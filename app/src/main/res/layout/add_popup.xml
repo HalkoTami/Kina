@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <LinearLayout
+        android:layout_width="334dp"
+        android:layout_height="225dp"
+        android:background="@drawable/rectangle_green_stroke"
+        android:orientation="vertical"
+        android:padding="10dp"
+
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:padding="10dp">
+
+            <EditText
+                android:background="@drawable/searchview"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:padding="5dp"
+                android:hint="タイトル"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="20dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_color_palet_col"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="7dp"
+                android:src="@drawable/circle"
+                app:tint="@color/red" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="7dp"
+                android:src="@drawable/circle"
+                app:tint="@color/blue" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="7dp"
+                android:src="@drawable/circle"
+                app:tint="@color/yellow" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="7dp"
+                android:src="@drawable/circle"
+                app:tint="@color/mygray" />
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:padding="10dp">
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:background="@drawable/rectangle_light_green"
+                android:text="作成"
+                android:textSize="17sp"
+                android:textColor="@color/mostdarkgray"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
