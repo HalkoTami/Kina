@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable-v24/file_cover.xml" value="0.1" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable-v24/icon_move_to_tb.xml" value="0.2995" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/add_popup.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/fragment_dashboard.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/fragment_library_home.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/fragment_notifications.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/item_bottom_navigation_bar.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/item_bottom_popup_add.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/item_cover_card_marker.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/item_cover_card_quiz.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/item_cover_card_string.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/item_cover_file.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/item_top_menu_bar.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_home.xml" value="0.67" />
+        <entry key="..\:/Users/halko/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/mainactvity.xml" value="0.22" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
