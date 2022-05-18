@@ -1,54 +1,99 @@
 package com.example.tangochoupdated
 
 
+import android.service.autofill.UserData
 import androidx.room.*
 import java.time.LocalDateTime
+import java.util.concurrent.Flow
 
-class room {
 
     @Entity
     data class User(
         @PrimaryKey(autoGenerate = true) val uid: Long,
-        @Embedded val file: File?,
-        @Embedded val card:Card?,
-        @Embedded val choice: Choice?,
-        @Embedded val activity:ActivityData?
+
 
 
     )
-    @Entity(tableName = "library")
-    data class Library(
-        @Embedded(prefix = "lib_file") val file: File?,
-        @Embedded(prefix = "lib_card") val card:Card?
+class UserAndAllData{
+    @Embedded
+    lateinit var user: User
+
+    @Relation(parentColumn = "uid", entityColumn = "userid")
+    lateinit var files: List<File>
+}
+
+
+
+    @Entity(tableName = "tbl_file",
+        foreignKeys = arrayOf(ForeignKey(
+            entity = User::class,
+            parentColumns = arrayOf("uid"),
+            childColumns = arrayOf("user_id"),
+            onDelete = ForeignKey.CASCADE
+        ))
     )
-
-    interface LibraryCover{
-        val type:Int
-        val filetitle:String?
-        val id: Int
-        val containingCards:Int?
-        val containingFiles:Int?
-        val fronttext:String?
-        val backtext:String?
-        val wholetext:String?
-        val question:String?
-        val answer:String?
-
-    }
-    @Entity(tableName = "tbl_file")
     @TypeConverters(ColorStatusConverter::class)
     data class File(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "file_id") val fileid:Int,
-        @ColumnInfo(name = "file_belonging_file") val belongingFileId: Int,
-        @ColumnInfo val  title: String?,
+        @ColumnInfo(name = "user_id") val userid:Int,
+        @Embedded(prefix = "belonging",)
+        val belongingFile: File?,
+        @ColumnInfo(defaultValue = "title") val  title: String?,
         @ColumnInfo val deleted: Boolean?,
-        @ColumnInfo var colorStatus: ColorStatus,
-        @Embedded val file:File?,
-        @Embedded val card: Card?
+        @ColumnInfo var colorStatus: ColorStatus?,
+
 
     )
+@Dao
+interface MyDao{
+    @Transaction
+    @Query("select * from user")
+    fun loadAllData(): List<UserAndAllData>
 
+    @Insert
+    fun insertFile(vararg files: File)
+
+    @Insert
+    fun insertCard(vararg cards: Card)
+
+    @Delete
+    fun deleteFile(vararg files: File)
+
+    @Query("DELETE FROM word_table")
+    suspend fun deleteAll()
+
+    @Transaction
+    @Query("select * from file")
+    fun loadFileAndCard(): List<FileAndCard>
+
+    @Transaction
+    @Query("select * from card")
+    fun loadCardsandData(): List<CardAndData>
+}
+class FileAndCard{
+    @Embedded
+    lateinit var file: File
+
+    @Relation(parentColumn = "file_id",
+        entityColumn = "belonging_file_id")
+    lateinit var cards: List<CardAndData>
+}
+
+class CardAndData{
+    @Embedded
+    lateinit var card: Card
+
+    @Relation(parentColumn = "card_id",
+        entityColumn = "marker_data_belonging_card_id")
+    lateinit var markerwords: List<MarkerData>
+
+    @Relation(parentColumn = "card_id",
+        entityColumn = "choice_belonging_card_id")
+    lateinit var choices: List<Choice>
+
+
+}
 
 
     enum class ColorStatus(value: Int) {
@@ -99,22 +144,32 @@ class room {
         FORGOT(7)
     }
 
-    @Entity(tableName = "tbl_card")
+    @Entity(tableName = "tbl_card",
+        foreignKeys = arrayOf(ForeignKey(entity = File::class,
+            parentColumns = arrayOf("file_id"),
+            childColumns = arrayOf("belonging_file_id"),
+            onDelete = ForeignKey.CASCADE
+        ))
+    )
     @TypeConverters(CardStatusConverter::class)
     data class Card(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name ="card_id") val id:Int,
-        @ColumnInfo(name = "card_belonging_file" ) val belongingFileId: Int?,
+        @ColumnInfo(name="belonging_file_id")
+        val belongingFileId:Int,
+        @Embedded(prefix = "belonging" )
+        val stringData: StringData?,
+        val markerData: MarkerData?,
+        val quizData: QuizData?,
         @ColumnInfo(name = "card_type") var cardStatus: CardStatus,
-        @Embedded val stringData: StringData?,
-        @Embedded val markerData: MarkerData?,
-        @Embedded val quizData: QuizData?,
         val deleted:Boolean?,
         val remembered: Boolean?
 
     )
 
-    @Entity(tableName = "string_data")
+
+
+
     data class StringData(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "string_data_id")
@@ -126,12 +181,16 @@ class room {
         val backtext:String?,
 
         )
-    @Entity(tableName = "marker_data")
+    @Entity(tableName = "marker_data",
+    foreignKeys = arrayOf(ForeignKey(entity = Card::class,
+    parentColumns = arrayOf("card_id"),
+    childColumns = arrayOf("marker_data_belonging_card_id"),
+    onDelete = ForeignKey.CASCADE)))
     data class MarkerData(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "marker_data_id")
         val id: Int,
-        @ColumnInfo(name = "marker_belonging_card_id")
+        @ColumnInfo(name = "marker_data_belonging_card_id")
         val cardid: Int,
         @ColumnInfo
         val text:String?,
@@ -140,7 +199,7 @@ class room {
 
     )
 
-    @Entity(tableName = "quiz_data")
+
     data class QuizData(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "quiz_data_id")
@@ -149,15 +208,21 @@ class room {
         val cardid: Int,
         @ColumnInfo
         val question:String,
-        @Embedded
-        val choice: Choice?,
         @ColumnInfo
         val answerchoiceid:Int?
 
     )
-    @Entity(tableName = "tbl_choice")
+    @Entity(tableName = "tbl_choice",
+    foreignKeys = arrayOf(ForeignKey(
+        entity = Card::class,
+        parentColumns = arrayOf("card_id"),
+        childColumns = arrayOf("choice_belonging_card_id"),
+        onDelete = ForeignKey.CASCADE
+    )))
     data class Choice(
         @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = "choice_belonging_card_id")
+        val belongingcardId: Int?,
         @ColumnInfo(name = "choice_id")
         val id: Int,
         @ColumnInfo
@@ -178,18 +243,4 @@ class room {
     )
 
 
-    @Dao
-    interface LibraryDao {
-        @Insert(onConflict = OnConflictStrategy.REPLACE)
-        fun insertcard(vararg card: Card)
 
-
-        @Query("""SELECT * FROM tbl_card a INNER JOIN string_data ON string_data_id = a.string_data_id 
-            INNER JOIN marker_data ON marker_data_id = a.marker_data_id
-            INNER JOIN quiz_data b ON quiz_data_id = a.quiz_data_id
-            INNER JOIN tbl_choice ON choice_id = a.choice_id""",
-        )
-        fun getcard ():List<Card>
-
-    }
-}
