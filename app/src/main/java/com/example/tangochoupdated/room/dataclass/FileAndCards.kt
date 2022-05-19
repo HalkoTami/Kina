@@ -2,7 +2,6 @@ package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.example.tangochoupdated.CardAndData
 
 class FileAndCards{
     @Embedded
@@ -10,5 +9,6 @@ class FileAndCards{
 
     @Relation(parentColumn = "file_id",
         entityColumn = "belonging_file_id")
-    lateinit var cards: List<CardAndData>
+    lateinit var cards: List<Card>
 }
+

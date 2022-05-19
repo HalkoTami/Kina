@@ -1,8 +1,10 @@
 package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.ColumnInfo
+import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.ActivityStatus
 import java.time.LocalDateTime
 
@@ -20,3 +22,5 @@ data class ActivityData(
     @ColumnInfo(name = "activity_daytime")
     val dateTime: LocalDateTime
 )
+@Dao
+abstract class ActivityDataDao: DataAccessObject<ActivityData>

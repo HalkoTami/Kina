@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.*
+import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.CardStatusConverter
 
@@ -9,7 +10,16 @@ import com.example.tangochoupdated.room.enumclass.CardStatusConverter
     foreignKeys = [ForeignKey(entity = File::class,
         parentColumns = arrayOf("file_id"),
         childColumns = arrayOf("belonging_file_id"),
-        onDelete = ForeignKey.CASCADE
+        onDelete = ForeignKey.SET_NULL,
+        onUpdate = ForeignKey.CASCADE
+    ),ForeignKey(entity = Choice::class,
+        parentColumns = arrayOf("choice_id"),
+        childColumns = arrayOf("belonging_choice_id_one",
+            "belonging_choice_id_two",
+            "belonging_choice_id_three",
+            "belonging_choice_id_four"),
+        onDelete = ForeignKey.SET_NULL,
+        onUpdate = ForeignKey.CASCADE
     )]
 )
 @TypeConverters(CardStatusConverter::class)
@@ -20,7 +30,7 @@ data class Card(
     val belongingFileId:Int,
     @Embedded(prefix = "belonging" )
     val stringData: StringData?,
-    val markerData: MarkerData?,
+    val markerData: MarkerPreviewData?,
     val quizData: QuizData?,
     @ColumnInfo(name = "card_type")
     var cardStatus: CardStatus,
@@ -47,6 +57,14 @@ data class StringData(
 data class QuizData(
     @ColumnInfo
     val question:String,
+    @ColumnInfo(name = "choice_id_one")
+    val choiceIdOne:Int?,
+    @ColumnInfo(name = "choice_id_two")
+    val choiceIdTwo:Int?,
+    @ColumnInfo(name = "choice_id_three")
+    val choiceIdThree:Int?,
+    @ColumnInfo(name = "choice_id_four")
+    val choiceIdFour:Int?,
     @ColumnInfo
     val answerChoiceId:Int?,
     @ColumnInfo(name= "answer_preview")
@@ -54,3 +72,10 @@ data class QuizData(
 
 
 )
+
+data class MarkerPreviewData(
+    @ColumnInfo(name ="marker_text_preview")
+    val markerTextPreview:String?
+)
+
+@Dao abstract class CardDao: DataAccessObject<Card>
