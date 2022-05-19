@@ -5,10 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.tangochoupdated.room.dataclass.Card
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = arrayOf(Card::class, User::class,
+@Database(entities = arrayOf(
+    Card::class, User::class,
     File::class, MarkerData::class, Choice::class),
     version = 1, exportSchema = false)
 public abstract class MyRoomDatabase : RoomDatabase() {
