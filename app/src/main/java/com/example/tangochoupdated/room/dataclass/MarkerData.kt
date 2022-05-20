@@ -1,12 +1,10 @@
 package com.example.tangochoupdated.room.dataclass
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
+import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 
-@Entity(tableName = "marker_data",
+@Entity(tableName = "tbl_marker_data",
     foreignKeys =[ForeignKey(entity = Card::class,
         parentColumns = arrayOf("card_id"),
         childColumns = arrayOf("marker_data_belonging_card_id"),
@@ -24,3 +22,8 @@ data class MarkerData(
     val remembered: Boolean
 
 )
+@Dao
+abstract class MarkerDataDao: DataAccessObject<MarkerData>{
+    @Query("DELETE FROM tbl_marker_data")
+    abstract suspend fun clearTblMarkerData()
+}

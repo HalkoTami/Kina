@@ -4,6 +4,7 @@ import androidx.room.*
 import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.ColorStatusConverter
+import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "tbl_file",
     foreignKeys = [ForeignKey(
@@ -29,9 +30,15 @@ data class File(
 
 @Dao
 abstract class FileDao: DataAccessObject<File>{
+    @Query("DELETE FROM tbl_file")
+    abstract suspend fun clearTblFile()
+
 
     @Transaction
     @Query("select * from tbl_file")
     abstract fun loadFileAndCard(): List<FileAndCards>
+
+    @Query("select * from tbl_file where NOT deleted AND belonging_file_id = NULL")
+    abstract fun getFileWithoutParent(): Flow<List<File>>
 }
 

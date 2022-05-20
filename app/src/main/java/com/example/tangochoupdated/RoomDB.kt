@@ -1,21 +1,34 @@
 package com.example.tangochoupdated
 
 import android.content.Context
+import android.service.autofill.UserData
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.tangochoupdated.room.dataclass.Card
+import com.example.tangochoupdated.room.DataAccessObject
+import com.example.tangochoupdated.room.dataclass.*
+import com.example.tangochoupdated.room.enumclass.ColorStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = arrayOf(
+@Database(entities = [
     Card::class, User::class,
-    File::class, MarkerData::class, Choice::class),
+    File::class, MarkerData::class, Choice::class, ActivityData::class],
     version = 1, exportSchema = false)
 public abstract class MyRoomDatabase : RoomDatabase() {
 
-    abstract fun myDao(): MyDao
+    abstract fun cardDao(): CardDao
+
+    abstract fun fileDao(): FileDao
+
+    abstract fun userDao(): UserDao
+
+    abstract fun markerDao(): MarkerDataDao
+
+    abstract fun activityDao(): ActivityDataDao
+
+    abstract fun choiceDao():ChoiceDao
 
     private class WordDatabaseCallback(
         private val scope: CoroutineScope
@@ -25,20 +38,23 @@ public abstract class MyRoomDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    var myDao = database.myDao()
+                    var cardDao = database.cardDao()
+                    var fileDao = database.fileDao()
+                    var userDao = database.userDao()
+                    var markerDao = database.markerDao()
+                    var activityDao = database.activityDao()
 
                     // Delete all content here.
-                    myDao.deleteFile()
+                    cardDao.clearTblCard()
+                    fileDao.clearTblFile()
+                    userDao.clearTblUser()
+                    markerDao.clearTblMarkerData()
+                    activityDao.clearTblActivity()
 
                     // Add sample words.
-                    var file = File(0,null,"タイトルなし",false,ColorStatus.RED,)
-                    wordDao.insert(word)
-                    word = Word("World!")
-                    wordDao.insert(word)
+                    var file = File(0,null,"タイトルなし",false, ColorStatus.RED,)
+                    fileDao.insert(file)
 
-                    // TODO: Add your own words!
-                    word = Word("TODO!")
-                    wordDao.insert(word)
                 }
             }
         }

@@ -4,6 +4,7 @@ import androidx.room.*
 import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.CardStatusConverter
+import kotlinx.coroutines.flow.Flow
 
 
 @Entity(tableName = "tbl_card",
@@ -28,9 +29,11 @@ data class Card(
     @ColumnInfo(name ="card_id") val id:Int,
     @ColumnInfo(name="belonging_file_id")
     val belongingFileId:Int,
-    @Embedded(prefix = "belonging" )
+    @Embedded(prefix = "belonging_" )
     val stringData: StringData?,
+    @Embedded(prefix = "belonging_")
     val markerData: MarkerPreviewData?,
+    @Embedded(prefix = "belonging_")
     val quizData: QuizData?,
     @ColumnInfo(name = "card_type")
     var cardStatus: CardStatus,
@@ -45,7 +48,7 @@ data class Card(
 
 
 data class StringData(
-    @ColumnInfo
+    @ColumnInfo(name = "string_data")
     val frontTitle:String?,
     val backTitle: String?,
     val frontText:String?,
@@ -55,8 +58,6 @@ data class StringData(
 
 
 data class QuizData(
-    @ColumnInfo
-    val question:String,
     @ColumnInfo(name = "choice_id_one")
     val choiceIdOne:Int?,
     @ColumnInfo(name = "choice_id_two")
@@ -67,9 +68,9 @@ data class QuizData(
     val choiceIdFour:Int?,
     @ColumnInfo
     val answerChoiceId:Int?,
-    @ColumnInfo(name= "answer_preview")
-    val answerPreview:String?
-
+    @ColumnInfo(name= "quiz_cover_preview")
+    val answerPreview:String?,
+    val question:String,
 
 )
 
@@ -78,4 +79,30 @@ data class MarkerPreviewData(
     val markerTextPreview:String?
 )
 
-@Dao abstract class CardDao: DataAccessObject<Card>
+@Dao abstract class CardDao: DataAccessObject<Card>{
+    @Query("DELETE FROM tbl_card")
+    abstract suspend fun clearTblCard()
+
+
+    @Query("select * from tbl_card where NOT card_deleted AND belonging_file_id = :belongingFileId ")
+    abstract fun getCardsByFileId(belongingFileId: Int ): Flow<List<Card>>
+
+    @Query("select * from tbl_card where NOT card_deleted AND belonging_string_data OR " +
+            "belonging_marker_text_preview OR belonging_quiz_cover_preview LIKE '%' || :search || '%' " +
+            "ORDER BY card_id DESC")
+    abstract fun searchCardsByWords(search:String):Flow<List<Card>>
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

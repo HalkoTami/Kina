@@ -1,9 +1,6 @@
 package com.example.tangochoupdated.room.dataclass
 
-import androidx.room.ColumnInfo
-import androidx.room.Dao
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.example.tangochoupdated.room.DataAccessObject
 
 @Entity(tableName = "tbl_choice")
@@ -18,4 +15,7 @@ data class Choice(
 
     )
 @Dao
-abstract class ChoiceDao: DataAccessObject<Choice>
+abstract class ChoiceDao: DataAccessObject<Choice>{
+    @Query("DELETE FROM tbl_choice")
+    abstract suspend fun clearTblChoice()
+}
