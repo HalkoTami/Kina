@@ -92,6 +92,8 @@ data class MarkerPreviewData(
             "ORDER BY card_id DESC")
     abstract fun searchCardsByWords(search:String):Flow<List<Card>>
 
+    @Query("select * from tbl_card where NOT card_deleted AND belonging_file_id = NULL")
+    abstract fun getCardsWithoutParent(): Flow<List<Card>>
 }
 
 

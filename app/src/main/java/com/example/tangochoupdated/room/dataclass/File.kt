@@ -4,6 +4,8 @@ import androidx.room.*
 import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.ColorStatusConverter
+import com.example.tangochoupdated.room.enumclass.FileStatus
+import com.example.tangochoupdated.room.enumclass.FileStatusConverter
 import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "tbl_file",
@@ -15,15 +17,16 @@ import kotlinx.coroutines.flow.Flow
         onUpdate = ForeignKey.CASCADE
     )]
 )
-@TypeConverters(ColorStatusConverter::class)
+@TypeConverters(ColorStatusConverter::class,FileStatusConverter::class)
 data class File(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "file_id") val fileId:Int,
-    @ColumnInfo( name = "belonging_file_id")
+    @ColumnInfo( name = "file_belonging_file_id")
     val belongingFileId: Int?,
     @ColumnInfo(defaultValue = "title") val  title: String?,
     @ColumnInfo val deleted: Boolean?,
-    @ColumnInfo var colorStatus: ColorStatus?,
+    @ColumnInfo var colorStatus: ColorStatus,
+    @ColumnInfo var fileStatus: FileStatus
 
 
     )
@@ -33,12 +36,15 @@ abstract class FileDao: DataAccessObject<File>{
     @Query("DELETE FROM tbl_file")
     abstract suspend fun clearTblFile()
 
+    @Query("select * from tbl_file where NOT deleted AND file_belonging_file_id = :belongingFileId ")
+    abstract fun getCardsByFileId(belongingFileId: Int ): Flow<List<File>>
 
     @Transaction
     @Query("select * from tbl_file")
     abstract fun loadFileAndCard(): List<FileAndCards>
 
-    @Query("select * from tbl_file where NOT deleted AND belonging_file_id = NULL")
+    @Query("select * from tbl_file where NOT deleted AND file_belonging_file_id = NULL")
     abstract fun getFileWithoutParent(): Flow<List<File>>
+
 }
 
