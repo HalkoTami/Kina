@@ -1,7 +1,6 @@
 package com.example.tangochoupdated
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.*
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +9,7 @@ import com.example.tangochoupdated.room.dataclass.Card
 import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
+import kotlin.coroutines.coroutineContext
 
 
 /**
@@ -42,8 +42,11 @@ class LibraryListAdapter(val clickListener: DataClickListener) :
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            ITEM_VIEW_TYPE_HORIZONTAL -> HorizontalViewHolder.from(parent)
-            ITEM_VIEW_TYPE_VERTICAL -> VerticalViewHolder.from(parent)
+            CARD_TYPE_STRING -> StringCardViewHolder.from(parent)
+            CARD_TYPE_QUIZ -> QuizCardViewHolder.from(parent)
+            CARD_TYPE_MARKER -> MarkerCardViewHolder.from(parent)
+            FILE_TYPE_FILE -> FileViewholder.from(parent)
+            FILE_TYPE_TANGO_CHO -> TangochoViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
@@ -58,7 +61,7 @@ class LibraryListAdapter(val clickListener: DataClickListener) :
                 holder.bind(item.card, clickListener)
             }
             is VerticalViewHolder -> {
-                val item = getItem(position) as DataItem.VerticalClass
+                val item = getItem(position) as LibCoverData.FileClass
                 holder.bind(item.yourData, clickListener)
             }
         }
@@ -67,10 +70,13 @@ class LibraryListAdapter(val clickListener: DataClickListener) :
     /**
      * Vertical View Holder Class
      */
-    class StringCardViewHolder private constructor(val binding: ) :
+    class StringCardViewHolder private constructor(val binding: ItemCoverCardStringBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Card, clickListener: DataClickListener) {
+            binding.root.setOnClickListener {
+                clickListener.onTouch(it, item.id, CARD_TYPE_STRING)
+            }
             /**
              * change all your view data here
              * assign click listeners here
@@ -81,16 +87,20 @@ class LibraryListAdapter(val clickListener: DataClickListener) :
              *     clickListener.onClick(item)
              *  }
              */
-            binding = item.stringData?.frontText
-            binding.
+            binding.txvFrontText.text = item.stringData?.frontText
+            binding.txvFrontTitle.text= item.stringData?.frontTitle
+            binding.txvBackTitle.text= item.stringData?.backTitle
+            binding.txvBackText.text = item.stringData?.backTitle
+
+
 
         }
 
         companion object {
-            fun from(parent: ViewGroup): VerticalViewHolder {
+            fun from(parent: ViewGroup): StringCardViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val view =  <REPLACE_WITH_BINDING_OBJECT>.inflate(R.layout.header, parent, false)
-                return VerticalViewHolder(binding)
+                val view =  ItemCoverCardStringBinding.inflate(layoutInflater, parent, false)
+                return StringCardViewHolder(view)
             }
         }
     }
@@ -147,7 +157,8 @@ class ListCheckDiffCallback : DiffUtil.ItemCallback<DataItem>() {
  *class MyFragment : Fragment(), DataClickListener
  */
 interface DataClickListener {
-    fun onClick(data: YourData)
+    fun onTouchWhole(view: View, dataId: Int, viewType: Int)
+    fun onTouchDelete(id: Int, dataId: Int, viewType: Int)
 }
 
 /**

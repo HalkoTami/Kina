@@ -14,10 +14,18 @@
         <!-- Customize your theme here. -->
         <item name="colorSurface"> @color/blue</item>
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+        <item name="android:textViewStyle">@style/TextAppearance.AppCompat.</item>
+        <item name=""></item>
     </style>
 
     <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.PrimarySurface">
        <item name="itemIconSize">30dp</item>
+
+    </style>
+    <style name="TextAppearance.AppCompat." parent="Widget.AppCompat.TextView">
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/mostdarkgray</item>
 
     </style>
 

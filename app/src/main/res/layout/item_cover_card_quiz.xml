@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             android:src="@drawable/circle_select"
             android:layout_margin="10dp"
             />
@@ -185,7 +185,7 @@
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
 
 
