@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">tangochoupdated</string>
+    <string name="app_name">tango cho updated</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -8,10 +8,12 @@
     <string name="title_tab_planner">プランナー</string>
     <string name="title_tab_data">データ</string>
     <string name="title_tab_create">作成</string>
-
-
+    <string name="text_sample">sample サンプル</string>
+    <string name="visible_guide_line">visible guideline</string>
     <string name="icon_search">Icon Search</string>
-
+    <string name="edt_front">edit front</string>
+    <string name="edt_back">edit back</string>
+    <string name="btn_select">select card or file</string>
 
 
 </resources>

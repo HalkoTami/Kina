@@ -1,125 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
     android:layout_margin="5dp">
+    <ImageView
+        android:id="@+id/btn_select"
+        android:contentDescription="@string/btn_select"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/data_frame"
+        app:layout_constraintEnd_toStartOf="@+id/data_frame"
 
-    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:visibility="visible"
+        android:src="@drawable/circle_select"
+        android:layout_marginEnd="5dp"
+
+        />
 
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:src="@drawable/circle_select"
-            android:layout_margin="10dp"
-            />
 
-        <LinearLayout
+
+
+        <FrameLayout
+            android:id="@+id/data_frame"
+            app:layout_constraintStart_toEndOf="@+id/btn_select"
+            app:layout_constraintEnd_toStartOf="@+id/btn_delete"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_new_card"
+            android:layout_marginBottom="5dp"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="105dp"
             >
-            <include android:id="@+id/card_string"
+            <ViewStub android:id="@+id/stub_string_card"
+                android:inflatedId="@+id/stub_string_card"
+                android:layout="@layout/item_cover_card_string"
+                tools:visibility="visible"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                layout="@layout/item_cover_card_string"/>
+                android:layout_height="match_parent" />
+            <ViewStub android:id="@+id/stub_marker_card"
+                android:inflatedId="@+id/stub_marker_card"
+                android:layout="@layout/item_cover_card_marker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <ViewStub android:id="@+id/stub_quiz_card"
+                android:inflatedId="@+id/stub_quiz_card"
+                android:layout="@layout/item_cover_card_quiz"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+    <ImageView
+        app:layout_constraintStart_toEndOf="@+id/data_frame"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/data_frame"
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/icon_delete_cover"
+        />
 
 
 
 
 
+    <ImageView
+        android:id="@+id/btn_add_new_card"
+
+        app:layout_constraintTop_toBottomOf="@+id/data_frame"
+        app:layout_constraintEnd_toEndOf="@id/data_frame"
+
+
+        android:layout_width="0dp"
+        android:layout_height="27dp"
+        android:layout_weight="1"
+        android:src="@drawable/icon_add_middlesize" />
+    <ViewStub
+        android:id="@+id/stub_tag"
+        android:inflatedId="@+id/stub_tag"
+        android:layout_width="0dp"
+        android:layout_height="37dp"
+        android:layout="@layout/item_cover_tags"
+        tools:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/data_frame"
+        app:layout_constraintStart_toStartOf="@id/data_frame"
+        app:layout_constraintEnd_toStartOf="@id/btn_add_new_card"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
-
-
-
-
-
-
-            </LinearLayout>
-
-        <LinearLayout
-
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:visibility="visible">
-
-
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:src="@drawable/icon_delete_cover"
-                />
-        </LinearLayout>
-
-        </LinearLayout>
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="4dp"
-        android:gravity="center_vertical">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="37dp"
-            android:layout_weight="8"
-            android:background="@drawable/gray_stroke_corner_10"
-            android:paddingStart="7dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="4dp"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="21dp"
-                android:src="@drawable/icon_tag"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="13px"
-                android:text="tag"/>
-
-            <ImageView
-                android:id="@+id/btn_edt_tag_string"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_edit_cover" />
-
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/btn_add_new_card"
-            android:layout_width="0dp"
-            android:layout_height="27dp"
-            android:layout_weight="1"
-            android:src="@drawable/icon_add_middlesize" />
-    </LinearLayout>
-    </LinearLayout>
-
-
-
-</LinearLayout>
