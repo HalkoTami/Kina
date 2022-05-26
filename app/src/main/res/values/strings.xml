@@ -25,6 +25,7 @@
     <string name="edt_question">edit question</string>
     <string name="icon_answer">answer</string>
     <string name="btn_edit_answer">edit answer</string>
+    <string name="cd_edit_tag">edit tag</string>
 
 
 </resources>
