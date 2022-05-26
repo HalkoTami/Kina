@@ -16,7 +16,7 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         android:src="@drawable/circle_select"
         android:layout_marginEnd="5dp"
 
@@ -69,7 +69,8 @@
         android:id="@+id/group_gone_on_long_click"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_tags="@string/gone_on_long_click"/>
+        android:visibility="gone"
+        app:constraint_referenced_ids="stub_tag,btn_add_new_card,btn_delete,btn_edit_whole"/>
 
     <ImageView
         android:contentDescription="@string/btn_edit"

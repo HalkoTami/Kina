@@ -4,9 +4,10 @@ import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
 import androidx.room.Relation
+import com.example.tangochoupdated.FileOrCard
 
 
-class FileAndCards{
+class FileAndBelongingCards{
     @Embedded
     lateinit var file: File
 
@@ -18,6 +19,7 @@ class FileAndCards{
 
 @Dao
 interface LibraryDao{
-    @Query("SELECT *  FROM tbl_file JOIN tbl_card ON belonging_file_id = file_belonging_file_id = NULL")
-    abstract fun getLibraryCoverWithoutParents():List<>
+    @Query("SELECT *   FROM tbl_file AS libraryCard JOIN tbl_card ON belonging_file_id = file_belonging_file_id = NULL")
+    abstract fun getLibraryCoverWithoutParents():List<FileOrCard>
+
 }

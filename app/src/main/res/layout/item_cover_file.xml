@@ -5,26 +5,27 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
     android:padding="3dp"
     android:background="@drawable/gray_stroke_corner_10">
-<!--TODO constraint set ね-->
-    <ImageView
-        android:id="@+id/imv_file_type"
-        android:layout_margin="10dp"
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="0dp"
-        app:layout_constraintHorizontal_weight="1"
+    <ImageView
+        android:contentDescription="@string/cd_file_type"
+        android:id="@+id/imv_file_type"
+        android:layout_width="40dp"
+
+
         android:layout_height="wrap_content"
-        android:src="@drawable/icon_file" />
+        android:layout_margin="15dp"
+        android:src="@drawable/icon_file"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/barrier_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txv_file_title"
-        android:layout_marginStart="10dp"
+
 
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -33,22 +34,33 @@
         android:maxLines="2"
         android:textSize="20sp"
 
-        app:layout_constraintBottom_toTopOf="@id/imv_icon_file_small"
+        app:layout_constraintBottom_toTopOf="@id/bottom_container"
 
-        app:layout_constraintEnd_toStartOf="@+id/btn_add"
+        app:layout_constraintEnd_toStartOf="@id/barrier_right"
 
-        app:layout_constraintStart_toEndOf="@+id/imv_file_type"
+        app:layout_constraintStart_toEndOf="@id/barrier_left"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_container"
-        app:layout_constraintStart_toEndOf="@id/imv_file_type"
+        app:layout_constraintStart_toEndOf="@id/barrier_left"
         app:layout_constraintTop_toBottomOf="@id/txv_file_title"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_add"
+        app:layout_constraintEnd_toStartOf="@id/barrier_right"
+
         android:layout_width="0dp"
         android:layout_height="wrap_content">
+        <Space
+            android:id="@+id/spacer"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/imv_icon_file_small"/>
+
         <ImageView
+            android:contentDescription="@string/cd_file_amount"
             android:id="@+id/imv_icon_file_small"
             android:layout_width="wrap_content"
             android:layout_height="15dp"
@@ -60,22 +72,23 @@
             app:layout_constraintEnd_toStartOf="@id/txv_file_amount"
 
 
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/spacer"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txv_file_amount"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="end"
+            android:layout_height="match_parent"
+            android:ellipsize="none"
 
-            android:text="30de枚"
+            android:gravity="end"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/imv_icon_tango_cho_small"
             app:layout_constraintStart_toEndOf="@+id/imv_icon_file_small"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:contentDescription="@string/cd_tango_cho_amount"
             android:id="@+id/imv_icon_tango_cho_small"
             android:layout_width="wrap_content"
             android:layout_height="15dp"
@@ -83,7 +96,7 @@
             android:background="@drawable/icon_library"
             android:drawingCacheQuality="auto"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/imv_icon_card_small"
+            app:layout_constraintEnd_toStartOf="@id/txv_tango_cho_amount"
             app:layout_constraintStart_toEndOf="@id/txv_file_amount"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,9 +104,9 @@
             android:id="@+id/txv_tango_cho_amount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:ellipsize="none"
             android:gravity="end"
-            android:paddingLeft="10dp"
-            android:text="枚"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imv_icon_card_small"
             app:layout_constraintStart_toEndOf="@+id/imv_icon_tango_cho_small"
@@ -101,6 +114,7 @@
 
 
         <ImageView
+            android:contentDescription="@string/cd_card_amount"
             android:id="@+id/imv_icon_card_small"
             android:layout_width="wrap_content"
 
@@ -108,7 +122,6 @@
             android:layout_height="15dp"
             android:layout_margin="5dp"
             android:background="@drawable/icon_create_card"
-            android:drawingCacheQuality="auto"
             app:layout_constraintBottom_toBottomOf="parent"
 
             app:layout_constraintStart_toEndOf="@id/txv_tango_cho_amount"
@@ -120,9 +133,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
-            android:layout_marginEnd="10dp"
+
+            android:ellipsize="none"
             android:gravity="end"
-            android:text="30dd枚"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imv_icon_card_small"
@@ -130,16 +144,30 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <ImageButton
+        android:contentDescription="@string/cd_btn_add_card"
         android:id="@+id/btn_add"
-        android:layout_width="25dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/icon_add_middlesize"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/icon_add_middlesize"
+        app:layout_constraintStart_toEndOf="@id/barrier_right"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <androidx.constraintlayout.widget.Barrier
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/barrier_left"
+        app:constraint_referenced_ids="txv_file_title,bottom_container"
+        app:barrierDirection="left"/>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/barrier_right"
+        app:constraint_referenced_ids="txv_file_title,bottom_container"
+        app:barrierDirection="right"/>
 
 
 

@@ -4,9 +4,11 @@ import android.view.*
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Embedded
 import com.example.tangochoupdated.databinding.ItemCoverCardStringBinding
 import com.example.tangochoupdated.room.dataclass.Card
 import com.example.tangochoupdated.room.dataclass.File
+import com.example.tangochoupdated.room.dataclass.FileOrCard
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import kotlin.coroutines.coroutineContext
@@ -17,13 +19,13 @@ import kotlin.coroutines.coroutineContext
  */
 
 class LibraryListAdapter(val clickListener: DataClickListener) :
-    ListAdapter<LibCoverData, RecyclerView.ViewHolder>(ListCheckDiffCallback()) {
+    ListAdapter<FileOrCard, RecyclerView.ViewHolder>(ListCheckDiffCallback()) {
 
     /**
      * This Function will help you out in choosing whether you want vertical or horizontal VIEW TYPE
      */
     override fun getItemViewType(position: Int): Int {
-        return when (getItem(position).viewType) {
+        return when (getItem(position)) {
              CLASS_TYPE_CARD-> when(getItem(position).card!!.cardStatus){
                  CardStatus.STRING-> CARD_TYPE_STRING
                  CardStatus.QUIZ-> CARD_TYPE_QUIZ
@@ -142,6 +144,8 @@ class LibraryListAdapter(val clickListener: DataClickListener) :
  */
 class ListCheckDiffCallback : DiffUtil.ItemCallback<DataItem>() {
     override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
+        var a = arrayListOf<FileOrCard>()
+        a.add(FileOrCard.FileCover(File()))
         return oldItem.id == newItem.id
     }
 
@@ -194,6 +198,25 @@ sealed class LibCoverData {
     abstract val card:Card?
     abstract val file:File?
 }
+
+sealed class FileOrCard {
+    abstract val libraryCard: Card?
+    abstract val file: File?
+    data class FileCover(val dbFile: File): FileOrCard(){
+        override val libraryCard: Card?
+            get() = null
+        override val file: File?
+            get() = dbFile
+    }
+    data class CardCover(val dbCard: Card):FileOrCard(){
+        override val file: File?
+            get() = null
+        override val libraryCard: Card?
+            get() = dbCard
+
+    }
+}
+
 
     private const val CARD_TYPE_STRING = 1
     private const val CARD_TYPE_MARKER = 2

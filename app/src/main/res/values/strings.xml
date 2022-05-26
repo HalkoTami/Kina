@@ -26,6 +26,11 @@
     <string name="icon_answer">answer</string>
     <string name="btn_edit_answer">edit answer</string>
     <string name="cd_edit_tag">edit tag</string>
+    <string name="cd_file_type">file</string>
+    <string name="cd_file_amount">containing files</string>
+    <string name="cd_tango_cho_amount">containing flashcards</string>
+    <string name="cd_card_amount">containing cards</string>
+    <string name="cd_btn_add_card">add new card</string>
 
 
 </resources>
