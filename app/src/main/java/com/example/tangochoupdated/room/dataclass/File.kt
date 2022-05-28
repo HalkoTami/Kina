@@ -37,7 +37,8 @@ abstract class FileDao: DataAccessObject<File>{
     abstract suspend fun clearTblFile()
 
     @Query("select * from tbl_file where NOT deleted AND file_belonging_file_id = :belongingFileId ")
-    abstract fun getCardsByFileId(belongingFileId: Int ): Flow<List<File>>
+    abstract fun getLibCardsByFileId(belongingFileId: Int? ): Flow<List<File>>
+
 
     @Transaction
     @Query("select * from tbl_file")

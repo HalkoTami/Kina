@@ -11,6 +11,7 @@ import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.dataclass.FileOrCard
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
+import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.coroutineContext
 
 
@@ -145,7 +146,7 @@ class LibraryListAdapter(val clickListener: DataClickListener) :
 class ListCheckDiffCallback : DiffUtil.ItemCallback<DataItem>() {
     override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
         var a = arrayListOf<FileOrCard>()
-        a.add(FileOrCard.FileCover(File()))
+        a.add(FileOrCard.FileCover(File(s)))
         return oldItem.id == newItem.id
     }
 
@@ -199,7 +200,7 @@ sealed class LibCoverData {
     abstract val file:File?
 }
 
-sealed class FileOrCard {
+sealed class FileOrCard{
     abstract val libraryCard: Card?
     abstract val file: File?
     data class FileCover(val dbFile: File): FileOrCard(){

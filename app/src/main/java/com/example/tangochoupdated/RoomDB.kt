@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.tangochoupdated.room.DataAccessObject
+import com.example.tangochoupdated.room.MyDao
 import com.example.tangochoupdated.room.dataclass.*
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import kotlinx.coroutines.CoroutineScope
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
     version = 1, exportSchema = false)
 public abstract class MyRoomDatabase : RoomDatabase() {
 
+    abstract fun myDao(): MyDao
     abstract fun cardDao(): CardDao
 
     abstract fun fileDao(): FileDao
@@ -38,14 +40,14 @@ public abstract class MyRoomDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    var cardDao = database.cardDao()
+                    var cardDao = database.myDao()
                     var fileDao = database.fileDao()
                     var userDao = database.userDao()
                     var markerDao = database.markerDao()
                     var activityDao = database.activityDao()
 
                     // Delete all content here.
-                    cardDao.clearTblCard()
+                    cardDao.cardDao.
                     fileDao.clearTblFile()
                     userDao.clearTblUser()
                     markerDao.clearTblMarkerData()
