@@ -7,19 +7,24 @@
 
     <fragment
         android:id="@+id/navigation_library"
-        android:name="com.example.tangochoupdated.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:name="com.example.tangochoupdated.ui.library.HomeFragment"
+        android:label="@string/title_tab_library"
         tools:layout="@layout/fragment_library_home" />
 
     <fragment
         android:id="@+id/navigation_anki"
-        android:name="com.example.tangochoupdated.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:name="com.example.tangochoupdated.ui.anki.AnkiFragment"
+        android:label="@string/title_tab_anki"
         tools:layout="@layout/fragment_anki_home" />
 
     <fragment
         android:id="@+id/navigation_planner"
-        android:name="com.example.tangochoupdated.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:name="com.example.tangochoupdated.ui.planner.PlannerFragment"
+        android:label="@string/title_tab_planner"
         tools:layout="@layout/fragment_planner_home" />
+    <fragment
+        android:id="@+id/navigation_data"
+        android:name="com.example.tangochoupdated.ui.data.DataFragment"
+        android:label="@string/title_tab_data"
+        tools:layout="@layout/fragment_data_home" />
 </navigation>

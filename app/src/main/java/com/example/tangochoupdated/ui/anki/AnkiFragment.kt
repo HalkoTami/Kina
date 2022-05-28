@@ -1,19 +1,18 @@
-package com.example.tangochoupdated.ui.home
+package com.example.tangochoupdated.ui.anki
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.tangochoupdated.databinding.FragmentAnkiHomeBinding
 
-import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 
-class HomeFragment : Fragment() {
+class AnkiFragment  : Fragment() {
 
-    private var _binding: FragmentLibraryHomeBinding? = null
+    private var _binding: FragmentAnkiHomeBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -24,15 +23,15 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val ankiViewModel =
+            ViewModelProvider(this)[AnkiViewModel::class.java]
 
-        _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentAnkiHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: EditText = binding.librarySearch
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.hint = it
+        val textView: TextView = binding.textDashboard
+        ankiViewModel.text.observe(viewLifecycleOwner) {
+            textView.text = it
         }
         return root
     }

@@ -3,4 +3,15 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_tab_library">ライブラリ</string>
+    <string name="title_tab_anki">暗記</string>
+    <string name="title_tab_planner">プランナー</string>
+    <string name="title_tab_data">データ</string>
+    <string name="title_tab_create">作成</string>
+
+
+    <string name="icon_search">Icon Search</string>
+
+
+
 </resources>

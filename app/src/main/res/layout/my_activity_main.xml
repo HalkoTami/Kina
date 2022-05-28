@@ -4,18 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <FrameLayout
-        android:id="@+id/topframelayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/nav_host_fragment"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <include
-            android:id="@+id/top_menu_bar_frame"
-            layout="@layout/item_top_menu_bar"/>
-    </FrameLayout>
+
 
 
     <androidx.fragment.app.FragmentContainerView
@@ -23,26 +12,22 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/btmframelayout"
+        app:layout_constraintBottom_toTopOf="@id/my_bnv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topframelayout"
+        app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
-    <FrameLayout
-        android:id="@+id/btmframelayout"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/my_bnv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nav_host_fragment">
+        app:layout_constraintTop_toBottomOf="@id/nav_host_fragment"
+        app:menu="@menu/bottom_nav_menu" />
 
-        <include
-            android:id="@+id/bottom_navigation_bar_frame"
-            layout="@layout/item_bottom_navigation_bar" />
-
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
