@@ -1,8 +1,13 @@
 package com.example.tangochoupdated
 
+import android.provider.SyncStateContract.Helpers.insert
 import androidx.annotation.WorkerThread
+import com.example.tangochoupdated.room.LibraryDao
+import com.example.tangochoupdated.room.MyDao
 import com.example.tangochoupdated.room.dataclass.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
@@ -12,16 +17,23 @@ class MyRoomRepository(
     private val userDao: UserDao,
     private val markerDao: MarkerDataDao,
     private val activityDao: ActivityDataDao,
-    private val choiceDao: ChoiceDao) {
+    private val choiceDao: ChoiceDao,
+    private val libraryDao: MyDao) {
 
 
 //cards
+
+    val getFileWithNoParents: Flow<List<File>> = fileDao.getFileWithoutParent()
 
     val cardsWithNoParents: Flow<List<Card>> = cardDao.getCardsWithoutParent()
     fun getCardByFileId(fileId: Int): Flow<List<Card>> {
         return cardDao.getCardsByFileId(fileId)
 
     }
+    fun getLibFilesByFileId(belongingFileId: Int? ): Flow<List<File>>{
+        return libraryDao.getLibCardsByFileId(belongingFileId)
+    }
+
 
     fun getCardsBySearch(search: String): Flow<List<Card>> {
         return cardDao.searchCardsByWords(search)
@@ -30,7 +42,7 @@ class MyRoomRepository(
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun insertCard(card: Card) {
-        cardDao.insert(card)
+        libraryDao.cardDao.insert(card)
     }
 
     suspend fun insertCards(cards: List<Card>) {
