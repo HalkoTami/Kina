@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">tangochoupdated</string>
+    <string name="app_name">tango cho updated</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -8,10 +8,29 @@
     <string name="title_tab_planner">プランナー</string>
     <string name="title_tab_data">データ</string>
     <string name="title_tab_create">作成</string>
-
-
+    <string name="text_sample">sample サンプル</string>
+    <string name="visible_guide_line">visible guideline</string>
     <string name="icon_search">Icon Search</string>
-
+    <string name="edt_front">edit front</string>
+    <string name="edt_back">edit back</string>
+    <string name="btn_select">select card or file</string>
+    <string name="gone_on_long_click">gone on long click</string>
+    <string name="delete">delete</string>
+    <string name="add_new_card">add new card</string>
+    <string name="btn_edit">edit</string>
+    <string name="icon_marker">marker</string>
+    <string name="marker_text">markered_ text</string>
+    <string name="edit_marker_text">"edit marker text "</string>
+    <string name="question">question</string>
+    <string name="edt_question">edit question</string>
+    <string name="icon_answer">answer</string>
+    <string name="btn_edit_answer">edit answer</string>
+    <string name="cd_edit_tag">edit tag</string>
+    <string name="cd_file_type">file</string>
+    <string name="cd_file_amount">containing files</string>
+    <string name="cd_tango_cho_amount">containing flashcards</string>
+    <string name="cd_card_amount">containing cards</string>
+    <string name="cd_btn_add_card">add new card</string>
 
 
 </resources>

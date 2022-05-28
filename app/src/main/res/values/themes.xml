@@ -14,10 +14,28 @@
         <!-- Customize your theme here. -->
         <item name="colorSurface"> @color/blue</item>
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+        <item name="android:textViewStyle">@style/TextAppearance.AppCompat.</item>
+        <item name="imageButtonStyle">@style/Widget.AppCompat.ImageButton.</item>
+
+
     </style>
 
+    <style name="Widget.AppCompat.ImageButton." parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:layout_margin">5dp</item>
+
+    </style>
     <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.PrimarySurface">
        <item name="itemIconSize">30dp</item>
+
+    </style>
+    <style name="TextAppearance.AppCompat." parent="Widget.AppCompat.TextView">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/text_color_gray</item>
+        <item name="android:text">@string/text_sample</item>
 
     </style>
 

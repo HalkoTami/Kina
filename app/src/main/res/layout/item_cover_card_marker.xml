@@ -1,185 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:layout_margin="5dp">
-
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:src="@drawable/circle_select"
-            android:layout_margin="10dp"
-            />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="105dp"
-            android:background="@drawable/gray_stroke_corner_10"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:paddingStart="10dp"
-                        android:paddingTop="7dp"
-                        android:paddingEnd="7dp"
-                        android:paddingBottom="4dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:src="@drawable/icon_marker_color" />
-
-
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="3dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/rectangle_line"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="7"
-                        android:paddingStart="10dp"
-                        android:paddingTop="7dp"
-                        android:paddingEnd="10dp"
-                        android:paddingBottom="7dp"
-                        android:gravity="bottom">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="表"
-                            android:textColor="@color/mostdarkgray"
-                            android:textSize="13sp" />
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/icon_edit_cover"/>
-
-
-                    </LinearLayout>
-
-
-
-                </LinearLayout>
-
-
-
-
-
-            </LinearLayout>
+    android:background="@drawable/gray_stroke_corner_10"
+    android:padding="3dp">
 
 
 
 
 
 
+    <ImageView
+        tools:ignore="contentDescription"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txv_marker"
+        app:layout_constraintStart_toEndOf="@id/imv_icon_marker"
 
-
-
-
-
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-
-
-    <LinearLayout
-
-        android:layout_width="wrap_content"
+        android:id="@+id/line_vertical"
+        android:layout_width="3dp"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:visibility="gone">
+        android:src="@drawable/rectangle_line"/>
 
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:src="@drawable/icon_delete_cover"
-            />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:contentDescription="@string/icon_marker"
+        android:id="@+id/imv_icon_marker"
+        android:layout_width="25dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="4dp"
-        android:gravity="center_vertical">
+        android:gravity="center"
+        android:layout_margin="5dp"
+        android:src="@drawable/icon_marker_color"
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="37dp"
-            android:layout_weight="8"
-            android:background="@drawable/gray_stroke_corner_10"
-            android:paddingStart="7dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="4dp"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="21dp"
-                android:src="@drawable/icon_tag"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="13px"
-                android:text="tag"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_edit_cover"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/line_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-        </LinearLayout>
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="27dp"
-            android:src="@drawable/icon_add_middlesize"/>
-    </LinearLayout>
+    <TextView
+        android:contentDescription="@string/marker_text"
+        android:id="@+id/txv_marker"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:textColor="@color/text_color_gray"
+        android:textSize="13sp"
+        app:layout_constraintStart_toEndOf="@id/line_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageButton
+        android:contentDescription="@string/edit_marker_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="5dp"
+        android:id="@+id/btn_edit_marker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_edit_cover"/>
 
-</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

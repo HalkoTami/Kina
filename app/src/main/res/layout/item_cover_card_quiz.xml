@@ -1,243 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:layout_margin="5dp">
+    android:padding="3dp"
+    android:background="@drawable/gray_stroke_corner_10">
 
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.Barrier
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        app:barrierDirection="left"
+        android:id="@+id/barrier_text"
+        app:constraint_referenced_ids="txv_answer,txv_question"/>
 
+    <ImageView
+
+
+        android:id="@+id/line_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:src="@drawable/rectangle_line"
+        tools:ignore="ContentDescription" />
+    <ImageView
+        android:id="@+id/line_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/barrier_text"
+        app:layout_constraintStart_toEndOf="@id/imv_icon_answer"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/rectangle_line"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/imv_icon_question"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/line_vertical"
+        app:layout_constraintBottom_toTopOf="@id/line_horizontal"
+        android:layout_width="25dp"
+        android:layout_margin="5dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:src="@drawable/icon_quiz"
+        android:contentDescription="@string/question" />
+    <TextView
+        android:id="@+id/txv_question"
+        app:layout_constraintStart_toEndOf="@id/line_vertical"
+        app:layout_constraintBottom_toTopOf="@id/line_horizontal"
+
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_edt_question"
+
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:src="@drawable/circle_select"
-            android:layout_margin="10dp"
-            />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="105dp"
-            android:background="@drawable/gray_stroke_corner_10"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:paddingStart="10dp"
-                        android:paddingTop="7dp"
-                        android:paddingEnd="7dp"
-                        android:paddingBottom="4dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:src="@drawable/icon_quiz" />
-
-
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="3dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/rectangle_line"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="7"
-                        android:paddingStart="10dp"
-                        android:paddingTop="7dp"
-                        android:paddingEnd="10dp"
-                        android:paddingBottom="4dp"
-                        android:gravity="bottom">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="表"
-                            android:textColor="@color/mostdarkgray"
-                            android:textSize="13sp" />
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/icon_edit_cover"/>
-
-
-                    </LinearLayout>
-
-
-
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    android:src="@drawable/rectangle_line"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:paddingStart="10dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="7dp"
-                        android:paddingBottom="7dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:src="@drawable/icon_answer" />
-
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="3dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/rectangle_line"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="7"
-                        android:paddingStart="10dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="10dp"
-                        android:paddingBottom="7dp"
-                        android:gravity="bottom">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="表"
-                            android:textColor="@color/mostdarkgray"
-                            android:textSize="13sp" />
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/icon_edit_cover"/>
-
-
-                    </LinearLayout>
-
-
-
-                </LinearLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-
-
-        <LinearLayout
-
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:visibility="gone">
-
-
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:src="@drawable/icon_delete_cover"
-                />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+        android:textColor="@color/text_color_gray"
+        android:textSize="13sp" />
+    <ImageButton
+        android:tag="@string/gone_on_long_click"
+        android:id="@+id/btn_edt_question"
+        android:contentDescription="@string/edt_question"
+        android:layout_margin="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/txv_question"
+        app:layout_constraintBottom_toBottomOf="@id/txv_question"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="4dp"
-        android:gravity="center_vertical">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="37dp"
-            android:layout_weight="8"
-            android:background="@drawable/gray_stroke_corner_10"
-            android:paddingStart="7dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="4dp"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="21dp"
-                android:src="@drawable/icon_tag"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="13px"
-                android:text="tag"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_edit_cover"/>
+        android:src="@drawable/icon_edit_cover"/>
 
 
-        </LinearLayout>
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="27dp"
-            android:src="@drawable/icon_add_middlesize"/>
-    </LinearLayout>
+    <ImageView
+        android:contentDescription="@string/icon_answer"
+        android:id="@+id/imv_icon_answer"
 
-</LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/line_vertical"
+        app:layout_constraintTop_toBottomOf="@id/line_horizontal"
+
+        android:layout_width="25dp"
+        android:layout_margin="5dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:src="@drawable/icon_answer" />
+
+
+
+    <TextView
+        android:id="@+id/txv_answer"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_edit_answer"
+        app:layout_constraintStart_toEndOf="@id/line_vertical"
+        app:layout_constraintTop_toBottomOf="@id/line_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        />
+    <ImageButton
+        android:contentDescription="@string/btn_edit_answer"
+        android:tag="@string/gone_on_long_click"
+        android:id="@+id/btn_edit_answer"
+        app:layout_constraintBottom_toBottomOf="@id/txv_answer"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_edit_cover"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/group_gone_on_long_click"
+        app:constraint_referenced_tags="@string/gone_on_long_click"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
