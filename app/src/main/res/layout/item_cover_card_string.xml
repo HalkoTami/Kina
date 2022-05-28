@@ -51,11 +51,16 @@
                         android:paddingEnd="7dp"
                         android:paddingBottom="4dp">
 
-                        <ImageView
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/txv_front_title"
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:src="@drawable/icon_marker_color" />
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="表"
+                            android:textColor="@color/mostdarkgray"
+                            android:textSize="13sp" />
+
 
 
                     </LinearLayout>
@@ -71,13 +76,82 @@
                         android:paddingStart="10dp"
                         android:paddingTop="7dp"
                         android:paddingEnd="10dp"
+                        android:paddingBottom="4dp"
+                        android:gravity="bottom">
+
+                        <TextView
+                            android:id="@+id/txv_front_text"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="表"
+                            android:textColor="@color/mostdarkgray"
+                            android:textSize="13sp" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/icon_edit_cover"/>
+
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:src="@drawable/rectangle_line"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:paddingStart="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="7dp"
+                        android:paddingBottom="7dp">
+
+                        <TextView
+                            android:id="@+id/txv_back_title"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="表"
+                            android:textColor="@color/mostdarkgray"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="3dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/rectangle_line"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:paddingStart="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="10dp"
                         android:paddingBottom="7dp"
                         android:gravity="bottom">
 
                         <TextView
+                            android:id="@+id/txv_back_text"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="match_parent"
+                            android:layout_weight="1"
                             android:gravity="center_vertical"
                             android:text="表"
                             android:textColor="@color/mostdarkgray"
@@ -98,48 +172,43 @@
 
 
 
+
+
+
+
+
+
+
             </LinearLayout>
-
-
-
-
-
-
-
-
-
-
 
 
         </LinearLayout>
 
 
-    </LinearLayout>
 
+        <LinearLayout
 
-
-    <LinearLayout
-
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:visibility="gone">
-
-
-
-        <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:src="@drawable/icon_delete_cover"
-            />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone">
 
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:src="@drawable/icon_delete_cover"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

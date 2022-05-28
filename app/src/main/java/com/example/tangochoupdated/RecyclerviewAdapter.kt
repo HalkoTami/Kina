@@ -7,13 +7,20 @@ import android.widget.ListAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tangochoupdated.databinding.ItemCoverCardMarkerBinding
+import com.example.tangochoupdated.databinding.ItemCoverCardQuizBinding
+import com.example.tangochoupdated.databinding.ItemCoverCardStringBinding
+import com.example.tangochoupdated.room.dataclass.Card
+import com.example.tangochoupdated.room.dataclass.File
+import com.example.tangochoupdated.room.enumclass.CardStatus
+import com.example.tangochoupdated.room.enumclass.CardStatusConverter
 
-class CardListAdapter : androidx.recyclerview.widget.ListAdapter<Card, CardListAdapter.RoomViewHolder>(WordsComparator()) {
+class CardListAdapter : androidx.recyclerview.widget.ListAdapter<Map<File,Card>, CardListAdapter.CardViewHolder>(CardsComparator()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType){
-            TYPE_FILE ->{
-                val binding = ItemCoverFileBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+             CardStatus.STRING.ordinal->{
+                val binding = ItemCoverCardStringBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 return ContentAdapter.FileViewHolder(binding)
             }
             ContentAdapter.TYPE_TANGOCHO ->
@@ -30,12 +37,26 @@ class CardListAdapter : androidx.recyclerview.widget.ListAdapter<Card, CardListA
         return RoomViewHolder.create(parent)
     }
 
-    override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
-        val current = getItem(position)
-        holder.bind(current)
+    override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
+        when (holder.itemViewType) {
+            CardStatus.STRING.ordinal ->{ onBindStringCard(holder, getItem(position))
+            }
+            TYPE_M -> onBindMessage(holder, rows[position] as ContentAdapter.MessageRow)
+            TYPE_COLOUR -> onBindColour(holder, rows[position] as ContentAdapter.ColourRow)
+            else -> throw IllegalArgumentException()
+        }
     }
 
-    class RoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    inner class StringCardViewHolder(binding: ItemCoverCardStringBinding) : RecyclerView.ViewHolder(binding.root){
+        var title:TextView= binding.txvFrontText
+    }
+
+    inner class QuizCardViewHolder(binding: ItemCoverCardQuizBinding) : RecyclerView.ViewHolder(binding.root)
+
+    inner class MarkerCardViewHolder(binding: ItemCoverCardMarkerBinding) : RecyclerView.ViewHolder(binding.root)
+
+    class LibraryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val wordItemView: TextView = itemView.findViewById(R.id.textView)
 
         fun bind(text: String?) {
@@ -51,7 +72,15 @@ class CardListAdapter : androidx.recyclerview.widget.ListAdapter<Card, CardListA
         }
     }
 
-    class WordsComparator : DiffUtil.ItemCallback<Word>() {
+    private fun onBindStringCard(holder: RecyclerView.ViewHolder, card: Card) {
+        val fileRow = holder as ContentAdapter.FileViewHolder
+        fileRow.title.text=row.title
+
+
+
+    }
+
+    class CardsComparator : DiffUtil.ItemCallback<Word>() {
         override fun areItemsTheSame(oldItem: Word, newItem: Word): Boolean {
             return oldItem === newItem
         }
@@ -62,9 +91,7 @@ class CardListAdapter : androidx.recyclerview.widget.ListAdapter<Card, CardListA
     }
 
     override fun getItemViewType(position: Int): Int =
-      when (getItem(position).cardStatus.ordinal) {
-          is 1 ->
-      }
+      getItem(position).cardStatus.ordinal
     /// TODO:
 
 }
