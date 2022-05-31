@@ -1,7 +1,6 @@
 package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.*
-import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.ActivityStatus
 import java.time.LocalDateTime
 

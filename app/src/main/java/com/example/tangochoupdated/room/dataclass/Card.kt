@@ -1,10 +1,8 @@
 package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.*
-import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.CardStatusConverter
-import kotlinx.coroutines.flow.Flow
 
 
 @Entity(tableName = "tbl_card",

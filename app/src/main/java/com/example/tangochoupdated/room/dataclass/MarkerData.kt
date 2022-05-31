@@ -1,9 +1,7 @@
 package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.*
-import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.ColorStatus
-import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "tbl_marker_data",
     foreignKeys =[ForeignKey(entity = Card::class,

@@ -1,12 +1,10 @@
 package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.*
-import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.ColorStatusConverter
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.enumclass.FileStatusConverter
-import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "tbl_file",
     foreignKeys = [ForeignKey(

@@ -1,7 +1,7 @@
 package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.*
-import com.example.tangochoupdated.room.DataAccessObject
+import com.example.tangochoupdated.room.BaseDao
 import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "tbl_choice")
@@ -16,7 +16,7 @@ data class Choice(
 
     )
 @Dao
-abstract class ChoiceDao: DataAccessObject<Choice>{
+abstract class ChoiceDao: BaseDao<Choice>{
     @Query("DELETE FROM tbl_choice")
     abstract suspend fun clearTblChoice()
 

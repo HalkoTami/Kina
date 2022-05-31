@@ -3,7 +3,7 @@ package com.example.tangochoupdated.room
 import androidx.room.*
 
 
-interface DataAccessObject <T> {
+interface BaseDao <T> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: T)
 
