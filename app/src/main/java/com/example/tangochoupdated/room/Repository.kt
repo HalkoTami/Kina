@@ -1,24 +1,34 @@
 package com.example.tangochoupdated
 
-import android.provider.SyncStateContract.Helpers.insert
 import androidx.annotation.WorkerThread
-import com.example.tangochoupdated.room.LibraryDao
 import com.example.tangochoupdated.room.MyDao
 import com.example.tangochoupdated.room.dataclass.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import java.util.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
 class MyRoomRepository(
-    private val fileDao: FileDao,
-    private val cardDao: CardDao,
-    private val userDao: UserDao,
-    private val markerDao: MarkerDataDao,
-    private val activityDao: ActivityDataDao,
-    private val choiceDao: ChoiceDao,
-    private val libraryDao: MyDao) {
+    private val myDao: MyDao) {
+
+    sealed class Table(){
+        abstract val daoItem:Any
+
+
+        data class TypeCard(val item: Card):Table(){
+            override val daoItem: Any
+                get() = item
+        }
+        data class TypeFile(val item: File):Table(){
+            override val daoItem: Any
+            get() = item
+        }
+        data class TypeChoice(val item: Choice):Table(){
+            override val daoItem: Any
+                get() = item
+        }
+//        TODO 残り
+    }
 
 
 //cards
@@ -31,7 +41,7 @@ class MyRoomRepository(
 
     }
     fun getLibFilesByFileId(belongingFileId: Int? ): Flow<List<File>>{
-        return libraryDao.getLibCardsByFileId(belongingFileId)
+        return myDao.getLibCardsByFileId(belongingFileId)
     }
 
 
@@ -41,30 +51,56 @@ class MyRoomRepository(
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insertCard(card: Card) {
-        libraryDao.cardDao.insert(card)
+    suspend fun insert(item: Any) {
+        when (item ){
+            is Card -> myDao.cardDao.insert(item)
+            is File -> myDao.fileDao.insert(item)
+            is User -> myDao.userDao.insert(item)
+            is MarkerData -> myDao.markerDataDao.insert(item)
+            is Choice -> myDao.choiceDao.insert(item)
+            is ActivityData -> myDao.activityDataDao.insert(item)
+
+        }
+
+    }
+    suspend fun insertMultiple(item: List<*>) {
+
+        myDao.cardDao.insertList(item.filterIsInstance<Card>())
+        myDao.fileDao.insertList(item.filterIsInstance<File>())
+        myDao.activityDataDao.insertList(item.filterIsInstance<ActivityData>())
+        myDao.markerDataDao.insertList(item.filterIsInstance<MarkerData>())
+        myDao.choiceDao.insertList(item.filterIsInstance<Choice>())
+
+
+
     }
 
-    suspend fun insertCards(cards: List<Card>) {
-        cardDao.insertList(cards)
-    }
 
-    suspend fun updateCard(card: Card) {
-        cardDao.update(card)
+
+    suspend fun updateCard(item: Any) {
+        when (item ){
+            is Card -> myDao.cardDao.update(item)
+            is File -> myDao.fileDao.update(item)
+            is User -> myDao.userDao.insert(item)
+            is MarkerData -> myDao.markerDataDao.insert(item)
+            is Choice -> myDao.choiceDao.insert(item)
+            is ActivityData -> myDao.activityDataDao.insert(item)
+
+        }
 
     }
 
     suspend fun updateCards(cards: List<Card>) {
-        cardDao.updateMultiple(cards)
+        myDao.cardDao.updateMultiple(cards)
 
     }
 
     suspend fun deleteCard(card: Card) {
-        cardDao.delete(card)
+        myDao.cardDao.delete(card)
     }
 
     suspend fun deleteCards(cards: List<Card>) {
-        cardDao.deleteMultiple(cards)
+        myDao.cardDao.deleteMultiple(cards)
     }
 
 //
