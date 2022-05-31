@@ -20,8 +20,3 @@ data class ActivityData(
     @ColumnInfo(name = "activity_daytime")
     val dateTime: LocalDateTime
 )
-@Dao
-abstract class ActivityDataDao: DataAccessObject<ActivityData>{
-    @Query("DELETE FROM tbl_activity_data")
-    abstract suspend fun clearTblActivity()
-}

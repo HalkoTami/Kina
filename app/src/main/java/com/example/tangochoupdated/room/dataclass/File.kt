@@ -31,21 +31,3 @@ data class File(
 
     )
 
-@Dao
-abstract class FileDao: DataAccessObject<File>{
-    @Query("DELETE FROM tbl_file")
-    abstract suspend fun clearTblFile()
-
-    @Query("select * from tbl_file where NOT deleted AND file_belonging_file_id = :belongingFileId ")
-    abstract fun getLibCardsByFileId(belongingFileId: Int? ): Flow<List<File>>
-
-
-    @Transaction
-    @Query("select * from tbl_file")
-    abstract fun loadFileAndCard(): List<FileAndCards>
-
-    @Query("select * from tbl_file where NOT deleted AND file_belonging_file_id = NULL")
-    abstract fun getFileWithoutParent(): Flow<List<File>>
-
-}
-

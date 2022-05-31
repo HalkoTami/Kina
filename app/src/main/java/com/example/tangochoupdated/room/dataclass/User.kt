@@ -14,10 +14,3 @@ data class User(
 
 
  )
-
-@Dao
-abstract class UserDao: DataAccessObject<User>{
-
- @Query("DELETE FROM tbl_user")
-  abstract suspend fun clearTblUser()
-}
