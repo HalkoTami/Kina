@@ -1,29 +1,37 @@
 package com.example.tangochoupdated.room.rvclasses
 
+import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 
 enum class LibRVViewType{
-    Folder,
+    Folder,FlashCardCover,StringCard,MarkerCard,ChoiceCard
 }
 sealed class LibraryRV(){
     abstract val type:LibRVViewType
-    data class Folder (var vararg :FolderData):LibraryRV(){
+    data class Folder (val folder :FolderData):LibraryRV(){
         override val type: LibRVViewType
             get() = LibRVViewType.Folder
 
     }
+    data class FlashCardCover(val flashCardCover: FlashCardCover):LibraryRV(){
+        override val type: LibRVViewType
+            get() = LibRVViewType.FlashCardCover
+    }
 
 }
-data class FolderData(val id: Int,
+data class FolderData(var id: Int,
                       val title:String,
                       val containingFolder:Int,
-    val containingFlashCardCover:Int,
-    val containingCard:Int,
-    val colorStatus: ColorStatus,
-    val position: Int)
+                      val containingFlashCardCover:Int,
+                      val containingCard:Int,
+                      val colorStatus: ColorStatus,
+                      val position: Int){
 
 
-    data class FlashCardCover(val id:Int,
+}
+
+
+    data class FlashCardCoverData(val id:Int,
                       val title:String,
                       val containingCard:Int,
                       val colorStatus: ColorStatus,

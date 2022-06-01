@@ -6,6 +6,8 @@ import com.example.tangochoupdated.room.dataclass.*
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.Table
 import com.example.tangochoupdated.room.rvclasses.Folder
+import com.example.tangochoupdated.room.rvclasses.FolderData
+import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import kotlinx.coroutines.flow.*
 import java.util.*
 
@@ -21,7 +23,42 @@ class MyRoomRepository(
 
 
 
-    fun getLibRVCover(parentFileId:Int):Flow<List<File>>{
+     suspend  fun getLibRVCover(parentFileId:Int?):List<LibraryRV>{
+
+
+         suspend fun initFolder (list:List<File>){
+             var a = 0
+             while(a<list.size){
+                 val file = list[a]
+                 var containingCard =0
+                 suspend fun initContainingFolder(list: List<File>){
+                     var b = 0
+
+                     containingCard += list.size
+                     while (b<list.size){
+                         myDao.libraryDao.getFilesCountByFileId(list[b].fileId).onEach { value -> initContainingFolder(value) }.collect()
+
+                     }
+
+
+                 }
+                 myDao.libraryDao.getFilesCountByFileId(file.fileId).onEach { value -> initFolder(value) }.collect()
+                 var rVFolder:FolderData = FolderData(id = file.fileId,
+                     title = file.title!!, colorStatus = file.colorStatus,
+                 containingFolder = containingCard,
+//                 TODO
+                     )
+                 ++a
+
+             }
+
+         }
+
+        val list = mutableListOf<LibraryRV>()
+
+         val folderData = mutableListOf<File>()
+        myDao.libraryDao.getLibFilesByFileId(parentFileId).onEach { value -> initFolder(value) }.collect()
+        return list
 
     }
 
