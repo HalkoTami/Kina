@@ -20,7 +20,7 @@ import kotlin.coroutines.coroutineContext
  */
 
 class LibraryListAdapter(val clickListener: DataClickListener) :
-    ListAdapter<FileOrCard, RecyclerView.ViewHolder>(ListCheckDiffCallback()) {
+    ListAdapter<Any, RecyclerView.ViewHolder>(ListCheckDiffCallback()) {
 
     /**
      * This Function will help you out in choosing whether you want vertical or horizontal VIEW TYPE
@@ -169,54 +169,8 @@ interface DataClickListener {
 /**
  * Your DataItem Class
  */
-sealed class LibCoverData {
-    data class CardClass(val cardData: Card) : LibCoverData(){
-        override val customPosition: Int
-            get() = cardData.id
-        override val card: Card?
-            get() = cardData
-        override val file: File?
-            get() = null
-        override val viewType: Int
-        get() = CLASS_TYPE_CARD
 
 
-    }
-
-    data class FileClass(val fileData: File) : LibCoverData() {
-
-        override val customPosition: Int
-            get() = fileData.fileId
-        override val viewType: Int
-            get() = CLASS_TYPE_FILE
-        override val card: Card?
-            get() = null
-        override val file: File?
-            get() = fileData
-    }
-    abstract val customPosition:Int
-    abstract val viewType: Int
-    abstract val card:Card?
-    abstract val file:File?
-}
-
-sealed class FileOrCard{
-    abstract val libraryCard: Card?
-    abstract val file: File?
-    data class FileCover(val dbFile: File): FileOrCard(){
-        override val libraryCard: Card?
-            get() = null
-        override val file: File?
-            get() = dbFile
-    }
-    data class CardCover(val dbCard: Card):FileOrCard(){
-        override val file: File?
-            get() = null
-        override val libraryCard: Card?
-            get() = dbCard
-
-    }
-}
 
 
     private const val CARD_TYPE_STRING = 1

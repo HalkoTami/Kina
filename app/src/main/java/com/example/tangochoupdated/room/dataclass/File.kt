@@ -24,7 +24,9 @@ data class File(
     @ColumnInfo(defaultValue = "title") val  title: String?,
     @ColumnInfo val deleted: Boolean?,
     @ColumnInfo var colorStatus: ColorStatus,
-    @ColumnInfo var fileStatus: FileStatus
+    @ColumnInfo var fileStatus: FileStatus,
+    @ColumnInfo(name= "library_order")
+    val libOrder: Int
 
 
     )

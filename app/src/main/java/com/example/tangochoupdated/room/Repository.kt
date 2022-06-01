@@ -3,7 +3,10 @@ package com.example.tangochoupdated
 import androidx.annotation.WorkerThread
 import com.example.tangochoupdated.room.MyDao
 import com.example.tangochoupdated.room.dataclass.*
-import kotlinx.coroutines.flow.Flow
+import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.room.enumclass.Table
+import com.example.tangochoupdated.room.rvclasses.Folder
+import kotlinx.coroutines.flow.*
 import java.util.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
@@ -11,42 +14,15 @@ import java.util.*
 class MyRoomRepository(
     private val myDao: MyDao) {
 
-    sealed class Table(){
-        abstract val daoItem:Any
 
-
-        data class TypeCard(val item: Card):Table(){
-            override val daoItem: Any
-                get() = item
-        }
-        data class TypeFile(val item: File):Table(){
-            override val daoItem: Any
-            get() = item
-        }
-        data class TypeChoice(val item: Choice):Table(){
-            override val daoItem: Any
-                get() = item
-        }
-//        TODO 残り
-    }
 
 
 //cards
 
-    val getFileWithNoParents: Flow<List<File>> = fileDao.getFileWithoutParent()
-
-    val cardsWithNoParents: Flow<List<Card>> = cardDao.getCardsWithoutParent()
-    fun getCardByFileId(fileId: Int): Flow<List<Card>> {
-        return cardDao.getCardsByFileId(fileId)
-
-    }
-    fun getLibFilesByFileId(belongingFileId: Int? ): Flow<List<File>>{
-        return myDao.getLibCardsByFileId(belongingFileId)
-    }
 
 
-    fun getCardsBySearch(search: String): Flow<List<Card>> {
-        return cardDao.searchCardsByWords(search)
+    fun getLibRVCover(parentFileId:Int):Flow<List<File>>{
+
     }
 
     @Suppress("RedundantSuspendModifier")
@@ -90,97 +66,43 @@ class MyRoomRepository(
 
     }
 
-    suspend fun updateCards(cards: List<Card>) {
-        myDao.cardDao.updateMultiple(cards)
+    suspend fun updateCards(item: List<Any>) {
+        myDao.cardDao.updateMultiple(item.filterIsInstance<Card>())
+        myDao.fileDao.updateMultiple(item.filterIsInstance<File>())
+        myDao.activityDataDao.updateMultiple(item.filterIsInstance<ActivityData>())
+        myDao.markerDataDao.updateMultiple(item.filterIsInstance<MarkerData>())
+        myDao.choiceDao.updateMultiple(item.filterIsInstance<Choice>())
 
     }
 
-    suspend fun deleteCard(card: Card) {
-        myDao.cardDao.delete(card)
+    suspend fun deleteCard(item: Any) {
+        when (item){
+            is Card -> myDao.cardDao.delete(item)
+            is File -> myDao.fileDao.delete(item)
+            is User -> myDao.userDao.delete(item)
+            is MarkerData -> myDao.markerDataDao.delete(item)
+            is Choice -> myDao.choiceDao.delete(item)
+            is ActivityData -> myDao.activityDataDao.delete(item)
+
+        }
+        }
+
+    suspend fun deleteCards(item: List<Any>) {
+        myDao.cardDao.deleteMultiple(item.filterIsInstance<Card>())
+        myDao.fileDao.deleteMultiple(item.filterIsInstance<File>())
+        myDao.activityDataDao.deleteMultiple(item.filterIsInstance<ActivityData>())
+        myDao.markerDataDao.deleteMultiple(item.filterIsInstance<MarkerData>())
+        myDao.choiceDao.deleteMultiple(item.filterIsInstance<Choice>())
     }
 
-    suspend fun deleteCards(cards: List<Card>) {
-        myDao.cardDao.deleteMultiple(cards)
+    suspend fun clearTable(table:Table){
+        when(table.ordinal){
+            Table.CARD.ordinal -> myDao.clearTable.clearTblCard()
+//            TODO 使うかわからん
+
+        }
     }
 
 //
-
-    //files
-//    val fileWithNoParents: Flow<List<File>> = fileDao.getFileWithoutParent()
-//    fun getFileByFileId(fileId: Int): Flow<List<File>> {
-//        return fileDao.getCardsByFileId(fileId)
-//
-//    }
-//
-//    @Suppress("RedundantSuspendModifier")
-//    @WorkerThread
-//    suspend fun insertFile(file: File) {
-//        fileDao.insert(file)
-//    }
-//
-//    suspend fun insertFiles(files: List<File>) {
-//        fileDao.insertList(files)
-//    }
-//
-//    suspend fun updateFile(file: File) {
-//        fileDao.update(file)
-//
-//    }
-//
-//    suspend fun updateFiles(files: List<File>) {
-//        fileDao.updateMultiple(files)
-//
-//    }
-//
-//    suspend fun deleteFile(file: File) {
-//        fileDao.delete(file)
-//    }
-//
-//    suspend fun deleteFiles(files: List<File>) {
-//        fileDao.deleteMultiple(files)
-//    }
-
-//    marker
-//    fun getMarkerByCardId(cardId: Int): Flow<List<MarkerData>> {
-//        return markerDao.getMarkerDataByCardId(cardId)
-//
-//    }
-//
-//    @Suppress("RedundantSuspendModifier")
-//    @WorkerThread
-//
-//    suspend fun insertMarkerData(markerData: List<MarkerData>) {
-//        markerDao.insertList(markerData)
-//    }
-//
-//
-//    suspend fun updateMarkerData(markerData: List<MarkerData>) {
-//        markerDao.updateMultiple(markerData)
-//
-//    }
-//
-//    suspend fun deleteMarkerData(markerData: List<MarkerData>) {
-//        markerDao.deleteMultiple(markerData)
-//    }
-// choice
-    fun getMarkerByCardId(choiceId: Int): Flow<List<Choice>> {
-        return choiceDao.getChoicesById(choiceId)
-
-    }
-
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-
-
-
-    suspend fun updateChoice(choice: Choice) {
-        choiceDao.update(choice)
-
-    }
-
-    suspend fun deleteMarkerData(choices: List<Choice>) {
-        choiceDao.deleteMultiple(choices)
-    }
-
 
 }

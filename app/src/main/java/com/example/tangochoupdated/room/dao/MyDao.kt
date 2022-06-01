@@ -2,6 +2,7 @@ package com.example.tangochoupdated.room
 
 import androidx.room.*
 import com.example.tangochoupdated.room.dao.ClearTable
+import com.example.tangochoupdated.room.dao.LibraryDao
 import com.example.tangochoupdated.room.dataclass.*
 import kotlinx.coroutines.flow.Flow
 
@@ -14,6 +15,7 @@ abstract class MyDao{
     abstract val markerDataDao: BaseDao<MarkerData>
     abstract val userDao: BaseDao<User>
     abstract val clearTable: ClearTable
+    abstract val libraryDao: LibraryDao
 
     @Query("select * from tbl_marker_data where marker_data_belonging_card_id = :cardId ")
     abstract fun getMarkerDataByCardId(cardId: Int ): Flow<List<MarkerData>>
@@ -39,11 +41,9 @@ abstract class MyDao{
     @Query("select * from tbl_card where NOT card_deleted AND belonging_file_id = NULL")
     abstract fun getCardsWithoutParent(): Flow<List<Card>>
 
-    @Query("select * from tbl_file where NOT deleted AND file_belonging_file_id = :belongingFileId ")
-    abstract fun getLibFilesByFileId(belongingFileId: Int? ): Flow<List<File>>
 
-    @Query("select count(file_id) from tbl_file where NOT deleted AND file_belonging_file_id = :belongingFileId")
-    abstract fun getFilesCountByFileId(belongingFileId: Int?):Flow<Int>
+
+
 
     @Query("select count(card_id) from tbl_card where NOT card_deleted AND belonging_file_id = :belongingFileId")
     abstract fun getCardsCountByFileId(belongingFileId: Int?):Flow<Int>

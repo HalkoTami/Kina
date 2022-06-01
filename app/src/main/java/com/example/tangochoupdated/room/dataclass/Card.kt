@@ -38,7 +38,9 @@ data class Card(
     @ColumnInfo(name = "card_deleted")
     val deleted:Boolean?,
     @ColumnInfo(name ="card_remembered")
-    val remembered: Boolean?
+    val remembered: Boolean?,
+    @ColumnInfo(name= "library_order")
+    val libOrder: Int
 
 )
 
