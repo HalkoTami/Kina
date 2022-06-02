@@ -2,15 +2,19 @@ package com.example.tangochoupdated
 
 import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.viewModels
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
+import com.example.tangochoupdated.ui.library.LibraryViewModel
+import com.example.tangochoupdated.ui.library.LibraryViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 

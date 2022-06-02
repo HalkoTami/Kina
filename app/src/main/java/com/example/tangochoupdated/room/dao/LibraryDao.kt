@@ -17,7 +17,12 @@ interface LibraryDao {
     fun getFlashCardCoversCountByFileId(belongingFileId: Int?):Flow<List<File>>
 
     @Query("select card_id from tbl_card where not card_deleted AND belonging_file_id = :belongingFileId")
-    fun getCardsByFileId(belongingFileId: Int?):Flow<List<Card>>
+    fun getCardIdsByFileId(belongingFileId: Int?):Flow<List<Card>>
+
+    @Query("select card_id, belonging_string_data, belonging_marker_text_preview, " +
+            "belonging_quiz_cover_preview, card_type, card_color, library_order from tbl_card " +
+            "where not card_deleted AND belonging_file_id = :belongingFileId")
+    fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<Card>>
 
 
 }

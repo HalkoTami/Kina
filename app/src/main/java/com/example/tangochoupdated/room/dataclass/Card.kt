@@ -3,6 +3,7 @@ package com.example.tangochoupdated.room.dataclass
 import androidx.room.*
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.CardStatusConverter
+import com.example.tangochoupdated.room.enumclass.ColorStatus
 
 
 @Entity(tableName = "tbl_card",
@@ -40,7 +41,9 @@ data class Card(
     @ColumnInfo(name ="card_remembered")
     val remembered: Boolean?,
     @ColumnInfo(name= "library_order")
-    val libOrder: Int
+    val libOrder: Int,
+    @ColumnInfo(name ="card_color")
+    val colorStatus: ColorStatus?,
 
 )
 
