@@ -1,8 +1,7 @@
 package com.example.tangochoupdated
 
 import android.app.Application
-import androidx.room.RoomDatabase
-import com.example.tangochoupdated.MyRoomDatabase.Companion.getDatabase
+import com.example.tangochoupdated.room.MyRoomRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 

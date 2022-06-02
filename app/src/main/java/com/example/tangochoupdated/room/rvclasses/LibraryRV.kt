@@ -13,7 +13,7 @@ sealed class LibraryRV(){
             get() = LibRVViewType.Folder
 
     }
-    data class FlashCardCover(val flashCardCover: FlashCardCover):LibraryRV(){
+    data class FlashCardCover(val flashCardCover: FlashCardCoverData):LibraryRV(){
         override val type: LibRVViewType
             get() = LibRVViewType.FlashCardCover
     }

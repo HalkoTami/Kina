@@ -1,7 +1,7 @@
 package com.example.tangochoupdated.ui.library
 
 import androidx.lifecycle.*
-import com.example.tangochoupdated.MyRoomRepository
+import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.Card
 import kotlinx.coroutines.launch
 
