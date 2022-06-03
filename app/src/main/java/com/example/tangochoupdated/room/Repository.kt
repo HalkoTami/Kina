@@ -51,7 +51,7 @@ class MyRoomRepository(
                     }
 
                 }
-                suspend fun initContainingFolder(folderList: List<File>?){
+                suspend fun getContainingFolder(folder: File?):Int{
                     var b = 0
                     containingFolder += folderList!!.size
 
@@ -61,6 +61,7 @@ class MyRoomRepository(
                         myDao.libraryDao.getFlashCardCoversCountByFileId(folderList[b].fileId).onEach { value -> initFlashCardCover(value) }
                         ++b
                     }
+
 
 
                 }
@@ -156,12 +157,16 @@ class MyRoomRepository(
 
 
 
-        myDao.libraryDao.getParentFileDataByFileId(parentFileId).onEach { value -> initFile(value) }.collect()
+        myDao.libraryDao.getParentFileDataByFileId(parentFileId).onEach {
+                value -> value.onEach {
+                    finalList.add(LibraryRV.Folder(file = it,
+                        containingFolder = myDao.libraryDao.getFolderAmount(it.fileId),
+                    ))
+                } }.collect()
         myDao.libraryDao.getCardsDataByFileId(parentFileId).onEach { value -> initCard(value) }.collect()
         finalList.sortWith(compareBy {it.position})
         while(true){
             emit(finalList)
-            delay(5000)
         }
 
     }

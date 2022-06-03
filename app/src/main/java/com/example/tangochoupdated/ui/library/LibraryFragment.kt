@@ -16,16 +16,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tangochoupdated.LibraryListAdapter
-import com.example.tangochoupdated.R
-import com.example.tangochoupdated.RoomApplication
-import com.example.tangochoupdated.UserListAdapter
+import com.example.tangochoupdated.*
 
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.job
 
-class HomeFragment : Fragment(){
+class HomeFragment : Fragment(),DataClickListener{
 
     private var _binding: FragmentLibraryHomeBinding? = null
 
@@ -48,7 +45,7 @@ class HomeFragment : Fragment(){
         _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val recyclerView = binding.vocabCardRV
-        val adapter = LibraryListAdapter()
+        val adapter = LibraryListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -73,6 +70,13 @@ class HomeFragment : Fragment(){
 
     }
 
+    override fun onTouchWhole(view: View, dataId: Int, viewType: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onTouchDelete(id: Int, dataId: Int, viewType: Int) {
+        TODO("Not yet implemented")
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
