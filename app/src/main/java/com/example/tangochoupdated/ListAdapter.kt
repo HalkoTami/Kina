@@ -8,6 +8,7 @@ import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardStringBinding
 import com.example.tangochoupdated.room.dataclass.Card
 import com.example.tangochoupdated.room.dataclass.File
+import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 
 
@@ -50,7 +51,9 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: LibraryRV, clickListener: DataClickListener) {
-            item
+            when(item.type){
+                LibRVViewType.Folder -> binding.
+            }
 
 //                TODO データに応じたレイアウトの振り分け！
 //            TODO クリックリスナー！

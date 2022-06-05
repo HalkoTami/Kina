@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 
 @Database(entities = [
     Card::class, User::class,
-    File::class, MarkerData::class, Choice::class, ActivityData::class],
+    File::class, MarkerData::class, Choice::class, ActivityData::class,
+    CardAndTagXRef::class],
     version = 1, exportSchema = false)
 public abstract class MyRoomDatabase : RoomDatabase() {
 
@@ -41,7 +42,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
 
 
                     // Add sample words.
-                    var file = File(0,null,"タイトルなし",false, ColorStatus.RED,FileStatus.FOLDER,0)
+                    var file = File(0,null,"タイトルなし",false, ColorStatus.RED,FileStatus.FOLDER,0,)
                     myDao.fileDao.insert(file)
 
                 }

@@ -28,12 +28,7 @@ data class File(
     @ColumnInfo var fileStatus: FileStatus,
     @ColumnInfo(name= "library_order")
     val libOrder: Int,
-    @ColumnInfo(name = "containing_folders_amount")
-    val containingFolderAmount:Int,
-    @ColumnInfo(name = "containing_flash_card_covers_amount")
-    val containingFlashCardCoverAmount: Int,
-    @ColumnInfo(name = "containing_cards_amount")
-    val containingCardAmount:Int,
+
 
 
 

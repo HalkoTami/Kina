@@ -3,6 +3,7 @@ package com.example.tangochoupdated.room.dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.tangochoupdated.room.dataclass.Card
+import com.example.tangochoupdated.room.dataclass.CardAndTags
 import com.example.tangochoupdated.room.dataclass.File
 import kotlinx.coroutines.flow.Flow
 
@@ -14,7 +15,7 @@ interface LibraryDao {
     @Query("select file_id, fileStatus from tbl_file where NOT deleted AND file_belonging_file_id = :belongingFileId AND fileStatus = 1")
     fun getFilesCountByFileId(belongingFileId: Int?):Flow<List<File>>
 
-    @Query("WITH RECURSIVE generation AS (" +
+    @Query("WITH RECURSIVE generation AS (  " +
             "    SELECT file_id," +
             "        file_belonging_file_id," +
             "fileStatus" +
@@ -38,11 +39,13 @@ interface LibraryDao {
 
     @Query("select card_id from tbl_card where not card_deleted AND belonging_file_id = :belongingFileId")
     fun getCardIdsByFileId(belongingFileId: Int?):Flow<List<Card>>
+
     @Transaction
-    @Query("select card_id, belonging_string_data, belonging_marker_text_preview, " +
-            "belonging_quiz_cover_preview, card_type, card_color, library_order from tbl_card " +
+    @Query("select * FROM tbl_card " +
             "where not card_deleted AND belonging_file_id = :belongingFileId")
-    fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<Card>>
+    fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<CardAndTags>>
+
+
 
 
 }

@@ -23,7 +23,7 @@
         />
 
 
-    <FrameLayout
+    <ViewStub
         android:id="@+id/data_frame"
         android:layout_width="0dp"
         android:layout_height="105dp"
@@ -63,7 +63,7 @@
             tools:visibility="invisible"/>
 
 
-    </FrameLayout>
+    </ViewStub>
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_gone_on_long_click"

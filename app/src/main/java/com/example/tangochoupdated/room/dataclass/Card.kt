@@ -12,14 +12,6 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
         childColumns = arrayOf("belonging_file_id"),
         onDelete = ForeignKey.SET_NULL,
         onUpdate = ForeignKey.CASCADE
-    ),ForeignKey(entity = Choice::class,
-        parentColumns = arrayOf("choice_id"),
-        childColumns = arrayOf("belonging_choice_id_one",
-            "belonging_choice_id_two",
-            "belonging_choice_id_three",
-            "belonging_choice_id_four"),
-        onDelete = ForeignKey.SET_NULL,
-        onUpdate = ForeignKey.CASCADE
     )]
 )
 @TypeConverters(CardStatusConverter::class)
@@ -61,14 +53,6 @@ data class StringData(
 
 
 data class QuizData(
-    @ColumnInfo(name = "choice_id_one")
-    val choiceIdOne:Int?,
-    @ColumnInfo(name = "choice_id_two")
-    val choiceIdTwo:Int?,
-    @ColumnInfo(name = "choice_id_three")
-    val choiceIdThree:Int?,
-    @ColumnInfo(name = "choice_id_four")
-    val choiceIdFour:Int?,
     @ColumnInfo
     val answerChoiceId:Int?,
     @ColumnInfo(name= "quiz_cover_preview")
@@ -83,10 +67,45 @@ data class MarkerPreviewData(
 )
 
 
+@Entity(
+    primaryKeys = ["_list_id", "song_id"],
+    foreignKeys = [
+        ForeignKey(
+            entity = File::class,
+            parentColumns = arrayOf("file_id"),
+            childColumns = arrayOf("belonging_tag_id")
+        ),
+        ForeignKey(
+            entity = Card::class,
+            parentColumns = arrayOf("card_id"),
+            childColumns = arrayOf("belonging_card_id")
+        )
+    ]
+)
+data class CardAndTagXRef(
+    @ColumnInfo(name = "belonging_card_id")
+    val cardId: Int,
+    @ColumnInfo(name = "belonging_tag_id")
+    val tagId: Int,
+)
 
 
+class CardAndTags {
+    @Embedded
+    lateinit var card: Card
 
-
+    @Relation(
+        entity = File::class,
+        parentColumn = "card_id",
+        entityColumn = "file_id",
+        associateBy = Junction(
+            value = CardAndTagXRef::class,
+            parentColumn = "belonging_card_id",
+            entityColumn = "belonging_tag_id"
+        )
+    )
+    lateinit var tags: List<File>
+}
 
 
 

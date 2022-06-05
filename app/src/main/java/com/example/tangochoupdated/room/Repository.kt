@@ -1,12 +1,13 @@
 package com.example.tangochoupdated.room
 
+import android.nfc.Tag
+import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.tangochoupdated.room.dataclass.*
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.enumclass.Table
 import com.example.tangochoupdated.room.rvclasses.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
@@ -29,141 +30,80 @@ class MyRoomRepository(
     suspend  fun getLibRVCover(parentFileId:Int?):Flow<List<LibraryRV>> = flow{
         val finalList = mutableListOf<LibraryRV>()
 
+        var containingFolder =0
+        var containingFlashCardCover = 0
+        var containingCard =0
 
-        suspend fun initFile (parentList:List<File>){
-            parentList.onEach {  }
-            var a = 0
-            while(a<parentList.size){
-                val file = parentList[a]
-                var containingFolder =0
-                var containingFlashCardCover = 0
-                var containingCard =0
-
-                fun initContainingCard(cardAmount:Int?){
-                    containingCard += cardAmount!!
+        suspend fun getContainingItemsAmount(file: File?) {
+            when(file?.fileStatus){
+                FileStatus.FOLDER ->{
+                    myDao.libraryDao.getFilesCountByFileId(file.fileId).collect { list ->
+                        containingFolder += (
+                        list.filter{ oneFile ->
+                            oneFile.fileStatus == FileStatus.FOLDER
+                        }.size)
+                        containingFlashCardCover += (
+                        list.filter { oneFile ->
+                            oneFile.fileStatus == FileStatus.TANGO_CHO_COVER
+                        }.size)
+                        list.onEach { oneFile ->
+                        getContainingItemsAmount(oneFile) } }
                 }
-                suspend fun initFlashCardCover(flashCardCoverList:List<File>?){
-                    containingFlashCardCover += flashCardCoverList!!.size
-                    var c = 0
-                    while(c< flashCardCoverList.size){
-                        myDao.libraryDao.getCardIdsByFileId(flashCardCoverList[c].fileId).onEach { value -> initContainingCard(value.size) }.collect()
-                        ++c
-                    }
-
+                FileStatus.TANGO_CHO_COVER ->{
+                    myDao.libraryDao.getCardIdsByFileId(file.fileId).collect { list ->
+                        containingCard += (list.size) }
                 }
-                suspend fun getContainingFolder(folder: File?):Int{
-                    var b = 0
-                    containingFolder += folderList!!.size
-
-
-                    while (b< folderList.size){
-                        myDao.libraryDao.getFilesCountByFileId(folderList[b].fileId).onEach { value -> initContainingFolder(value) }.collect()
-                        myDao.libraryDao.getFlashCardCoversCountByFileId(folderList[b].fileId).onEach { value -> initFlashCardCover(value) }
-                        ++b
-                    }
-
-
-
-                }
-
-                myDao.libraryDao.getFilesCountByFileId(file.fileId).onEach { value -> initContainingFolder(value) }.collect()
-                val rVFolderData:FolderData
-                val rvFlashCardCover:FlashCardCoverData
-                when (file.fileStatus){
-
-                    FileStatus.FOLDER-> {
-                        rVFolderData = FolderData(
-                            id = file.fileId,
-                            title = file.title!!,
-                            colorStatus = file.colorStatus,
-                            containingFolder = containingFolder,
-                            containingFlashCardCover = containingFlashCardCover,
-                            containingCard = containingCard,
-                            position = file.libOrder
-                        )
-                        finalList . add (LibraryRV.Folder(rVFolderData))
-                    }
-                    FileStatus.TANGO_CHO_COVER-> {
-                        rvFlashCardCover = FlashCardCoverData(
-                            id = file.fileId,
-                            title = file.title!!,
-                            colorStatus = file.colorStatus,
-                            containingCard = containingCard,
-                            position = file.libOrder
-                        )
-                        finalList . add (LibraryRV.FlashCardCover(rvFlashCardCover))
-                    }
-                    else -> return
-                }
-
-
-                ++a
-
+                else -> Log.d("getLibRVCover","${file?.fileId} unknown file status")
             }
+
+
+
+
 
         }
-
-        fun initCard(cardList:List<Card>){
-            var a = 0
-            while (a<cardList.size){
-                val card = cardList[a]
-                val stringCardData: StringCardData
-                val choiceCardData: ChoiceCardData
-                val markerCardData: MarkerCardData
-
-                when (card.cardStatus){
-                    CardStatus.MARKER->{
-                        markerCardData = MarkerCardData(
-                            id = card.id,
-                            colorStatus = card.colorStatus!!,
-                            position = card.libOrder,
-                            markedText = card.markerData?.markerTextPreview
-                        )
-                        finalList.add(LibraryRV.MarkerCard(markerCardData))
-
-                    }
-
-                    CardStatus.STRING -> {
-                        stringCardData = StringCardData(
-                            id = card.id,
-                            frontTitle = card.stringData?.frontTitle,
-                            frontText = card.stringData?.frontText!!,
-                            backTitle = card.stringData.backTitle,
-                            backText = card.stringData.backText!!,
-                            colorStatus = card.colorStatus!!,
-                            position = card.libOrder
-                        )
-                        finalList.add(LibraryRV.StringCard(stringCardData))
-
-                    }
-
-                    CardStatus.CHOICE->{
-                        choiceCardData = ChoiceCardData(
-                            id = card.id,
-                            colorStatus = card.colorStatus!!,
-                            position = card.libOrder,
-                            question = card.quizData?.question,
-                            answerChoice = card.quizData?.answerPreview
-                        )
-                        finalList.add(LibraryRV.ChoiceCard(choiceCardData))
-
-                    }
-
-                }
-                a++
-            }
+        suspend fun getTagsList(file:List<File>):MutableList<TagData>{
+            val tagList = mutableListOf<TagData>()
+            file.filter { file ->  file.fileStatus== FileStatus.TAG}.onEach { file -> tagList.add(TagData(tagId = file.fileId,
+            tagText = file.title!!)) }
+            return tagList
         }
 
 
 
 
-        myDao.libraryDao.getParentFileDataByFileId(parentFileId).onEach {
-                value -> value.onEach {
-                    finalList.add(LibraryRV.Folder(file = it,
-                        containingFolder = myDao.libraryDao.getFolderAmount(it.fileId),
-                    ))
-                } }.collect()
-        myDao.libraryDao.getCardsDataByFileId(parentFileId).onEach { value -> initCard(value) }.collect()
+        myDao.libraryDao.getParentFileDataByFileId(parentFileId).collect { value
+            -> value.onEach {
+                file -> getContainingItemsAmount(file)
+                        when(file.fileStatus){
+                        FileStatus.FOLDER -> finalList.add(
+                            LibraryRV.Folder(
+                                file = file,
+                                containingFolder = containingFolder,
+                                containingFlashCardCover = containingFlashCardCover,
+                                containingCard = containingCard
+                            )
+                        )
+                        FileStatus.TANGO_CHO_COVER -> finalList.add(
+                            LibraryRV.FlashCardCover(
+                                file = file,
+                                containingCard = containingCard
+                            )
+                        )
+                        else -> Log.d("getLibRVCover","unknown file status")
+                        }
+                }
+            }
+
+        myDao.libraryDao.getCardsDataByFileId(parentFileId).collect {
+            list -> list.filter { card -> card.card.cardStatus== CardStatus.STRING  }.onEach {
+                        card -> finalList.add(LibraryRV.StringCard(card.card,getTagsList(card.tags))) }
+                    list.filter { card -> card.card.cardStatus == CardStatus.CHOICE }.onEach {
+                        card -> finalList.add(LibraryRV.ChoiceCard(card.card,getTagsList(card.tags))) }
+                    list.filter { card -> card.card.cardStatus == CardStatus.MARKER  }.onEach {
+                        card -> finalList.add(LibraryRV.MarkerCard(card.card,getTagsList(card.tags)))
+                    }
+
+        }
         finalList.sortWith(compareBy {it.position})
         while(true){
             emit(finalList)
@@ -174,7 +114,9 @@ class MyRoomRepository(
 
 
     suspend fun insert(item: Any) {
+
         when (item ){
+            is CardAndTagXRef -> myDao.cardAndTagXRefDao.insert(item)
             is Card -> myDao.cardDao.insert(item)
             is File -> myDao.fileDao.insert(item)
             is User -> myDao.userDao.insert(item)
@@ -187,6 +129,7 @@ class MyRoomRepository(
     }
     suspend fun insertMultiple(item: List<*>) {
 
+        myDao.cardAndTagXRefDao.insertList(item.filterIsInstance<CardAndTagXRef>())
         myDao.cardDao.insertList(item.filterIsInstance<Card>())
         myDao.fileDao.insertList(item.filterIsInstance<File>())
         myDao.activityDataDao.insertList(item.filterIsInstance<ActivityData>())
@@ -201,6 +144,7 @@ class MyRoomRepository(
 
     suspend fun updateCard(item: Any) {
         when (item ){
+            is CardAndTagXRef -> myDao.cardAndTagXRefDao.insert(item)
             is Card -> myDao.cardDao.update(item)
             is File -> myDao.fileDao.update(item)
             is User -> myDao.userDao.insert(item)
@@ -213,6 +157,7 @@ class MyRoomRepository(
     }
 
     suspend fun updateCards(item: List<Any>) {
+        myDao.cardAndTagXRefDao.updateMultiple(item.filterIsInstance<CardAndTagXRef>())
         myDao.cardDao.updateMultiple(item.filterIsInstance<Card>())
         myDao.fileDao.updateMultiple(item.filterIsInstance<File>())
         myDao.activityDataDao.updateMultiple(item.filterIsInstance<ActivityData>())
@@ -223,6 +168,7 @@ class MyRoomRepository(
 
     suspend fun deleteCard(item: Any) {
         when (item){
+            is CardAndTagXRef -> myDao.cardAndTagXRefDao.insert(item)
             is Card -> myDao.cardDao.delete(item)
             is File -> myDao.fileDao.delete(item)
             is User -> myDao.userDao.delete(item)
@@ -234,6 +180,7 @@ class MyRoomRepository(
         }
 
     suspend fun deleteCards(item: List<Any>) {
+        myDao.cardAndTagXRefDao.deleteMultiple(item.filterIsInstance<CardAndTagXRef>())
         myDao.cardDao.deleteMultiple(item.filterIsInstance<Card>())
         myDao.fileDao.deleteMultiple(item.filterIsInstance<File>())
         myDao.activityDataDao.deleteMultiple(item.filterIsInstance<ActivityData>())

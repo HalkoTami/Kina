@@ -6,35 +6,31 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 enum class LibRVViewType{
     Folder,FlashCardCover,StringCard,MarkerCard,ChoiceCard
 }
-sealed class LibraryRV(){
-    abstract val type:LibRVViewType
-    abstract val position:Int
-    abstract val id:Int
-    abstract val colorStatus:ColorStatus?
-    abstract val markerCardData:List<MarkerCardData>?
+sealed class LibraryRV(
+    val type:LibRVViewType,
+    val position:Int,
+    val id:Int,
+    val colorStatus:ColorStatus?
+){
+
+    abstract val markerCardData:MarkerCardData?
     abstract val stringCardData: StringCardData?
     abstract val choiceCardData: ChoiceCardData?
     abstract val folderData:FolderData?
     abstract val flashCardCoverData:FlashCardCoverData?
-    abstract val tagData:List<TagData>
-
-    abstract val tag: List<String>
+    abstract val tagData:MutableList<TagData>?
 //    tODO make accessible from ListAdapter
-    data class Folder (val file: File, val containingCard: Int, val containingFolder: Int, val containingFlashCardCover: Int):LibraryRV(){
+    data class Folder (val file: File,
+                       val containingCard: Int,
+                       val containingFolder: Int,
+                       val containingFlashCardCover: Int):LibraryRV(
+    type = LibRVViewType.Folder,
+    position = file.libOrder,
+    colorStatus = file.colorStatus,
+    id = file.fileId
+                       ){
 
-    override val type: LibRVViewType
-        get() = LibRVViewType.Folder
-
-    override val position: Int
-        get() = file.libOrder
-
-    override val id: Int
-        get() = file.fileId
-
-    override val colorStatus: ColorStatus?
-        get() = file.colorStatus
-
-    override val markerCardData: List<MarkerCardData>?
+    override val markerCardData: MarkerCardData?
         get() = null
 
     override val stringCardData: StringCardData?
@@ -52,94 +48,99 @@ sealed class LibraryRV(){
 
     override val flashCardCoverData: FlashCardCoverData?
         get() = null
-    override val tagData: List<TagData>
-        get() = TODO("Not yet implemented")
-    override val tag: List<String>
-        get() = TODO("Not yet implemented")
+
+    override val tagData: MutableList<TagData>?
+        get() = null
+
 }
-    data class FlashCardCover(val file: File, val containingCard: Int):LibraryRV(){
-        override val type: LibRVViewType
-            get() = TODO("Not yet implemented")
-        override val position: Int
-            get() = TODO("Not yet implemented")
-        override val id: Int
-            get() = TODO("Not yet implemented")
-        override val colorStatus: ColorStatus?
-            get() = TODO("Not yet implemented")
-        override val markerCardData: List<MarkerCardData>?
-            get() = TODO("Not yet implemented")
+
+    data class FlashCardCover(
+        val file: File,
+        val containingCard: Int):LibraryRV(
+        type = LibRVViewType.FlashCardCover,
+        position = file.libOrder,
+        colorStatus = file.colorStatus,
+        id = file.fileId
+    ){
+        override val markerCardData: MarkerCardData?
+            get() = null
         override val stringCardData: StringCardData?
-            get() = TODO("Not yet implemented")
+            get() = null
         override val choiceCardData: ChoiceCardData?
-            get() = TODO("Not yet implemented")
+            get() = null
         override val folderData: FolderData?
-            get() = TODO("Not yet implemented")
+            get() = null
         override val flashCardCoverData: FlashCardCoverData?
-            get() = TODO("Not yet implemented")
-        override val tagData: List<TagData>
-            get() = TODO("Not yet implemented")
-        override val tag: List<String>
-            get() = TODO("Not yet implemented")
+            get() = FlashCardCoverData(
+                title = file.title,
+                containingCard = containingCard
+            )
+        override val tagData: MutableList<TagData>?
+            get() = null
+
     }
-    data class StringCard(val card: Card):LibraryRV(){
-        override val stringCardData: StringCardData?
-            get() = TODO("Not yet implemented")
-        override val type: LibRVViewType
-            get() = TODO("Not yet implemented")
-        override val position: Int
-            get() = TODO("Not yet implemented")
-        override val id: Int
-            get() = TODO("Not yet implemented")
-        override val colorStatus: ColorStatus?
-            get() = TODO("Not yet implemented")
-        override val markerCardData: List<MarkerCardData>?
-            get() = TODO("Not yet implemented")
+
+    data class StringCard(
+        val card: Card,
+        val tags: MutableList<TagData>?):LibraryRV(
+        type = LibRVViewType.StringCard,
+        position = card.libOrder,
+        colorStatus = card.colorStatus,
+        id = card.id
+    ){
+        override val stringCardData: StringCardData
+            get() = StringCardData(
+                frontText = card.stringData?.frontText!!,
+                frontTitle = card.stringData.frontTitle,
+                backTitle = card.stringData.backTitle,
+                backText = card.stringData.backText!!
+            )
+
+        override val markerCardData: MarkerCardData?
+            get() = null
         override val choiceCardData: ChoiceCardData?
-            get() = TODO("Not yet implemented")
+            get() = null
         override val folderData: FolderData?
-            get() = TODO("Not yet implemented")
+            get() = null
         override val flashCardCoverData: FlashCardCoverData?
-            get() = TODO("Not yet implemented")
-        override val tagData: List<TagData>
-            get() = TODO("Not yet implemented")
-        override val tag: List<String>
-            get() = TODO("Not yet implemented")
+            get() = null
+        override val tagData: MutableList<TagData>?
+            get() = tags
+
     }
-    data class ChoiceCard(val card: Card):LibraryRV(){
+    data class ChoiceCard(val card: Card,
+                          val tags: MutableList<TagData>?):LibraryRV(
+        type = LibRVViewType.ChoiceCard,
+        position = card.libOrder,
+        colorStatus = card.colorStatus,
+        id = card.id
+                          ){
         override val choiceCardData: ChoiceCardData?
-            get() = TODO("Not yet implemented")
-        override val type: LibRVViewType
-            get() = TODO("Not yet implemented")
-        override val position: Int
-            get() = TODO("Not yet implemented")
-        override val id: Int
-            get() = TODO("Not yet implemented")
-        override val colorStatus: ColorStatus?
-            get() = TODO("Not yet implemented")
-        override val markerCardData: List<MarkerCardData>?
-            get() = TODO("Not yet implemented")
+            get() = ChoiceCardData(card.quizData?.question, card.quizData?.answerPreview)
+        override val markerCardData: MarkerCardData?
+            get() = null
         override val stringCardData: StringCardData?
-            get() = TODO("Not yet implemented")
+            get() = null
         override val folderData: FolderData?
-            get() = TODO("Not yet implemented")
+            get() = null
         override val flashCardCoverData: FlashCardCoverData?
-            get() = TODO("Not yet implemented")
-        override val tagData: List<TagData>
-            get() = TODO("Not yet implemented")
-        override val tag: List<String>
-            get() = TODO("Not yet implemented")
+            get() = null
+        override val tagData: MutableList<TagData>?
+            get() = tags
+
     }
-    data class MarkerCard(val card: Card):LibraryRV(){
-        override val markerCardData: List<MarkerCardData>?
-            get() = TODO("Not yet implemented")
-        override val type: LibRVViewType
-            get() = TODO("Not yet implemented")
-        override val position: Int
-            get() = TODO("Not yet implemented")
-        override val id: Int
-            get() = TODO("Not yet implemented")
-        override val colorStatus: ColorStatus?
-            get() = TODO("Not yet implemented")
+
+
+    data class MarkerCard(val card: Card,
+                          val tags: MutableList<TagData>?):LibraryRV(
+        type = LibRVViewType.MarkerCard,
+        position = card.libOrder,
+        colorStatus = card.colorStatus,
+        id = card.id
+                          ){
+        override val markerCardData: MarkerCardData
+            get() = MarkerCardData(card.markerData?.markerTextPreview!!)
+
         override val stringCardData: StringCardData?
             get() = TODO("Not yet implemented")
         override val choiceCardData: ChoiceCardData?
@@ -148,10 +149,8 @@ sealed class LibraryRV(){
             get() = TODO("Not yet implemented")
         override val flashCardCoverData: FlashCardCoverData?
             get() = TODO("Not yet implemented")
-        override val tagData: List<TagData>
-            get() = TODO("Not yet implemented")
-        override val tag: List<String>
-            get() = TODO("Not yet implemented")
+        override val tagData: MutableList<TagData>?
+            get() = tags
     }
 
 
@@ -176,7 +175,7 @@ data class FolderData(val title:String?,
                           val backText:String,
                           )
 
-    data class MarkerCardData(val markedText:MarkerData)
+    data class MarkerCardData(val markedText:String)
 
     data class TagData(val tagId:Int,
                     val tagText:String)

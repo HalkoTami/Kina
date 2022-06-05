@@ -16,6 +16,7 @@ abstract class MyDao{
     abstract val userDao: BaseDao<User>
     abstract val clearTable: ClearTable
     abstract val libraryDao: LibraryDao
+    abstract val cardAndTagXRefDao: BaseDao<CardAndTagXRef>
 
     @Query("select * from tbl_marker_data where marker_data_belonging_card_id = :cardId ")
     abstract fun getMarkerDataByCardId(cardId: Int ): Flow<List<MarkerData>>
