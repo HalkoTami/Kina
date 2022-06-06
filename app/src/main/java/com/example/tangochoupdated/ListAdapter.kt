@@ -1,11 +1,17 @@
 package com.example.tangochoupdated
 
+import android.opengl.Visibility
+import android.text.Layout
 import android.view.*
+import android.view.View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION
+import android.view.View.VISIBLE
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardStringBinding
+import com.example.tangochoupdated.databinding.ItemCoverFileBinding
 import com.example.tangochoupdated.room.dataclass.Card
 import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
@@ -30,7 +36,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder{
         val layoutInflater = LayoutInflater.from(parent.context)
-        return LibraryViewHolder(ItemCoverCardBaseBinding.inflate(layoutInflater, parent, false))
+        return LibraryViewHolder(ItemCoverCardBaseBinding.inflate(layoutInflater, parent, false),layoutInflater)
     }
 
     /**
@@ -47,12 +53,25 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
     /**
      * Vertical View Holder Class
      */
-    class LibraryViewHolder (private val binding: ItemCoverCardBaseBinding) :
+    class LibraryViewHolder (private val binding: ItemCoverCardBaseBinding,private val layoutInflater: LayoutInflater) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: LibraryRV, clickListener: DataClickListener) {
             when(item.type){
-                LibRVViewType.Folder -> binding.
+                LibRVViewType.Folder -> {
+                    val folderBinding = ItemCoverFileBinding.inflate(layoutInflater)
+
+
+                    binding.stubMain.addView(folderBinding.root)
+
+
+                }
+                LibRVViewType.FlashCardCover ->{
+                    binding.stubMain.layoutResource = R.layout.item_cover_file
+                    binding.stubMain.inflate()
+
+                }
+                else -> {}
             }
 
 //                TODO データに応じたレイアウトの振り分け！
