@@ -4,22 +4,42 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.tangochoupdated.room.BaseDao
 import com.example.tangochoupdated.room.MyDao
 import com.example.tangochoupdated.room.dataclass.*
-import com.example.tangochoupdated.room.enumclass.ColorStatus
-import com.example.tangochoupdated.room.enumclass.FileStatus
+import com.example.tangochoupdated.room.enumclass.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(entities = [
-    Card::class, User::class,
-    File::class, MarkerData::class, Choice::class, ActivityData::class,
+    Card::class,
+    User::class,
+    File::class,
+    MarkerData::class,
+    Choice::class,
+    ActivityData::class,
     CardAndTagXRef::class],
     version = 1, exportSchema = false)
+@TypeConverters(
+    ActivityStatusConverter::class,
+    CardStatusConverter::class,
+    ColorStatusConverter::class,
+    FileStatusConverter::class,
+)
 public abstract class MyRoomDatabase : RoomDatabase() {
 
-    abstract fun myDao(): MyDao
+
+    abstract fun cardDao(): MyDao.CardDao
+    abstract fun activityDataDao(): MyDao.ActivityDataDao
+    abstract fun choiceDao(): MyDao.ChoiceDao
+    abstract fun fileDao(): MyDao.FileDao
+    abstract fun markerDataDao(): MyDao.MarkerDataDao
+    abstract fun userDao(): MyDao.UserDao
+    abstract fun clearTable(): MyDao.ClearTable
+    abstract fun libraryDao(): MyDao.LibraryDao
+    abstract fun cardAndTagXRefDao(): MyDao.CardAndTagXRefDao
 
     private class WordDatabaseCallback(
         private val scope: CoroutineScope
@@ -29,8 +49,8 @@ public abstract class MyRoomDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    var myDao = database.myDao()
-                    var clearTable = myDao.clearTable
+                    var fileDao = database.fileDao()
+                    var clearTable = database.clearTable()
 
                     // Delete all content here.
                     clearTable.clearTblCard()
@@ -42,8 +62,8 @@ public abstract class MyRoomDatabase : RoomDatabase() {
 
 
                     // Add sample words.
-                    var file = File(0,null,"タイトルなし",false, ColorStatus.RED,FileStatus.FOLDER,0,)
-                    myDao.fileDao.insert(file)
+                    var file = File(0,0,"タイトルなし",false, ColorStatus.RED,FileStatus.FOLDER,0,)
+                    fileDao.insert(file)
 
                 }
             }

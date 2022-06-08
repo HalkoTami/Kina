@@ -42,15 +42,13 @@
                     android:src="@drawable/icon_search"
                     android:padding="5dp"/>
 
-                <EditText
+                <TextView
                     android:id="@+id/edt_library_search"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:autofillHints="name"
-                    android:inputType="text"
-                    android:background="@android:color/transparent"
-                    android:hint="検索" />
+                    android:background="@android:color/transparent" />
 
 
 
@@ -70,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:listitem="@layout/item_cover_file" />
+            tools:listitem="@layout/item_cover_card_base" />
 
     </LinearLayout>
 

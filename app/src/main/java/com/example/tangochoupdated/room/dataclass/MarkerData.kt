@@ -2,22 +2,24 @@ package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.*
 import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.room.enumclass.ColorStatusConverter
 
 @Entity(tableName = "tbl_marker_data",
+    indices = [Index("id", unique = true),
+              Index("cardId", unique = true)],
     foreignKeys =[ForeignKey(entity = Card::class,
-        parentColumns = arrayOf("card_id"),
-        childColumns = arrayOf("marker_data_belonging_card_id"),
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("cardId"),
         onDelete = ForeignKey.CASCADE)])
+@TypeConverters(ColorStatusConverter::class)
 data class MarkerData(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "marker_data_id")
+    @PrimaryKey
     val id: Int,
-    @ColumnInfo(name = "marker_data_belonging_card_id")
     val cardId: Int,
     @ColumnInfo
-    val text:String?,
-    val marked:Boolean,
+    var text:String?,
+    var marked:Boolean,
     var markerColor: ColorStatus,
-    val remembered: Boolean
+    var remembered: Boolean
 
 )

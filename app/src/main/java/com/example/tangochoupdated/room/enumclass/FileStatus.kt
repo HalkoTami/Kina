@@ -10,7 +10,6 @@ enum class FileStatus(Value:Int) {
 }
 
 
-@ProvidedTypeConverter
 class FileStatusConverter {
     @TypeConverter
     fun toFileStatus(value: Int): FileStatus = enumValues<FileStatus>()[value]

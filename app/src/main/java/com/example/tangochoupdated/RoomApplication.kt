@@ -6,10 +6,21 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
 class RoomApplication : Application() {
-    val applicationScope = CoroutineScope(SupervisorJob())
+    private val applicationScope = CoroutineScope(SupervisorJob())
 
     // Using by lazy so the database and the repository are only created when they're needed
     // rather than when the application starts
+    // ]
     val database by lazy { MyRoomDatabase.getDatabase(this,applicationScope) }
-    val repository by lazy { MyRoomRepository(database.myDao()) }
+    val repository by lazy { MyRoomRepository(
+        cardDao = database.cardDao(),
+        activityDataDao= database.activityDataDao(),
+        database.choiceDao(),
+        database.fileDao(),
+        database.markerDataDao(),
+        database.userDao(),
+        database.clearTable(),
+        database.libraryDao(),
+        database.cardAndTagXRefDao()
+    ) }
 }

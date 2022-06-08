@@ -7,19 +7,20 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 
 
 @Entity(tableName = "tbl_card",
+    indices = [Index("id", unique = true),
+              Index("belongingFileId", unique = true, )],
     foreignKeys = [ForeignKey(entity = File::class,
-        parentColumns = arrayOf("file_id"),
-        childColumns = arrayOf("belonging_file_id"),
+        parentColumns = arrayOf("fileId"),
+        childColumns = arrayOf("belongingFileId"),
         onDelete = ForeignKey.SET_NULL,
         onUpdate = ForeignKey.CASCADE
     )]
 )
 @TypeConverters(CardStatusConverter::class)
 data class Card(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name ="card_id") val id:Int,
-    @ColumnInfo(name="belonging_file_id")
+    @PrimaryKey
     val belongingFileId:Int,
+    val id:Int,
     @Embedded(prefix = "belonging_" )
     val stringData: StringData?,
     @Embedded(prefix = "belonging_")
@@ -38,6 +39,7 @@ data class Card(
     val colorStatus: ColorStatus?,
 
 )
+
 
 
 
@@ -68,24 +70,25 @@ data class MarkerPreviewData(
 
 
 @Entity(
-    primaryKeys = ["_list_id", "song_id"],
+    indices = [Index("cardId", unique = true),
+              Index("tagId", unique = true)],
+
     foreignKeys = [
         ForeignKey(
             entity = File::class,
-            parentColumns = arrayOf("file_id"),
-            childColumns = arrayOf("belonging_tag_id")
+            parentColumns = arrayOf("fileId"),
+            childColumns = arrayOf("tagId")
         ),
         ForeignKey(
             entity = Card::class,
-            parentColumns = arrayOf("card_id"),
-            childColumns = arrayOf("belonging_card_id")
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("cardId")
         )
     ]
 )
 data class CardAndTagXRef(
-    @ColumnInfo(name = "belonging_card_id")
+    @PrimaryKey
     val cardId: Int,
-    @ColumnInfo(name = "belonging_tag_id")
     val tagId: Int,
 )
 
@@ -96,12 +99,12 @@ class CardAndTags {
 
     @Relation(
         entity = File::class,
-        parentColumn = "card_id",
-        entityColumn = "file_id",
+        parentColumn = "id",
+        entityColumn = "fileId",
         associateBy = Junction(
             value = CardAndTagXRef::class,
-            parentColumn = "belonging_card_id",
-            entityColumn = "belonging_tag_id"
+            parentColumn = "cardId",
+            entityColumn = "tagId"
         )
     )
     lateinit var tags: List<File>

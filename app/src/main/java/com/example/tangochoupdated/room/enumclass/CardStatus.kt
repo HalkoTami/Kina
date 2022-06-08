@@ -9,7 +9,7 @@ enum class CardStatus(value: Int) {
     CHOICE(2)
 }
 
-@ProvidedTypeConverter
+
 class CardStatusConverter {
     @TypeConverter
     fun toCardStatus(value: Int): CardStatus = enumValues<CardStatus>()[value]

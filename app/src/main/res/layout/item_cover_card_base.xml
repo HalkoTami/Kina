@@ -31,36 +31,7 @@
         app:layout_constraintStart_toEndOf="@+id/btn_select"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include
-            android:id="@+id/stub_string_card"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inflatedId="@+id/stub_string_card"
-            android:layout="@layout/item_cover_card_string"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/stub_marker_card"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inflatedId="@+id/stub_marker_card"
-
-            android:layout="@layout/item_cover_card_marker" />
-
-        <include
-            android:id="@+id/stub_quiz_card"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:inflatedId="@+id/stub_quiz_card"
-            android:layout="@layout/item_cover_card_quiz" />
-        <include
-            android:id="@+id/stub_file"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout="@layout/item_cover_file"
-            android:inflatedId="@+id/stub_file"
-            tools:visibility="invisible"/>
+        
 
 
     </FrameLayout>

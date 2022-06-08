@@ -57,21 +57,21 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: LibraryRV, clickListener: DataClickListener) {
-            binding.btnDelete.setOnClickListener {
-                clickListener.onTouchDelete(item.id,item.type)
-            }
-            binding.stubMain.setOnClickListener {
-                clickListener.onTouchMain()
-            }
-            binding.root.setOnLongClickListener {
-                clickListener.onLongClickMain()
-            }
-            binding.btnSelect.setOnClickListener {
-                clickListener.oncClickSelect()
-            }
-            binding.btnEditWhole.setOnClickListener {
-                clickListener.onClickEdit()
-            }
+//            binding.btnDelete.setOnClickListener {
+//                clickListener.onTouchDelete(item.id,item.type)
+//            }
+//            binding.stubMain.setOnClickListener {
+//                clickListener.onTouchMain()
+//            }
+//            binding.root.setOnLongClickListener {
+//                clickListener.onLongClickMain()
+//            }
+//            binding.btnSelect.setOnClickListener {
+//                clickListener.oncClickSelect()
+//            }
+//            binding.btnEditWhole.setOnClickListener {
+//                clickListener.onClickEdit()
+//            }
             when(item.type){
                 LibRVViewType.Folder -> {
 
@@ -85,12 +85,8 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
 
 
                 }
-                LibRVViewType.FlashCardCover ->{
-                    binding.stubMain.layoutResource = R.layout.item_cover_file
-                    binding.stubMain.inflate()
 
-                }
-                else -> {}
+                else -> {return}
             }
 
 //                TODO データに応じたレイアウトの振り分け！
