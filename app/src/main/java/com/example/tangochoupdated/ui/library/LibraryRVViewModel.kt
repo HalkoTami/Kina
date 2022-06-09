@@ -1,13 +1,12 @@
 package com.example.tangochoupdated.ui.library
 
 import androidx.lifecycle.*
+import com.example.tangochoupdated.RoomApplication
 import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 class  LibraryViewModel : ViewModel() {
 
@@ -16,29 +15,23 @@ class  LibraryViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 }
-class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel() {
-    val test:LiveData<File> = repository.allFolder.asLiveData()
+class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel(){
+    var _listData = MutableLiveData<List<LibraryRV>>()
+    suspend  fun get ():List<LibraryRV>{
+        return repository.getLibRVCover(null)
+    }
 
-
-    fun rvList(id:Int?) =
-      viewModelScope.launch() { repository.getLibRVCover(id) }
 
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is library Fragment"
-    }
-    val text: LiveData<String> = _text
+    val list: LiveData<List<LibraryRV>> = _listData
 }
-class ViewModelFactory(private val repository: MyRoomRepository) : ViewModelProvider.Factory {
+class ViewModelFactory(private val repository: MyRoomRepository) : ViewModelProvider.NewInstanceFactory() {
+
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(LibraryRVViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return LibraryRVViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        return LibraryRVViewModel(repository) as T
     }
 }

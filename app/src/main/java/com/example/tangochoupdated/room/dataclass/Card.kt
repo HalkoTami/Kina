@@ -45,7 +45,6 @@ data class Card(
 
 
 data class StringData(
-    @ColumnInfo(name = "string_data")
     val frontTitle:String?,
     val backTitle: String?,
     val frontText:String?,
@@ -55,16 +54,13 @@ data class StringData(
 
 
 data class QuizData(
-    @ColumnInfo
     val answerChoiceId:Int?,
-    @ColumnInfo(name= "quiz_cover_preview")
     val answerPreview:String?,
     val question:String,
 
 )
 
 data class MarkerPreviewData(
-    @ColumnInfo(name ="marker_text_preview")
     val markerTextPreview:String?
 )
 

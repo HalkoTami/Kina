@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.library
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Color.rgb
 import android.os.Bundle
@@ -22,16 +23,21 @@ import com.example.tangochoupdated.*
 
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.room.MyRoomRepository
+import com.example.tangochoupdated.room.dataclass.File
+import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
+import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.planner.CreateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.job
+import kotlinx.coroutines.*
 
 class HomeFragment : Fragment(),DataClickListener{
+    lateinit var adapter:LibraryListAdapter
 
-    val viewModel: LibraryRVViewModel by viewModels {
-        ViewModelFactory((requireActivity().application as RoomApplication).repository)
-    }
+    private val viewModel: LibraryRVViewModel by lazy { ViewModelProvider(this, ViewModelFactory(
+        (requireActivity().application as RoomApplication).repository
+    )).get(LibraryRVViewModel::class.java) }
     private var _binding: FragmentLibraryHomeBinding? = null
 
     // This property is only valid between onCreateView and
@@ -44,16 +50,17 @@ class HomeFragment : Fragment(),DataClickListener{
         savedInstanceState: Bundle?
     ): View {
 
-
-
-        _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
+                _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
 
-        viewModel.test.observe(requireActivity()){
-            binding.edtLibrarySearch.text = it.title!!
-        }
 
+        val recyclerView = _binding?.vocabCardRV
+        adapter = LibraryListAdapter(this)
+        recyclerView?.adapter = adapter
+        recyclerView?.layoutManager = LinearLayoutManager(context)
+
+        testCoroutine()
 
         val bnv :BottomNavigationView = requireActivity().findViewById(R.id.my_bnv)
         bnv.menu.getItem(0).setIcon(R.drawable.icon_library_active)
@@ -63,6 +70,25 @@ class HomeFragment : Fragment(),DataClickListener{
 
 
     }
+    private fun testCoroutine() {
+        viewModel.viewModelScope.launch {
+            // ここはメインスレッドで呼び出される
+
+            // asyncTask() は suspend 関数なので、呼び出してもメインスレッドをブロックしない
+            val result = asyncTask()
+
+            // asyncTask() が終了したら、メインスレッドでこのブロックが実行される
+            adapter.submitList(result)
+        }
+    }
+    private suspend fun asyncTask(): List<LibraryRV> =  withContext(Dispatchers.Default) {
+        val list = RoomApplication().repository.getLibRVCover(null)
+        // ここは DefaultDispatcher-worker-X というバックグラウンドスレッドで呼び出される
+        return@withContext list
+    }
+
+
+
 
 
     override fun onTouchWhole(id: Int, viewType: LibRVViewType) {

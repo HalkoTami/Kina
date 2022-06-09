@@ -170,12 +170,12 @@ data class FolderData(val title:String?,
 
     data class StringCardData(
                           val frontTitle:String?,
-                          val frontText:String,
+                          val frontText:String?,
                           val backTitle:String?,
-                          val backText:String,
+                          val backText:String?,
                           )
 
-    data class MarkerCardData(val markedText:String)
+    data class MarkerCardData(val markedText:String?)
 
     data class TagData(val tagId:Int,
                     val tagText:String)

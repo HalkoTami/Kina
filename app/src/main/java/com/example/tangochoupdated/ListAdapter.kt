@@ -6,6 +6,7 @@ import android.view.*
 import android.view.View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION
 import android.view.View.VISIBLE
 import androidx.annotation.LayoutRes
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ import com.example.tangochoupdated.room.dataclass.Card
 import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
+import com.example.tangochoupdated.ui.library.LibraryRVViewModel
 
 
 /**
@@ -23,7 +25,7 @@ import com.example.tangochoupdated.room.rvclasses.LibraryRV
  */
 
 
-class LibraryListAdapter(val dataClickListener: DataClickListener) :
+class LibraryListAdapter(val dataClickListener: DataClickListener, ) :
     ListAdapter<LibraryRV, LibraryListAdapter.LibraryViewHolder>(MyDiffCallback) {
 
     /**
@@ -56,22 +58,19 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
     class LibraryViewHolder (private val binding: ItemCoverCardBaseBinding,private val layoutInflater: LayoutInflater) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: LibraryRV, clickListener: DataClickListener) {
-//            binding.btnDelete.setOnClickListener {
-//                clickListener.onTouchDelete(item.id,item.type)
-//            }
-//            binding.stubMain.setOnClickListener {
-//                clickListener.onTouchMain()
-//            }
-//            binding.root.setOnLongClickListener {
-//                clickListener.onLongClickMain()
-//            }
-//            binding.btnSelect.setOnClickListener {
-//                clickListener.oncClickSelect()
-//            }
-//            binding.btnEditWhole.setOnClickListener {
-//                clickListener.onClickEdit()
-//            }
+        fun bind(item: LibraryRV, clickListener: DataClickListener, ) {
+            binding.btnDelete.setOnClickListener {
+                clickListener.onTouchDelete(item.id,item.type)
+            }
+            binding.stubMain.setOnClickListener {
+                clickListener.onTouchMain()
+            }
+            binding.btnSelect.setOnClickListener {
+                clickListener.oncClickSelect()
+            }
+            binding.btnEditWhole.setOnClickListener {
+                clickListener.onClickEdit()
+            }
             when(item.type){
                 LibRVViewType.Folder -> {
 
@@ -89,6 +88,8 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
                 else -> {return}
             }
 
+
+//
 //                TODO データに応じたレイアウトの振り分け！
 //            TODO クリックリスナー！
             /**

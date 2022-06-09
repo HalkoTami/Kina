@@ -2,16 +2,17 @@ package com.example.tangochoupdated
 
 import android.app.Application
 import com.example.tangochoupdated.room.MyRoomRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 class RoomApplication : Application() {
-    private val applicationScope = CoroutineScope(SupervisorJob())
+    val myContext: CoroutineContext = SupervisorJob() + Dispatchers.Default
+    val myScope = CoroutineScope(myContext + CoroutineName("my name"))
 
     // Using by lazy so the database and the repository are only created when they're needed
     // rather than when the application starts
     // ]
-    val database by lazy { MyRoomDatabase.getDatabase(this,applicationScope) }
+    val database by lazy { MyRoomDatabase.getDatabase(this,myScope) }
     val repository by lazy { MyRoomRepository(
         cardDao = database.cardDao(),
         activityDataDao= database.activityDataDao(),
