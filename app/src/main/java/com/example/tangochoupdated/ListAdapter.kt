@@ -59,27 +59,15 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: LibraryRV, clickListener: DataClickListener, ) {
-            binding.btnDelete.setOnClickListener {
-                clickListener.onTouchDelete(item.id,item.type)
-            }
-            binding.stubMain.setOnClickListener {
-                clickListener.onTouchMain()
-            }
-            binding.btnSelect.setOnClickListener {
-                clickListener.oncClickSelect()
-            }
-            binding.btnEditWhole.setOnClickListener {
-                clickListener.onClickEdit()
-            }
             when(item.type){
                 LibRVViewType.Folder -> {
 
                     val folderBinding = ItemCoverFileBinding.inflate(layoutInflater)
-                    val folderData = item.folderData!!
+                    val folderData = item.file!!
                     folderBinding.txvFileTitle.text = folderData.title
-                    folderBinding.txvFileAmount.text=  "${folderData.containingFolder}個"
-                    folderBinding.txvCardAmount.text= "${folderData.containingCard}枚"
-                    folderBinding.txvTangoChoAmount.text = "${folderData.containingFlashCardCover}個"
+                    folderBinding.txvFileAmount.text=  "${folderData.childFoldersAmount}個"
+                    folderBinding.txvCardAmount.text= "${folderData.childCardsAmount}枚"
+                    folderBinding.txvTangoChoAmount.text = "${folderData.childFlashCardCoversAmount}個"
                     binding.stubMain.addView(folderBinding.root)
 
 
@@ -123,11 +111,11 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, ) :
  */
 private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
     override fun areItemsTheSame(oldItem: LibraryRV, newItem: LibraryRV): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem == newItem
     }
 
     override fun areContentsTheSame(oldItem: LibraryRV, newItem: LibraryRV): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.file!!.fileId == newItem.file!!.fileId
     }
 
 }
@@ -139,8 +127,8 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
  *class MyFragment : Fragment(), DataClickListener
  */
 interface DataClickListener {
-    fun onTouchWhole( id:Int, viewType: LibRVViewType)
-    fun onTouchDelete(id: Int, viewType: LibRVViewType)
+    fun onTouchWhole( )
+    fun onTouchDelete()
     fun onTouchMain()
     fun onLongClickMain()
     fun onClickEdit()

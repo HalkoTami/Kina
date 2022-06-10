@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface LibraryDao {
 
     @Query("select * from tbl_file where NOT deleted AND parentFile = :belongingFileId ")
-    fun getFileDataByFileId(belongingFileId: Int ): List<File>
+    fun getFileDataByFileId(belongingFileId: Int ): Flow<List<File>>
 
     @Query("select * from tbl_file where NOT deleted AND parentFile = fileId ")
     fun getFileWithoutParent(): Flow<List<File>>
@@ -26,12 +26,12 @@ interface LibraryDao {
 
 
     @Query("select count(id) from tbl_card where not card_deleted AND belongingFileId = :belongingFileId")
-    fun getCardAmountByFileId(belongingFileId: Int):Int
+    fun getCardAmountByFileId(belongingFileId: Int):Flow<Int>
 
     @Transaction
     @Query("select * FROM tbl_card " +
             "where not card_deleted AND belongingFileId = :belongingFileId")
-    fun getCardsDataByFileId(belongingFileId: Int):List<CardAndTags>
+    fun getCardsDataByFileId(belongingFileId: Int):Flow<List<CardAndTags>>
 
     @Query("select * from tbl_card where NOT card_deleted AND " +
             "belonging_markerTextPreview OR " +

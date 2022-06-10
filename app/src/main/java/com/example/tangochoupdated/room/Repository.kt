@@ -23,6 +23,15 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
 
 
 //cards
+    fun getFileWithoutParent():Flow<List<File>>{
+        return libraryDao.getFileWithoutParent()
+    }
+    fun getFileDataByFileId(parentFileId:Int):Flow<List<File>>{
+        return libraryDao.getFileDataByFileId(parentFileId)
+    }
+    fun getCardDataByFileId(parentFileId: Int):Flow<List<CardAndTags>>{
+        return  libraryDao.getCardsDataByFileId(parentFileId)
+    }
 
 
     suspend fun getLibRVCover(parentFileId: Int?): ArrayList<LibraryRV> {
@@ -97,6 +106,7 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
             libraryDao.getFileWithoutParent().collect {
                 it.onEach { finalList.add(convertFileToLibraryRV(it)) }
             }
+            val a = finalList[0].file?.title
             return finalList
 
 
@@ -109,6 +119,7 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
             libraryDao.getCardsDataByFileId(parentFileId).collect() { card ->
                 card.onEach { finalList.add(convertCardToLibraryRV(it)) }
             }
+            val a = finalList[0].file?.title
             return finalList
         }
     }
