@@ -1,38 +1,22 @@
 package com.example.tangochoupdated.ui.library
 
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.Color.rgb
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import androidx.activity.viewModels
-import androidx.core.graphics.BlendModeColorFilterCompat
-import androidx.core.graphics.BlendModeCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tangochoupdated.*
 
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
-import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.CardAndTags
 import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.enumclass.CardStatus
-import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
-import com.example.tangochoupdated.ui.planner.CreateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.*
 
 class HomeFragment : Fragment(),DataClickListener{
 
@@ -59,7 +43,7 @@ class HomeFragment : Fragment(),DataClickListener{
 
 
         val recyclerView = _binding?.vocabCardRV
-        adapter = LibraryListAdapter(this)
+        adapter = LibraryListAdapter(this,requireContext())
         recyclerView?.adapter = adapter
 
 
@@ -79,24 +63,24 @@ class HomeFragment : Fragment(),DataClickListener{
     }
     fun makeLibRVList(filelist:List<File>?,cardlist:List<CardAndTags>?):List<LibraryRV>{
         val a = mutableListOf<LibraryRV>()
-        filelist?.onEach { a.add(convertFileToLibraryRV(it)) }
-        cardlist?.onEach { a.add(convertCardToLibraryRV(it)) }
+        filelist?.onEach { a.add(convertFileToLibraryRV(it)!!) }
+        cardlist?.onEach { a.add(convertCardToLibraryRV(it)!!) }
         return a
 
 
     }
-
-    fun convertFileToLibraryRV(file: File?): LibraryRV {
+    fun convertFileToLibraryRV(file: File?): LibraryRV? {
 
         when (file!!.fileStatus) {
 
             FileStatus.FOLDER -> {
                 return LibraryRV(
                     type = LibRVViewType.Folder,
+                    position = file.libOrder,
                     file = file,
-                    tag = null,
                     card = null,
-                    position = file.libOrder
+                    tag = null,
+                    id = file.fileId
                 )
 
             }
@@ -104,44 +88,64 @@ class HomeFragment : Fragment(),DataClickListener{
             FileStatus.TANGO_CHO_COVER ->
                 return LibraryRV(
                     type = LibRVViewType.FlashCardCover,
+                    position = file.libOrder,
                     file = file,
-                    tag = null,
                     card = null,
-                    position = file.libOrder
+                    tag = null,
+                    id = file.fileId
                 )
 
 
-            else -> return LibraryRV(LibRVViewType.Folder, 0, null, null, null)
+            else -> return null
         }
 
     }
-    fun convertCardToLibraryRV(card: CardAndTags?): LibraryRV {
+    fun convertCardToLibraryRV(card: CardAndTags?): LibraryRV? {
         when (card?.card?.cardStatus) {
             CardStatus.STRING -> return LibraryRV(
                 type = LibRVViewType.StringCard,
+                position = card.card.libOrder,
                 file = null,
-                tag = card.tags,
                 card = card.card,
-                position = card.card.libOrder
+                tag = card.tags,
+                id = card.card.id
             )
             CardStatus.CHOICE -> return LibraryRV(
                 type = LibRVViewType.ChoiceCard,
+                position = card.card.libOrder,
                 file = null,
-                tag = card.tags,
                 card = card.card,
-                position = card.card.libOrder
+                tag = card.tags,
+                id = card.card.id
             )
 
             CardStatus.MARKER -> return LibraryRV(
                 type = LibRVViewType.MarkerCard,
+                position = card.card.libOrder,
                 file = null,
-                tag = card.tags,
                 card = card.card,
-                position = card.card.libOrder
+                tag = card.tags,
+                id = card.card.id
             )
 
-            else -> return LibraryRV(LibRVViewType.Folder, 0, null, null, null)
+            else -> return null
         }
+    }
+
+    override fun onClickWholeFolder() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onClickAddFolder() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onClickEditBack() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onClickEditFront() {
+        TODO("Not yet implemented")
     }
 
     override fun onTouchWhole() {
@@ -152,7 +156,7 @@ class HomeFragment : Fragment(),DataClickListener{
         TODO("Not yet implemented")
     }
 
-    override fun onLongClickMain() {
+    override fun onLongClickMain(type: LibRVViewType, id: Int) {
         TODO("Not yet implemented")
     }
 

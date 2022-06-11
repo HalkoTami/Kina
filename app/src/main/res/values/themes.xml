@@ -16,6 +16,7 @@
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
         <item name="android:textViewStyle">@style/TextAppearance.AppCompat.</item>
         <item name="imageButtonStyle">@style/Widget.AppCompat.ImageButton.</item>
+        <item name="android:background">@android:color/transparent</item>
 
 
     </style>

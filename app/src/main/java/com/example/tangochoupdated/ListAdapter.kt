@@ -1,23 +1,18 @@
 package com.example.tangochoupdated
 
-import android.opengl.Visibility
-import android.text.Layout
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.*
-import android.view.View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION
-import android.view.View.VISIBLE
-import androidx.annotation.LayoutRes
-import androidx.lifecycle.LifecycleOwner
+import android.view.View.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardStringBinding
 import com.example.tangochoupdated.databinding.ItemCoverFileBinding
-import com.example.tangochoupdated.room.dataclass.Card
-import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
-import com.example.tangochoupdated.ui.library.LibraryRVViewModel
 
 
 /**
@@ -25,7 +20,7 @@ import com.example.tangochoupdated.ui.library.LibraryRVViewModel
  */
 
 
-class LibraryListAdapter(val dataClickListener: DataClickListener, ) :
+class LibraryListAdapter(val dataClickListener: DataClickListener, val context:Context) :
     ListAdapter<LibraryRV, LibraryListAdapter.LibraryViewHolder>(MyDiffCallback) {
 
     /**
@@ -49,7 +44,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, ) :
 
 
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
-        holder.bind(getItem(position),dataClickListener)
+        holder.bind(getItem(position),dataClickListener,context )
     }
 
     /**
@@ -58,23 +53,83 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, ) :
     class LibraryViewHolder (private val binding: ItemCoverCardBaseBinding,private val layoutInflater: LayoutInflater) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: LibraryRV, clickListener: DataClickListener, ) {
-            when(item.type){
-                LibRVViewType.Folder -> {
+        fun bind(item: LibraryRV, clickListener: DataClickListener, context: Context) {
+            fun setFileVisibility(type:LibRVViewType,item: LibraryRV){
+                binding.stubTag.visibility = GONE
+                binding.btnAddNewCard.visibility = GONE
 
-                    val folderBinding = ItemCoverFileBinding.inflate(layoutInflater)
-                    val folderData = item.file!!
-                    folderBinding.txvFileTitle.text = folderData.title
-                    folderBinding.txvFileAmount.text=  "${folderData.childFoldersAmount}個"
-                    folderBinding.txvCardAmount.text= "${folderData.childCardsAmount}枚"
-                    folderBinding.txvTangoChoAmount.text = "${folderData.childFlashCardCoversAmount}個"
-                    binding.stubMain.addView(folderBinding.root)
-
-
+                val folderBinding = ItemCoverFileBinding.inflate(layoutInflater)
+                val folderData = item.file!!
+                val image:Drawable
+                when(type){
+                    LibRVViewType.Folder ->{
+                        folderBinding.txvFileAmount.text=  "${folderData.childFoldersAmount}個"
+                        folderBinding.txvCardAmount.text= "${folderData.childCardsAmount}枚"
+                        folderBinding.txvTangoChoAmount.text = "${folderData.childFlashCardCoversAmount}個"
+                        image = ContextCompat.getDrawable(context,R.drawable.icon_file)!!
+                    }
+                    LibRVViewType.FlashCardCover ->{
+                        folderBinding.txvCardAmount.text= "${folderData.childCardsAmount}枚"
+                        image = ContextCompat.getDrawable(context,R.drawable.icon_library)!!
+                    }
+                    else -> return
                 }
+                folderBinding.txvFileTitle.text = folderData.title
+                folderBinding.imvFileType.setImageDrawable(image)
+
+                folderBinding.root.setOnClickListener {
+                    clickListener.onClickWholeFolder()
+                }
+                folderBinding.btnAdd.setOnClickListener {
+                    clickListener.onClickAddFolder()
+                }
+                binding.stubMain.addView(folderBinding.root)
+            }
+            fun onLongClickMain(){
+                val selectedtIcon = ContextCompat.getDrawable(context,R.drawable.circle_selected)
+                clickListener.onLongClickMain(item.type, item.id)
+                binding.btnSelect.setImageDrawable(selectedtIcon)
+            }
+            fun setStringCardVisibility(item:LibraryRV){
+                val stringCardBinding = ItemCoverCardStringBinding.inflate(layoutInflater)
+                val stringData = item.card?.stringData
+
+
+                stringCardBinding.txvFrontTitle.text = stringData?.frontTitle
+                stringCardBinding.txvFrontText .text = stringData?.frontText
+                stringCardBinding.txvBackTitle .text = stringData?.backTitle!!
+                stringCardBinding.txvBackText.text = stringData.backText
+
+                stringCardBinding.btnEdtBack.setOnClickListener {
+                    clickListener.onClickEdit()
+                }
+                stringCardBinding.btnEdtFront.setOnClickListener {
+                    clickListener.onClickEditFront()
+                }
+                binding.stubMain.addView(stringCardBinding.root)
+            }
+
+            binding.btnSelect.visibility= GONE
+            binding.btnDelete.visibility= GONE
+            binding.btnDelete.visibility = GONE
+            when(item.type){
+                LibRVViewType.Folder ->  setFileVisibility(LibRVViewType.Folder,item)
+
+
+
+                LibRVViewType.FlashCardCover -> setFileVisibility(LibRVViewType.FlashCardCover,item)
+
 
                 else -> {return}
             }
+            binding.stubMain.setOnTouchListener(object: OnSwipeTouchListener(context){
+                override fun onLongClick() {
+                    onLongClickMain()
+                    super.onLongClick()
+                }
+            })
+
+
 
 
 //
@@ -96,7 +151,9 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, ) :
 
         }
 
+
     }
+
 
     /**
      * Horizontal View Holder
@@ -127,14 +184,19 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
  *class MyFragment : Fragment(), DataClickListener
  */
 interface DataClickListener {
+    fun onClickWholeFolder()
+
     fun onTouchWhole( )
     fun onTouchDelete()
     fun onTouchMain()
-    fun onLongClickMain()
+    fun onLongClickMain(type: LibRVViewType, id: Int)
     fun onClickEdit()
     fun onClickTags()
     fun oncClickSelect()
     fun onClickAdd()
+    fun onClickAddFolder()
+    fun onClickEditBack()
+    fun onClickEditFront()
 
 }
 

@@ -1,6 +1,5 @@
 package com.example.tangochoupdated.room
 
-import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.tangochoupdated.room.dataclass.*
 import com.example.tangochoupdated.room.enumclass.CardStatus
@@ -34,95 +33,6 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
     }
 
 
-    suspend fun getLibRVCover(parentFileId: Int?): ArrayList<LibraryRV> {
-
-
-        fun convertFileToLibraryRV(file: File?): LibraryRV {
-
-            when (file!!.fileStatus) {
-
-                FileStatus.FOLDER -> {
-                    return LibraryRV(
-                        type = LibRVViewType.Folder,
-                        file = file,
-                        tag = null,
-                        card = null,
-                        position = file.libOrder
-                    )
-
-                }
-
-                FileStatus.TANGO_CHO_COVER ->
-                    return LibraryRV(
-                        type = LibRVViewType.FlashCardCover,
-                        file = file,
-                        tag = null,
-                        card = null,
-                        position = file.libOrder
-                    )
-
-
-                else -> return LibraryRV(LibRVViewType.Folder, 0, null, null, null)
-            }
-
-        }
-
-        fun convertCardToLibraryRV(card: CardAndTags?): LibraryRV {
-            when (card?.card?.cardStatus) {
-                CardStatus.STRING -> return LibraryRV(
-                    type = LibRVViewType.StringCard,
-                    file = null,
-                    tag = card.tags,
-                    card = card.card,
-                    position = card.card.libOrder
-                )
-                CardStatus.CHOICE -> return LibraryRV(
-                    type = LibRVViewType.ChoiceCard,
-                    file = null,
-                    tag = card.tags,
-                    card = card.card,
-                    position = card.card.libOrder
-                )
-
-                CardStatus.MARKER -> return LibraryRV(
-                    type = LibRVViewType.MarkerCard,
-                    file = null,
-                    tag = card.tags,
-                    card = card.card,
-                    position = card.card.libOrder
-                )
-
-                else -> return LibraryRV(LibRVViewType.Folder, 0, null, null, null)
-            }
-        }
-
-
-
-
-
-
-        if (parentFileId == null) {
-            val finalList = arrayListOf<LibraryRV>()
-            libraryDao.getFileWithoutParent().collect {
-                it.onEach { finalList.add(convertFileToLibraryRV(it)) }
-            }
-            val a = finalList[0].file?.title
-            return finalList
-
-
-        } else {
-            val finalList = arrayListOf<LibraryRV>()
-            libraryDao.getFileDataByFileId(parentFileId).collect { file ->
-                file.onEach { finalList.add(convertFileToLibraryRV(it)) }
-
-            }
-            libraryDao.getCardsDataByFileId(parentFileId).collect() { card ->
-                card.onEach { finalList.add(convertCardToLibraryRV(it)) }
-            }
-            val a = finalList[0].file?.title
-            return finalList
-        }
-    }
 
 
     @Suppress("RedundantSuspendModifier")

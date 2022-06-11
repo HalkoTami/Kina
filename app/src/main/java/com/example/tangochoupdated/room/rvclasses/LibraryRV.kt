@@ -7,11 +7,13 @@ enum class LibRVViewType{
     Folder,FlashCardCover,StringCard,MarkerCard,ChoiceCard
 }
  class LibraryRV(
-    val type:LibRVViewType,
-    val position:Int,
-    val file: File?,
-    val card :Card?,
-    val tag:List<File>?)
+     val type: LibRVViewType,
+     val position: Int,
+     val file: File?,
+     val card: Card?,
+     val tag: List<File>?,
+     val id: Int
+ )
 
 
 

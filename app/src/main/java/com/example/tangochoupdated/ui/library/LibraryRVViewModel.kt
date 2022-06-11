@@ -1,10 +1,7 @@
 package com.example.tangochoupdated.ui.library
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.example.tangochoupdated.RoomApplication
 import com.example.tangochoupdated.room.MyRoomRepository
-import com.example.tangochoupdated.room.dataclass.Card
 import com.example.tangochoupdated.room.dataclass.CardAndTags
 import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.enumclass.CardStatus
@@ -12,9 +9,6 @@ import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onEach
-import kotlin.coroutines.CoroutineContext
 
 
 class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel(){
@@ -32,24 +26,25 @@ class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel()
     private fun makeLibRVList(filelist:List<File>?,cardlist:List<CardAndTags>?):List<LibraryRV>{
 
         val a = mutableListOf<LibraryRV>()
-        filelist?.onEach { a.add(convertFileToLibraryRV(it)) }
-        cardlist?.onEach { a.add(convertCardToLibraryRV(it)) }
+        filelist?.onEach { a.add(convertFileToLibraryRV(it)!!) }
+        cardlist?.onEach { a.add(convertCardToLibraryRV(it)!!) }
         return a
 
 
     }
 
-    private fun convertFileToLibraryRV(file: File?): LibraryRV {
+    private fun convertFileToLibraryRV(file: File?): LibraryRV? {
 
         when (file!!.fileStatus) {
 
             FileStatus.FOLDER -> {
                 return LibraryRV(
                     type = LibRVViewType.Folder,
+                    position = file.libOrder,
                     file = file,
-                    tag = null,
                     card = null,
-                    position = file.libOrder
+                    tag = null,
+                    id = file.fileId
                 )
 
             }
@@ -57,43 +52,47 @@ class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel()
             FileStatus.TANGO_CHO_COVER ->
                 return LibraryRV(
                     type = LibRVViewType.FlashCardCover,
+                    position = file.libOrder,
                     file = file,
-                    tag = null,
                     card = null,
-                    position = file.libOrder
+                    tag = null,
+                    id = file.fileId
                 )
 
 
-            else -> return LibraryRV(LibRVViewType.Folder, 0, null, null, null)
+            else -> return null
         }
 
     }
-    fun convertCardToLibraryRV(card: CardAndTags?): LibraryRV {
+    fun convertCardToLibraryRV(card: CardAndTags?): LibraryRV? {
         when (card?.card?.cardStatus) {
             CardStatus.STRING -> return LibraryRV(
                 type = LibRVViewType.StringCard,
+                position = card.card.libOrder,
                 file = null,
-                tag = card.tags,
                 card = card.card,
-                position = card.card.libOrder
+                tag = card.tags,
+                id = card.card.id
             )
             CardStatus.CHOICE -> return LibraryRV(
                 type = LibRVViewType.ChoiceCard,
+                position = card.card.libOrder,
                 file = null,
-                tag = card.tags,
                 card = card.card,
-                position = card.card.libOrder
+                tag = card.tags,
+                id = card.card.id
             )
 
             CardStatus.MARKER -> return LibraryRV(
                 type = LibRVViewType.MarkerCard,
+                position = card.card.libOrder,
                 file = null,
-                tag = card.tags,
                 card = card.card,
-                position = card.card.libOrder
+                tag = card.tags,
+                id = card.card.id
             )
 
-            else -> return LibraryRV(LibRVViewType.Folder, 0, null, null, null)
+            else -> return null
         }
     }
 
