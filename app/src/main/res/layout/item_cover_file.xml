@@ -15,7 +15,7 @@
 
 
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
         android:src="@drawable/icon_file"
 
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,14 +50,7 @@
 
         android:layout_width="0dp"
         android:layout_height="wrap_content">
-        <Space
-            android:id="@+id/spacer"
-            android:layout_width="10dp"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/imv_icon_file_small"/>
+
 
         <ImageView
             android:contentDescription="@string/cd_file_amount"
@@ -72,7 +65,7 @@
             app:layout_constraintEnd_toStartOf="@id/txv_file_amount"
 
 
-            app:layout_constraintStart_toEndOf="@id/spacer"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -146,8 +139,8 @@
     <ImageButton
         android:contentDescription="@string/cd_btn_add_card"
         android:id="@+id/btn_add"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_margin="15dp"
         android:background="@drawable/icon_add_middlesize"
         app:layout_constraintStart_toEndOf="@id/barrier_right"

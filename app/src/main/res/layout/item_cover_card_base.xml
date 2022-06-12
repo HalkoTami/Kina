@@ -16,7 +16,6 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
         android:src="@drawable/circle_select"
         android:layout_marginEnd="5dp"
 
@@ -40,13 +39,6 @@
 
     </FrameLayout>
 
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group_folder_or_flash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:constraint_referenced_ids="stub_tag,btn_add_new_card,btn_delete,btn_edit_whole"/>
 
     <ImageView
         android:contentDescription="@string/btn_edit"
@@ -73,7 +65,6 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:src="@drawable/icon_delete_cover"
-        android:visibility="visible"
         />
 
 

@@ -68,8 +68,8 @@ open class OnSwipeTouchListener(context:Context) : View.OnTouchListener {
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-         gestureDetector.onTouchEvent(event)
-        return v!!.performClick()
+        v!!.performClick()
+        return gestureDetector.onTouchEvent(event)
     }
 
     open fun onSwipeRight() {}

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tangochoupdated.*
 
@@ -43,13 +44,16 @@ class HomeFragment : Fragment(),DataClickListener{
 
 
         val recyclerView = _binding?.vocabCardRV
-        adapter = LibraryListAdapter(this,requireContext())
+        adapter = LibraryListAdapter(this)
         recyclerView?.adapter = adapter
+        val rvList = mutableListOf<LibraryRV>()
 
 
         viewModel.parentList.observe(requireActivity()){
-            adapter.submitList(makeLibRVList(it,null))
+           rvList.addAll(viewModel.getListData(it,null))
         }
+        adapter.submitList(rvList)
+
 
         recyclerView?.layoutManager = LinearLayoutManager(context)
 
@@ -132,51 +136,23 @@ class HomeFragment : Fragment(),DataClickListener{
         }
     }
 
-    override fun onClickWholeFolder() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onClickAddFolder() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onClickEditBack() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onClickEditFront() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onTouchWhole() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onTouchMain() {
-        TODO("Not yet implemented")
-    }
-
     override fun onLongClickMain(type: LibRVViewType, id: Int) {
         TODO("Not yet implemented")
     }
 
-    override fun onClickEdit() {
+    override fun onClickEdit(id: Int, viewId: Int) {
         TODO("Not yet implemented")
     }
 
-    override fun onClickTags() {
+    override fun onClickAdd(type: LibRVViewType, id: Int) {
         TODO("Not yet implemented")
     }
 
-    override fun oncClickSelect() {
+    override fun onClickDelete(type: LibRVViewType, id: Int) {
         TODO("Not yet implemented")
     }
 
-    override fun onClickAdd() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onTouchDelete() {
+    override fun onClickMain(type: LibRVViewType, id: Int) {
         TODO("Not yet implemented")
     }
 
