@@ -1,15 +1,14 @@
 package com.example.tangochoupdated
 
 import android.content.Context
-import android.service.autofill.UserData
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.MyDao
 import com.example.tangochoupdated.room.dataclass.*
 import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.room.enumclass.FileStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -20,17 +19,6 @@ import kotlinx.coroutines.launch
 public abstract class MyRoomDatabase : RoomDatabase() {
 
     abstract fun myDao(): MyDao
-    abstract fun cardDao(): CardDao
-
-    abstract fun fileDao(): FileDao
-
-    abstract fun userDao(): UserDao
-
-    abstract fun markerDao(): MarkerDataDao
-
-    abstract fun activityDao(): ActivityDataDao
-
-    abstract fun choiceDao():ChoiceDao
 
     private class WordDatabaseCallback(
         private val scope: CoroutineScope
@@ -40,22 +28,21 @@ public abstract class MyRoomDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    var cardDao = database.myDao()
-                    var fileDao = database.fileDao()
-                    var userDao = database.userDao()
-                    var markerDao = database.markerDao()
-                    var activityDao = database.activityDao()
+                    var myDao = database.myDao()
+                    var clearTable = myDao.clearTable
 
                     // Delete all content here.
-                    cardDao.cardDao.
-                    fileDao.clearTblFile()
-                    userDao.clearTblUser()
-                    markerDao.clearTblMarkerData()
-                    activityDao.clearTblActivity()
+                    clearTable.clearTblCard()
+                    clearTable.clearTblActivity()
+                    clearTable.clearTblChoice()
+                    clearTable.clearTblUser()
+                    clearTable.clearTblFile()
+                    clearTable.clearTblMarkerData()
+
 
                     // Add sample words.
-                    var file = File(0,null,"タイトルなし",false, ColorStatus.RED,)
-                    fileDao.insert(file)
+                    var file = File(0,null,"タイトルなし",false, ColorStatus.RED,FileStatus.FOLDER)
+                    myDao.fileDao.insert(file)
 
                 }
             }

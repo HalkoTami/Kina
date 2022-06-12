@@ -1,9 +1,7 @@
 package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.*
-import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.ColorStatus
-import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "tbl_marker_data",
     foreignKeys =[ForeignKey(entity = Card::class,
@@ -23,11 +21,3 @@ data class MarkerData(
     val remembered: Boolean
 
 )
-@Dao
-abstract class MarkerDataDao: DataAccessObject<MarkerData>{
-    @Query("DELETE FROM tbl_marker_data")
-    abstract suspend fun clearTblMarkerData()
-
-    @Query("select * from tbl_marker_data where marker_data_belonging_card_id = :cardId ")
-    abstract fun getMarkerDataByCardId(cardId: Int ): Flow<List<MarkerData>>
-}

@@ -4,8 +4,9 @@ import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 
 enum class FileStatus(Value:Int) {
-    TANGO_CHO(0),
-    FILE(1)
+    TANGO_CHO_COVER(0),
+    FOLDER(1),
+    TAG(3)
 }
 
 

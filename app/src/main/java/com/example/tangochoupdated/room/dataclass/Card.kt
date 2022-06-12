@@ -1,10 +1,8 @@
 package com.example.tangochoupdated.room.dataclass
 
 import androidx.room.*
-import com.example.tangochoupdated.room.DataAccessObject
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.CardStatusConverter
-import kotlinx.coroutines.flow.Flow
 
 
 @Entity(tableName = "tbl_card",
@@ -79,22 +77,7 @@ data class MarkerPreviewData(
     val markerTextPreview:String?
 )
 
-@Dao abstract class CardDao: DataAccessObject<Card>{
-    @Query("DELETE FROM tbl_card")
-    abstract suspend fun clearTblCard()
 
-
-    @Query("select * from tbl_card where NOT card_deleted AND belonging_file_id = :belongingFileId ")
-    abstract fun getCardsByFileId(belongingFileId: Int ): Flow<List<Card>>
-
-    @Query("select * from tbl_card where NOT card_deleted AND belonging_string_data OR " +
-            "belonging_marker_text_preview OR belonging_quiz_cover_preview LIKE '%' || :search || '%' " +
-            "ORDER BY card_id DESC")
-    abstract fun searchCardsByWords(search:String):Flow<List<Card>>
-
-    @Query("select * from tbl_card where NOT card_deleted AND belonging_file_id = NULL")
-    abstract fun getCardsWithoutParent(): Flow<List<Card>>
-}
 
 
 
