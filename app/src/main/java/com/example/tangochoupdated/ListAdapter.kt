@@ -8,9 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
-import com.example.tangochoupdated.databinding.ItemCoverCardStringBinding
-import com.example.tangochoupdated.databinding.ItemCoverFileBinding
+import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 
@@ -33,7 +31,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder{
         val layoutInflater = LayoutInflater.from(parent.context)
-        return LibraryViewHolder(ItemCoverCardBaseBinding.inflate(layoutInflater, parent, false),layoutInflater)
+        return LibraryViewHolder(ItemCoverCardBaseBinding.inflate(layoutInflater, parent, false))
     }
 
     /**
@@ -50,15 +48,20 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
     /**
      * Vertical View Holder Class
      */
-    class LibraryViewHolder (private val binding: ItemCoverCardBaseBinding,private val layoutInflater: LayoutInflater) :
+    class LibraryViewHolder (private val binding: ItemCoverCardBaseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: LibraryRV, clickListener: DataClickListener, context: Context) {
+            fun setVisibilityStart(){
+                binding.btnSelect.visibility= GONE
+                binding.btnDelete.visibility= GONE
+                binding.btnDelete.visibility = GONE
+            }
             fun setFileVisibility(type:LibRVViewType,item: LibraryRV){
                 binding.stubTag.visibility = GONE
                 binding.btnAddNewCard.visibility = GONE
 
-                val folderBinding = ItemCoverFileBinding.inflate(layoutInflater)
+                val folderBinding = ItemCoverFileBinding.bind(binding.root)
                 val folderData = item.file!!
                 val image:Drawable
                 when(type){
@@ -85,13 +88,26 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
                 }
                 binding.stubMain.addView(folderBinding.root)
             }
-            fun onLongClickMain(){
-                val selectedtIcon = ContextCompat.getDrawable(context,R.drawable.circle_selected)
-                clickListener.onLongClickMain(item.type, item.id)
-                binding.btnSelect.setImageDrawable(selectedtIcon)
+            fun setVisibilityOnLongClickMain(){
+                setVisibilityStart()
+                binding.stubTag.visibility = GONE
+                binding.btnAddNewCard.visibility = GONE
+                val selectedIcon = ContextCompat.getDrawable(context,R.drawable.circle_selected)
+                binding.btnSelect.setImageDrawable(selectedIcon)
+
             }
-            fun setStringCardVisibility(item:LibraryRV){
-                val stringCardBinding = ItemCoverCardStringBinding.inflate(layoutInflater)
+            fun setVisibilityOnSwipeLeft(type: LibRVViewType){
+                binding.btnSelect.visibility = GONE
+                binding.btnDelete.visibility = VISIBLE
+                if(type==LibRVViewType.Folder || type == LibRVViewType.FlashCardCover){
+                    binding.btnEditWhole.visibility = VISIBLE
+                } else{
+                    binding.btnEditWhole.visibility = INVISIBLE
+                }
+
+            }
+            fun setStringCard(item:LibraryRV){
+                val stringCardBinding = ItemCoverCardStringBinding.bind(binding.root)
                 val stringData = item.card?.stringData
 
 
@@ -100,35 +116,69 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
                 stringCardBinding.txvBackTitle .text = stringData?.backTitle!!
                 stringCardBinding.txvBackText.text = stringData.backText
 
-                stringCardBinding.btnEdtBack.setOnClickListener {
-                    clickListener.onClickEdit()
-                }
-                stringCardBinding.btnEdtFront.setOnClickListener {
-                    clickListener.onClickEditFront()
+                stringCardBinding.root.setOnClickListener {
+                    clickListener.onClickEdit(item.id,it.id)
                 }
                 binding.stubMain.addView(stringCardBinding.root)
             }
 
-            binding.btnSelect.visibility= GONE
-            binding.btnDelete.visibility= GONE
-            binding.btnDelete.visibility = GONE
+            fun setChoiceCard(item: LibraryRV){
+                val choiceCardBinding = ItemCoverCardQuizBinding.bind(binding.root)
+                choiceCardBinding.txvQuestion.text = item.card?.quizData?.question
+                choiceCardBinding.txvAnswer.text = item.card?.quizData?.answerPreview
+                choiceCardBinding.root.setOnClickListener {
+
+                    clickListener.onClickEdit(item.id,it.id)
+                }
+
+            }
+            fun setTag(item: LibraryRV){
+                if (item.tag!=null){
+                    val tagBinding = ItemCoverTagsBinding.bind(binding.root)
+                    tagBinding.txvTag.text = item.tag.onEach { "#${it.title} " }.toString()
+                    tagBinding.root.setOnClickListener {
+                        clickListener.onClickEdit(item.id,it.id)
+                    }
+                    binding.stubTag.addView(tagBinding.root)
+                } else {
+                    binding.stubTag.visibility = INVISIBLE
+                }
+            }
+
+
+
+
             when(item.type){
                 LibRVViewType.Folder ->  setFileVisibility(LibRVViewType.Folder,item)
 
-
-
                 LibRVViewType.FlashCardCover -> setFileVisibility(LibRVViewType.FlashCardCover,item)
 
+                LibRVViewType.StringCard -> setStringCard(item)
 
-                else -> {return}
+                LibRVViewType.ChoiceCard -> setChoiceCard(item)
+
+                else -> return
             }
-            binding.stubMain.setOnTouchListener(object: OnSwipeTouchListener(context){
-                override fun onLongClick() {
-                    onLongClickMain()
-                    super.onLongClick()
-                }
-            })
-
+            setTag(item)
+            binding.root.setOnTouchListener { v, event ->
+                v.performClick()
+                object: OnSwipeTouchListener(context){
+                    override fun onLongClick() {
+                        super.onLongClick()
+                        setVisibilityOnLongClickMain()
+                        clickListener.onLongClickMain(item.type,item.id)
+                    }
+                }.onTouch(v,event)
+            }
+            binding.stubMain.setOnTouchListener { v, event ->
+                v.performClick()
+                object : OnSwipeTouchListener(context){
+                    override fun onSwipeLeft() {
+                        super.onSwipeLeft()
+                        setVisibilityOnSwipeLeft(item.type)
+                    }
+                }.onTouch(v, event)
+            }
 
 
 
@@ -190,7 +240,7 @@ interface DataClickListener {
     fun onTouchDelete()
     fun onTouchMain()
     fun onLongClickMain(type: LibRVViewType, id: Int)
-    fun onClickEdit()
+    fun onClickEdit(id: Int,viewId :Int)
     fun onClickTags()
     fun oncClickSelect()
     fun onClickAdd()
@@ -200,18 +250,4 @@ interface DataClickListener {
 
 }
 
-/**
- * Your DataItem Class
- */
-
-
-
-
-    private const val CARD_TYPE_STRING = 1
-    private const val CARD_TYPE_MARKER = 2
-    private const val CARD_TYPE_QUIZ = 3
-    private const val CLASS_TYPE_FILE = 4
-    private const val CLASS_TYPE_CARD = 5
-    private const val FILE_TYPE_FILE = 6
-    private const val FILE_TYPE_TANGO_CHO = 7
 
