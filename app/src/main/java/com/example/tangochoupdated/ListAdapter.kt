@@ -18,7 +18,7 @@ import com.example.tangochoupdated.room.rvclasses.LibraryRV
  */
 
 
-class LibraryListAdapter(val dataClickListener: DataClickListener, val context:Context) :
+class LibraryListAdapter(val dataClickListener: DataClickListener) :
     ListAdapter<LibraryRV, LibraryListAdapter.LibraryViewHolder>(MyDiffCallback) {
 
     /**
@@ -31,7 +31,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder{
         val layoutInflater = LayoutInflater.from(parent.context)
-        return LibraryViewHolder(ItemCoverCardBaseBinding.inflate(layoutInflater, parent, false))
+        return LibraryViewHolder(ItemCoverCardBaseBinding.inflate(layoutInflater, parent, false),parent.context)
     }
 
     /**
@@ -42,16 +42,16 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
 
 
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
-        holder.bind(getItem(position),dataClickListener,context )
+        holder.bind(getItem(position),dataClickListener)
     }
 
     /**
      * Vertical View Holder Class
      */
-    class LibraryViewHolder (private val binding: ItemCoverCardBaseBinding) :
+    class LibraryViewHolder (private val binding: ItemCoverCardBaseBinding,val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: LibraryRV, clickListener: DataClickListener, context: Context) {
+        fun bind(item: LibraryRV, clickListener: DataClickListener) {
             fun setVisibilityStart(){
                 binding.btnSelect.visibility= GONE
                 binding.btnDelete.visibility= GONE
@@ -61,7 +61,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
                 binding.stubTag.visibility = GONE
                 binding.btnAddNewCard.visibility = GONE
 
-                val folderBinding = ItemCoverFileBinding.bind(binding.root)
+                val folderBinding = ItemCoverFileBinding.inflate(LayoutInflater.from(context))
                 val folderData = item.file!!
                 val image:Drawable
                 when(type){
@@ -80,11 +80,9 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
                 folderBinding.txvFileTitle.text = folderData.title
                 folderBinding.imvFileType.setImageDrawable(image)
 
-                folderBinding.root.setOnClickListener {
-                    clickListener.onClickWholeFolder()
-                }
+
                 folderBinding.btnAdd.setOnClickListener {
-                    clickListener.onClickAddFolder()
+                    clickListener.onClickAdd(item.type,item.id)
                 }
                 binding.stubMain.addView(folderBinding.root)
             }
@@ -107,7 +105,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
 
             }
             fun setStringCard(item:LibraryRV){
-                val stringCardBinding = ItemCoverCardStringBinding.bind(binding.root)
+                val stringCardBinding = ItemCoverCardStringBinding.inflate(LayoutInflater.from(context))
                 val stringData = item.card?.stringData
 
 
@@ -123,7 +121,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
             }
 
             fun setChoiceCard(item: LibraryRV){
-                val choiceCardBinding = ItemCoverCardQuizBinding.bind(binding.root)
+                val choiceCardBinding = ItemCoverCardQuizBinding.inflate(LayoutInflater.from(context))
                 choiceCardBinding.txvQuestion.text = item.card?.quizData?.question
                 choiceCardBinding.txvAnswer.text = item.card?.quizData?.answerPreview
                 choiceCardBinding.root.setOnClickListener {
@@ -134,7 +132,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
             }
             fun setTag(item: LibraryRV){
                 if (item.tag!=null){
-                    val tagBinding = ItemCoverTagsBinding.bind(binding.root)
+                    val tagBinding = ItemCoverTagsBinding.inflate(LayoutInflater.from(context))
                     tagBinding.txvTag.text = item.tag.onEach { "#${it.title} " }.toString()
                     tagBinding.root.setOnClickListener {
                         clickListener.onClickEdit(item.id,it.id)
@@ -148,6 +146,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
 
 
 
+            setVisibilityStart()
             when(item.type){
                 LibRVViewType.Folder ->  setFileVisibility(LibRVViewType.Folder,item)
 
@@ -160,6 +159,15 @@ class LibraryListAdapter(val dataClickListener: DataClickListener, val context:C
                 else -> return
             }
             setTag(item)
+            binding.stubMain.setOnClickListener {
+                clickListener.onClickMain(item.type,item.id)
+            }
+            binding.btnEditWhole.setOnClickListener {
+                clickListener.onClickEdit(item.id,it.id)
+            }
+            binding.btnDelete.setOnClickListener {
+                clickListener.onClickDelete(item.type,item.id)
+            }
             binding.root.setOnTouchListener { v, event ->
                 v.performClick()
                 object: OnSwipeTouchListener(context){
@@ -234,19 +242,12 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
  *class MyFragment : Fragment(), DataClickListener
  */
 interface DataClickListener {
-    fun onClickWholeFolder()
 
-    fun onTouchWhole( )
-    fun onTouchDelete()
-    fun onTouchMain()
     fun onLongClickMain(type: LibRVViewType, id: Int)
     fun onClickEdit(id: Int,viewId :Int)
-    fun onClickTags()
-    fun oncClickSelect()
-    fun onClickAdd()
-    fun onClickAddFolder()
-    fun onClickEditBack()
-    fun onClickEditFront()
+    fun onClickAdd(type: LibRVViewType,id: Int)
+    fun onClickDelete(type: LibRVViewType,id: Int)
+    fun onClickMain(type: LibRVViewType,id: Int)
 
 }
 

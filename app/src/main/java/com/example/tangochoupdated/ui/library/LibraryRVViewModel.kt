@@ -13,25 +13,21 @@ import kotlinx.coroutines.*
 
 class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel(){
     var fileId:Int = 0
+
     val parentList:LiveData<List<File>> = repository.getFileWithoutParent().asLiveData()
     fun  getSpecifiedFiles(fileId:Int):LiveData<List<File>> =  repository.getFileDataByFileId(fileId!!).asLiveData()
 
     fun getSpecifiedCards(fileId: Int):LiveData<List<CardAndTags>> = repository.getCardDataByFileId(fileId).asLiveData()
-    private val _listData = MutableLiveData<List<LibraryRV>>().apply{
-
-
-    }
-    val listData: LiveData<List<LibraryRV>> = _listData
-
-    private fun makeLibRVList(filelist:List<File>?,cardlist:List<CardAndTags>?):List<LibraryRV>{
-
+    fun  getListData(fileList: List<File>?, cardList: List<CardAndTags>?) :List<LibraryRV>{
         val a = mutableListOf<LibraryRV>()
-        filelist?.onEach { a.add(convertFileToLibraryRV(it)!!) }
-        cardlist?.onEach { a.add(convertCardToLibraryRV(it)!!) }
+        fileList?.onEach { a.add(convertFileToLibraryRV(it)!!) }
+        cardList?.onEach { a.add(convertCardToLibraryRV(it)!!) }
         return a
 
 
     }
+
+
 
     private fun convertFileToLibraryRV(file: File?): LibraryRV? {
 
