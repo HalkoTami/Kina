@@ -22,13 +22,19 @@ import com.example.tangochoupdated.room.rvclasses.LibraryRV
 data class File(
     @PrimaryKey
     var fileId:Int,
+    @ColumnInfo
     var parentFile: Int,
     @ColumnInfo(defaultValue = "title") var  title: String?,
     @ColumnInfo var deleted: Boolean?,
     @ColumnInfo var colorStatus: ColorStatus,
     @ColumnInfo var fileStatus: FileStatus,
     @ColumnInfo(name= "library_order")
+    var hasChild:Boolean,
+    var hasParent:Boolean,
     var libOrder: Int,
+    var childFoldersAmount:Int,
+    var childFlashCardCoversAmount: Int,
+    var childCardsAmount:Int
 
 
 

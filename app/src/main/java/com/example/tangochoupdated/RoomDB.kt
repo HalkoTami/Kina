@@ -62,7 +62,19 @@ public abstract class MyRoomDatabase : RoomDatabase() {
 
 
                     // Add sample words.
-                    var file = File(0,0,"タイトルなし",false, ColorStatus.RED,FileStatus.FOLDER,0,)
+                    var file = File(
+                        0,
+                        0,
+                        "タイトルなし",
+                        false,
+                        ColorStatus.RED,
+                        FileStatus.FOLDER,
+                        false,
+                        false,
+                        0,
+                        0,
+                        0,
+                        0)
                     fileDao.insert(file)
 
                 }
