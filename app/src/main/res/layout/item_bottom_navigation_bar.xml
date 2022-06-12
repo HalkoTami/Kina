@@ -1,230 +1,123 @@
 <!--<?xml version="1.0" encoding="utf-8"?>-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="70dp"
+    android:padding="10dp"
     >
+<LinearLayout
+    android:id="@+id/layout_1"
+    android:layout_width="wrap_content"
+    android:layout_height="0dp"
+    android:orientation="vertical"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
 
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:background="@drawable/bottombar_background"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:padding="1dp">-->
-
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1"-->
-<!--            android:gravity="center_horizontal"-->
-<!--            android:orientation="vertical"-->
-<!--            >-->
-
-
-<!--            <LinearLayout-->
-<!--                android:id="@+id/tab_library"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_margin="0dp"-->
-<!--                android:gravity="center"-->
-<!--                android:onClick="onclick"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="center">-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/ivlibrary"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:padding="2dp" />-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="1dp">-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="ライブラリ"-->
-<!--                        android:textSize="8sp" />-->
-<!--                </LinearLayout>-->
-<!--            </LinearLayout>-->
-
-
-<!--        </LinearLayout>-->
-
-<!--        <LinearLayout-->
-
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1"-->
-<!--            android:gravity="center_horizontal"-->
-<!--            android:orientation="vertical"-->
-<!--            >-->
-
-
-<!--            <LinearLayout-->
-<!--                android:id="@+id/tab_anki"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_margin="0dp"-->
-<!--                android:gravity="center"-->
-<!--                android:onClick="onclick"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="center">-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/ivAnki"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:padding="2dp" />-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="1dp"-->
-<!--                    android:layout_marginTop="2dp">-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="暗記する"-->
-<!--                        android:textSize="8sp" />-->
-<!--                </LinearLayout>-->
-<!--            </LinearLayout>-->
-
-
-<!--        </LinearLayout>-->
-
-
-<!--        <LinearLayout-->
-
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1"-->
-<!--            android:padding="13dp"-->
-<!--            android:gravity="center">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/btn_bottom_create"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:src="@drawable/iconadd" />-->
-<!--        </LinearLayout>-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1"-->
-<!--            android:gravity="center_horizontal"-->
-<!--            android:orientation="vertical"-->
-<!--            >-->
-
-
-<!--            <LinearLayout-->
-<!--                android:id="@+id/tab_planner"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_margin="0dp"-->
-<!--                android:gravity="center"-->
-<!--                android:onClick="onclick"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="center">-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/ivPlanner"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:padding="2dp" />-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="1dp"-->
-<!--                    android:layout_marginTop="2dp">-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="プランナー"-->
-<!--                        android:textSize="8sp" />-->
-<!--                </LinearLayout>-->
-<!--            </LinearLayout>-->
-
-
-<!--        </LinearLayout>-->
-
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1"-->
-<!--            android:gravity="center_horizontal"-->
-<!--            android:orientation="vertical">-->
-
-
-<!--            <LinearLayout-->
-<!--                android:id="@+id/tab_data"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_margin="0dp"-->
-<!--                android:gravity="center"-->
-<!--                android:onClick="onclick"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="center">-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/ivData"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:padding="2dp" />-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="1dp"-->
-<!--                    android:layout_marginTop="2dp">-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="データ"-->
-<!--                        android:textSize="8sp" />-->
-<!--                </LinearLayout>-->
-<!--            </LinearLayout>-->
-
-
-<!--        </LinearLayout>-->
-
-<!--    </LinearLayout>-->
-
-<!--</LinearLayout>-->
+    android:gravity="center">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/icon_library_active"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:layout_marginTop="2dp"
+        android:text="ライブらり"/>
 </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        app:layout_constraintStart_toEndOf="@id/layout_1"
+        app:layout_constraintEnd_toStartOf="@id/layout_3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_library_active"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:text="ライブらり" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+       app:layout_constraintStart_toEndOf="@id/layout_1"
+        app:layout_constraintEnd_toStartOf="@id/layout_5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_add_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:text="ライブらり" />
+    </LinearLayout>
+    <LinearLayout
+
+        android:id="@+id/layout_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/layout_3"
+        app:layout_constraintEnd_toStartOf="@id/layout_5"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_library_active"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:text="ライブらり" />
+    </LinearLayout>
+    <LinearLayout
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/layout_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_library_active"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:text="ライブらり" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
