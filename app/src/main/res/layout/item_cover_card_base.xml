@@ -11,8 +11,8 @@
         android:contentDescription="@string/btn_select"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/data_frame"
-        app:layout_constraintEnd_toStartOf="@+id/data_frame"
+        app:layout_constraintBottom_toBottomOf="@+id/stub_main"
+        app:layout_constraintEnd_toStartOf="@+id/stub_main"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,43 +24,14 @@
 
 
     <FrameLayout
-        android:id="@+id/data_frame"
+        android:id="@+id/stub_main"
         android:layout_width="0dp"
         android:layout_height="105dp"
         app:layout_constraintEnd_toStartOf="@+id/btn_delete"
         app:layout_constraintStart_toEndOf="@+id/btn_select"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ViewStub
-            android:id="@+id/stub_string_card"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inflatedId="@+id/stub_string_card"
-            android:layout="@layout/item_cover_card_string"
-            tools:visibility="visible" />
-
-        <ViewStub
-            android:id="@+id/stub_marker_card"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inflatedId="@+id/stub_marker_card"
-
-            android:layout="@layout/item_cover_card_marker" />
-
-        <ViewStub
-            android:id="@+id/stub_quiz_card"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:inflatedId="@+id/stub_quiz_card"
-            android:layout="@layout/item_cover_card_quiz" />
-        <ViewStub
-            android:id="@+id/stub_file"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout="@layout/item_cover_file"
-            android:inflatedId="@+id/stub_file"
-            tools:visibility="invisible"/>
+        
 
 
     </FrameLayout>
@@ -88,11 +59,11 @@
     <ImageView
         android:contentDescription="@string/delete"
         android:tag="@string/gone_on_long_click"
-        app:layout_constraintStart_toEndOf="@+id/data_frame"
+        app:layout_constraintStart_toEndOf="@+id/stub_main"
         app:layout_constraintTop_toBottomOf="@id/btn_edit_whole"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/data_frame"
+        app:layout_constraintBottom_toBottomOf="@+id/stub_main"
         android:id="@+id/btn_delete"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -117,8 +88,8 @@
 
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/data_frame"
-        app:layout_constraintTop_toBottomOf="@id/data_frame"
+        app:layout_constraintEnd_toEndOf="@id/stub_main"
+        app:layout_constraintTop_toBottomOf="@id/stub_main"
         android:layout_height="37dp"
         android:layout_marginEnd="5dp"
         android:layout_width="20dp"
@@ -133,8 +104,8 @@
         tools:visibility="visible"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        app:layout_constraintTop_toBottomOf="@id/data_frame"
-        app:layout_constraintStart_toStartOf="@id/data_frame"
+        app:layout_constraintTop_toBottomOf="@id/stub_main"
+        app:layout_constraintStart_toStartOf="@id/stub_main"
         app:layout_constraintEnd_toStartOf="@id/btn_add_new_card"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

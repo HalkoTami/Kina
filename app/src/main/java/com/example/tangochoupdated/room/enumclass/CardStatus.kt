@@ -6,10 +6,10 @@ import androidx.room.TypeConverter
 enum class CardStatus(value: Int) {
     STRING(0),
     MARKER(1),
-    QUIZ(2)
+    CHOICE(2)
 }
 
-@ProvidedTypeConverter
+
 class CardStatusConverter {
     @TypeConverter
     fun toCardStatus(value: Int): CardStatus = enumValues<CardStatus>()[value]

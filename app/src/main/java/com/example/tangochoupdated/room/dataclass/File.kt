@@ -5,26 +5,33 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.ColorStatusConverter
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.enumclass.FileStatusConverter
+import com.example.tangochoupdated.room.rvclasses.LibraryRV
 
 @Entity(tableName = "tbl_file",
+    indices = [Index("fileId", unique = true, name = "file_id"),
+              Index("parentFile", unique = true, name = "parent_file_id")],
     foreignKeys = [ForeignKey(
         entity = File::class,
-        parentColumns = arrayOf("file_id"),
-        childColumns = arrayOf("belonging_file_id"),
+        parentColumns = arrayOf("parentFile"),
+        childColumns = arrayOf("fileId"),
         onDelete = ForeignKey.NO_ACTION,
         onUpdate = ForeignKey.CASCADE
     )]
 )
 @TypeConverters(ColorStatusConverter::class,FileStatusConverter::class)
 data class File(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "file_id") val fileId:Int,
-    @ColumnInfo( name = "file_belonging_file_id")
-    val belongingFileId: Int?,
-    @ColumnInfo(defaultValue = "title") val  title: String?,
-    @ColumnInfo val deleted: Boolean?,
+    @PrimaryKey
+    var fileId:Int,
+    var parentFile: Int,
+    @ColumnInfo(defaultValue = "title") var  title: String?,
+    @ColumnInfo var deleted: Boolean?,
     @ColumnInfo var colorStatus: ColorStatus,
-    @ColumnInfo var fileStatus: FileStatus
+    @ColumnInfo var fileStatus: FileStatus,
+    @ColumnInfo(name= "library_order")
+    var libOrder: Int,
+
+
+
 
 
     )

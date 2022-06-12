@@ -3,7 +3,7 @@ package com.example.tangochoupdated.room.enumclass
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 
-@ProvidedTypeConverter
+
 class ActivityStatusConverter {
     @TypeConverter
     fun toActivityStatus(value: Int): ActivityStatus = enumValues<ActivityStatus>()[value]

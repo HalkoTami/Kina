@@ -1,150 +1,219 @@
-package com.example.tangochoupdated
+package com.example.tangochoupdated.room
 
-import android.provider.SyncStateContract.Helpers.insert
+import android.util.Log
 import androidx.annotation.WorkerThread
-import com.example.tangochoupdated.room.LibraryDao
-import com.example.tangochoupdated.room.MyDao
 import com.example.tangochoupdated.room.dataclass.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.example.tangochoupdated.room.enumclass.CardStatus
+import com.example.tangochoupdated.room.enumclass.FileStatus
+import com.example.tangochoupdated.room.rvclasses.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.*
+import org.w3c.dom.Document
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
 class MyRoomRepository(
-    private val fileDao: FileDao,
-    private val cardDao: CardDao,
-    private val userDao: UserDao,
-    private val markerDao: MarkerDataDao,
-    private val activityDao: ActivityDataDao,
-    private val choiceDao: ChoiceDao,
-    private val libraryDao: MyDao) {
+private val cardDao            : MyDao.CardDao,
+private val activityDataDao    : MyDao.ActivityDataDao,
+private val choiceDao          : MyDao.ChoiceDao,
+private val fileDao            : MyDao.FileDao,
+private val markerDataDao      : MyDao.MarkerDataDao,
+private val userDao            : MyDao.UserDao,
+private val clearTable         : MyDao.ClearTable,
+private val libraryDao         : MyDao.LibraryDao,
+private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
 
 
 //cards
 
-    val getFileWithNoParents: Flow<List<File>> = fileDao.getFileWithoutParent()
 
-    val cardsWithNoParents: Flow<List<Card>> = cardDao.getCardsWithoutParent()
-    fun getCardByFileId(fileId: Int): Flow<List<Card>> {
-        return cardDao.getCardsByFileId(fileId)
 
+     suspend fun getLibRVCover(parentFileId: Int?): List<LibraryRV> {
+        val finalList = mutableListOf<LibraryRV>()
+
+        var containingFolder = 0
+        var containingFlashCardCover = 0
+        var containingCard = 0
+
+         fun getContainingItemsAmount(file: File?) {
+            when (file?.fileStatus) {
+                FileStatus.FOLDER -> {
+                    var containingFiles:List<File> = libraryDao.getFileDataByFileId(file.fileId)
+                     val folders= containingFiles.filter { file ->
+                        file.fileStatus== FileStatus.FOLDER}
+                    containingFolder +=folders.size
+                    val flashCardCovers = containingFiles.filter { file->
+                        file.fileStatus == FileStatus.TANGO_CHO_COVER }
+                    containingFlashCardCover += flashCardCovers.size
+//                    containingFiles.onEach { getContainingItemsAmount(it) }
+                    }
+                FileStatus.TANGO_CHO_COVER -> {
+                 containingCard +=  libraryDao.getCardAmountByFileId(file.fileId)
+                }
+                else -> Log.d("getLibRVCover", "${file?.fileId} unknown file status")
+            }
+
+
+
+
+
+
+        }
+        fun addToFinalList(file:File?,card:CardAndTags?){
+            when (file!!.fileStatus) {
+                FileStatus.FOLDER -> finalList.add(
+                    LibraryRV.Folder(
+                        file = file,
+                        containingFolder = containingFolder,
+                        containingFlashCardCover = containingFlashCardCover,
+                        containingCard = containingCard
+                    )
+                )
+                FileStatus.TANGO_CHO_COVER -> finalList.add(
+                    LibraryRV.FlashCardCover(
+                        file = file,
+                        containingCard = containingCard
+                    )
+                )
+                else -> Log.d("getLibRVCover", "unknown file status")
+            }
+            val mytags = mutableListOf<TagData>()
+            card?.tags?.onEach { mytags.add(TagData(it.fileId,it.title.orEmpty())) }
+            when (card?.card?.cardStatus) {
+                CardStatus.STRING->finalList.add(
+                    LibraryRV.StringCard(
+                        card = card.card,
+                        tags = mytags
+                    ))
+                CardStatus.CHOICE ->finalList.add(
+                    LibraryRV.ChoiceCard(
+                        card = card.card,
+                        tags = mytags
+                    )
+                )
+                CardStatus.MARKER ->finalList.add(
+                    LibraryRV.MarkerCard(
+                        card = card.card,
+                        tags = mytags
+                    )
+                )
+                else -> return
+            }
+        }
+
+
+
+
+
+
+        if (parentFileId == null) {
+            libraryDao.getFileWithoutParent().collect { file ->
+                file.onEach { file ->  getContainingItemsAmount(file)
+                    addToFinalList(file,null)}
+
+                }
+            } else {
+            libraryDao.getFileDataByFileId(parentFileId).onEach { file ->
+                    getContainingItemsAmount(file)
+                    addToFinalList(file,null)
+
+                }
+            libraryDao.getCardsDataByFileId(parentFileId).onEach { addToFinalList(null,it) }
+            }
+
+        finalList.sortWith(compareBy { it.position })
+        return finalList
     }
-    fun getLibFilesByFileId(belongingFileId: Int? ): Flow<List<File>>{
-        return libraryDao.getLibCardsByFileId(belongingFileId)
-    }
 
 
-    fun getCardsBySearch(search: String): Flow<List<Card>> {
-        return cardDao.searchCardsByWords(search)
-    }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insertCard(card: Card) {
-        libraryDao.cardDao.insert(card)
-    }
+    suspend fun insert(item: Any) {
 
-    suspend fun insertCards(cards: List<Card>) {
-        cardDao.insertList(cards)
-    }
+        when (item ){
+            is CardAndTagXRef -> cardAndTagXRefDao  .insert(item)
+            is Card           -> cardDao            .insert(item)
+            is File           -> fileDao            .insert(item)
+            is User           -> userDao            .insert(item)
+            is MarkerData     -> markerDataDao      .insert(item)
+            is Choice         -> choiceDao          .insert(item)
+            is ActivityData   -> activityDataDao    .insert(item)
 
-    suspend fun updateCard(card: Card) {
-        cardDao.update(card)
-
-    }
-
-    suspend fun updateCards(cards: List<Card>) {
-        cardDao.updateMultiple(cards)
+        }
 
     }
+    suspend fun insertMultiple(item: List<*>) {
 
-    suspend fun deleteCard(card: Card) {
-        cardDao.delete(card)
-    }
+        cardAndTagXRefDao      .insertList(item.filterIsInstance<CardAndTagXRef>())
+        cardDao                .insertList(item.filterIsInstance<Card>())
+        fileDao                .insertList(item.filterIsInstance<File>())
+        activityDataDao        .insertList(item.filterIsInstance<ActivityData>())
+        markerDataDao          .insertList(item.filterIsInstance<MarkerData>())
+        choiceDao              .insertList(item.filterIsInstance<Choice>())
 
-    suspend fun deleteCards(cards: List<Card>) {
-        cardDao.deleteMultiple(cards)
-    }
 
-//
-
-    //files
-//    val fileWithNoParents: Flow<List<File>> = fileDao.getFileWithoutParent()
-//    fun getFileByFileId(fileId: Int): Flow<List<File>> {
-//        return fileDao.getCardsByFileId(fileId)
-//
-//    }
-//
-//    @Suppress("RedundantSuspendModifier")
-//    @WorkerThread
-//    suspend fun insertFile(file: File) {
-//        fileDao.insert(file)
-//    }
-//
-//    suspend fun insertFiles(files: List<File>) {
-//        fileDao.insertList(files)
-//    }
-//
-//    suspend fun updateFile(file: File) {
-//        fileDao.update(file)
-//
-//    }
-//
-//    suspend fun updateFiles(files: List<File>) {
-//        fileDao.updateMultiple(files)
-//
-//    }
-//
-//    suspend fun deleteFile(file: File) {
-//        fileDao.delete(file)
-//    }
-//
-//    suspend fun deleteFiles(files: List<File>) {
-//        fileDao.deleteMultiple(files)
-//    }
-
-//    marker
-//    fun getMarkerByCardId(cardId: Int): Flow<List<MarkerData>> {
-//        return markerDao.getMarkerDataByCardId(cardId)
-//
-//    }
-//
-//    @Suppress("RedundantSuspendModifier")
-//    @WorkerThread
-//
-//    suspend fun insertMarkerData(markerData: List<MarkerData>) {
-//        markerDao.insertList(markerData)
-//    }
-//
-//
-//    suspend fun updateMarkerData(markerData: List<MarkerData>) {
-//        markerDao.updateMultiple(markerData)
-//
-//    }
-//
-//    suspend fun deleteMarkerData(markerData: List<MarkerData>) {
-//        markerDao.deleteMultiple(markerData)
-//    }
-// choice
-    fun getMarkerByCardId(choiceId: Int): Flow<List<Choice>> {
-        return choiceDao.getChoicesById(choiceId)
 
     }
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
 
 
+    suspend fun updateCard(item: Any) {
+        when (item ){
+            is CardAndTagXRef -> cardAndTagXRefDao  .update(item)
+            is Card           -> cardDao            .update(item)
+            is File           -> fileDao            .update(item)
+            is User           -> userDao            .update(item)
+            is MarkerData     -> markerDataDao      .update(item)
+            is Choice         -> choiceDao          .update(item)
+            is ActivityData   -> activityDataDao    .update(item)
 
-    suspend fun updateChoice(choice: Choice) {
-        choiceDao.update(choice)
+        }
 
     }
 
-    suspend fun deleteMarkerData(choices: List<Choice>) {
-        choiceDao.deleteMultiple(choices)
+    suspend fun updateCards(item: List<Any>) {
+        cardAndTagXRefDao      .updateMultiple(item.filterIsInstance<CardAndTagXRef>())
+        cardDao                .updateMultiple(item.filterIsInstance<Card>())
+        fileDao                .updateMultiple(item.filterIsInstance<File>())
+        activityDataDao        .updateMultiple(item.filterIsInstance<ActivityData>())
+        markerDataDao          .updateMultiple(item.filterIsInstance<MarkerData>())
+        choiceDao              .updateMultiple(item.filterIsInstance<Choice>())
+
     }
 
+    suspend fun deleteCard(item: Any) {
+        when (item){
+            is CardAndTagXRef -> cardAndTagXRefDao  .delete(item)
+            is Card           -> cardDao            .delete(item)
+            is File           -> fileDao            .delete(item)
+            is User           -> userDao            .delete(item)
+            is MarkerData     -> markerDataDao      .delete(item)
+            is Choice         -> choiceDao          .delete(item)
+            is ActivityData   -> activityDataDao    .delete(item)
+
+        }
+        }
+
+    suspend fun deleteCards(item: List<Any>) {
+        cardAndTagXRefDao      .deleteMultiple(item.filterIsInstance<CardAndTagXRef>())
+        cardDao                .deleteMultiple(item.filterIsInstance<Card>())
+        fileDao                .deleteMultiple(item.filterIsInstance<File>())
+        activityDataDao        .deleteMultiple(item.filterIsInstance<ActivityData>())
+        markerDataDao          .deleteMultiple(item.filterIsInstance<MarkerData>())
+        choiceDao              .deleteMultiple(item.filterIsInstance<Choice>())
+    }
+
+
+
+
+//
+
+
+
+
+//
 
 }

@@ -9,7 +9,7 @@ enum class ColorStatus(value: Int) {
     BLUE(2),
     YELLOW(3)
 }
-@ProvidedTypeConverter
+
 class ColorStatusConverter {
     @TypeConverter
     fun toColorStatus(value: Int): ColorStatus = enumValues<ColorStatus>()[value]
