@@ -7,7 +7,7 @@
 
 
 
-    <androidx.viewpager2.widget.ViewPager2
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/viewPager"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
@@ -27,10 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewPager"
-        app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="unlabeled" >
-        <include
-            layout="@layout/item_bottom_navigation_bar"/>
     </FrameLayout>
 
 

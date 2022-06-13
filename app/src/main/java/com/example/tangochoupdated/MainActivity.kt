@@ -1,13 +1,16 @@
 package com.example.tangochoupdated
 
 import android.os.Bundle
+import android.view.View
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -24,7 +27,7 @@ import com.example.tangochoupdated.ui.planner.CreateFragment
 import com.example.tangochoupdated.ui.planner.PlannerFragment
 
 private const val NUM_PAGES = 5
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),View.OnClickListener {
     val fragments = mutableListOf(HomeFragment(),PlannerFragment(),CreateFragment())
     val fragmentManager = MyFragmentManager()
 
@@ -41,50 +44,48 @@ class MainActivity : AppCompatActivity() {
         binding = MyActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val fm = supportFragmentManager
+        val fta = fm.beginTransaction()
+        fta.replace(binding.viewPager.id,HomeFragment()).commit()
 
 
-
-
-        viewPager = binding.viewPager
-
-        // The pager adapter, which provides the pages to the view pager widget.
-        val pagerAdapter = ScreenSlidePagerAdapter(this)
-        viewPager.adapter = pagerAdapter
         val bnvBinding = ItemBottomNavigationBarBinding.inflate(layoutInflater)
+
+        bnvBinding.root.children.iterator().forEachRemaining {
+            it.setOnClickListener { when (it?.id) {
+                bnvBinding.layout3.id -> fm.commit {
+                    replace(binding.viewPager.id,AnkiFragment())
+                }
+                bnvBinding.layout2.id -> fm.commit {
+                    replace(binding.viewPager.id,CreateFragment())
+                }
+                bnvBinding.layout1.id -> fm.commit {
+                    replace(binding.viewPager.id,HomeFragment())
+                }
+            }
+            }
+        }
+
+
         binding.frameBnv.addView(bnvBinding.root)
 
 
+
+
+
     }
-    override fun onBackPressed() {
-        if (viewPager.currentItem == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed()
-        } else {
-            // Otherwise, select the previous step.
-            viewPager.currentItem = viewPager.currentItem - 1
+
+    override fun onClick(v: View?) {
+        val bnvBinding = ItemBottomNavigationBarBinding.inflate(layoutInflater)
+        val fm = supportFragmentManager
+        val fta = fm.beginTransaction()
+        when (v?.id) {
+            bnvBinding.imvAnki.id -> fta.replace(binding.frameBnv.id, AnkiFragment()).commit()
+            bnvBinding.imvAdd.id -> fta.replace(binding.frameBnv.id, CreateFragment()).commit()
         }
-    }
-
-    fun initLibRV(rv:RecyclerView,adapter: LibraryListAdapter){
-        rv.adapter = adapter
-        rv.layoutManager = LinearLayoutManager(this)
 
 
-    }
 
-    private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-
-        override fun getItemCount(): Int = NUM_PAGES
-
-
-        override fun createFragment(position: Int): Fragment{
-            val fragments = mutableListOf<Fragment>()
-            fragments.add(0,HomeFragment())
-            fragments.add(1,CreateFragment())
-            fragments.add(2,AnkiFragment())
-            return fragments[position]
-        }
 
     }
 
