@@ -16,6 +16,15 @@
         android:name="com.example.tangochoupdated.ui.anki.AnkiFragment"
         android:label="@string/title_tab_anki"
         tools:layout="@layout/fragment_anki_home" />
+    <action
+        android:id="@+id/to_lib"
+        app:destination="@+id/navigation_library"/>
+    <action
+        android:id="@+id/to_anki"
+        app:destination="@+id/navigation_anki"/>
+
+
+
 
     <fragment
         android:id="@+id/navigation_planner"

@@ -1,68 +1,64 @@
 package com.example.tangochoupdated
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.children
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
+import androidx.fragment.app.*
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.adapter.FragmentViewHolder
-import androidx.viewpager2.widget.ViewPager2
 import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
 import com.example.tangochoupdated.ui.anki.AnkiFragment
 import com.example.tangochoupdated.ui.library.HomeFragment
 import com.example.tangochoupdated.ui.planner.CreateFragment
-import com.example.tangochoupdated.ui.planner.PlannerFragment
 
-private const val NUM_PAGES = 5
-class MainActivity : AppCompatActivity(),View.OnClickListener {
-    val fragments = mutableListOf(HomeFragment(),PlannerFragment(),CreateFragment())
-    val fragmentManager = MyFragmentManager()
-
-    class MyFragmentManager:FragmentManager(){
-
+class MainActivity : AppCompatActivity() {
+    enum class Tab{
+        TabLibrary,TabAnki,TabCreate
     }
+    enum class ViewStatus{
+        Active, InActive
+    }
+    var activeTab = Tab.TabLibrary
+    var popUpVisible = false
+
 
     private lateinit var binding: MyActivityMainBinding
-    private lateinit var viewPager: ViewPager2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         binding = MyActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val fm = supportFragmentManager
-        val fta = fm.beginTransaction()
-        fta.replace(binding.viewPager.id,HomeFragment()).commit()
-
-
         val bnvBinding = ItemBottomNavigationBarBinding.inflate(layoutInflater)
+        bnvBinding.bnvImv1.setImageDrawable(getDrawable(R.drawable.icon_library_active))
+        bnvBinding.bnvTxv1.visibility = GONE
+        bnvBinding.imv2.setImageDrawable(getDrawable(R.drawable.iconadd))
+        bnvBinding.imv3.setImageDrawable(getDrawable(R.drawable.iconanki))
+        bnvBinding.txv3.text = getString(R.string.title_tab_anki)
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(binding.viewPager.id) as NavHostFragment
+        val myNav = navHostFragment.navController
+
+
+
+
 
         bnvBinding.root.children.iterator().forEachRemaining {
-            it.setOnClickListener { when (it?.id) {
-                bnvBinding.layout3.id -> fm.commit {
-                    replace(binding.viewPager.id,AnkiFragment())
-                }
-                bnvBinding.layout2.id -> fm.commit {
-                    replace(binding.viewPager.id,CreateFragment())
-                }
-                bnvBinding.layout1.id -> fm.commit {
-                    replace(binding.viewPager.id,HomeFragment())
-                }
-            }
+            it.setOnClickListener { view->
+                onClickBnv(bnvBinding,view,myNav)
             }
         }
 
@@ -75,18 +71,99 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
     }
 
-    override fun onClick(v: View?) {
-        val bnvBinding = ItemBottomNavigationBarBinding.inflate(layoutInflater)
-        val fm = supportFragmentManager
-        val fta = fm.beginTransaction()
-        when (v?.id) {
-            bnvBinding.imvAnki.id -> fta.replace(binding.frameBnv.id, AnkiFragment()).commit()
-            bnvBinding.imvAdd.id -> fta.replace(binding.frameBnv.id, CreateFragment()).commit()
+    private fun onClickBnv(bnvBinding: ItemBottomNavigationBarBinding, v: View,navController: NavController){
+        val makeActive = when(v.id){
+            bnvBinding.layout1.id -> Tab.TabLibrary
+            bnvBinding.layout2.id -> Tab.TabCreate
+            bnvBinding.layout3.id -> Tab.TabAnki
+            else -> null
+
+        }
+
+
+        fun setBnvLayout( tab:Tab?,makeStatus: ViewStatus) {
+            val imv = when(tab){
+                Tab.TabLibrary -> bnvBinding.bnvImv1
+                Tab.TabAnki -> bnvBinding.imv3
+                else -> return
+            }
+            val txv= when(tab){
+                Tab.TabLibrary -> bnvBinding.bnvTxv1
+                Tab.TabAnki -> bnvBinding.txv3
+                Tab.TabCreate -> return
+            }
+            val txvText = when(tab){
+                Tab.TabLibrary -> getString(R.string.title_tab_library)
+                Tab.TabAnki -> getString(R.string.title_tab_anki)
+                Tab.TabCreate -> return
+            }
+            val activeDrawable:Drawable = when(tab){
+                Tab.TabLibrary -> getDrawable(R.drawable.icon_library_active)!!
+                Tab.TabAnki -> getDrawable(R.drawable.icon_anki_active)!!
+                Tab.TabCreate -> return
+            }
+            val inActiveDrawable:Drawable= when(tab){
+                Tab.TabLibrary -> getDrawable(R.drawable.icon_library_plane)!!
+                Tab.TabAnki -> getDrawable(R.drawable.iconanki)!!
+                Tab.TabCreate -> return
+            }
+
+            when (makeStatus) {
+                ViewStatus.Active -> {
+                    txv.visibility = GONE
+                    imv.setImageDrawable(activeDrawable)
+                }
+                ViewStatus.InActive ->  {
+                    txv.visibility = VISIBLE
+                    txv.text = txvText
+                    imv.setImageDrawable(inActiveDrawable)
+                }
+            }
+
+
+
+        }
+        fun fragmentAction( makeActive:Tab ){
+
+            val actionId = when(v.id){
+                bnvBinding.layout1.id -> R.id.to_lib
+                bnvBinding.layout3.id -> R.id.to_anki
+                else -> return
+            }
+
+            navController.navigate(actionId!!)
+            setBnvLayout(activeTab,ViewStatus.InActive)
+            setBnvLayout(makeActive,ViewStatus.Active)
+            activeTab = makeActive
+
+
+        }
+
+        if(makeActive!= Tab.TabCreate){
+            if(makeActive!=activeTab){
+                fragmentAction(makeActive!!)
+
+            } else return
+
+        } else{
+            if(!popUpVisible){
+                supportFragmentManager.commit {
+                    add(binding.viewPager.id,CreateFragment(),"AddFragment")
+                    popUpVisible =true
+
+                }
+            } else{
+                supportFragmentManager.commit {
+                    remove( supportFragmentManager.findFragmentByTag("AddFragment")!!)
+                    popUpVisible = false
+                }
+            }
         }
 
 
 
-
     }
+
+
 
 }
