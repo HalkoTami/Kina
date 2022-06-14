@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity() {
     private fun onClickBnv(bnvBinding: ItemBottomNavigationBarBinding, v: View,navController: NavController){
         val makeActive = when(v.id){
             bnvBinding.layout1.id -> Tab.TabLibrary
-            bnvBinding.layout2.id -> Tab.TabCreate
             bnvBinding.layout3.id -> Tab.TabAnki
             else -> null
 
@@ -130,7 +129,6 @@ class MainActivity : AppCompatActivity() {
                 bnvBinding.layout3.id -> R.id.to_anki
                 else -> return
             }
-
             navController.navigate(actionId!!)
             setBnvLayout(activeTab,ViewStatus.InActive)
             setBnvLayout(makeActive,ViewStatus.Active)
@@ -138,27 +136,27 @@ class MainActivity : AppCompatActivity() {
 
 
         }
-
-        if(makeActive!= Tab.TabCreate){
-            if(makeActive!=activeTab){
-                fragmentAction(makeActive!!)
-
-            } else return
-
+        if(popUpVisible){
+            supportFragmentManager.commit {
+                remove( supportFragmentManager.findFragmentByTag("AddFragment")!!)
+                popUpVisible = false
+            }
         } else{
-            if(!popUpVisible){
+            if(makeActive!=null){
+                if(makeActive!=activeTab){
+                    fragmentAction(makeActive)
+                } else return
+            } else{
                 supportFragmentManager.commit {
                     add(binding.viewPager.id,CreateFragment(),"AddFragment")
                     popUpVisible =true
 
                 }
-            } else{
-                supportFragmentManager.commit {
-                    remove( supportFragmentManager.findFragmentByTag("AddFragment")!!)
-                    popUpVisible = false
-                }
             }
+
         }
+
+
 
 
 

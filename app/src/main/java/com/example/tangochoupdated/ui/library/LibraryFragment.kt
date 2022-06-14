@@ -48,10 +48,9 @@ class HomeFragment : Fragment(),DataClickListener{
         val rvList = mutableListOf<LibraryRV>()
 
 
-        viewModel.parentList.observe(requireActivity()){
-           rvList.addAll(viewModel.getListData(it,null))
+        viewModel.finalList.observe(requireActivity()){
+            adapter.submitList(it)
         }
-        adapter.submitList(rvList)
 
 
         recyclerView?.layoutManager = LinearLayoutManager(context)
