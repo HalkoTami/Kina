@@ -13,23 +13,32 @@ import kotlinx.coroutines.*
 
 class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel(){
     var fileId:Int = 0
-
-    val parentList:LiveData<List<File>> = repository.getFileWithoutParent().asLiveData()
-    fun  getSpecifiedFiles(fileId:Int):LiveData<List<File>> =  repository.getFileDataByFileId(fileId!!).asLiveData()
-
-    fun getSpecifiedCards(fileId: Int):LiveData<List<CardAndTags>> = repository.getCardDataByFileId(fileId).asLiveData()
-    fun  getListData(fileList: List<File>?, cardList: List<CardAndTags>?) :List<LibraryRV>{
+    fun  getListData(fileList: List<File>?, cardList: List<CardAndTags>?) :LiveData<List<LibraryRV>>{
+        val liveD = MutableLiveData<List<LibraryRV>>()
         val a = mutableListOf<LibraryRV>()
         fileList?.onEach { a.add(convertFileToLibraryRV(it)!!) }
         cardList?.onEach { a.add(convertCardToLibraryRV(it)!!) }
-        return a
+        liveD.apply {
+            value = a
+        }
+
+        return liveD
 
 
     }
 
+    val parentList:LiveData<List<File>> = repository.getFileWithoutParent().asLiveData()
+    val finalList:LiveData<List<LibraryRV>> = Transformations.switchMap(parentList){
+        list -> getListData(list,null)
+    }
+
+    fun  getSpecifiedFiles(fileId:Int):LiveData<List<File>> =  repository.getFileDataByFileId(fileId!!).asLiveData()
+
+    fun getSpecifiedCards(fileId: Int):LiveData<List<CardAndTags>> = repository.getCardDataByFileId(fileId).asLiveData()
 
 
-    private fun convertFileToLibraryRV(file: File?): LibraryRV? {
+
+    fun convertFileToLibraryRV(file: File?): LibraryRV? {
 
         when (file!!.fileStatus) {
 

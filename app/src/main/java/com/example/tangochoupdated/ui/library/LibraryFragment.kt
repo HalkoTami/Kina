@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tangochoupdated.*
 
@@ -49,16 +48,15 @@ class HomeFragment : Fragment(),DataClickListener{
         val rvList = mutableListOf<LibraryRV>()
 
 
-        viewModel.parentList.observe(requireActivity()){
-           rvList.addAll(viewModel.getListData(it,null))
+        viewModel.finalList.observe(requireActivity()){
+            adapter.submitList(it)
         }
-        adapter.submitList(rvList)
 
 
         recyclerView?.layoutManager = LinearLayoutManager(context)
 
-        val bnv :BottomNavigationView = requireActivity().findViewById(R.id.my_bnv)
-        bnv.menu.getItem(0).setIcon(R.drawable.icon_library_active)
+
+
 
 
         return root
