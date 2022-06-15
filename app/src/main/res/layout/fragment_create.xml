@@ -5,27 +5,34 @@
     android:layout_height="match_parent"
     android:backgroundTint="@android:color/transparent">
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_green_stroke"
+        android:elevation="20dp"
+        android:id="@+id/popup_add_file"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        >
         <include
-            android:id="@+id/popup_add_file"
+            android:id="@+id/binding_create_file"
             layout="@layout/add_popup"/>
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/frame_bottomMenu"
+        android:background="@drawable/rectangle_green_stroke"
+        android:elevation="10dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <include
-            android:id="@+id/popup_add_menu"
+            android:id="@+id/binding_add_menu"
             layout="@layout/item_bottom_popup_add" />
 
     </FrameLayout>

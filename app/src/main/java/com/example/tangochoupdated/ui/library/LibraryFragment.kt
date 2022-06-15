@@ -78,7 +78,7 @@ class HomeFragment : Fragment(),DataClickListener{
             FileStatus.FOLDER -> {
                 return LibraryRV(
                     type = LibRVViewType.Folder,
-                    position = file.libOrder,
+                    position = file.libOrder!!,
                     file = file,
                     card = null,
                     tag = null,
@@ -90,7 +90,7 @@ class HomeFragment : Fragment(),DataClickListener{
             FileStatus.TANGO_CHO_COVER ->
                 return LibraryRV(
                     type = LibRVViewType.FlashCardCover,
-                    position = file.libOrder,
+                    position = file.libOrder!!,
                     file = file,
                     card = null,
                     tag = null,

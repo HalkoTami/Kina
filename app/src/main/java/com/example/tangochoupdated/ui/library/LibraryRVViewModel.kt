@@ -11,7 +11,7 @@ import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import kotlinx.coroutines.*
 
 
-class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel(){
+class LibraryRVViewModel(private val repository: MyRoomRepository) : BaseViewModel(repository){
     var fileId:Int = 0
     fun  getListData(fileList: List<File>?, cardList: List<CardAndTags>?) :LiveData<List<LibraryRV>>{
         val liveD = MutableLiveData<List<LibraryRV>>()
@@ -45,7 +45,7 @@ class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel()
             FileStatus.FOLDER -> {
                 return LibraryRV(
                     type = LibRVViewType.Folder,
-                    position = file.libOrder,
+                    position = file.libOrder!!,
                     file = file,
                     card = null,
                     tag = null,
@@ -57,7 +57,7 @@ class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel()
             FileStatus.TANGO_CHO_COVER ->
                 return LibraryRV(
                     type = LibRVViewType.FlashCardCover,
-                    position = file.libOrder,
+                    position = file.libOrder!!,
                     file = file,
                     card = null,
                     tag = null,
@@ -113,6 +113,14 @@ class LibraryRVViewModel(private val repository: MyRoomRepository) : ViewModel()
      * Launching a new coroutine to insert the data in a non-blocking way
      */
     var list = listOf<LibraryRV>()
+}
+
+abstract class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
+    fun insert(item:Any)= viewModelScope.launch {
+            repository.insert(item)
+        }
+
+
 }
 class ViewModelFactory(private val repository: MyRoomRepository) : ViewModelProvider.NewInstanceFactory() {
 

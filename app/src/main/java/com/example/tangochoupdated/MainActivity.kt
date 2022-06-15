@@ -9,7 +9,9 @@ import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.children
+import androidx.core.view.setPadding
 import androidx.fragment.app.*
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -18,7 +20,10 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
 import com.example.tangochoupdated.ui.anki.AnkiFragment
+import com.example.tangochoupdated.ui.library.BaseViewModel
 import com.example.tangochoupdated.ui.library.HomeFragment
+import com.example.tangochoupdated.ui.library.LibraryRVViewModel
+import com.example.tangochoupdated.ui.library.ViewModelFactory
 import com.example.tangochoupdated.ui.planner.CreateFragment
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +33,10 @@ class MainActivity : AppCompatActivity() {
     enum class ViewStatus{
         Active, InActive
     }
+    private val baseviewModel: BaseViewModel by lazy { ViewModelProvider(this, ViewModelFactory(
+        (application as RoomApplication).repository
+    )
+    ).get(BaseViewModel::class.java) }
     var activeTab = Tab.TabLibrary
     var popUpVisible = false
 
@@ -45,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         bnvBinding.bnvImv1.setImageDrawable(getDrawable(R.drawable.icon_library_active))
         bnvBinding.bnvTxv1.visibility = GONE
         bnvBinding.imv2.setImageDrawable(getDrawable(R.drawable.iconadd))
+        bnvBinding.bnvImv1.setPadding(10)
         bnvBinding.imv3.setImageDrawable(getDrawable(R.drawable.iconanki))
         bnvBinding.txv3.text = getString(R.string.title_tab_anki)
 
@@ -111,11 +121,13 @@ class MainActivity : AppCompatActivity() {
                 ViewStatus.Active -> {
                     txv.visibility = GONE
                     imv.setImageDrawable(activeDrawable)
+                    imv.setPadding(10)
                 }
                 ViewStatus.InActive ->  {
                     txv.visibility = VISIBLE
                     txv.text = txvText
                     imv.setImageDrawable(inActiveDrawable)
+                    imv.setPadding(0)
                 }
             }
 
