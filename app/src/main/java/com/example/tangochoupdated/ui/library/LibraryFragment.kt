@@ -1,11 +1,15 @@
 package com.example.tangochoupdated.ui.library
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tangochoupdated.*
 
@@ -22,15 +26,18 @@ class HomeFragment : Fragment(),DataClickListener{
 
     lateinit var adapter:LibraryListAdapter
 
-    private val viewModel: LibraryRVViewModel by lazy { ViewModelProvider(this, ViewModelFactory(
-        (requireActivity().application as RoomApplication).repository
-    )).get(LibraryRVViewModel::class.java) }
+    lateinit var sharedViewModel: BaseViewModel
     private var _binding: FragmentLibraryHomeBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        sharedViewModel =
+        ViewModelProvider(requireActivity(),ViewModelFactory((requireActivity().application as RoomApplication).repository)).get(BaseViewModel::class.java)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,10 +52,10 @@ class HomeFragment : Fragment(),DataClickListener{
         val recyclerView = _binding?.vocabCardRV
         adapter = LibraryListAdapter(this)
         recyclerView?.adapter = adapter
-        val rvList = mutableListOf<LibraryRV>()
 
 
-        viewModel.finalList.observe(requireActivity()){
+
+        sharedViewModel.finalList.observe(requireActivity()){
             adapter.submitList(it)
         }
 

@@ -13,12 +13,15 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.FragmentCreateBinding
 import com.example.tangochoupdated.databinding.FragmentPlannerHomeBinding
 import com.example.tangochoupdated.room.dataclass.File
+import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.ui.library.BaseViewModel
 
 class CreateFragment : Fragment() {
@@ -31,6 +34,8 @@ class CreateFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,23 +66,22 @@ class CreateFragment : Fragment() {
                 onClickAddMenu(it)
             }
         }
-
+        binding.bindingCreateFile.btnCreateFile.setOnClickListener {
+            onClickCreateFile(it)
+        }
         return root
     }
     fun onClickAddMenu(v:View){
         appearAnimator.reverse()
         when (v.id){
             binding.bindingAddMenu.imvnewfolder.id -> {
+                sharedViewModel.fileStatus = FileStatus.FOLDER
                 binding.popupAddFile.visibility= View.VISIBLE
                 ObjectAnimator.ofFloat(binding.popupAddFile, View.ALPHA, 0f,1f ).apply {
                     duration= 500
                     start()
                 }
-                binding.bindingCreateFile.root.children.iterator().forEachRemaining {
-                    it.setOnClickListener {
-                        onClickCreateFile(it)
-                    }
-                }
+
             }
         }
 
@@ -85,8 +89,13 @@ class CreateFragment : Fragment() {
     }
 
     fun onClickCreateFile(v:View){
-        when(v){
-            binding.bindingCreateFile.btnCreateFile -> {
+        when(v.id){
+            binding.bindingCreateFile.btnCreateFile.id -> {
+                sharedViewModel.title = binding.bindingCreateFile.edtCreatefile.text.toString()
+                sharedViewModel.insertFile()
+                requireActivity().supportFragmentManager.commit {
+                    remove(this@CreateFragment)
+                }
 
             }
         }

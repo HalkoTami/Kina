@@ -20,7 +20,8 @@ import kotlinx.coroutines.launch
     MarkerData::class,
     Choice::class,
     ActivityData::class,
-    CardAndTagXRef::class],
+    CardAndTagXRef::class,
+    FileXRef::class],
     version = 1, exportSchema = false)
 @TypeConverters(
     ActivityStatusConverter::class,
@@ -63,18 +64,17 @@ public abstract class MyRoomDatabase : RoomDatabase() {
 
                     // Add sample words.
                     var file = File(
-                        0,
-                        0,
-                        "タイトルなし",
-                        false,
-                        ColorStatus.RED,
-                        FileStatus.FOLDER,
-                        false,
-                        false,
-                        0,
-                        0,
-                        0,
-                        0)
+                        fileId = 0,
+                        title = "タイトルなし",
+                        deleted = false,
+                        colorStatus=  ColorStatus.RED,
+                        fileStatus = FileStatus.FOLDER,
+                        hasChild = false,
+                        hasParent = false,
+                        libOrder = 0,
+                        childFoldersAmount = 0,
+                        childCardsAmount = 0,
+                        childFlashCardCoversAmount = 0)
                     fileDao.insert(file)
 
                 }

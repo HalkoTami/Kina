@@ -2,9 +2,7 @@ package com.example.tangochoupdated.room
 
 import androidx.annotation.WorkerThread
 import com.example.tangochoupdated.room.dataclass.*
-import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
-import com.example.tangochoupdated.room.rvclasses.*
 import kotlinx.coroutines.flow.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
@@ -25,12 +23,13 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
     fun getFileWithoutParent():Flow<List<File>>{
         return libraryDao.getFileWithoutParent()
     }
-    fun getFileDataByFileId(parentFileId:Int):Flow<List<File>>{
-        return libraryDao.getFileDataByFileId(parentFileId)
+    fun getFileDataByFileId(parentFileId:Int):Flow<List<FileWithChild>>{
+        return libraryDao.getFileListByParentFileId(parentFileId)
     }
     fun getCardDataByFileId(parentFileId: Int):Flow<List<CardAndTags>>{
         return  libraryDao.getCardsDataByFileId(parentFileId)
     }
+
 
 
 
@@ -42,7 +41,30 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
         when (item) {
             is CardAndTagXRef -> cardAndTagXRefDao.insert(item)
             is Card -> cardDao.insert(item)
-            is File -> fileDao.insert(item)
+            is File -> {
+//
+//                suspend fun getOverGrandParent(file:File){
+//                    if(file.hasParent){
+//                        var overGrandparentFile = mutableListOf<File>()
+//                        libraryDao.getFileByFileId(file.parentFile).collect{
+//                            overGrandparentFile.add(it)
+//                        }
+//                        when(file.fileStatus){
+//                            FileStatus.FOLDER ->
+//                                overGrandparentFile[0].childFoldersAmount = overGrandparentFile[0].childFoldersAmount?.plus(1)
+//                            FileStatus.TANGO_CHO_COVER ->
+//                                overGrandparentFile[0].childFlashCardCoversAmount = overGrandparentFile[0].childFlashCardCoversAmount?.plus(1)
+//                        }
+//                        overGrandparentFile[0].hasChild = true
+//                        update(overGrandparentFile[0])
+//                        getOverGrandParent(overGrandparentFile[0])
+//
+//                    } else return
+//
+//                }
+//                getOverGrandParent(item)
+                fileDao.insert(item)
+            }
             is User -> userDao.insert(item)
             is MarkerData -> markerDataDao.insert(item)
             is Choice -> choiceDao.insert(item)
@@ -65,7 +87,7 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
     }
 
 
-    suspend fun updateCard(item: Any) {
+    suspend fun update(item: Any) {
         when (item) {
             is CardAndTagXRef -> cardAndTagXRefDao.update(item)
             is Card -> cardDao.update(item)
@@ -79,7 +101,7 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
 
     }
 
-    suspend fun updateCards(item: List<Any>) {
+    suspend fun updateMultiple(item: List<Any>) {
         cardAndTagXRefDao.updateMultiple(item.filterIsInstance<CardAndTagXRef>())
         cardDao.updateMultiple(item.filterIsInstance<Card>())
         fileDao.updateMultiple(item.filterIsInstance<File>())

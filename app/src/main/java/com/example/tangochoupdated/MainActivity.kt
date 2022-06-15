@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.activity.viewModels
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -19,10 +20,13 @@ import androidx.navigation.fragment.NavHostFragment
 
 import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
+import com.example.tangochoupdated.room.dataclass.File
+import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.ui.anki.AnkiFragment
 import com.example.tangochoupdated.ui.library.BaseViewModel
 import com.example.tangochoupdated.ui.library.HomeFragment
-import com.example.tangochoupdated.ui.library.LibraryRVViewModel
+
 import com.example.tangochoupdated.ui.library.ViewModelFactory
 import com.example.tangochoupdated.ui.planner.CreateFragment
 
@@ -33,12 +37,11 @@ class MainActivity : AppCompatActivity() {
     enum class ViewStatus{
         Active, InActive
     }
-    private val baseviewModel: BaseViewModel by lazy { ViewModelProvider(this, ViewModelFactory(
-        (application as RoomApplication).repository
-    )
-    ).get(BaseViewModel::class.java) }
+
     var activeTab = Tab.TabLibrary
     var popUpVisible = false
+
+
 
 
     private lateinit var binding: MyActivityMainBinding
@@ -46,6 +49,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        val baseviewModel:BaseViewModel = ViewModelProvider(this,ViewModelFactory((application as RoomApplication).repository))[BaseViewModel::class.java]
+
+
+
+
 
         binding = MyActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
