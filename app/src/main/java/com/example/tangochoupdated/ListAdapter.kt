@@ -55,7 +55,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
             fun setVisibilityStart(){
                 binding.btnSelect.visibility= GONE
                 binding.btnDelete.visibility= GONE
-                binding.btnDelete.visibility = GONE
+                binding.btnEditWhole.visibility = GONE
             }
             fun setFileVisibility(type:LibRVViewType,item: LibraryRV){
                 binding.stubTag.visibility = GONE
@@ -139,7 +139,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
                     }
                     binding.stubTag.addView(tagBinding.root)
                 } else {
-                    binding.stubTag.visibility = INVISIBLE
+                    binding.stubTag.visibility = GONE
                 }
             }
 
