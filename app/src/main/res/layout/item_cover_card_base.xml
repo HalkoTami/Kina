@@ -28,10 +28,12 @@
         android:layout_width="0dp"
         android:layout_height="105dp"
         android:padding="3dp"
+        android:animateLayoutChanges="true"
         app:layout_constraintEnd_toStartOf="@+id/btn_delete"
         app:layout_constraintStart_toEndOf="@+id/btn_select"
         app:layout_constraintTop_toTopOf="parent">
         <include
+            android:id="@+id/binding_create_file"
             layout="@layout/item_cover_file"/>
 
         
@@ -50,7 +52,7 @@
         app:layout_constraintEnd_toEndOf="@id/btn_delete"
         app:layout_constraintBottom_toTopOf="@+id/btn_delete"
         app:layout_constraintStart_toStartOf="@+id/btn_delete"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageView

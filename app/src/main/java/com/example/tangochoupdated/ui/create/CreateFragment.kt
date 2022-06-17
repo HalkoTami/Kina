@@ -7,22 +7,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationSet
-import android.view.animation.AnimationUtils
-import android.widget.TextView
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
-import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.FragmentCreateBinding
-import com.example.tangochoupdated.databinding.FragmentPlannerHomeBinding
-import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.enumclass.FileStatus
-import com.example.tangochoupdated.ui.library.BaseViewModel
+import com.example.tangochoupdated.BaseViewModel
 
 class CreateFragment : Fragment() {
 

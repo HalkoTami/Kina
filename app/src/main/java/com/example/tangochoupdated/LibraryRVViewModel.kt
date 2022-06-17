@@ -1,4 +1,4 @@
-package com.example.tangochoupdated.ui.library
+package com.example.tangochoupdated
 
 import androidx.lifecycle.*
 import com.example.tangochoupdated.room.MyRoomRepository
@@ -13,115 +13,15 @@ import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import kotlinx.coroutines.*
 
 
-//class LibraryRVViewModel(private val repository: MyRoomRepository) : BaseViewModel(repository){
-//    var fileId:Int = 0
-//    fun  getListData(fileList: List<File>?, cardList: List<CardAndTags>?) :LiveData<List<LibraryRV>>{
-//        val liveD = MutableLiveData<List<LibraryRV>>()
-//        val a = mutableListOf<LibraryRV>()
-//        fileList?.onEach { a.add(convertFileToLibraryRV(it)!!) }
-//        cardList?.onEach { a.add(convertCardToLibraryRV(it)!!) }
-//        liveD.apply {
-//            value = a
-//        }
-//
-//        return liveD
-//
-//
-//    }
-//
-//    val parentList:LiveData<List<File>> = repository.getFileWithoutParent().asLiveData()
-//    val finalList:LiveData<List<LibraryRV>> = Transformations.switchMap(parentList){
-//        list -> getListData(list,null)
-//    }
-//
-//    fun  getSpecifiedFiles(fileId:Int):LiveData<List<File>> =  repository.getFileDataByFileId(fileId!!).asLiveData()
-//
-//    fun getSpecifiedCards(fileId: Int):LiveData<List<CardAndTags>> = repository.getCardDataByFileId(fileId).asLiveData()
-//
-//
-//
-//    fun convertFileToLibraryRV(file: File?): LibraryRV? {
-//
-//        when (file!!.fileStatus) {
-//
-//            FileStatus.FOLDER -> {
-//                return LibraryRV(
-//                    type = LibRVViewType.Folder,
-//                    position = file.libOrder!!,
-//                    file = file,
-//                    card = null,
-//                    tag = null,
-//                    id = file.fileId
-//                )
-//
-//            }
-//
-//            FileStatus.TANGO_CHO_COVER ->
-//                return LibraryRV(
-//                    type = LibRVViewType.FlashCardCover,
-//                    position = file.libOrder!!,
-//                    file = file,
-//                    card = null,
-//                    tag = null,
-//                    id = file.fileId
-//                )
-//
-//
-//            else -> return null
-//        }
-//
-//    }
-//    fun convertCardToLibraryRV(card: CardAndTags?): LibraryRV? {
-//        when (card?.card?.cardStatus) {
-//            CardStatus.STRING -> return LibraryRV(
-//                type = LibRVViewType.StringCard,
-//                position = card.card.libOrder,
-//                file = null,
-//                card = card.card,
-//                tag = card.tags,
-//                id = card.card.id
-//            )
-//            CardStatus.CHOICE -> return LibraryRV(
-//                type = LibRVViewType.ChoiceCard,
-//                position = card.card.libOrder,
-//                file = null,
-//                card = card.card,
-//                tag = card.tags,
-//                id = card.card.id
-//            )
-//
-//            CardStatus.MARKER -> return LibraryRV(
-//                type = LibRVViewType.MarkerCard,
-//                position = card.card.libOrder,
-//                file = null,
-//                card = card.card,
-//                tag = card.tags,
-//                id = card.card.id
-//            )
-//
-//            else -> return null
-//        }
-//    }
-//
-//
-//
-//    override fun onCleared() {
-//        super.onCleared()
-//        viewModelScope.cancel()
-//    }
-//    /**
-//     * Launching a new coroutine to insert the data in a non-blocking way
-//     */
-//    var list = listOf<LibraryRV>()
-//}
 
 class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
-    var fileId:Int = 0
-    fun  getListData(fileList: List<File>?, cardList: List<CardAndTags>?) :LiveData<List<LibraryRV>>{
+    var fileId:Int? = null
+    fun  getListData(fileList: List<File>?, cardList: List<CardAndTags>?,childFiles:List<FileWithChild>?) :LiveData<List<LibraryRV>>{
         val liveD = MutableLiveData<List<LibraryRV>>()
         val a = mutableListOf<LibraryRV>()
         fileList?.onEach { a.add(convertFileToLibraryRV(it)!!) }
         cardList?.onEach { a.add(convertCardToLibraryRV(it)!!) }
+        childFiles?.onEach { file -> file.childFiles.onEach { a.add(convertFileToLibraryRV(it)!!) } }
         liveD.apply {
             value = a
         }
@@ -132,13 +32,55 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     }
 
     val parentList:LiveData<List<File>> = repository.getFileWithoutParent().asLiveData()
-    val finalList:LiveData<List<LibraryRV>> = Transformations.switchMap(parentList){
-            list -> getListData(list,null)
+    val childFiles:LiveData<List<FileWithChild>> = getFileFromParentFile()
+    val childCards:LiveData<List<CardAndTags>> = getCardsFromFileId()
+    private fun getFileFromParentFile():LiveData<List<FileWithChild>>{
+        return if (fileId!=null){
+            return repository.getFileDataByFileId(fileId!!).asLiveData()
+        } else MutableLiveData()
+
     }
+    private fun getCardsFromFileId():LiveData<List<CardAndTags>> {
+        return if (fileId!=null){
+            repository.getCardDataByFileId(fileId!!).asLiveData()
+        } else MutableLiveData()
+
+
+    }
+    val liveDNoParents:LiveData<List<LibraryRV>> =  Transformations.switchMap(parentList)
+    {
+            list -> getListData(list, null,null)
+    }
+
+
+    val liveDChildFiles:LiveData<List<LibraryRV>> = Transformations.switchMap(childFiles){
+            list -> getListData(null,null,list)
+    }
+    val liveDChildCards:LiveData<List<LibraryRV>> = Transformations.switchMap(childCards){
+            list -> getListData(null,list,null)
+    }
+    fun finalList():MediatorLiveData<List<LibraryRV>>{
+        val a = MediatorLiveData<List<LibraryRV>>()
+        if(fileId!=null){
+            a.addSource(liveDChildFiles){
+                a.value = it
+            }
+            a.addSource(liveDChildCards){
+                a.value = it
+            }
+        } else {
+            a.addSource(liveDNoParents){
+                a.value = it
+            }
+        }
+        return a
+    }
+
+
 
     fun  getSpecifiedFiles(fileId:Int):LiveData<List<FileWithChild>> =  repository.getFileDataByFileId(fileId!!).asLiveData()
 
-    fun getSpecifiedCards(fileId: Int):LiveData<List<CardAndTags>> = repository.getCardDataByFileId(fileId).asLiveData()
+
 
 
 
@@ -220,7 +162,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     fun insertFile(){
         if(!hasParent){
             parentFileId = 0
-            libOrder = finalList.value!!.size
+            libOrder = finalList().value!!.size
         }
         val a = File(
         fileId = 0,

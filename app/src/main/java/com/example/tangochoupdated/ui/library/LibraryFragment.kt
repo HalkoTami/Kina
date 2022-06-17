@@ -2,14 +2,10 @@ package com.example.tangochoupdated.ui.library
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tangochoupdated.*
 
@@ -20,11 +16,15 @@ import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
+import kotlin.math.abs
 
 class HomeFragment : Fragment(),DataClickListener{
 
+
+
     lateinit var adapter:LibraryListAdapter
+
 
     lateinit var sharedViewModel: BaseViewModel
     private var _binding: FragmentLibraryHomeBinding? = null
@@ -36,7 +36,10 @@ class HomeFragment : Fragment(),DataClickListener{
     override fun onAttach(context: Context) {
         super.onAttach(context)
         sharedViewModel =
-        ViewModelProvider(requireActivity(),ViewModelFactory((requireActivity().application as RoomApplication).repository)).get(BaseViewModel::class.java)
+        ViewModelProvider(requireActivity(),
+            ViewModelFactory((requireActivity().application as RoomApplication).repository)
+        ).get(BaseViewModel::class.java)
+
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,13 +52,18 @@ class HomeFragment : Fragment(),DataClickListener{
 
 
 
+
+
+
+
+
         val recyclerView = _binding?.vocabCardRV
         adapter = LibraryListAdapter(this)
         recyclerView?.adapter = adapter
 
 
 
-        sharedViewModel.finalList.observe(requireActivity()){
+        sharedViewModel.finalList().observe(requireActivity()){
             adapter.submitList(it)
         }
 
@@ -70,95 +78,31 @@ class HomeFragment : Fragment(),DataClickListener{
 
 
     }
-    fun makeLibRVList(filelist:List<File>?,cardlist:List<CardAndTags>?):List<LibraryRV>{
-        val a = mutableListOf<LibraryRV>()
-        filelist?.onEach { a.add(convertFileToLibraryRV(it)!!) }
-        cardlist?.onEach { a.add(convertCardToLibraryRV(it)!!) }
-        return a
 
 
-    }
-    fun convertFileToLibraryRV(file: File?): LibraryRV? {
-
-        when (file!!.fileStatus) {
-
-            FileStatus.FOLDER -> {
-                return LibraryRV(
-                    type = LibRVViewType.Folder,
-                    position = file.libOrder!!,
-                    file = file,
-                    card = null,
-                    tag = null,
-                    id = file.fileId
-                )
-
-            }
-
-            FileStatus.TANGO_CHO_COVER ->
-                return LibraryRV(
-                    type = LibRVViewType.FlashCardCover,
-                    position = file.libOrder!!,
-                    file = file,
-                    card = null,
-                    tag = null,
-                    id = file.fileId
-                )
 
 
-            else -> return null
-        }
 
-    }
-    fun convertCardToLibraryRV(card: CardAndTags?): LibraryRV? {
-        when (card?.card?.cardStatus) {
-            CardStatus.STRING -> return LibraryRV(
-                type = LibRVViewType.StringCard,
-                position = card.card.libOrder,
-                file = null,
-                card = card.card,
-                tag = card.tags,
-                id = card.card.id
-            )
-            CardStatus.CHOICE -> return LibraryRV(
-                type = LibRVViewType.ChoiceCard,
-                position = card.card.libOrder,
-                file = null,
-                card = card.card,
-                tag = card.tags,
-                id = card.card.id
-            )
 
-            CardStatus.MARKER -> return LibraryRV(
-                type = LibRVViewType.MarkerCard,
-                position = card.card.libOrder,
-                file = null,
-                card = card.card,
-                tag = card.tags,
-                id = card.card.id
-            )
-
-            else -> return null
-        }
-    }
 
     override fun onLongClickMain(type: LibRVViewType, id: Int) {
-        TODO("Not yet implemented")
+        Snackbar.make(binding.root,"hello",Snackbar.LENGTH_SHORT)
     }
 
     override fun onClickEdit(id: Int, viewId: Int) {
-        TODO("Not yet implemented")
+        Snackbar.LENGTH_SHORT
     }
 
     override fun onClickAdd(type: LibRVViewType, id: Int) {
-        TODO("Not yet implemented")
+        Snackbar.LENGTH_SHORT
     }
 
     override fun onClickDelete(type: LibRVViewType, id: Int) {
-        TODO("Not yet implemented")
+        Snackbar.LENGTH_SHORT
     }
 
     override fun onClickMain(type: LibRVViewType, id: Int) {
-        TODO("Not yet implemented")
+       binding.topMenuBarFrame.txvTitle.text = "hello"
     }
 
     override fun onDestroyView() {
