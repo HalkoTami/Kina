@@ -57,6 +57,7 @@ class HomeFragment : Fragment(),DataClickListener{
 
 
 
+
         val recyclerView = _binding?.vocabCardRV
         adapter = LibraryListAdapter(this)
         recyclerView?.adapter = adapter
