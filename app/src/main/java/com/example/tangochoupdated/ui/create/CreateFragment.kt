@@ -84,6 +84,7 @@ class CreateFragment : Fragment() {
         when(v.id){
             binding.bindingCreateFile.btnCreateFile.id -> {
                 sharedViewModel.title = binding.bindingCreateFile.edtCreatefile.text.toString()
+                sharedViewModel.libOrder = 0
                 sharedViewModel.insertFile()
                 requireActivity().supportFragmentManager.commit {
                     remove(this@CreateFragment)

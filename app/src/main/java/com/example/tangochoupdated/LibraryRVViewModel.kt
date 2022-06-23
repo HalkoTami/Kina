@@ -22,6 +22,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
         fileList?.onEach { a.add(convertFileToLibraryRV(it)!!) }
         cardList?.onEach { a.add(convertCardToLibraryRV(it)!!) }
         childFiles?.onEach { file -> file.childFiles.onEach { a.add(convertFileToLibraryRV(it)!!) } }
+        a.sortBy { it.position }
         liveD.apply {
             value = a
         }
@@ -162,7 +163,6 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     fun insertFile(){
         if(!hasParent){
             parentFileId = 0
-            libOrder = finalList().value!!.size
         }
         val a = File(
         fileId = 0,

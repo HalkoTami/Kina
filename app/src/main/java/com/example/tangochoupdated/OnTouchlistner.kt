@@ -12,6 +12,7 @@ open class MyTouchListener(context:Context) : View.OnTouchListener {
 
 
 
+
     private inner class MyGestureListener : GestureDetector.OnGestureListener {
         override fun onShowPress(e: MotionEvent?) {
 
@@ -40,6 +41,7 @@ open class MyTouchListener(context:Context) : View.OnTouchListener {
         private val swipeVelocityThreshold = 100
 
         override fun onDown(e: MotionEvent): Boolean {
+            onDown()
             return true
         }
 
@@ -71,7 +73,8 @@ open class MyTouchListener(context:Context) : View.OnTouchListener {
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         v!!.performClick()
-        return gestureDetector.onTouchEvent(event)
+        gestureDetector.onTouchEvent(event)
+        return true
     }
 
     open fun onSwipeRight() {}
@@ -84,6 +87,9 @@ open class MyTouchListener(context:Context) : View.OnTouchListener {
 
     }
     open fun onSingleTap(){
+
+    }
+    open fun onDown(){
 
     }
 }
