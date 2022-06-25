@@ -8,6 +8,7 @@ import com.example.tangochoupdated.room.dataclass.FileWithChild
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
+import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import kotlinx.coroutines.*
@@ -16,6 +17,18 @@ import kotlinx.coroutines.*
 
 class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     var fileId:Int? = null
+    val createFragmentActive = MutableLiveData<Boolean>()
+    fun changeCreateFragmentStatus(active:Boolean){
+        createFragmentActive.value = active
+    }
+    val activeTab = MutableLiveData<Tab>()
+    fun changeActiveTab (tab:Tab){
+        activeTab.apply {
+            value = tab
+        }
+    }
+
+
     fun  getListData(fileList: List<File>?, cardList: List<CardAndTags>?,childFiles:List<FileWithChild>?) :LiveData<List<LibraryRV>>{
         val liveD = MutableLiveData<List<LibraryRV>>()
         val a = mutableListOf<LibraryRV>()
@@ -183,6 +196,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
 
 
 }
+
 class ViewModelFactory(private val repository: MyRoomRepository) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
@@ -190,3 +204,4 @@ class ViewModelFactory(private val repository: MyRoomRepository) : ViewModelProv
         return BaseViewModel(repository) as T
     }
 }
+//ToDO make factory reusable to different viewModels https://stackoverflow.com/questions/69150992/how-can-i-create-common-viewmodelfactory-with-repository-in-kotlin-android

@@ -8,6 +8,7 @@ import android.transition.Scene
 import android.transition.TransitionManager
 import android.view.*
 import android.view.View.*
+import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -223,9 +224,9 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
             }
             baseBinding.btnSelect.setOnClickListener {
                 if (item.selected){
-                    clickListener.onUnselect(item)
+                    clickListener.onUnselect(item,binding.btnSelect)
                 } else if(!item.selected) {
-                    clickListener.onSelect(item)
+                    clickListener.onSelect(item,binding.btnSelect)
                 }
 
             }
@@ -238,9 +239,9 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
                         binding.btnEditWhole.visibility = GONE
                     } else if(item.selectable){
                         if (item.selected){
-                            clickListener.onUnselect(item)
+                            clickListener.onUnselect(item,binding.btnSelect)
                         } else if (!item.selected) {
-                            clickListener.onSelect(item)
+                            clickListener.onSelect(item,binding.btnSelect)
                         }
 
                     }
@@ -251,12 +252,12 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
 
                 override fun onSwipeLeft() {
                     super.onSwipeLeft()
-                    if(!item.leftSwiped){
+                    if(!item.leftSwiped&&!item.selectable){
                         baseBinding.root.layoutTransition = LayoutTransition()
 
                         baseBinding.root.layoutTransition.apply {
                             enableTransitionType(LayoutTransition.CHANGING)
-                            setDuration(2000)
+                            setDuration(200)
                         }
 
                         binding.btnDelete.visibility = VISIBLE
@@ -268,7 +269,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
                 override fun onLongClick() {
                     super.onLongClick()
                     clickListener.onLongClickMain()
-                    clickListener.onSelect(item)
+                    clickListener.onSelect(item,binding.btnSelect)
                 }
             })
 
@@ -407,12 +408,12 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
 interface DataClickListener {
 
     fun onLongClickMain()
-    fun onSelect(item: LibraryRV)
+    fun onSelect(item: LibraryRV, imageView: ImageView)
     fun onClickEdit(item: LibraryRV)
     fun onClickAdd(item: LibraryRV)
     fun onClickDelete(item: LibraryRV)
     fun onClickMain(item: LibraryRV)
-    fun onUnselect(item: LibraryRV)
+    fun onUnselect(item: LibraryRV,imageView: ImageView)
 
 }
 

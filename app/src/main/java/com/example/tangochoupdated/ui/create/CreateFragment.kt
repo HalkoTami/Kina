@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.planner
 
 import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
@@ -15,14 +16,18 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.tangochoupdated.databinding.FragmentCreateBinding
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.BaseViewModel
+import com.example.tangochoupdated.room.enumclass.Tab
 
 class CreateFragment : Fragment() {
 
     private var _binding: FragmentCreateBinding? = null
     lateinit var appearAnimator:AnimatorSet
-    val bottomAnimators = mutableListOf<Animator>()
+
     private val sharedViewModel: BaseViewModel by activityViewModels()
 
+    private var bottomMenuVisible:Boolean = false
+
+    private var addFileMenuVisible:Boolean = false
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -39,20 +44,20 @@ class CreateFragment : Fragment() {
         _binding = FragmentCreateBinding.inflate(inflater, container, false)
         val root: View = binding.root
         binding.popupAddFile.visibility = View.INVISIBLE
-        val a =ObjectAnimator.ofFloat(binding.frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
 
-        val b = ObjectAnimator.ofFloat(binding.bindingAddMenu.root, View.ALPHA,0f,1f)
-        bottomAnimators.add(a)
-        bottomAnimators.add(b)
+
+
 
 
         appearAnimator =AnimatorSet().apply{
-
+            val a =ObjectAnimator.ofFloat(binding.frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
+            val b = ObjectAnimator.ofFloat(binding.bindingAddMenu.root, View.ALPHA,0f,1f)
             playTogether(a,b)
             duration = 500
 
         }
         appearAnimator.start()
+        bottomMenuVisible = true
         binding.bindingAddMenu.root.children.iterator().forEachRemaining {
             it.setOnClickListener {
                 onClickAddMenu(it)
@@ -61,18 +66,24 @@ class CreateFragment : Fragment() {
         binding.bindingCreateFile.btnCreateFile.setOnClickListener {
             onClickCreateFile(it)
         }
+        binding.root.setOnClickListener {
+            finishWithAnimation()
+//
+        }
         return root
     }
     fun onClickAddMenu(v:View){
         appearAnimator.reverse()
+        bottomMenuVisible = false
         when (v.id){
             binding.bindingAddMenu.imvnewfolder.id -> {
                 sharedViewModel.fileStatus = FileStatus.FOLDER
                 binding.popupAddFile.visibility= View.VISIBLE
-                ObjectAnimator.ofFloat(binding.popupAddFile, View.ALPHA, 0f,1f ).apply {
+                appearAnimator = AnimatorSet().apply {
                     duration= 500
-                    start()
+                    play(ObjectAnimator.ofFloat(binding.popupAddFile, View.ALPHA, 0f,1f ))
                 }
+                addFileMenuVisible= true
 
             }
         }
@@ -86,12 +97,22 @@ class CreateFragment : Fragment() {
                 sharedViewModel.title = binding.bindingCreateFile.edtCreatefile.text.toString()
                 sharedViewModel.libOrder = 0
                 sharedViewModel.insertFile()
-                requireActivity().supportFragmentManager.commit {
-                    remove(this@CreateFragment)
-                }
+                finishWithAnimation()
 
             }
         }
+    }
+    fun finishWithAnimation(){
+
+        appearAnimator.addListener(object:AnimatorListenerAdapter(){
+            override fun onAnimationEnd(animation: Animator?, isReverse: Boolean) {
+                super.onAnimationEnd(animation, isReverse)
+                requireActivity().supportFragmentManager.commit {
+                    remove(this@CreateFragment)
+                }
+            }
+        })
+        appearAnimator.reverse()
     }
 
     override fun onDestroyView() {

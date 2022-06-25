@@ -22,9 +22,12 @@
         app:popUpTo="@id/mobile_navigation"
         app:destination="@+id/navigation_library"/>
     <action
-        android:id="@+id/to_anki"
-        app:popUpTo="@id/mobile_navigation"
-        app:destination="@+id/navigation_anki"/>
+    android:id="@+id/to_anki"
+    app:popUpTo="@id/mobile_navigation"
+    app:destination="@+id/navigation_anki"/>
+    <action
+        android:id="@+id/to_create"
+        app:destination="@+id/navigation_create"/>
 
 
 
