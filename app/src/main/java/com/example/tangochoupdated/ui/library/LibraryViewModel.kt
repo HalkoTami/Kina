@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.tangochoupdated.BaseViewModel
 import com.example.tangochoupdated.room.MyRoomRepository
 
-class LibraryViewModel() : ViewModel() {
+class LibraryViewModel(repository: MyRoomRepository) : ViewModel() {
     val selectedAmount = MutableLiveData<Int>()
 
     var multipleSelectMode :Boolean = false

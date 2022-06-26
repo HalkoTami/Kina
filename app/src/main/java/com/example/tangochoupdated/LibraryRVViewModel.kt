@@ -1,5 +1,6 @@
 package com.example.tangochoupdated
 
+import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.*
 import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.CardAndTags
@@ -11,6 +12,7 @@ import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
+import com.example.tangochoupdated.ui.library.LibraryViewModel
 import kotlinx.coroutines.*
 
 
@@ -201,7 +203,12 @@ class ViewModelFactory(private val repository: MyRoomRepository) : ViewModelProv
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return BaseViewModel(repository) as T
+        val a = when(modelClass ){
+            BaseViewModel::class.java-> BaseViewModel(repository)
+            LibraryViewModel::class.java -> LibraryViewModel(repository)
+            else -> throw illegalDecoyCallException("unknown ViewModel class")
+        }
+        return a as T
+
     }
 }
-//ToDO make factory reusable to different viewModels https://stackoverflow.com/questions/69150992/how-can-i-create-common-viewmodelfactory-with-repository-in-kotlin-android
