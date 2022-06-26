@@ -12,13 +12,15 @@ interface LibraryDao {
 
     @Transaction
     @Query("select * from tbl_file where NOT deleted AND fileId = :belongingFileId ")
-    fun getFileListByParentFileId(belongingFileId: Int ): Flow<List<FileWithChild>>
+    fun getFileListByParentFileId(belongingFileId: Int? ): Flow<List<FileWithChild>>
 
     @Query("select * from tbl_file where NOT deleted AND NOT hasParent ")
     fun getFileWithoutParent(): Flow<List<File>>
 
+
+
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
-    fun getFileByFileId(lookingFileId:Int): Flow<List<File>>
+    fun getFileByFileId(lookingFileId:Int): Flow<File>
 
 
 

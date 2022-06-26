@@ -39,7 +39,7 @@ class HomeFragment : Fragment(),DataClickListener{
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    lateinit var libraryViewModel: LibraryViewModel
+    private lateinit var libraryViewModel: LibraryViewModel
 
 
     override fun onCreateView(
@@ -51,7 +51,19 @@ class HomeFragment : Fragment(),DataClickListener{
         _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
         libraryViewModel =
-            ViewModelProvider(this)[LibraryViewModel::class.java]
+            ViewModelProvider(this,
+                ViewModelFactory((requireActivity().application as RoomApplication).repository)
+            )[LibraryViewModel::class.java]
+
+        val recyclerView = _binding?.vocabCardRV
+        adapter = LibraryListAdapter(this)
+        recyclerView?.adapter = adapter
+
+        libraryViewModel.apply {
+            parentFileId.observe(requireActivity()){
+                adapter.submitList(libraryViewModel.getFinalList(it))
+            }
+        }
 
 
 
@@ -65,9 +77,7 @@ class HomeFragment : Fragment(),DataClickListener{
 
 
 
-        val recyclerView = _binding?.vocabCardRV
-        adapter = LibraryListAdapter(this)
-        recyclerView?.adapter = adapter
+
 
 
 

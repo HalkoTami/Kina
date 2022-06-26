@@ -23,11 +23,14 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
     fun getFileWithoutParent():Flow<List<File>>{
         return libraryDao.getFileWithoutParent()
     }
-    fun getFileDataByFileId(parentFileId:Int):Flow<List<FileWithChild>>{
+    fun getFileDataByParentFileId(parentFileId:Int?):Flow<List<FileWithChild>>{
         return libraryDao.getFileListByParentFileId(parentFileId)
     }
     fun getCardDataByFileId(parentFileId: Int):Flow<List<CardAndTags>>{
         return  libraryDao.getCardsDataByFileId(parentFileId)
+    }
+    fun getFileByFileId(fileId:Int):Flow<File>{
+        return libraryDao.getFileByFileId(fileId)
     }
 
 

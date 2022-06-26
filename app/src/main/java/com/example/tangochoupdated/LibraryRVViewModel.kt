@@ -52,17 +52,15 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     val childCards:LiveData<List<CardAndTags>> = getCardsFromFileId()
     private fun getFileFromParentFile():LiveData<List<FileWithChild>>{
         return if (fileId!=null){
-            return repository.getFileDataByFileId(fileId!!).asLiveData()
+            return repository.getFileDataByParentFileId(fileId!!).asLiveData()
         } else MutableLiveData()
 
     }
-    private fun getCardsFromFileId():LiveData<List<CardAndTags>> {
-        return if (fileId!=null){
-            repository.getCardDataByFileId(fileId!!).asLiveData()
-        } else MutableLiveData()
+    private fun getCards(parentFileId: Int) =  repository.getCardDataByFileId(fileId!!).asLiveData()
+    private fun getFiles(parentFileId: Int?) = repository.getFileDataByParentFileId(parentFileId).asLiveData()
 
 
-    }
+
     val liveDNoParents:LiveData<List<LibraryRV>> =  Transformations.switchMap(parentList)
     {
             list -> getListData(list, null,null)
@@ -94,7 +92,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
 
 
 
-    fun  getSpecifiedFiles(fileId:Int):LiveData<List<FileWithChild>> =  repository.getFileDataByFileId(fileId!!).asLiveData()
+    fun  getSpecifiedFiles(fileId:Int):LiveData<List<FileWithChild>> =  repository.getFileDataByParentFileId(fileId!!).asLiveData()
 
 
 
@@ -131,7 +129,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
         }
 
     }
-    fun convertCardToLibraryRV(card: CardAndTags?): LibraryRV? {
+    fun convertCardToLibraryRV(card: CardAndTags): LibraryRV {
         when (card?.card?.cardStatus) {
             CardStatus.STRING -> return LibraryRV(
                 type = LibRVViewType.StringCard,
