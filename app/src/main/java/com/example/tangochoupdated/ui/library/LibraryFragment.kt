@@ -55,15 +55,7 @@ class HomeFragment : Fragment(),DataClickListener{
                 ViewModelFactory((requireActivity().application as RoomApplication).repository)
             )[LibraryViewModel::class.java]
 
-        val recyclerView = _binding?.vocabCardRV
-        adapter = LibraryListAdapter(this)
-        recyclerView?.adapter = adapter
 
-        libraryViewModel.apply {
-            parentFileId.observe(requireActivity()){
-                adapter.submitList(libraryViewModel.getFinalList(it))
-            }
-        }
 
 
 
@@ -82,24 +74,39 @@ class HomeFragment : Fragment(),DataClickListener{
 
 
 
-        sharedViewModel.finalList().observe(requireActivity()){
-            adapter.submitList(it)
-            sharedViewModel.libOrder = adapter.itemCount
-            libraryViewModel.selectedAmount.apply {
-                value = it.filter { it.selected }.size
-            }
+//        sharedViewModel.finalList().observe(requireActivity()){
+//            adapter.submitList(it)
+//            sharedViewModel.libOrder = adapter.itemCount
+//            libraryViewModel.selectedAmount.apply {
+//                value = it.filter { it.selected }.size
+//            }
+//
+//        }
+//        libraryViewModel.selectedAmount.observe(requireActivity()){
+//            binding.topMenuBarFrame.txvTitle.text = "${it.toString()}"
+//        }
 
-        }
-        libraryViewModel.selectedAmount.observe(requireActivity()){
-            binding.topMenuBarFrame.txvTitle.text = "${it.toString()}"
-        }
 
 
 
+
+
+        val recyclerView = _binding?.vocabCardRV
+        adapter = LibraryListAdapter(this)
+        recyclerView?.adapter = adapter
         recyclerView?.layoutManager = LinearLayoutManager(context)
+        libraryViewModel.parentFileId.apply {
+            value = null
+        }
+        val owner = requireActivity()
 
-
-
+        libraryViewModel.apply {
+            parentFileId.observe(owner){
+                getFinalList(it).observe(owner){
+                    adapter.submitList(it)
+                }
+            }
+        }
 
 
         return root

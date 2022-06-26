@@ -1,5 +1,6 @@
 package com.example.tangochoupdated.ui.library
 
+import android.widget.Switch
 import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.*
 import com.example.tangochoupdated.room.MyRoomRepository
@@ -20,6 +21,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     private fun getCards(parentFileId: Int) =  repository.getCardDataByFileId(parentFileId).asLiveData()
     private fun getFiles(parentFileId: Int?) = repository.getFileDataByParentFileId(parentFileId).asLiveData()
+    val fileWithoutParent = repository.getFileWithoutParent().asLiveData()
 
 
     fun convertFileToLibraryRV(file: File): LibraryRV {
@@ -85,25 +87,48 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-    private fun convertDBItemsToLibRV(item:List<Any>?):List<LibraryRV>{
+    private fun convertDBItemsToLibRV(item:List<Any>?):LiveData<List<LibraryRV>>{
         val finalList = mutableListOf<LibraryRV>()
         item?.onEach { when (it ){
             is File -> finalList.add(convertFileToLibraryRV(it))
+            is FileWithChild -> it.childFiles.onEach { finalList.add(convertFileToLibraryRV(it)) }
             is CardAndTags -> finalList.add(convertCardToLibraryRV(it))
         } }
-        return finalList
+        val liveD = MutableLiveData<List<LibraryRV>>()
+        liveD.apply {
+            value = finalList
+        }
+        return  liveD
     }
 
-    fun getFinalList(id:Int?):List<LibraryRV>{
-        val a = mutableListOf<LibraryRV>()
-        a.addAll(convertDBItemsToLibRV(getFiles(id).value))
-        return if(id==null){
-            a
+    fun getFinalList(id:Int?):LiveData<List<LibraryRV>>{
+        val a = MediatorLiveData<List<LibraryRV>>()
+        if (id!=null){
+            val file = Transformations.switchMap(getFiles(id)){
+                convertDBItemsToLibRV(it)
+            }
+            val card = Transformations.switchMap(getCards(id)){
+                convertDBItemsToLibRV(it)
+            }
+            a.apply {
+                addSource(file){
+                    a.value = it
+                }
+                addSource(card){
+                    a.value = it
+                }
+            }
         } else{
-            a.addAll(convertDBItemsToLibRV(getCards(id).value))
-            a
-
+            val noParents = Transformations.switchMap(fileWithoutParent){
+                convertDBItemsToLibRV(it)
+            }
+            a.addSource(noParents){
+                a.value = it
+            }
         }
+
+        return a
+
     }
 
     val selectedAmount = MutableLiveData<Int>()

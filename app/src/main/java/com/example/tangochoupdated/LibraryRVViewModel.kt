@@ -6,6 +6,7 @@ import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.CardAndTags
 import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.dataclass.FileWithChild
+import com.example.tangochoupdated.room.dataclass.FileXRef
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
@@ -18,7 +19,7 @@ import kotlinx.coroutines.*
 
 
 class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
-    var fileId:Int? = null
+    var fileId = 0
     val createFragmentActive = MutableLiveData<Boolean>()
     fun changeCreateFragmentStatus(active:Boolean){
         createFragmentActive.value = active
@@ -49,7 +50,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
 
     val parentList:LiveData<List<File>> = repository.getFileWithoutParent().asLiveData()
     val childFiles:LiveData<List<FileWithChild>> = getFileFromParentFile()
-    val childCards:LiveData<List<CardAndTags>> = getCardsFromFileId()
+    val childCards:LiveData<List<CardAndTags>> = getCards(fileId)
     private fun getFileFromParentFile():LiveData<List<FileWithChild>>{
         return if (fileId!=null){
             return repository.getFileDataByParentFileId(fileId!!).asLiveData()
@@ -129,7 +130,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
         }
 
     }
-    fun convertCardToLibraryRV(card: CardAndTags): LibraryRV {
+    fun convertCardToLibraryRV(card: CardAndTags): LibraryRV? {
         when (card?.card?.cardStatus) {
             CardStatus.STRING -> return LibraryRV(
                 type = LibRVViewType.StringCard,
@@ -169,7 +170,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     }
     var parentFileId:Int = 0
     var hasParent:Boolean = false
-    var libOrder:Int? = null
+    var libOrder:Int = finalList().value!!.size + 1
     var fileStatus:FileStatus? = null
     var title:String = ""
 
@@ -187,10 +188,11 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
         libOrder = libOrder,
         )
         insert(a)
-
+        val id = 0
     }
 
-     fun insert(item: Any) = viewModelScope.launch {
+
+    fun insert(item: Any) = viewModelScope.launch {
         repository.insert(item)
     }
 

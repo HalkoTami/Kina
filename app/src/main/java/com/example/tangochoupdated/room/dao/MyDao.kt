@@ -2,6 +2,7 @@ package com.example.tangochoupdated.room
 
 import androidx.room.*
 import com.example.tangochoupdated.room.dataclass.*
+import kotlinx.coroutines.flow.Flow
 
 
 abstract class MyDao{
@@ -12,7 +13,10 @@ abstract class MyDao{
     @Dao
     abstract class ChoiceDao: BaseDao<Choice>
     @Dao
-    abstract class FileDao: BaseDao<File>
+    abstract class FileDao: BaseDao<File>{
+        @Query("select MAX(fileId) from tbl_file  ")
+        abstract fun getLastInsertedFile(): Flow<File>
+    }
     @Dao
     abstract class MarkerDataDao: BaseDao<MarkerData>
     @Dao
