@@ -170,7 +170,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     }
     var parentFileId:Int = 0
     var hasParent:Boolean = false
-    var libOrder:Int = finalList().value!!.size + 1
+    var libOrder:Int =0
     var fileStatus:FileStatus? = null
     var title:String = ""
 

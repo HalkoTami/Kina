@@ -14,7 +14,9 @@ import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 
 class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
-    val parentFileId = MutableLiveData<Int?>()
+    val parentItem = MutableLiveData<LibraryRV>()
+    val menuOpened =  MutableLiveData<Boolean>()
+    val multipleSelectMode =  MutableLiveData<Boolean>()
 
 
 
@@ -101,7 +103,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         return  liveD
     }
 
-    fun getFinalList(id:Int?):LiveData<List<LibraryRV>>{
+    fun getFinalList(id:Int?):LiveData<List<LibraryRV>?>{
         val a = MediatorLiveData<List<LibraryRV>>()
         if (id!=null){
             val file = Transformations.switchMap(getFiles(id)){
@@ -131,16 +133,12 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     }
 
-    val selectedAmount = MutableLiveData<Int>()
 
-    var multipleSelectMode :Boolean = false
+
+    val selectedItems = MutableLiveData<List<LibraryRV>>()
+
     fun topBarText():String{
         var a = "A"
-        if(multipleSelectMode){
-            a = "$selectedAmount 個　選択中"
-        } else{
-            a ="最初"
-        }
 
         return a
     }

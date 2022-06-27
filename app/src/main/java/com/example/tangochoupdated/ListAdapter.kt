@@ -213,6 +213,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
                 }
 
             }
+            setViewSelectable(baseBinding,context)
             if(item.selectable){
                 setViewSelectable(baseBinding,context)
                 if (item.selected){
@@ -407,7 +408,7 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
  */
 interface DataClickListener {
 
-    fun onLongClickMain()
+    fun onLongClickMain(){}
     fun onSelect(item: LibraryRV, imageView: ImageView)
     fun onClickEdit(item: LibraryRV)
     fun onClickAdd(item: LibraryRV)

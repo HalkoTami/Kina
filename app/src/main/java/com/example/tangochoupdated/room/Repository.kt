@@ -32,9 +32,6 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
     fun getFileByFileId(fileId:Int):Flow<File>{
         return libraryDao.getFileByFileId(fileId)
     }
-    fun getLastInsertedFile():Flow<File>{
-        return fileDao.getLastInsertedFile()
-    }
 
 
 

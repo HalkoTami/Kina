@@ -13,10 +13,7 @@ abstract class MyDao{
     @Dao
     abstract class ChoiceDao: BaseDao<Choice>
     @Dao
-    abstract class FileDao: BaseDao<File>{
-        @Query("select MAX(fileId) from tbl_file  ")
-        abstract fun getLastInsertedFile(): Flow<File>
-    }
+    abstract class FileDao: BaseDao<File>
     @Dao
     abstract class MarkerDataDao: BaseDao<MarkerData>
     @Dao
