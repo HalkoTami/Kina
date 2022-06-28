@@ -3,24 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_library">
+    app:startDestination="@+id/fragmentLibrary">
 
     <fragment
-        android:id="@+id/navigation_library"
+        android:id="@+id/fragmentLibrary"
         android:name="com.example.tangochoupdated.ui.library.HomeFragment"
-        android:label="@string/title_tab_library"
-        tools:layout="@layout/fragment_library_home" />
+        android:label="library"
+        tools:layout="@layout/fragment_library_home" >
+
+
+
+
+        <argument
+        android:name="parentItemId"
+        app:argType="integer[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/library_to_library"
+            app:destination="@id/fragmentLibrary">
+
+        </action>
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/navigation_anki"
         android:name="com.example.tangochoupdated.ui.anki.AnkiFragment"
-        android:label="@string/title_tab_anki"
+        android:label="anki"
 
         tools:layout="@layout/fragment_anki_home" />
     <action
         android:id="@+id/to_lib"
         app:popUpTo="@id/mobile_navigation"
-        app:destination="@+id/navigation_library"/>
+        app:destination="@+id/fragmentLibrary"/>
     <action
     android:id="@+id/to_anki"
     app:popUpTo="@id/mobile_navigation"

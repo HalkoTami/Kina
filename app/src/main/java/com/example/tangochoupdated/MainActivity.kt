@@ -11,11 +11,14 @@ import androidx.core.view.setPadding
 import androidx.fragment.app.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navArgs
 
 import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
 import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.room.enumclass.TabStatus
+import com.example.tangochoupdated.ui.library.HomeFragmentArgs
+import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 
 import com.example.tangochoupdated.ui.planner.CreateFragment
 
@@ -24,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     var previousTabHolder:Tab = Tab.TabLibrary
     var popUpVisible = false
+    lateinit var factory:ViewModelFactory
 
     lateinit var baseviewModel: BaseViewModel
 
@@ -36,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        factory = ViewModelFactory((application as RoomApplication).repository)
 
         baseviewModel = ViewModelProvider(this,
         ViewModelFactory((application as RoomApplication).repository)
@@ -59,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(binding.viewPager.id) as NavHostFragment
         val navCon = navHostFragment.navController
+        navArgs<HomeFragmentArgs>()
 
 
 

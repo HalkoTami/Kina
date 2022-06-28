@@ -46,7 +46,7 @@
 
 
 
-    <ScrollView
+    <FrameLayout
         android:id="@+id/scroll_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,18 +54,19 @@
         app:layout_constraintTop_toBottomOf="@id/lay_search_view"
         android:layout_width="match_parent"
         android:layout_height="0dp">
-        <androidx.recyclerview.widget.RecyclerView
-            android:padding="10dp"
-            android:id="@+id/vocabCardRV"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/item_cover_card_base" />
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:padding="10dp"
+                android:id="@+id/vocabCardRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_cover_card_base" />
+        </ScrollView>
 
 
-    </ScrollView>
-    <include
-        android:id="@+id/lay_empty_binding"
-        layout="@layout/empty"
-        android:visibility="gone"/>
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

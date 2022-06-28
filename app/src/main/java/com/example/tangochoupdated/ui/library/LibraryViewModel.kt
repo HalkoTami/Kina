@@ -12,19 +12,36 @@ import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
+import kotlinx.coroutines.cancel
 
 class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
-    val parentItem = MutableLiveData<LibraryRV>()
+
     val menuOpened =  MutableLiveData<Boolean>()
     val multipleSelectMode =  MutableLiveData<Boolean>()
 
 
 
 
-    private fun getCards(parentFileId: Int) =  repository.getCardDataByFileId(parentFileId).asLiveData()
-    private fun getFiles(parentFileId: Int?) = repository.getFileDataByParentFileId(parentFileId).asLiveData()
-    val fileWithoutParent = repository.getFileWithoutParent().asLiveData()
+     fun getCards(id:Int):LiveData<List<CardAndTags>>? =  this.repository.getCardDataByFileId(id).asLiveData()
+     fun getFiles(id:Int):LiveData<FileWithChild>? = this.repository.getFileDataByParentFileId(id).asLiveData()
+     fun fileWithoutParent():LiveData<List<File>> = this.repository.getFileWithoutParent.asLiveData()
+     fun parentFile(id:Int):LiveData<File> = repository.getFileByFileId(id).asLiveData()
+     fun parentItem(id:Int):LiveData<LibraryRV> = Transformations.switchMap(parentFile(id)){file ->
+         convertParentFileToItem(file)
+     }
 
+    val finalList= MediatorLiveData<List<LibraryRV>>()
+
+    fun convertParentFileToItem(file: File):LiveData<LibraryRV>{
+        val a = MutableLiveData<LibraryRV>()
+        val b = convertFileToLibraryRV(file)
+
+        a.apply {
+            value = b
+        }
+        return a
+
+    }
 
     fun convertFileToLibraryRV(file: File): LibraryRV {
 
@@ -37,7 +54,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
                     file = file,
                     card = null,
                     tag = null,
-                    id = file.fileId
+                    id = file.fileId,
+                    selectable = false,
+                    selected = false
                 )
 
             }
@@ -89,47 +108,59 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-    private fun convertDBItemsToLibRV(item:List<Any>?):LiveData<List<LibraryRV>>{
-        val finalList = mutableListOf<LibraryRV>()
-        item?.onEach { when (it ){
-            is File -> finalList.add(convertFileToLibraryRV(it))
-            is FileWithChild -> it.childFiles.onEach { finalList.add(convertFileToLibraryRV(it)) }
-            is CardAndTags -> finalList.add(convertCardToLibraryRV(it))
-        } }
+    fun convertDBItemsToLibRV(files:List<File>?,cards:List<CardAndTags>?,childFiles:FileWithChild?):MutableLiveData<List<LibraryRV>>{
         val liveD = MutableLiveData<List<LibraryRV>>()
+        val finalList = mutableListOf<LibraryRV>()
+        files?.onEach {  finalList.add(convertFileToLibraryRV(it))}
+        cards?.onEach {  finalList.add(convertCardToLibraryRV(it))}
+        childFiles?.childFiles?.onEach{finalList.add(convertFileToLibraryRV(it))}
+
         liveD.apply {
             value = finalList
         }
         return  liveD
     }
 
-    fun getFinalList(id:Int?):LiveData<List<LibraryRV>?>{
+    fun file(id:Int):LiveData<List<LibraryRV>> = Transformations.switchMap(getFiles(id)!!){
+        convertDBItemsToLibRV(it.childFiles,null,null)
+    }
+    fun card(id:Int):LiveData<List<LibraryRV>> = Transformations.switchMap(getCards(id)!!){
+        convertDBItemsToLibRV(null,it,null)
+    }
+    val noParents:LiveData<List<LibraryRV>> = Transformations.switchMap(fileWithoutParent()){list->
+        convertDBItemsToLibRV(list,null,null)
+    }
+
+    fun getFinalList(id:Int?):MediatorLiveData<List<LibraryRV>>{
+
+
+
+
+
         val a = MediatorLiveData<List<LibraryRV>>()
         if (id!=null){
-            val file = Transformations.switchMap(getFiles(id)){
-                convertDBItemsToLibRV(it)
-            }
-            val card = Transformations.switchMap(getCards(id)){
-                convertDBItemsToLibRV(it)
-            }
-            a.apply {
-                addSource(file){
+
+
+                a.addSource(file(id)){
                     a.value = it
                 }
-                addSource(card){
+                a.addSource(card(id)){
                     a.value = it
                 }
-            }
+
         } else{
-            val noParents = Transformations.switchMap(fileWithoutParent){
-                convertDBItemsToLibRV(it)
-            }
             a.addSource(noParents){
                 a.value = it
             }
         }
 
         return a
+
+    }
+    fun makeAllSelectable(id:Int?) {
+        getFinalList(id).apply {
+            value?.onEach { it.selectable = true }
+        }
 
     }
 
@@ -143,5 +174,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         return a
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
+    }
 
 }

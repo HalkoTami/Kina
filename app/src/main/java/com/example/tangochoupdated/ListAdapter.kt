@@ -122,7 +122,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
                 }
                 else -> return folderBinding
             }
-            folderBinding.txvFileTitle.text = folderData.title
+            folderBinding.txvFileTitle.text = item.id.toString()
             folderBinding.imvFileType.setImageDrawable(image)
             return folderBinding
         }
@@ -200,7 +200,15 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
             baseBinding.stubMain.addView(mainFrameBinding!!.root)
             baseBinding.stubTag.addView(tagBinding.root)
 
+            if(item.selectable==true){
+                setViewSelectable(baseBinding,context)
+                if (item.selected){
+                    setViewSelected(baseBinding,context)
 
+                } else if(!item.selected) {
+                    setViewUnselected(baseBinding,context)
+                }
+            }
 
             baseBinding.root.children.iterator().forEachRemaining {
                 when(it.id){
@@ -213,16 +221,7 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
                 }
 
             }
-            setViewSelectable(baseBinding,context)
-            if(item.selectable){
-                setViewSelectable(baseBinding,context)
-                if (item.selected){
-                    setViewSelected(baseBinding,context)
 
-                } else if(!item.selected) {
-                    setViewUnselected(baseBinding,context)
-                }
-            }
             baseBinding.btnSelect.setOnClickListener {
                 if (item.selected){
                     clickListener.onUnselect(item,binding.btnSelect)
@@ -395,7 +394,7 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
     }
 
     override fun areContentsTheSame(oldItem: LibraryRV, newItem: LibraryRV): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.equals(newItem)
     }
 
 }
