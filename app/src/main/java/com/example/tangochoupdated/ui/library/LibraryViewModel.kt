@@ -22,11 +22,14 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
     }
     val menuViewMode:LiveData<Boolean> = _menuOpened
+
+
     fun setMultipleSelectMode(boolean: Boolean){
         _multipleSelectMode.apply {
             value = boolean
         }
     }
+
     private val _multipleSelectMode =  MutableLiveData<Boolean>()
     val multipleSelectMode:LiveData<Boolean> = _multipleSelectMode
 
@@ -226,10 +229,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-
-    fun makeUnselected(position: Int){
-        _myFinalList.value?.get(position)?.selected = false
-    }
 
 
 

@@ -6,6 +6,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.runtime.internal.illegalDecoyCallException
+import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -19,14 +20,13 @@ import com.example.tangochoupdated.databinding.EmptyBinding
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
+import kotlinx.coroutines.delay
 
-class HomeFragment : Fragment(),DataClickListener{
+class HomeFragment : Fragment(),DataClickListener {
     private val args: HomeFragmentArgs by navArgs()
 
 
-
-
-    lateinit var adapter:LibraryListAdapter
+    lateinit var adapter: LibraryListAdapter
 
     private val sharedViewModel: BaseViewModel by activityViewModels()
 
@@ -36,6 +36,8 @@ class HomeFragment : Fragment(),DataClickListener{
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var libraryViewModel: LibraryViewModel
+    var menuViewStatus = false
+    var multipleSelectModeStatus = false
 
 
     override fun onCreateView(
@@ -47,53 +49,14 @@ class HomeFragment : Fragment(),DataClickListener{
         val repository = (requireActivity().application as RoomApplication).repository
         val viewModelFactory = ViewModelFactory(repository)
         libraryViewModel =
-            ViewModelProvider(this,viewModelFactory
+            ViewModelProvider(
+                this, viewModelFactory
             )[LibraryViewModel::class.java]
         _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
 
-
-        val myId:Int? = args.parentItemId?.single()
-        libraryViewModel.apply {
-            setParentItemId(myId)
-
-            setMenuStatus(false)
-            setMultipleSelectMode(false)
-            card.observe(viewLifecycleOwner){
-                setValueToCards(it)
-                chooseValuesOfFinalList()
-            }
-            file.observe(viewLifecycleOwner){
-                setValueToFiles(it)
-                chooseValuesOfFinalList()
-            }
-            noParents.observe(viewLifecycleOwner){
-                setValueToNoParents(it)
-                chooseValuesOfFinalList()
-            }
-
-            parentItem.observe(viewLifecycleOwner){
-                setValueToMyParentItem(it)
-
-            }
-
-
-
-
-        }
-
-
-
-
-
-
-
-        binding.topMenuBarFrame.layEnd.visibility =View.GONE
-
-
-
-
+        val myId: Int? = args.parentItemId?.single()
 
         val recyclerView = binding.vocabCardRV
         adapter = LibraryListAdapter(this)
@@ -102,118 +65,74 @@ class HomeFragment : Fragment(),DataClickListener{
 
         val owner = requireActivity()
 
-
-
-
-
         libraryViewModel.apply {
-            binding.topMenuBarFrame.apply{
+            setParentItemId(myId)
 
+            setMenuStatus(false)
+            menuViewMode.observe(viewLifecycleOwner) {
+                menuViewStatus = it
+                binding.topMenuBarFrame.layEnd.apply {
+                    val b = ValueAnimator.ofInt(
+                        1,
+                        binding.topMenuBarFrame.menuBinding.root.layoutParams.width
+                    )
+                    b.duration = 300
+                    b.addUpdateListener { animator ->
 
+                        layoutParams.width = animator.animatedValue as Int
+                        invalidate()
+                        requestLayout()
+                    }
+                    when {
+                        menuViewStatus -> {
+                            layoutParams.width = 1
+                            visibility = View.VISIBLE
+                            b.start()
 
+                        }
+                        !menuViewStatus -> {
 
-
-                multipleSelectMode.observe(viewLifecycleOwner){ multipleSelectMode->
-
-                    when(multipleSelectMode) {
-
-                        true -> {
-
-                            selectedItems.observe(viewLifecycleOwner){
-                                txvTitle.text = "${it.size}個　選択中"
-
-                            }
-                            binding.topMenuBarFrame.apply {
-                                imv1.apply {
-                                    setImageDrawable(owner.getDrawable(R.drawable.icon_close)!!)
-                                    setOnClickListener {
-                                        setMultipleSelectMode(false)
-                                        changeAllSelectableState(false)
-                                    }
-                                }
-                                    if(myId==null){
-                                        imvEnd.apply{
-                                            setImageDrawable(owner.getDrawable(R.drawable.icon_dot)!!)
-                                            setOnClickListener { onclickMenuDot() }
-                                        }
-                                    }
-                                }
-                            }
-
-
-
-
-
-                        false -> {
-                            when(myId){
-                                null -> {
-                                    binding.topMenuBarFrame.apply {
-                                        txvTitle.text = "home"
-                                        imv1.setImageDrawable(owner.getDrawable(R.drawable.icon_eye_opened)!!)
-                                        imvEnd.apply {
-                                            setImageDrawable(owner.getDrawable(R.drawable.icon_inbox)!!)
-                                            setOnClickListener {
-                                                onClickInBox()
-                                            }
-                                        }
-                                    }
-
-
-                                }
-                                else -> {
-                                   myParentItem.observe(viewLifecycleOwner){ parent->
-                                       binding.topMenuBarFrame.apply {
-                                           txvTitle.text = parent.single().file?.title.toString()
-                                           imv1.setImageDrawable(
-                                               when(parent.single().type){
-                                               LibRVViewType.Folder -> owner.getDrawable(R.drawable.icon_file)!!
-                                               LibRVViewType.FlashCardCover -> owner.getDrawable(R.drawable.icon_library_plane)!!
-                                               else -> illegalDecoyCallException("unknown Type")
-                                           } )
-                                           imvEnd.apply{
-                                               setImageDrawable(owner.getDrawable(R.drawable.icon_dot)!!)
-                                               setOnClickListener{
-                                                   onclickMenuDot()
-                                               }
-                                           }
-                                       }
-
-
-                                   }
-                                }
-                            }
+                            b.reverse()
+                            b.doOnEnd { visibility = View.GONE }
 
                         }
                     }
 
-
-
                 }
+            }
+            setMultipleSelectMode(false)
+            multipleSelectMode.observe(viewLifecycleOwner) {
+                multipleSelectModeStatus = it
+            }
+            card.observe(viewLifecycleOwner) {
+                setValueToCards(it)
+                chooseValuesOfFinalList()
+            }
+            file.observe(viewLifecycleOwner) {
+                setValueToFiles(it)
+                chooseValuesOfFinalList()
+            }
+            noParents.observe(viewLifecycleOwner) {
+                setValueToNoParents(it)
+                chooseValuesOfFinalList()
+            }
 
-
-
+            parentItem.observe(viewLifecycleOwner) {
+                setValueToMyParentItem(it)
 
             }
 
-//            binding.topMenuBarFrame.menuBinding.apply {
-//                myParentItem.observe(viewLifecycleOwner){ myParentItem->
-//                    when{
-//                        myId == null -> imv1.setOnClickListener {
-//                            onDelete()
-//                        }
-//                    }
-//
-//                }
-//            }
-//
-//
+            selectedItems.observe(viewLifecycleOwner) {
+                if (multipleSelectModeStatus) {
+                    binding.topMenuBarFrame.txvTitle.text = "${it.size}個　選択中"
+                }
 
-
-            myFinalList.observe(viewLifecycleOwner){ containingList->
+            }
+            myFinalList.observe(viewLifecycleOwner) { containingList ->
                 setValueToSelectedItem(containingList)
 
 
-                if(containingList.isNullOrEmpty()){
+                if (containingList.isNullOrEmpty()) {
                     val a = EmptyBinding.inflate(layoutInflater)
                     a.apply {
                         txvCenter.text = "${myId}は空です"
@@ -229,67 +148,119 @@ class HomeFragment : Fragment(),DataClickListener{
                 }
 
             }
+            multipleSelectMode.observe(viewLifecycleOwner) {
+
+                when (multipleSelectModeStatus) {
+
+                    true -> {
 
 
-            libraryViewModel.menuViewMode.observe(viewLifecycleOwner) { menuVisible ->
-                binding.topMenuBarFrame.layEnd.apply {
+                        binding.topMenuBarFrame.apply {
 
-                    when {
-                        menuVisible -> {
-                            visibility = View.VISIBLE
-                        }
-                        !menuVisible -> {
-                            visibility = View.GONE
+                            imv1.apply {
+                                setImageDrawable(owner.getDrawable(R.drawable.icon_close)!!)
+                                setOnClickListener {
+                                    libraryViewModel.setMultipleSelectMode(false)
+                                    changeAllSelectableState(false)
+                                }
+                            }
+                            if (myId == null) {
+                                imvEnd.apply {
+                                    setImageDrawable(owner.getDrawable(R.drawable.icon_dot)!!)
+                                    setOnClickListener {
+
+                                        setMenuStatus(!menuViewStatus)
+                                        Toast.makeText(
+                                            context,
+                                            "onclick menu",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+
+
+                                    }
+                                }
+                            }
                         }
                     }
-                    val b = ValueAnimator.ofInt(
-                        1,
-                        binding.topMenuBarFrame.menuBinding.root.layoutParams.width
-                    )
-                    b.duration = 300
-                    b.addUpdateListener { animator ->
 
-                        layoutParams.width = animator.animatedValue as Int
-                        invalidate()
-                        requestLayout()
-                    }
-                    when {
-                        menuVisible -> {
-                            layoutParams.width = 1
-                            visibility = View.VISIBLE
-                            b.start()
+
+                    false -> {
+                        when (myId) {
+                            null -> {
+                                binding.topMenuBarFrame.apply {
+                                    txvTitle.text = "home"
+                                    imv1.setImageDrawable(owner.getDrawable(R.drawable.icon_eye_opened)!!)
+                                    imvEnd.apply {
+                                        setImageDrawable(owner.getDrawable(R.drawable.icon_inbox)!!)
+                                        setOnClickListener {
+
+                                        }
+                                    }
+                                }
+
+
+                            }
+                            else -> {
+                                myParentItem.observe(viewLifecycleOwner) { parent ->
+                                    binding.topMenuBarFrame.apply {
+                                        txvTitle.text =
+                                            parent.single().file?.title.toString()
+                                        imv1.setImageDrawable(
+                                            when (parent.single().type) {
+                                                LibRVViewType.Folder -> owner.getDrawable(R.drawable.icon_file)!!
+                                                LibRVViewType.FlashCardCover -> owner.getDrawable(
+                                                    R.drawable.icon_library_plane
+                                                )!!
+                                                else -> illegalDecoyCallException("unknown Type")
+                                            }
+                                        )
+                                        imvEnd.apply {
+                                            setImageDrawable(owner.getDrawable(R.drawable.icon_dot)!!)
+                                            setOnClickListener {
+
+                                            }
+                                        }
+                                    }
+
+
+                                }
+                            }
                         }
-                        !menuVisible -> {
-                            b.reverse()
-                            visibility = View.GONE
-                        }
+
                     }
                 }
-//
 
 
             }
+            myParentItem.observe(viewLifecycleOwner) { myParentItem ->
+                when {
+                    myId == null -> binding.topMenuBarFrame.menuBinding.imv1.setOnClickListener {
+                        onDelete()
+                    }
+                }
+
+            }
+
         }
+
+
+
+
+
+
+
+
+
 
         return root
 
 
     }
     fun onDelete(){
-
+        Toast.makeText(context, "onClickDelete", Toast.LENGTH_SHORT).show()
     }
 
-    fun onclickMenuDot(){
-        libraryViewModel.setMenuStatus(true)
 
-
-
-
-
-
-        Toast.makeText(context, "onclick menu", Toast.LENGTH_SHORT).show()
-
-    }
 
     fun onClickInBox(){
 
