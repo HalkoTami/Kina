@@ -18,7 +18,6 @@
         <item name="imageButtonStyle">@style/Widget.AppCompat.ImageButton.</item>
         <item name="android:background">@android:color/transparent</item>
 
-
     </style>
 
     <style name="Widget.AppCompat.ImageButton." parent="Widget.AppCompat.ImageButton">

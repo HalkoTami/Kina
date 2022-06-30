@@ -20,7 +20,7 @@ interface LibraryDao {
 
 
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
-    fun getFileByFileId(lookingFileId:Int): Flow<File>
+    fun getFileByFileId(lookingFileId:Int?): Flow<List<File>>
 
 
 
@@ -39,7 +39,7 @@ interface LibraryDao {
     @Transaction
     @Query("select * FROM tbl_card " +
             "where not card_deleted AND belongingFileId = :belongingFileId")
-    fun getCardsDataByFileId(belongingFileId: Int):Flow<List<CardAndTags>>
+    fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<CardAndTags>>
 
     @Query("select * from tbl_card where NOT card_deleted AND " +
             "belonging_markerTextPreview OR " +

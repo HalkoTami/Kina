@@ -16,7 +16,7 @@ import kotlinx.coroutines.cancel
 class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     private val _menuOpened =  MutableLiveData<Boolean>()
-    fun setMenuView(boolean: Boolean){
+    fun setMenuStatus(boolean: Boolean){
         _menuOpened.apply {
             value = boolean
         }
@@ -31,46 +31,46 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     val multipleSelectMode:LiveData<Boolean> = _multipleSelectMode
 
 
-    private val parentItemId = MutableLiveData<Int>().apply {
-        value = null
-    }
+    private val parentItemId = MutableLiveData<Int>()
     fun setParentItemId (id:Int?){
-        parentItemId.value = null
+        parentItemId.value = id
     }
 
 
 
 
-     private val getCards:LiveData<List<CardAndTags>> =  this.repository.getCardDataByFileId(parentItemId.value).asLiveData()
-     private val getFiles:LiveData<FileWithChild> = this.repository.getFileDataByParentFileId(parentItemId.value).asLiveData()
-     private val  fileWithoutParent:LiveData<List<File>> = this.repository.getFileWithoutParent.asLiveData()
-     private val  parentFile:LiveData<File> = if(parentItemId.value == null){
-        MutableLiveData()
+     private val getCards:LiveData<List<CardAndTags>> =  if(parentItemId.value == null){
+         MutableLiveData()
      } else {
-         repository.getFileByFileId(parentItemId.value!!.toInt()).asLiveData()
+         this.repository.getCardDataByFileId(parentItemId.value).asLiveData()
      }
-//     fun parentItem(id:Int?):LiveData<LibraryRV?> {
-//         return if(id==null){
-//             val a = MutableLiveData<LibraryRV?>()
-//             a.apply {
-//                 value = null
-//             }
-//             a
-//         } else{
-//
-//             val a = Transformations.switchMap(parentFile(id)){file ->
-//                 convertParentFileToItem(file) }
-//             a
-//         }
-//     }
 
 
-    private val _parentItem :LiveData<LibraryRV> = Transformations.switchMap(parentFile){
-        convertParentFileToItem(it)
+     private val getFiles:LiveData<FileWithChild> = if(parentItemId.value == null){
+         MutableLiveData()
+     } else {
+         this.repository.getFileDataByParentFileId(parentItemId.value).asLiveData()
+     }
+     private val  fileWithoutParent:LiveData<List<File>> = this.repository.getFileWithoutParent.asLiveData()
+
+    private val  parentFile:LiveData<List<File>> = if(parentItemId.value == null){
+        MutableLiveData()
+    } else {
+        repository.getFileByFileId(parentItemId.value).asLiveData()
     }
-    val myParentItem : LiveData<LibraryRV> = _parentItem
-    val noParents:LiveData<List<LibraryRV>> = Transformations.switchMap(fileWithoutParent){
-         convertDBItemsToLibRV(it,null,null)}
+
+
+
+    val parentItem :LiveData<List<LibraryRV>> = Transformations.switchMap(parentFile){
+        convertDBItemsToLibRV(it,null,null)
+    }
+    private val _myParentItem = MutableLiveData<List<LibraryRV>>()
+    val myParentItem:LiveData<List<LibraryRV>> = _myParentItem
+    fun setValueToMyParentItem(item:List<LibraryRV>?){
+        _myParentItem.apply {
+            value = item
+        }
+    }
 
     private val _myFinalList= MutableLiveData<List<LibraryRV>>()
     val myFinalList :LiveData<List<LibraryRV>> = _myFinalList
@@ -79,29 +79,53 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             value = list
         }
     }
+
+
+
+
+    val noParents:LiveData<List<LibraryRV>> = Transformations.switchMap(fileWithoutParent){
+        convertDBItemsToLibRV(it,null,null)}
+    private val _noParents = MutableLiveData<List<LibraryRV>>()
+    fun setValueToNoParents(list:List<LibraryRV>){
+        list.sortedBy { it.position }
+        _noParents.value = list
+    }
+
+
     val file:LiveData<List<LibraryRV>> = Transformations.switchMap(getFiles){
         convertDBItemsToLibRV(it.childFiles,null,null)
     }
+    private val _files = mutableListOf<LibraryRV>()
+    fun setValueToFiles(list:List<LibraryRV>){
+        _files.addAll(list)
+    }
+
     val card:LiveData<List<LibraryRV>> = Transformations.switchMap(getCards){
         convertDBItemsToLibRV(null,it,null)
     }
-    private val mutableList = mutableListOf<LibraryRV>()
-    fun addValue (list: List<LibraryRV>){
-
-        list.onEach { mutableList.add(it) }
-        setValueToFinalList(mutableList)
-
+    private val _cards =mutableListOf<LibraryRV>()
+    fun setValueToCards(list:List<LibraryRV>){
+        _cards.addAll(list)
     }
-    private fun convertParentFileToItem(file: File):LiveData<LibraryRV>{
-        val a = MutableLiveData<LibraryRV>()
-        val b = convertFileToLibraryRV(file)
 
-        a.apply {
-            value = b
+
+    fun chooseValuesOfFinalList (){
+        val mutableList = mutableListOf<LibraryRV>()
+        if(parentItemId.value ==null){
+            _noParents.value?.onEach { mutableList.add(it) }
+            setValueToFinalList(mutableList)
         }
-        return a
-
+        else{
+            mutableList.addAll(_files)
+            mutableList.addAll(_cards)
+            mutableList.sortBy { it.position }
+            setValueToFinalList(mutableList)
+        }
     }
+
+
+
+
 
     private fun convertFileToLibraryRV(file: File): LibraryRV {
 
@@ -184,23 +208,41 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 
 
-    fun makeAllSelectable() {
+    fun changeAllSelectableState(boolean: Boolean) {
         val a = mutableListOf<LibraryRV>()
-        _myFinalList.value?.onEach { it.selectable =true
+        _myFinalList.value?.onEach { it.selectable = boolean
         a.add(it)}
         setValueToFinalList(a)
 
     }
-    fun makeSelected(position:Int){
-        _myFinalList.value?.get(position)?.selected = true
+    fun changeSelectedState(boolean: Boolean,position: Int) {
+        val a = mutableListOf<LibraryRV>()
+        _myFinalList.value?.onEach { if(it.position == position){
+            it.selected = boolean
+        }
+        a.add(it)}
+        setValueToFinalList(a)
+
     }
+
+
+
     fun makeUnselected(position: Int){
         _myFinalList.value?.get(position)?.selected = false
     }
 
 
 
-    val selectedItems = MutableLiveData<List<LibraryRV>>()
+    private val _selectedItems = MutableLiveData<List<LibraryRV>>()
+    val selectedItems:LiveData<List<LibraryRV>> = _selectedItems
+    fun setValueToSelectedItem(list: List<LibraryRV>){
+        val a = mutableListOf<LibraryRV>()
+        list.onEach { if(it.selected){
+            a.add(it)
+        }
+        }
+        _selectedItems.value = a
+    }
 
     fun topBarText():String{
         var a = "A"
