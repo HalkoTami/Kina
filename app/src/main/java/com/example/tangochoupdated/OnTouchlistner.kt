@@ -6,9 +6,10 @@ import android.view.MotionEvent
 import android.view.View
 import kotlin.math.abs
 
-open class OnSwipeTouchListener(context:Context) : View.OnTouchListener {
+open class MyTouchListener(context:Context) : View.OnTouchListener {
 
     private val gestureDetector = GestureDetector(context, MyGestureListener())
+
 
 
 
@@ -18,7 +19,8 @@ open class OnSwipeTouchListener(context:Context) : View.OnTouchListener {
         }
 
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
-            TODO("Not yet implemented")
+            onSingleTap()
+            return false
         }
 
         override fun onScroll(
@@ -27,7 +29,8 @@ open class OnSwipeTouchListener(context:Context) : View.OnTouchListener {
             distanceX: Float,
             distanceY: Float
         ): Boolean {
-            TODO("Not yet implemented")
+            onScroll()
+            return false
         }
 
         override fun onLongPress(e: MotionEvent?) {
@@ -38,6 +41,7 @@ open class OnSwipeTouchListener(context:Context) : View.OnTouchListener {
         private val swipeVelocityThreshold = 100
 
         override fun onDown(e: MotionEvent): Boolean {
+            onDown()
             return true
         }
 
@@ -69,14 +73,23 @@ open class OnSwipeTouchListener(context:Context) : View.OnTouchListener {
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         v!!.performClick()
-        return gestureDetector.onTouchEvent(event)
+        gestureDetector.onTouchEvent(event)
+        return true
     }
 
     open fun onSwipeRight() {}
 
     open fun onSwipeLeft() {}
 
-     open fun onLongClick(){
+     open fun onLongClick(){}
 
-     }
+    open fun onScroll(){
+
+    }
+    open fun onSingleTap(){
+
+    }
+    open fun onDown(){
+
+    }
 }

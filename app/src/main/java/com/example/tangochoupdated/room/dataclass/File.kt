@@ -8,37 +8,65 @@ import com.example.tangochoupdated.room.enumclass.FileStatusConverter
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 
 @Entity(tableName = "tbl_file",
-    indices = [Index("fileId", unique = true, name = "file_id"),
-              Index("parentFile", unique = true, name = "parent_file_id")],
-    foreignKeys = [ForeignKey(
-        entity = File::class,
-        parentColumns = arrayOf("parentFile"),
-        childColumns = arrayOf("fileId"),
-        onDelete = ForeignKey.NO_ACTION,
-        onUpdate = ForeignKey.CASCADE
-    )]
 )
 @TypeConverters(ColorStatusConverter::class,FileStatusConverter::class)
 data class File(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     var fileId:Int,
-    @ColumnInfo
-    var parentFile: Int,
-    @ColumnInfo(defaultValue = "title") var  title: String?,
-    @ColumnInfo var deleted: Boolean?,
-    @ColumnInfo var colorStatus: ColorStatus,
+    @ColumnInfo(defaultValue = "title") var  title: String? = null,
+    @ColumnInfo var deleted: Boolean? = false,
+    @ColumnInfo var colorStatus: ColorStatus = ColorStatus.GRAY,
     @ColumnInfo var fileStatus: FileStatus,
     @ColumnInfo(name= "library_order")
-    var hasChild:Boolean,
-    var hasParent:Boolean,
-    var libOrder: Int,
-    var childFoldersAmount:Int,
-    var childFlashCardCoversAmount: Int,
-    var childCardsAmount:Int
+    var hasChild:Boolean = false,
+    var hasParent:Boolean = false,
+    var libOrder: Int? =null ,
+    var childFoldersAmount:Int? = null,
+    var childFlashCardCoversAmount: Int? = null,
+    var childCardsAmount:Int? = null
 
 
 
 
 
     )
+@Entity(
+    indices = [Index("parentFileId", unique = true),
+        Index("childFileId", unique = true)],
+
+    foreignKeys = [
+        ForeignKey(
+            entity = File::class,
+            parentColumns = arrayOf("fileId"),
+            childColumns = arrayOf("parentFileId")
+        ),
+        ForeignKey(
+            entity = File::class,
+            parentColumns = arrayOf("fileId"),
+            childColumns = arrayOf("childFileId")
+        )
+    ]
+)
+data class FileXRef(
+    @PrimaryKey
+    val parentFileId: Int,
+    val childFileId: Int,
+)
+
+class FileWithChild {
+    @Embedded
+    lateinit var parentFile: File
+
+    @Relation(
+        entity = File::class,
+        parentColumn = "fileId",
+        entityColumn = "fileId",
+        associateBy = Junction(
+            value = FileXRef::class,
+            parentColumn = "parentFileId",
+            entityColumn = "childFileId"
+        )
+    )
+    lateinit var childFiles: List<File>
+}
 

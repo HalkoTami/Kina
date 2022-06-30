@@ -2,6 +2,7 @@ package com.example.tangochoupdated.room
 
 import androidx.room.*
 import com.example.tangochoupdated.room.dataclass.*
+import kotlinx.coroutines.flow.Flow
 
 
 abstract class MyDao{

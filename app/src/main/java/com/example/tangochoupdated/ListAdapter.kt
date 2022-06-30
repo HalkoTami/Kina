@@ -1,10 +1,17 @@
 package com.example.tangochoupdated
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.transition.ChangeBounds
+import android.transition.Scene
+import android.transition.TransitionManager
 import android.view.*
 import android.view.View.*
+import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -45,167 +52,329 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
         holder.bind(getItem(position),dataClickListener)
     }
 
+
+
+
+
+
+
+
+
     /**
      * Vertical View Holder Class
      */
     class LibraryViewHolder (private val binding: ItemCoverCardBaseBinding,val context: Context) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root){
 
-        fun bind(item: LibraryRV, clickListener: DataClickListener) {
-            fun setVisibilityStart(){
-                binding.btnSelect.visibility= GONE
-                binding.btnDelete.visibility= GONE
-                binding.btnDelete.visibility = GONE
-            }
-            fun setFileVisibility(type:LibRVViewType,item: LibraryRV){
-                binding.stubTag.visibility = GONE
-                binding.btnAddNewCard.visibility = GONE
+        fun getBaseBindingStart(binding:ItemCoverCardBaseBinding,item: LibraryRV):ItemCoverCardBaseBinding{
+            binding.btnSelect.visibility= GONE
+            binding.btnDelete.visibility= GONE
+            binding.btnEditWhole.visibility = GONE
+            binding.stubMain.removeAllViews()
 
-                val folderBinding = ItemCoverFileBinding.inflate(LayoutInflater.from(context))
-                val folderData = item.file!!
-                val image:Drawable
-                when(type){
-                    LibRVViewType.Folder ->{
-                        folderBinding.txvFileAmount.text=  "${folderData.childFoldersAmount}個"
-                        folderBinding.txvCardAmount.text= "${folderData.childCardsAmount}枚"
-                        folderBinding.txvTangoChoAmount.text = "${folderData.childFlashCardCoversAmount}個"
-                        image = ContextCompat.getDrawable(context,R.drawable.icon_file)!!
+            when (item.type){
+                LibRVViewType.Folder, LibRVViewType.FlashCardCover -> {
+                    binding.stubTag.visibility = GONE
+                    binding.btnAddNewCard.visibility = GONE
+                }
+                else -> {
+                    binding.btnAddNewCard.visibility = VISIBLE
+                    if(item.tag!=null){
+                        binding.stubTag.visibility = VISIBLE
+                    } else {
+                        binding.stubTag.visibility = INVISIBLE
                     }
-                    LibRVViewType.FlashCardCover ->{
-                        folderBinding.txvCardAmount.text= "${folderData.childCardsAmount}枚"
-                        image = ContextCompat.getDrawable(context,R.drawable.icon_library)!!
+                }
+
+            }
+            return binding
+        }
+        fun setVisibilityOnSwipeLeft(type: LibRVViewType,binding:ItemCoverCardBaseBinding){
+            binding.btnSelect.visibility = GONE
+            binding.btnDelete.visibility = VISIBLE
+            if(type==LibRVViewType.Folder ){
+                binding.btnEditWhole.visibility = VISIBLE
+            } else{
+                binding.btnEditWhole.visibility = INVISIBLE
+            }
+
+        }
+
+
+
+
+
+        fun getFileBindingWithContent(item: LibraryRV,context: Context):ItemCoverFileBinding{
+            val folderBinding =ItemCoverFileBinding.inflate(LayoutInflater.from(context))
+            val folderData = item.file!!
+            val image: Drawable
+            when (item.type) {
+                LibRVViewType.Folder -> {
+                    folderBinding.txvFileAmount.text = "${folderData.childFoldersAmount}個"
+                    folderBinding.txvCardAmount.text = "${folderData.childCardsAmount}枚"
+                    folderBinding.txvTangoChoAmount.text =
+                        "${folderData.childFlashCardCoversAmount}個"
+                    image = ContextCompat.getDrawable(context, R.drawable.icon_file)!!
+                }
+                LibRVViewType.FlashCardCover -> {
+                    folderBinding.txvCardAmount.text = "${folderData.childCardsAmount}枚"
+                    image = ContextCompat.getDrawable(context, R.drawable.icon_library)!!
+                }
+                else -> return folderBinding
+            }
+            folderBinding.txvFileTitle.text = item.id.toString()
+            folderBinding.imvFileType.setImageDrawable(image)
+            return folderBinding
+        }
+        fun setViewSelected(binding: ItemCoverCardBaseBinding,context: Context) {
+            val selectedIcon = ContextCompat.getDrawable(context, R.drawable.circle_selected)
+            binding.btnSelect.setImageDrawable(selectedIcon)
+
+        }
+        fun setViewUnselected(binding: ItemCoverCardBaseBinding,context: Context){
+            val selectedIcon = ContextCompat.getDrawable(context, R.drawable.circle_select)
+            binding.btnSelect.setImageDrawable(selectedIcon)
+        }
+        fun setViewSelectable(binding: ItemCoverCardBaseBinding,context: Context) {
+            binding.btnDelete.visibility = GONE
+            binding.btnEditWhole.visibility = GONE
+            binding.stubTag.visibility = GONE
+            binding.btnAddNewCard.visibility = GONE
+            val selectedIcon = ContextCompat.getDrawable(context, R.drawable.circle_select)
+            binding.btnSelect.setImageDrawable(selectedIcon)
+            binding.btnSelect.visibility = VISIBLE
+
+
+        }
+        fun getStringCardBindingWithContent(item: LibraryRV,context: Context):ItemCoverCardStringBinding {
+            val stringBinding =  ItemCoverCardStringBinding.inflate(LayoutInflater.from(context))
+            val stringData = item.card?.stringData
+
+
+            stringBinding.txvFrontTitle.text = stringData?.frontTitle
+            stringBinding.txvFrontText.text = stringData?.frontText
+            stringBinding.txvBackTitle.text = stringData?.backTitle!!
+            stringBinding.txvBackText.text = stringData.backText
+            return stringBinding
+
+        }
+        fun getTagBindingWithContent(item: LibraryRV,context: Context) :ItemCoverTagsBinding{
+            val tagBinding = ItemCoverTagsBinding.inflate(LayoutInflater.from(context))
+            if(item.tag!=null){
+                tagBinding.txvTag.text = item.tag!!.onEach { "#${it.title} " }.toString()
+
+            }
+            return tagBinding
+        }
+
+        fun getChoiceCardBindingWithContent(
+            item: LibraryRV,
+            context: Context
+        ): ItemCoverCardQuizBinding {
+            val choiceCardQuizBinding = ItemCoverCardQuizBinding.inflate(LayoutInflater.from(context))
+            choiceCardQuizBinding.txvQuestion.text = item.card?.quizData?.question
+            choiceCardQuizBinding.txvAnswer.text = item.card?.quizData?.answerPreview
+            return choiceCardQuizBinding
+
+
+        }
+
+        fun bind(item: LibraryRV, clickListener: DataClickListener ){
+            item.position = adapterPosition
+
+
+            val mainFrameBinding = when (item.type){
+              LibRVViewType.Folder, LibRVViewType.FlashCardCover -> {
+                  val a = getFileBindingWithContent(item,context)
+                  a.btnAdd.setOnClickListener {
+                      clickListener.onClickAdd(item)
+                  }
+                  a
+              }
+              LibRVViewType.StringCard -> getStringCardBindingWithContent(item,context)
+              LibRVViewType.ChoiceCard -> getChoiceCardBindingWithContent(item,context)
+              else -> null
+          }
+            val tagBinding = getTagBindingWithContent(item,context)
+            val baseBinding = getBaseBindingStart(binding,item)
+            baseBinding.stubMain.addView(mainFrameBinding!!.root)
+            baseBinding.stubTag.addView(tagBinding.root)
+
+            if(item.selectable==true){
+                setViewSelectable(baseBinding,context)
+                if (item.selected){
+                    setViewSelected(baseBinding,context)
+
+                } else if(!item.selected) {
+                    setViewUnselected(baseBinding,context)
+                }
+            }
+
+            baseBinding.root.children.iterator().forEachRemaining {
+                when(it.id){
+                    baseBinding.btnEditWhole.id -> it.setOnClickListener {
+                        clickListener.onClickEdit(item)
                     }
-                    else -> return
-                }
-                folderBinding.txvFileTitle.text = folderData.title
-                folderBinding.imvFileType.setImageDrawable(image)
-
-
-                folderBinding.btnAdd.setOnClickListener {
-                    clickListener.onClickAdd(item.type,item.id)
-                }
-                binding.stubMain.addView(folderBinding.root)
-            }
-            fun setVisibilityOnLongClickMain(){
-                setVisibilityStart()
-                binding.stubTag.visibility = GONE
-                binding.btnAddNewCard.visibility = GONE
-                val selectedIcon = ContextCompat.getDrawable(context,R.drawable.circle_selected)
-                binding.btnSelect.setImageDrawable(selectedIcon)
-
-            }
-            fun setVisibilityOnSwipeLeft(type: LibRVViewType){
-                binding.btnSelect.visibility = GONE
-                binding.btnDelete.visibility = VISIBLE
-                if(type==LibRVViewType.Folder || type == LibRVViewType.FlashCardCover){
-                    binding.btnEditWhole.visibility = VISIBLE
-                } else{
-                    binding.btnEditWhole.visibility = INVISIBLE
-                }
-
-            }
-            fun setStringCard(item:LibraryRV){
-                val stringCardBinding = ItemCoverCardStringBinding.inflate(LayoutInflater.from(context))
-                val stringData = item.card?.stringData
-
-
-                stringCardBinding.txvFrontTitle.text = stringData?.frontTitle
-                stringCardBinding.txvFrontText .text = stringData?.frontText
-                stringCardBinding.txvBackTitle .text = stringData?.backTitle!!
-                stringCardBinding.txvBackText.text = stringData.backText
-
-                stringCardBinding.root.setOnClickListener {
-                    clickListener.onClickEdit(item.id,it.id)
-                }
-                binding.stubMain.addView(stringCardBinding.root)
-            }
-
-            fun setChoiceCard(item: LibraryRV){
-                val choiceCardBinding = ItemCoverCardQuizBinding.inflate(LayoutInflater.from(context))
-                choiceCardBinding.txvQuestion.text = item.card?.quizData?.question
-                choiceCardBinding.txvAnswer.text = item.card?.quizData?.answerPreview
-                choiceCardBinding.root.setOnClickListener {
-
-                    clickListener.onClickEdit(item.id,it.id)
-                }
-
-            }
-            fun setTag(item: LibraryRV){
-                if (item.tag!=null){
-                    val tagBinding = ItemCoverTagsBinding.inflate(LayoutInflater.from(context))
-                    tagBinding.txvTag.text = item.tag.onEach { "#${it.title} " }.toString()
-                    tagBinding.root.setOnClickListener {
-                        clickListener.onClickEdit(item.id,it.id)
+                    baseBinding.btnDelete.id -> it.setOnClickListener {
+                        clickListener.onClickDelete(item)
                     }
-                    binding.stubTag.addView(tagBinding.root)
-                } else {
-                    binding.stubTag.visibility = INVISIBLE
                 }
+
             }
 
+            baseBinding.btnSelect.setOnClickListener {
+                if (item.selected){
+                    clickListener.onUnselect(item,binding.btnSelect)
+                } else if(!item.selected) {
+                    clickListener.onSelect(item,binding.btnSelect)
+                }
 
-
-
-            setVisibilityStart()
-            when(item.type){
-                LibRVViewType.Folder ->  setFileVisibility(LibRVViewType.Folder,item)
-
-                LibRVViewType.FlashCardCover -> setFileVisibility(LibRVViewType.FlashCardCover,item)
-
-                LibRVViewType.StringCard -> setStringCard(item)
-
-                LibRVViewType.ChoiceCard -> setChoiceCard(item)
-
-                else -> return
             }
-            setTag(item)
-            binding.stubMain.setOnClickListener {
-                clickListener.onClickMain(item.type,item.id)
-            }
-            binding.btnEditWhole.setOnClickListener {
-                clickListener.onClickEdit(item.id,it.id)
-            }
-            binding.btnDelete.setOnClickListener {
-                clickListener.onClickDelete(item.type,item.id)
-            }
-            binding.root.setOnTouchListener { v, event ->
-                v.performClick()
-                object: OnSwipeTouchListener(context){
-                    override fun onLongClick() {
-                        super.onLongClick()
-                        setVisibilityOnLongClickMain()
-                        clickListener.onLongClickMain(item.type,item.id)
+
+            baseBinding.stubMain.setOnTouchListener (object:MyTouchListener(context){
+                override fun onSingleTap() {
+                    super.onSingleTap()
+                    if(item.leftSwiped){
+                        binding.btnDelete.visibility = GONE
+                        binding.btnEditWhole.visibility = GONE
+                    } else if(item.selectable){
+                        if (item.selected){
+                            clickListener.onUnselect(item,binding.btnSelect)
+                        } else if (!item.selected) {
+                            clickListener.onSelect(item,binding.btnSelect)
+                        }
+
                     }
-                }.onTouch(v,event)
-            }
-            binding.stubMain.setOnTouchListener { v, event ->
-                v.performClick()
-                object : OnSwipeTouchListener(context){
-                    override fun onSwipeLeft() {
-                        super.onSwipeLeft()
-                        setVisibilityOnSwipeLeft(item.type)
+                    else{
+                        clickListener.onClickMain(item)
                     }
-                }.onTouch(v, event)
-            }
+                }
+
+                override fun onSwipeLeft() {
+                    super.onSwipeLeft()
+                    if(!item.leftSwiped&&!item.selectable){
+                        baseBinding.root.layoutTransition = LayoutTransition()
+
+                        baseBinding.root.layoutTransition.apply {
+                            enableTransitionType(LayoutTransition.CHANGING)
+                            setDuration(200)
+                        }
+
+                        binding.btnDelete.visibility = VISIBLE
+                        binding.btnEditWhole.visibility = VISIBLE
+
+                    }else return
+                }
+
+                override fun onLongClick() {
+                    super.onLongClick()
+                    clickListener.onLongClickMain()
+                    clickListener.onSelect(item,binding.btnSelect)
+                }
+            })
+
+
+
+
+
+
 
 
 
 //
 //                TODO データに応じたレイアウトの振り分け！
 //            TODO クリックリスナー！
-            /**
-             * change all your view data here
-             * assign click listeners here
-             *
-             *  example -->
-             *
-             *  binding.xyz.setOnClickListener {
-             *     clickListener.onClick(item)
-             *  }
-             */
+                /**
+                 * change all your view data here
+                 * assign click listeners here
+                 *
+                 *  example -->
+                 *
+                 *  binding.xyz.setOnClickListener {
+                 *     clickListener.onClick(item)
+                 *  }
+                 */
 
 
+            }
 
+        }
+
+
+    }
+
+    /**
+     * Horizontal View Holder
+     */
+
+    class GestureListener(
+        val dataClickListener: DataClickListener,
+        val binding: ItemCoverCardBaseBinding,
+        val  item: LibraryRV,
+        val viewId: Int,
+        var leftSwiped:Boolean = false,
+        var longPressed:Boolean = false) : GestureDetector.SimpleOnGestureListener() {
+
+        override fun onDown(e: MotionEvent?): Boolean {
+            if(leftSwiped){
+                when (viewId){
+                    binding.btnDelete.id -> dataClickListener.onClickDelete(item)
+                    binding.btnEditWhole.id -> dataClickListener.onClickEdit(item)
+                    else -> {
+                        binding.btnDelete.visibility = VISIBLE
+                        binding.btnEditWhole.visibility = VISIBLE
+                        leftSwiped != leftSwiped
+                    }
+
+                }
+                binding.btnDelete.visibility = VISIBLE
+                binding.btnEditWhole.visibility = VISIBLE
+                leftSwiped != leftSwiped
+            }
+
+
+            return true
+        }
+
+
+        private val SWIPE_VELOCITY_THRESHOLD = 400
+        private val SWIPE_THRESHOLD = 100
+        override fun onFling(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            velocityX: Float,
+            velocityY: Float
+        ): Boolean {
+            val diffY = e2!!.y - e1!!.y
+            val diffX = e2.x - e1.x
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
+                        binding.btnDelete.visibility = VISIBLE
+                        binding.btnEditWhole.visibility = VISIBLE
+                        leftSwiped != leftSwiped
+//                        swipe right
+                    } else {
+                        binding.btnDelete.visibility = VISIBLE
+                        binding.btnEditWhole.visibility = VISIBLE
+                        leftSwiped != leftSwiped
+
+                        if(viewId==binding.stubMain.id&&!leftSwiped){
+                            binding.btnDelete.visibility = VISIBLE
+                            binding.btnEditWhole.visibility = VISIBLE
+                            leftSwiped != leftSwiped
+                        }
+
+                    }
+                }
+            } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                if (diffY > 0) {
+
+                } else {
+
+                }
+            }
+            return true
 
         }
 
@@ -213,11 +382,6 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
     }
 
 
-    /**
-     * Horizontal View Holder
-     */
-
-}
 
 /**
  * This function checks the difference between 2 different Lists.
@@ -226,11 +390,11 @@ class LibraryListAdapter(val dataClickListener: DataClickListener) :
  */
 private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
     override fun areItemsTheSame(oldItem: LibraryRV, newItem: LibraryRV): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: LibraryRV, newItem: LibraryRV): Boolean {
-        return oldItem.file!!.fileId == newItem.file!!.fileId
+        return oldItem.equals(newItem)
     }
 
 }
@@ -243,11 +407,13 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
  */
 interface DataClickListener {
 
-    fun onLongClickMain(type: LibRVViewType, id: Int)
-    fun onClickEdit(id: Int,viewId :Int)
-    fun onClickAdd(type: LibRVViewType,id: Int)
-    fun onClickDelete(type: LibRVViewType,id: Int)
-    fun onClickMain(type: LibRVViewType,id: Int)
+    fun onLongClickMain(){}
+    fun onSelect(item: LibraryRV, imageView: ImageView)
+    fun onClickEdit(item: LibraryRV)
+    fun onClickAdd(item: LibraryRV)
+    fun onClickDelete(item: LibraryRV)
+    fun onClickMain(item: LibraryRV)
+    fun onUnselect(item: LibraryRV,imageView: ImageView)
 
 }
 

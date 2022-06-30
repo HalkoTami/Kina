@@ -8,11 +8,14 @@ enum class LibRVViewType{
 }
  class LibraryRV(
      val type: LibRVViewType,
-     val position: Int,
+     var position: Int,
      val file: File?,
      val card: Card?,
      val tag: List<File>?,
-     val id: Int
+     val id: Int,
+     var selectable:Boolean = false,
+     var selected:Boolean = false,
+     var leftSwiped:Boolean = false
  )
 
 

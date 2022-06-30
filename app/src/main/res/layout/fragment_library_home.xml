@@ -5,20 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.library.HomeFragment">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical">
+
 
         <FrameLayout
             android:id="@+id/topframelayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/viewPager"
+            android:layout_height="70dp"
+            android:padding="6dp"
+            android:elevation="10dp"
+            android:background="@color/white"
+
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -26,53 +22,51 @@
                 android:id="@+id/top_menu_bar_frame"
                 layout="@layout/item_top_menu_bar"/>
         </FrameLayout>
-        <LinearLayout
+    <FrameLayout
+        android:id="@+id/lay_search_view"
+        app:layout_constraintTop_toBottomOf="@id/topframelayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="8dp">
+        <include
+            layout="@layout/item_search_bar"/>
+
+
+    </FrameLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <FrameLayout
+        android:id="@+id/scroll_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lay_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:layout_margin="13dp"
-            android:background="@drawable/searchview"
-            android:padding="2dp"
-
-            >
-                <ImageView
-                    android:contentDescription="@string/icon_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/icon_search"
-                    android:padding="5dp"/>
-
-                <TextView
-                    android:id="@+id/edt_library_search"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="name"
-                    android:background="@android:color/transparent" />
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:padding="10dp"
+                android:id="@+id/vocabCardRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_cover_card_base" />
+        </ScrollView>
 
 
-
-
-
-
-
-
-
-
-        </LinearLayout>
-
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:padding="10dp"
-            android:id="@+id/vocabCardRV"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            tools:listitem="@layout/item_cover_card_base" />
-
-    </LinearLayout>
-
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
