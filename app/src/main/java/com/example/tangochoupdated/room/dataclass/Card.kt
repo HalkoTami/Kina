@@ -30,7 +30,7 @@ data class Card(
     @ColumnInfo(name = "card_type")
     var cardStatus: CardStatus,
     @ColumnInfo(name = "card_deleted")
-    val deleted:Boolean?,
+    var deleted:Boolean?,
     @ColumnInfo(name ="card_remembered")
     val remembered: Boolean?,
     @ColumnInfo(name= "library_order")

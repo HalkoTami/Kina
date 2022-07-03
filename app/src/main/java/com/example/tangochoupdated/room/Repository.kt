@@ -26,7 +26,7 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
     fun getFileDataByParentFileId(parentFileId:Int?) = libraryDao.getFileListByParentFileId(parentFileId)
 
     fun getCardDataByFileId(parentFileId: Int?):Flow<List<CardAndTags>>  = libraryDao.getCardsDataByFileId(parentFileId)
-    fun getFileByFileId(fileId:Int?):Flow<List<File>> = libraryDao.getFileByFileId(fileId)
+    fun getFileByFileId(fileId:Int?):Flow<File> = libraryDao.getFileByFileId(fileId)
 
 
 

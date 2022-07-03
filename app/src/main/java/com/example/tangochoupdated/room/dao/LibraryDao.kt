@@ -20,7 +20,7 @@ interface LibraryDao {
 
 
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
-    fun getFileByFileId(lookingFileId:Int?): Flow<List<File>>
+    fun getFileByFileId(lookingFileId:Int?): Flow<File>
 
 
 
