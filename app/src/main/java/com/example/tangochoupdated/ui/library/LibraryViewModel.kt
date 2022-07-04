@@ -116,7 +116,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //    top right IMV click
 
     fun topBarRightIMVOnClick(){
-        val a:Unit = when (_menuOpened.value) {
+        when (_menuOpened.value) {
             true -> setMenuStatus(false)
             false -> setMenuStatus(true)
             else -> throw IllegalArgumentException("is null")
@@ -135,8 +135,42 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
         setValueToSelectedItem()
         upDateTopText()
-    }
+        upDateFileEmptyStatus()
 
+    }
+//    file is  empty or not
+    private val _fileEmptyStatus =  MutableLiveData<Boolean>()
+    private fun setFileEmptyStatus(boolean: Boolean){
+        _fileEmptyStatus.apply {
+            value = boolean
+        }
+    }
+    private fun upDateFileEmptyStatus(){
+        when(_myFinalList.value?.size){
+            null,0-> {
+                setFileEmptyStatus(true)
+                upDateFileEmptyText()
+            }
+            else -> setFileEmptyStatus(false)
+        }
+    }
+    val fileEmptyStatus:LiveData<Boolean> = _fileEmptyStatus
+// text when empty
+
+    private val _fileEmptyText =  MutableLiveData<String>()
+    private fun setFileEmptyText(string: String){
+        _fileEmptyText.apply {
+            value = string
+        }
+    }
+    private fun upDateFileEmptyText(){
+        when(_fileEmptyStatus.value){
+            true->setFileEmptyText("${_myParentItem.value?.file?.title}は空です")
+            false,null -> return
+        }
+
+    }
+    val fileEmptyText:LiveData<String> = _fileEmptyText
 
 
 //menu Visibility

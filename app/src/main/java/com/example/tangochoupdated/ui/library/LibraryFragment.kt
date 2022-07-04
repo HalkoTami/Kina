@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -14,6 +15,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tangochoupdated.*
+import com.example.tangochoupdated.databinding.EmptyBinding
 
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
@@ -246,13 +248,41 @@ class HomeFragment : Fragment(),DataClickListener {
                     libraryViewModel.topBarRightIMVOnClick()
                 }
 
-                menuBinding.apply {
-                    imv3.setOnClickListener {
-                        libraryViewModel.deleteItem()
+                menuBinding.root.children.iterator().forEachRemaining {
+                    when (it.id){
+                       menuBinding.imv1.id ->{
+                           it.setOnClickListener {
+                               onClickAnki()
+                           }
+                       }
+                        menuBinding.imv2.id -> {
+                            it.setOnClickListener{
+                                onClickEdit()
+                            }
+                        }
+                        menuBinding.imv3.id ->{
+                            it.setOnClickListener { onClickDelete() }
+                        }
                     }
+
 
                 }
             }
+            val a = EmptyBinding.inflate(LayoutInflater.from(context))
+            libraryViewModel.fileEmptyStatus.observe(viewLifecycleOwner){
+                when(it){
+                    true -> {
+                        binding.scrollView.addView(a.root)
+                    }
+                    false -> binding.scrollView.removeAllViews()
+                }
+            }
+            libraryViewModel.fileEmptyText.observe(viewLifecycleOwner){
+                a.txvCenter.text = it
+            }
+
+
+
         }
         libraryViewModel.myFinalList.observe(viewLifecycleOwner){
             adapter.submitList(it)
@@ -275,6 +305,9 @@ class HomeFragment : Fragment(),DataClickListener {
     fun onClickAnki(){
         val action = AnkiFragmentDirections.toAnki()
         navCon.navigate(action)
+    }
+    fun onClickEdit(){
+
     }
 
 
