@@ -61,165 +61,31 @@ class HomeFragment : Fragment(),DataClickListener {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val owner = requireActivity()
-        navCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.viewPager).id)
+        navCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
 
 
-//        libraryViewModel.apply {
-//            setParentItemId(myId)
-//
-//            setMenuStatus(View.GONE)
-//            fileWithoutParent.observe(viewLifecycleOwner){
-//                setValueToFileWithoutParent(it)
-//                chooseValuesOfFinalList()
-//            }
-////            menuViewMode.observe(viewLifecycleOwner) {
-////                menuViewStatus = it
-////                binding.topMenuBarFrame.layEnd.apply {
-////                    val b = ValueAnimator.ofInt(
-////                        1,
-////                        binding.topMenuBarFrame.menuBinding.root.layoutParams.width
-////                    )
-////                    b.duration = 300
-////                    b.addUpdateListener { animator ->
-////
-////                        layoutParams.width = animator.animatedValue as Int
-////                        invalidate()
-////                        requestLayout()
-////                    }
-////                    when {
-////                        menuViewStatus -> {
-////                            layoutParams.width = 1
-////                            visibility = View.VISIBLE
-////                            b.start()
-////
-////                        }
-////                        !menuViewStatus -> {
-////
-////                            b.reverse()
-////                            b.doOnEnd { visibility = View.GONE }
-////
-////                        }
-////                    }
-////
-////                }
-////            }
-//            setMultipleSelectMode(false)
-//            multipleSelectMode.observe(viewLifecycleOwner) {
-//                when {
-//                    it == true -> {
-//                        binding.topMenuBarFrame.menuBinding.apply {
-//                            imv1.setOnClickListener { onClickAnki() }
-//                        }
-//                    }
-//                    else -> {
-//                        when (myId) {
-//                            null -> {
-//                                binding.topMenuBarFrame.apply {
-//                                    txvTitle.text = "home"
-//                                    imv1.setImageDrawable(owner.getDrawable(R.drawable.icon_eye_opened)!!)
-//                                    imvEnd.apply {
-//                                        setImageDrawable(owner.getDrawable(R.drawable.icon_inbox)!!)
-//                                        setOnClickListener {
-//
-//                                        }
-//                                    }
-//                                }
-//
-//
-//                            }
-//                            else -> {
-//                                myParentItem.observe(viewLifecycleOwner) { parent ->
-//                                    binding.topMenuBarFrame.apply {
-//                                        txvTitle.text =
-//                                            parent.file?.title.toString()
-//                                        imv1.setImageDrawable(
-//                                            when (parent.type) {
-//                                                LibRVViewType.Folder -> owner.getDrawable(R.drawable.icon_file)!!
-//                                                LibRVViewType.FlashCardCover -> owner.getDrawable(
-//                                                    R.drawable.icon_library_plane
-//                                                )!!
-//                                                else -> illegalDecoyCallException("unknown Type")
-//                                            }
-//                                        )
-//                                        imvEnd.apply {
-//                                            setImageDrawable(owner.getDrawable(R.drawable.icon_dot)!!)
-//                                            setOnClickListener {
-//
-//                                            }
-//                                        }
-//                                    }
-//
-//
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            card.observe(viewLifecycleOwner) {
-//                setValueToCards(it)
-//                chooseValuesOfFinalList()
-//            }
-//            file.observe(viewLifecycleOwner) {
-//                setValueToFiles(it)
-//                chooseValuesOfFinalList()
-//            }
-////            noParents.observe(viewLifecycleOwner) {
-////                setValueToNoParents(it)
-////                chooseValuesOfFinalList()
-////            }
-//
-//            parentFile.observe(viewLifecycleOwner) {
-//                getParentItem(it)
-//
-//            }
-//
-//
-//            myFinalList.observe(viewLifecycleOwner) { containingList ->
-//                setValueToSelectedItem()
-//
-//
-//                if (containingList.isNullOrEmpty()) {
-//                    val a = EmptyBinding.inflate(layoutInflater)
-//                    a.apply {
-//                        txvCenter.text = "${myId}は空です"
-//                        root.visibility = View.VISIBLE
-//                    }
-//                    binding.scrollView.removeAllViewsInLayout()
-//                    binding.scrollView.addView(a.root)
-//
-//                } else {
-//                    adapter.submitList(containingList)
-//                    adapter.notifyDataSetChanged()
-//
-//                }
-//
-//            }
-//            selectedItems.observe(viewLifecycleOwner) { list->
-//                binding.topMenuBarFrame.txvTitle.text = "${list.size}個　選択中"
-//                binding.topMenuBarFrame.menuBinding.imv3.setOnClickListener {
-//                    onClickDelete()
-//                }
-//
-//            }
-//            parentFile.observe(viewLifecycleOwner) {
-//                getParentItem(it)
-//
-//            }
-//            topText.observe(viewLifecycleOwner){
-//                binding.topMenuBarFrame.txvTitle.text = it
-//            }
-//
-//        }
-//        初期データ設定
+//　　　　DBからデータとってくる
         libraryViewModel.apply {
             setParentItemId(myId)
-            setMenuStatus(false)
-            fileWithoutParent.observe(viewLifecycleOwner){
-                setValueToFileWithoutParent(it)
-                chooseValuesOfFinalList()
+            parentFileFromDB(myId).observe(viewLifecycleOwner){
+                setParentFileFromDB(it)
+
             }
+
+            fileWithoutParentFromDB.observe(viewLifecycleOwner){
+                setFileWithoutParentFromDB(it)
+            }
+            childFilesFromDB.observe(viewLifecycleOwner){
+                setChildFilesFromDB(it)
+            }
+            childCardsFromDB.observe(viewLifecycleOwner){
+                setChildCardsFromDB(it)
+            }
+
+        }
+//        初期データ設定
+        libraryViewModel.apply {
+            setMenuStatus(false)
         }
 
 
@@ -268,18 +134,22 @@ class HomeFragment : Fragment(),DataClickListener {
 
                 }
             }
-            val a = EmptyBinding.inflate(LayoutInflater.from(context))
+
+
+            libraryViewModel.fileEmptyText.observe(viewLifecycleOwner){
+                binding.emptyBinding.txvCenter.text = it
+            }
             libraryViewModel.fileEmptyStatus.observe(viewLifecycleOwner){
                 when(it){
                     true -> {
-                        binding.scrollView.addView(a.root)
+                        binding.emptyBinding.root.visibility = View.VISIBLE
                     }
-                    false -> binding.scrollView.removeAllViews()
+                    false ->{
+                        binding.emptyBinding.root.visibility = View.GONE
+                    }
                 }
             }
-            libraryViewModel.fileEmptyText.observe(viewLifecycleOwner){
-                a.txvCenter.text = it
-            }
+
 
 
 
@@ -299,7 +169,7 @@ class HomeFragment : Fragment(),DataClickListener {
 
     }
     fun onClickDelete(){
-        libraryViewModel.deleteItem()
+        libraryViewModel.onDelete()
         Toast.makeText(context, "onClickDelete", Toast.LENGTH_SHORT).show()
     }
     fun onClickAnki(){

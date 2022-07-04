@@ -7,18 +7,58 @@
 
 
 
-    <androidx.fragment.app.FragmentContainerView
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/mobile_navigation"
-        android:id="@+id/viewPager"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:id="@+id/viewPager"
         app:layout_constraintBottom_toTopOf="@id/frame_bnv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/mobile_navigation"
+            android:id="@+id/frag_container_view"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+    <FrameLayout
+        android:background="@drawable/rectangle_green_stroke"
+        android:elevation="20dp"
+        android:id="@+id/popup_add_file"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="@id/viewPager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/viewPager"
+        >
+        <include
+            android:id="@+id/binding_create_file"
+            layout="@layout/add_popup"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_bottomMenu"
+        android:background="@drawable/rectangle_green_stroke"
+        android:elevation="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/viewPager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <include
+            android:id="@+id/binding_add_menu"
+            layout="@layout/item_bottom_popup_add" />
+
+    </FrameLayout>
 
     <FrameLayout
         android:background="@color/lightgreen"
@@ -32,5 +72,10 @@
         app:labelVisibilityMode="unlabeled" >
     </FrameLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/whole_view"
+        android:background="@android:color/transparent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

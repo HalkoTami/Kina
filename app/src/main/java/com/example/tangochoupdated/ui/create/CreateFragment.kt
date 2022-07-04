@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.tangochoupdated.databinding.FragmentCreateBinding
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.BaseViewModel
-import com.example.tangochoupdated.room.enumclass.Tab
+import com.example.tangochoupdated.RoomApplication
+import com.example.tangochoupdated.ViewModelFactory
 
 class CreateFragment : Fragment() {
 
@@ -24,6 +26,7 @@ class CreateFragment : Fragment() {
     lateinit var appearAnimator:AnimatorSet
 
     private val sharedViewModel: BaseViewModel by activityViewModels()
+    private lateinit var createViewModel:CreateViewModel
 
     private var bottomMenuVisible:Boolean = false
 
@@ -39,8 +42,13 @@ class CreateFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val plannerViewModel =
-            ViewModelProvider(this)[CreateViewModel::class.java]
+        val repository = (requireActivity().application as RoomApplication).repository
+        val viewModelFactory = ViewModelFactory(repository)
+        createViewModel =
+            ViewModelProvider(
+                this, viewModelFactory
+            )[CreateViewModel::class.java]
+
         _binding = FragmentCreateBinding.inflate(inflater, container, false)
         val root: View = binding.root
         binding.popupAddFile.visibility = View.INVISIBLE
