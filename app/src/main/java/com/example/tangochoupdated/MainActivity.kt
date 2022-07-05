@@ -5,12 +5,15 @@ import android.animation.ObjectAnimator
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -29,6 +32,7 @@ import androidx.navigation.navArgs
 
 import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
+import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.room.enumclass.TabStatus
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
@@ -90,7 +94,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        baseviewModel.setOnCreate()
+        baseviewModel.setOnCreate(getDrawable(R.drawable.circle_stroke)!!,
+            binding.createFileBinding.bindingCreateFile.imvColGray.drawable)
 
 
 
@@ -142,10 +147,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.createFileBinding.bindingAddMenu.apply {
             imvnewTangocho.setOnClickListener {
-                baseviewModel.onClickFolderOrFlashCard()
+                baseviewModel.onCLickCreateFlashCardCover()
             }
             imvnewfolder.setOnClickListener {
-            baseviewModel.onClickFolderOrFlashCard()
+            baseviewModel.onClickCreateFolder()
         }
         }
 
@@ -176,11 +181,23 @@ class MainActivity : AppCompatActivity() {
         }
 //        add new File pop up Data
         binding.createFileBinding.bindingCreateFile.apply {
+            baseviewModel.txvLeftTop.observe(this@MainActivity){
+                txvFileTitle.text = it
+            }
+            baseviewModel.txvHint.observe(this@MainActivity){
+                txvHint.text = it
+            }
+            baseviewModel.drawFileType.observe(this@MainActivity){
+                imvFileType.setImageDrawable(getDrawable(it))
+            }
+            baseviewModel.imvGrayDrawable.observe(this@MainActivity){
+                imvColGray.setImageDrawable(it)
+            }
+            imvColGray.setOnClickListener {
 
-
-            val a = DrawableCompat.wrap(getDrawable(R.drawable.color_palet_circle)!!)
-            a.setTint(R.color.red)
-            val b = LayerDrawable(arrayOf(a))
+                baseviewModel.setFileColor(ColorStatus.GRAY)
+                Toast.makeText(this@MainActivity,"gray",Toast.LENGTH_SHORT).show()
+            }
         }
 
 
