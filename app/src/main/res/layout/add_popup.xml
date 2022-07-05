@@ -30,6 +30,7 @@
         app:layout_constraintBottom_toBottomOf="@id/imv_file_type"
         app:layout_constraintTop_toTopOf="@id/imv_file_type"/>
     <TextView
+        android:id="@+id/txv_file_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

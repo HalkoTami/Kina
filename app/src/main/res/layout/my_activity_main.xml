@@ -25,38 +25,9 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
-    </FrameLayout>
-    <FrameLayout
-        android:background="@drawable/rectangle_green_stroke"
-        android:elevation="20dp"
-        android:id="@+id/popup_add_file"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        app:layout_constraintBottom_toBottomOf="@id/viewPager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/viewPager"
-        >
         <include
-            android:id="@+id/binding_create_file"
-            layout="@layout/add_popup"/>
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/frame_bottomMenu"
-        android:background="@drawable/rectangle_green_stroke"
-        android:elevation="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/viewPager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <include
-            android:id="@+id/binding_add_menu"
-            layout="@layout/item_bottom_popup_add" />
+            android:id="@+id/create_file_Binding"
+            layout="@layout/fragment_create"/>
 
     </FrameLayout>
 

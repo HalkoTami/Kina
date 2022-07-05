@@ -30,6 +30,7 @@
        />
     <TextView
         android:id="@+id/bnv_txv_1"
+        android:textSize="11sp"
 
 
         app:layout_constraintStart_toStartOf="parent"

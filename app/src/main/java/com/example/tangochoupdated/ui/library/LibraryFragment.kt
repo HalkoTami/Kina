@@ -69,6 +69,7 @@ class HomeFragment : Fragment(),DataClickListener {
             setParentItemId(myId)
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it)
+                sharedViewModel.setParentFile(it)
 
             }
 
