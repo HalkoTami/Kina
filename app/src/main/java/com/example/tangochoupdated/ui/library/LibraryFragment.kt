@@ -20,6 +20,7 @@ import com.example.tangochoupdated.databinding.EmptyBinding
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
+import com.example.tangochoupdated.ui.planner.CreateFileViewModel
 
 class HomeFragment : Fragment(),DataClickListener {
     private val args: HomeFragmentArgs by navArgs()
@@ -29,6 +30,7 @@ class HomeFragment : Fragment(),DataClickListener {
     lateinit var adapter: LibraryListAdapter
 
     private val sharedViewModel: BaseViewModel by activityViewModels()
+    private val createFileViewModel: CreateFileViewModel by activityViewModels()
 
     private var _binding: FragmentLibraryHomeBinding? = null
 
@@ -69,7 +71,7 @@ class HomeFragment : Fragment(),DataClickListener {
             setParentItemId(myId)
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it)
-                sharedViewModel.setParentFile(it)
+                createFileViewModel.setParentFile(it)
 
             }
 
@@ -158,6 +160,7 @@ class HomeFragment : Fragment(),DataClickListener {
         libraryViewModel.myFinalList.observe(viewLifecycleOwner){
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
+            createFileViewModel.setNewPosition(it.size+1)
         }
 
 

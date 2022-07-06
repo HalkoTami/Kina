@@ -13,10 +13,12 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.Group
 import androidx.constraintlayout.helper.widget.Layer
 import androidx.core.animation.doOnEnd
@@ -38,6 +40,7 @@ import com.example.tangochoupdated.room.enumclass.TabStatus
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
 import com.example.tangochoupdated.ui.library.HomeFragmentArgs
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
+import com.example.tangochoupdated.ui.planner.CreateFileViewModel
 
 import com.example.tangochoupdated.ui.planner.CreateFragment
 import com.example.tangochoupdated.ui.planner.CreateFragmentDirections
@@ -49,8 +52,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var factory:ViewModelFactory
 
     lateinit var baseviewModel: BaseViewModel
+    lateinit var createFileviewModel:CreateFileViewModel
 
-    private val allTabs= listOf(Tab.TabLibrary,Tab.TabAnki,Tab.TabCreate)
+    var filePopUpVisible = false
+
 
 
     private lateinit var binding: MyActivityMainBinding
@@ -65,16 +70,17 @@ class MainActivity : AppCompatActivity() {
         ViewModelFactory((application as RoomApplication).repository)
         )[BaseViewModel::class.java]
 
-
+        createFileviewModel = ViewModelProvider(this,
+            ViewModelFactory((application as RoomApplication).repository)
+        )[CreateFileViewModel::class.java]
 
         binding = MyActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
-        bnvBinding = ItemBottomNavigationBarBinding.inflate(layoutInflater)
+        bnvBinding = binding.bnvBinding
         bnvBinding.imv2.setImageDrawable(getDrawable(R.drawable.icon_add_middlesize))
 
-        binding.frameBnv.addView(bnvBinding.root)
 
 
 
@@ -84,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         val navCon = navHostFragment.navController
         navArgs<HomeFragmentArgs>()
         val toLibrary = HomeFragmentDirections.toLib()
+
         val toAnki = AnkiFragmentDirections.toAnki()
 
         binding.createFileBinding.apply {
@@ -94,19 +101,24 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        baseviewModel.setOnCreate(getDrawable(R.drawable.circle_stroke)!!,
-            binding.createFileBinding.bindingCreateFile.imvColGray.drawable)
+
+        baseviewModel.setOnCreate()
+        createFileviewModel.onCreate()
 
 
 
 
         baseviewModel.activeTab.observe(this){
+
             when(it){
                 Tab.TabLibrary -> {
                     navCon.navigate(toLibrary)
+
                 }
                 Tab.TabAnki -> navCon.navigate(toAnki)
+
             }
+
         }
 
 
@@ -115,7 +127,7 @@ class MainActivity : AppCompatActivity() {
 //    add new file pop up -- bottom menu
 
 
-        baseviewModel.bottomMenuVisible.observe(this){
+        createFileviewModel.bottomMenuVisible.observe(this){
             val btmMenuAnimator = AnimatorSet().apply{
                 val a = ObjectAnimator.ofFloat(binding.createFileBinding.frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
                 val b = ObjectAnimator.ofFloat(binding.createFileBinding.frameBottomMenu, View.ALPHA,0f,1f)
@@ -125,13 +137,9 @@ class MainActivity : AppCompatActivity() {
 
             when (it){
                 true -> {
-                    binding.createFileBinding.root.visibility = VISIBLE
                     btmMenuAnimator.start()
                     binding.createFileBinding.frameBottomMenu.visibility = VISIBLE
-                    binding.createFileBinding.root.setOnClickListener {
-                        baseviewModel.reset()
 
-                    }
 
 
                 }
@@ -147,15 +155,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.createFileBinding.bindingAddMenu.apply {
             imvnewTangocho.setOnClickListener {
-                baseviewModel.onCLickCreateFlashCardCover()
+                createFileviewModel.onCLickCreateFlashCardCover()
             }
             imvnewfolder.setOnClickListener {
-            baseviewModel.onClickCreateFolder()
+            createFileviewModel.onClickCreateFolder()
         }
         }
 
         //    add new file pop up -- edit file
-        baseviewModel.editFilePopUpVisible.observe(this){
+        createFileviewModel.editFilePopUpVisible.observe(this){
             val appearAnimator = AnimatorSet().apply {
                 duration= 500
                 play(ObjectAnimator.ofFloat(binding.createFileBinding.popupAddFile, View.ALPHA, 0f,1f ))
@@ -165,9 +173,8 @@ class MainActivity : AppCompatActivity() {
 
                     binding.createFileBinding.popupAddFile.visibility = VISIBLE
                     appearAnimator.start()
-                    binding.createFileBinding.root.setOnClickListener {
-                        baseviewModel.reset()
-                    }
+                    binding.createFileBinding.popupAddFile.setOnClickListener(null)
+
                 }
                 false ->{
                     appearAnimator.doOnEnd {
@@ -181,33 +188,86 @@ class MainActivity : AppCompatActivity() {
         }
 //        add new File pop up Data
         binding.createFileBinding.bindingCreateFile.apply {
-            baseviewModel.txvLeftTop.observe(this@MainActivity){
+            createFileviewModel.txvLeftTop.observe(this@MainActivity){
                 txvFileTitle.text = it
             }
-            baseviewModel.txvHint.observe(this@MainActivity){
+            createFileviewModel.txvHint.observe(this@MainActivity){
                 txvHint.text = it
             }
-            baseviewModel.drawFileType.observe(this@MainActivity){
-                imvFileType.setImageDrawable(getDrawable(it))
-            }
-            baseviewModel.imvGrayDrawable.observe(this@MainActivity){
-                imvColGray.setImageDrawable(it)
-            }
-            imvColGray.setOnClickListener {
 
-                baseviewModel.setFileColor(ColorStatus.GRAY)
-                Toast.makeText(this@MainActivity,"gray",Toast.LENGTH_SHORT).show()
+            var previousColor:ColorStatus?
+            previousColor = null
+
+
+            createFileviewModel.fileColor.observe(this@MainActivity){
+
+
+
+                if(previousColor == null){
+                    changeSelected(ColorStatus.RED,false)
+                    changeSelected(ColorStatus.YELLOW,false)
+                    changeSelected(ColorStatus.BLUE,false)
+                    changeSelected(ColorStatus.GRAY,false)
+
+                } else{
+                    changeSelected(previousColor!!,false)
+                }
+                changeSelected(it,true)
+                previousColor = it
+
+
+
             }
+
+
+            lineLayColorPalet.children.iterator().forEachRemaining {
+                it.setOnClickListener{
+                    when(it.id){
+                        imvColBlue.id -> createFileviewModel.setFileColor(ColorStatus.BLUE)
+                        imvColGray.id -> createFileviewModel.setFileColor(ColorStatus.GRAY)
+                        imvColRed.id -> createFileviewModel.setFileColor(ColorStatus.RED)
+                        imvColYellow.id -> createFileviewModel.setFileColor(ColorStatus.YELLOW)
+                    }
+                }
+
+
+            }
+
+            createFileviewModel.lastInsetedFileId.observe(this@MainActivity){
+                createFileviewModel.setLastInsertedFileId(it)
+
+            }
+            btnCreateFile.setOnClickListener {
+                createFileviewModel.onClickCreateFolder()
+            }
+//
+
         }
 
 
 //         background
 
-        baseviewModel.addFileActive.observe(this){
-            binding.createFileBinding.root.visibility = when(it){
-                true -> VISIBLE
-                false -> GONE
+        createFileviewModel.addFileActive.observe(this@MainActivity){ boolean ->
+            binding.createFileBinding.apply {
+                when(boolean){
+                    true ->{
+                        root.visibility = VISIBLE
+                        bindingCreateFile.btnClose.setOnClickListener {
+                            createFileviewModel.setAddFileActive(false)
+                        }
+                        background.setOnClickListener{
+                            createFileviewModel.setAddFileActive(false)
+                        }
+                    }
+                    false -> {
+                        root.visibility = GONE
+                        this@MainActivity.filePopUpVisible = false
+                    }
+                }
+
             }
+
+
 
         }
 
@@ -228,7 +288,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             layout2.setOnClickListener {
-                baseviewModel.onClickAddTab()
+                createFileviewModel.setAddFileActive(true)
+                createFileviewModel.setMode(CreateFileViewModel.Mode.Create)
             }
             layout3.apply {
                 baseviewModel.bnvLayout3View.observe(this@MainActivity){
@@ -252,6 +313,53 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
+
+    fun changeSelected(colorStatus: ColorStatus,selected:Boolean){
+        val circle = getDrawable(R.drawable.circle)!!
+        val wrappedCircle = DrawableCompat.wrap(circle)
+        val stroke = getDrawable(R.drawable.circle_stroke)
+        val imageView:ImageView
+        val col:Int
+        when(colorStatus) {
+            ColorStatus.GRAY -> {
+                col = getColor(R.color.gray)
+                imageView = binding.createFileBinding.bindingCreateFile.imvColGray
+            }
+            ColorStatus.BLUE -> {
+                col = getColor(R.color.blue)
+                imageView = binding.createFileBinding.bindingCreateFile.imvColBlue
+            }
+            ColorStatus.YELLOW -> {
+                col = getColor(R.color.yellow)
+                imageView = binding.createFileBinding.bindingCreateFile.imvColYellow
+            }
+            ColorStatus.RED -> {
+                col = getColor(R.color.red)
+                imageView = binding.createFileBinding.bindingCreateFile.imvColRed
+            }
+        }
+
+        when(selected){
+            true -> {
+                DrawableCompat.setTint(wrappedCircle, col)
+                val lay = LayerDrawable(arrayOf(wrappedCircle,stroke))
+                imageView.setImageDrawable(lay)
+            }
+            false -> {
+                DrawableCompat.setTint(wrappedCircle, col)
+                imageView.setImageDrawable(wrappedCircle)
+            }
+        }
+        Toast.makeText(this,"unselect",Toast.LENGTH_SHORT).show()
+
+    }
+
+
+
+
+
 
 
 

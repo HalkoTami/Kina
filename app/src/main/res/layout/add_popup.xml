@@ -10,6 +10,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
     <ImageView
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_close"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="5dp"
+        />
+    <ImageView
         android:id="@+id/imv_file_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,6 +73,7 @@
             android:layout_marginTop="10dp"
             />
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/lineLay_color_palet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -88,16 +98,14 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginEnd="7dp"
-                android:src="@drawable/circle"
-                app:tint="@color/blue" />
+                android:src="@drawable/circle" />
 
             <ImageView
                 android:id="@+id/imv_col_yellow"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginEnd="7dp"
-                android:src="@drawable/circle"
-                app:tint="@color/yellow" />
+                android:src="@drawable/circle" />
 
             <ImageView
                 android:id="@+id/imv_col_gray"

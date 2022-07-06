@@ -41,12 +41,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewPager"
         app:labelVisibilityMode="unlabeled" >
+        <include
+            android:id="@+id/bnv_binding"
+            layout="@layout/item_bottom_navigation_bar"/>
     </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/whole_view"
-        android:background="@android:color/transparent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

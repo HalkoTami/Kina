@@ -22,6 +22,11 @@ interface LibraryDao {
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
     fun getFileByFileId(lookingFileId:Int?): Flow<File>
 
+    @Query("SELECT a.fileId FROM tbl_file a " +
+            " INNER JOIN ( SELECT  MAX(fileId) fileId FROM tbl_file  GROUP BY fileId ) b ON a.fileId = b.fileId"
+    )
+    fun getLastInsertedFile():Flow<Int>
+
 
 
 
