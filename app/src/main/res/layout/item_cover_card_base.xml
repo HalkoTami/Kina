@@ -38,9 +38,9 @@
         app:layout_constraintEnd_toStartOf="@+id/btn_delete"
         app:layout_constraintStart_toEndOf="@+id/btn_select"
         app:layout_constraintTop_toTopOf="parent">
-        <include
-            android:id="@+id/binding_create_file"
-            layout="@layout/item_cover_file"/>
+
+
+
 
         
 

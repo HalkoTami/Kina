@@ -20,112 +20,107 @@ import com.example.tangochoupdated.BaseViewModel
 import com.example.tangochoupdated.RoomApplication
 import com.example.tangochoupdated.ViewModelFactory
 
-class CreateFragment : Fragment() {
-
-    private var _binding: FragmentCreateBinding? = null
-    lateinit var appearAnimator:AnimatorSet
-
-    private val sharedViewModel: BaseViewModel by activityViewModels()
-    private lateinit var createViewModel:CreateViewModel
-
-    private var bottomMenuVisible:Boolean = false
-
-    private var addFileMenuVisible:Boolean = false
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val repository = (requireActivity().application as RoomApplication).repository
-        val viewModelFactory = ViewModelFactory(repository)
-        createViewModel =
-            ViewModelProvider(
-                this, viewModelFactory
-            )[CreateViewModel::class.java]
-
-        _binding = FragmentCreateBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        binding.popupAddFile.visibility = View.INVISIBLE
-
-
-
-
-
-        appearAnimator =AnimatorSet().apply{
-            val a =ObjectAnimator.ofFloat(binding.frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
-            val b = ObjectAnimator.ofFloat(binding.bindingAddMenu.root, View.ALPHA,0f,1f)
-            playTogether(a,b)
-            duration = 500
-
-        }
-        appearAnimator.start()
-        bottomMenuVisible = true
-        binding.bindingAddMenu.root.children.iterator().forEachRemaining {
-            it.setOnClickListener {
-                onClickAddMenu(it)
-            }
-        }
-        binding.bindingCreateFile.btnCreateFile.setOnClickListener {
-            onClickCreateFile(it)
-        }
-        binding.root.setOnClickListener {
-            finishWithAnimation()
+//class CreateFragment : Fragment() {
 //
-        }
-        return root
-    }
-    fun onClickAddMenu(v:View){
-        appearAnimator.reverse()
-        bottomMenuVisible = false
-        when (v.id){
-            binding.bindingAddMenu.imvnewfolder.id -> {
-                sharedViewModel.fileStatus = FileStatus.FOLDER
-                binding.popupAddFile.visibility= View.VISIBLE
-                appearAnimator = AnimatorSet().apply {
-                    duration= 500
-                    play(ObjectAnimator.ofFloat(binding.popupAddFile, View.ALPHA, 0f,1f ))
-                }
-                addFileMenuVisible= true
-
-            }
-        }
-
-        return
-    }
-
-    fun onClickCreateFile(v:View){
-        when(v.id){
-            binding.bindingCreateFile.btnCreateFile.id -> {
-                sharedViewModel.title = binding.bindingCreateFile.edtCreatefile.text.toString()
-                sharedViewModel.libOrder = 0
-                sharedViewModel.insertFile()
-                finishWithAnimation()
-
-            }
-        }
-    }
-    fun finishWithAnimation(){
-
-        appearAnimator.addListener(object:AnimatorListenerAdapter(){
-            override fun onAnimationEnd(animation: Animator?, isReverse: Boolean) {
-                super.onAnimationEnd(animation, isReverse)
-                requireActivity().supportFragmentManager.commit {
-                    remove(this@CreateFragment)
-                }
-            }
-        })
-        appearAnimator.reverse()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        _binding = null
-    }
-}
+//    private var _binding: FragmentCreateBinding? = null
+//    lateinit var appearAnimator:AnimatorSet
+//
+//    private val sharedViewModel: BaseViewModel by activityViewModels()
+//    private lateinit var createViewModel:CreateViewModel
+//
+//    private var bottomMenuVisible:Boolean = false
+//
+//    private var addFileMenuVisible:Boolean = false
+//    // This property is only valid between onCreateView and
+//    // onDestroyView.
+//    private val binding get() = _binding!!
+//
+//
+//
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View {
+//        val repository = (requireActivity().application as RoomApplication).repository
+//        val viewModelFactory = ViewModelFactory(repository)
+//        createViewModel =
+//            ViewModelProvider(
+//                this, viewModelFactory
+//            )[CreateViewModel::class.java]
+//
+//        _binding = FragmentCreateBinding.inflate(inflater, container, false)
+//        val root: View = binding.root
+//        binding.popupAddFile.visibility = View.INVISIBLE
+//
+//
+//
+//
+//
+//        appearAnimator =AnimatorSet().apply{
+//            val a =ObjectAnimator.ofFloat(binding.frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
+//            val b = ObjectAnimator.ofFloat(binding.bindingAddMenu.root, View.ALPHA,0f,1f)
+//            playTogether(a,b)
+//            duration = 500
+//
+//        }
+//        appearAnimator.start()
+//        bottomMenuVisible = true
+//        binding.bindingAddMenu.root.children.iterator().forEachRemaining {
+//            it.setOnClickListener {
+//                onClickAddMenu(it)
+//            }
+//        }
+//
+//        binding.root.setOnClickListener {
+//            finishWithAnimation()
+////
+//        }
+//        return root
+//    }
+//    fun onClickAddMenu(v:View){
+//        appearAnimator.reverse()
+//        bottomMenuVisible = false
+//        when (v.id){
+//            binding.bindingAddMenu.imvnewfolder.id -> {
+//                binding.popupAddFile.visibility= View.VISIBLE
+//                appearAnimator = AnimatorSet().apply {
+//                    duration= 500
+//                    play(ObjectAnimator.ofFloat(binding.popupAddFile, View.ALPHA, 0f,1f ))
+//                }
+//                addFileMenuVisible= true
+//
+//            }
+//        }
+//
+//        return
+//    }
+//
+//    fun onClickCreateFile(v:View){
+//        when(v.id){
+//            binding.bindingCreateFile.btnCreateFile.id -> {
+//
+//                finishWithAnimation()
+//
+//            }
+//        }
+//    }
+//    fun finishWithAnimation(){
+//
+//        appearAnimator.addListener(object:AnimatorListenerAdapter(){
+//            override fun onAnimationEnd(animation: Animator?, isReverse: Boolean) {
+//                super.onAnimationEnd(animation, isReverse)
+//                requireActivity().supportFragmentManager.commit {
+//                    remove(this@CreateFragment)
+//                }
+//            }
+//        })
+//        appearAnimator.reverse()
+//    }
+//
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//
+//        _binding = null
+//    }
+//}

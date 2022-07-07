@@ -40,10 +40,10 @@ import com.example.tangochoupdated.room.enumclass.TabStatus
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
 import com.example.tangochoupdated.ui.library.HomeFragmentArgs
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
+import com.example.tangochoupdated.ui.library.LibraryViewModel
 import com.example.tangochoupdated.ui.planner.CreateFileViewModel
 
-import com.example.tangochoupdated.ui.planner.CreateFragment
-import com.example.tangochoupdated.ui.planner.CreateFragmentDirections
+
 import kotlinx.coroutines.delay
 
 class MainActivity : AppCompatActivity() {
@@ -233,12 +233,20 @@ class MainActivity : AppCompatActivity() {
 
             }
 
+
             createFileviewModel.lastInsetedFileId.observe(this@MainActivity){
-                createFileviewModel.setLastInsertedFileId(it)
+                Toast.makeText(this@MainActivity,"$it",Toast.LENGTH_SHORT).show()
+//                createFileviewModel.setLastInsertedFileId(it)
+//                createFileviewModel.afterNewFileInserted(it)
 
             }
             btnCreateFile.setOnClickListener {
-                createFileviewModel.onClickCreateFolder()
+                if(edtCreatefile.text.isEmpty()){
+                    edtCreatefile.hint = "タイトルが必要です"
+                } else{
+                    createFileviewModel.onClickFinish(edtCreatefile.text!!.toString())
+                }
+
             }
 //
 
@@ -352,7 +360,7 @@ class MainActivity : AppCompatActivity() {
                 imageView.setImageDrawable(wrappedCircle)
             }
         }
-        Toast.makeText(this,"unselect",Toast.LENGTH_SHORT).show()
+
 
     }
 

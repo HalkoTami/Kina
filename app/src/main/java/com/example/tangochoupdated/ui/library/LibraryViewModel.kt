@@ -17,6 +17,311 @@ import kotlinx.coroutines.launch
 
 class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
+    fun onStart(){
+        setMenuStatus(false)
+        clearChildrenStock()
+    }
+
+
+    //    parentItemId
+
+    private val _parentItemId = MutableLiveData<Int>()
+    fun setParentItemId (id:Int?){
+        _parentItemId.value = id
+        clearFinalList()
+
+
+
+
+    }
+
+
+
+
+
+    //    child Files from DB
+    fun childFilesFromDB(int: Int?):LiveData<FileWithChild?> = this.repository.getFileDataByParentFileId(int).asLiveData()
+    private val _childFilesFromDB = MutableLiveData<FileWithChild>()
+    fun setChildFilesFromDB (list:FileWithChild?,home: Boolean){
+
+        _childFilesFromDB.value = list
+        if(home){
+            return
+        } else{
+            val b = mutableListOf<LibraryRV>()
+            list!!.childFiles.onEach {
+                b.add(convertFileToLibraryRV(it))
+            }
+            if(b.size != 0){
+
+
+                childrenStock.addAll(b)
+                setValueToFinalList(childrenStock)
+                setFileEmptyStatus(false,false)
+            } else setFileEmptyStatus(true,false)
+        }
+
+
+
+
+    }
+//    child Cards From DB
+
+    fun childCardsFromDB(int: Int?):LiveData<List<CardAndTags>?> =  this.repository.getCardDataByFileId(int).asLiveData()
+    private val _childCardsFromDB=MutableLiveData<List<CardAndTags>>()
+    fun setChildCardsFromDB(list:List<CardAndTags>?,home: Boolean){
+
+        _childCardsFromDB.value = list
+
+        when(home){
+            true -> return
+            false ->{val a = mutableListOf<LibraryRV>()
+                list!!.onEach {
+                    a.add(convertCardToLibraryRV(it))
+                }
+                if(a.size != 0){
+
+                    childrenStock.addAll(a)
+                    setValueToFinalList(childrenStock)
+                    setFileEmptyStatus(false,false)
+                } else setFileEmptyStatus(true,false)
+            }
+        }
+
+
+    }
+
+
+
+//file without parent from DB
+
+    fun  fileWithoutParentFromDB():LiveData<List<File>?> = this.repository.getFileWithoutParent.asLiveData()
+    private val _fileWithoutParentFromDB= MutableLiveData<List<File>>()
+
+    fun setFileWithoutParentFromDB(list:List<File>?,home: Boolean){
+
+        _fileWithoutParentFromDB.value = list
+
+
+        when(home ){
+            true -> {
+               if(list!=null){
+                   setFileEmptyStatus(false,true)
+                   val a = mutableListOf<LibraryRV>()
+                   list.onEach {
+                       a.add(convertFileToLibraryRV(it))
+                   }
+                   setValueToFinalList(a)
+               } else setFileEmptyStatus(true,true)
+            }
+            else -> {
+                return
+            }
+        }
+
+
+    }
+
+
+    //    RVList
+    private val _myFinalList= MutableLiveData<List<LibraryRV>>()
+    val myFinalList :LiveData<List<LibraryRV>> = _myFinalList
+    private fun setValueToFinalList(list:List<LibraryRV>){
+        val comparator : Comparator<LibraryRV> = compareBy { it.id }
+        val a = list.sortedWith(comparator)
+        _myFinalList.apply {
+            value = a
+        }
+
+
+    }
+
+    fun makeAllSelectable(){
+        val a = mutableListOf<LibraryRV>()
+        _myFinalList.value?.onEach { if(!it.selectable ){
+            it.selectable = true
+        }
+            a.add(it)}
+        setValueToFinalList(a)
+    }
+    fun makeAllUnSelectableUnSelected(){
+        val a = mutableListOf<LibraryRV>()
+        _myFinalList.value?.onEach { if(it.selectable ){
+            it.selectable = false
+        } else if(it.selected){
+            it.selected = false
+        }
+            a.add(it)}
+        setValueToFinalList(a)
+    }
+
+
+    fun onclickSelectableItem(position: Int,boolean: Boolean) {
+        val a = mutableListOf<LibraryRV>()
+        _myFinalList.value?.onEach { if(it.position == position){
+            it.selected = boolean
+        }
+            a.add(it)}
+        setValueToFinalList(a)
+
+
+    }
+    fun makeItemLeftSwiped(position:Int){
+        val a = mutableListOf<LibraryRV>()
+        _myFinalList.value?.onEach { if(it.position == position){
+            it.leftSwiped = true
+        }
+            a.add(it)}
+        setValueToFinalList(a)
+        setLeftSwipedItemExists(true)
+    }
+    private fun makeAllItemNotLeftSwiped(){
+        val a = mutableListOf<LibraryRV>()
+        _myFinalList.value?.onEach { if(it.leftSwiped){
+            it.leftSwiped = false
+        }
+            a.add(it)}
+        setValueToFinalList(a)
+        setLeftSwipedItemExists(false)
+    }
+
+    private fun clearFinalList(){
+        val a = mutableListOf<LibraryRV>()
+        _myFinalList.value = a
+    }
+    val childrenStock = mutableListOf<LibraryRV>()
+    private fun clearChildrenStock(){
+        childrenStock.removeAll(childrenStock)
+    }
+
+
+
+
+
+    //    parent File from DB
+    fun  parentFileFromDB(int: Int?):LiveData<File?> = repository.getFileByFileId(int).asLiveData()
+
+    fun setParentFileFromDB (file: File?,home: Boolean){
+        val a = mutableListOf<File>()
+
+        when(file){
+            null -> {
+                setMyParentItem(null)
+            }
+            else ->{
+                val a = convertFileToLibraryRV(file)
+                setMyParentItem(a)
+
+            }
+        }
+    }
+
+
+//    parent item as Library RV
+
+    private val _myParentItem = MutableLiveData<LibraryRV?>()
+
+    private fun setMyParentItem(item:LibraryRV?){
+        _myParentItem.apply {
+            value = item
+        }
+        if(item == null){
+            setHomeStatus(true)
+        } else{
+            setHomeStatus(false)
+            when(_fileEmptyStatus.value){
+                null -> setFileEmptyText("ロード中")
+                true -> setFileEmptyText("${item.file?.title}は空です")
+            }
+        }
+
+    }
+
+    //    home or not done
+    private val _homeStatus =  MutableLiveData<Boolean>()
+    private fun setHomeStatus(boolean: Boolean){
+        _homeStatus.apply {
+            value = boolean
+        }
+        when(boolean){
+            true ->{
+                setMLDTopText("home")
+                setTopBarLeftIMVDrawableId(R.drawable.icon_eye_opened)
+                setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
+            }
+            false -> {
+                setMLDTopText(_myParentItem.value!!.file!!.title.toString())
+                setTopBarLeftIMVDrawableId(
+                    when(_myParentItem.value!!.file!!.fileStatus){
+                        FileStatus.FOLDER ->R.drawable.icon_file
+                        FileStatus.TANGO_CHO_COVER ->R.drawable.icon_library_plane
+                        else -> throw  IllegalArgumentException("file status not appropriate")
+                    }
+                )
+            }
+
+        }
+
+    }
+
+
+
+    //multiSelectMode
+    private val _multipleSelectMode =  MutableLiveData<Boolean>()
+
+    fun setMultipleSelectMode(boolean: Boolean){
+        _multipleSelectMode.apply {
+            value = boolean
+        }
+
+        when(boolean){
+            true ->{
+                makeAllSelectable()
+                setTopBarLeftIMVDrawableId(R.drawable.icon_close)
+                setTopBarRightIMVDrawableId(R.drawable.icon_dot)
+
+            }
+            false -> {
+                makeAllUnSelectableUnSelected()
+                when(_homeStatus.value){
+                    true -> setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
+                }
+
+
+            }
+        }
+
+
+    }
+
+
+
+    //selected Items
+
+    private val _selectedItems = MutableLiveData<List<LibraryRV>>()
+    private fun setSelectedItem(list:List<LibraryRV>){
+        _selectedItems.value = list
+        setMLDTopText("${list.size}個　選択中")
+    }
+    fun filterSelectedItem(list: List<LibraryRV>){
+        if(_fileEmptyStatus.value==false){
+            if(_multipleSelectMode.value == true){
+                val a = mutableListOf<LibraryRV>()
+                list.onEach { if(it.selected){
+                    a.add(it)
+                }
+                }
+                setSelectedItem(a)
+            }
+        }
+
+    }
+
+
+
+
+
+
 
 
 //    topBarText
@@ -24,21 +329,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private val _topText = MutableLiveData<String>()
     private fun setMLDTopText(text:String){
         _topText.value= text
-
-    }
-    private fun upDateTopText(){
-        val a:String = when (_multipleSelectMode.value) {
-            true -> {
-                "${_selectedItems.value?.size.toString()}個　選択中"
-            }
-            else -> {
-                when (_homeStatus.value) {
-                    true -> "home"
-                    else -> _myParentItem.value?.file?.title.toString()
-                }
-            }
-        }
-        setMLDTopText(a)
 
     }
     val topText:LiveData<String> = _topText
@@ -50,53 +340,17 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _topBarLeftIMVDrawableId.value= int
 
     }
-    private fun upDateTopBarLeftIMVDrawableId(){
-        val a:Int
-        when (_multipleSelectMode.value) {
-            true -> {
-                a = R.drawable.icon_close
-            }
-            else -> {
-                a = when(_homeStatus.value){
-                    true,null->{
-                        R.drawable.icon_eye_opened
-                    }
-                    false-> {
-                        when(_myParentItem.value!!.type){
-                            LibRVViewType.FlashCardCover -> R.drawable.icon_library
-                            LibRVViewType.Folder -> R.drawable.icon_file
-                            else -> throw IllegalArgumentException("upDateTopBarLeft() unknown Type")
-                        }
-                    }
-                }
 
-            }
-        }
-        setTopBarLeftIMVDrawableId(a)
-
-    }
     val topBarLeftIMVDrawableId:LiveData<Int> = _topBarLeftIMVDrawableId
-//multiSelectMode
-
-    fun setMultipleSelectMode(boolean: Boolean){
-        _multipleSelectMode.apply {
-            value = boolean
-        }
-        upDateTopText()
-        upDateTopBarLeftIMVDrawableId()
-        if(_homeStatus.value == true){
-            upDateTopBarRightIMVDrawableId()
-        }
-        changeAllSelectableState(boolean)
-
-    }
-
-    private val _multipleSelectMode =  MutableLiveData<Boolean>()
 
     //    onCLick Left Icon done
     fun onClickLeftIcon(){
         when(_multipleSelectMode.value){
-            true -> setMultipleSelectMode(false)
+            true -> {
+                setMultipleSelectMode(false)
+                makeAllUnSelectableUnSelected()
+                setHomeStatus(_homeStatus.value!!)
+            }
             else -> return
         }
     }
@@ -104,27 +358,16 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //    top right imv
     private val _topBarRightIMVDrawableId = MutableLiveData<Int>()
     private fun setTopBarRightIMVDrawableId(int: Int){
-        _topBarRightIMVDrawableId.value= int
-
-    }
-    private fun upDateTopBarRightIMVDrawableId(){
-        val a:Int = when (_multipleSelectMode.value) {
-            true -> {
-                R.drawable.icon_dot
-            }
-            else -> {
-                when(_homeStatus.value){
-                    true->{
-                        R.drawable.icon_inbox
-                    }
-                    false,null -> R.drawable.icon_dot
-                }
-
-            }
+        val before = _topBarLeftIMVDrawableId.value
+        if(before == int){
+            return
+        }else {
+            _topBarRightIMVDrawableId.value= int
         }
-        setTopBarRightIMVDrawableId(a)
+
 
     }
+
     val topBarRightIMVDrawableId:LiveData<Int> = _topBarRightIMVDrawableId
 
 //    top right IMV click
@@ -138,97 +381,29 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
 
     }
-    //    home or not done
-    private val _homeStatus =  MutableLiveData<Boolean>()
-    private fun setHomeStatus(boolean: Boolean){
-        _homeStatus.apply {
-            value = boolean
-        }
-        upDateTopText()
-        upDateTopBarLeftIMVDrawableId()
-        upDateTopBarRightIMVDrawableId()
-        upDateFinalList()
-        upDateFileEmptyText()
 
-    }
-    private fun upDateHomeStatus(){
-        when(_myParentItem.value){
-            null-> {
-                setHomeStatus(true)
-            }
-            else -> {
-                setHomeStatus(false)
-            }
-        }
-
-    }
-
-    //    RVList
-    private val _myFinalList= MutableLiveData<List<LibraryRV>>()
-    val myFinalList :LiveData<List<LibraryRV>> = _myFinalList
-    private fun setValueToFinalList(list:List<LibraryRV>){
-        _myFinalList.apply {
-            value = list
-        }
-
-        upDateSelectedItem()
-        upDateTopText()
-        upDateFileEmptyStatus()
-
-    }
-    fun changeAllSelectableState(boolean: Boolean) {
-        val a = mutableListOf<LibraryRV>()
-        _myFinalList.value?.onEach { it.selectable = boolean
-            a.add(it)}
-        setValueToFinalList(a)
-
-    }
-    fun changeSelectedState(boolean: Boolean,position: Int) {
-        val a = mutableListOf<LibraryRV>()
-        _myFinalList.value?.onEach { if(it.position == position){
-            it.selected = boolean
-        }
-            a.add(it)}
-        setValueToFinalList(a)
-
-
-    }
-        private fun upDateFinalList (){
-        val mutableList = mutableListOf<LibraryRV>()
-        when(_homeStatus.value){
-            true -> {
-                _fileWithoutParentFromDB.value?.onEach {
-                    mutableList.add(convertFileToLibraryRV(it)) }
-            }
-            false -> {
-                _childFilesFromDB.value?.childFiles?.onEach {
-                    mutableList.add(convertFileToLibraryRV(it))
-                }
-                _childCardsFromDB.value?.onEach {
-                    mutableList.add(convertCardToLibraryRV(it))
-                }
-            }
-            null -> throw IllegalArgumentException("homeStatus is null")
-
-        }
-        setValueToFinalList(mutableList)
-    }
 //    file is  empty or not done
     private val _fileEmptyStatus =  MutableLiveData<Boolean>()
-    private fun setFileEmptyStatus(boolean: Boolean){
+    private fun setFileEmptyStatus(empty: Boolean,home: Boolean){
         _fileEmptyStatus.apply {
-            value = boolean
+            value = empty
         }
-        upDateFileEmptyText()
-    }
-    private fun upDateFileEmptyStatus(){
-        when(_myFinalList.value?.size){
-            0-> {
-                setFileEmptyStatus(true)
+        if(empty){
+            when(home){
+                true -> setFileEmptyText("まだデータがありません")
+                false -> {
+                    if(_myParentItem.value == null){
+                        setFileEmptyText("ロード中")
+                    } else{
+                        setFileEmptyText("${_myParentItem.value?.file?.title}は空です")
+                    }
+                }
+                null -> return
             }
-            else -> setFileEmptyStatus(false)
+
         }
     }
+
     val fileEmptyStatus:LiveData<Boolean> = _fileEmptyStatus
 
 
@@ -241,118 +416,50 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             value = string
         }
     }
-    private fun upDateFileEmptyText(){
-        when(_fileEmptyStatus.value){
-            true->{
-                when(_homeStatus.value){
-                true ->setFileEmptyText("まだデータがありません")
-                false -> setFileEmptyText("${_myParentItem.value?.file?.title}は空です")
-                    null -> throw IllegalArgumentException("home status not set yet and is null")
-                }
-            }
-            false,null -> return
-        }
-
-    }
     val fileEmptyText:LiveData<String> = _fileEmptyText
 
 
 //menu Visibility done
     private val _menuOpened =  MutableLiveData<Boolean>()
-    fun setMenuStatus(boolean: Boolean){
+    private fun setMenuStatus(boolean: Boolean){
         _menuOpened.apply {
             value = boolean
         }
     }
+    fun changeMenuStatus(){
+        val before = _menuOpened.value!!
+        setMenuStatus(!before)
+    }
+
     val menuViewMode:LiveData<Boolean> = _menuOpened
 
 
-
-//    parentItemId
-
-    private val _parentItemId = MutableLiveData<Int>()
-    fun setParentItemId (id:Int?){
-        _parentItemId.value = id
-
-
-    }
-
-
-
-
-
-//    child Files from DB
-     val childFilesFromDB:LiveData<FileWithChild?> = this.repository.getFileDataByParentFileId(_parentItemId.value).asLiveData()
-     private val _childFilesFromDB = MutableLiveData<FileWithChild>()
-    fun setChildFilesFromDB (list:FileWithChild?){
-        val a = mutableListOf<FileWithChild>()
-        if(list!= null){
-            a.add(list)
-        }
-        _childFilesFromDB.value = list
-
-
-    }
-//    child Cards From DB
-
-    val childCardsFromDB:LiveData<List<CardAndTags>?> =  this.repository.getCardDataByFileId(_parentItemId.value).asLiveData()
-    private val _childCardsFromDB=MutableLiveData<List<CardAndTags>>()
-    fun setChildCardsFromDB(list:List<CardAndTags>?){
-        val a = mutableListOf<CardAndTags>()
-        if(list!= null){
-            a.addAll(list)
-        }
-        _childCardsFromDB.value = list
-    }
-
-
-
-//file without parent from DB
-
-    val  fileWithoutParentFromDB:LiveData<List<File>?> = this.repository.getFileWithoutParent.asLiveData()
-    private val _fileWithoutParentFromDB= MutableLiveData<List<File>>()
-
-    fun setFileWithoutParentFromDB(list:List<File>?){
-        val a = mutableListOf<File>()
-        if(list!= null){
-            a.addAll(list)
-        }
-        _fileWithoutParentFromDB.value = list
-
-    }
-
-
-//    parent File from DB
-    fun  parentFileFromDB(id: Int?):LiveData<File?> = repository.getFileByFileId(id).asLiveData()
-
-    fun setParentFileFromDB (file: File?){
-        when(file){
-            null -> setMyParentItem(null)
-            else ->{
-                val a = convertFileToLibraryRV(file)
-                setMyParentItem(a)
-            }
+    //menu Visibility done
+    private val _leftSwipedItemExists =  MutableLiveData<Boolean>()
+    private fun setLeftSwipedItemExists(boolean: Boolean){
+        _leftSwipedItemExists.apply {
+            value = boolean
         }
     }
 
-//    parent item as Library RV
-
-    private val _myParentItem = MutableLiveData<LibraryRV?>()
 
 
-
-
-    private fun setMyParentItem(item:LibraryRV?){
-        _myParentItem.apply {
-            value = item
-        }
-        upDateHomeStatus()
-        upDateTopText()
-
-        upDateTopBarLeftIMVDrawableId()
-        upDateFileEmptyText()
-        upDateTopBarRightIMVDrawableId()
+    fun checkReset():Boolean{
+        if(_menuOpened.value == true||
+            _leftSwipedItemExists.value == true){
+            setMenuStatus(false)
+            makeAllItemNotLeftSwiped()
+            return true
+        } else return false
     }
+
+
+
+
+
+
+
+
 
 
 
@@ -436,21 +543,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 
 
-
-//selected Items
-
-    private val _selectedItems = MutableLiveData<List<LibraryRV>>()
-    private fun setSelectedItem(list:List<LibraryRV>){
-        _selectedItems.value = list
-    }
-    private fun upDateSelectedItem(){
-        val a = mutableListOf<LibraryRV>()
-        _myFinalList.value?.onEach { if(it.selected){
-            a.add(it)
-        }
-        }
-        setSelectedItem(a)
-    }
 
 
 

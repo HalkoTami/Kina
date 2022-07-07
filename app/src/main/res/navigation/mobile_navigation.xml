@@ -49,19 +49,5 @@
 
 
 
-    <fragment
-        android:id="@+id/navigation_planner"
-        android:name="com.example.tangochoupdated.ui.planner.PlannerFragment"
-        android:label="@string/title_tab_planner"
-        tools:layout="@layout/fragment_planner_home" />
-    <fragment
-        android:id="@+id/navigation_data"
-        android:name="com.example.tangochoupdated.ui.data.DataFragment"
-        android:label="@string/title_tab_data"
-        tools:layout="@layout/fragment_data_home" />
-    <fragment
-        android:id="@+id/navigation_create"
-        android:name="com.example.tangochoupdated.ui.planner.CreateFragment"
-        android:label="@string/title_tab_create"
-        tools:layout="@layout/fragment_create"/>
+
 </navigation>

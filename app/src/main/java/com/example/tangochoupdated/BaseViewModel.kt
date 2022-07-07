@@ -179,33 +179,9 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
         super.onCleared()
         viewModelScope.cancel()
     }
-    var parentFileId:Int = 0
-    var hasParent:Boolean = false
-    var libOrder:Int =0
-    var fileStatus:FileStatus? = null
-    var title:String = ""
-
-    fun insertFile(){
-        if(!hasParent){
-            parentFileId = 0
-        }
-        val a = File(
-        fileId = 0,
-        title = title,
-        colorStatus=  ColorStatus.RED,
-        fileStatus = fileStatus!!,
-        hasChild = false,
-        hasParent = hasParent,
-        libOrder = libOrder,
-        )
-        insert(a)
-        val id = 0
-    }
 
 
-    fun insert(item: Any) = viewModelScope.launch {
-        repository.insert(item)
-    }
+
 
 
 }

@@ -18,6 +18,7 @@ import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.EmptyBinding
 
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
+import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
 import com.example.tangochoupdated.ui.planner.CreateFileViewModel
@@ -38,6 +39,7 @@ class HomeFragment : Fragment(),DataClickListener {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var libraryViewModel: LibraryViewModel
+    var leftSwiped = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +53,8 @@ class HomeFragment : Fragment(),DataClickListener {
             ViewModelProvider(
                 this, viewModelFactory
             )[LibraryViewModel::class.java]
+
+
         _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -58,38 +62,38 @@ class HomeFragment : Fragment(),DataClickListener {
         val myId: Int? = args.parentItemId?.single()
 
         val recyclerView = binding.vocabCardRV
-        adapter = LibraryListAdapter(this)
+        adapter = LibraryListAdapter(this,requireActivity())
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val owner = requireActivity()
         navCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
 
+        libraryViewModel.onStart()
+
 
 //　　　　DBからデータとってくる
         libraryViewModel.apply {
-            setParentItemId(myId)
+            setParentItemId(15)
+
+
+            fileWithoutParentFromDB().observe(viewLifecycleOwner){
+                setFileWithoutParentFromDB(it, myId == null)
+            }
+            childFilesFromDB(myId).observe(viewLifecycleOwner){
+                setChildFilesFromDB(it,myId == null)
+            }
+            childCardsFromDB(myId).observe(viewLifecycleOwner){
+                setChildCardsFromDB(it,myId ==null)
+            }
             parentFileFromDB(myId).observe(viewLifecycleOwner){
-                setParentFileFromDB(it)
+                setParentFileFromDB(it, myId == null)
                 createFileViewModel.setParentFile(it)
 
             }
-
-            fileWithoutParentFromDB.observe(viewLifecycleOwner){
-                setFileWithoutParentFromDB(it)
-            }
-            childFilesFromDB.observe(viewLifecycleOwner){
-                setChildFilesFromDB(it)
-            }
-            childCardsFromDB.observe(viewLifecycleOwner){
-                setChildCardsFromDB(it)
-            }
-
         }
 //        初期データ設定
-        libraryViewModel.apply {
-            setMenuStatus(false)
-        }
+
 
 
         binding.apply {
@@ -114,7 +118,7 @@ class HomeFragment : Fragment(),DataClickListener {
                     libraryViewModel.onClickLeftIcon()
                 }
                 imvEnd.setOnClickListener {
-                    libraryViewModel.topBarRightIMVOnClick()
+                    libraryViewModel.changeMenuStatus()
                 }
 
                 menuBinding.root.children.iterator().forEachRemaining {
@@ -162,6 +166,9 @@ class HomeFragment : Fragment(),DataClickListener {
             adapter.notifyDataSetChanged()
             createFileViewModel.setNewPosition(it.size+1)
         }
+        binding.topMenuBarFrame.imv1.setOnClickListener{
+            libraryViewModel.onClickLeftIcon()
+        }
 
 
 
@@ -184,16 +191,21 @@ class HomeFragment : Fragment(),DataClickListener {
 
     }
 
+    override fun onSwipeLeft(item: LibraryRV, binding: ItemCoverCardBaseBinding) {
+        if(item.selectable||leftSwiped){
 
-
-    fun onClickInBox(){
-
+            return
+        } else{
+            libraryViewModel.makeItemLeftSwiped(item.position)
+            binding.btnDelete.visibility = View.VISIBLE
+            binding.btnEditWhole.visibility = View.VISIBLE
+        }
     }
 
-
-    override fun onLongClickMain() {
+    override fun onLongClickMain(item: LibraryRV) {
         libraryViewModel.setMultipleSelectMode(true)
-        libraryViewModel.changeAllSelectableState(true)
+        libraryViewModel.onclickSelectableItem(item.position,true)
+
 
         Toast.makeText(context, "onclick edit", Toast.LENGTH_SHORT).show()
 
@@ -213,23 +225,29 @@ class HomeFragment : Fragment(),DataClickListener {
     }
 
     override fun onClickMain(item: LibraryRV) {
+        if(libraryViewModel.checkReset()){
+            Toast.makeText(context, "all reset", Toast.LENGTH_SHORT).show()
+            return
+        } else{
+            val action= HomeFragmentDirections.libraryToLibrary()
+            action.parentItemId = intArrayOf(item.id)
+            navCon.navigate(action)
+            Toast.makeText(context, "onClickMain", Toast.LENGTH_SHORT).show()
+        }
 
-        val action= HomeFragmentDirections.libraryToLibrary()
-        action.parentItemId = intArrayOf(item.id)
-        navCon.navigate(action)
-        Toast.makeText(context, "onClickMain", Toast.LENGTH_SHORT).show()
+
 
     }
 
     override fun onSelect(item: LibraryRV,imageView: ImageView) {
-        libraryViewModel.changeSelectedState(true,item.position)
-        imageView.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
+        libraryViewModel.onclickSelectableItem(item.position,true)
+
         Toast.makeText(context, "onSelect", Toast.LENGTH_SHORT).show()
     }
 
     override fun onUnselect(item: LibraryRV,imageView: ImageView) {
-        libraryViewModel.changeSelectedState(false,item.position)
-        imageView.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_select))
+        libraryViewModel.onclickSelectableItem(item.position,false)
+
         Toast.makeText(context, "onUnselect", Toast.LENGTH_SHORT).show()
     }
 

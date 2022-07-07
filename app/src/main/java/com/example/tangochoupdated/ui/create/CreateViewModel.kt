@@ -186,6 +186,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun onClickFinish(title:String){
         if(_mode.value == Mode.Create){
+
             val newFile = File(
                 fileId = 0,
                 title = title,
@@ -196,11 +197,31 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 childFoldersAmount = 0,
                 hasChild = false,
                 deleted = false,
-                hasParent = true,
-                libOrder = _newPosition.value
+                hasParent = when(_parentFile.value){
+                    null -> false
+                    else -> true
+                },
+                libOrder = 0
             )
             insertFile(newFile)
+            insertFile(newFile)
+            insertFile(newFile)
+            insertFile(newFile)
         }
+        setAddFileActive(false)
+    }
+    fun afterNewFileInserted(fileId: Int){
+        val parentFile = _parentFile.value
+        when(parentFile ){
+            null -> return
+            else -> {
+                val newXref = FileXRef(parentFileId = parentFile.fileId,
+                    childFileId = fileId
+                )
+                insertFileXRef(newXref)
+            }
+        }
+
     }
 
 
