@@ -20,6 +20,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun onStart(){
         setMenuStatus(false)
         clearChildrenStock()
+        setSelectedItem(mutableListOf())
     }
 
 
@@ -148,21 +149,15 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         val a = mutableListOf<LibraryRV>()
         _myFinalList.value?.onEach { if(it.selectable ){
             it.selectable = false
-        } else if(it.selected){
-            it.selected = false
         }
             a.add(it)}
         setValueToFinalList(a)
+        setSelectedItem(mutableListOf())
     }
 
 
-    fun onclickSelectableItem(position: Int,boolean: Boolean) {
-        val a = mutableListOf<LibraryRV>()
-        _myFinalList.value?.onEach { if(it.position == position){
-            it.selected = boolean
-        }
-            a.add(it)}
-        setValueToFinalList(a)
+    fun onclickSelectableItem(item: LibraryRV,boolean: Boolean) {
+        if (boolean==true)  addToSelectedItem(item) else removeFromSelectedItem(item)
 
 
     }
@@ -276,13 +271,13 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
         when(boolean){
             true ->{
-                makeAllSelectable()
+//                makeAllSelectable()
                 setTopBarLeftIMVDrawableId(R.drawable.icon_close)
                 setTopBarRightIMVDrawableId(R.drawable.icon_dot)
 
             }
             false -> {
-                makeAllUnSelectableUnSelected()
+//                makeAllUnSelectableUnSelected()
                 when(_homeStatus.value){
                     true -> setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
                 }
@@ -303,18 +298,34 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _selectedItems.value = list
         setMLDTopText("${list.size}個　選択中")
     }
-    fun filterSelectedItem(list: List<LibraryRV>){
+    fun addToSelectedItem(item: LibraryRV){
         if(_fileEmptyStatus.value==false){
             if(_multipleSelectMode.value == true){
                 val a = mutableListOf<LibraryRV>()
-                list.onEach { if(it.selected){
-                    a.add(it)
-                }
-                }
+                a.addAll(_selectedItems.value!!)
+                item.selected = true
+                a.add(item)
                 setSelectedItem(a)
             }
         }
 
+    }
+    fun changeItemSelected(item: LibraryRV,boolean: Boolean){
+        val a = mutableListOf<LibraryRV>()
+        a.addAll(_myFinalList.value!!)
+        a.remove(item)
+        item.selected = boolean
+        a.add(item)
+        setValueToFinalList(a)
+
+
+    }
+
+    fun removeFromSelectedItem(item: LibraryRV){
+        val a = mutableListOf<LibraryRV>()
+        a.addAll(_selectedItems.value!!)
+        a.remove(item)
+        setSelectedItem(a)
     }
 
 

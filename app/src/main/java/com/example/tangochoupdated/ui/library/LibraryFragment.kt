@@ -13,7 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.selection.ItemDetailsLookup
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StableIdKeyProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.EmptyBinding
 
@@ -26,6 +30,8 @@ import com.example.tangochoupdated.ui.planner.CreateFileViewModel
 class HomeFragment : Fragment(),DataClickListener {
     private val args: HomeFragmentArgs by navArgs()
     lateinit var navCon:NavController
+
+    lateinit var recyclerView:RecyclerView
 
 
     lateinit var adapter: LibraryListAdapter
@@ -61,10 +67,12 @@ class HomeFragment : Fragment(),DataClickListener {
 
         val myId: Int? = args.parentItemId?.single()
 
-        val recyclerView = binding.vocabCardRV
+        recyclerView = binding.vocabCardRV
         adapter = LibraryListAdapter(this,requireActivity())
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+
 
         val owner = requireActivity()
         navCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
@@ -196,16 +204,22 @@ class HomeFragment : Fragment(),DataClickListener {
 
             return
         } else{
-            libraryViewModel.makeItemLeftSwiped(item.position)
+
             binding.btnDelete.visibility = View.VISIBLE
             binding.btnEditWhole.visibility = View.VISIBLE
+            libraryViewModel.makeItemLeftSwiped(item.position)
+            Toast.makeText(context, "onclick left swiped ", Toast.LENGTH_SHORT).show()
         }
     }
 
-    override fun onLongClickMain(item: LibraryRV) {
+    override fun onLongClickMain(item: LibraryRV,binding: ItemCoverCardBaseBinding) {
         libraryViewModel.setMultipleSelectMode(true)
-        libraryViewModel.onclickSelectableItem(item.position,true)
-
+        libraryViewModel.addToSelectedItem(item)
+        recyclerView.children.iterator().forEachRemaining {
+            it.findViewById<ImageView>(R.id.btn_select).visibility = View.VISIBLE
+        }
+        binding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
+        binding.btnSelect.tag = MyState.Selected
 
         Toast.makeText(context, "onclick edit", Toast.LENGTH_SHORT).show()
 
@@ -226,6 +240,7 @@ class HomeFragment : Fragment(),DataClickListener {
 
     override fun onClickMain(item: LibraryRV) {
         if(libraryViewModel.checkReset()){
+            leftSwiped = false
             Toast.makeText(context, "all reset", Toast.LENGTH_SHORT).show()
             return
         } else{
@@ -238,16 +253,24 @@ class HomeFragment : Fragment(),DataClickListener {
 
 
     }
+    enum class MyState{
+        Selected, Unselected
+    }
 
-    override fun onSelect(item: LibraryRV,imageView: ImageView) {
-        libraryViewModel.onclickSelectableItem(item.position,true)
+    override fun onSelect(item: LibraryRV,binding: ItemCoverCardBaseBinding) {
 
+        binding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
+        binding.btnSelect.tag = MyState.Selected
+        libraryViewModel.onclickSelectableItem(item,true)
         Toast.makeText(context, "onSelect", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onUnselect(item: LibraryRV,imageView: ImageView) {
-        libraryViewModel.onclickSelectableItem(item.position,false)
 
+    override fun onUnselect(item: LibraryRV,binding: ItemCoverCardBaseBinding) {
+
+        binding.btnSelect.setImageDrawable(requireContext().getDrawable(R.drawable.circle_select))
+        binding.btnSelect.tag = MyState.Unselected
+        libraryViewModel.onclickSelectableItem(item,false)
         Toast.makeText(context, "onUnselect", Toast.LENGTH_SHORT).show()
     }
 

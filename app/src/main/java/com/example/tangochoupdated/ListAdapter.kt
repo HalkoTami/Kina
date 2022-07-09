@@ -12,12 +12,14 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
+import com.example.tangochoupdated.ui.library.HomeFragment
 
 
 /**
@@ -28,6 +30,8 @@ import com.example.tangochoupdated.room.rvclasses.LibraryRV
 class LibraryListAdapter(val dataClickListener: DataClickListener,
 val mycontext: Context) :
     ListAdapter<LibraryRV, LibraryListAdapter.LibraryViewHolder>(MyDiffCallback) {
+
+
 
     /**
      * This Function will help you out in choosing whether you want vertical or horizontal VIEW TYPE
@@ -52,13 +56,6 @@ val mycontext: Context) :
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
         holder.bind(getItem(position),dataClickListener)
     }
-
-
-
-
-
-
-
 
 
     /**
@@ -133,15 +130,20 @@ val mycontext: Context) :
                 else -> GONE
             }
 
-            binding.btnSelect.visibility = if(item.selectable) VISIBLE else GONE
-            binding.btnDelete.visibility = if(item.leftSwiped) VISIBLE else GONE
-            binding.btnEditWhole.visibility = if(item.leftSwiped) VISIBLE else GONE
-            binding.btnSelect.setImageDrawable(
-                when(item.selected){
-                    true -> context.getDrawable(R.drawable.circle_selected)
-                    false -> context.getDrawable(R.drawable.circle_select)
-                }
-            )
+//            binding.btnSelect.apply {
+//                tag = HomeFragment.MyState.Unselected
+//                if(item.selectable) {
+//                    visibility = VISIBLE
+//
+//                } else {
+//                    visibility = GONE
+//                }
+//            }
+            binding.btnSelect.visibility = GONE
+
+            binding.btnDelete.visibility = if(!item.leftSwiped) GONE else return
+            binding.btnEditWhole.visibility = if(!item.leftSwiped) GONE else return
+
 
 
 
@@ -149,10 +151,16 @@ val mycontext: Context) :
             binding.stubMain.setOnTouchListener (object:MyTouchListener(context){
                 override fun onSingleTap() {
                     super.onSingleTap()
-                    if(item.selectable){
-                        when(item.selected){
-                            true -> clickListener.onUnselect(item,binding.btnSelect)
-                            false -> clickListener.onSelect(item,binding.btnSelect)
+                    if(binding.btnSelect.visibility == VISIBLE){
+                        when(binding.btnSelect.tag){
+                            HomeFragment.MyState.Selected -> {
+
+                                clickListener.onUnselect(item,binding)
+                            }
+                            else -> {
+
+                                clickListener.onSelect(item,binding)
+                            }
                         }
                     }
                     else{
@@ -168,7 +176,7 @@ val mycontext: Context) :
 
                 override fun onLongClick() {
                     super.onLongClick()
-                    clickListener.onLongClickMain(item)
+                    clickListener.onLongClickMain(item,binding)
                 }
             })
 
@@ -237,14 +245,13 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
  */
 interface DataClickListener {
     fun onSwipeLeft(item:LibraryRV,binding:ItemCoverCardBaseBinding)
-    fun onLongClickMain(item: LibraryRV)
-    fun onSelect(item: LibraryRV, imageView: ImageView)
+    fun onLongClickMain(item: LibraryRV,binding: ItemCoverCardBaseBinding)
+    fun onSelect(item: LibraryRV, binding: ItemCoverCardBaseBinding)
     fun onClickEdit(item: LibraryRV)
     fun onClickAdd(item: LibraryRV)
     fun onClickDelete(item: LibraryRV)
     fun onClickMain(item: LibraryRV)
-    fun onUnselect(item: LibraryRV,imageView: ImageView)
+    fun onUnselect(item: LibraryRV,binding: ItemCoverCardBaseBinding)
 
 }
-
 
