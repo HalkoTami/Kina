@@ -235,10 +235,12 @@ class MainActivity : AppCompatActivity() {
 
 
             createFileviewModel.lastInsetedFileId.observe(this@MainActivity){
-                Toast.makeText(this@MainActivity,"$it",Toast.LENGTH_SHORT).show()
-//                createFileviewModel.setLastInsertedFileId(it)
-//                createFileviewModel.afterNewFileInserted(it)
 
+                createFileviewModel.setLastInsertedFileId(it)
+
+            }
+            createFileviewModel.parentFileStock.observe(this@MainActivity){
+                Toast.makeText(this@MainActivity,"stock size ${it.size}",Toast.LENGTH_SHORT).show()
             }
             btnCreateFile.setOnClickListener {
                 if(edtCreatefile.text.isEmpty()){

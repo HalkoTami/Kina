@@ -82,7 +82,7 @@ class HomeFragment : Fragment(),DataClickListener {
 
 //　　　　DBからデータとってくる
         libraryViewModel.apply {
-            setParentItemId(15)
+            setParentItemId(myId)
 
 
             fileWithoutParentFromDB().observe(viewLifecycleOwner){
@@ -90,10 +90,12 @@ class HomeFragment : Fragment(),DataClickListener {
             }
             childFilesFromDB(myId).observe(viewLifecycleOwner){
                 setChildFilesFromDB(it,myId == null)
+                Toast.makeText(requireActivity(), "child files size ${it.size}",Toast.LENGTH_SHORT).show()
+
             }
-            childCardsFromDB(myId).observe(viewLifecycleOwner){
-                setChildCardsFromDB(it,myId ==null)
-            }
+//            childCardsFromDB(myId).observe(viewLifecycleOwner){
+//                setChildCardsFromDB(it,myId ==null)
+//            }
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it, myId == null)
                 createFileViewModel.setParentFile(it)
@@ -123,7 +125,13 @@ class HomeFragment : Fragment(),DataClickListener {
 
                 }
                 imv1.setOnClickListener {
+                    recyclerView.children.iterator().forEachRemaining {
+                        val a = it.findViewById<ImageView>(R.id.btn_select)
+                        a.visibility = View.GONE
+                        a.tag = MyState.Unselected
+                    }
                     libraryViewModel.onClickLeftIcon()
+
                 }
                 imvEnd.setOnClickListener {
                     libraryViewModel.changeMenuStatus()
@@ -171,12 +179,11 @@ class HomeFragment : Fragment(),DataClickListener {
         }
         libraryViewModel.myFinalList.observe(viewLifecycleOwner){
             adapter.submitList(it)
-            adapter.notifyDataSetChanged()
+            Toast.makeText(requireActivity(), "myfinallist size ${it.size}",Toast.LENGTH_SHORT).show()
+
             createFileViewModel.setNewPosition(it.size+1)
         }
-        binding.topMenuBarFrame.imv1.setOnClickListener{
-            libraryViewModel.onClickLeftIcon()
-        }
+
 
 
 

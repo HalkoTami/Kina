@@ -41,6 +41,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
     abstract fun clearTable(): MyDao.ClearTable
     abstract fun libraryDao(): MyDao.LibraryDao
     abstract fun cardAndTagXRefDao(): MyDao.CardAndTagXRefDao
+    abstract fun fileXRefDao(): MyDao.FileXRefDao
 
     private class WordDatabaseCallback(
         private val scope: CoroutineScope
@@ -76,6 +77,8 @@ public abstract class MyRoomDatabase : RoomDatabase() {
                         childCardsAmount = 0,
                         childFlashCardCoversAmount = 0)
                     fileDao.insert(file)
+
+
 
                 }
             }

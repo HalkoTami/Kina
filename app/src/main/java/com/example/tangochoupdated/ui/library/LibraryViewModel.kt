@@ -7,7 +7,7 @@ import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.Card
 import com.example.tangochoupdated.room.dataclass.CardAndTags
 import com.example.tangochoupdated.room.dataclass.File
-import com.example.tangochoupdated.room.dataclass.FileWithChild
+//import com.example.tangochoupdated.room.dataclass.FileWithChild
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
@@ -19,7 +19,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     fun onStart(){
         setMenuStatus(false)
+        setMultipleSelectMode(false)
         clearChildrenStock()
+        clearFinalList()
         setSelectedItem(mutableListOf())
     }
 
@@ -29,7 +31,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private val _parentItemId = MutableLiveData<Int>()
     fun setParentItemId (id:Int?){
         _parentItemId.value = id
-        clearFinalList()
+
+
+
+
 
 
 
@@ -41,25 +46,32 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 
     //    child Files from DB
-    fun childFilesFromDB(int: Int?):LiveData<FileWithChild?> = this.repository.getFileDataByParentFileId(int).asLiveData()
-    private val _childFilesFromDB = MutableLiveData<FileWithChild>()
-    fun setChildFilesFromDB (list:FileWithChild?,home: Boolean){
+    fun childFilesFromDB(int: Int?):LiveData<List<File>> = this.repository.mygetFileDataByParentFileId(int).asLiveData()
+    private val _childFilesFromDB = MutableLiveData<List<File>>()
+    fun setChildFilesFromDB (list:List<File>?,home: Boolean){
 
         _childFilesFromDB.value = list
         if(home){
             return
         } else{
             val b = mutableListOf<LibraryRV>()
-            list!!.childFiles.onEach {
-                b.add(convertFileToLibraryRV(it))
-            }
+            val a = mutableListOf<File>()
+//            b.addAll(childrenStock)
+//            clearChildrenStock()
+            a.addAll(list!!)
+            a.onEach {  b.add(convertFileToLibraryRV(it)) }
+
             if(b.size != 0){
 
+                clearFinalList()
 
-                childrenStock.addAll(b)
-                setValueToFinalList(childrenStock)
+                setValueToFinalList(b.distinct())
+
+
                 setFileEmptyStatus(false,false)
             } else setFileEmptyStatus(true,false)
+
+
         }
 
 
@@ -77,15 +89,20 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         when(home){
             true -> return
             false ->{val a = mutableListOf<LibraryRV>()
+                a.addAll(childrenStock)
+                clearChildrenStock()
                 list!!.onEach {
                     a.add(convertCardToLibraryRV(it))
                 }
-                if(a.size != 0){
 
-                    childrenStock.addAll(a)
-                    setValueToFinalList(childrenStock)
+                if(a.size != 0){
+                    childrenStock.addAll(a.distinctBy { it.card?.id })
+
+
                     setFileEmptyStatus(false,false)
                 } else setFileEmptyStatus(true,false)
+                setValueToFinalList(childrenStock)
+
             }
         }
 
@@ -245,7 +262,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
                 setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
             }
             false -> {
-                setMLDTopText(_myParentItem.value!!.file!!.title.toString())
+                setMLDTopText("${_myParentItem.value!!.file!!.title}")
                 setTopBarLeftIMVDrawableId(
                     when(_myParentItem.value!!.file!!.fileStatus){
                         FileStatus.FOLDER ->R.drawable.icon_file
@@ -296,7 +313,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private val _selectedItems = MutableLiveData<List<LibraryRV>>()
     private fun setSelectedItem(list:List<LibraryRV>){
         _selectedItems.value = list
-        setMLDTopText("${list.size}個　選択中")
+        if(_multipleSelectMode.value==true){
+            setMLDTopText("${list.size}個　選択中")
+        }
+
     }
     fun addToSelectedItem(item: LibraryRV){
         if(_fileEmptyStatus.value==false){
@@ -358,9 +378,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun onClickLeftIcon(){
         when(_multipleSelectMode.value){
             true -> {
+                setSelectedItem(mutableListOf())
                 setMultipleSelectMode(false)
-                makeAllUnSelectableUnSelected()
                 setHomeStatus(_homeStatus.value!!)
+
             }
             else -> return
         }
@@ -508,6 +529,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
                     card = null,
                     tag = null,
                     id = file.fileId
+
                 )
 
 

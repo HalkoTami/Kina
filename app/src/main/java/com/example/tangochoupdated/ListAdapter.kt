@@ -78,7 +78,7 @@ val mycontext: Context) :
                   binding.stubMain.addView(fileBinding.root)
                   fileBinding.apply{
 
-                      txvFileTitle.text = item.file?.title ?:"no title"
+                      txvFileTitle.text = item.file?.fileId.toString() ?:"no title"
                       txvFileAmount.text = "${item.file?.childFoldersAmount ?:0}個"
                       txvCardAmount.text = "${item.file?.childCardsAmount ?:0}枚"
                       txvTangoChoAmount.text = "${item.file?.childFlashCardCoversAmount ?:0}個"

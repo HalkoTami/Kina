@@ -31,42 +31,42 @@ data class File(
 
     )
 @Entity(
-    indices = [Index("parentFileId", unique = true),
-        Index("childFileId", unique = true)],
-
-    foreignKeys = [
-        ForeignKey(
-            entity = File::class,
-            parentColumns = arrayOf("fileId"),
-            childColumns = arrayOf("parentFileId")
-        ),
-        ForeignKey(
-            entity = File::class,
-            parentColumns = arrayOf("fileId"),
-            childColumns = arrayOf("childFileId")
-        )
-    ]
+    tableName = "file_xref",
+//    indices = [Index("parentFileId", unique = true),
+//        Index("childFileId", unique = true)],
+//
+//    foreignKeys = [
+//        ForeignKey(
+//            entity = File::class,
+//            parentColumns = arrayOf("fileId"),
+//            childColumns = arrayOf("parentFileId")
+//        ),
+//        ForeignKey(
+//            entity = File::class,
+//            parentColumns = arrayOf("fileId"),
+//            childColumns = arrayOf("childFileId")
+//        )
+//    ]
 )
 data class FileXRef(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true) val id:Int,
     val parentFileId: Int,
     val childFileId: Int,
 )
 
-class FileWithChild {
-    @Embedded
-    lateinit var parentFile: File
-
-    @Relation(
-        entity = File::class,
-        parentColumn = "fileId",
-        entityColumn = "fileId",
-        associateBy = Junction(
-            value = FileXRef::class,
-            parentColumn = "parentFileId",
-            entityColumn = "childFileId"
-        )
-    )
-    lateinit var childFiles: List<File>
-}
+//class FileWithChild {
+//    @Embedded
+//    lateinit var parentFile: File
+//
+//    @Relation(
+//        parentColumn = "fileId",
+//        entityColumn = "fileId",
+//        associateBy = Junction(
+//            value = FileXRef::class,
+//            parentColumn = "parentFileId",
+//            entityColumn = "childFileId"
+//        )
+//    )
+//    lateinit var childFiles: List<File>
+//}
 

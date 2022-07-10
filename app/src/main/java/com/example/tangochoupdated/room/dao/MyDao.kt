@@ -24,6 +24,8 @@ abstract class MyDao{
     abstract class LibraryDao: com.example.tangochoupdated.room.dao.LibraryDao
     @Dao
     abstract class CardAndTagXRefDao: BaseDao<CardAndTagXRef>
+    @Dao
+    abstract class FileXRefDao:BaseDao<FileXRef>
 
 
 

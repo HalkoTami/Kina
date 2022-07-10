@@ -1,5 +1,6 @@
 package com.example.tangochoupdated.ui.planner
 
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.room.MyRoomRepository
@@ -27,10 +28,36 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     val parentFile:LiveData<File?> = _parentFile
     fun setParentFile(file: File?){
         _parentFile.value = file
-        setTxvLeftTop(when(file){
-            null -> "home"
-            else -> file.title.toString()
-        })
+        when(file){
+            null ->{
+                setTxvLeftTop("home")
+
+            }
+            else -> {
+                setTxvLeftTop("${file.title.toString()} >")
+
+            }
+        }
+//        setParentFileStock(file)
+
+    }
+    private val _parentFileStock = MutableLiveData<List<File>>()
+    val parentFileStock:LiveData<List<File>> = _parentFileStock
+    fun setParentFileStock(file: File?){
+        val a = mutableListOf<File>()
+        if(file!=null){
+            if(_parentFileStock.value!=null){
+                a.addAll(_parentFileStock.value!!)
+
+            }
+            if (a.contains(file)){
+                a.removeAt(a.size-1)
+            } else{
+                a.add(file)
+            }
+        }
+
+        _parentFileStock.value = a
     }
 
     enum class Mode{
@@ -177,16 +204,31 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
     }
+    var createXREF:Boolean = false
 
     val lastInsetedFileId:LiveData<Int> = repository.lastInsertedFile.asLiveData()
     private val _lastInsertedFileId = MutableLiveData<Int>()
     fun setLastInsertedFileId(int: Int){
-        _lastInsertedFileId.value = int
+        val before = _lastInsertedFileId.value
+        if(before == int){
+            return
+        } else{
+            _lastInsertedFileId.value = int
+            if(createXREF){
+                val newXref = FileXRef(
+                    id = 0,
+                    parentFileId = _parentFile.value!!.fileId,
+                    childFileId = int
+                )
+                insertFileXRef(newXref)
+            }
+        }
+
     }
 
     fun onClickFinish(title:String){
+        val parentFile = _parentFile.value
         if(_mode.value == Mode.Create){
-
             val newFile = File(
                 fileId = 0,
                 title = title,
@@ -204,9 +246,11 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 libOrder = 0
             )
             insertFile(newFile)
-            insertFile(newFile)
-            insertFile(newFile)
-            insertFile(newFile)
+            if(parentFile!=null){
+                createXREF = true
+            }
+
+
         }
         setAddFileActive(false)
     }
@@ -215,10 +259,17 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         when(parentFile ){
             null -> return
             else -> {
-                val newXref = FileXRef(parentFileId = parentFile.fileId,
+                val newXref = FileXRef(
+                    id = 0,
+                    parentFileId = parentFile.fileId,
                     childFileId = fileId
                 )
                 insertFileXRef(newXref)
+
+
+
+
+
             }
         }
 
@@ -235,6 +286,11 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private fun upDateFile(file: File){
         viewModelScope.launch {
             repository.update(file)
+        }
+    }
+    private fun upDateMultipleFiles(list:List<File>){
+        viewModelScope.launch {
+            repository.updateMultiple(list)
         }
     }
     private fun insertFileXRef(fileXRef: FileXRef){

@@ -16,20 +16,21 @@ private val markerDataDao      : MyDao.MarkerDataDao,
 private val userDao            : MyDao.UserDao,
 private val clearTable         : MyDao.ClearTable,
 private val libraryDao         : MyDao.LibraryDao,
-private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
+private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao,
+private val fileXRefDao        : MyDao.FileXRefDao,) {
 
 
 //cards
 
 
     val  getFileWithoutParent:Flow<List<File>> = libraryDao.getFileWithoutParent()
-    fun getFileDataByParentFileId(parentFileId:Int?) = libraryDao.getFileListByParentFileId(parentFileId)
+//    fun getFileDataByParentFileId(parentFileId:Int?):Flow<FileWithChild> = libraryDao.getFileListByParentFileId(parentFileId)
 
     fun getCardDataByFileId(parentFileId: Int?):Flow<List<CardAndTags>>  = libraryDao.getCardsDataByFileId(parentFileId)
     fun getFileByFileId(fileId:Int?):Flow<File> = libraryDao.getFileByFileId(fileId)
 
     val lastInsertedFile:Flow<Int> = libraryDao.getLastInsertedFile()
-
+    fun mygetFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = libraryDao.myGetFileByParentFileId(parentFileId)
 
 
 
@@ -69,6 +70,9 @@ private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
             is MarkerData -> markerDataDao.insert(item)
             is Choice -> choiceDao.insert(item)
             is ActivityData -> activityDataDao.insert(item)
+            is FileXRef -> {
+                fileXRefDao.insert(item)
+            }
 
         }
 
