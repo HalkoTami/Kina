@@ -99,7 +99,7 @@ class HomeFragment : Fragment(),DataClickListener {
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it, myId == null)
                 createFileViewModel.setParentFile(it)
-
+                Toast.makeText(requireActivity(), "parent file id ${it?.fileId}",Toast.LENGTH_SHORT).show()
             }
         }
 //        初期データ設定

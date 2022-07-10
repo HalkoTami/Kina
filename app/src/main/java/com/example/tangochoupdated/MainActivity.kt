@@ -234,9 +234,15 @@ class MainActivity : AppCompatActivity() {
             }
 
 
+            var start = true
             createFileviewModel.lastInsetedFileId.observe(this@MainActivity){
+                if(start){
+                    start = false
+                    return@observe
+                } else{
+                    createFileviewModel.setLastInsertedFileId(it)
+                }
 
-                createFileviewModel.setLastInsertedFileId(it)
 
             }
             createFileviewModel.parentFileStock.observe(this@MainActivity){

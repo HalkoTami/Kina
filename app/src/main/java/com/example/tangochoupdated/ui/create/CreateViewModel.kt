@@ -35,6 +35,15 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             }
             else -> {
                 setTxvLeftTop("${file.title.toString()} >")
+                if(createXREF){
+                    val newXref = FileXRef(
+                        id = 0,
+                        parentFileId = file.fileId,
+                        childFileId = _lastInsertedFileId.value!!
+                    )
+                    insertFileXRef(newXref)
+                    createXREF = false
+                }
 
             }
         }
@@ -214,14 +223,14 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             return
         } else{
             _lastInsertedFileId.value = int
-            if(createXREF){
-                val newXref = FileXRef(
-                    id = 0,
-                    parentFileId = _parentFile.value!!.fileId,
-                    childFileId = int
-                )
-                insertFileXRef(newXref)
-            }
+//            if(createXREF){
+//                val newXref = FileXRef(
+//                    id = 0,
+//                    parentFileId = _parentFile.value!!.fileId,
+//                    childFileId = int
+//                )
+//                insertFileXRef(newXref)
+//            }
         }
 
     }

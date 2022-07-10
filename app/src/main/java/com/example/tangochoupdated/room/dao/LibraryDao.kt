@@ -35,7 +35,7 @@ interface LibraryDao {
 //        """)
 //    fun myGetFileByParentFileId(parentFileId: Int?): Flow<List<File>>
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM tbl_file su INNER JOIN file_xref ss ON ss.parentFileId = su.fileId INNER JOIN tbl_file st ON ss.childFileId = st.fileId WHERE su.fileId = ss.parentFileId = :fileId")
+    @Query("SELECT * FROM tbl_file su INNER JOIN file_xref ss ON ss.parentFileId = su.fileId INNER JOIN tbl_file st ON ss.childFileId = st.fileId WHERE ss.parentFileId = :fileId")
      fun myGetFileByParentFileId(fileId: Int?): Flow<List<File>>
 
 
