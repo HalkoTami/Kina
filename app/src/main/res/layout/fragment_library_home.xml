@@ -29,6 +29,7 @@
         android:layout_height="60dp"
         android:padding="8dp">
         <include
+            android:id="@+id/binding_search"
             layout="@layout/item_search_bar"/>
 
 

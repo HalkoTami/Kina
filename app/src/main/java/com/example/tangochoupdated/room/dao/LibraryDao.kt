@@ -22,6 +22,8 @@ interface LibraryDao {
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
     fun getFileByFileId(lookingFileId:Int?): Flow<File>
 
+
+
     @Query("SELECT a.fileId FROM tbl_file a " +
             " INNER JOIN ( SELECT  MAX(fileId) fileId FROM tbl_file  ) b ON a.fileId = b.fileId"
     )
@@ -38,9 +40,22 @@ interface LibraryDao {
     @Query("SELECT * FROM tbl_file su INNER JOIN file_xref ss ON ss.parentFileId = su.fileId INNER JOIN tbl_file st ON ss.childFileId = st.fileId WHERE ss.parentFileId = :fileId")
      fun myGetFileByParentFileId(fileId: Int?): Flow<List<File>>
 
+     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT *  FROM tbl_file c " +
+            " INNER JOIN file_xref p_c ON p_c.childFileId = c.fileId " +
+            " INNER JOIN file_xref gp_p ON gp_p.childFileId = p_c.parentFileId " +
+            "LEFT JOIN tbl_file p ON p.fileId = p_c.parentFileId " +
+            "LEFT JOIN tbl_file gp ON gp_p.parentFileId = gp.fileId " +
+            "WHERE gp.fileId = :fileId ")
+    fun getPAndGPFileBychildId(fileId: Int?):Flow<List<File>>
 
-
-
+//
+//    uery("SELECT *  FROM file_xref p_c " +
+//    " INNER JOIN file_xref gp_p ON gp_p.childFileId = p_c.parentFileId " +
+//    " INNER JOIN tbl_file gp ON gp.fileId = gp_p.parentFileId " +
+//    "INNER JOIN tbl_file p ON p.fileId = p_c.parentFileId " +
+//    "INNER JOIN tbl_file c ON c.fileId = p_c.childFileId " +
+//    "WHERE p_c.childFileId ")
 
 
 //    TODO　果たしてこれはできるのか？？

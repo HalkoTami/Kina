@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 abstract class MyDao{
+
     @Dao
     abstract class CardDao(): BaseDao<Card>
     @Dao
@@ -13,7 +14,8 @@ abstract class MyDao{
     @Dao
     abstract class ChoiceDao: BaseDao<Choice>
     @Dao
-    abstract class FileDao: BaseDao<File>
+    abstract class FileDao: BaseDao<File>{
+    }
     @Dao
     abstract class MarkerDataDao: BaseDao<MarkerData>
     @Dao
@@ -26,6 +28,7 @@ abstract class MyDao{
     abstract class CardAndTagXRefDao: BaseDao<CardAndTagXRef>
     @Dao
     abstract class FileXRefDao:BaseDao<FileXRef>
+
 
 
 

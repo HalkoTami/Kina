@@ -24,6 +24,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         setFileColor(ColorStatus.GRAY)
     }
 
+
     private val _parentFile = MutableLiveData<File?>()
     val parentFile:LiveData<File?> = _parentFile
     fun setParentFile(file: File?){
@@ -31,6 +32,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         when(file){
             null ->{
                 setTxvLeftTop("home")
+
 
             }
             else -> {
@@ -42,7 +44,13 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                         childFileId = _lastInsertedFileId.value!!
                     )
                     insertFileXRef(newXref)
+                    val a = mutableListOf<File>()
+                    a.addAll(_pAndgGP.value!!)
+                    a.onEach { it.childFoldersAmount =+1 }
+                    upDateMultipleFiles(a)
                     createXREF = false
+
+
                 }
 
             }
@@ -50,6 +58,11 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 //        setParentFileStock(file)
 
     }
+    val _pAndgGP = MutableLiveData<List<File>>()
+    fun setPAndG(list: List<File>?){
+        _pAndgGP.value = list
+    }
+
     private val _parentFileStock = MutableLiveData<List<File>>()
     val parentFileStock:LiveData<List<File>> = _parentFileStock
     fun setParentFileStock(file: File?){
@@ -214,6 +227,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     }
     var createXREF:Boolean = false
+    var fileInserted:Boolean = false
 
     val lastInsetedFileId:LiveData<Int> = repository.lastInsertedFile.asLiveData()
     private val _lastInsertedFileId = MutableLiveData<Int>()
@@ -223,17 +237,21 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             return
         } else{
             _lastInsertedFileId.value = int
-//            if(createXREF){
-//                val newXref = FileXRef(
-//                    id = 0,
-//                    parentFileId = _parentFile.value!!.fileId,
-//                    childFileId = int
-//                )
-//                insertFileXRef(newXref)
-//            }
+            if(fileInserted){
+                val newXref = FileXRef(
+                    id = 0,
+                    parentFileId = int,
+                    childFileId = 0
+                )
+                insertFileXRef(newXref)
+                fileInserted = false
+            }
         }
 
     }
+
+
+
 
     fun onClickFinish(title:String){
         val parentFile = _parentFile.value
@@ -255,9 +273,11 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 libOrder = 0
             )
             insertFile(newFile)
+            fileInserted = true
             if(parentFile!=null){
                 createXREF = true
             }
+
 
 
         }

@@ -32,51 +32,34 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
     val lastInsertedFile:Flow<Int> = libraryDao.getLastInsertedFile()
     fun mygetFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = libraryDao.myGetFileByParentFileId(parentFileId)
 
+    fun getPAndGPFiles(fileId: Int?):Flow<List<File>> = libraryDao.getPAndGPFileBychildId(fileId)
+
 
 
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insert(item: Any) {
+    suspend fun insert(item: Any){
 
         when (item) {
             is CardAndTagXRef -> cardAndTagXRefDao.insert(item)
             is Card -> cardDao.insert(item)
-            is File -> {
-//
-//                suspend fun getOverGrandParent(file:File){
-//                    if(file.hasParent){
-//                        var overGrandparentFile = mutableListOf<File>()
-//                        libraryDao.getFileByFileId(file.parentFile).collect{
-//                            overGrandparentFile.add(it)
-//                        }
-//                        when(file.fileStatus){
-//                            FileStatus.FOLDER ->
-//                                overGrandparentFile[0].childFoldersAmount = overGrandparentFile[0].childFoldersAmount?.plus(1)
-//                            FileStatus.TANGO_CHO_COVER ->
-//                                overGrandparentFile[0].childFlashCardCoversAmount = overGrandparentFile[0].childFlashCardCoversAmount?.plus(1)
-//                        }
-//                        overGrandparentFile[0].hasChild = true
-//                        update(overGrandparentFile[0])
-//                        getOverGrandParent(overGrandparentFile[0])
-//
-//                    } else return
-//
-//                }
-//                getOverGrandParent(item)
-                fileDao.insert(item)
-            }
+            is File -> { fileDao.insert(item) }
             is User -> userDao.insert(item)
             is MarkerData -> markerDataDao.insert(item)
             is Choice -> choiceDao.insert(item)
             is ActivityData -> activityDataDao.insert(item)
-            is FileXRef -> {
-                fileXRefDao.insert(item)
+            is FileXRef -> { fileXRefDao.insert(item)
+
+
+
             }
+            else -> throw  IllegalArgumentException("no such table")
 
         }
 
     }
+
 
     suspend fun insertMultiple(item: List<*>) {
 

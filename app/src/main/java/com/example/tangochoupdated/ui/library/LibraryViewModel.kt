@@ -227,6 +227,11 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             }
         }
     }
+    fun pAndGP(parentId:Int?):LiveData<List<File>?> = repository.getPAndGPFiles(parentId).asLiveData()
+    val _pAndgGP = MutableLiveData<List<File>?>()
+    fun setPAndG(list: List<File>?){
+           _pAndgGP.value = list
+    }
 
 
 //    parent item as Library RV
@@ -262,7 +267,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
                 setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
             }
             false -> {
-                setMLDTopText("${_myParentItem.value!!.file!!.title}")
+                setMLDTopText("${_myParentItem.value!!.file!!.fileId}")
                 setTopBarLeftIMVDrawableId(
                     when(_myParentItem.value!!.file!!.fileStatus){
                         FileStatus.FOLDER ->R.drawable.icon_file

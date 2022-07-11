@@ -90,7 +90,7 @@ class HomeFragment : Fragment(),DataClickListener {
             }
             childFilesFromDB(myId).observe(viewLifecycleOwner){
                 setChildFilesFromDB(it,myId == null)
-                Toast.makeText(requireActivity(), "child files size ${it.size}",Toast.LENGTH_SHORT).show()
+
 
             }
 //            childCardsFromDB(myId).observe(viewLifecycleOwner){
@@ -99,7 +99,19 @@ class HomeFragment : Fragment(),DataClickListener {
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it, myId == null)
                 createFileViewModel.setParentFile(it)
-                Toast.makeText(requireActivity(), "parent file id ${it?.fileId}",Toast.LENGTH_SHORT).show()
+            }
+            pAndGP(myId).observe(viewLifecycleOwner){
+                setPAndG(it)
+                createFileViewModel.setPAndG(it)
+                var ids =" "
+                var a = 0
+                while(a<it!!.size){
+                    val id = " ${it[a].fileId}, "
+                    ids = "$ids $id"
+                    a++
+
+                }
+                binding.bindingSearch.edtLibrarySearch.hint = ids
             }
         }
 //        初期データ設定
@@ -179,7 +191,6 @@ class HomeFragment : Fragment(),DataClickListener {
         }
         libraryViewModel.myFinalList.observe(viewLifecycleOwner){
             adapter.submitList(it)
-            Toast.makeText(requireActivity(), "myfinallist size ${it.size}",Toast.LENGTH_SHORT).show()
 
             createFileViewModel.setNewPosition(it.size+1)
         }
