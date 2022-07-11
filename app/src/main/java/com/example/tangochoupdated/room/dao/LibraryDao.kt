@@ -41,14 +41,18 @@ interface LibraryDao {
      fun myGetFileByParentFileId(fileId: Int?): Flow<List<File>>
 
      @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT *  FROM tbl_file c " +
-            " INNER JOIN file_xref p_c ON p_c.childFileId = c.fileId " +
-            " INNER JOIN file_xref gp_p ON gp_p.childFileId = p_c.parentFileId " +
-            "LEFT JOIN tbl_file p ON p.fileId = p_c.parentFileId " +
-            "LEFT JOIN tbl_file gp ON gp_p.parentFileId = gp.fileId " +
-            "WHERE gp.fileId = :fileId ")
+    @Query("with recursive generation as (SELECT *  FROM tbl_file f" +
+          "  JOIN  file_xref  " +
+            " a on a.childFileId is f.fileId"+
+          " and a.parentFileId is :fileId " +
+            "Union all " +
+            "select * from tbl_file child " +
+            "JOIN file_xref b on b.childFileId = child.fileId " +
+            "and b.parentFileId is :fileId" +
+            " Join generation g On g.fileId = b.parentFileId ) " +
+            "SELECT * from generation g JOIN tbl_file parent ON g.parentFileId = parent.fileId" )
     fun getPAndGPFileBychildId(fileId: Int?):Flow<List<File>>
-
+//    " JOIN tbl_file parent ON parent.fileId = a.parentFileId"
 //
 //    uery("SELECT *  FROM file_xref p_c " +
 //    " INNER JOIN file_xref gp_p ON gp_p.childFileId = p_c.parentFileId " +
@@ -59,7 +63,10 @@ interface LibraryDao {
 
 
 //    TODO　果たしてこれはできるのか？？
-
+//@Query("SELECT *  FROM tbl_file f " +
+//        "JOIN (SELECT * FROM file_xref  " +
+//        " ) a on a.childFileId = f.fileId " +
+//        " and a.parentFileId = :fileId  ")
 
 
     @Query("select count(id) from tbl_card where not card_deleted AND belongingFileId = :belongingFileId")

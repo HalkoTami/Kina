@@ -50,7 +50,7 @@ data class File(
 )
 data class FileXRef(
     @PrimaryKey(autoGenerate = true) val id:Int,
-    val parentFileId: Int,
+    val parentFileId: Int?,
     val childFileId: Int,
 )
 

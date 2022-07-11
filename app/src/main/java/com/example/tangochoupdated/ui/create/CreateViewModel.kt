@@ -29,6 +29,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     val parentFile:LiveData<File?> = _parentFile
     fun setParentFile(file: File?){
         _parentFile.value = file
+
         when(file){
             null ->{
                 setTxvLeftTop("home")
@@ -37,21 +38,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             }
             else -> {
                 setTxvLeftTop("${file.title.toString()} >")
-                if(createXREF){
-                    val newXref = FileXRef(
-                        id = 0,
-                        parentFileId = file.fileId,
-                        childFileId = _lastInsertedFileId.value!!
-                    )
-                    insertFileXRef(newXref)
-                    val a = mutableListOf<File>()
-                    a.addAll(_pAndgGP.value!!)
-                    a.onEach { it.childFoldersAmount =+1 }
-                    upDateMultipleFiles(a)
-                    createXREF = false
 
-
-                }
 
             }
         }
@@ -240,8 +227,8 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             if(fileInserted){
                 val newXref = FileXRef(
                     id = 0,
-                    parentFileId = int,
-                    childFileId = 0
+                    parentFileId = _parentFile.value?.fileId,
+                    childFileId = int
                 )
                 insertFileXRef(newXref)
                 fileInserted = false
@@ -274,9 +261,6 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             )
             insertFile(newFile)
             fileInserted = true
-            if(parentFile!=null){
-                createXREF = true
-            }
 
 
 
