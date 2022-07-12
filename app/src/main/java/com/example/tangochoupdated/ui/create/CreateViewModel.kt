@@ -257,7 +257,8 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                     null -> false
                     else -> true
                 },
-                libOrder = 0
+                libOrder = 0,
+                parentFileId = _parentFile.value?.fileId
             )
             insertFile(newFile)
             fileInserted = true

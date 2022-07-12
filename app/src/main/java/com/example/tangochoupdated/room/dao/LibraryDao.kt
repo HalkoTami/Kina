@@ -37,20 +37,11 @@ interface LibraryDao {
 //        """)
 //    fun myGetFileByParentFileId(parentFileId: Int?): Flow<List<File>>
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM tbl_file su INNER JOIN file_xref ss ON ss.parentFileId = su.fileId INNER JOIN tbl_file st ON ss.childFileId = st.fileId WHERE ss.parentFileId = :fileId")
+    @Query("SELECT * FROM tbl_file su WHERE su.parentFileId is :fileId")
      fun myGetFileByParentFileId(fileId: Int?): Flow<List<File>>
 
      @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("with recursive generation as (SELECT *  FROM tbl_file f" +
-          "  JOIN  file_xref  " +
-            " a on a.childFileId is f.fileId"+
-          " and a.parentFileId is :fileId " +
-            "Union all " +
-            "select * from tbl_file child " +
-            "JOIN file_xref b on b.childFileId = child.fileId " +
-            "and b.parentFileId is :fileId" +
-            " Join generation g On g.fileId = b.parentFileId ) " +
-            "SELECT * from generation g JOIN tbl_file parent ON g.parentFileId = parent.fileId" )
+    @Query("SELECT * FROM tbl_file su LEFT JOIN tbl_file ss ON ss.parentFileId = su.fileId WHERE ss.parentFileId = :fileId")
     fun getPAndGPFileBychildId(fileId: Int?):Flow<List<File>>
 //    " JOIN tbl_file parent ON parent.fileId = a.parentFileId"
 //
@@ -60,8 +51,17 @@ interface LibraryDao {
 //    "INNER JOIN tbl_file p ON p.fileId = p_c.parentFileId " +
 //    "INNER JOIN tbl_file c ON c.fileId = p_c.childFileId " +
 //    "WHERE p_c.childFileId ")
-
-
+//
+//    "with recursive generation as (SELECT *  FROM tbl_file f" +
+//    "  JOIN  file_xref  " +
+//    " a on a.childFileId is f.fileId"+
+//    " and a.parentFileId is :fileId " +
+//    "Union all " +
+//    "select * from tbl_file child " +
+//    "JOIN file_xref b on b.childFileId = child.fileId " +
+//    "and b.parentFileId is :fileId" +
+//    " Join generation g On g.fileId = b.parentFileId ) " +
+//    "SELECT * from generation g JOIN tbl_file parent ON g.parentFileId = parent.fileId"
 //    TODO　果たしてこれはできるのか？？
 //@Query("SELECT *  FROM tbl_file f " +
 //        "JOIN (SELECT * FROM file_xref  " +

@@ -113,7 +113,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 //file without parent from DB
 
-    fun  fileWithoutParentFromDB():LiveData<List<File>?> = this.repository.getFileWithoutParent.asLiveData()
+    fun  fileWithoutParentFromDB():LiveData<List<File>?> = this.repository.mygetFileDataByParentFileId(null).asLiveData()
     private val _fileWithoutParentFromDB= MutableLiveData<List<File>>()
 
     fun setFileWithoutParentFromDB(list:List<File>?,home: Boolean){
