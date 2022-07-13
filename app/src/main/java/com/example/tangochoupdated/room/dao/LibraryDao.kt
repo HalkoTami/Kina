@@ -41,7 +41,11 @@ interface LibraryDao {
      fun myGetFileByParentFileId(fileId: Int?): Flow<List<File>>
 
      @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM tbl_file su LEFT JOIN tbl_file ss ON ss.parentFileId = su.fileId WHERE ss.parentFileId = :fileId")
+    @Query("WITH  generation AS (" +
+            " select * from tbl_file where fileId = :fileId " +
+            "UNION ALL" +
+            " SELECT a.* from tbl_file a Inner JOIN generation g ON g.parentFileId = a.fileId )" +
+            "SELECT * FROM generation b ")
     fun getPAndGPFileBychildId(fileId: Int?):Flow<List<File>>
 //    " JOIN tbl_file parent ON parent.fileId = a.parentFileId"
 //

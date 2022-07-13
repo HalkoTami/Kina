@@ -1,7 +1,13 @@
 package com.example.tangochoupdated
 
+import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.LayoutTransition
+import android.animation.ValueAnimator
+import android.app.ActionBar
+import android.content.ClipData
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.transition.ChangeBounds
 import android.transition.Scene
@@ -10,6 +16,8 @@ import android.view.*
 import android.view.View.*
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.recyclerview.selection.ItemDetailsLookup
@@ -65,6 +73,8 @@ val mycontext: Context) :
         RecyclerView.ViewHolder(binding.root){
 
 
+        lateinit var fileBinding:ItemCoverFileBinding
+
 
         fun bind(item: LibraryRV, clickListener: DataClickListener ){
             item.position = adapterPosition
@@ -74,14 +84,27 @@ val mycontext: Context) :
             binding.stubMain.removeAllViews()
             when (item.type){
               LibRVViewType.Folder, LibRVViewType.FlashCardCover ->{
-                  val fileBinding = ItemCoverFileBinding.inflate(LayoutInflater.from(context))
+                  fileBinding = ItemCoverFileBinding.inflate(LayoutInflater.from(context))
                   binding.stubMain.addView(fileBinding.root)
                   fileBinding.apply{
 
-                      txvFileTitle.text = item.file?.fileId.toString() ?:"no title"
-                      txvFileAmount.text = "${item.file?.childFoldersAmount ?:0}個"
-                      txvCardAmount.text = "${item.file?.childCardsAmount ?:0}枚"
-                      txvTangoChoAmount.text = "${item.file?.childFlashCardCoversAmount ?:0}個"
+                      txvFileTitle.text = item.file?.title.toString()
+                      item.file?.apply {
+                          txvFileAmount.apply {
+                              if(childFoldersAmount == 0) visibility = INVISIBLE
+                              else text = "$childFoldersAmount 個"
+                          }
+                          txvTangoChoAmount.apply {
+                              if(childFlashCardCoversAmount == 0) visibility = INVISIBLE
+                              else text = "$childFlashCardCoversAmount 個"
+                          }
+                          txvCardAmount.apply {
+                              if(childCardsAmount == 0) visibility = INVISIBLE
+                              else text = "$childCardsAmount 個"
+                          }
+
+
+                      }
 
                       imvFileType.setImageDrawable(when(item.type){
                           LibRVViewType.Folder -> context.getDrawable(R.drawable.icon_file)
@@ -129,16 +152,6 @@ val mycontext: Context) :
                 LibRVViewType.MarkerCard,LibRVViewType.ChoiceCard,LibRVViewType.StringCard -> VISIBLE
                 else -> GONE
             }
-
-//            binding.btnSelect.apply {
-//                tag = HomeFragment.MyState.Unselected
-//                if(item.selectable) {
-//                    visibility = VISIBLE
-//
-//                } else {
-//                    visibility = GONE
-//                }
-//            }
             binding.btnSelect.visibility = GONE
 
             binding.btnDelete.visibility = if(!item.leftSwiped) GONE else return
@@ -147,39 +160,36 @@ val mycontext: Context) :
 
 
 
-
+//
             binding.stubMain.setOnTouchListener (object:MyTouchListener(context){
                 override fun onSingleTap() {
                     super.onSingleTap()
-                    if(binding.btnSelect.visibility == VISIBLE){
-                        when(binding.btnSelect.tag){
-                            HomeFragment.MyState.Selected -> {
+                    clickListener.onClickMain(item,binding)
 
-                                clickListener.onUnselect(item,binding)
-                            }
-                            else -> {
-
-                                clickListener.onSelect(item,binding)
-                            }
-                        }
-                    }
-                    else{
-                        clickListener.onClickMain(item)
-                    }
 
                 }
 
                 override fun onSwipeLeft() {
                     super.onSwipeLeft()
-                    clickListener.onSwipeLeft(item,binding)
+                    clickListener.onSwipeLeft(item,binding,fileBinding)
+
                 }
 
                 override fun onLongClick() {
                     super.onLongClick()
                     clickListener.onLongClickMain(item,binding)
+
+
+                }
+
+//                scroll view にネスト化して　やりたいイベントはできそうだが後回し
+                override fun onScrollLeft() {
+                    super.onScrollLeft()
+
+
                 }
             })
-
+//
 
 
 
@@ -209,6 +219,11 @@ val mycontext: Context) :
 
 
     }
+
+
+
+
+
 
     /**
      * Horizontal View Holder
@@ -244,14 +259,15 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
  *class MyFragment : Fragment(), DataClickListener
  */
 interface DataClickListener {
-    fun onSwipeLeft(item:LibraryRV,binding:ItemCoverCardBaseBinding)
-    fun onLongClickMain(item: LibraryRV,binding: ItemCoverCardBaseBinding)
-    fun onSelect(item: LibraryRV, binding: ItemCoverCardBaseBinding)
+    fun onSwipeLeft(item :LibraryRV, rvBinding:ItemCoverCardBaseBinding, fileBinding: ItemCoverFileBinding)
+    fun onLongClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
+    fun onSelect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
     fun onClickEdit(item: LibraryRV)
     fun onClickAdd(item: LibraryRV)
     fun onClickDelete(item: LibraryRV)
-    fun onClickMain(item: LibraryRV)
-    fun onUnselect(item: LibraryRV,binding: ItemCoverCardBaseBinding)
+    fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
+    fun onUnselect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
+    fun onScrollLeft(distanceX:Float, rvBinding: ItemCoverCardBaseBinding)
 
 }
 

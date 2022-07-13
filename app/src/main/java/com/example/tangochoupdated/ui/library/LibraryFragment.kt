@@ -13,21 +13,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.selection.ItemDetailsLookup
-import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.selection.StableIdKeyProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
-import com.example.tangochoupdated.databinding.EmptyBinding
 
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
+import com.example.tangochoupdated.databinding.ItemCoverFileBinding
+import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
 import com.example.tangochoupdated.ui.planner.CreateFileViewModel
 
-class HomeFragment : Fragment(),DataClickListener {
+class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     private val args: HomeFragmentArgs by navArgs()
     lateinit var navCon:NavController
 
@@ -35,6 +33,7 @@ class HomeFragment : Fragment(),DataClickListener {
 
 
     lateinit var adapter: LibraryListAdapter
+    val  allChildrenMutableList = mutableListOf<View>()
 
     private val sharedViewModel: BaseViewModel by activityViewModels()
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
@@ -103,17 +102,25 @@ class HomeFragment : Fragment(),DataClickListener {
             pAndGP(myId).observe(viewLifecycleOwner){
                 setPAndG(it)
                 createFileViewModel.setPAndG(it)
-                var ids =" "
-                var a = 0
-                while(a<it!!.size){
-                    val id = " ${it[a].fileId}, "
-                    ids = "$ids $id"
-                    a++
+                binding.bindingSearch.edtLibrarySearch.hint = it?.size.toString()
 
-                }
-                binding.bindingSearch.edtLibrarySearch.hint = ids
             }
         }
+
+        allChildrenMutableList.apply {
+            binding.root.children.iterator().forEachRemaining {
+                add(it)
+            }
+            binding.mainFrameLayout.children.iterator().forEachRemaining{
+                add(it)
+            }
+
+        }
+
+
+
+
+
 //        初期データ設定
 
 
@@ -134,15 +141,6 @@ class HomeFragment : Fragment(),DataClickListener {
                         true -> this.layEnd.visibility = View.VISIBLE
                         false -> this.layEnd.visibility = View.GONE
                     }
-
-                }
-                imv1.setOnClickListener {
-                    recyclerView.children.iterator().forEachRemaining {
-                        val a = it.findViewById<ImageView>(R.id.btn_select)
-                        a.visibility = View.GONE
-                        a.tag = MyState.Unselected
-                    }
-                    libraryViewModel.onClickLeftIcon()
 
                 }
                 imvEnd.setOnClickListener {
@@ -194,8 +192,7 @@ class HomeFragment : Fragment(),DataClickListener {
 
             createFileViewModel.setNewPosition(it.size+1)
         }
-
-
+        CustomLayout(requireContext())
 
 
 
@@ -205,6 +202,24 @@ class HomeFragment : Fragment(),DataClickListener {
 
 
     }
+
+
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            binding.topMenuBarFrame.imv1.id ->{
+                libraryViewModel.onClickLeftIcon(recyclerView)
+            }
+
+        }
+
+
+    }
+    fun clicked(v: View?):Boolean{
+        Toast.makeText(context, "${v?.id}", Toast.LENGTH_SHORT).show()
+        return true
+    }
+
     fun onClickDelete(){
         libraryViewModel.onDelete()
         Toast.makeText(context, "onClickDelete", Toast.LENGTH_SHORT).show()
@@ -217,27 +232,55 @@ class HomeFragment : Fragment(),DataClickListener {
 
     }
 
-    override fun onSwipeLeft(item: LibraryRV, binding: ItemCoverCardBaseBinding) {
-        if(item.selectable||leftSwiped){
+    override fun onSwipeLeft(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding, fileBinding:ItemCoverFileBinding) {
+        if((rvBinding.btnDelete.visibility == View.VISIBLE) or
+            (rvBinding.btnEditWhole.visibility == View.VISIBLE)) return
+        else  {
+            val a = mutableListOf<Animator>()
+            a.add(animateWidth(rvBinding.btnDelete, 0, 70,300))
+            when(item.type){
+                LibRVViewType.FlashCardCover, LibRVViewType.Folder ->
+                    a.add(animateWidth(rvBinding.btnEditWhole,0,70,300))
+                else -> return
+            }
+            AnimatorSet().apply {
+                playTogether(a)
+                start()
+            }
+            allChildrenMutableList.onEach {
+                when(it.id){
+                    rvBinding.btnDelete.id,rvBinding.btnEditWhole.id -> return
+                    else -> {
+                        it.setOnClickListener(null)
+                        it.setOnClickListener {
+                            mutableListOf<View>(rvBinding.btnDelete,rvBinding.btnEditWhole).onEach {
+                                animateWidth(it,it.layoutParams.width,0,300).start()
+                                allChildrenMutableList.onEach {
+                                    it.setOnClickListener(this)
+                                }
+                            }
 
-            return
-        } else{
+                        }
 
-            binding.btnDelete.visibility = View.VISIBLE
-            binding.btnEditWhole.visibility = View.VISIBLE
-            libraryViewModel.makeItemLeftSwiped(item.position)
-            Toast.makeText(context, "onclick left swiped ", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+            }
+            libraryViewModel.setLeftSwipedItemExists(true)
+            fileBinding.btnAdd.visibility = View.GONE
+
+
         }
     }
 
-    override fun onLongClickMain(item: LibraryRV,binding: ItemCoverCardBaseBinding) {
+    override fun onLongClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
         libraryViewModel.setMultipleSelectMode(true)
         libraryViewModel.addToSelectedItem(item)
         recyclerView.children.iterator().forEachRemaining {
             it.findViewById<ImageView>(R.id.btn_select).visibility = View.VISIBLE
         }
-        binding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
-        binding.btnSelect.tag = MyState.Selected
+        rvBinding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
+        rvBinding.btnSelect.tag = MyState.Selected
 
         Toast.makeText(context, "onclick edit", Toast.LENGTH_SHORT).show()
 
@@ -256,9 +299,26 @@ class HomeFragment : Fragment(),DataClickListener {
         Toast.makeText(context, "onClickDelete", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onClickMain(item: LibraryRV) {
-        if(libraryViewModel.checkReset()){
-            leftSwiped = false
+    override fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
+        if(rvBinding.btnSelect.visibility == View.VISIBLE){
+            when(rvBinding.btnSelect.tag){
+                MyState.Selected -> {
+                    onUnselect(item,rvBinding)
+                }
+                else -> {
+                    onSelect(item,rvBinding)
+                }
+            }
+        } else if(libraryViewModel.checkReset()){
+            recyclerView.children.iterator().forEachRemaining {
+                mutableListOf<View>(it.findViewById(R.id.btn_edit_whole),
+                    it.findViewById(R.id.btn_delete)).onEach {
+                        if(it.visibility == View.VISIBLE){
+                            animateWidth(it,it.layoutParams.width,0,300).start()
+                        }
+                }
+            }
+            libraryViewModel.setLeftSwipedItemExists(false)
             Toast.makeText(context, "all reset", Toast.LENGTH_SHORT).show()
             return
         } else{
@@ -275,23 +335,29 @@ class HomeFragment : Fragment(),DataClickListener {
         Selected, Unselected
     }
 
-    override fun onSelect(item: LibraryRV,binding: ItemCoverCardBaseBinding) {
+    override fun onSelect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
 
-        binding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
-        binding.btnSelect.tag = MyState.Selected
+        rvBinding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
+        rvBinding.btnSelect.tag = MyState.Selected
         libraryViewModel.onclickSelectableItem(item,true)
         Toast.makeText(context, "onSelect", Toast.LENGTH_SHORT).show()
     }
 
 
-    override fun onUnselect(item: LibraryRV,binding: ItemCoverCardBaseBinding) {
+    override fun onUnselect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
 
-        binding.btnSelect.setImageDrawable(requireContext().getDrawable(R.drawable.circle_select))
-        binding.btnSelect.tag = MyState.Unselected
+        rvBinding.btnSelect.setImageDrawable(requireContext().getDrawable(R.drawable.circle_select))
+        rvBinding.btnSelect.tag = MyState.Unselected
         libraryViewModel.onclickSelectableItem(item,false)
         Toast.makeText(context, "onUnselect", Toast.LENGTH_SHORT).show()
     }
 
+    override fun onScrollLeft(distanceX: Float, rvBinding: ItemCoverCardBaseBinding) {
+//        binding.btnDelete.visibility = View.VISIBLE
+//        binding.btnEditWhole.visibility = View.VISIBLE
+//        binding.stubMain.layoutParams.width = distanceX.toInt()
+//        libraryViewModel.makeItemLeftSwiped()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

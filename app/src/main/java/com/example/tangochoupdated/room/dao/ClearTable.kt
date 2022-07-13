@@ -20,5 +20,8 @@ interface ClearTable {
     @Query("DELETE FROM tbl_user")
     abstract suspend fun clearTblUser()
 
+    @Query("DELETE FROM file_xref")
+    abstract suspend fun clearTblFileXRef()
+
 
 }

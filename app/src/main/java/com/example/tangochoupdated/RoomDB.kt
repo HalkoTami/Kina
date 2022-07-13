@@ -61,6 +61,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
                     clearTable.clearTblUser()
                     clearTable.clearTblFile()
                     clearTable.clearTblMarkerData()
+                    clearTable.clearTblFileXRef()
 
 
                     // Add sample words.

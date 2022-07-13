@@ -22,9 +22,9 @@ data class File(
     var hasChild:Boolean = false,
     var hasParent:Boolean = false,
     var libOrder: Int? = 0 ,
-    var childFoldersAmount:Int? = null,
-    var childFlashCardCoversAmount: Int? = null,
-    var childCardsAmount:Int? = null
+    var childFoldersAmount:Int = 0,
+    var childFlashCardCoversAmount: Int = 0,
+    var childCardsAmount:Int = 0
 
 
 

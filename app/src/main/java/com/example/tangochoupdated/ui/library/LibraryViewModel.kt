@@ -1,7 +1,11 @@
 package com.example.tangochoupdated.ui.library
 
+import android.view.View
+import android.widget.ImageView
 import androidx.compose.runtime.internal.illegalDecoyCallException
+import androidx.core.view.children
 import androidx.lifecycle.*
+import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.Card
@@ -178,13 +182,13 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 
     }
-    fun makeItemLeftSwiped(position:Int){
-        val a = mutableListOf<LibraryRV>()
-        _myFinalList.value?.onEach { if(it.position == position){
-            it.leftSwiped = true
-        }
-            a.add(it)}
-        setValueToFinalList(a)
+    fun makeItemLeftSwiped(){
+//        val a = mutableListOf<LibraryRV>()
+//        _myFinalList.value?.onEach { if(it.position == position){
+//            it.leftSwiped = true
+//        }
+//            a.add(it)}
+//        setValueToFinalList(a)
         setLeftSwipedItemExists(true)
     }
     private fun makeAllItemNotLeftSwiped(){
@@ -281,10 +285,17 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     }
 
+    private fun makeRVUnSelectable(recyclerView: RecyclerView){
+        recyclerView.children.iterator().forEachRemaining {
+            val a = it.findViewById<ImageView>(R.id.btn_select)
+            a.visibility = View.GONE
+            a.tag = HomeFragment.MyState.Unselected
+        }
 
+    }
 
     //multiSelectMode
-    private val _multipleSelectMode =  MutableLiveData<Boolean>()
+    val _multipleSelectMode =  MutableLiveData<Boolean>()
 
     fun setMultipleSelectMode(boolean: Boolean){
         _multipleSelectMode.apply {
@@ -380,10 +391,11 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     val topBarLeftIMVDrawableId:LiveData<Int> = _topBarLeftIMVDrawableId
 
     //    onCLick Left Icon done
-    fun onClickLeftIcon(){
+    fun onClickLeftIcon(recyclerView: RecyclerView){
         when(_multipleSelectMode.value){
             true -> {
-                setSelectedItem(mutableListOf())
+                makeRVUnSelectable(recyclerView)
+
                 setMultipleSelectMode(false)
                 setHomeStatus(_homeStatus.value!!)
 
@@ -473,7 +485,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     //menu Visibility done
     private val _leftSwipedItemExists =  MutableLiveData<Boolean>()
-    private fun setLeftSwipedItemExists(boolean: Boolean){
+    fun setLeftSwipedItemExists(boolean: Boolean){
         _leftSwipedItemExists.apply {
             value = boolean
         }
@@ -485,7 +497,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         if(_menuOpened.value == true||
             _leftSwipedItemExists.value == true){
             setMenuStatus(false)
-            makeAllItemNotLeftSwiped()
             return true
         } else return false
     }
