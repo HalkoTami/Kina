@@ -6,6 +6,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.view.children
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -20,6 +21,7 @@ import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
 import com.example.tangochoupdated.databinding.ItemCoverFileBinding
+import com.example.tangochoupdated.databinding.MenuLayoutBinding
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
@@ -116,6 +118,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 //        初期データ設定
 
 
+        binding.topMenuBarFrame.imvSwitchMenu.setPadding(10)
 
         binding.apply {
             topMenuBarFrame.apply {
@@ -139,6 +142,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                     add(imvSwitchMenu)
                     add(imvFileStatusOrClose)
                 }
+                menuBinding.root.visibility = View.VISIBLE
 
                 menuBinding.apply {
                     homeFragClickListenerItem.apply {

@@ -62,60 +62,20 @@
         android:hint="タイトル"/>
 
 
-        <ImageView
-            android:id="@+id/imv_icon_palet"
-            app:layout_constraintStart_toStartOf="@id/edt_createfile"
-            app:layout_constraintTop_toBottomOf="@id/edt_createfile"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintHeight_max="35dp"
-            android:src="@drawable/icon_color_palet_col"
-            android:layout_marginTop="10dp"
-            />
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/lineLay_color_palet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_marginStart="10dp"
-            app:layout_constraintBottom_toBottomOf="@id/imv_icon_palet"
-            app:layout_constraintTop_toTopOf="@id/imv_icon_palet"
-            app:layout_constraintStart_toEndOf="@id/imv_icon_palet"
-            android:orientation="horizontal">
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@id/edt_createfile"
+            app:layout_constraintTop_toBottomOf="@id/edt_createfile">
+            <include
+                android:id="@+id/col_palet_binding"
+                layout="@layout/color_palet"/>
 
-            <ImageView
-                android:id="@+id/imv_col_red"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="7dp"
-                android:minWidth="20dp"
-                android:minHeight="20dp"
-                android:src="@drawable/circle"
-                app:layout_constraintHeight_max="35dp"
-                />
 
-            <ImageView
-                android:id="@+id/imv_col_blue"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="7dp"
-                android:src="@drawable/circle" />
+        </FrameLayout>
 
-            <ImageView
-                android:id="@+id/imv_col_yellow"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="7dp"
-                android:src="@drawable/circle" />
-
-            <ImageView
-                android:id="@+id/imv_col_gray"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="7dp"
-                android:src="@drawable/circle"
-                />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <Button

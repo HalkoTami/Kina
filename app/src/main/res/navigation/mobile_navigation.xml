@@ -28,6 +28,7 @@
 
 
 
+
     <fragment
         android:id="@+id/navigation_anki"
         android:name="com.example.tangochoupdated.ui.anki.AnkiFragment"
