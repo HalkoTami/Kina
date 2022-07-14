@@ -33,7 +33,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 
     lateinit var adapter: LibraryListAdapter
-    val  allChildrenMutableList = mutableListOf<View>()
+    val  homeFragClickListenerItem = mutableListOf<View>()
 
     private val sharedViewModel: BaseViewModel by activityViewModels()
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
@@ -107,15 +107,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             }
         }
 
-        allChildrenMutableList.apply {
-            binding.root.children.iterator().forEachRemaining {
-                add(it)
-            }
-            binding.mainFrameLayout.children.iterator().forEachRemaining{
-                add(it)
-            }
 
-        }
 
 
 
@@ -128,13 +120,13 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         binding.apply {
             topMenuBarFrame.apply {
                 libraryViewModel.topBarLeftIMVDrawableId.observe(viewLifecycleOwner){
-                    this.imv1.setImageDrawable(owner.getDrawable(it))
+                    this.imvFileStatusOrClose.setImageDrawable(owner.getDrawable(it))
                 }
                 libraryViewModel.topText.observe(viewLifecycleOwner){
                     this.txvTitle.text = it
                 }
                 libraryViewModel.topBarRightIMVDrawableId.observe(viewLifecycleOwner){
-                    this.imvEnd.setImageDrawable(owner.getDrawable(it))
+                    this.imvSwitchMenu.setImageDrawable(owner.getDrawable(it))
                 }
                 libraryViewModel.menuViewMode.observe(viewLifecycleOwner){
                     when(it){
@@ -143,28 +135,17 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                     }
 
                 }
-                imvEnd.setOnClickListener {
-                    libraryViewModel.changeMenuStatus()
+                homeFragClickListenerItem.apply {
+                    add(imvSwitchMenu)
+                    add(imvFileStatusOrClose)
                 }
 
-                menuBinding.root.children.iterator().forEachRemaining {
-                    when (it.id){
-                       menuBinding.imv1.id ->{
-                           it.setOnClickListener {
-                               onClickAnki()
-                           }
-                       }
-                        menuBinding.imv2.id -> {
-                            it.setOnClickListener{
-                                onClickEdit()
-                            }
-                        }
-                        menuBinding.imv3.id ->{
-                            it.setOnClickListener { onClickDelete() }
-                        }
+                menuBinding.apply {
+                    homeFragClickListenerItem.apply {
+                        add(imvAnki)
+                        add(imvDeleteFile)
+                        add(imvEditFile)
                     }
-
-
                 }
             }
 
@@ -197,6 +178,9 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 
 
+        homeFragClickListenerItem.onEach {
+            it.setOnClickListener(this)
+        }
 
         return root
 
@@ -206,11 +190,22 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            binding.topMenuBarFrame.imv1.id ->{
-                libraryViewModel.onClickLeftIcon(recyclerView)
-            }
+        binding.apply {
+            topMenuBarFrame.apply {
+                when(v){
+                    imvFileStatusOrClose -> libraryViewModel.onClickImvFileStatusOrClose(recyclerView)
+                    this.imvSwitchMenu -> libraryViewModel.onClickimvSwitchMenu()
+                }
 
+                menuBinding.apply {
+                    when(v){
+                        this.imvAnki ->{}
+                        this.imvEditFile -> {
+                           createFileViewModel.onClickImvEditFile()
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -247,25 +242,25 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                 playTogether(a)
                 start()
             }
-            allChildrenMutableList.onEach {
-                when(it.id){
-                    rvBinding.btnDelete.id,rvBinding.btnEditWhole.id -> return
-                    else -> {
-                        it.setOnClickListener(null)
-                        it.setOnClickListener {
-                            mutableListOf<View>(rvBinding.btnDelete,rvBinding.btnEditWhole).onEach {
-                                animateWidth(it,it.layoutParams.width,0,300).start()
-                                allChildrenMutableList.onEach {
-                                    it.setOnClickListener(this)
-                                }
-                            }
-
-                        }
-
-                    }
-
-                }
-            }
+//            homeFragClickListenerItem.onEach {
+//                when(it.id){
+//                    rvBinding.btnDelete.id,rvBinding.btnEditWhole.id -> return
+//                    else -> {
+//                        it.setOnClickListener(null)
+//                        it.setOnClickListener {
+//                            mutableListOf<View>(rvBinding.btnDelete,rvBinding.btnEditWhole).onEach {
+//                                animateWidth(it,it.layoutParams.width,0,300).start()
+//                                allChildrenMutableList.onEach {
+//                                    it.setOnClickListener(this)
+//                                }
+//                            }
+//
+//                        }
+//
+//                    }
+//
+//                }
+//            }
             libraryViewModel.setLeftSwipedItemExists(true)
             fileBinding.btnAdd.visibility = View.GONE
 

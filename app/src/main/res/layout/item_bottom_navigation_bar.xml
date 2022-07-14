@@ -55,7 +55,7 @@
         android:gravity="center">
         <ImageView
             android:contentDescription="@string/title_tab_create"
-            android:id="@+id/imv_2"
+            android:id="@+id/imv_edit_file"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

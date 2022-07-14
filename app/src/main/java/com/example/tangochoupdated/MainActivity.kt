@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
 
         bnvBinding = binding.bnvBinding
-        bnvBinding.imv2.setImageDrawable(getDrawable(R.drawable.icon_add_middlesize))
+        bnvBinding.imvEditFile.setImageDrawable(getDrawable(R.drawable.icon_add_middlesize))
 
 
 
@@ -256,6 +256,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
+            createFileviewModel.txvFileTitleText.observe(this@MainActivity){
+                edtCreatefile.text = it
+            }
 
 //
 
@@ -305,8 +308,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             layout2.setOnClickListener {
-                createFileviewModel.setAddFileActive(true)
-                createFileviewModel.setMode(CreateFileViewModel.Mode.Create)
+                createFileviewModel.onClickImvAddBnv()
+
             }
             layout3.apply {
                 baseviewModel.bnvLayout3View.observe(this@MainActivity){

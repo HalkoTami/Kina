@@ -11,34 +11,34 @@
 
     <ImageView
 
-        android:id="@+id/imv_1"
+        android:id="@+id/imv_anki"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:src="@drawable/icon_anki_small"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imv_2"
+        app:layout_constraintEnd_toStartOf="@id/imv_edit_file"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imv_2"
+        android:id="@+id/imv_edit_file"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:src="@drawable/icon_edit_cover"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imv_3"
-        app:layout_constraintStart_toEndOf="@id/imv_1"
+        app:layout_constraintEnd_toStartOf="@id/imv_delete_file"
+        app:layout_constraintStart_toEndOf="@id/imv_anki"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imv_3"
+        android:id="@+id/imv_delete_file"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:src="@drawable/icon_delete_cover"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imv_2"
+        app:layout_constraintStart_toEndOf="@id/imv_edit_file"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

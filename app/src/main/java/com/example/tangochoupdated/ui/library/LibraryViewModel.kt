@@ -47,6 +47,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 
 
+//    DBアクセス関連
 
 
     //    child Files from DB
@@ -145,6 +146,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 
+
     //    RVList
     private val _myFinalList= MutableLiveData<List<LibraryRV>>()
     val myFinalList :LiveData<List<LibraryRV>> = _myFinalList
@@ -177,11 +179,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-    fun onclickSelectableItem(item: LibraryRV,boolean: Boolean) {
-        if (boolean==true)  addToSelectedItem(item) else removeFromSelectedItem(item)
 
-
-    }
     fun makeItemLeftSwiped(){
 //        val a = mutableListOf<LibraryRV>()
 //        _myFinalList.value?.onEach { if(it.position == position){
@@ -271,7 +269,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
                 setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
             }
             false -> {
-                setMLDTopText("${_myParentItem.value!!.file!!.fileId}")
+                setMLDTopText("${_myParentItem.value!!.file!!.title}")
                 setTopBarLeftIMVDrawableId(
                     when(_myParentItem.value!!.file!!.fileStatus){
                         FileStatus.FOLDER ->R.drawable.icon_file
@@ -390,19 +388,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     val topBarLeftIMVDrawableId:LiveData<Int> = _topBarLeftIMVDrawableId
 
-    //    onCLick Left Icon done
-    fun onClickLeftIcon(recyclerView: RecyclerView){
-        when(_multipleSelectMode.value){
-            true -> {
-                makeRVUnSelectable(recyclerView)
 
-                setMultipleSelectMode(false)
-                setHomeStatus(_homeStatus.value!!)
-
-            }
-            else -> return
-        }
-    }
 
 //    top right imv
     private val _topBarRightIMVDrawableId = MutableLiveData<Int>()
@@ -421,15 +407,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 //    top right IMV click
 
-    fun topBarRightIMVOnClick(){
-        when (_menuOpened.value) {
-            true -> setMenuStatus(false)
-            false -> setMenuStatus(true)
-            else -> throw IllegalArgumentException("is null")
 
-        }
-
-    }
 
 //    file is  empty or not done
     private val _fileEmptyStatus =  MutableLiveData<Boolean>()
@@ -474,10 +452,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _menuOpened.apply {
             value = boolean
         }
-    }
-    fun changeMenuStatus(){
-        val before = _menuOpened.value!!
-        setMenuStatus(!before)
     }
 
     val menuViewMode:LiveData<Boolean> = _menuOpened
@@ -596,7 +570,38 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 
 
-//    clickEvents
+//    onclickEvents
+
+    fun onClickImvFileStatusOrClose(recyclerView: RecyclerView){
+        when(_multipleSelectMode.value){
+            true -> {
+                makeRVUnSelectable(recyclerView)
+
+                setMultipleSelectMode(false)
+                setHomeStatus(_homeStatus.value!!)
+
+            }
+            else -> return
+        }
+    }
+    fun onClickimvSwitchMenu(){
+        if(_homeStatus.value != true  ) {
+            when (_menuOpened.value) {
+                true -> setMenuStatus(false)
+                false -> setMenuStatus(true)
+                else -> throw IllegalArgumentException("is null")
+
+            }
+        }
+
+
+    }
+    fun onclickSelectableItem(item: LibraryRV,boolean: Boolean) {
+        if (boolean==true)  addToSelectedItem(item) else removeFromSelectedItem(item)
+
+
+    }
+
 
     fun onDelete(){
         when(_multipleSelectMode.value){

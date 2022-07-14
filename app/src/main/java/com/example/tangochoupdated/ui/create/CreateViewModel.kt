@@ -1,5 +1,7 @@
 package com.example.tangochoupdated.ui.planner
 
+import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.widget.Toast
 import androidx.lifecycle.*
 import com.example.tangochoupdated.R
@@ -37,7 +39,11 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
             }
             else -> {
-                setTxvLeftTop("${file.title.toString()} >")
+                when(_mode.value){
+                    Mode.Create -> setTxvLeftTop("${file.title.toString()} >")
+                    Mode.Edit -> setTxvLeftTop("")
+                }
+
 
 
             }
@@ -75,6 +81,21 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _mode = MutableLiveData<Mode>()
     fun setMode(mode: Mode){
         _mode.value = mode
+        when(mode){
+            Mode.Edit -> {
+                setDrawFileType(
+                    when(_parentFile.value!!.fileStatus){
+                        FileStatus.FOLDER -> R.drawable.icon_file_1
+                        FileStatus.TANGO_CHO_COVER -> R.drawable.icon_library_plane
+                        else -> throw IllegalArgumentException("editing FileStatus not correct")
+                    })
+                setTxvHint("タイトルを編集する")
+                setEdtHint("")
+                setTxvLeftTop("")
+                setTxvFileTitleText(SpannableStringBuilder(_parentFile.value!!.title))
+                setFileColor(parentFile.value!!.colorStatus)
+            }
+        }
     }
 
 
@@ -95,7 +116,14 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             return
         } else{
             _addFileActive.value = boolean
-            setBottomMenuVisible(true)
+            if(boolean){
+                when(_mode.value){
+                    Mode.Create -> setBottomMenuVisible(true)
+                    Mode.Edit -> setEditFilePopUpVisible(true)
+                }
+            }
+
+
         }
 
     }
@@ -122,6 +150,9 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         } else return false
 
     }
+
+
+
 
 
     fun onClickAddTab(){
@@ -185,6 +216,12 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     private fun setTxvHint(string: String){
         _txvHint.value = string
+    }
+    private val _txvFileTitleText = MutableLiveData<Editable>()
+    val txvFileTitleText:LiveData<Editable> = _txvFileTitleText
+
+    private fun setTxvFileTitleText(editable: Editable){
+        _txvFileTitleText.value = editable
     }
 
     private val _drawFileType = MutableLiveData<Int>()
@@ -250,26 +287,50 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun onClickFinish(title:String){
         val parentFile = _parentFile.value
-        if(_mode.value == Mode.Create){
-            val newFile = File(
-                fileId = 0,
-                title = title,
-                fileStatus = _creatingFileType.value!!,
-                colorStatus = _fileColor.value!!,
-                childFlashCardCoversAmount = 0,
-                childCardsAmount = 0,
-                childFoldersAmount = 0,
-                hasChild = false,
-                deleted = false,
-                hasParent = when(_parentFile.value){
-                    null -> false
-                    else -> true
-                },
-                libOrder = 0,
-                parentFileId = _parentFile.value?.fileId
-            )
-            insertFile(newFile)
-            fileInserted = true
+
+        when(_mode.value ){
+            Mode.Create -> {
+                val newFile = File(
+                    fileId = 0,
+                    title = title,
+                    fileStatus = _creatingFileType.value!!,
+                    colorStatus = _fileColor.value!!,
+                    childFlashCardCoversAmount = 0,
+                    childCardsAmount = 0,
+                    childFoldersAmount = 0,
+                    hasChild = false,
+                    deleted = false,
+                    hasParent = when(_parentFile.value){
+                        null -> false
+                        else -> true
+                    },
+                    libOrder = 0,
+                    parentFileId = _parentFile.value?.fileId
+                )
+                insertFile(newFile)
+                fileInserted = true
+            }
+            Mode.Edit -> {
+                val upDatingFile = File(
+                    fileId = parentFile!!.fileId,
+                    title = title,
+                    fileStatus = parentFile.fileStatus,
+                    colorStatus = _fileColor.value!!,
+                    childFlashCardCoversAmount = parentFile.childFlashCardCoversAmount,
+                    childCardsAmount = parentFile.childCardsAmount,
+                    childFoldersAmount = parentFile.childFoldersAmount,
+                    hasChild = parentFile.hasChild,
+                    deleted = false,
+                    hasParent = parentFile.hasParent,
+                    libOrder = parentFile.libOrder,
+                    parentFileId = parentFile.parentFileId
+                )
+                if(parentFile == upDatingFile) return
+                else upDateFile(upDatingFile)
+
+            }
+
+
 
 
 
@@ -297,8 +358,17 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     }
 
+//    onclick Events
+    fun onClickImvEditFile(){
+        setMode(Mode.Edit)
+        setAddFileActive(true)
 
+    }
 
+    fun onClickImvAddBnv(){
+        setMode(Mode.Create)
+        setAddFileActive(true)
+    }
     private fun insertFile(file: File){
         viewModelScope.launch {
             repository.insert(file)
