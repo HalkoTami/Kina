@@ -2,7 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/create_card_nav">
+    android:id="@+id/create_card_nav"
+    app:startDestination="@id/navigation_stringCard">
     <fragment
         android:id="@+id/navigation_stringCard"
         tools:layout="@layout/create_card_string"/>
