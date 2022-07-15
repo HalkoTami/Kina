@@ -38,6 +38,7 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.room.enumclass.TabStatus
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
+import com.example.tangochoupdated.ui.create.CreateCardFragmentDirections
 import com.example.tangochoupdated.ui.library.HomeFragmentArgs
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 import com.example.tangochoupdated.ui.library.LibraryViewModel
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         val toLibrary = HomeFragmentDirections.toLib()
 
         val toAnki = AnkiFragmentDirections.toAnki()
+        val toCreateCard = CreateCardFragmentDirections.toCreateCard()
 
         binding.createFileBinding.apply {
             popupAddFile.visibility = GONE
@@ -115,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                     navCon.navigate(toLibrary)
 
                 }
-                Tab.TabAnki -> navCon.navigate(toAnki)
+                Tab.TabAnki -> navCon.navigate(R.id.action_to_create_card_nav)
 
             }
 
@@ -159,7 +161,10 @@ class MainActivity : AppCompatActivity() {
             }
             imvnewfolder.setOnClickListener {
             createFileviewModel.onClickCreateFolder()
-        }
+            }
+            imvnewCard.setOnClickListener {
+                navCon.navigate(toCreateCard)
+            }
         }
 
         //    add new file pop up -- edit file
@@ -220,17 +225,11 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-            lineLayColorPalet.children.iterator().forEachRemaining {
-                it.setOnClickListener{
-                    when(it.id){
-                        imvColBlue.id -> createFileviewModel.setFileColor(ColorStatus.BLUE)
-                        imvColGray.id -> createFileviewModel.setFileColor(ColorStatus.GRAY)
-                        imvColRed.id -> createFileviewModel.setFileColor(ColorStatus.RED)
-                        imvColYellow.id -> createFileviewModel.setFileColor(ColorStatus.YELLOW)
-                    }
-                }
-
-
+            binding.createFileBinding.bindingCreateFile.colPaletBinding.apply {
+                imvColBlue.setOnClickListener{createFileviewModel.setFileColor(ColorStatus.BLUE)}
+                imvColGray.setOnClickListener{ createFileviewModel.setFileColor(ColorStatus.GRAY)}
+                imvColRed.setOnClickListener{createFileviewModel.setFileColor(ColorStatus.RED)}
+                imvColYellow.setOnClickListener { createFileviewModel.setFileColor(ColorStatus.YELLOW) }
             }
 
 
@@ -342,24 +341,27 @@ class MainActivity : AppCompatActivity() {
         val stroke = getDrawable(R.drawable.circle_stroke)
         val imageView:ImageView
         val col:Int
-        when(colorStatus) {
-            ColorStatus.GRAY -> {
-                col = getColor(R.color.gray)
-                imageView = binding.createFileBinding.bindingCreateFile.imvColGray
-            }
-            ColorStatus.BLUE -> {
-                col = getColor(R.color.blue)
-                imageView = binding.createFileBinding.bindingCreateFile.imvColBlue
-            }
-            ColorStatus.YELLOW -> {
-                col = getColor(R.color.yellow)
-                imageView = binding.createFileBinding.bindingCreateFile.imvColYellow
-            }
-            ColorStatus.RED -> {
-                col = getColor(R.color.red)
-                imageView = binding.createFileBinding.bindingCreateFile.imvColRed
+        binding.createFileBinding.bindingCreateFile.colPaletBinding.apply {
+            when(colorStatus) {
+                ColorStatus.GRAY -> {
+                    col = getColor(R.color.gray)
+                    imageView = this.imvColGray
+                }
+                ColorStatus.BLUE -> {
+                    col = getColor(R.color.blue)
+                    imageView = this.imvColBlue
+                }
+                ColorStatus.YELLOW -> {
+                    col = getColor(R.color.yellow)
+                    imageView = this.imvColYellow
+                }
+                ColorStatus.RED -> {
+                    col = getColor(R.color.red)
+                    imageView = this.imvColRed
+                }
             }
         }
+
 
         when(selected){
             true -> {

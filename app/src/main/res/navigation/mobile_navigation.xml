@@ -26,7 +26,21 @@
         </action>
     </fragment>
 
+    <action
+        android:id="@+id/action_to_create_card_nav"
+        app:destination="@id/create_card_nav" />
 
+    <fragment
+        android:id="@+id/fragmentCreateCard"
+        android:name="com.example.tangochoupdated.ui.create.CreateCardFragment"
+        tools:layout="@layout/create_card_base"/>
+
+
+
+
+    <action
+        android:id="@+id/to_create_card"
+        app:destination="@+id/fragmentCreateCard"/>
 
 
     <fragment

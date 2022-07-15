@@ -6,6 +6,7 @@
     app:startDestination="@id/navigation_stringCard">
     <fragment
         android:id="@+id/navigation_stringCard"
-        tools:layout="@layout/create_card_string"/>
+        tools:layout="@layout/create_card_string"
+        android:name="com.example.tangochoupdated.ui.create.StringCardFragment"/>
 
 </navigation>

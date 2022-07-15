@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.create.CreateCardFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/lay_create_card_top_bar"
@@ -155,7 +156,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tag_container">
             <androidx.fragment.app.FragmentContainerView
-                app:defaultNavHost="true"
                 app:navGraph="@navigation/create_card_nav"
                 android:id="@+id/create_card_frag_container"
                 android:name="androidx.navigation.fragment.NavHostFragment"
