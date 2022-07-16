@@ -7,6 +7,12 @@
     <fragment
         android:id="@+id/navigation_stringCard"
         tools:layout="@layout/create_card_string"
-        android:name="com.example.tangochoupdated.ui.create.StringCardFragment"/>
+        android:name="com.example.tangochoupdated.ui.create.StringCardFragment">
+
+
+
+
+
+    </fragment>
 
 </navigation>

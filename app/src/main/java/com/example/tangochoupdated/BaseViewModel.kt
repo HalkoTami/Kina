@@ -1,20 +1,12 @@
 package com.example.tangochoupdated
 
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
-import androidx.annotation.ColorRes
-import androidx.compose.runtime.internal.illegalDecoyCallException
-import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.*
 import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.File
-import com.example.tangochoupdated.room.enumclass.ColorStatus
-import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.enumclass.Tab
-import com.example.tangochoupdated.ui.library.LibraryViewModel
-import com.example.tangochoupdated.ui.planner.CreateFileViewModel
-import com.example.tangochoupdated.ui.planner.CreateViewModel
+import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
+import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
+import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 import kotlinx.coroutines.*
 
 
@@ -28,22 +20,15 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
 
 //on create
     fun setOnCreate(){
-
-
-
     activateBnvLayout1View()
     deactivateBnvLayout3View()
     setActiveTab(Tab.TabLibrary)
-
-
-
-
-
     }
-
-
-
-    //    parent File
+    //    parent FlashCardCover
+    val parentFlashCardCoverId = MutableLiveData<Int>()
+    fun setParentFlashCardCover(int:Int){
+        parentFlashCardCoverId.value = int
+    }
 
 
 
@@ -129,6 +114,11 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
             tabName = "")
         setBnvLayout3View(a)
     }
+    private val _action = MutableLiveData<Any>()
+    val action: LiveData<Any> = _action
+    fun setAction(any: Any){
+        _action.value = any
+    }
 
 //    which tab is active
 
@@ -145,8 +135,18 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
         }
 
         when(tab){
-            Tab.TabLibrary -> activateBnvLayout1View()
-            Tab.TabAnki -> activateBnvLayout3View()
+            Tab.TabLibrary ->{
+                activateBnvLayout1View()
+                setAction(HomeFragmentDirections.toLib())
+            }
+            Tab.TabAnki -> {
+                activateBnvLayout3View()
+                setAction(AnkiFragmentDirections.toAnki())
+            }
+            Tab.CreateCard -> {
+                val a = intArrayOf(parentFlashCardCoverId.value!!)
+                setAction(CreateCardFragmentDirections.toCreateCard(a))
+            }
         }
 
 
@@ -186,18 +186,3 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
 
 }
 
-class ViewModelFactory(private val repository: MyRoomRepository) : ViewModelProvider.NewInstanceFactory() {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        val a = when{
-            modelClass.isAssignableFrom(BaseViewModel::class.java)-> BaseViewModel(repository)
-            modelClass.isAssignableFrom(LibraryViewModel::class.java)->LibraryViewModel(repository)
-            modelClass.isAssignableFrom(CreateViewModel::class.java)-> CreateViewModel(repository)
-            modelClass.isAssignableFrom(CreateFileViewModel::class.java)->CreateFileViewModel(repository)
-            else ->  illegalDecoyCallException("unknown ViewModel class")
-        }
-        return a as T
-
-    }
-}

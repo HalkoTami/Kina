@@ -2,32 +2,19 @@ package com.example.tangochoupdated
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.Group
-import androidx.constraintlayout.helper.widget.Layer
 import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.view.children
 import androidx.core.view.setPadding
-import androidx.fragment.app.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navArgs
@@ -36,16 +23,11 @@ import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.Tab
-import com.example.tangochoupdated.room.enumclass.TabStatus
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
-import com.example.tangochoupdated.ui.create.CreateCardFragmentDirections
+import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
 import com.example.tangochoupdated.ui.library.HomeFragmentArgs
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
-import com.example.tangochoupdated.ui.library.LibraryViewModel
-import com.example.tangochoupdated.ui.planner.CreateFileViewModel
-
-
-import kotlinx.coroutines.delay
+import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var factory:ViewModelFactory
 
     lateinit var baseviewModel: BaseViewModel
-    lateinit var createFileviewModel:CreateFileViewModel
+    lateinit var createFileviewModel: CreateFileViewModel
 
     var filePopUpVisible = false
 
@@ -93,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         val toLibrary = HomeFragmentDirections.toLib()
 
         val toAnki = AnkiFragmentDirections.toAnki()
-        val toCreateCard = CreateCardFragmentDirections.toCreateCard()
+
 
         binding.createFileBinding.apply {
             popupAddFile.visibility = GONE
@@ -110,14 +92,17 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        baseviewModel.activeTab.observe(this){
+        baseviewModel.apply {
+            activeTab.observe(this@MainActivity){
 
-            when(it){
-                Tab.TabLibrary -> {
-                    navCon.navigate(toLibrary)
+                when(it){
+                    Tab.TabLibrary -> {
+                        navCon.navigate(toLibrary)
+
+                    }
+                    Tab.TabAnki -> navCon.navigate(toAnki)
 
                 }
-                Tab.TabAnki -> navCon.navigate(R.id.action_to_create_card_nav)
 
             }
 
@@ -163,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             createFileviewModel.onClickCreateFolder()
             }
             imvnewCard.setOnClickListener {
-                navCon.navigate(toCreateCard)
+
             }
         }
 

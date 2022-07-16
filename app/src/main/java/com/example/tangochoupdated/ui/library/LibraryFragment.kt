@@ -21,11 +21,11 @@ import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
 import com.example.tangochoupdated.databinding.ItemCoverFileBinding
-import com.example.tangochoupdated.databinding.MenuLayoutBinding
+import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
-import com.example.tangochoupdated.ui.planner.CreateFileViewModel
+import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 
 class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     private val args: HomeFragmentArgs by navArgs()
@@ -100,6 +100,9 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it, myId == null)
                 createFileViewModel.setParentFile(it)
+                if(it?.fileStatus == FileStatus.TANGO_CHO_COVER ){
+                    sharedViewModel.setParentFlashCardCover(it.fileId)
+                }
             }
             pAndGP(myId).observe(viewLifecycleOwner){
                 setPAndG(it)

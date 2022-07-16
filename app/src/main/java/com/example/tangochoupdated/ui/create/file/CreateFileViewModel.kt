@@ -1,8 +1,7 @@
-package com.example.tangochoupdated.ui.planner
+package com.example.tangochoupdated.ui.create.file
 
 import android.text.Editable
 import android.text.SpannableStringBuilder
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.room.MyRoomRepository
@@ -12,13 +11,6 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import kotlinx.coroutines.launch
 
-class CreateViewModel(val repository: MyRoomRepository) : ViewModel() {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is planner Fragment"
-    }
-    val text: LiveData<String> = _text
-}
 class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun onCreate(){

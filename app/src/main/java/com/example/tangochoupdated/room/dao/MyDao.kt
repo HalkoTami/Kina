@@ -8,7 +8,10 @@ import kotlinx.coroutines.flow.Flow
 abstract class MyDao{
 
     @Dao
-    abstract class CardDao(): BaseDao<Card>
+    abstract class CardDao(): BaseDao<Card>{
+        @Query("select * from tbl_card where not card_deleted AND id = :cardId ")
+        abstract fun getCardByCardId(cardId:Int?): Flow<Card>
+    }
     @Dao
     abstract class ActivityDataDao(): BaseDao<ActivityData>
     @Dao

@@ -32,8 +32,18 @@
 
     <fragment
         android:id="@+id/fragmentCreateCard"
-        android:name="com.example.tangochoupdated.ui.create.CreateCardFragment"
-        tools:layout="@layout/create_card_base"/>
+        android:name="com.example.tangochoupdated.ui.create.card.CreateCardFragment"
+        tools:layout="@layout/create_card_base">
+
+        <argument
+            android:name="parentFlashCardCoverId"
+            app:argType="integer[]" />
+        <argument
+            android:name="cardId"
+            app:argType="integer[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
 
 
