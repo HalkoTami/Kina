@@ -2,6 +2,8 @@ package com.example.tangochoupdated
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.View
@@ -16,6 +18,8 @@ import androidx.core.animation.doOnEnd
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavAction
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navArgs
 
@@ -29,7 +33,7 @@ import com.example.tangochoupdated.ui.library.HomeFragmentArgs
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
     lateinit var factory:ViewModelFactory
@@ -72,9 +76,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
         val navCon = navHostFragment.navController
         navArgs<HomeFragmentArgs>()
-        val toLibrary = HomeFragmentDirections.toLib()
 
-        val toAnki = AnkiFragmentDirections.toAnki()
 
 
         binding.createFileBinding.apply {
@@ -93,16 +95,8 @@ class MainActivity : AppCompatActivity() {
 
 
         baseviewModel.apply {
-            activeTab.observe(this@MainActivity){
-
-                when(it){
-                    Tab.TabLibrary -> {
-                        navCon.navigate(toLibrary)
-
-                    }
-                    Tab.TabAnki -> navCon.navigate(toAnki)
-
-                }
+            action.observe(this@MainActivity){
+                navCon.navigate(it)
 
             }
 
@@ -112,6 +106,14 @@ class MainActivity : AppCompatActivity() {
 
 
 //    add new file pop up -- bottom menu
+        createFileviewModel.bottomMenuClickable.observe(this){
+            binding.createFileBinding.bindingAddMenu.apply {
+                this.imvnewfolder.visibility = if(!it.createFile)  GONE else VISIBLE
+                this.imvnewTangocho.visibility =if (!it.createFlashCardCover)  GONE else VISIBLE
+                this.imvnewCard.visibility= if(!it.createCard) GONE else VISIBLE
+
+            }
+        }
 
 
         createFileviewModel.bottomMenuVisible.observe(this){
@@ -148,6 +150,8 @@ class MainActivity : AppCompatActivity() {
             createFileviewModel.onClickCreateFolder()
             }
             imvnewCard.setOnClickListener {
+                createFileviewModel.setAddFileActive(false)
+                baseviewModel.onClickAddNewCard()
 
             }
         }
@@ -275,8 +279,15 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+
 //        bottom navigation bar
+//
+        baseviewModel.bnvVisibility.observe(this@MainActivity){
+                binding.frameBnv.visibility = if(it == true) VISIBLE else GONE
+            }
         bnvBinding.apply {
+
+
             layout1.apply {
                 baseviewModel.bnvLayout1View.observe(this@MainActivity){
                     bnvImv1.setImageDrawable(getDrawable(it.drawableId))
@@ -314,6 +325,11 @@ class MainActivity : AppCompatActivity() {
 
 
 //   reset
+
+
+    }
+
+    override fun onClick(v: View?) {
 
 
     }

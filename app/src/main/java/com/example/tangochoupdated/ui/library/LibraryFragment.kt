@@ -22,6 +22,7 @@ import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
 import com.example.tangochoupdated.databinding.ItemCoverFileBinding
 import com.example.tangochoupdated.room.enumclass.FileStatus
+import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
@@ -65,6 +66,8 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        sharedViewModel.setActiveTab(Tab.TabLibrary)
+
 
         val myId: Int? = args.parentItemId?.single()
 
@@ -94,14 +97,15 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 
             }
-//            childCardsFromDB(myId).observe(viewLifecycleOwner){
-//                setChildCardsFromDB(it,myId ==null)
-//            }
+            childCardsFromDB(myId).observe(viewLifecycleOwner){
+                setChildCardsFromDB(it,myId ==null)
+            }
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it, myId == null)
                 createFileViewModel.setParentFile(it)
                 if(it?.fileStatus == FileStatus.TANGO_CHO_COVER ){
                     sharedViewModel.setParentFlashCardCover(it.fileId)
+                    Toast.makeText(requireActivity(),"${it.fileId}",Toast.LENGTH_SHORT).show()
                 }
             }
             pAndGP(myId).observe(viewLifecycleOwner){

@@ -1,6 +1,8 @@
 package com.example.tangochoupdated
 
 import androidx.lifecycle.*
+import androidx.navigation.NavAction
+import androidx.navigation.NavDirections
 import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.enumclass.Tab
@@ -23,6 +25,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     activateBnvLayout1View()
     deactivateBnvLayout3View()
     setActiveTab(Tab.TabLibrary)
+    setBnvVisibility(true)
     }
     //    parent FlashCardCover
     val parentFlashCardCoverId = MutableLiveData<Int>()
@@ -31,44 +34,22 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     }
 
 
+    private val _bnvVisibility = MutableLiveData<Boolean>()
+    val bnvVisibility:LiveData<Boolean> = _bnvVisibility
+    private fun setBnvVisibility(boolean: Boolean){
+        val previous = _bnvVisibility.value
+        if (boolean == previous) return else {
+            _bnvVisibility.value = boolean
+        }
 
-
-
-
-
-//    bottom menu Visibility
-
-
-//    popUpFile data
-
-// txv left top parent file title
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    onclick add
-
-
-
-
-
+    }
 
 //    bnv each View Change
     inner class BnvLayout(
         val drawableId:Int,
         val padding:Int,
         val tabNameVisibility:Boolean,
-        val tabName:String
+        val tabName:String,
         )
     private val _bnvLayout1View = MutableLiveData<BnvLayout>()
     val bnvLayout1View:LiveData<BnvLayout> = _bnvLayout1View
@@ -114,40 +95,48 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
             tabName = "")
         setBnvLayout3View(a)
     }
-    private val _action = MutableLiveData<Any>()
-    val action: LiveData<Any> = _action
-    fun setAction(any: Any){
-        _action.value = any
+    private val _action = MutableLiveData<NavDirections>()
+    val action: LiveData<NavDirections> = _action
+    fun setAction(navDirections: NavDirections){
+        _action.value = navDirections
     }
 
 //    which tab is active
 
     private val _activeTab = MutableLiveData<Tab>()
     val activeTab:LiveData<Tab> = _activeTab
-    private fun setActiveTab (tab:Tab){
+    fun setActiveTab (tab:Tab){
+
         val previousTab = _activeTab.value
-        _activeTab.apply {
-            value = tab
-        }
-        when(previousTab){
-            Tab.TabLibrary -> deactivateBnvLayout1View()
-            Tab.TabAnki -> deactivateBnvLayout3View()
+        if(tab == previousTab) return else{
+            _activeTab.apply {
+                value = tab
+            }
+            when(previousTab){
+                Tab.TabLibrary -> deactivateBnvLayout1View()
+                Tab.TabAnki -> deactivateBnvLayout3View()
+            }
+
+            when(tab){
+                Tab.TabLibrary ->{
+                    activateBnvLayout1View()
+                    setAction(HomeFragmentDirections.toLib())
+                    setBnvVisibility(true)
+                }
+                Tab.TabAnki -> {
+                    activateBnvLayout3View()
+                    setAction(AnkiFragmentDirections.toAnki())
+                    setBnvVisibility(true)
+                }
+                Tab.CreateCard -> {
+                    val a = intArrayOf(parentFlashCardCoverId.value!!)
+                    val b = CreateCardFragmentDirections.toCreateCard(a)
+                    setAction(b)
+                    setBnvVisibility(false)
+                }
+            }
         }
 
-        when(tab){
-            Tab.TabLibrary ->{
-                activateBnvLayout1View()
-                setAction(HomeFragmentDirections.toLib())
-            }
-            Tab.TabAnki -> {
-                activateBnvLayout3View()
-                setAction(AnkiFragmentDirections.toAnki())
-            }
-            Tab.CreateCard -> {
-                val a = intArrayOf(parentFlashCardCoverId.value!!)
-                setAction(CreateCardFragmentDirections.toCreateCard(a))
-            }
-        }
 
 
 
@@ -169,6 +158,10 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
                 setActiveTab(Tab.TabAnki)
             }
         }
+    }
+
+    fun onClickAddNewCard(){
+        setActiveTab(Tab.CreateCard)
     }
 
 

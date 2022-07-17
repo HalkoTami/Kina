@@ -46,6 +46,37 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     val _pAndgGP = MutableLiveData<List<File>>()
     fun setPAndG(list: List<File>?){
         _pAndgGP.value = list
+        val file:Boolean
+        val flashCardCover:Boolean
+        val card:Boolean
+
+        when(_parentFile.value?.fileStatus){
+            null, FileStatus.FOLDER -> {
+                card = false
+                if(list == null ||list.size < 3 ) {
+                    file = true
+                    flashCardCover = true
+                } else {
+                    file = false
+                    flashCardCover = list.size < 4
+                }
+            }
+            FileStatus.TANGO_CHO_COVER -> {
+                file = false
+                flashCardCover = false
+                card = true
+            }
+            else ->{
+                file = false
+                flashCardCover = false
+                card = false
+            }
+
+        }
+        setBottomMenuClickable(
+            BottomMenuClickable(file,flashCardCover,card
+            )
+        )
     }
 
     private val _parentFileStock = MutableLiveData<List<File>>()
@@ -119,6 +150,22 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         }
 
     }
+
+//    add Bottom Menu
+    inner class BottomMenuClickable(
+        val createFile:Boolean,
+        val createFlashCardCover: Boolean,
+        val createCard: Boolean
+    )
+    private val _bottomMenuClickable = MutableLiveData<BottomMenuClickable>()
+    val bottomMenuClickable: LiveData<BottomMenuClickable> = _bottomMenuClickable
+
+    fun setBottomMenuClickable(bottomMenuClickable: BottomMenuClickable){
+        _bottomMenuClickable.value = bottomMenuClickable
+    }
+
+
+
     private val _bottomMenuVisible = MutableLiveData<Boolean>()
     val bottomMenuVisible:LiveData<Boolean> = _bottomMenuVisible
     private fun setBottomMenuVisible(boolean: Boolean){
@@ -154,13 +201,19 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
     fun onClickCreateFolder(){
+        if(_bottomMenuClickable.value!!.createFile){
+            setEditFilePopUpVisible(true)
+            setCreatingFileType(FileStatus.FOLDER)
+        }
 
-        setEditFilePopUpVisible(true)
-        setCreatingFileType(FileStatus.FOLDER)
+
     }
     fun onCLickCreateFlashCardCover(){
-        setEditFilePopUpVisible(true)
-        setCreatingFileType(FileStatus.TANGO_CHO_COVER)
+        if(_bottomMenuClickable.value!!.createFlashCardCover){
+            setEditFilePopUpVisible(true)
+            setCreatingFileType(FileStatus.TANGO_CHO_COVER)
+        }
+
     }
 
     //    edit file popup Visibility

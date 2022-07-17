@@ -93,20 +93,19 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
         when(home){
             true -> return
-            false ->{val a = mutableListOf<LibraryRV>()
-                a.addAll(childrenStock)
-                clearChildrenStock()
-                list!!.onEach {
-                    a.add(convertCardToLibraryRV(it))
+            false ->{
+                if(_myParentItem.value?.file?.fileStatus == FileStatus.TANGO_CHO_COVER){
+                    val a = mutableListOf<LibraryRV>()
+                    list!!.onEach {
+                        a.add(convertCardToLibraryRV(it))
+                    }
+
+                    if(a.size != 0){
+                        setFileEmptyStatus(false,false)
+                    } else setFileEmptyStatus(true,false)
+                    setValueToFinalList(a)
+
                 }
-
-                if(a.size != 0){
-                    childrenStock.addAll(a.distinctBy { it.card?.id })
-
-
-                    setFileEmptyStatus(false,false)
-                } else setFileEmptyStatus(true,false)
-                setValueToFinalList(childrenStock)
 
             }
         }

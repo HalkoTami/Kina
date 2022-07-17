@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.example.tangochoupdated.BaseViewModel
 import com.example.tangochoupdated.RoomApplication
 import com.example.tangochoupdated.ViewModelFactory
 import com.example.tangochoupdated.databinding.*
@@ -33,11 +36,13 @@ class CreateCardFragment: Fragment() {
         _binding = CreateCardBaseBinding.inflate(inflater, container, false)
 
         createCardViewModel.apply{
-            getParentCard(args.cardId.single()).observe(requireActivity()){
+            getParentCard(args.cardId?.single()).observe(requireActivity()){
                 setParentCard(it)
+
             }
             getParentFlashCardCover(args.parentFlashCardCoverId.single()).observe(requireActivity()){
                 setParentFlashCardCover(it)
+                Toast.makeText(context, "${it.title} ", Toast.LENGTH_SHORT).show()
             }
 
 
