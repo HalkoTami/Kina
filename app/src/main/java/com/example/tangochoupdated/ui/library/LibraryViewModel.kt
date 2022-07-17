@@ -5,6 +5,7 @@ import android.widget.ImageView
 import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.core.view.children
 import androidx.lifecycle.*
+import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
@@ -339,16 +340,16 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
 
     }
-    fun changeItemSelected(item: LibraryRV,boolean: Boolean){
-        val a = mutableListOf<LibraryRV>()
-        a.addAll(_myFinalList.value!!)
-        a.remove(item)
-        item.selected = boolean
-        a.add(item)
-        setValueToFinalList(a)
-
-
-    }
+//    fun changeItemSelected(item: LibraryRV,boolean: Boolean){
+//        val a = mutableListOf<LibraryRV>()
+//        a.addAll(_myFinalList.value!!)
+//        a.remove(item)
+//        item.selected = boolean
+//        a.add(item)
+//        setValueToFinalList(a)
+//
+//
+//    }
 
     fun removeFromSelectedItem(item: LibraryRV){
         val a = mutableListOf<LibraryRV>()
@@ -536,11 +537,16 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 
+    val navCon= MutableLiveData<NavController>()
+    fun setNavCon(navController: NavController){
+        navCon.value = navController
+    }
 //    navigation
 private val _action = MutableLiveData<NavDirections>()
     val action: LiveData<NavDirections> = _action
     fun setAction(navDirections: NavDirections){
         _action.value = navDirections
+        navCon.value!!.navigate(navDirections)
     }
 
 
@@ -570,28 +576,17 @@ private val _action = MutableLiveData<NavDirections>()
 
 
     }
-    fun changeItemSelected(item: LibraryRV, boolean: Boolean,rvBinding: ItemCoverCardBaseBinding) {
+    fun changeItemSelected(item: LibraryRV, boolean: Boolean,btnSelect: ImageView) {
         if (boolean)  {
-            rvBinding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
-            rvBinding.btnSelect.tag = HomeFragment.MyState.Selected
-            libraryViewModel.onclickSelectableItem(item,true)
+            btnSelect.isSelected = true
+            btnSelect.tag = HomeFragment.MyState.Selected
+            addToSelectedItem(item)
 
         } else {
             removeFromSelectedItem(item)
-            addToSelectedItem(item)
-            rvBinding.btnSelect.setImageDrawable(requireContext().getDrawable(R.drawable.circle_select))
-            rvBinding.btnSelect.tag = HomeFragment.MyState.Unselected
-            libraryViewModel.onclickSelectableItem(item,false)
-        }
-        if(rvBinding.btnSelect.visibility == View.VISIBLE){
-            when(rvBinding.btnSelect.tag){
-                HomeFragment.MyState.Selected -> {
-                    onUnselect(item,rvBinding)
-                }
-                else -> {
-                    onSelect(item,rvBinding)
-                }
-            }
+
+            btnSelect.isSelected = false
+            btnSelect.tag = HomeFragment.MyState.Unselected
         }
 
 
@@ -599,14 +594,15 @@ private val _action = MutableLiveData<NavDirections>()
 
     fun onClickRVItem(rvBinding: ItemCoverCardBaseBinding,item: LibraryRV){
         if(_multipleSelectMode.value == true){
-            when(rvBinding.btnSelect.tag){
-                HomeFragment.MyState.Selected -> {
-
-                }
-                else -> {
-                    onSelect(item,rvBinding)
-                }
+            val select = when(rvBinding.btnSelect.isSelected){
+                true -> false
+                false -> true
             }
+            changeItemSelected(item,select,rvBinding.btnSelect)
+        } else{
+            val action = HomeFragmentDirections.libraryToLibrary()
+            action.parentItemId = intArrayOf(item.id)
+            setAction(action)
         }
     }
 

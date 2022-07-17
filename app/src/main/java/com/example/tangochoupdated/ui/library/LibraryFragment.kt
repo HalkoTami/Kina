@@ -30,7 +30,7 @@ import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 
 class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     private val args: HomeFragmentArgs by navArgs()
-    lateinit var navCon:NavController
+    lateinit var mynavCon:NavController
 
     lateinit var recyclerView:RecyclerView
 
@@ -79,7 +79,8 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 
         val owner = requireActivity()
-        navCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
+        mynavCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
+
 
         libraryViewModel.onStart()
 
@@ -87,6 +88,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 //　　　　DBからデータとってくる
         libraryViewModel.apply {
             setParentItemId(myId)
+            setNavCon(mynavCon)
 
 
             fileWithoutParentFromDB().observe(viewLifecycleOwner){
@@ -230,7 +232,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     }
     fun onClickAnki(){
         val action = AnkiFragmentDirections.toAnki()
-        navCon.navigate(action)
+        mynavCon.navigate(action)
     }
     fun onClickEdit(){
 
@@ -283,8 +285,6 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         recyclerView.children.iterator().forEachRemaining {
             it.findViewById<ImageView>(R.id.btn_select).visibility = View.VISIBLE
         }
-        rvBinding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
-        rvBinding.btnSelect.tag = MyState.Selected
 
         Toast.makeText(context, "onclick edit", Toast.LENGTH_SHORT).show()
 
@@ -304,33 +304,36 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     }
 
     override fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
-        if(rvBinding.btnSelect.visibility == View.VISIBLE){
-            when(rvBinding.btnSelect.tag){
-                MyState.Selected -> {
-                    onUnselect(item,rvBinding)
-                }
-                else -> {
-                    onSelect(item,rvBinding)
-                }
-            }
-        } else if(libraryViewModel.checkReset()){
-            recyclerView.children.iterator().forEachRemaining {
-                mutableListOf<View>(it.findViewById(R.id.btn_edit_whole),
-                    it.findViewById(R.id.btn_delete)).onEach {
-                        if(it.visibility == View.VISIBLE){
-                            animateWidth(it,it.layoutParams.width,0,300).start()
-                        }
-                }
-            }
-            libraryViewModel.setLeftSwipedItemExists(false)
-            Toast.makeText(context, "all reset", Toast.LENGTH_SHORT).show()
-            return
-        } else{
-            val action= HomeFragmentDirections.libraryToLibrary()
-            action.parentItemId = intArrayOf(item.id)
-            navCon.navigate(action)
-            Toast.makeText(context, "onClickMain", Toast.LENGTH_SHORT).show()
-        }
+        libraryViewModel.onClickRVItem(rvBinding,item)
+
+//
+//        if(rvBinding.btnSelect.visibility == View.VISIBLE){
+//            when(rvBinding.btnSelect.tag){
+//                MyState.Selected -> {
+//                    onUnselect(item,rvBinding)
+//                }
+//                else -> {
+//                    onSelect(item,rvBinding)
+//                }
+//            }
+//        } else if(libraryViewModel.checkReset()){
+//            recyclerView.children.iterator().forEachRemaining {
+//                mutableListOf<View>(it.findViewById(R.id.btn_edit_whole),
+//                    it.findViewById(R.id.btn_delete)).onEach {
+//                        if(it.visibility == View.VISIBLE){
+//                            animateWidth(it,it.layoutParams.width,0,300).start()
+//                        }
+//                }
+//            }
+//            libraryViewModel.setLeftSwipedItemExists(false)
+//            Toast.makeText(context, "all reset", Toast.LENGTH_SHORT).show()
+//            return
+//        } else{
+//            val action= HomeFragmentDirections.libraryToLibrary()
+//            action.parentItemId = intArrayOf(item.id)
+//            navCon.navigate(action)
+//            Toast.makeText(context, "onClickMain", Toast.LENGTH_SHORT).show()
+//        }
 
 
 
@@ -341,19 +344,19 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
     override fun onSelect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
 
-        rvBinding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
-        rvBinding.btnSelect.tag = MyState.Selected
-        libraryViewModel.onclickSelectableItem(item,true)
-        Toast.makeText(context, "onSelect", Toast.LENGTH_SHORT).show()
+//        rvBinding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
+//        rvBinding.btnSelect.tag = MyState.Selected
+//        libraryViewModel.onclickSelectableItem(item,true)
+//        Toast.makeText(context, "onSelect", Toast.LENGTH_SHORT).show()
     }
 
 
     override fun onUnselect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
 
-        rvBinding.btnSelect.setImageDrawable(requireContext().getDrawable(R.drawable.circle_select))
-        rvBinding.btnSelect.tag = MyState.Unselected
-        libraryViewModel.onclickSelectableItem(item,false)
-        Toast.makeText(context, "onUnselect", Toast.LENGTH_SHORT).show()
+//        rvBinding.btnSelect.setImageDrawable(requireContext().getDrawable(R.drawable.circle_select))
+//        rvBinding.btnSelect.tag = MyState.Unselected
+//        libraryViewModel.onclickSelectableItem(item,false)
+//        Toast.makeText(context, "onUnselect", Toast.LENGTH_SHORT).show()
     }
 
     override fun onScrollLeft(distanceX: Float, rvBinding: ItemCoverCardBaseBinding) {

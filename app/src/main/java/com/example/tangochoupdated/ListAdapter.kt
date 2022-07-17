@@ -160,6 +160,8 @@ val mycontext: Context) :
 
 
 
+
+
 //
             binding.stubMain.setOnTouchListener (object:MyTouchListener(context){
                 override fun onSingleTap() {

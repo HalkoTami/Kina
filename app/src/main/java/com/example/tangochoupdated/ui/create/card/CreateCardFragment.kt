@@ -40,9 +40,9 @@ class CreateCardFragment: Fragment() {
                 setParentCard(it)
 
             }
-            getParentFlashCardCover(args.parentFlashCardCoverId.single()).observe(requireActivity()){
+            getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(requireActivity()){
                 setParentFlashCardCover(it)
-                Toast.makeText(context, "${it.title} ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "${it?.title} ", Toast.LENGTH_SHORT).show()
             }
 
 

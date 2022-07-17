@@ -164,6 +164,15 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
 
     fun onClickAddNewCard(){
         setActiveTab(Tab.CreateCard)
+        val parentFileId:IntArray?
+        val parentCard:IntArray?
+        if(parentFile.value== null || parentFile.value?.fileStatus!=FileStatus.TANGO_CHO_COVER){
+            parentFileId = null
+        } else parentFileId = intArrayOf(parentFile.value!!.fileId)
+        parentCard = null
+
+        val a = CreateCardFragmentDirections.toCreateCard(parentFileId,parentCard)
+        setAction(a)
     }
 
 
