@@ -2,8 +2,6 @@ package com.example.tangochoupdated
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.View

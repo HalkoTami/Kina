@@ -5,6 +5,7 @@ import androidx.navigation.NavAction
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.File
+import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
 import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
@@ -28,9 +29,9 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     setBnvVisibility(true)
     }
     //    parent FlashCardCover
-    val parentFlashCardCoverId = MutableLiveData<Int>()
-    fun setParentFlashCardCover(int:Int){
-        parentFlashCardCoverId.value = int
+    val parentFile = MutableLiveData<File?>()
+    fun setParentFile(file: File?){
+        parentFile.value = file
     }
 
 
@@ -95,6 +96,10 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
             tabName = "")
         setBnvLayout3View(a)
     }
+
+
+//   nav action
+
     private val _action = MutableLiveData<NavDirections>()
     val action: LiveData<NavDirections> = _action
     fun setAction(navDirections: NavDirections){
@@ -120,18 +125,13 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
             when(tab){
                 Tab.TabLibrary ->{
                     activateBnvLayout1View()
-                    setAction(HomeFragmentDirections.toLib())
                     setBnvVisibility(true)
                 }
                 Tab.TabAnki -> {
                     activateBnvLayout3View()
-                    setAction(AnkiFragmentDirections.toAnki())
                     setBnvVisibility(true)
                 }
                 Tab.CreateCard -> {
-                    val a = intArrayOf(parentFlashCardCoverId.value!!)
-                    val b = CreateCardFragmentDirections.toCreateCard(a)
-                    setAction(b)
                     setBnvVisibility(false)
                 }
             }
@@ -146,6 +146,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
             Tab.TabLibrary -> return
             else -> {
                 setActiveTab(Tab.TabLibrary)
+                setAction(HomeFragmentDirections.toLib())
             }
         }
     }
@@ -156,6 +157,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
             Tab.TabAnki -> return
             else -> {
                 setActiveTab(Tab.TabAnki)
+                setAction(AnkiFragmentDirections.toAnki())
             }
         }
     }

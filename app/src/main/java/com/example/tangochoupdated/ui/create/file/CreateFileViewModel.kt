@@ -51,9 +51,15 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         val card:Boolean
 
         when(_parentFile.value?.fileStatus){
-            null, FileStatus.FOLDER -> {
+            null -> {
+                card = true
+                file = true
+                flashCardCover = true
+            }
+            FileStatus.FOLDER -> {
+
                 card = false
-                if(list == null ||list.size < 3 ) {
+                if(list!!.size < 3 ) {
                     file = true
                     flashCardCover = true
                 } else {

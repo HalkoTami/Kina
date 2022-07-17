@@ -5,8 +5,11 @@ import android.widget.ImageView
 import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.core.view.children
 import androidx.lifecycle.*
+import androidx.navigation.NavDirections
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
+import com.example.tangochoupdated.databinding.CreateCardBaseBinding
+import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
 import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.Card
 import com.example.tangochoupdated.room.dataclass.CardAndTags
@@ -29,9 +32,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         setSelectedItem(mutableListOf())
     }
 
-
     //    parentItemId
-
     private val _parentItemId = MutableLiveData<Int>()
     fun setParentItemId (id:Int?){
         _parentItemId.value = id
@@ -45,11 +46,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     }
 
-
-
 //    DBアクセス関連
-
-
     //    child Files from DB
     fun childFilesFromDB(int: Int?):LiveData<List<File>> = this.repository.mygetFileDataByParentFileId(int).asLiveData()
     private val _childFilesFromDB = MutableLiveData<List<File>>()
@@ -84,7 +81,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     }
 //    child Cards From DB
-
     fun childCardsFromDB(int: Int?):LiveData<List<CardAndTags>?> =  this.repository.getCardDataByFileId(int).asLiveData()
     private val _childCardsFromDB=MutableLiveData<List<CardAndTags>>()
     fun setChildCardsFromDB(list:List<CardAndTags>?,home: Boolean){
@@ -474,24 +470,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         } else return false
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private fun convertFileToLibraryRV(file: File): LibraryRV {
 
         when (file.fileStatus) {
@@ -558,15 +536,12 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-
-
-
-
-
-
-
-
-
+//    navigation
+private val _action = MutableLiveData<NavDirections>()
+    val action: LiveData<NavDirections> = _action
+    fun setAction(navDirections: NavDirections){
+        _action.value = navDirections
+    }
 
 
 //    onclickEvents
@@ -595,10 +570,44 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 
     }
-    fun onclickSelectableItem(item: LibraryRV,boolean: Boolean) {
-        if (boolean==true)  addToSelectedItem(item) else removeFromSelectedItem(item)
+    fun changeItemSelected(item: LibraryRV, boolean: Boolean,rvBinding: ItemCoverCardBaseBinding) {
+        if (boolean)  {
+            rvBinding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
+            rvBinding.btnSelect.tag = HomeFragment.MyState.Selected
+            libraryViewModel.onclickSelectableItem(item,true)
+
+        } else {
+            removeFromSelectedItem(item)
+            addToSelectedItem(item)
+            rvBinding.btnSelect.setImageDrawable(requireContext().getDrawable(R.drawable.circle_select))
+            rvBinding.btnSelect.tag = HomeFragment.MyState.Unselected
+            libraryViewModel.onclickSelectableItem(item,false)
+        }
+        if(rvBinding.btnSelect.visibility == View.VISIBLE){
+            when(rvBinding.btnSelect.tag){
+                HomeFragment.MyState.Selected -> {
+                    onUnselect(item,rvBinding)
+                }
+                else -> {
+                    onSelect(item,rvBinding)
+                }
+            }
+        }
 
 
+    }
+
+    fun onClickRVItem(rvBinding: ItemCoverCardBaseBinding,item: LibraryRV){
+        if(_multipleSelectMode.value == true){
+            when(rvBinding.btnSelect.tag){
+                HomeFragment.MyState.Selected -> {
+
+                }
+                else -> {
+                    onSelect(item,rvBinding)
+                }
+            }
+        }
     }
 
 

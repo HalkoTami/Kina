@@ -103,10 +103,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it, myId == null)
                 createFileViewModel.setParentFile(it)
-                if(it?.fileStatus == FileStatus.TANGO_CHO_COVER ){
-                    sharedViewModel.setParentFlashCardCover(it.fileId)
-                    Toast.makeText(requireActivity(),"${it.fileId}",Toast.LENGTH_SHORT).show()
-                }
+                sharedViewModel.setParentFile(it)
             }
             pAndGP(myId).observe(viewLifecycleOwner){
                 setPAndG(it)
@@ -192,6 +189,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         homeFragClickListenerItem.onEach {
             it.setOnClickListener(this)
         }
+
 
         return root
 

@@ -37,12 +37,13 @@
 
         <argument
             android:name="parentFlashCardCoverId"
-            app:argType="integer[]" />
+            app:argType="integer[]"
+            app:nullable="true"
+            />
         <argument
             android:name="cardId"
             app:argType="integer[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </fragment>
 
 
