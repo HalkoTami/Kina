@@ -36,7 +36,7 @@ data class Card(
     @ColumnInfo(name= "library_order")
     val libOrder: Int,
     @ColumnInfo(name ="card_color")
-    val colorStatus: ColorStatus?,
+    val colorStatus: ColorStatus,
 
 )
 

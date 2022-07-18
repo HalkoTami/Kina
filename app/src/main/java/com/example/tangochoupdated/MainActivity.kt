@@ -2,6 +2,7 @@ package com.example.tangochoupdated
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.View
@@ -20,6 +21,7 @@ import androidx.navigation.NavAction
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navArgs
+import com.example.tangochoupdated.databinding.ColorPaletBinding
 
 import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
@@ -194,17 +196,15 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             createFileviewModel.fileColor.observe(this@MainActivity){
 
 
+                val a = binding.createFileBinding.bindingCreateFile.colPaletBinding
 
                 if(previousColor == null){
-                    changeSelected(ColorStatus.RED,false)
-                    changeSelected(ColorStatus.YELLOW,false)
-                    changeSelected(ColorStatus.BLUE,false)
-                    changeSelected(ColorStatus.GRAY,false)
+                    makeAllColPaletUnselected(a)
 
                 } else{
-                    changeSelected(previousColor!!,false)
+                    changeColPalletCol(previousColor!!,false,a)
                 }
-                changeSelected(it,true)
+                changeColPalletCol(it,true,a)
                 previousColor = it
 
 
@@ -334,13 +334,16 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
 
-    fun changeSelected(colorStatus: ColorStatus,selected:Boolean){
+
+    fun changeColPalletCol(colorStatus: ColorStatus, selected:Boolean, colorPaletBinding: ColorPaletBinding){
+
+
         val circle = getDrawable(R.drawable.circle)!!
         val wrappedCircle = DrawableCompat.wrap(circle)
         val stroke = getDrawable(R.drawable.circle_stroke)
         val imageView:ImageView
         val col:Int
-        binding.createFileBinding.bindingCreateFile.colPaletBinding.apply {
+        colorPaletBinding.apply {
             when(colorStatus) {
                 ColorStatus.GRAY -> {
                     col = getColor(R.color.gray)
@@ -377,18 +380,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
+    fun makeAllColPaletUnselected(colorPaletBinding: ColorPaletBinding){
+        changeColPalletCol(ColorStatus.RED,false,colorPaletBinding)
+        changeColPalletCol(ColorStatus.YELLOW,false,colorPaletBinding)
+        changeColPalletCol(ColorStatus.BLUE,false,colorPaletBinding)
+        changeColPalletCol(ColorStatus.GRAY,false,colorPaletBinding)
+    }
 
 
 }

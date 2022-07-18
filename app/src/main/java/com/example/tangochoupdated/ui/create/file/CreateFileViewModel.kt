@@ -9,6 +9,7 @@ import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.dataclass.FileXRef
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
+import com.example.tangochoupdated.ui.create.Mode
 import kotlinx.coroutines.launch
 
 class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
@@ -104,9 +105,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         _parentFileStock.value = a
     }
 
-    enum class Mode{
-        Create, Edit
-    }
+
     private val _mode = MutableLiveData<Mode>()
     fun setMode(mode: Mode){
         _mode.value = mode

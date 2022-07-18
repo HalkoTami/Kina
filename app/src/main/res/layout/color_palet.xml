@@ -27,7 +27,7 @@
         android:minHeight="20dp"
         android:src="@drawable/circle"
         app:layout_constraintHeight_max="35dp"
-        />
+         />
 
     <ImageView
         android:id="@+id/imv_col_blue"

@@ -6,6 +6,15 @@ import android.view.View
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 
+
+
+fun appearByWidth(view: View,duration: Long):Animator{
+    return animateWidth(view,0,view.width,duration)
+}
+fun disAppearByWidth(view: View,duration: Long):Animator{
+    return  animateWidth(view,view.width,0,duration)
+}
+
 fun animateWidth(view:View,from:Int,to:Int,duration:Long):Animator{
 
     val widthAnim = ValueAnimator.ofInt(if(from==0) 1 else from ,
@@ -19,6 +28,7 @@ fun animateWidth(view:View,from:Int,to:Int,duration:Long):Animator{
             if(to==0){
                 doOnEnd {
                     view.visibility = View.GONE
+                    view.layoutParams.width = from
                 }
             }
 

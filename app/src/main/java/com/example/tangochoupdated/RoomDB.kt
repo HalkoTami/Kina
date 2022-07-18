@@ -1,10 +1,7 @@
 package com.example.tangochoupdated
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.tangochoupdated.room.BaseDao
 import com.example.tangochoupdated.room.MyDao
@@ -22,7 +19,8 @@ import kotlinx.coroutines.launch
     ActivityData::class,
     CardAndTagXRef::class,
     FileXRef::class],
-    version = 1, exportSchema = false)
+    version = 2, exportSchema = true,
+autoMigrations = [AutoMigration(from = 1, to = 2)])
 @TypeConverters(
     ActivityStatusConverter::class,
     CardStatusConverter::class,
