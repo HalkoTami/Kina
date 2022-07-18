@@ -265,7 +265,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
                 setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
             }
             false -> {
-                setMLDTopText("${_myParentItem.value!!.file!!.title}")
+                setMLDTopText("${_myParentItem.value!!.file!!.fileId}")
                 setTopBarLeftIMVDrawableId(
                     when(_myParentItem.value!!.file!!.fileStatus){
                         FileStatus.FOLDER ->R.drawable.icon_file

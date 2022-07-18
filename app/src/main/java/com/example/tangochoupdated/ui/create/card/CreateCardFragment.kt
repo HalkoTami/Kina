@@ -7,15 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 
 class CreateCardFragment: Fragment(),View.OnClickListener {
 
-    lateinit var colListener : ColPalletListener
     private var _binding: CreateCardBaseBinding? = null
     private val binding get() = _binding!!
     private val args: CreateCardFragmentArgs by navArgs()
@@ -23,6 +25,8 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
     private val clickableViews = mutableListOf<View>()
 
     private lateinit var createCardViewModel: CreateCardViewModel
+    private lateinit var stringCardViewModel: StringCardViewModel
+    private val mainViewModel : BaseViewModel by activityViewModels()
 
 
 
@@ -38,13 +42,19 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             ViewModelProvider(
                 this, viewModelFactory
             )[CreateCardViewModel::class.java]
+        stringCardViewModel = ViewModelProvider(this@CreateCardFragment).get(StringCardViewModel::class.java)
+
 
         _binding = CreateCardBaseBinding.inflate(inflater, container, false)
 
         createCardViewModel.apply{
+//            初期設定
+            onStart()
+
 //            DBからデータとってくる
             getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){
                 setParentCard(it)
+                stringCardViewModel.setParentCard(it)
 
             }
             getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){
@@ -57,8 +67,8 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             colPalletVisibility.observe(viewLifecycleOwner){
                 val time:Long = 500
                 when(it){
-                    true -> appearByWidth(palletBinding.lineLayColorPalet,time).start()
-                    false -> disAppearByWidth(palletBinding.lineLayColorPalet,time).start()
+                    true -> palletBinding.lineLayColorPalet.visibility = View.VISIBLE
+                    false ->palletBinding.lineLayColorPalet.visibility = View.GONE
                 }
             }
 
@@ -91,8 +101,13 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             clickableViews.onEach {
                 it.setOnClickListener(this@CreateCardFragment)
             }
-            return binding.root
+
         }
+        stringCardViewModel.stringData.observe(viewLifecycleOwner){
+            createCardViewModel.setStringData(it)
+        }
+
+        return binding.root
     }
 
     override fun onClick(v: View?) {
@@ -107,6 +122,14 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                             imvColYellow -> onClickEachColor(ColorStatus.YELLOW)
                         }
                 }
+                when(v){
+                    imvSaveAndBack -> {
+                        onClickSaveAndBack()
+                        stringCardViewModel.setSendStringData(true)
+//                        activity!!.finish()
+                    }
+                }
+
             }
         }
 

@@ -32,6 +32,7 @@ import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
 import com.example.tangochoupdated.ui.library.HomeFragmentArgs
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
+import com.example.tangochoupdated.ui.library.HomeFragment
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
 
@@ -75,7 +76,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val navHostFragment =
             supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
         val navCon = navHostFragment.navController
-        navArgs<HomeFragmentArgs>()
 
 
 

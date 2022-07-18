@@ -2,6 +2,7 @@ package com.example.tangochoupdated
 
 import android.content.Context
 import androidx.room.*
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.tangochoupdated.room.BaseDao
 import com.example.tangochoupdated.room.MyDao
@@ -19,8 +20,7 @@ import kotlinx.coroutines.launch
     ActivityData::class,
     CardAndTagXRef::class,
     FileXRef::class],
-    version = 2, exportSchema = true,
-autoMigrations = [AutoMigration(from = 1, to = 2)])
+    version = 1, exportSchema = true)
 @TypeConverters(
     ActivityStatusConverter::class,
     CardStatusConverter::class,
@@ -28,6 +28,7 @@ autoMigrations = [AutoMigration(from = 1, to = 2)])
     FileStatusConverter::class,
 )
 public abstract class MyRoomDatabase : RoomDatabase() {
+
 
 
     abstract fun cardDao(): MyDao.CardDao
@@ -85,6 +86,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
         }
     }
     companion object {
+
         // Singleton prevents multiple instances of database opening at the
         // same time.
         @Volatile

@@ -7,20 +7,21 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 
 
 @Entity(tableName = "tbl_card",
-    indices = [Index("id", unique = true),
-              Index("belongingFileId", unique = true, )],
-    foreignKeys = [ForeignKey(entity = File::class,
-        parentColumns = arrayOf("fileId"),
-        childColumns = arrayOf("belongingFileId"),
-        onDelete = ForeignKey.SET_NULL,
-        onUpdate = ForeignKey.CASCADE
-    )]
+//    indices = [Index("id", unique = true),
+//              Index("belongingFileId", unique = true, )],
+//    foreignKeys = [ForeignKey(entity = File::class,
+//        parentColumns = arrayOf("fileId"),
+//        childColumns = arrayOf("belongingFileId"),
+//        onDelete = ForeignKey.SET_NULL,
+//        onUpdate = ForeignKey.CASCADE
+//    )]
 )
 @TypeConverters(CardStatusConverter::class)
 data class Card(
     @PrimaryKey
-    val belongingFileId:Int,
     val id:Int,
+    @ColumnInfo
+    val belongingFileId:Int?,
     @Embedded(prefix = "belonging_" )
     val stringData: StringData?,
     @Embedded(prefix = "belonging_")
@@ -36,7 +37,7 @@ data class Card(
     @ColumnInfo(name= "library_order")
     val libOrder: Int,
     @ColumnInfo(name ="card_color")
-    val colorStatus: ColorStatus,
+    val colorStatus: ColorStatus?,
 
 )
 

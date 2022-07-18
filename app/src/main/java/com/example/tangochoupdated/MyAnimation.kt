@@ -9,10 +9,10 @@ import androidx.core.animation.doOnStart
 
 
 fun appearByWidth(view: View,duration: Long):Animator{
-    return animateWidth(view,0,view.width,duration)
+    return animateWidth(view,0,view.layoutParams.width,duration)
 }
 fun disAppearByWidth(view: View,duration: Long):Animator{
-    return  animateWidth(view,view.width,0,duration)
+    return  animateWidth(view,view.layoutParams.width,0,duration)
 }
 
 fun animateWidth(view:View,from:Int,to:Int,duration:Long):Animator{
@@ -28,7 +28,6 @@ fun animateWidth(view:View,from:Int,to:Int,duration:Long):Animator{
             if(to==0){
                 doOnEnd {
                     view.visibility = View.GONE
-                    view.layoutParams.width = from
                 }
             }
 
@@ -37,8 +36,8 @@ fun animateWidth(view:View,from:Int,to:Int,duration:Long):Animator{
                 doOnStart {
                     view.layoutParams.width = 1
                     view.requestLayout()
-                    view.visibility = View.VISIBLE
                 }
+                doOnEnd { view.visibility = View.VISIBLE }
             }
 
         }
