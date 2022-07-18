@@ -101,6 +101,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             }
             childCardsFromDB(myId).observe(viewLifecycleOwner){
                 setChildCardsFromDB(it,myId ==null)
+                Toast.makeText(context, "${it?.size}", Toast.LENGTH_SHORT).show()
             }
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it, myId == null)

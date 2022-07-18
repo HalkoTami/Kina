@@ -88,24 +88,8 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
         _childCardsFromDB.value = list
 
-        when(home){
-            true -> return
-            false ->{
-                if(_myParentItem.value?.file?.fileStatus == FileStatus.TANGO_CHO_COVER){
-                    val a = mutableListOf<LibraryRV>()
-                    list!!.onEach {
-                        a.add(convertCardToLibraryRV(it))
-                    }
 
-                    if(a.size != 0){
-                        setFileEmptyStatus(false,false)
-                    } else setFileEmptyStatus(true,false)
-                    setValueToFinalList(a)
 
-                }
-
-            }
-        }
 
 
     }
@@ -244,6 +228,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             setHomeStatus(true)
         } else{
             setHomeStatus(false)
+
             when(_fileEmptyStatus.value){
                 null -> setFileEmptyText("ロード中")
                 true -> setFileEmptyText("${item.file?.title}は空です")

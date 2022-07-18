@@ -18,8 +18,9 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 )
 @TypeConverters(CardStatusConverter::class)
 data class Card(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id:Int,
+    @ColumnInfo
     val belongingFileId:Int?,
 
     @Embedded(prefix = "belonging_" )

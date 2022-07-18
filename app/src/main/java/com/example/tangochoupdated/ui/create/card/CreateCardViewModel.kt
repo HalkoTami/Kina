@@ -28,7 +28,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             quizData = null,
             markerData =  null,
             stringData = StringData("d", "a","b","c"),
-            belongingFileId = 18,
+            belongingFileId = 2,
             remembered = false
         )
         insertCard(newCard)

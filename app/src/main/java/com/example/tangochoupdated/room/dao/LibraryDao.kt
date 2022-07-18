@@ -76,7 +76,7 @@ interface LibraryDao {
     @Query("select count(id) from tbl_card where not card_deleted AND belongingFileId = :belongingFileId")
     fun getCardAmountByFileId(belongingFileId: Int):Flow<Int>
 
-    @Transaction
+
     @Query("select * FROM tbl_card " +
             "where not card_deleted AND belongingFileId = :belongingFileId")
     fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<CardAndTags>>
