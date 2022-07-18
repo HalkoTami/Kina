@@ -20,8 +20,8 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 data class Card(
     @PrimaryKey
     val id:Int,
-    @ColumnInfo
     val belongingFileId:Int?,
+
     @Embedded(prefix = "belonging_" )
     val stringData: StringData?,
     @Embedded(prefix = "belonging_")

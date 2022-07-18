@@ -52,6 +52,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        applicationContext.deleteDatabase("my_database")
         factory = ViewModelFactory((application as RoomApplication).repository)
 
         baseviewModel = ViewModelProvider(this,

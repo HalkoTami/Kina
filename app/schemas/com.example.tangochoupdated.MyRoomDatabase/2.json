@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "8453dd2368391fa769a8e6701dbec385",
+    "identityHash": "571af41149342066a544a1d717a4b8a7",
     "entities": [
       {
         "tableName": "tbl_card",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `belongingFileId` INTEGER, `card_type` INTEGER NOT NULL, `card_deleted` INTEGER, `card_remembered` INTEGER, `library_order` INTEGER NOT NULL, `card_color` INTEGER, `belonging_frontTitle` TEXT, `belonging_backTitle` TEXT, `belonging_frontText` TEXT, `belonging_backText` TEXT, `belonging_markerTextPreview` TEXT, `belonging_answerChoiceId` INTEGER, `belonging_answerPreview` TEXT, `belonging_question` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `belongingFileId` INTEGER, `card_type` INTEGER NOT NULL, `card_deleted` INTEGER, `card_remembered` INTEGER, `library_order` INTEGER NOT NULL, `card_color` INTEGER, `belonging_frontTitle` TEXT, `belonging_backTitle` TEXT, `belonging_frontText` TEXT, `belonging_backText` TEXT, `belonging_markerTextPreview` TEXT, `belonging_answerChoiceId` INTEGER, `belonging_answerPreview` TEXT, `belonging_question` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`belongingFileId`) REFERENCES `tbl_file`(`fileId`) ON UPDATE CASCADE ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -105,8 +105,39 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
-        "foreignKeys": []
+        "indices": [
+          {
+            "name": "index_tbl_card_id",
+            "unique": true,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_tbl_card_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_tbl_card_belongingFileId",
+            "unique": true,
+            "columnNames": [
+              "belongingFileId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_tbl_card_belongingFileId` ON `${TABLE_NAME}` (`belongingFileId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tbl_file",
+            "onDelete": "SET NULL",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "belongingFileId"
+            ],
+            "referencedColumns": [
+              "fileId"
+            ]
+          }
+        ]
       },
       {
         "tableName": "tbl_user",
@@ -476,7 +507,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8453dd2368391fa769a8e6701dbec385')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '571af41149342066a544a1d717a4b8a7')"
     ]
   }
 }
