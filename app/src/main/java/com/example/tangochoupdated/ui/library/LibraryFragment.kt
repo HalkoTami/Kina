@@ -244,6 +244,10 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
     }
 
+    override fun onCickEditCard(item: LibraryRV) {
+        createCardViewModel.onClickEditCard(item)
+    }
+
     override fun onSwipeLeft(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding, fileBinding:ItemCoverFileBinding) {
         if((rvBinding.btnDelete.visibility == View.VISIBLE) or
             (rvBinding.btnEditWhole.visibility == View.VISIBLE)) return

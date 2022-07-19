@@ -24,7 +24,7 @@ data class Card(
     val belongingFileId:Int?,
 
     @Embedded(prefix = "belonging_" )
-    val stringData: StringData?,
+    var stringData: StringData?,
     @Embedded(prefix = "belonging_")
     val markerData: MarkerPreviewData?,
     @Embedded(prefix = "belonging_")
@@ -43,14 +43,14 @@ data class Card(
 )
 
 
-
+//Todo val と var の正しい振り分け
 
 
 data class StringData(
-    val frontTitle:String?,
-    val backTitle: String?,
-    val frontText:String?,
-    val backText:String?,
+    var frontTitle:String?,
+    var backTitle: String?,
+    var frontText:String?,
+    var backText:String?,
 
     )
 

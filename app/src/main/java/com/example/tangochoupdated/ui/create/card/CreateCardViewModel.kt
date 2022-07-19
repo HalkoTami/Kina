@@ -194,9 +194,9 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     fun setStringData(stringData: StringData){
         _stringData.value = stringData
-        when(_savingCard.value){
-            true -> saveCard()
-            else -> return
+        when(_mode.value){
+            Mode.Create -> saveCard()
+            Mode.Edit -> upDateCard()
         }
 
 
@@ -214,14 +214,25 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             belongingFileId = _parentFlashCardCover.value?.fileId,
             remembered = false
         )
-        insertCard(newCard)
+        insert(newCard)
+    }
+    fun upDateCard(){
+        val upDating = _parentCard.value!!.card
+        upDating.stringData = _stringData.value
+        update(upDating)
     }
 
-    private fun insertCard(card: Card){
+    private fun insert(any: Any){
         viewModelScope.launch {
-            repository.insert(card)
+            repository.insert(any)
         }
         setSavingCard(false)
+
+    }
+    private fun update(any: Any){
+        viewModelScope.launch {
+            repository.update(any)
+        }
 
     }
     private fun upDateMultipleCards(list: List<Card>){
@@ -264,9 +275,16 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
     fun onClickSaveAndBack(){
-        setSavingCard(true)
         setGetStringData(true)
 //        setCreateFragActive(false)
+    }
+    enum class CursorPosition{
+        Tag, FrontTitle, FrontContent, BackTitle, BackText
+    }
+    fun onClickEditCard(item: LibraryRV){
+        setParentCardId(item.id)
+        activateCreateCard()
+
     }
 
 

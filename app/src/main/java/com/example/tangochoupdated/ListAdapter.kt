@@ -170,7 +170,10 @@ val mycontext: Context) :
             binding.stubMain.setOnTouchListener (object:MyTouchListener(context){
                 override fun onSingleTap() {
                     super.onSingleTap()
-                    clickListener.onClickMain(item,binding)
+                    when(item.type){
+                        LibRVViewType.StringCard -> clickListener.onCickEditCard(item)
+                        else ->  clickListener.onClickMain(item,binding)
+                    }
 
 
                 }
@@ -270,6 +273,7 @@ interface DataClickListener {
     fun onLongClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
     fun onSelect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
     fun onClickEdit(item: LibraryRV)
+    fun onCickEditCard(item: LibraryRV)
     fun onClickAdd(item: LibraryRV)
     fun onClickDelete(item: LibraryRV)
     fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
