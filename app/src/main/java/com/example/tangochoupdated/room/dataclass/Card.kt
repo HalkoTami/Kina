@@ -36,7 +36,7 @@ data class Card(
     @ColumnInfo(name ="card_remembered")
     val remembered: Boolean?,
     @ColumnInfo(name= "library_order")
-    val libOrder: Int,
+    var libOrder: Int,
     @ColumnInfo(name ="card_color")
     val colorStatus: ColorStatus?,
 

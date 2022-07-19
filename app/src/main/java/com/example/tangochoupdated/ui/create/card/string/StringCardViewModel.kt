@@ -9,7 +9,6 @@ import com.example.tangochoupdated.room.dataclass.StringData
 class StringCardViewModel:ViewModel() {
     private val _parentCard = MutableLiveData<Card?>()
     val parentCard:LiveData<Card?> = _parentCard
-
     fun setParentCard (card: Card?){
         _parentCard.value = card
     }
@@ -28,6 +27,7 @@ class StringCardViewModel:ViewModel() {
 
 
     }
+    val a = "hinyanay"
 
 
 

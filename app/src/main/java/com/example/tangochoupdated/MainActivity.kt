@@ -29,6 +29,7 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
 import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
+import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.library.HomeFragmentArgs
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
     lateinit var baseviewModel: BaseViewModel
     lateinit var createFileviewModel: CreateFileViewModel
+    lateinit var createCardViewModel: CreateCardViewModel
 
     var filePopUpVisible = false
 
@@ -53,7 +55,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-//        applicationContext.deleteDatabase("my_database")
+        applicationContext.deleteDatabase("my_database")
         factory = ViewModelFactory((application as RoomApplication).repository)
 
         baseviewModel = ViewModelProvider(this,
@@ -63,6 +65,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         createFileviewModel = ViewModelProvider(this,
             ViewModelFactory((application as RoomApplication).repository)
         )[CreateFileViewModel::class.java]
+
+        createCardViewModel = ViewModelProvider(this,
+            ViewModelFactory((application as RoomApplication).repository)
+        )[CreateCardViewModel::class.java]
 
         binding = MyActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -102,6 +108,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
             }
 
+        }
+        createCardViewModel.action.observe(this){
+            navCon.navigate(it)
         }
 
 
@@ -153,6 +162,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             }
             imvnewCard.setOnClickListener {
                 createFileviewModel.setAddFileActive(false)
+                createCardViewModel.onClickAddNewCardBottomBar()
                 baseviewModel.onClickAddNewCard()
 
             }

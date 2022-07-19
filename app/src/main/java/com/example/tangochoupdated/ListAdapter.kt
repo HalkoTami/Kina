@@ -120,11 +120,13 @@ val mycontext: Context) :
                   binding.stubMain.addView(stringBinding.root)
 
                   val stringData = item.card?.stringData
-
-                  stringBinding.txvFrontTitle.text = stringData?.frontTitle
+//                  stringData?.frontTitle
+                  stringBinding.txvFrontTitle.text = item.card?.libOrder.toString()
                   stringBinding.txvFrontText.text = stringData?.frontText
-                  stringBinding.txvBackTitle.text = stringData?.backTitle
+                  stringBinding.txvBackTitle.text = stringData?.backTitle ?:"裏"
                   stringBinding.txvBackText.text = stringData?.backText
+
+
 
 
               }
@@ -161,7 +163,9 @@ val mycontext: Context) :
 
 
 
-
+            binding.btnAddNewCard.setOnClickListener{
+                clickListener.onClickAddNewCardByPosition(item)
+            }
 //
             binding.stubMain.setOnTouchListener (object:MyTouchListener(context){
                 override fun onSingleTap() {
@@ -260,6 +264,7 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
  * like
  *class MyFragment : Fragment(), DataClickListener
  */
+
 interface DataClickListener {
     fun onSwipeLeft(item :LibraryRV, rvBinding:ItemCoverCardBaseBinding, fileBinding: ItemCoverFileBinding)
     fun onLongClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
@@ -270,6 +275,8 @@ interface DataClickListener {
     fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
     fun onUnselect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
     fun onScrollLeft(distanceX:Float, rvBinding: ItemCoverCardBaseBinding)
+    fun onClickAddNewCardByPosition(item:LibraryRV)
+
 
 }
 

@@ -83,7 +83,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private val _myFinalList= MutableLiveData<List<LibraryRV>>()
     val myFinalList :LiveData<List<LibraryRV>> = _myFinalList
     private fun setValueToFinalList(list:List<LibraryRV>){
-        val comparator : Comparator<LibraryRV> = compareBy { it.id }
+        val comparator : Comparator<LibraryRV> = compareBy { it.position }
         val a = list.sortedWith(comparator)
         _myFinalList.apply {
             value = a
@@ -164,6 +164,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             }
         }
         val b = mutableListOf<LibraryRV>()
+        clearFinalList()
         when(item?.type){
             LibRVViewType.FlashCardCover-> {
                 _childCardsFromDB.value?.onEach {
@@ -173,7 +174,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             else -> {
 
                 _childFilesFromDB.value?.onEach { b.add(convertFileToLibraryRV(it)) }
-                clearFinalList()
 
             }
         }

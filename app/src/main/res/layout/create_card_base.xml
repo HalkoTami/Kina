@@ -42,7 +42,7 @@
             android:layout_marginEnd="5dp"/>
 
         <ImageView
-            android:id="@+id/imv_not_yet"
+            android:id="@+id/imv_mode"
             android:layout_width="40dp"
             android:layout_height="match_parent"
 

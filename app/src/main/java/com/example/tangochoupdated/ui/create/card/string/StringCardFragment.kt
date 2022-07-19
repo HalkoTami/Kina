@@ -10,10 +10,12 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.tangochoupdated.databinding.FragmentCreateBinding
 import com.example.tangochoupdated.room.enumclass.FileStatus
@@ -29,12 +31,13 @@ import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 class StringCardFragment : Fragment() {
 
     private var _binding: CreateCardStringBinding? = null
+    private val  createCardViewModel: CreateCardViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val  stringViewModel: StringCardViewModel by activityViewModels()
+//   private val  stringViewModel: StringCardViewModel by activityViewModels()
 
 
 
@@ -46,15 +49,21 @@ class StringCardFragment : Fragment() {
     ): View {
         _binding = CreateCardStringBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+
+
+        createCardViewModel.setCardStatus(CardStatus.STRING)
+
+
         binding.apply {
             edtFrontTitle.hint = "表のタイトル"
             edtFrontContent.hint = "表"
             edtBackTitle.hint = "裏のタイトル"
             edtBackContent.hint = "裏"
-            stringViewModel.sendStringData.observe(viewLifecycleOwner){
-                if(it==true){
 
-                    stringViewModel.setStringData(
+            createCardViewModel.getStringData.observe(viewLifecycleOwner){
+                if(it==true){
+                    createCardViewModel.setStringData(
                         StringData(
                             frontTitle =  if(edtFrontTitle.text.toString() == "表") null else edtFrontTitle.text.toString(),
                             frontText = edtFrontContent.text.toString(),
@@ -70,13 +79,15 @@ class StringCardFragment : Fragment() {
 
 
 
-        stringViewModel.parentCard.observe(viewLifecycleOwner){
-            binding.apply {
-                edtFrontTitle.text = SpannableStringBuilder(it?.stringData?.frontTitle ?:"表")
-                edtFrontContent.text = SpannableStringBuilder(it?.stringData?.frontText ?:"")
-                edtBackTitle.text = SpannableStringBuilder(it?.stringData?.backTitle ?:"裏")
-                edtBackContent.text =  SpannableStringBuilder(it?.stringData?.backText ?:"")
+        binding.apply {
+            createCardViewModel.parentCard.observe(viewLifecycleOwner){
+                edtFrontTitle.text = SpannableStringBuilder(it?.card?.stringData?.frontTitle ?:"表" )
+                edtFrontContent.text = SpannableStringBuilder(it?.card?.stringData?.frontText ?:"" )
+                edtBackTitle.text = SpannableStringBuilder(it?.card?.stringData?.backTitle ?:"裏")
+                edtBackContent.text =  SpannableStringBuilder(it?.card?.stringData?.backText ?:"")
+
             }
+//                it?.stringData?.frontTitle
 
         }
 

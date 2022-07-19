@@ -7,13 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.ui.create.Mode
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 
 class CreateCardFragment: Fragment(),View.OnClickListener {
@@ -24,10 +30,12 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 
     private val clickableViews = mutableListOf<View>()
 
-    private lateinit var createCardViewModel: CreateCardViewModel
-    private lateinit var stringCardViewModel: StringCardViewModel
+    private val  createCardViewModel: CreateCardViewModel by activityViewModels()
+//    private lateinit var stringCardViewModel: StringCardViewModel
     private val mainViewModel : BaseViewModel by activityViewModels()
+    private val stringCardViewModel :StringCardViewModel by viewModels()
 
+    lateinit var mainNavCon:NavController
 
 
 
@@ -36,33 +44,41 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val repository = (requireActivity().application as RoomApplication).repository
-        val viewModelFactory = ViewModelFactory(repository)
-        createCardViewModel =
-            ViewModelProvider(
-                this, viewModelFactory
-            )[CreateCardViewModel::class.java]
-        stringCardViewModel = ViewModelProvider(this@CreateCardFragment).get(StringCardViewModel::class.java)
-
 
         _binding = CreateCardBaseBinding.inflate(inflater, container, false)
+        mainNavCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
 
         createCardViewModel.apply{
 //            初期設定
             onStart()
 
-//            DBからデータとってくる
-            getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){
-                setParentCard(it)
-                stringCardViewModel.setParentCard(it)
-
-            }
+            setParentCardId(args.cardId?.single())
             getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){
                 setParentFlashCardCover(it)
-                Toast.makeText(context, "${it?.title} ", Toast.LENGTH_SHORT).show()
+            }
+//            DBからデータとってくる
+            getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){
+                setSisterCards(it)
+            }
+            filterAndSetParentCard(args.cardId?.single())
+//            getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){
+//                setParentCard(it)
+//            }
+
+            val edit = requireActivity().getDrawable(R.drawable.icon_edit)
+            val new = requireActivity().getDrawable(R.drawable.icon_eye_opened)
+            mode.observe(viewLifecycleOwner){
+                binding.imvMode.setImageDrawable(when(it){
+                    Mode.Create -> new
+                    Mode.Edit -> edit
+                })
             }
 
-//            Color Pallet attribute 1 pallet visibility
+            parentFlashCardCover.observe(viewLifecycleOwner){
+                binding.txvTitle.text = it?.title ?:"単語帳に入ってないよ"
+            }
+
+//            Color Pallet attribute 1. pallet visibility
             val palletBinding = binding.createCardColPaletBinding
             colPalletVisibility.observe(viewLifecycleOwner){
                 val time:Long = 500
@@ -72,14 +88,11 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 }
             }
 
-//            Color Pallet attribute 2 each color
+//            Color Pallet attribute 2. change  each color
             var previousColor: ColorStatus?
             previousColor = null
             val mainActivity = activity as MainActivity
-
-
             cardColor.observe(viewLifecycleOwner){
-
                 mainActivity.apply {
                     if(previousColor == null) makeAllColPaletUnselected(palletBinding)
                         else changeColPalletCol(previousColor!!,false,palletBinding)
@@ -91,20 +104,18 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             binding.createCardColPaletBinding.apply {
                 clickableViews.addAll(arrayOf(imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet))
             }
+            clickableViews.add(binding.imvSaveAndBack)
 
 
-
-
-
-
-
-            clickableViews.onEach {
-                it.setOnClickListener(this@CreateCardFragment)
-            }
 
         }
-        stringCardViewModel.stringData.observe(viewLifecycleOwner){
-            createCardViewModel.setStringData(it)
+//        stringCardViewModel.stringData.observe(viewLifecycleOwner){
+//            createCardViewModel.setStringData(it)
+//            stringCardViewModel.setSendStringData(false)
+//        }
+
+        clickableViews.onEach {
+            it.setOnClickListener(this)
         }
 
         return binding.root
@@ -124,9 +135,10 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 }
                 when(v){
                     imvSaveAndBack -> {
-                        onClickSaveAndBack()
-                        stringCardViewModel.setSendStringData(true)
-//                        activity!!.finish()
+                        createCardViewModel.onClickSaveAndBack()
+                        Toast.makeText(context, "onsave clicked", Toast.LENGTH_SHORT).show()
+
+//
                     }
                 }
 

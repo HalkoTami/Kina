@@ -26,6 +26,8 @@ import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
+import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
+import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 
 class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
@@ -40,6 +42,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
     private val sharedViewModel: BaseViewModel by activityViewModels()
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
+    private val createCardViewModel: CreateCardViewModel by activityViewModels()
 
     private var _binding: FragmentLibraryHomeBinding? = null
 
@@ -105,7 +108,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             }
             childCardsFromDB(myId).observe(viewLifecycleOwner){
                 setChildCardsFromDB(it,myId ==null)
-                Toast.makeText(context, "${it?.size}", Toast.LENGTH_SHORT).show()
+
             }
 
             pAndGP(myId).observe(viewLifecycleOwner){
@@ -302,6 +305,13 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
     override fun onClickDelete(item: LibraryRV) {
         Toast.makeText(context, "onClickDelete", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClickAddNewCardByPosition(item: LibraryRV) {
+        createCardViewModel.onClickAddNewCardByPosition(item)
+        val flashcardCoverId = intArrayOf(args.parentItemId!!.single())
+        val action = CreateCardFragmentDirections.toCreateCard(flashcardCoverId,null)
+        mynavCon.navigate(action)
     }
 
     override fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
