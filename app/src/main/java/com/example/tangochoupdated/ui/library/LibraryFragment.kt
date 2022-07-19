@@ -89,11 +89,15 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         libraryViewModel.apply {
             setParentItemId(myId)
             setNavCon(mynavCon)
-
-
-            fileWithoutParentFromDB().observe(viewLifecycleOwner){
-                setFileWithoutParentFromDB(it, myId == null)
+            parentFileFromDB(myId).observe(viewLifecycleOwner){
+                setParentFileFromDB(it, myId == null)
+                createFileViewModel.setParentFile(it)
+                sharedViewModel.setParentFile(it)
             }
+
+//            fileWithoutParentFromDB().observe(viewLifecycleOwner){
+//                setFileWithoutParentFromDB(it, myId == null)
+//            }
             childFilesFromDB(myId).observe(viewLifecycleOwner){
                 setChildFilesFromDB(it,myId == null)
 
@@ -103,11 +107,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                 setChildCardsFromDB(it,myId ==null)
                 Toast.makeText(context, "${it?.size}", Toast.LENGTH_SHORT).show()
             }
-            parentFileFromDB(myId).observe(viewLifecycleOwner){
-                setParentFileFromDB(it, myId == null)
-                createFileViewModel.setParentFile(it)
-                sharedViewModel.setParentFile(it)
-            }
+
             pAndGP(myId).observe(viewLifecycleOwner){
                 setPAndG(it)
                 createFileViewModel.setPAndG(it)
