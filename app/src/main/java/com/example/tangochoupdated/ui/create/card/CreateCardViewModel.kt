@@ -9,10 +9,12 @@ import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.dataclass.StringData
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.Mode
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.net.CookieHandler
 import java.text.FieldPosition
 
@@ -54,10 +56,11 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private val _parentFlashCardCover = MutableLiveData<File?>()
     fun setParentFlashCardCover(file: File?){
         _parentFlashCardCover.value = file
-        when(file){
-            null -> setHasParentFlashCarCover(false)
-            else -> setHasParentFlashCarCover(true)
-        }
+
+        if(file?.fileStatus == FileStatus.TANGO_CHO_COVER){
+            setHasParentFlashCarCover(true)
+        } else setHasParentFlashCarCover(false)
+
     }
     val parentFlashCardCover:LiveData<File?> =_parentFlashCardCover
 
@@ -67,6 +70,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     }
     val parentCardId:LiveData<Int?> =_parentCardId
+
+
 
 //    parent card
     private val _parentCard = MutableLiveData<CardAndTags?>()
@@ -224,6 +229,16 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             repository.updateMultiple(list)
         }
     }
+    private fun activateCreateCard(){
+        val parentFileId = try {
+            intArrayOf(_parentFlashCardCover.value!!.fileId)
+        } catch (e:Exception) { null }
+        val cardId = try {
+            intArrayOf(_parentCardId.value!!)
+        } catch (e:Exception){ null }
+        val action = CreateCardFragmentDirections.toCreateCard(parentFileId,cardId)
+        setAction(action)
+    }
 
 // onClickEvents
     fun onClickColPaletIcon(){
@@ -234,14 +249,17 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     }
     fun onClickAddNewCardByPosition(item:LibraryRV){
-        setMode(Mode.Create)
-        setParentCard(null)
-        setPosition(item.position+1)
-        updateSistersPosition(item.position+1 )
+        setParentCardId(null)
+//        item.position+1
+        setPosition(item.position +2)
+        updateSistersPosition(item.position +2)
+        activateCreateCard()
 
     }
     fun onClickAddNewCardBottomBar(){
-        setMode(Mode.Create)
+        setParentCardId(null)
+        setPosition((_sisterCards.value!!.size) +1)
+        activateCreateCard()
 
     }
 

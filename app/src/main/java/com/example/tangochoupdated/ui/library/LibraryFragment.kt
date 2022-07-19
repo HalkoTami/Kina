@@ -95,6 +95,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it, myId == null)
                 createFileViewModel.setParentFile(it)
+                createCardViewModel.setParentFlashCardCover(it)
                 sharedViewModel.setParentFile(it)
             }
 
@@ -108,6 +109,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             }
             childCardsFromDB(myId).observe(viewLifecycleOwner){
                 setChildCardsFromDB(it,myId ==null)
+                createCardViewModel.setSisterCards(it)
 
             }
 
@@ -309,9 +311,6 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
     override fun onClickAddNewCardByPosition(item: LibraryRV) {
         createCardViewModel.onClickAddNewCardByPosition(item)
-        val flashcardCoverId = intArrayOf(args.parentItemId!!.single())
-        val action = CreateCardFragmentDirections.toCreateCard(flashcardCoverId,null)
-        mynavCon.navigate(action)
     }
 
     override fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
