@@ -5,7 +5,7 @@ import android.view.View
 import android.view.View.INVISIBLE
 
 enum class Tab{
-    TabLibrary,TabAnki,TabCreate
+    TabLibrary,TabAnki,CreateFile,CreateCard
 }
 enum class TabStatus{
     Focused, UnFocused

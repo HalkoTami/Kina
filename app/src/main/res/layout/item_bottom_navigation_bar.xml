@@ -7,7 +7,7 @@
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
     android:orientation="horizontal"
-    android:background="@android:color/transparent"
+    android:background="@color/lightgreen"
     android:baselineAligned="false">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/layout_1"
@@ -30,6 +30,7 @@
        />
     <TextView
         android:id="@+id/bnv_txv_1"
+        android:textSize="11sp"
 
 
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +55,7 @@
         android:gravity="center">
         <ImageView
             android:contentDescription="@string/title_tab_create"
-            android:id="@+id/imv_2"
+            android:id="@+id/imv_edit_file"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

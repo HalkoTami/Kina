@@ -5,9 +5,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="3dp"
+    android:padding="10dp"
     android:id="@+id/view_file">
 
+<!--    TODO タイトルの文字サイズフィット-->
+    <!--    TODO タイトルの文字サイズフィット-->
+    <!--    TODO タイトルの文字サイズフィット-->
+    <!--    TODO タイトルの文字サイズフィット-->
     <ImageView
         android:contentDescription="@string/cd_file_type"
         android:id="@+id/imv_file_type"
@@ -15,11 +19,10 @@
 
 
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginRight="10dp"
         android:src="@drawable/icon_file"
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/barrier_left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,17 +39,17 @@
 
         app:layout_constraintBottom_toTopOf="@id/bottom_container"
 
-        app:layout_constraintEnd_toStartOf="@id/barrier_right"
+        app:layout_constraintEnd_toStartOf="@id/btn_add"
 
-        app:layout_constraintStart_toEndOf="@id/barrier_left"
+        app:layout_constraintStart_toEndOf="@id/imv_file_type"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_container"
-        app:layout_constraintStart_toEndOf="@id/barrier_left"
+        app:layout_constraintStart_toEndOf="@id/imv_file_type"
         app:layout_constraintTop_toBottomOf="@id/txv_file_title"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/barrier_right"
+        app:layout_constraintEnd_toStartOf="@id/btn_add"
 
         android:layout_width="0dp"
         android:layout_height="wrap_content">
@@ -56,7 +59,7 @@
             android:contentDescription="@string/cd_file_amount"
             android:id="@+id/imv_icon_file_small"
             android:layout_width="wrap_content"
-            android:layout_height="15dp"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@drawable/icon_file_1"
 
@@ -71,7 +74,7 @@
         <TextView
             android:id="@+id/txv_file_amount"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:ellipsize="none"
 
             android:gravity="end"
@@ -84,7 +87,7 @@
             android:contentDescription="@string/cd_tango_cho_amount"
             android:id="@+id/imv_icon_tango_cho_small"
             android:layout_width="wrap_content"
-            android:layout_height="15dp"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@drawable/icon_library"
             android:drawingCacheQuality="auto"
@@ -112,7 +115,7 @@
             android:layout_width="wrap_content"
 
 
-            android:layout_height="15dp"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@drawable/icon_create_card"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -141,28 +144,12 @@
         android:id="@+id/btn_add"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_margin="15dp"
+        android:layout_marginStart="15dp"
         android:background="@drawable/icon_add_middlesize"
-        app:layout_constraintStart_toEndOf="@id/barrier_right"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <androidx.constraintlayout.widget.Barrier
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/barrier_left"
-        app:constraint_referenced_ids="txv_file_title,bottom_container"
-        app:barrierDirection="left"/>
-
-    <androidx.constraintlayout.widget.Barrier
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/barrier_right"
-        app:constraint_referenced_ids="txv_file_title,bottom_container"
-        app:barrierDirection="right"/>
-
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 
 

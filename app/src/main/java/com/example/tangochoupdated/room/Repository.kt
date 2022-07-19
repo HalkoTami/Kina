@@ -16,61 +16,52 @@ private val markerDataDao      : MyDao.MarkerDataDao,
 private val userDao            : MyDao.UserDao,
 private val clearTable         : MyDao.ClearTable,
 private val libraryDao         : MyDao.LibraryDao,
-private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao) {
+private val cardAndTagXRefDao  : MyDao.CardAndTagXRefDao,
+private val fileXRefDao        : MyDao.FileXRefDao,) {
 
 
 //cards
 
 
     val  getFileWithoutParent:Flow<List<File>> = libraryDao.getFileWithoutParent()
-    fun getFileDataByParentFileId(parentFileId:Int?) = libraryDao.getFileListByParentFileId(parentFileId)
+//    fun getFileDataByParentFileId(parentFileId:Int?):Flow<FileWithChild> = libraryDao.getFileListByParentFileId(parentFileId)
 
     fun getCardDataByFileId(parentFileId: Int?):Flow<List<CardAndTags>>  = libraryDao.getCardsDataByFileId(parentFileId)
-    fun getFileByFileId(fileId:Int?):Flow<List<File>> = libraryDao.getFileByFileId(fileId)
+    fun getFileByFileId(fileId:Int?):Flow<File> = libraryDao.getFileByFileId(fileId)
 
+    val lastInsertedFile:Flow<Int> = libraryDao.getLastInsertedFile()
+    fun mygetFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = libraryDao.myGetFileByParentFileId(parentFileId)
+
+    fun getPAndGPFiles(fileId: Int?):Flow<List<File>> = libraryDao.getPAndGPFileBychildId(fileId)
+
+    fun getCardByCardId(cardId:Int?):Flow<CardAndTags> = cardDao.getCardAndTagsByCardId(cardId)
 
 
 
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insert(item: Any) {
+    suspend fun insert(item: Any){
 
         when (item) {
             is CardAndTagXRef -> cardAndTagXRefDao.insert(item)
             is Card -> cardDao.insert(item)
-            is File -> {
-//
-//                suspend fun getOverGrandParent(file:File){
-//                    if(file.hasParent){
-//                        var overGrandparentFile = mutableListOf<File>()
-//                        libraryDao.getFileByFileId(file.parentFile).collect{
-//                            overGrandparentFile.add(it)
-//                        }
-//                        when(file.fileStatus){
-//                            FileStatus.FOLDER ->
-//                                overGrandparentFile[0].childFoldersAmount = overGrandparentFile[0].childFoldersAmount?.plus(1)
-//                            FileStatus.TANGO_CHO_COVER ->
-//                                overGrandparentFile[0].childFlashCardCoversAmount = overGrandparentFile[0].childFlashCardCoversAmount?.plus(1)
-//                        }
-//                        overGrandparentFile[0].hasChild = true
-//                        update(overGrandparentFile[0])
-//                        getOverGrandParent(overGrandparentFile[0])
-//
-//                    } else return
-//
-//                }
-//                getOverGrandParent(item)
-                fileDao.insert(item)
-            }
+            is File -> { fileDao.insert(item) }
             is User -> userDao.insert(item)
             is MarkerData -> markerDataDao.insert(item)
             is Choice -> choiceDao.insert(item)
             is ActivityData -> activityDataDao.insert(item)
+            is FileXRef -> { fileXRefDao.insert(item)
+
+
+
+            }
+            else -> throw  IllegalArgumentException("no such table")
 
         }
 
     }
+
 
     suspend fun insertMultiple(item: List<*>) {
 

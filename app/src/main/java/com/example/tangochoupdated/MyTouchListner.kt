@@ -4,9 +4,9 @@ import android.content.Context
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import kotlin.math.abs
+import java.lang.Math.abs
 
-open class MyTouchListener(context:Context) : View.OnTouchListener {
+open class MyTouchListener(context: Context) : View.OnTouchListener {
 
     private val gestureDetector = GestureDetector(context, MyGestureListener())
 
@@ -29,7 +29,11 @@ open class MyTouchListener(context:Context) : View.OnTouchListener {
             distanceX: Float,
             distanceY: Float
         ): Boolean {
-            onScroll()
+            if(distanceX<0){
+                onScrollRight()
+            } else{
+                onScrollLeft()
+            }
             return false
         }
 
@@ -81,9 +85,12 @@ open class MyTouchListener(context:Context) : View.OnTouchListener {
 
     open fun onSwipeLeft() {}
 
-     open fun onLongClick(){}
+    open fun onLongClick(){}
 
-    open fun onScroll(){
+    open fun onScrollRight(){
+
+    }
+    open fun onScrollLeft(){
 
     }
     open fun onSingleTap(){

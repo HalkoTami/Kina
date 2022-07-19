@@ -1,10 +1,8 @@
 package com.example.tangochoupdated
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.tangochoupdated.room.BaseDao
 import com.example.tangochoupdated.room.MyDao
@@ -22,7 +20,7 @@ import kotlinx.coroutines.launch
     ActivityData::class,
     CardAndTagXRef::class,
     FileXRef::class],
-    version = 1, exportSchema = false)
+    version = 1, exportSchema = true)
 @TypeConverters(
     ActivityStatusConverter::class,
     CardStatusConverter::class,
@@ -30,6 +28,7 @@ import kotlinx.coroutines.launch
     FileStatusConverter::class,
 )
 public abstract class MyRoomDatabase : RoomDatabase() {
+
 
 
     abstract fun cardDao(): MyDao.CardDao
@@ -41,6 +40,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
     abstract fun clearTable(): MyDao.ClearTable
     abstract fun libraryDao(): MyDao.LibraryDao
     abstract fun cardAndTagXRefDao(): MyDao.CardAndTagXRefDao
+    abstract fun fileXRefDao(): MyDao.FileXRefDao
 
     private class WordDatabaseCallback(
         private val scope: CoroutineScope
@@ -60,6 +60,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
                     clearTable.clearTblUser()
                     clearTable.clearTblFile()
                     clearTable.clearTblMarkerData()
+                    clearTable.clearTblFileXRef()
 
 
                     // Add sample words.
@@ -74,14 +75,18 @@ public abstract class MyRoomDatabase : RoomDatabase() {
                         libOrder = 0,
                         childFoldersAmount = 0,
                         childCardsAmount = 0,
-                        childFlashCardCoversAmount = 0)
+                        childFlashCardCoversAmount = 0,
+                        parentFileId = null)
                     fileDao.insert(file)
+
+
 
                 }
             }
         }
     }
     companion object {
+
         // Singleton prevents multiple instances of database opening at the
         // same time.
         @Volatile

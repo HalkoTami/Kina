@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
-    android:layout_height="250dp"
-    android:maxHeight="300dp"
-    android:maxWidth="370dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@drawable/rectangle_green_stroke"
     android:orientation="vertical"
     android:padding="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
+    <ImageView
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_close"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="5dp"
+        />
     <ImageView
         android:id="@+id/imv_file_type"
         android:layout_width="wrap_content"
@@ -32,6 +39,7 @@
         app:layout_constraintBottom_toBottomOf="@id/imv_file_type"
         app:layout_constraintTop_toTopOf="@id/imv_file_type"/>
     <TextView
+        android:id="@+id/txv_file_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,61 +62,20 @@
         android:hint="タイトル"/>
 
 
-        <ImageView
-            android:id="@+id/imv_icon_palet"
-            app:layout_constraintStart_toStartOf="@id/edt_createfile"
-            app:layout_constraintTop_toBottomOf="@id/edt_createfile"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintHeight_max="35dp"
-            android:src="@drawable/icon_color_palet_col"
-            android:layout_marginTop="10dp"
-            />
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_marginStart="10dp"
-            app:layout_constraintBottom_toBottomOf="@id/imv_icon_palet"
-            app:layout_constraintTop_toTopOf="@id/imv_icon_palet"
-            app:layout_constraintStart_toEndOf="@id/imv_icon_palet"
-            android:orientation="horizontal">
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@id/edt_createfile"
+            app:layout_constraintTop_toBottomOf="@id/edt_createfile">
+            <include
+                android:id="@+id/col_palet_binding"
+                layout="@layout/color_palet"/>
 
-            <ImageView
-                android:id="@+id/imv_col_1"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="7dp"
-                android:minWidth="20dp"
-                android:minHeight="20dp"
-                android:src="@drawable/circle"
-                app:layout_constraintHeight_max="35dp"
-                app:tint="@color/red" />
 
-            <ImageView
-                android:id="@+id/imv_col_2"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="7dp"
-                android:src="@drawable/circle"
-                app:tint="@color/blue" />
+        </FrameLayout>
 
-            <ImageView
-                android:id="@+id/imv_col_3"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="7dp"
-                android:src="@drawable/circle"
-                app:tint="@color/yellow" />
-
-            <ImageView
-                android:id="@+id/imv_col_4"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="7dp"
-                android:src="@drawable/circle"
-                app:tint="@color/light_gray" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <Button

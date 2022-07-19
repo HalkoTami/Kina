@@ -17,13 +17,14 @@ data class File(
     @ColumnInfo var deleted: Boolean? = false,
     @ColumnInfo var colorStatus: ColorStatus = ColorStatus.GRAY,
     @ColumnInfo var fileStatus: FileStatus,
+    @ColumnInfo val parentFileId: Int?,
     @ColumnInfo(name= "library_order")
     var hasChild:Boolean = false,
     var hasParent:Boolean = false,
-    var libOrder: Int? =null ,
-    var childFoldersAmount:Int? = null,
-    var childFlashCardCoversAmount: Int? = null,
-    var childCardsAmount:Int? = null
+    var libOrder: Int? = 0 ,
+    var childFoldersAmount:Int = 0,
+    var childFlashCardCoversAmount: Int = 0,
+    var childCardsAmount:Int = 0
 
 
 
@@ -31,42 +32,42 @@ data class File(
 
     )
 @Entity(
-    indices = [Index("parentFileId", unique = true),
-        Index("childFileId", unique = true)],
-
-    foreignKeys = [
-        ForeignKey(
-            entity = File::class,
-            parentColumns = arrayOf("fileId"),
-            childColumns = arrayOf("parentFileId")
-        ),
-        ForeignKey(
-            entity = File::class,
-            parentColumns = arrayOf("fileId"),
-            childColumns = arrayOf("childFileId")
-        )
-    ]
+    tableName = "file_xref",
+//    indices = [Index("parentFileId", unique = true),
+//        Index("childFileId", unique = true)],
+//
+//    foreignKeys = [
+//        ForeignKey(
+//            entity = File::class,
+//            parentColumns = arrayOf("fileId"),
+//            childColumns = arrayOf("parentFileId")
+//        ),
+//        ForeignKey(
+//            entity = File::class,
+//            parentColumns = arrayOf("fileId"),
+//            childColumns = arrayOf("childFileId")
+//        )
+//    ]
 )
 data class FileXRef(
-    @PrimaryKey
-    val parentFileId: Int,
+    @PrimaryKey(autoGenerate = true) val id:Int,
+    val parentFileId: Int?,
     val childFileId: Int,
 )
 
-class FileWithChild {
-    @Embedded
-    lateinit var parentFile: File
-
-    @Relation(
-        entity = File::class,
-        parentColumn = "fileId",
-        entityColumn = "fileId",
-        associateBy = Junction(
-            value = FileXRef::class,
-            parentColumn = "parentFileId",
-            entityColumn = "childFileId"
-        )
-    )
-    lateinit var childFiles: List<File>
-}
+//class FileWithChild {
+//    @Embedded
+//    lateinit var parentFile: File
+//
+//    @Relation(
+//        parentColumn = "fileId",
+//        entityColumn = "fileId",
+//        associateBy = Junction(
+//            value = FileXRef::class,
+//            parentColumn = "parentFileId",
+//            entityColumn = "childFileId"
+//        )
+//    )
+//    lateinit var childFiles: List<File>
+//}
 

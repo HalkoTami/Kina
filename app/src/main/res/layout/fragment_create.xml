@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="@android:color/transparent">
+
     <FrameLayout
         android:background="@drawable/rectangle_green_stroke"
         android:elevation="20dp"
@@ -17,7 +18,8 @@
         >
         <include
             android:id="@+id/binding_create_file"
-            layout="@layout/add_popup"/>
+            layout="@layout/add_popup"
+            android:visibility="visible"/>
     </FrameLayout>
 
     <FrameLayout
@@ -37,6 +39,10 @@
 
     </FrameLayout>
 
-
+    <View
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

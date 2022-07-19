@@ -1,37 +1,53 @@
 package com.example.tangochoupdated
 
-import android.graphics.drawable.Drawable
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.content.Context
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.ImageView
+import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.animation.doOnEnd
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.setPadding
-import androidx.fragment.app.*
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavAction
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navArgs
+import com.example.tangochoupdated.databinding.ColorPaletBinding
 
 import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
+import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.Tab
-import com.example.tangochoupdated.room.enumclass.TabStatus
+import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
+import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
+import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
+import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.library.HomeFragmentArgs
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
+import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
+import com.example.tangochoupdated.ui.library.HomeFragment
 
-import com.example.tangochoupdated.ui.planner.CreateFragment
-
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
-    var previousTabHolder:Tab = Tab.TabLibrary
-    var popUpVisible = false
     lateinit var factory:ViewModelFactory
 
     lateinit var baseviewModel: BaseViewModel
+    lateinit var createFileviewModel: CreateFileViewModel
+    lateinit var createCardViewModel: CreateCardViewModel
+    lateinit var stringCardViewModel: StringCardViewModel
 
-    private val allTabs= listOf(Tab.TabLibrary,Tab.TabAnki,Tab.TabCreate)
+    var filePopUpVisible = false
+
 
 
     private lateinit var binding: MyActivityMainBinding
@@ -40,219 +56,351 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+//        applicationContext.deleteDatabase("my_database")
         factory = ViewModelFactory((application as RoomApplication).repository)
 
         baseviewModel = ViewModelProvider(this,
         ViewModelFactory((application as RoomApplication).repository)
         )[BaseViewModel::class.java]
 
+        createFileviewModel = ViewModelProvider(this,
+            ViewModelFactory((application as RoomApplication).repository)
+        )[CreateFileViewModel::class.java]
+
+        createCardViewModel = ViewModelProvider(this,
+            ViewModelFactory((application as RoomApplication).repository)
+        )[CreateCardViewModel::class.java]
+
+        stringCardViewModel = ViewModelProvider(this)[StringCardViewModel::class.java]
+
         binding = MyActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        bnvBinding = ItemBottomNavigationBarBinding.inflate(layoutInflater)
-        bnvBinding.imv2.setImageDrawable(getDrawable(R.drawable.icon_add_middlesize))
-        allTabs.onEach {
-            setEachOne(it,bnvBinding,TabStatus.UnFocused)
-        }
-        baseviewModel.changeActiveTab(Tab.TabLibrary)
-        baseviewModel.changeCreateFragmentStatus(false)
-        binding.frameBnv.addView(bnvBinding.root)
+
+        bnvBinding = binding.bnvBinding
+        bnvBinding.imvEditFile.setImageDrawable(getDrawable(R.drawable.icon_add_middlesize))
+
 
 
 
 
         val navHostFragment =
-            supportFragmentManager.findFragmentById(binding.viewPager.id) as NavHostFragment
+            supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
         val navCon = navHostFragment.navController
-        navArgs<HomeFragmentArgs>()
 
 
 
-
-
-
-
-
-
-        baseviewModel.activeTab.observe(this){
-            setEachOne(previousTabHolder,bnvBinding,TabStatus.UnFocused)
-            setEachOne(it, bnvBinding,TabStatus.Focused)
-            previousTabHolder = it
+        binding.createFileBinding.apply {
+            popupAddFile.visibility = GONE
+            frameBottomMenu.visibility = GONE
         }
-        bnvBinding.root.setOnClickListener {
-            if(baseviewModel.createFragmentActive.value==true){
 
-                val a = supportFragmentManager.findFragmentByTag("createFragment")!!
-                if (a is CreateFragment){
-                    a.finishWithAnimation()
+
+
+
+
+        baseviewModel.setOnCreate()
+        createFileviewModel.onCreate()
+
+
+
+
+        baseviewModel.apply {
+            action.observe(this@MainActivity){
+                navCon.navigate(it)
+
+            }
+
+        }
+        createCardViewModel.action.observe(this){
+            navCon.navigate(it)
+        }
+
+
+
+
+//    add new file pop up -- bottom menu
+        createFileviewModel.bottomMenuClickable.observe(this){
+            binding.createFileBinding.bindingAddMenu.apply {
+                this.imvnewfolder.visibility = if(!it.createFile)  GONE else VISIBLE
+                this.imvnewTangocho.visibility =if (!it.createFlashCardCover)  GONE else VISIBLE
+                this.imvnewCard.visibility= if(!it.createCard) GONE else VISIBLE
+
+            }
+        }
+
+
+        createFileviewModel.bottomMenuVisible.observe(this){
+            val btmMenuAnimator = AnimatorSet().apply{
+                val a = ObjectAnimator.ofFloat(binding.createFileBinding.frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
+                val b = ObjectAnimator.ofFloat(binding.createFileBinding.frameBottomMenu, View.ALPHA,0f,1f)
+                playTogether(a,b)
+                duration = 500
+            }
+
+            when (it){
+                true -> {
+                    btmMenuAnimator.start()
+                    binding.createFileBinding.frameBottomMenu.visibility = VISIBLE
+
+
+
+                }
+                false ->{
+                    btmMenuAnimator.doOnEnd {
+                        binding.createFileBinding.frameBottomMenu.visibility = GONE }
+                    btmMenuAnimator.reverse()
+
+                }
+            }
+
+        }
+
+        binding.createFileBinding.bindingAddMenu.apply {
+            imvnewTangocho.setOnClickListener {
+                createFileviewModel.onCLickCreateFlashCardCover()
+            }
+            imvnewfolder.setOnClickListener {
+            createFileviewModel.onClickCreateFolder()
+            }
+            imvnewCard.setOnClickListener {
+                createFileviewModel.setAddFileActive(false)
+                createCardViewModel.onClickAddNewCardBottomBar()
+
+            }
+        }
+
+        //    add new file pop up -- edit file
+        createFileviewModel.editFilePopUpVisible.observe(this){
+            val appearAnimator = AnimatorSet().apply {
+                duration= 500
+                play(ObjectAnimator.ofFloat(binding.createFileBinding.popupAddFile, View.ALPHA, 0f,1f ))
+            }
+            when (it){
+                true -> {
+
+                    binding.createFileBinding.popupAddFile.visibility = VISIBLE
+                    appearAnimator.start()
+                    binding.createFileBinding.popupAddFile.setOnClickListener(null)
+
+                }
+                false ->{
+                    appearAnimator.doOnEnd {
+                        binding.createFileBinding.popupAddFile.visibility = GONE
+                    }
+                    appearAnimator.reverse()
+
+                }
+            }
+
+        }
+//        add new File pop up Data
+        binding.createFileBinding.bindingCreateFile.apply {
+            createFileviewModel.txvLeftTop.observe(this@MainActivity){
+                txvFileTitle.text = it
+            }
+            createFileviewModel.txvHint.observe(this@MainActivity){
+                txvHint.text = it
+            }
+
+            var previousColor:ColorStatus?
+            previousColor = null
+
+
+            createFileviewModel.fileColor.observe(this@MainActivity){
+
+
+                val a = binding.createFileBinding.bindingCreateFile.colPaletBinding
+
+                if(previousColor == null){
+                    makeAllColPaletUnselected(a)
+
+                } else{
+                    changeColPalletCol(previousColor!!,false,a)
+                }
+                changeColPalletCol(it,true,a)
+                previousColor = it
+
+
+
+            }
+
+
+            binding.createFileBinding.bindingCreateFile.colPaletBinding.apply {
+                imvColBlue.setOnClickListener{createFileviewModel.setFileColor(ColorStatus.BLUE)}
+                imvColGray.setOnClickListener{ createFileviewModel.setFileColor(ColorStatus.GRAY)}
+                imvColRed.setOnClickListener{createFileviewModel.setFileColor(ColorStatus.RED)}
+                imvColYellow.setOnClickListener { createFileviewModel.setFileColor(ColorStatus.YELLOW) }
+            }
+
+
+            var start = true
+            createFileviewModel.lastInsetedFileId.observe(this@MainActivity){
+                if(start){
+                    start = false
+                    return@observe
+                } else{
+                    createFileviewModel.setLastInsertedFileId(it)
                 }
 
-            } else if (baseviewModel.createFragmentActive.value==false){
-                bnvBinding.layout1.setOnClickListener {
-                    if(baseviewModel.activeTab.value!=Tab.TabLibrary){
-                        baseviewModel.changeActiveTab(Tab.TabLibrary)
-                        navCon.navigate(R.id.to_lib)
-                    }
 
+            }
+            createFileviewModel.parentFileStock.observe(this@MainActivity){
+                Toast.makeText(this@MainActivity,"stock size ${it.size}",Toast.LENGTH_SHORT).show()
+            }
+            btnCreateFile.setOnClickListener {
+                if(edtCreatefile.text.isEmpty()){
+                    edtCreatefile.hint = "タイトルが必要です"
+                } else{
+                    createFileviewModel.onClickFinish(edtCreatefile.text!!.toString())
                 }
-                bnvBinding.layout2.setOnClickListener {
-                    supportFragmentManager.commit {
-                        if(supportFragmentManager.findFragmentByTag("createFragment")==null){
-                            add(binding.viewPager.id, CreateFragment(),"createFragment")
-                            baseviewModel.changeCreateFragmentStatus(true)
-                        } else return@setOnClickListener
 
+            }
+            createFileviewModel.txvFileTitleText.observe(this@MainActivity){
+                edtCreatefile.text = it
+            }
+
+//
+
+        }
+
+
+//         background
+
+        createFileviewModel.addFileActive.observe(this@MainActivity){ boolean ->
+            binding.createFileBinding.apply {
+                when(boolean){
+                    true ->{
+                        root.visibility = VISIBLE
+                        bindingCreateFile.btnClose.setOnClickListener {
+                            createFileviewModel.setAddFileActive(false)
+                        }
+                        background.setOnClickListener{
+                            createFileviewModel.setAddFileActive(false)
+                        }
+                    }
+                    false -> {
+                        root.visibility = GONE
+                        this@MainActivity.filePopUpVisible = false
                     }
                 }
-                bnvBinding.layout3.setOnClickListener {
-                    if(baseviewModel.activeTab.value!=Tab.TabAnki){
-                        baseviewModel.changeActiveTab(Tab.TabAnki)
-                        navCon.navigate(R.id.to_anki)
+
+            }
+
+
+
+        }
+
+
+//        bottom navigation bar
+//
+        baseviewModel.bnvVisibility.observe(this@MainActivity){
+                binding.frameBnv.visibility = if(it == true) VISIBLE else GONE
+            }
+        bnvBinding.apply {
+
+
+            layout1.apply {
+                baseviewModel.bnvLayout1View.observe(this@MainActivity){
+                    bnvImv1.setImageDrawable(getDrawable(it.drawableId))
+                    bnvImv1.setPadding(it.padding)
+                    bnvTxv1.text = it.tabName
+                    bnvTxv1.visibility = when(it.tabNameVisibility){
+                        true -> View.VISIBLE
+                        false -> GONE
                     }
+                }
+                setOnClickListener {
+                    baseviewModel.onClickTab1()
+                }
+            }
+            layout2.setOnClickListener {
+                createFileviewModel.onClickImvAddBnv()
+
+            }
+            layout3.apply {
+                baseviewModel.bnvLayout3View.observe(this@MainActivity){
+                    imv3.setImageDrawable(getDrawable(it.drawableId))
+                    imv3.setPadding(it.padding)
+                    txv3.text = it.tabName
+                    txv3.visibility = when(it.tabNameVisibility){
+                        true -> View.VISIBLE
+                        false -> GONE
+                    }
+                }
+                setOnClickListener {
+                    baseviewModel.onClickTab3()
                 }
             }
         }
 
+
+
+//   reset
 
 
     }
 
-//    private fun onClickBnv(bnvBinding: ItemBottomNavigationBarBinding, v: View,navController: NavController){
-//        val makeActive = when(v.id){
-//            bnvBinding.layout1.id -> Tab.TabLibrary
-//            bnvBinding.layout3.id -> Tab.TabAnki
-//            else -> null
-//
-//        }
-//
-//
-//        fun setBnvLayout( tab:Tab?,makeStatus: ViewStatus) {
-//            val imv = when(tab){
-//                Tab.TabLibrary -> bnvBinding.bnvImv1
-//                Tab.TabAnki -> bnvBinding.imv3
-//                else -> return
-//            }
-//            val txv= when(tab){
-//                Tab.TabLibrary -> bnvBinding.bnvTxv1
-//                Tab.TabAnki -> bnvBinding.txv3
-//                Tab.TabCreate -> return
-//            }
-//            val txvText = when(tab){
-//                Tab.TabLibrary -> getString(R.string.title_tab_library)
-//                Tab.TabAnki -> getString(R.string.title_tab_anki)
-//                Tab.TabCreate -> return
-//            }
-//            val activeDrawable:Drawable = when(tab){
-//                Tab.TabLibrary -> getDrawable(R.drawable.icon_library_active)!!
-//                Tab.TabAnki -> getDrawable(R.drawable.icon_anki_active)!!
-//                Tab.TabCreate -> return
-//            }
-//            val inActiveDrawable:Drawable= when(tab){
-//                Tab.TabLibrary -> getDrawable(R.drawable.icon_library_plane)!!
-//                Tab.TabAnki -> getDrawable(R.drawable.iconanki)!!
-//                Tab.TabCreate -> return
-//            }
-//
-//            when (makeStatus) {
-//                ViewStatus.Active -> {
-//                    txv.visibility = GONE
-//                    imv.setImageDrawable(activeDrawable)
-//                    imv.setPadding(10)
-//                }
-//                ViewStatus.InActive ->  {
-//                    txv.visibility = VISIBLE
-//                    txv.text = txvText
-//                    imv.setImageDrawable(inActiveDrawable)
-//                    imv.setPadding(0)
-//                }
-//            }
-//
-//
-//
-//        }
-//        fun fragmentAction( makeActive:Tab ){
-//
-//            val actionId = when(v.id){
-//                bnvBinding.layout1.id -> R.id.to_lib
-//                bnvBinding.layout3.id -> R.id.to_anki
-//                else -> return
-//            }
-//            navController.navigate(actionId!!)
-//            setBnvLayout(activeTab,ViewStatus.InActive)
-//            setBnvLayout(makeActive,ViewStatus.Active)
-//            activeTab = makeActive
-//
-//
-//        }
-//        if(baseviewModel.popUpVisible){
-//            supportFragmentManager.commit {
-//                remove( supportFragmentManager.findFragmentByTag("AddFragment")!!)
-//                popUpVisible = false
-//            }
-//        } else{
-//            if(makeActive!=null){
-//                if(makeActive!=activeTab){
-//                    fragmentAction(makeActive)
-//                } else return
-//            } else{
-//                supportFragmentManager.commit {
-//                    add(binding.viewPager.id,CreateFragment(),"AddFragment")
-//                    popUpVisible =true
-//
-//                }
-//            }
-//
-//        }
-//
-//
-//
-//
-//
-//    }
-    fun setEachOne(changeTab: Tab?, bnvBinding: ItemBottomNavigationBarBinding, viewStatus: TabStatus){
-        val imv = when(changeTab){
-            Tab.TabLibrary -> bnvBinding.bnvImv1
-            Tab.TabAnki -> bnvBinding.imv3
-            else -> return
-        }
-        val txv= when(changeTab){
-            Tab.TabLibrary -> bnvBinding.bnvTxv1
-            Tab.TabAnki -> bnvBinding.txv3
-            Tab.TabCreate -> return
-        }
-        val txvText = when(changeTab){
-            Tab.TabLibrary -> getString(R.string.title_tab_library)
-            Tab.TabAnki -> getString(R.string.title_tab_anki)
-            Tab.TabCreate -> return
-        }
-        val activeDrawable:Drawable = when(changeTab){
-            Tab.TabLibrary -> getDrawable(R.drawable.icon_library_active)!!
-            Tab.TabAnki -> getDrawable(R.drawable.icon_anki_active)!!
-            Tab.TabCreate -> return
-        }
-        val inActiveDrawable:Drawable= when(changeTab){
-            Tab.TabLibrary -> getDrawable(R.drawable.icon_library_plane)!!
-            Tab.TabAnki -> getDrawable(R.drawable.iconanki)!!
-            Tab.TabCreate -> return
-        }
+    override fun onClick(v: View?) {
 
-        when (viewStatus) {
-            TabStatus.Focused -> {
-                txv.visibility = GONE
-                imv.setImageDrawable(activeDrawable)
-                imv.setPadding(10)
-            }
-            TabStatus.UnFocused ->  {
-                txv.visibility = VISIBLE
-                txv.text = txvText
-                imv.setImageDrawable(inActiveDrawable)
-                imv.setPadding(0)
-            }
-        }
+
     }
 
 
 
+
+    fun changeColPalletCol(colorStatus: ColorStatus, selected:Boolean, colorPaletBinding: ColorPaletBinding){
+
+
+        val circle = getDrawable(R.drawable.circle)!!
+        val wrappedCircle = DrawableCompat.wrap(circle)
+        val stroke = getDrawable(R.drawable.circle_stroke)
+        val imageView:ImageView
+        val col:Int
+        colorPaletBinding.apply {
+            when(colorStatus) {
+                ColorStatus.GRAY -> {
+                    col = getColor(R.color.gray)
+                    imageView = this.imvColGray
+                }
+                ColorStatus.BLUE -> {
+                    col = getColor(R.color.blue)
+                    imageView = this.imvColBlue
+                }
+                ColorStatus.YELLOW -> {
+                    col = getColor(R.color.yellow)
+                    imageView = this.imvColYellow
+                }
+                ColorStatus.RED -> {
+                    col = getColor(R.color.red)
+                    imageView = this.imvColRed
+                }
+            }
+        }
+
+
+        when(selected){
+            true -> {
+                DrawableCompat.setTint(wrappedCircle, col)
+                val lay = LayerDrawable(arrayOf(wrappedCircle,stroke))
+                imageView.setImageDrawable(lay)
+            }
+            false -> {
+                DrawableCompat.setTint(wrappedCircle, col)
+                imageView.setImageDrawable(wrappedCircle)
+            }
+        }
+
+
+    }
+
+    fun makeAllColPaletUnselected(colorPaletBinding: ColorPaletBinding){
+        changeColPalletCol(ColorStatus.RED,false,colorPaletBinding)
+        changeColPalletCol(ColorStatus.YELLOW,false,colorPaletBinding)
+        changeColPalletCol(ColorStatus.BLUE,false,colorPaletBinding)
+        changeColPalletCol(ColorStatus.GRAY,false,colorPaletBinding)
+    }
 
 
 }

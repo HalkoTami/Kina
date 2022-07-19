@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.tangochoupdated.databinding.FragmentPlannerHomeBinding
+import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 
 class PlannerFragment : Fragment() {
 
@@ -23,7 +24,7 @@ class PlannerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val plannerViewModel =
-            ViewModelProvider(this)[CreateViewModel::class.java]
+            ViewModelProvider(this)[CreateFileViewModel::class.java]
 
         _binding = FragmentPlannerHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root

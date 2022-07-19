@@ -7,22 +7,24 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 
 
 @Entity(tableName = "tbl_card",
-    indices = [Index("id", unique = true),
-              Index("belongingFileId", unique = true, )],
-    foreignKeys = [ForeignKey(entity = File::class,
-        parentColumns = arrayOf("fileId"),
-        childColumns = arrayOf("belongingFileId"),
-        onDelete = ForeignKey.SET_NULL,
-        onUpdate = ForeignKey.CASCADE
-    )]
+//    indices = [Index("id", unique = true),
+//              Index("belongingFileId", unique = true, )],
+//    foreignKeys = [ForeignKey(entity = File::class,
+//        parentColumns = arrayOf("fileId"),
+//        childColumns = arrayOf("belongingFileId"),
+//        onDelete = ForeignKey.SET_NULL,
+//        onUpdate = ForeignKey.CASCADE
+//    )]
 )
 @TypeConverters(CardStatusConverter::class)
 data class Card(
-    @PrimaryKey
-    val belongingFileId:Int,
+    @PrimaryKey(autoGenerate = true)
     val id:Int,
+    @ColumnInfo
+    val belongingFileId:Int?,
+
     @Embedded(prefix = "belonging_" )
-    val stringData: StringData?,
+    var stringData: StringData?,
     @Embedded(prefix = "belonging_")
     val markerData: MarkerPreviewData?,
     @Embedded(prefix = "belonging_")
@@ -30,25 +32,25 @@ data class Card(
     @ColumnInfo(name = "card_type")
     var cardStatus: CardStatus,
     @ColumnInfo(name = "card_deleted")
-    val deleted:Boolean?,
+    var deleted:Boolean?,
     @ColumnInfo(name ="card_remembered")
     val remembered: Boolean?,
     @ColumnInfo(name= "library_order")
-    val libOrder: Int,
+    var libOrder: Int,
     @ColumnInfo(name ="card_color")
     val colorStatus: ColorStatus?,
 
 )
 
 
-
+//Todo val と var の正しい振り分け
 
 
 data class StringData(
-    val frontTitle:String?,
-    val backTitle: String?,
-    val frontText:String?,
-    val backText:String?,
+    var frontTitle:String?,
+    var backTitle: String?,
+    var frontText:String?,
+    var backText:String?,
 
     )
 
@@ -89,9 +91,9 @@ data class CardAndTagXRef(
 )
 
 
-class CardAndTags {
+class CardAndTags (
     @Embedded
-    lateinit var card: Card
+    val card: Card,
 
     @Relation(
         entity = File::class,
@@ -103,8 +105,8 @@ class CardAndTags {
             entityColumn = "tagId"
         )
     )
-    lateinit var tags: List<File>
-}
+    val tags: List<File>
+)
 
 
 

@@ -22,6 +22,7 @@ class RoomApplication : Application() {
         database.userDao(),
         database.clearTable(),
         database.libraryDao(),
-        database.cardAndTagXRefDao()
+        database.cardAndTagXRefDao(),
+        database.fileXRefDao()
     ) }
 }

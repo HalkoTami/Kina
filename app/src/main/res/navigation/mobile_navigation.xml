@@ -26,6 +26,44 @@
         </action>
     </fragment>
 
+    <action
+        android:id="@+id/action_to_create_card_nav"
+        app:destination="@id/create_card_nav" />
+
+    <fragment
+        android:id="@+id/fragmentCreateCard"
+        android:name="com.example.tangochoupdated.ui.create.card.CreateCardFragment"
+        tools:layout="@layout/create_card_base">
+
+        <argument
+            android:name="parentFlashCardCoverId"
+            app:argType="integer[]"
+            app:nullable="true"
+            />
+        <argument
+            android:name="cardId"
+            app:argType="integer[]"
+            app:nullable="true" />
+    </fragment>
+
+
+
+
+    <action
+        android:id="@+id/to_create_card"
+        app:destination="@+id/fragmentCreateCard"/>
+
+    <action
+        android:id="@+id/to_lib"
+        app:popUpTo="@id/mobile_navigation"
+        app:destination="@+id/fragmentLibrary"/>
+    <action
+        android:id="@+id/to_anki"
+        app:popUpTo="@id/mobile_navigation"
+        app:destination="@+id/navigation_anki"/>
+    <action
+        android:id="@+id/to_create"
+        app:destination="@+id/navigation_create"/>
 
 
     <fragment
@@ -34,34 +72,8 @@
         android:label="anki"
 
         tools:layout="@layout/fragment_anki_home" />
-    <action
-        android:id="@+id/to_lib"
-        app:popUpTo="@id/mobile_navigation"
-        app:destination="@+id/fragmentLibrary"/>
-    <action
-    android:id="@+id/to_anki"
-    app:popUpTo="@id/mobile_navigation"
-    app:destination="@+id/navigation_anki"/>
-    <action
-        android:id="@+id/to_create"
-        app:destination="@+id/navigation_create"/>
 
 
 
 
-    <fragment
-        android:id="@+id/navigation_planner"
-        android:name="com.example.tangochoupdated.ui.planner.PlannerFragment"
-        android:label="@string/title_tab_planner"
-        tools:layout="@layout/fragment_planner_home" />
-    <fragment
-        android:id="@+id/navigation_data"
-        android:name="com.example.tangochoupdated.ui.data.DataFragment"
-        android:label="@string/title_tab_data"
-        tools:layout="@layout/fragment_data_home" />
-    <fragment
-        android:id="@+id/navigation_create"
-        android:name="com.example.tangochoupdated.ui.planner.CreateFragment"
-        android:label="@string/title_tab_create"
-        tools:layout="@layout/fragment_create"/>
 </navigation>
