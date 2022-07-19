@@ -25,6 +25,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         setSavingCard(false)
         setColPalletVisibility(false)
         setCardStatus(CardStatus.STRING)
+        setCardColor(ColorStatus.GRAY)
+//        setGetStringData(false)
 //        val newCard = Card(
 //            id = 0,
 //            libOrder = 0,
@@ -38,7 +40,6 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 //            remembered = false
 //        )
 //        insertCard(newCard)
-        _mode
     }
 
 
@@ -74,27 +75,31 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
 
 //    parent card
-    private val _parentCard = MutableLiveData<CardAndTags?>()
-    fun setParentCard(card: CardAndTags?){
+    fun getParentCard(cardId: Int?):LiveData<CardAndTags?> = repository.getCardByCardId(cardId).asLiveData()
+    private val _parentCard = MutableLiveData<Card>()
+    fun setParentCard(card: Card?){
         _parentCard.value = card
+        setTxvPositionText("${card?.libOrder}/ ${_sisterCards.value?.size}")
         if(card == null) {
             setMode(Mode.Create)
         } else {
             setMode(Mode.Edit)
         }
+
     }
-    val parentCard :LiveData<CardAndTags?> = _parentCard
+    val parentCard :LiveData<Card?> = _parentCard
 
 //    parent sister cards
     fun getSisterCards(fileId: Int?):LiveData<List<CardAndTags>?> = repository.getCardDataByFileId(fileId).asLiveData()
     private val _sisterCards = MutableLiveData<List<CardAndTags>?>()
     fun setSisterCards(list:List<CardAndTags>?){
         _sisterCards.value = list
+//        setTxvPositionText("${_position.value}/ ${list?.size}")
     }
     val sisterCards:LiveData<List<CardAndTags>?> =_sisterCards
     fun filterAndSetParentCard(cardId:Int?){
         val a:CardAndTags? = _sisterCards.value?.find { it.card.id == cardId }
-        setParentCard(a)
+        setParentCard(a?.card)
     }
     fun updateSistersPosition(position: Int){
         val updateSisters = mutableListOf<Card>()
@@ -128,7 +133,12 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     val mode:LiveData<Mode> = _mode
     private val _position = MutableLiveData<Int>()
     private fun setPosition( int: Int){
-        _position.value = int
+        val before = _position.value
+        if(before != int){
+            _position.value = int
+//            setTxvPositionText("${int}/ ${_sisterCards.value?.size ?: 1}")
+        }
+
     }
     val position :LiveData<Int> =_position
 
@@ -172,14 +182,15 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun setSavingCard (boolean: Boolean){
         _savingCard.value = boolean
     }
-
+//
     private val _getStringData = MutableLiveData<Boolean>()
     val getStringData: LiveData<Boolean> = _getStringData
     private fun setGetStringData (boolean: Boolean){
-        _getStringData.value = boolean
-        if(_savingCard.value == true){
-            saveCard()
-        }
+        val before =_getStringData.value
+        if(before != boolean){
+            _getStringData.value = boolean
+        } else return
+
     }
 
 
@@ -190,17 +201,20 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
 
-    private val _stringData = MutableLiveData<StringData>()
+    private val _stringData = MutableLiveData<StringData?>()
 
-    fun setStringData(stringData: StringData){
+    fun setStringData(stringData: StringData?){
         _stringData.value = stringData
         when(_mode.value){
             Mode.Create -> saveCard()
             Mode.Edit -> upDateCard()
+            else -> throw  IllegalArgumentException()
         }
+//        setGetStringData(false)
 
 
     }
+    val stringData :LiveData<StringData?> =_stringData
     fun saveCard(){
         val newCard = Card(
             id = 0,
@@ -217,7 +231,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         insert(newCard)
     }
     fun upDateCard(){
-        val upDating = _parentCard.value!!.card
+        val upDating = _parentCard.value!!
         upDating.stringData = _stringData.value
         update(upDating)
     }
@@ -252,6 +266,10 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
 // onClickEvents
+
+//   fragment create card
+
+//   color palet
     fun onClickColPaletIcon(){
         setColPalletVisibility(_colPalletVisibility.value!!.not())
     }
@@ -259,16 +277,29 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         setCardColor(colorStatus)
 
     }
+
+//    navigation
+    fun onClickBtnNext(){
+       val nextCard = _sisterCards.value?.find { it.card.libOrder == _parentCard.value!!.libOrder + 1}
+        setParentCard(nextCard?.card)
+
+
+    }
+
+
     fun onClickAddNewCardByPosition(item:LibraryRV){
+        setMode(Mode.Create)
         setParentCardId(null)
-//        item.position+1
+        setParentCard(null)
         setPosition(item.position +2)
         updateSistersPosition(item.position +2)
         activateCreateCard()
 
     }
     fun onClickAddNewCardBottomBar(){
+        setMode(Mode.Create)
         setParentCardId(null)
+        setParentCard(null)
         setPosition((_sisterCards.value!!.size) +1)
         activateCreateCard()
 
@@ -282,7 +313,10 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         Tag, FrontTitle, FrontContent, BackTitle, BackText
     }
     fun onClickEditCard(item: LibraryRV){
-        setParentCardId(item.id)
+        setMode(Mode.Edit)
+        setParentCardId(item.card!!.id)
+        setParentCard(item.card)
+        setTxvPositionText("${item.card.libOrder}/ ${_sisterCards.value?.size ?: 1}")
         activateCreateCard()
 
     }

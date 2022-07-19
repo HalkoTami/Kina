@@ -28,6 +28,7 @@ import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
 import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
+import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 
 class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
@@ -43,6 +44,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     private val sharedViewModel: BaseViewModel by activityViewModels()
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
+    private val stringCardViewModel : StringCardViewModel by activityViewModels()
 
     private var _binding: FragmentLibraryHomeBinding? = null
 
@@ -245,7 +247,9 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     }
 
     override fun onCickEditCard(item: LibraryRV) {
+        stringCardViewModel.setStringData(item.card!!.stringData)
         createCardViewModel.onClickEditCard(item)
+
     }
 
     override fun onSwipeLeft(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding, fileBinding:ItemCoverFileBinding) {

@@ -32,6 +32,7 @@ class StringCardFragment : Fragment() {
 
     private var _binding: CreateCardStringBinding? = null
     private val  createCardViewModel: CreateCardViewModel by activityViewModels()
+    private val stringCardViewModel :StringCardViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -71,7 +72,7 @@ class StringCardFragment : Fragment() {
                             backText =  edtBackContent.text.toString()
                         )
                     )
-                }
+                } else return@observe
             }
 
 
@@ -80,14 +81,14 @@ class StringCardFragment : Fragment() {
 
 
         binding.apply {
-            createCardViewModel.parentCard.observe(viewLifecycleOwner){
-                edtFrontTitle.text = SpannableStringBuilder(it?.card?.stringData?.frontTitle ?:"表" )
-                edtFrontContent.text = SpannableStringBuilder(it?.card?.stringData?.frontText ?:"" )
-                edtBackTitle.text = SpannableStringBuilder(it?.card?.stringData?.backTitle ?:"裏")
-                edtBackContent.text =  SpannableStringBuilder(it?.card?.stringData?.backText ?:"")
+            stringCardViewModel.stringData.observe(viewLifecycleOwner){
+                edtFrontTitle.text = SpannableStringBuilder(it?. frontTitle ?:"表" )
+                edtFrontContent.text = SpannableStringBuilder(it?.frontText ?:"" )
+                edtBackTitle.text = SpannableStringBuilder(it?.backTitle ?:"裏")
+                edtBackContent.text =  SpannableStringBuilder(it?. backText ?:"")
 
             }
-//                it?.stringData?.frontTitle
+//
 
         }
 

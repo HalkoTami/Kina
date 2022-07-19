@@ -30,6 +30,7 @@ import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
 import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
+import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.library.HomeFragmentArgs
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     lateinit var baseviewModel: BaseViewModel
     lateinit var createFileviewModel: CreateFileViewModel
     lateinit var createCardViewModel: CreateCardViewModel
+    lateinit var stringCardViewModel: StringCardViewModel
 
     var filePopUpVisible = false
 
@@ -69,6 +71,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         createCardViewModel = ViewModelProvider(this,
             ViewModelFactory((application as RoomApplication).repository)
         )[CreateCardViewModel::class.java]
+
+        stringCardViewModel = ViewModelProvider(this)[StringCardViewModel::class.java]
 
         binding = MyActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

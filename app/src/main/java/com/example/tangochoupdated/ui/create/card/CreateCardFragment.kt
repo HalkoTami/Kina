@@ -61,9 +61,9 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 setSisterCards(it)
             }
             filterAndSetParentCard(args.cardId?.single())
-//            getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){
-//                setParentCard(it)
-//            }
+            getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){
+                setParentCard(it?.card)
+            }
 
             val edit = requireActivity().getDrawable(R.drawable.icon_edit)
             val new = requireActivity().getDrawable(R.drawable.icon_eye_opened)
@@ -74,9 +74,22 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 })
             }
 
-            parentFlashCardCover.observe(viewLifecycleOwner){
-                binding.txvTitle.text = it?.title ?:"単語帳に入ってないよ"
+
+//            top Bar
+//            parentFlashCardCover.observe(viewLifecycleOwner){
+//                binding.txvTitle.text = it?.title ?:"単語帳に入ってないよ"
+//            }
+            txvPositionText.observe(viewLifecycleOwner){
+                binding.txvPosition.text = it
             }
+            parentCard.observe(viewLifecycleOwner){
+                binding.txvTitle.text = it?.id.toString()
+            }
+
+
+
+
+
 
 //            Color Pallet attribute 1. pallet visibility
             val palletBinding = binding.createCardColPaletBinding
@@ -101,10 +114,18 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 }
 
             }
-            binding.createCardColPaletBinding.apply {
-                clickableViews.addAll(arrayOf(imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet))
+
+            binding.apply {
+                clickableViews.add(imvSaveAndBack)
+                clickableViews.addAll(arrayOf(btnNext,btnPrevious))
+
+                createCardColPaletBinding.apply {
+                    clickableViews.addAll(arrayOf(imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet))
+                }
             }
-            clickableViews.add(binding.imvSaveAndBack)
+
+//            移動ボタン
+
 
 
 
@@ -137,10 +158,14 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                     imvSaveAndBack -> {
                         createCardViewModel.onClickSaveAndBack()
                         Toast.makeText(context, "onsave clicked", Toast.LENGTH_SHORT).show()
-
-//
                     }
+                    //  移動操作
+                    btnNext ->  onClickBtnNext()
+                    btnPrevious -> return
+
                 }
+
+
 
             }
         }

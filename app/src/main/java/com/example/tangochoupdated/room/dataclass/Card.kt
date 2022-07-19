@@ -91,9 +91,9 @@ data class CardAndTagXRef(
 )
 
 
-class CardAndTags {
+class CardAndTags (
     @Embedded
-    lateinit var card: Card
+    val card: Card,
 
     @Relation(
         entity = File::class,
@@ -105,8 +105,8 @@ class CardAndTags {
             entityColumn = "tagId"
         )
     )
-    lateinit var tags: List<File>
-}
+    val tags: List<File>
+)
 
 
 

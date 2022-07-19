@@ -11,6 +11,11 @@ abstract class MyDao{
     abstract class CardDao(): BaseDao<Card>{
         @Query("select * from tbl_card where not card_deleted AND id = :cardId ")
         abstract fun getCardByCardId(cardId:Int?): Flow<Card>
+
+        @Transaction
+        @Query("select * from tbl_card where not card_deleted AND id = :cardId ")
+        abstract fun getCardAndTagsByCardId(cardId:Int?): Flow<CardAndTags>
+
     }
     @Dao
     abstract class ActivityDataDao(): BaseDao<ActivityData>

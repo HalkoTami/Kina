@@ -22,12 +22,11 @@ class StringCardViewModel:ViewModel() {
     private val _stringData = MutableLiveData<StringData>()
     val stringData:LiveData<StringData> = _stringData
 
-    fun setStringData(stringData: StringData){
+    fun setStringData(stringData: StringData?){
         _stringData.value = stringData
 
 
     }
-    val a = "hinyanay"
 
 
 
