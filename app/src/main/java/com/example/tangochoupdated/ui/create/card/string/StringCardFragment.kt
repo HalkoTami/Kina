@@ -64,10 +64,12 @@ class StringCardFragment : Fragment() {
 
             createCardViewModel.getStringData.observe(viewLifecycleOwner){
                 if(it==true){
+                    Toast.makeText(context, "sending stringdata ", Toast.LENGTH_SHORT).show()
+//
                     createCardViewModel.setStringData(
                         StringData(
                             frontTitle =  if(edtFrontTitle.text.toString() == "表") null else edtFrontTitle.text.toString(),
-                            frontText = edtFrontContent.text.toString(),
+                            frontText =     edtFrontContent.text.toString(),
                             backTitle = if(edtBackTitle.text.toString() == "裏") null else edtBackTitle.text.toString(),
                             backText =  edtBackContent.text.toString()
                         )

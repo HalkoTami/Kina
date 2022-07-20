@@ -135,10 +135,13 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             if(it.fromSameFrag == true){
                 navCon.popBackStack()
                 navCon.navigate(it.action)
+
             }else{
                 navCon.navigate(it.action)
             }
-            Toast.makeText(this,"action",Toast.LENGTH_SHORT).show()
+        }
+        createCardViewModel.parentCard.observe(this){
+            stringCardViewModel.setStringData(it?.card?.stringData)
         }
 
 

@@ -42,7 +42,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     class CreateCardNav(
         val action: NavDirections,
-        val fromSameFrag:Boolean
+        val fromSameFrag:Boolean,
+//        var updateDone :Boolean
     )
 
     private val _action = MutableLiveData<CreateCardNav>()
@@ -94,14 +95,19 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun getParentCard(cardId: Int?):LiveData<CardAndTags?> = repository.getCardByCardId(cardId).asLiveData()
     private val _parentCard = MutableLiveData<CardAndTags>()
     fun setParentCard(card: CardAndTags){
+        val before = _parentCard.value
+
         _parentCard.value = card
 //        setPosition(card.card.libOrder)
         val nowCard = _sisterCards.value!!.find { it.card.id == _parentCard.value!!.card.id }
         val nowPosition = _sisterCards.value!!.indexOf(nowCard)
         setPosition(nowPosition)
-
         setTxvPositionText("${card.card.libOrder + 1}/ ${_sisterCards.value?.size}")
-//        card?.card?.apply {
+//        if(before?.card?.id == card.card.id && before.card.stringData != card.card.stringData ){
+////            confirmUpdate()
+//        }
+
+    //        card?.card?.apply {
 //            if(markerData == null && quizData == null && stringData == null){
 //                setMode(Mode.Create)
 //            } else setMode(Mode.Edit)
@@ -238,7 +244,11 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     fun setStringData(stringData: StringData?){
         _stringData.value = stringData
+//        val update =_parentCard.value!!
+//        update.card.stringData = stringData
+//        update(update)
         upDateCard()
+//        upDateCard()
 //        when(_mode.value){
 //            Mode.Create -> saveCard()
 //            Mode.Edit -> upDateCard()
@@ -280,8 +290,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         insert(newCard)
     }
     fun upDateCard(){
-        val upDating = _parentCard.value!!
-        upDating.card.stringData = _stringData.value
+        val upDating = _parentCard.value!!.card
+        upDating.stringData = _stringData.value
         update(upDating)
         setGetStringData(false)
     }
@@ -292,10 +302,17 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         }
 
     }
+//    fun confirmUpdate(){
+//        val update = _action.value!!
+//        update.updateDone = true
+//        setAction(update)
+//    }
     private fun update(any: Any){
         viewModelScope.launch {
             repository.update(any)
         }
+
+
 
     }
     private fun upDateMultipleCards(list: List<Card>){
@@ -328,7 +345,6 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
 //    navigation
     fun onClickBtnNext(){
-    setGetStringData(true)
     setFromSameFrag(true)
     val a = intArrayOf(_parentCard.value!!.card.belongingFileId!!)
     val now = _sisterCards.value!!.find { it.card.id == _parentCard.value!!.card.id }
@@ -338,8 +354,12 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
         val nextCardId =_sisterCards.value?.get(nowPosition+1)!!.card.id
         val b = intArrayOf(nextCardId)
-        setAction(CreateCardNav(CreateCardFragmentDirections.toCreateCard(a,b),true) )
+        setAction(CreateCardNav(CreateCardFragmentDirections.toCreateCard(a,b),true,
+//            updateDone = false
+        ) )
     } else createNewCardNextToPosition(nowPosition  ,false,a.single())
+    setGetStringData(true)
+
     }
     fun onClickBtnPrevious(){
         setGetStringData(true)

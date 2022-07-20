@@ -59,6 +59,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                     binding.txvTitle.text = cardandTags?.card?.id.toString()
                     Toast.makeText(requireActivity(),"parent card id from parent card ${cardandTags?.card?.id}",Toast.LENGTH_SHORT).show()
                 }
+                stringCardViewModel.setStringData(cardandTags?.card?.stringData)
 
             }
             getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ sisters ->
@@ -177,7 +178,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 when(v){
                     imvSaveAndBack -> {
                         createCardViewModel.onClickSaveAndBack()
-                        Toast.makeText(context, "onsave clicked", Toast.LENGTH_SHORT).show()
+
                     }
                     //  移動操作
                     btnNext ->  onClickBtnNext()

@@ -248,7 +248,6 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     }
 
     override fun onCickEditCard(item: LibraryRV) {
-        stringCardViewModel.setStringData(item.card!!.stringData)
         createCardViewModel.onClickEditCard(item)
 
     }
