@@ -35,7 +35,7 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
     fun getPAndGPFiles(fileId: Int?):Flow<List<File>> = libraryDao.getPAndGPFileBychildId(fileId)
 
     fun getCardByCardId(cardId:Int?):Flow<CardAndTags> = cardDao.getCardAndTagsByCardId(cardId)
-
+    val lastInsertedCard:Flow<Card> = cardDao.getLastInsertedCard()
 
 
 

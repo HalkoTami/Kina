@@ -78,7 +78,7 @@ interface LibraryDao {
 
 
     @Query("select * FROM tbl_card " +
-            "where not card_deleted AND belongingFileId = :belongingFileId")
+            "where not card_deleted AND belongingFileId = :belongingFileId Order by library_order asc")
     fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<CardAndTags>>
 
     @Query("select * from tbl_card where NOT card_deleted AND " +

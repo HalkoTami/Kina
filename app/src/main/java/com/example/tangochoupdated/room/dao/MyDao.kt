@@ -16,6 +16,12 @@ abstract class MyDao{
         @Query("select * from tbl_card where not card_deleted AND id = :cardId ")
         abstract fun getCardAndTagsByCardId(cardId:Int?): Flow<CardAndTags>
 
+
+        @Query("SELECT * FROM tbl_card a " +
+                " INNER JOIN ( SELECT  MAX(id) id FROM tbl_card  ) b ON a.id = b.id"
+        )
+        abstract fun getLastInsertedCard():Flow<Card>
+
     }
     @Dao
     abstract class ActivityDataDao(): BaseDao<ActivityData>

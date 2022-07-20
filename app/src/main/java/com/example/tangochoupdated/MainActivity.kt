@@ -35,6 +35,7 @@ import com.example.tangochoupdated.ui.library.HomeFragmentArgs
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.HomeFragment
+import com.example.tangochoupdated.ui.library.LibraryViewModel
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
 
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     lateinit var createFileviewModel: CreateFileViewModel
     lateinit var createCardViewModel: CreateCardViewModel
     lateinit var stringCardViewModel: StringCardViewModel
+    lateinit var libraryViewModel:LibraryViewModel
 
     var filePopUpVisible = false
 
@@ -72,6 +74,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             ViewModelFactory((application as RoomApplication).repository)
         )[CreateCardViewModel::class.java]
 
+        libraryViewModel =
+            ViewModelProvider(
+                this, factory
+            )[LibraryViewModel::class.java]
+
         stringCardViewModel = ViewModelProvider(this)[StringCardViewModel::class.java]
 
         binding = MyActivityMainBinding.inflate(layoutInflater)
@@ -80,6 +87,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
         bnvBinding = binding.bnvBinding
         bnvBinding.imvEditFile.setImageDrawable(getDrawable(R.drawable.icon_add_middlesize))
+
 
 
 
@@ -104,6 +112,15 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         createFileviewModel.onCreate()
 
 
+        var lastInserted = 0
+        createCardViewModel. lastInsertedCardAndTags.observe(this){
+            if(lastInserted != 0){
+                createCardViewModel.setLastInsertedCardAndTags(it)
+            }
+            lastInserted = it.id
+
+
+        }
 
 
         baseviewModel.apply {
@@ -115,6 +132,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         createCardViewModel.action.observe(this){
             navCon.navigate(it)
+            Toast.makeText(this,"action",Toast.LENGTH_SHORT).show()
         }
 
 
@@ -157,6 +175,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
         }
 
+        libraryViewModel.parentItemId.observe(this@MainActivity){
+            createCardViewModel.setParentFlashCardCoverId(it)
+
+        }
         binding.createFileBinding.bindingAddMenu.apply {
             imvnewTangocho.setOnClickListener {
                 createFileviewModel.onCLickCreateFlashCardCover()
@@ -166,6 +188,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             }
             imvnewCard.setOnClickListener {
                 createFileviewModel.setAddFileActive(false)
+
                 createCardViewModel.onClickAddNewCardBottomBar()
 
             }
