@@ -131,7 +131,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
         }
         createCardViewModel.action.observe(this){
-            navCon.navigate(it)
+            if(it.fromSameFrag == true){
+                navCon.popBackStack()
+                navCon.navigate(it.action)
+            }else{
+                navCon.navigate(it.action)
+            }
             Toast.makeText(this,"action",Toast.LENGTH_SHORT).show()
         }
 

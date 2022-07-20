@@ -45,12 +45,22 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
 
+    class CreateCardNav(
+        val action: NavDirections,
+        val fromSameFrag:Boolean
+    )
 
-    private val _action = MutableLiveData<NavDirections>()
-    private fun setAction (navDirections: NavDirections){
-        _action.value = navDirections
+    private val _action = MutableLiveData<CreateCardNav>()
+    private fun setAction (createCardNav: CreateCardNav){
+        _action.value = createCardNav
     }
-    val action :LiveData<NavDirections> = _action
+    val action :LiveData<CreateCardNav> = _action
+
+    private val _fromSameFrag = MutableLiveData<Boolean>()
+    private fun setFromSameFrag (boolean: Boolean){
+        _fromSameFrag.value = boolean
+    }
+    val fromSameFrag :LiveData<Boolean> = _fromSameFrag
 
 
 //    DBからとってくる
@@ -132,7 +142,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             _lastInsertedCardAndTags.value = card
             val a = intArrayOf(card.belongingFileId!!)
             val b = intArrayOf(card.id)
-            setAction(HomeFragmentDirections.toCreateCard(a,b))
+            val fromSameFrag = _fromSameFrag.value!!
+            setAction(CreateCardNav(HomeFragmentDirections.toCreateCard(a,b),fromSameFrag))
 //            setMode(Mode.Edit)
         }
 
@@ -326,7 +337,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val nextPositionId = _sisterCards.value!!.indexOf(now)
         val nextCardId =_sisterCards.value?.get(nextPositionId+1)!!.card.id
         val b = intArrayOf(nextCardId)
-        setAction(CreateCardFragmentDirections.toCreateCard(a,b))
+        setFromSameFrag(true)
+        setAction(CreateCardNav(CreateCardFragmentDirections.toCreateCard(a,b),true) )
     }
     }
 
@@ -351,11 +363,13 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 //        } else intArrayOf(item.card.belongingFileId)
 //
 //        setAction(CreateCardFragmentDirections.toCreateCard(parentFileId,null))
+        setFromSameFrag(false)
         createNewCardNextToPosition(item.card!!.libOrder,false,item.card.belongingFileId)
     }
     fun onClickAddNewCardBottomBar(){
         val parentFile = intArrayOf(_parentFlashCardCoverId.value!!)
 //        setAction(CreateCardFragmentDirections.toCreateCard(parentFile,null))
+        setFromSameFrag(false)
         createNewCardNextToPosition((_sisterCards.value?.size ?:0)  ,false,_parentFlashCardCoverId.value!!)
 
 
@@ -371,7 +385,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun onClickEditCard(item: LibraryRV){
         val a = intArrayOf(item.card!!.belongingFileId!!)
         val b = intArrayOf(item.card.id)
-        setAction(HomeFragmentDirections.toCreateCard(a,b))
+        setFromSameFrag(false)
+        setAction(CreateCardNav( HomeFragmentDirections.toCreateCard(a,b),false))
         setMode(Mode.Edit)
 
 
