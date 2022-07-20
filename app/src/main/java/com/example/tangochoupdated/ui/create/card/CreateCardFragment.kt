@@ -6,15 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
@@ -22,11 +20,13 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.ui.create.Mode
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 
+
 class CreateCardFragment: Fragment(),View.OnClickListener {
 
     private var _binding: CreateCardBaseBinding? = null
     private val binding get() = _binding!!
-    private val args: CreateCardFragmentArgs by navArgs()
+
+    private val args :CreateCardFragmentArgs by navArgs()
 
     private val clickableViews = mutableListOf<View>()
 
@@ -52,18 +52,38 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 //            初期設定
             onStart()
 
-            setParentCardId(args.cardId?.single())
-            getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){
-                setParentFlashCardCover(it)
+//            setParentCardId(args.cardId?.single())
+            getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){ cardandTags->
+                if(cardandTags!= null){
+                    setParentCard(cardandTags)
+                    binding.txvTitle.text = cardandTags?.card?.id.toString()
+                    Toast.makeText(requireActivity(),"parent card id from parent card ${cardandTags?.card?.id}",Toast.LENGTH_SHORT).show()
+                }
+                stringCardViewModel.setStringData(cardandTags?.card?.stringData)
+
             }
-//            DBからデータとってくる
-            getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){
-                setSisterCards(it)
+            getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ sisters ->
+                setSisterCards(sisters!!)
             }
-            filterAndSetParentCard(args.cardId?.single())
-            getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){
-                setParentCard(it?.card)
+            getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ file ->
+                setParentFlashCardCover(file)
             }
+
+//            parentCard.observe(viewLifecycleOwner){
+//
+////                Toast.makeText(requireActivity(),"${it?.card?.belongingFileId}",Toast.LENGTH_SHORT).show()
+//            }
+//            getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){
+//                setParentFlashCardCover(it)
+//            }
+
+//            getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){
+//                setSisterCards(it)
+//            }
+//            filterAndSetParentCard(args.cardId?.single())
+//            getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){
+//                setParentCard(it?.card)
+//            }
 
             val edit = requireActivity().getDrawable(R.drawable.icon_edit)
             val new = requireActivity().getDrawable(R.drawable.icon_eye_opened)
@@ -82,9 +102,10 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             txvPositionText.observe(viewLifecycleOwner){
                 binding.txvPosition.text = it
             }
-            parentCard.observe(viewLifecycleOwner){
-                binding.txvTitle.text = it?.id.toString()
-            }
+//            parentCard.observe(viewLifecycleOwner){
+//                binding.txvTitle.text = it?.id.toString()
+//                stringCardViewModel.setStringData(it?.stringData)
+//            }
 
 
 
@@ -157,11 +178,11 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 when(v){
                     imvSaveAndBack -> {
                         createCardViewModel.onClickSaveAndBack()
-                        Toast.makeText(context, "onsave clicked", Toast.LENGTH_SHORT).show()
+
                     }
                     //  移動操作
                     btnNext ->  onClickBtnNext()
-                    btnPrevious -> return
+                    btnPrevious -> onClickBtnPrevious()
 
                 }
 
@@ -171,4 +192,19 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         }
 
     }
+
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
+//            true // default to enabled
+//        ) {
+//            override fun handleOnBackPressed() {
+//
+//            }
+//        }
+//        requireActivity().onBackPressedDispatcher.addCallback(
+//            this,  // LifecycleOwner
+//            callback
+//        )
+//    }
 }

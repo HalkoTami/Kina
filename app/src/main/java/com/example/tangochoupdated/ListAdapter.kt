@@ -121,9 +121,10 @@ val mycontext: Context) :
 
                   val stringData = item.card?.stringData
 //                  stringData?.frontTitle
+//                  stringData?.backTitle ?:"裏"
                   stringBinding.txvFrontTitle.text = item.card?.libOrder.toString()
-                  stringBinding.txvFrontText.text = stringData?.frontText
-                  stringBinding.txvBackTitle.text = stringData?.backTitle ?:"裏"
+                  stringBinding.txvFrontText.text = stringData?.frontText ?:"null"
+                  stringBinding.txvBackTitle.text = item.card?.id.toString()
                   stringBinding.txvBackText.text = stringData?.backText
 
 

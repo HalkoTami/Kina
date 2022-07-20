@@ -45,13 +45,13 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val stringCardViewModel : StringCardViewModel by activityViewModels()
+    private val libraryViewModel: LibraryViewModel by activityViewModels()
 
     private var _binding: FragmentLibraryHomeBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var libraryViewModel: LibraryViewModel
     var leftSwiped = false
 
     override fun onCreateView(
@@ -60,12 +60,12 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
 
-        val repository = (requireActivity().application as RoomApplication).repository
-        val viewModelFactory = ViewModelFactory(repository)
-        libraryViewModel =
-            ViewModelProvider(
-                this, viewModelFactory
-            )[LibraryViewModel::class.java]
+//        val repository = (requireActivity().application as RoomApplication).repository
+//        val viewModelFactory = ViewModelFactory(repository)
+//        libraryViewModel =
+//            ViewModelProvider(
+//                this, viewModelFactory
+//            )[LibraryViewModel::class.java]
 
 
         _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
@@ -80,6 +80,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         adapter = LibraryListAdapter(this,requireActivity())
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.isNestedScrollingEnabled = false
 
 
 
@@ -88,6 +89,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 
         libraryViewModel.onStart()
+//        createCardViewModel.setParentFlashCardCoverId(args.parentItemId?.single())
 
 
 //　　　　DBからデータとってくる
@@ -96,8 +98,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             setNavCon(mynavCon)
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it, myId == null)
-                createFileViewModel.setParentFile(it)
-                createCardViewModel.setParentFlashCardCover(it)
+//                createFileViewModel.setParentFile(it)
                 sharedViewModel.setParentFile(it)
             }
 
@@ -247,7 +248,6 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     }
 
     override fun onCickEditCard(item: LibraryRV) {
-        stringCardViewModel.setStringData(item.card!!.stringData)
         createCardViewModel.onClickEditCard(item)
 
     }
@@ -318,7 +318,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     }
 
     override fun onClickAddNewCardByPosition(item: LibraryRV) {
-        createCardViewModel.onClickAddNewCardByPosition(item)
+        createCardViewModel.onClickRVAddNewCard(item)
     }
 
     override fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {

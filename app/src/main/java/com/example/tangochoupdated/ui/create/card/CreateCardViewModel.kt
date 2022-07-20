@@ -12,11 +12,8 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.Mode
-import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
+import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import java.net.CookieHandler
-import java.text.FieldPosition
 
 
 class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
@@ -43,12 +40,23 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
 
+    class CreateCardNav(
+        val action: NavDirections,
+        val fromSameFrag:Boolean,
+//        var updateDone :Boolean
+    )
 
-    private val _action = MutableLiveData<NavDirections>()
-    private fun setAction (navDirections: NavDirections){
-        _action.value = navDirections
+    private val _action = MutableLiveData<CreateCardNav>()
+    private fun setAction (createCardNav: CreateCardNav){
+        _action.value = createCardNav
     }
-    val action :LiveData<NavDirections> = _action
+    val action :LiveData<CreateCardNav> = _action
+
+    private val _fromSameFrag = MutableLiveData<Boolean>()
+    private fun setFromSameFrag (boolean: Boolean){
+        _fromSameFrag.value = boolean
+    }
+    val fromSameFrag :LiveData<Boolean> = _fromSameFrag
 
 
 //    DBからとってくる
@@ -65,6 +73,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
     val parentFlashCardCover:LiveData<File?> =_parentFlashCardCover
 
+
     private val _parentCardId = MutableLiveData<Int?>()
     fun setParentCardId(int: Int?){
         _parentCardId.value = int
@@ -72,35 +81,54 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
     val parentCardId:LiveData<Int?> =_parentCardId
 
+    private val _parentFlashCardCoverId = MutableLiveData<Int?>()
+    fun setParentFlashCardCoverId(int: Int?){
+        _parentFlashCardCoverId.value = int
+
+    }
+    val parentFlashCardCoverId:LiveData<Int?> =_parentFlashCardCoverId
+
+
 
 
 //    parent card
     fun getParentCard(cardId: Int?):LiveData<CardAndTags?> = repository.getCardByCardId(cardId).asLiveData()
-    private val _parentCard = MutableLiveData<Card>()
-    fun setParentCard(card: Card?){
+    private val _parentCard = MutableLiveData<CardAndTags>()
+    fun setParentCard(card: CardAndTags){
+        val before = _parentCard.value
+
         _parentCard.value = card
-        setTxvPositionText("${card?.libOrder}/ ${_sisterCards.value?.size}")
-        if(card == null) {
-            setMode(Mode.Create)
-        } else {
-            setMode(Mode.Edit)
-        }
+//        setPosition(card.card.libOrder)
+        val nowCard = _sisterCards.value!!.find { it.card.id == _parentCard.value!!.card.id }
+        val nowPosition = _sisterCards.value!!.indexOf(nowCard)
+        setPosition(nowPosition)
+        setTxvPositionText("${card.card.libOrder + 1}/ ${_sisterCards.value?.size}")
+//        if(before?.card?.id == card.card.id && before.card.stringData != card.card.stringData ){
+////            confirmUpdate()
+//        }
+
+    //        card?.card?.apply {
+//            if(markerData == null && quizData == null && stringData == null){
+//                setMode(Mode.Create)
+//            } else setMode(Mode.Edit)
+//        }
 
     }
-    val parentCard :LiveData<Card?> = _parentCard
+    val parentCard :LiveData<CardAndTags?> = _parentCard
 
 //    parent sister cards
     fun getSisterCards(fileId: Int?):LiveData<List<CardAndTags>?> = repository.getCardDataByFileId(fileId).asLiveData()
     private val _sisterCards = MutableLiveData<List<CardAndTags>?>()
     fun setSisterCards(list:List<CardAndTags>?){
         _sisterCards.value = list
-//        setTxvPositionText("${_position.value}/ ${list?.size}")
+
+        setTxvPositionText("${(_parentCard.value?.card?.libOrder ?:0) + 1}/ ${list?.size}")
     }
     val sisterCards:LiveData<List<CardAndTags>?> =_sisterCards
-    fun filterAndSetParentCard(cardId:Int?){
-        val a:CardAndTags? = _sisterCards.value?.find { it.card.id == cardId }
-        setParentCard(a?.card)
-    }
+//    fun filterAndSetParentCard(cardId:Int?){
+//        val a:CardAndTags? = _sisterCards.value?.find { it.card.id == cardId }
+//        setParentCard(a)
+//    }
     fun updateSistersPosition(position: Int){
         val updateSisters = mutableListOf<Card>()
         _sisterCards.value?.onEach {
@@ -111,6 +139,22 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         }
         upDateMultipleCards(updateSisters)
     }
+
+    val lastInsertedCardAndTags :LiveData<Card?> = repository.lastInsertedCard.asLiveData()
+    private val _lastInsertedCardAndTags = MutableLiveData<Card>()
+    fun setLastInsertedCardAndTags(card: Card?){
+        val before = _lastInsertedCardAndTags.value?.id
+        if(card != null && before != card.id ) {
+            _lastInsertedCardAndTags.value = card
+            val a = intArrayOf(card.belongingFileId!!)
+            val b = intArrayOf(card.id)
+            val fromSameFrag = _fromSameFrag.value!!
+            setAction(CreateCardNav(HomeFragmentDirections.toCreateCard(a,b),fromSameFrag))
+//            setMode(Mode.Edit)
+        }
+
+    }
+
 
     private val _hasParentFlashCardCover = MutableLiveData<Boolean>()
     private fun setHasParentFlashCarCover (boolean: Boolean){
@@ -133,17 +177,15 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     val mode:LiveData<Mode> = _mode
     private val _position = MutableLiveData<Int>()
     private fun setPosition( int: Int){
-        val before = _position.value
-        if(before != int){
-            _position.value = int
-//            setTxvPositionText("${int}/ ${_sisterCards.value?.size ?: 1}")
-        }
+        _position.value = int
+        setTxvPositionText("${int + 1}/ ${_sisterCards.value?.size}")
+
 
     }
     val position :LiveData<Int> =_position
 
     private val _txvPositionText = MutableLiveData<String>()
-    private fun setTxvPositionText(string: String){
+    fun setTxvPositionText(string: String){
         _txvPositionText.value = string
     }
     val txvPositionText :LiveData<String> =_txvPositionText
@@ -186,10 +228,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private val _getStringData = MutableLiveData<Boolean>()
     val getStringData: LiveData<Boolean> = _getStringData
     private fun setGetStringData (boolean: Boolean){
-        val before =_getStringData.value
-        if(before != boolean){
-            _getStringData.value = boolean
-        } else return
+        _getStringData.value = boolean
 
     }
 
@@ -205,11 +244,16 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     fun setStringData(stringData: StringData?){
         _stringData.value = stringData
-        when(_mode.value){
-            Mode.Create -> saveCard()
-            Mode.Edit -> upDateCard()
-            else -> throw  IllegalArgumentException()
-        }
+//        val update =_parentCard.value!!
+//        update.card.stringData = stringData
+//        update(update)
+        upDateCard()
+//        upDateCard()
+//        when(_mode.value){
+//            Mode.Create -> saveCard()
+//            Mode.Edit -> upDateCard()
+//            else -> throw  IllegalArgumentException()
+//        }
 //        setGetStringData(false)
 
 
@@ -230,23 +274,45 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         )
         insert(newCard)
     }
+    fun saveEmptyCard(position:Int,parentFlashCardCoverId:Int?){
+        val newCard = Card(
+            id = 0,
+            libOrder =  position,
+            deleted = false,
+            colorStatus = ColorStatus.GRAY,
+            cardStatus = CardStatus.STRING,
+            quizData = null,
+            markerData = null,
+            stringData = null,
+            belongingFileId = parentFlashCardCoverId,
+            remembered = false
+        )
+        insert(newCard)
+    }
     fun upDateCard(){
-        val upDating = _parentCard.value!!
+        val upDating = _parentCard.value!!.card
         upDating.stringData = _stringData.value
         update(upDating)
+        setGetStringData(false)
     }
 
     private fun insert(any: Any){
         viewModelScope.launch {
             repository.insert(any)
         }
-        setSavingCard(false)
 
     }
+//    fun confirmUpdate(){
+//        val update = _action.value!!
+//        update.updateDone = true
+//        setAction(update)
+//    }
     private fun update(any: Any){
         viewModelScope.launch {
             repository.update(any)
         }
+
+
 
     }
     private fun upDateMultipleCards(list: List<Card>){
@@ -254,16 +320,16 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             repository.updateMultiple(list)
         }
     }
-    private fun activateCreateCard(){
-        val parentFileId = try {
-            intArrayOf(_parentFlashCardCover.value!!.fileId)
-        } catch (e:Exception) { null }
-        val cardId = try {
-            intArrayOf(_parentCardId.value!!)
-        } catch (e:Exception){ null }
-        val action = CreateCardFragmentDirections.toCreateCard(parentFileId,cardId)
-        setAction(action)
-    }
+//    private fun activateCreateCard(){
+//        val parentFileId = try {
+//            intArrayOf(_parentFlashCardCover.value!!.fileId)
+//        } catch (e:Exception) { null }
+//        val cardId = try {
+//            intArrayOf(_parentCardId.value!!)
+//        } catch (e:Exception){ null }
+//        val action = CreateCardFragmentDirections.toCreateCard(parentFileId,cardId)
+//        setAction(action)
+//    }
 
 // onClickEvents
 
@@ -275,33 +341,73 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
     fun onClickEachColor(colorStatus: ColorStatus){
         setCardColor(colorStatus)
-
     }
 
 //    navigation
     fun onClickBtnNext(){
-       val nextCard = _sisterCards.value?.find { it.card.libOrder == _parentCard.value!!.libOrder + 1}
-        setParentCard(nextCard?.card)
+    setFromSameFrag(true)
+    val a = intArrayOf(_parentCard.value!!.card.belongingFileId!!)
+    val now = _sisterCards.value!!.find { it.card.id == _parentCard.value!!.card.id }
+    val nowPosition = _sisterCards.value!!.indexOf(now)
+
+    if(nowPosition < _sisterCards.value!!.size -1  ){
+
+        val nextCardId =_sisterCards.value?.get(nowPosition+1)!!.card.id
+        val b = intArrayOf(nextCardId)
+        setAction(CreateCardNav(CreateCardFragmentDirections.toCreateCard(a,b),true,
+//            updateDone = false
+        ) )
+    } else createNewCardNextToPosition(nowPosition  ,false,a.single())
+    setGetStringData(true)
+
+    }
+    fun onClickBtnPrevious(){
+        setGetStringData(true)
+        setFromSameFrag(true)
+        val a = intArrayOf(_parentCard.value!!.card.belongingFileId!!)
+        val nowCard = _sisterCards.value!!.find { it.card.id == _parentCard.value!!.card.id }
+        val nowPosition = _sisterCards.value!!.indexOf(nowCard)
+        if(nowPosition == 0 ){
+            createNewCardNextToPosition(nowPosition,previous = true,a.single())
+
+
+        } else{
+            val nextCardId =_sisterCards.value?.get(nowPosition-1)!!.card.id
+            val b = intArrayOf(nextCardId)
+            setAction(CreateCardNav(CreateCardFragmentDirections.toCreateCard(a,b),true) )
+        }
+    }
+
+
+    private fun createNewCardNextToPosition(position: Int,previous:Boolean,parentFlashCardCoverId:Int?){
+        setMode(Mode.Create)
+        val myPosition:Int = if(previous) position  else position +1
+        setPosition(myPosition)
+        setParentFlashCardCoverId(parentFlashCardCoverId)
+        if (previous) updateSistersPosition(myPosition) else updateSistersPosition(position+2)
+        saveEmptyCard(myPosition,parentFlashCardCoverId)
+
+
 
 
     }
 
 
-    fun onClickAddNewCardByPosition(item:LibraryRV){
-        setMode(Mode.Create)
-        setParentCardId(null)
-        setParentCard(null)
-        setPosition(item.position +2)
-        updateSistersPosition(item.position +2)
-        activateCreateCard()
-
+    fun onClickRVAddNewCard(item:LibraryRV){
+//        val parentFileId = if(item.card?.belongingFileId==null){
+//            null
+//        } else intArrayOf(item.card.belongingFileId)
+//
+//        setAction(CreateCardFragmentDirections.toCreateCard(parentFileId,null))
+        setFromSameFrag(false)
+        createNewCardNextToPosition(item.card!!.libOrder,false,item.card.belongingFileId)
     }
     fun onClickAddNewCardBottomBar(){
-        setMode(Mode.Create)
-        setParentCardId(null)
-        setParentCard(null)
-        setPosition((_sisterCards.value!!.size) +1)
-        activateCreateCard()
+        val parentFile = intArrayOf(_parentFlashCardCoverId.value!!)
+//        setAction(CreateCardFragmentDirections.toCreateCard(parentFile,null))
+        setFromSameFrag(false)
+        createNewCardNextToPosition((_sisterCards.value?.size ?:0)  ,false,_parentFlashCardCoverId.value!!)
+
 
     }
 
@@ -313,11 +419,13 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         Tag, FrontTitle, FrontContent, BackTitle, BackText
     }
     fun onClickEditCard(item: LibraryRV){
+        val a = intArrayOf(item.card!!.belongingFileId!!)
+        val b = intArrayOf(item.card.id)
+        setFromSameFrag(false)
+        setAction(CreateCardNav( HomeFragmentDirections.toCreateCard(a,b),false))
         setMode(Mode.Edit)
-        setParentCardId(item.card!!.id)
-        setParentCard(item.card)
-        setTxvPositionText("${item.card.libOrder}/ ${_sisterCards.value?.size ?: 1}")
-        activateCreateCard()
+
+
 
     }
 

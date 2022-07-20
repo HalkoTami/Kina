@@ -37,6 +37,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun setParentItemId (id:Int?){
         _parentItemId.value = id
     }
+    val parentItemId:LiveData<Int> = _parentItemId
 
 //    DBアクセス関連
 //    parent File from DB
@@ -48,6 +49,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             else convertFileToLibraryRV(file)
         )
     }
+
 
     //    child Files from DB
     fun childFilesFromDB(int: Int?):LiveData<List<File>> = this.repository.mygetFileDataByParentFileId(int).asLiveData()

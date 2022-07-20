@@ -1,5 +1,6 @@
 package com.example.tangochoupdated
 
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
 import androidx.navigation.NavAction
 import androidx.navigation.NavDirections
@@ -44,6 +45,18 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
         }
 
     }
+    private val _backStackEntry = MutableLiveData<FragmentManager.BackStackEntry>()
+    fun setBackStackEntry(backStackEntry: FragmentManager.BackStackEntry){
+        val before = _backStackEntry.value
+        if (before!= backStackEntry){
+            _backStackEntry.value = backStackEntry
+        } else return
+
+    }
+    fun returnBackStackEntry():FragmentManager.BackStackEntry{
+        return  _backStackEntry.value!!
+    }
+
 
 //    bnv each View Change
     inner class BnvLayout(
@@ -162,18 +175,18 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
         }
     }
 
-    fun onClickAddNewCard(){
-        setActiveTab(Tab.CreateCard)
-        val parentFileId:IntArray?
-        val parentCard:IntArray?
-        if(parentFile.value== null || parentFile.value?.fileStatus!=FileStatus.TANGO_CHO_COVER){
-            parentFileId = null
-        } else parentFileId = intArrayOf(parentFile.value!!.fileId)
-        parentCard = null
-
-        val a = CreateCardFragmentDirections.toCreateCard(parentFileId,parentCard)
-        setAction(a)
-    }
+//    fun onClickAddNewCard(){
+//        setActiveTab(Tab.CreateCard)
+//        val parentFileId:IntArray?
+//        val parentCard:IntArray?
+//        if(parentFile.value== null || parentFile.value?.fileStatus!=FileStatus.TANGO_CHO_COVER){
+//            parentFileId = null
+//        } else parentFileId = intArrayOf(parentFile.value!!.fileId)
+//        parentCard = null
+//
+//        val a = CreateCardFragmentDirections.toCreateCard(parentFileId,parentCard)
+//        setAction(a)
+//    }
 
 
 
