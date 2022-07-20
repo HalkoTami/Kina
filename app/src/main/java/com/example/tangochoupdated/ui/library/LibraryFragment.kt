@@ -80,6 +80,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         adapter = LibraryListAdapter(this,requireActivity())
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.isNestedScrollingEnabled = false
 
 
 
