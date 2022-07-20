@@ -181,7 +181,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                     }
                     //  移動操作
                     btnNext ->  onClickBtnNext()
-                    btnPrevious -> return
+                    btnPrevious -> onClickBtnPrevious()
 
                 }
 

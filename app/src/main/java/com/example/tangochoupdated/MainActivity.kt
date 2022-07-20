@@ -112,12 +112,13 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         createFileviewModel.onCreate()
 
 
-        var lastInserted = 0
+        var lastInserted:Int? = 0
         createCardViewModel. lastInsertedCardAndTags.observe(this){
             if(lastInserted != 0){
                 createCardViewModel.setLastInsertedCardAndTags(it)
+
             }
-            lastInserted = it.id
+            lastInserted = it?.id
 
 
         }
