@@ -11,12 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.room.enumclass.StringFragFocusedOn
 import com.example.tangochoupdated.ui.create.Mode
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 
@@ -33,9 +35,11 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
     private val  createCardViewModel: CreateCardViewModel by activityViewModels()
 //    private lateinit var stringCardViewModel: StringCardViewModel
     private val mainViewModel : BaseViewModel by activityViewModels()
-    private val stringCardViewModel :StringCardViewModel by viewModels()
+    private val stringCardViewModel :StringCardViewModel by activityViewModels()
 
     lateinit var mainNavCon:NavController
+
+    var finish = false
 
 
 
@@ -57,7 +61,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 if(cardandTags!= null){
                     setParentCard(cardandTags)
                     binding.txvTitle.text = cardandTags?.card?.id.toString()
-                    Toast.makeText(requireActivity(),"parent card id from parent card ${cardandTags?.card?.id}",Toast.LENGTH_SHORT).show()
+
                 }
                 stringCardViewModel.setStringData(cardandTags?.card?.stringData)
 
@@ -106,8 +110,26 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 //                binding.txvTitle.text = it?.id.toString()
 //                stringCardViewModel.setStringData(it?.stringData)
 //            }
+            var lastInserted:Int? = 0
+            createCardViewModel.lastInsertedCardAndTags.observe(viewLifecycleOwner){
+                if(lastInserted != 0){
+                    createCardViewModel.setLastInsertedCardAndTags(it)
+
+                }
+                lastInserted = it?.id
 
 
+            }
+
+
+//            checkUpdate
+            upDateCompleted.observe(viewLifecycleOwner){
+                if(it==true){
+                    if(finish){
+                        requireActivity().finish()
+                    }
+                }
+            }
 
 
 
@@ -138,6 +160,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 
             binding.apply {
                 clickableViews.add(imvSaveAndBack)
+                clickableViews.add(imvMode)
                 clickableViews.addAll(arrayOf(btnNext,btnPrevious))
 
                 createCardColPaletBinding.apply {
@@ -177,9 +200,11 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 }
                 when(v){
                     imvSaveAndBack -> {
-                        createCardViewModel.onClickSaveAndBack()
+//                        createCardViewModel.onClickSaveAndBack()
+                        stringCardViewModel.setFocusedOn(StringFragFocusedOn.FrontContent)
 
                     }
+                    imvMode -> stringCardViewModel.setFocusedOn(StringFragFocusedOn.BackContent)
                     //  移動操作
                     btnNext ->  onClickBtnNext()
                     btnPrevious -> onClickBtnPrevious()
@@ -193,18 +218,21 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 
     }
 
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
-//            true // default to enabled
-//        ) {
-//            override fun handleOnBackPressed() {
-//
-//            }
-//        }
-//        requireActivity().onBackPressedDispatcher.addCallback(
-//            this,  // LifecycleOwner
-//            callback
-//        )
-//    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
+            true // default to enabled
+        ) {
+            override fun handleOnBackPressed() {
+
+                createCardViewModel.onClickBack()
+                mainNavCon.popBackStack()
+
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,  // LifecycleOwner
+            callback
+        )
+    }
 }

@@ -26,6 +26,7 @@ import com.example.tangochoupdated.databinding.ColorPaletBinding
 import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
 import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.room.enumclass.StringFragFocusedOn
 import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
 import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
@@ -90,6 +91,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
 
+        binding.mainTopConstrainLayout.requestFocus()
 
 
 
@@ -112,16 +114,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         createFileviewModel.onCreate()
 
 
-        var lastInserted:Int? = 0
-        createCardViewModel. lastInsertedCardAndTags.observe(this){
-            if(lastInserted != 0){
-                createCardViewModel.setLastInsertedCardAndTags(it)
 
-            }
-            lastInserted = it?.id
-
-
-        }
 
 
         baseviewModel.apply {
@@ -131,18 +124,19 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             }
 
         }
+
+
         createCardViewModel.action.observe(this){
-            if(it.fromSameFrag == true){
+            if(it.fromSameFrag){
                 navCon.popBackStack()
                 navCon.navigate(it.action)
 
-            }else{
-                navCon.navigate(it.action)
-            }
+            } else navCon.navigate(it.action)
+
         }
-        createCardViewModel.parentCard.observe(this){
-            stringCardViewModel.setStringData(it?.card?.stringData)
-        }
+//        createCardViewModel.parentCard.observe(this){
+//            stringCardViewModel.setStringData(it?.card?.stringData)
+//        }
 
 
 
@@ -363,6 +357,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 }
                 setOnClickListener {
                     baseviewModel.onClickTab3()
+
                 }
             }
         }

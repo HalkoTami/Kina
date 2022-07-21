@@ -7,6 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <EditText
+        android:focusableInTouchMode="true"
+        android:focusable="true"
         android:id="@+id/edt_front_title"
         android:layout_width="wrap_content"
         android:minWidth="150dp"
@@ -17,6 +19,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
     <EditText
+
+        android:focusableInTouchMode="true"
+        android:focusable="true"
         android:id="@+id/edt_front_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,6 +34,9 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
+
+        android:focusableInTouchMode="true"
+        android:focusable="true"
         android:id="@+id/edt_back_title"
         android:layout_width="wrap_content"
         android:minWidth="150dp"
@@ -40,6 +48,9 @@
         app:layout_constraintTop_toBottomOf="@id/edt_front_content"
         app:layout_constraintStart_toStartOf="parent"/>
     <EditText
+
+        android:focusableInTouchMode="true"
+        android:focusable="true"
         android:id="@+id/edt_back_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -40,14 +40,19 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
 
+
     class CreateCardNav(
         val action: NavDirections,
-        val fromSameFrag:Boolean,
+        var fromSameFrag:Boolean,
 //        var updateDone :Boolean
     )
 
     private val _action = MutableLiveData<CreateCardNav>()
     private fun setAction (createCardNav: CreateCardNav){
+        val before = _action.value
+        if(before == null){
+            createCardNav.fromSameFrag = false
+        }
         _action.value = createCardNav
     }
     val action :LiveData<CreateCardNav> = _action
@@ -103,9 +108,9 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val nowPosition = _sisterCards.value!!.indexOf(nowCard)
         setPosition(nowPosition)
         setTxvPositionText("${card.card.libOrder + 1}/ ${_sisterCards.value?.size}")
-//        if(before?.card?.id == card.card.id && before.card.stringData != card.card.stringData ){
-////            confirmUpdate()
-//        }
+        if(before?.card?.id == card.card.id && before.card != card.card ){
+            setUpdateCompleted(true)
+        }
 
     //        card?.card?.apply {
 //            if(markerData == null && quizData == null && stringData == null){
@@ -144,7 +149,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private val _lastInsertedCardAndTags = MutableLiveData<Card>()
     fun setLastInsertedCardAndTags(card: Card?){
         val before = _lastInsertedCardAndTags.value?.id
-        if(card != null && before != card.id ) {
+        if(before != null &&card != null && before != card.id ) {
             _lastInsertedCardAndTags.value = card
             val a = intArrayOf(card.belongingFileId!!)
             val b = intArrayOf(card.id)
@@ -295,6 +300,13 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         update(upDating)
         setGetStringData(false)
     }
+// db insert & update
+
+    private val _updateCompleted = MutableLiveData<Boolean>()
+    val upDateCompleted :LiveData<Boolean> = _updateCompleted
+    private fun setUpdateCompleted (boolean: Boolean){
+        _updateCompleted.value = boolean
+    }
 
     private fun insert(any: Any){
         viewModelScope.launch {
@@ -344,6 +356,10 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
 //    navigation
+
+
+
+
     fun onClickBtnNext(){
     setFromSameFrag(true)
     val a = intArrayOf(_parentCard.value!!.card.belongingFileId!!)
@@ -415,6 +431,10 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         setGetStringData(true)
 //        setCreateFragActive(false)
     }
+    fun onClickBack(){
+        setGetStringData(true)
+    }
+
     enum class CursorPosition{
         Tag, FrontTitle, FrontContent, BackTitle, BackText
     }

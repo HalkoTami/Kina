@@ -1,31 +1,21 @@
 package com.example.tangochoupdated.ui.create.card.string
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.graphics.Color
-import android.os.Bundle
+import android.content.Context
+import android.os.*
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.view.children
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.commit
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import com.example.tangochoupdated.databinding.FragmentCreateBinding
-import com.example.tangochoupdated.room.enumclass.FileStatus
-import com.example.tangochoupdated.BaseViewModel
-import com.example.tangochoupdated.RoomApplication
-import com.example.tangochoupdated.ViewModelFactory
-import com.example.tangochoupdated.databinding.CreateCardBaseBinding
+import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.CreateCardStringBinding
 import com.example.tangochoupdated.room.dataclass.StringData
 import com.example.tangochoupdated.room.enumclass.CardStatus
+import com.example.tangochoupdated.room.enumclass.StringFragFocusedOn
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 
 class StringCardFragment : Fragment() {
@@ -82,17 +72,37 @@ class StringCardFragment : Fragment() {
 
 
 
+
         binding.apply {
-            stringCardViewModel.stringData.observe(viewLifecycleOwner){
-                edtFrontTitle.text = SpannableStringBuilder(it?. frontTitle ?:"表" )
-                edtFrontContent.text = SpannableStringBuilder(it?.frontText ?:"" )
-                edtBackTitle.text = SpannableStringBuilder(it?.backTitle ?:"裏")
-                edtBackContent.text =  SpannableStringBuilder(it?. backText ?:"")
+            stringCardViewModel.apply {
+                stringData.observe(viewLifecycleOwner) {
+                    edtFrontTitle.text = SpannableStringBuilder(it?.frontTitle ?: "表")
+                    edtFrontContent.text = SpannableStringBuilder(it?.frontText ?: "")
+                    edtBackTitle.text = SpannableStringBuilder(it?.backTitle ?: "裏")
+                    edtBackContent.text = SpannableStringBuilder(it?.backText ?: "")
+
+                }
+                focusedOn.observe(viewLifecycleOwner){
+
+
+
+                    when(it){
+                        StringFragFocusedOn.FrontContent-> showSoftKeyboard(edtFrontContent)
+                        StringFragFocusedOn.BackContent -> showSoftKeyboard(edtBackContent)
+                        StringFragFocusedOn.FrontTitle -> showSoftKeyboard(edtFrontTitle)
+                        StringFragFocusedOn.BackTitle -> showSoftKeyboard(edtBackTitle)
+                        else -> requireActivity().findViewById<ConstraintLayout>(R.id.main_top_constrainLayout).requestFocus()
+                    }
+                }
 
             }
+
 //
 
+
         }
+
+
 
 
 
@@ -102,10 +112,17 @@ class StringCardFragment : Fragment() {
         return root
     }
 
+    fun showSoftKeyboard(view: View) {
+        view.requestFocus()
+        if (view.requestFocus()) {
+            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
-
+        requireActivity().findViewById<ConstraintLayout>(R.id.main_top_constrainLayout).requestFocus()
 
         _binding = null
     }

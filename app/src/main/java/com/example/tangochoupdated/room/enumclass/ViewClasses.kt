@@ -15,4 +15,6 @@ enum class ActionStatus{
 }
 
 
-
+enum class StringFragFocusedOn{
+    FrontTitle,FrontContent,BackTitle,BackContent,None
+}

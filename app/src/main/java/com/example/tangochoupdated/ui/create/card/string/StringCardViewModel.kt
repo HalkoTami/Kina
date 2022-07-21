@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.tangochoupdated.room.dataclass.Card
 import com.example.tangochoupdated.room.dataclass.StringData
+import com.example.tangochoupdated.room.enumclass.StringFragFocusedOn
 
 class StringCardViewModel:ViewModel() {
     private val _parentCard = MutableLiveData<Card?>()
@@ -13,10 +14,15 @@ class StringCardViewModel:ViewModel() {
         _parentCard.value = card
     }
 
-    private val _sendStringData = MutableLiveData<Boolean>()
-    val sendStringData :LiveData<Boolean> = _sendStringData
-    fun setSendStringData(boolean: Boolean){
-        _sendStringData.value = boolean
+    fun onCreate(){
+        setFocusedOn(StringFragFocusedOn.None)
+    }
+
+
+    private val _focusedOn = MutableLiveData<StringFragFocusedOn>()
+    val focusedOn :LiveData<StringFragFocusedOn> = _focusedOn
+    fun setFocusedOn(stringFragFocusedOn: StringFragFocusedOn){
+        _focusedOn.value = stringFragFocusedOn
     }
 
     private val _stringData = MutableLiveData<StringData>()
