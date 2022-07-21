@@ -172,7 +172,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         if(before == mode) return else{
             _mode.value = mode
             when (mode){
-                Mode.Create -> setCardColor(ColorStatus.GRAY)
+                Mode.New -> setCardColor(ColorStatus.GRAY)
 
                 else -> return
             }
@@ -396,7 +396,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
 
     private fun createNewCardNextToPosition(position: Int,previous:Boolean,parentFlashCardCoverId:Int?){
-        setMode(Mode.Create)
+        setMode(Mode.New)
         val myPosition:Int = if(previous) position  else position +1
         setPosition(myPosition)
         setParentFlashCardCoverId(parentFlashCardCoverId)

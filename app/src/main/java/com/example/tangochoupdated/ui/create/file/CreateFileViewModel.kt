@@ -33,7 +33,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             }
             else -> {
                 when(_mode.value){
-                    Mode.Create -> setTxvLeftTop("${file.title.toString()} >")
+                    Mode.New -> setTxvLeftTop("${file.title.toString()} >")
                     Mode.Edit -> setTxvLeftTop("")
                 }
 
@@ -146,7 +146,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             _addFileActive.value = boolean
             if(boolean){
                 when(_mode.value){
-                    Mode.Create -> setBottomMenuVisible(true)
+                    Mode.New -> setBottomMenuVisible(true)
                     Mode.Edit -> setEditFilePopUpVisible(true)
                 }
             }
@@ -339,7 +339,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         val parentFile = _parentFile.value
 
         when(_mode.value ){
-            Mode.Create -> {
+            Mode.New -> {
                 val newFile = File(
                     fileId = 0,
                     title = title,
@@ -416,7 +416,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
     fun onClickImvAddBnv(){
-        setMode(Mode.Create)
+        setMode(Mode.New)
         setAddFileActive(true)
     }
     private fun insertFile(file: File){

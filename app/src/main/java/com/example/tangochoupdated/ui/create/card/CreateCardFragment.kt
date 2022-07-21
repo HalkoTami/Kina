@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -52,132 +50,98 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         _binding = CreateCardBaseBinding.inflate(inflater, container, false)
         mainNavCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
 
-        createCardViewModel.apply{
+        binding.apply {
+            createCardViewModel.apply{
 //            初期設定
-            onStart()
+                onStart()
 
-//            setParentCardId(args.cardId?.single())
-            getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){ cardandTags->
-                if(cardandTags!= null){
-                    setParentCard(cardandTags)
-                    binding.txvTitle.text = cardandTags?.card?.id.toString()
-
-                }
-                stringCardViewModel.setStringData(cardandTags?.card?.stringData)
-
-            }
-            getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ sisters ->
-                setSisterCards(sisters!!)
-            }
-            getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ file ->
-                setParentFlashCardCover(file)
-            }
-
-//            parentCard.observe(viewLifecycleOwner){
-//
-////                Toast.makeText(requireActivity(),"${it?.card?.belongingFileId}",Toast.LENGTH_SHORT).show()
-//            }
-//            getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){
-//                setParentFlashCardCover(it)
-//            }
-
-//            getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){
-//                setSisterCards(it)
-//            }
-//            filterAndSetParentCard(args.cardId?.single())
-//            getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){
-//                setParentCard(it?.card)
-//            }
-
-            val edit = requireActivity().getDrawable(R.drawable.icon_edit)
-            val new = requireActivity().getDrawable(R.drawable.icon_eye_opened)
-            mode.observe(viewLifecycleOwner){
-                binding.imvMode.setImageDrawable(when(it){
-                    Mode.Create -> new
-                    Mode.Edit -> edit
-                })
-            }
-
-
-//            top Bar
-//            parentFlashCardCover.observe(viewLifecycleOwner){
-//                binding.txvTitle.text = it?.title ?:"単語帳に入ってないよ"
-//            }
-            txvPositionText.observe(viewLifecycleOwner){
-                binding.txvPosition.text = it
-            }
-//            parentCard.observe(viewLifecycleOwner){
-//                binding.txvTitle.text = it?.id.toString()
-//                stringCardViewModel.setStringData(it?.stringData)
-//            }
-            var lastInserted:Int? = 0
-            createCardViewModel.lastInsertedCardAndTags.observe(viewLifecycleOwner){
-                if(lastInserted != 0){
-                    createCardViewModel.setLastInsertedCardAndTags(it)
-
-                }
-                lastInserted = it?.id
-
-
-            }
-
-
-//            checkUpdate
-            upDateCompleted.observe(viewLifecycleOwner){
-                if(it==true){
-                    if(finish){
-                        requireActivity().finish()
+//            DBからデータ下ろす
+                getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){ cardAndTags->
+                    if(cardAndTags!= null){
+                        setParentCard(cardAndTags)
+                        binding.txvTitle.text = cardAndTags.card.id.toString()
                     }
+                    stringCardViewModel.setStringData(cardAndTags?.card?.stringData)
                 }
-            }
-
-
-
-
-//            Color Pallet attribute 1. pallet visibility
-            val palletBinding = binding.createCardColPaletBinding
-            colPalletVisibility.observe(viewLifecycleOwner){
-                val time:Long = 500
-                when(it){
-                    true -> palletBinding.lineLayColorPalet.visibility = View.VISIBLE
-                    false ->palletBinding.lineLayColorPalet.visibility = View.GONE
+                getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ sisters ->
+                    setSisterCards(sisters!!)
                 }
-            }
-
-//            Color Pallet attribute 2. change  each color
-            var previousColor: ColorStatus?
-            previousColor = null
-            val mainActivity = activity as MainActivity
-            cardColor.observe(viewLifecycleOwner){
-                mainActivity.apply {
-                    if(previousColor == null) makeAllColPaletUnselected(palletBinding)
-                        else changeColPalletCol(previousColor!!,false,palletBinding)
-                    changeColPalletCol(it,true,palletBinding)
-                    previousColor = it
+                getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ file ->
+                    setParentFlashCardCover(file)
                 }
 
-            }
+//              編集モード/新しいカード
+                mode.observe(viewLifecycleOwner){
+                    requireActivity().apply {
+                        binding.imvMode.setImageDrawable(when(it){
+                            Mode.New -> getDrawable(R.drawable.icon_edit)
+                            Mode.Edit -> getDrawable(R.drawable.icon_eye_opened)
+                        })
+                    }
 
-            binding.apply {
-                clickableViews.add(imvSaveAndBack)
-                clickableViews.add(imvMode)
-                clickableViews.addAll(arrayOf(btnNext,btnPrevious))
-
-                createCardColPaletBinding.apply {
-                    clickableViews.addAll(arrayOf(imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet))
                 }
-            }
+//                現在地 text view
+                txvPositionText.observe(viewLifecycleOwner){
+                    binding.txvPosition.text = it
+                }
+//                新しいカードが挿入完了したら
+                var calledFirstTime = true
+                createCardViewModel.lastInsertedCardAndTags.observe(viewLifecycleOwner){
+                    if(!calledFirstTime){
+                        createCardViewModel.setLastInsertedCardAndTags(it)
+                    }
+                    calledFirstTime = false
+                }
+
+//            Color Pallet attribute
+               createCardColPaletBinding.apply {
+//                   addToClickListener
+                   root.children.iterator().forEachRemaining {
+                       clickableViews.add(it)
+                   }
+
+                   val palletBinding = this
+//                    pallet visibility
+                   lineLayColorPalet.visibility.apply {
+                       colPalletVisibility.observe(viewLifecycleOwner){
+                           when(it){
+                               true -> View.VISIBLE
+                               false ->View.GONE
+                           }
+                       }
+                   }
+//                   Color Pallet attribute 2. change  each color
+                   var previousColor: ColorStatus?
+                   previousColor = null
+                   val mainActivity = activity as MainActivity
+                   cardColor.observe(viewLifecycleOwner){
+                       mainActivity.apply {
+                           if(previousColor == null) makeAllColPaletUnselected(palletBinding)
+                           else changeColPalletCol(previousColor!!,false,palletBinding)
+                           changeColPalletCol(it,true,palletBinding)
+                           previousColor = it
+                       }
+                   }
+               }
+
+
+
+
+                binding.apply {
+                    clickableViews.add(imvSaveAndBack)
+                    clickableViews.add(imvMode)
+                    clickableViews.addAll(arrayOf(btnNext,btnPrevious))
+
+                }
 
 //            移動ボタン
 
 
 
 
+
+            }
         }
-//        stringCardViewModel.stringData.observe(viewLifecycleOwner){
-//            createCardViewModel.setStringData(it)
-//            stringCardViewModel.setSendStringData(false)
-//        }
 
         clickableViews.onEach {
             it.setOnClickListener(this)

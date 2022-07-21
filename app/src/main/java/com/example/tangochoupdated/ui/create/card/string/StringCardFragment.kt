@@ -46,46 +46,27 @@ class StringCardFragment : Fragment() {
         createCardViewModel.setCardStatus(CardStatus.STRING)
 
 
+
+
         binding.apply {
+//            ヒント
             edtFrontTitle.hint = "表のタイトル"
             edtFrontContent.hint = "表"
             edtBackTitle.hint = "裏のタイトル"
             edtBackContent.hint = "裏"
 
-            createCardViewModel.getStringData.observe(viewLifecycleOwner){
-                if(it==true){
-                    Toast.makeText(context, "sending stringdata ", Toast.LENGTH_SHORT).show()
-//
-                    createCardViewModel.setStringData(
-                        StringData(
-                            frontTitle =  if(edtFrontTitle.text.toString() == "表") null else edtFrontTitle.text.toString(),
-                            frontText =     edtFrontContent.text.toString(),
-                            backTitle = if(edtBackTitle.text.toString() == "裏") null else edtBackTitle.text.toString(),
-                            backText =  edtBackContent.text.toString()
-                        )
-                    )
-                } else return@observe
-            }
-
-
-        }
-
-
-
-
-        binding.apply {
             stringCardViewModel.apply {
+
+//                表示
                 stringData.observe(viewLifecycleOwner) {
                     edtFrontTitle.text = SpannableStringBuilder(it?.frontTitle ?: "表")
                     edtFrontContent.text = SpannableStringBuilder(it?.frontText ?: "")
                     edtBackTitle.text = SpannableStringBuilder(it?.backTitle ?: "裏")
                     edtBackContent.text = SpannableStringBuilder(it?.backText ?: "")
-
                 }
+
+//                キーボードフォーカス
                 focusedOn.observe(viewLifecycleOwner){
-
-
-
                     when(it){
                         StringFragFocusedOn.FrontContent-> showSoftKeyboard(edtFrontContent)
                         StringFragFocusedOn.BackContent -> showSoftKeyboard(edtBackContent)
@@ -97,7 +78,20 @@ class StringCardFragment : Fragment() {
 
             }
 
-//
+//            テキストの内容を親に送る
+            createCardViewModel.getStringData.observe(viewLifecycleOwner){
+                if(it==true){
+                    createCardViewModel.setStringData(
+                        StringData(
+                            frontTitle =  if(edtFrontTitle.text.toString() == "表") null else edtFrontTitle.text.toString(),
+                            frontText =     edtFrontContent.text.toString(),
+                            backTitle = if(edtBackTitle.text.toString() == "裏") null else edtBackTitle.text.toString(),
+                            backText =  edtBackContent.text.toString()
+                        )
+                    )
+                } else return@observe
+            }
+
 
 
         }
