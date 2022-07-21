@@ -1,11 +1,17 @@
 package com.example.tangochoupdated.ui.create.card
 
 import android.content.Context
+import android.graphics.BlendMode
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.ViewUtils
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -50,7 +56,10 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         _binding = CreateCardBaseBinding.inflate(inflater, container, false)
         mainNavCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
 
+        val vlo = viewLifecycleOwner
         binding.apply {
+            binding.root.requestFocus()
+
             createCardViewModel.apply{
 //            初期設定
                 onStart()
@@ -59,7 +68,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){ cardAndTags->
                     if(cardAndTags!= null){
                         setParentCard(cardAndTags)
-                        binding.txvTitle.text = cardAndTags.card.id.toString()
+                        txvTitle.text = cardAndTags.card.id.toString()
                     }
                     stringCardViewModel.setStringData(cardAndTags?.card?.stringData)
                 }
@@ -70,46 +79,52 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                     setParentFlashCardCover(file)
                 }
 
-//              編集モード/新しいカード
-                mode.observe(viewLifecycleOwner){
-                    requireActivity().apply {
-                        binding.imvMode.setImageDrawable(when(it){
-                            Mode.New -> getDrawable(R.drawable.icon_edit)
-                            Mode.Edit -> getDrawable(R.drawable.icon_eye_opened)
-                        })
-                    }
 
-                }
+//                Top Frame
+                layCreateCardTopBar.apply {
+
 //                現在地 text view
-                txvPositionText.observe(viewLifecycleOwner){
-                    binding.txvPosition.text = it
-                }
-//                新しいカードが挿入完了したら
-                var calledFirstTime = true
-                createCardViewModel.lastInsertedCardAndTags.observe(viewLifecycleOwner){
-                    if(!calledFirstTime){
-                        createCardViewModel.setLastInsertedCardAndTags(it)
+                    txvPositionText.observe(viewLifecycleOwner){
+                        txvPosition.text = it
                     }
-                    calledFirstTime = false
-                }
 
+//                編集モード/新しいカード
+                    mode.observe(viewLifecycleOwner){
+                        requireActivity().apply {
+                            imvMode.setImageDrawable(when(it){
+                                Mode.New -> getDrawable(R.drawable.icon_edit)
+                                Mode.Edit -> getDrawable(R.drawable.icon_eye_opened)
+                                else -> return@observe
+                            })
+                        }
+                    }
+//                    add to click listener
+                    clickableViews.addAll(arrayOf(
+                        imvSaveAndBack
+                    )
+                    )
+
+
+                }
 //            Color Pallet attribute
                createCardColPaletBinding.apply {
-//                   addToClickListener
-                   root.children.iterator().forEachRemaining {
-                       clickableViews.add(it)
-                   }
-
                    val palletBinding = this
 //                    pallet visibility
-                   lineLayColorPalet.visibility.apply {
-                       colPalletVisibility.observe(viewLifecycleOwner){
-                           when(it){
-                               true -> View.VISIBLE
-                               false ->View.GONE
+                   createCardViewModel.colPalletVisibility.observe(viewLifecycleOwner){ visible->
+                       lineLayColorPalet.children.iterator().forEachRemaining {
+                           when(visible){
+                               true -> {
+                                   it.visibility = View.VISIBLE
+                               }
+                               false ->  {
+                                   it.visibility = View.GONE
+                               }
                            }
                        }
+
+
                    }
+
 //                   Color Pallet attribute 2. change  each color
                    var previousColor: ColorStatus?
                    previousColor = null
@@ -122,19 +137,42 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                            previousColor = it
                        }
                    }
+
+                   //                   addToClickListener
+                   clickableViews.addAll(arrayOf(
+                       imvIconPalet,imvColYellow,imvColRed,imvColGray,imvColBlue
+                   ))
+
                }
+//                移動ボタン
+                val gray = requireActivity().getColor(R.color.light_gray)
+                layNavigateButtons.apply {
+                    btnPrevious.apply {
+                        previousCardExists.observe(viewLifecycleOwner){
+                            when(it){
+                                true ->  alpha = 1f
+                                false -> alpha = 0.5f
+                            }
+                        }
+                    }
+                    btnNext.apply {
+                        nextCardExists.observe(viewLifecycleOwner){
+                            when(it){
+                                true ->  alpha = 1f
+                                false -> alpha = 0.5f
+                            }
+                        }
+                    }
 
+//                    add to click listener
+                    clickableViews.addAll( arrayOf(
+                        btnInsertPrevious,btnPrevious,btnNext,btnInsertNext
+                    )
+                    )
 
-
-
-                binding.apply {
-                    clickableViews.add(imvSaveAndBack)
-                    clickableViews.add(imvMode)
-                    clickableViews.addAll(arrayOf(btnNext,btnPrevious))
 
                 }
 
-//            移動ボタン
 
 
 
@@ -155,7 +193,10 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             binding.apply {
                 createCardColPaletBinding.apply {
                         when(v){
-                            imvIconPalet -> onClickColPaletIcon()
+                            imvIconPalet -> {
+
+                                onClickColPaletIcon()
+                            }
                             imvColBlue -> onClickEachColor(ColorStatus.BLUE)
                             imvColRed -> onClickEachColor(ColorStatus.RED)
                             imvColGray -> onClickEachColor(ColorStatus.GRAY)
@@ -170,6 +211,8 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                     }
                     imvMode -> stringCardViewModel.setFocusedOn(StringFragFocusedOn.BackContent)
                     //  移動操作
+                    btnInsertPrevious -> onClickBtnInsertPrevious()
+                    btnInsertNext -> onClickBtnInsertNext()
                     btnNext ->  onClickBtnNext()
                     btnPrevious -> onClickBtnPrevious()
 

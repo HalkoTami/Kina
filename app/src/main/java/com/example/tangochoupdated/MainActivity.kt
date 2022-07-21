@@ -106,7 +106,14 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             frameBottomMenu.visibility = GONE
         }
 
-
+//        /                新しいカードが挿入完了したら呼ばれる
+        var calledFirstTime = true
+        createCardViewModel.lastInsertedCardAndTags.observe(this){
+            if(!calledFirstTime){
+                createCardViewModel.setLastInsertedCardAndTags(it)
+            }
+            calledFirstTime = false
+        }
 
 
 

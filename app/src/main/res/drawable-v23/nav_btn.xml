@@ -1,0 +1,25 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+  <item
+      android:state_selected="false">
+    <layer-list>
+      <item android:id="@+id/background_circle" >
+        <shape android:shape="rectangle">
+          <solid android:color="@color/lightgreen"/>
+          <corners android:radius="50dp"/>
+        </shape>
+      </item>
+      <item
+          android:id="@+id/arrow"
+          android:drawable="@drawable/icon_arrow"
+          android:top="12dp"
+          android:bottom="11dp"
+          android:left="14dp"
+          android:right="9dp"/>
+
+
+    </layer-list>
+  </item>
+</selector>
+
