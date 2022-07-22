@@ -9,6 +9,7 @@ import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.dataclass.FileXRef
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
+import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.Mode
 import kotlinx.coroutines.launch
 
@@ -409,7 +410,10 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
 //    onclick Events
-    fun onClickImvEditFile(){
+    fun onClickEditFile(childFile: File?){
+        if(childFile!=null){
+            setParentFile(childFile)
+        }
         setMode(Mode.Edit)
         setAddFileActive(true)
 

@@ -1,10 +1,12 @@
 package com.example.tangochoupdated.ui.library
 
 import android.animation.*
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
@@ -21,7 +23,9 @@ import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
 import com.example.tangochoupdated.databinding.ItemCoverFileBinding
+import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.enumclass.FileStatus
+import com.example.tangochoupdated.room.enumclass.LibRVState
 import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
@@ -91,15 +95,15 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         libraryViewModel.onStart()
 //        createCardViewModel.setParentFlashCardCoverId(args.parentItemId?.single())
 
-
 //　　　　DBからデータとってくる
         libraryViewModel.apply {
             setParentItemId(myId)
             setNavCon(mynavCon)
             parentFileFromDB(myId).observe(viewLifecycleOwner){
                 setParentFileFromDB(it, myId == null)
-//                createFileViewModel.setParentFile(it)
-                sharedViewModel.setParentFile(it)
+                createFileViewModel.setParentFile(it)
+
+//                sharedViewModel.setParentFile(it)
             }
 
 //            fileWithoutParentFromDB().observe(viewLifecycleOwner){
@@ -122,6 +126,16 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                 binding.bindingSearch.edtLibrarySearch.hint = it?.size.toString()
 
             }
+//            選択モード
+            multipleSlectMode.observe(viewLifecycleOwner){ selectable->
+                recyclerView.children.iterator().forEachRemaining {
+                    it.findViewById<ConstraintLayout>(R.id.base_container).tag = if (selectable) LibRVState.Selectable else LibRVState.Plane
+                    it.findViewById<ImageView>(R.id.btn_select).visibility = if(selectable) View.VISIBLE else View.GONE
+                }
+
+
+            }
+
         }
 
 
@@ -134,6 +148,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 
         binding.topMenuBarFrame.imvSwitchMenu.setPadding(10)
+
 
         binding.apply {
             topMenuBarFrame.apply {
@@ -221,7 +236,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                     when(v){
                         this.imvAnki ->{}
                         this.imvEditFile -> {
-                           createFileViewModel.onClickImvEditFile()
+                           createFileViewModel.onClickEditFile(null)
                         }
                     }
                 }
@@ -247,71 +262,62 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
     }
 
-    override fun onCickEditCard(item: LibraryRV) {
-        createCardViewModel.onClickEditCard(item)
-
-    }
-
-    override fun onSwipeLeft(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding, fileBinding:ItemCoverFileBinding) {
-        if((rvBinding.btnDelete.visibility == View.VISIBLE) or
-            (rvBinding.btnEditWhole.visibility == View.VISIBLE)) return
-        else  {
-            val a = mutableListOf<Animator>()
-            a.add(animateWidth(rvBinding.btnDelete, 0, 70,300))
-            when(item.type){
-                LibRVViewType.FlashCardCover, LibRVViewType.Folder ->
-                    a.add(animateWidth(rvBinding.btnEditWhole,0,70,300))
-                else -> return
-            }
-            AnimatorSet().apply {
-                playTogether(a)
-                start()
-            }
-//            homeFragClickListenerItem.onEach {
-//                when(it.id){
-//                    rvBinding.btnDelete.id,rvBinding.btnEditWhole.id -> return
-//                    else -> {
-//                        it.setOnClickListener(null)
-//                        it.setOnClickListener {
-//                            mutableListOf<View>(rvBinding.btnDelete,rvBinding.btnEditWhole).onEach {
-//                                animateWidth(it,it.layoutParams.width,0,300).start()
-//                                allChildrenMutableList.onEach {
-//                                    it.setOnClickListener(this)
-//                                }
-//                            }
-//
-//                        }
-//
-//                    }
-//
-//                }
+//    override fun onSwipeLeft(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding, fileBinding:ItemCoverFileBinding) {
+//        if((rvBinding.btnDelete.visibility == View.VISIBLE) or
+//            (rvBinding.btnEditWhole.visibility == View.VISIBLE)) return
+//        else  {
+//            val a = mutableListOf<Animator>()
+//            a.add(animateWidth(rvBinding.btnDelete, 0, 70,300))
+//            when(item.type){
+//                LibRVViewType.FlashCardCover, LibRVViewType.Folder ->
+//                    a.add(animateWidth(rvBinding.btnEditWhole,0,70,300))
+//                else -> return
 //            }
-            libraryViewModel.setLeftSwipedItemExists(true)
-            fileBinding.btnAdd.visibility = View.GONE
+//            AnimatorSet().apply {
+//                playTogether(a)
+//                start()
+//            }
+////            homeFragClickListenerItem.onEach {
+////                when(it.id){
+////                    rvBinding.btnDelete.id,rvBinding.btnEditWhole.id -> return
+////                    else -> {
+////                        it.setOnClickListener(null)
+////                        it.setOnClickListener {
+////                            mutableListOf<View>(rvBinding.btnDelete,rvBinding.btnEditWhole).onEach {
+////                                animateWidth(it,it.layoutParams.width,0,300).start()
+////                                allChildrenMutableList.onEach {
+////                                    it.setOnClickListener(this)
+////                                }
+////                            }
+////
+////                        }
+////
+////                    }
+////
+////                }
+////            }
+//            libraryViewModel.setLeftSwipedItemExists(true)
+//            fileBinding.btnAdd.visibility = View.GONE
+//
+//
+//        }
+//    }
 
-
-        }
-    }
-
-    override fun onLongClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
+    override fun onLongClickMain(item: LibraryRV) {
         libraryViewModel.setMultipleSelectMode(true)
-        libraryViewModel.addToSelectedItem(item)
-        recyclerView.children.iterator().forEachRemaining {
-            it.findViewById<ImageView>(R.id.btn_select).visibility = View.VISIBLE
-        }
-
-        Toast.makeText(context, "onclick edit", Toast.LENGTH_SHORT).show()
-
+        libraryViewModel.onClickSelectableItem(item,true)
     }
 
     override fun onClickEdit(item: LibraryRV) {
+        createFileViewModel.onClickEditFile(item.file)
+        createFileViewModel
         Toast.makeText(context, "onclick edit", Toast.LENGTH_SHORT).show()
 
     }
 
-    override fun onClickAdd(item: LibraryRV) {
-        Toast.makeText(context, "onClickAdd", Toast.LENGTH_SHORT).show()
-    }
+//    override fun onClickAdd(item: LibraryRV) {
+//        Toast.makeText(context, "onClickAdd", Toast.LENGTH_SHORT).show()
+//    }
 
     override fun onClickDelete(item: LibraryRV) {
         Toast.makeText(context, "onClickDelete", Toast.LENGTH_SHORT).show()
@@ -321,70 +327,144 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         createCardViewModel.onClickRVAddNewCard(item)
     }
 
-    override fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
-        libraryViewModel.onClickRVItem(rvBinding,item)
-
+//    override fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
+//        libraryViewModel.onClickRVItem(rvBinding,item)
 //
-//        if(rvBinding.btnSelect.visibility == View.VISIBLE){
-//            when(rvBinding.btnSelect.tag){
-//                MyState.Selected -> {
-//                    onUnselect(item,rvBinding)
-//                }
-//                else -> {
-//                    onSelect(item,rvBinding)
-//                }
-//            }
-//        } else if(libraryViewModel.checkReset()){
-//            recyclerView.children.iterator().forEachRemaining {
-//                mutableListOf<View>(it.findViewById(R.id.btn_edit_whole),
-//                    it.findViewById(R.id.btn_delete)).onEach {
-//                        if(it.visibility == View.VISIBLE){
-//                            animateWidth(it,it.layoutParams.width,0,300).start()
-//                        }
-//                }
-//            }
-//            libraryViewModel.setLeftSwipedItemExists(false)
-//            Toast.makeText(context, "all reset", Toast.LENGTH_SHORT).show()
-//            return
-//        } else{
-//            val action= HomeFragmentDirections.libraryToLibrary()
-//            action.parentItemId = intArrayOf(item.id)
-//            navCon.navigate(action)
-//            Toast.makeText(context, "onClickMain", Toast.LENGTH_SHORT).show()
-//        }
+////
+////        if(rvBinding.btnSelect.visibility == View.VISIBLE){
+////            when(rvBinding.btnSelect.tag){
+////                MyState.Selected -> {
+////                    onUnselect(item,rvBinding)
+////                }
+////                else -> {
+////                    onSelect(item,rvBinding)
+////                }
+////            }
+////        } else if(libraryViewModel.checkReset()){
+////            recyclerView.children.iterator().forEachRemaining {
+////                mutableListOf<View>(it.findViewById(R.id.btn_edit_whole),
+////                    it.findViewById(R.id.btn_delete)).onEach {
+////                        if(it.visibility == View.VISIBLE){
+////                            animateWidth(it,it.layoutParams.width,0,300).start()
+////                        }
+////                }
+////            }
+////            libraryViewModel.setLeftSwipedItemExists(false)
+////            Toast.makeText(context, "all reset", Toast.LENGTH_SHORT).show()
+////            return
+////        } else{
+////            val action= HomeFragmentDirections.libraryToLibrary()
+////            action.parentItemId = intArrayOf(item.id)
+////            navCon.navigate(action)
+////            Toast.makeText(context, "onClickMain", Toast.LENGTH_SHORT).show()
+////        }
+//
+//
+//
+//    }
 
 
+//    override fun onSelect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
+//
+////        rvBinding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
+////        rvBinding.btnSelect.tag = MyState.Selected
+////        libraryViewModel.onclickSelectableItem(item,true)
+////        Toast.makeText(context, "onSelect", Toast.LENGTH_SHORT).show()
+//    }
 
-    }
-    enum class MyState{
-        Selected, Unselected
-    }
-
-    override fun onSelect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
-
-//        rvBinding.btnSelect.setImageDrawable(requireActivity().getDrawable(R.drawable.circle_selected))
-//        rvBinding.btnSelect.tag = MyState.Selected
-//        libraryViewModel.onclickSelectableItem(item,true)
-//        Toast.makeText(context, "onSelect", Toast.LENGTH_SHORT).show()
-    }
-
-
-    override fun onUnselect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding) {
-
-//        rvBinding.btnSelect.setImageDrawable(requireContext().getDrawable(R.drawable.circle_select))
-//        rvBinding.btnSelect.tag = MyState.Unselected
-//        libraryViewModel.onclickSelectableItem(item,false)
-//        Toast.makeText(context, "onUnselect", Toast.LENGTH_SHORT).show()
+    override fun onClickSelectableItem(item: LibraryRV, selected: Boolean) {
+        libraryViewModel.onClickSelectableItem(item,selected)
     }
 
-    override fun onScrollLeft(distanceX: Float, rvBinding: ItemCoverCardBaseBinding) {
-//        binding.btnDelete.visibility = View.VISIBLE
-//        binding.btnEditWhole.visibility = View.VISIBLE
-//        binding.stubMain.layoutParams.width = distanceX.toInt()
-//        libraryViewModel.makeItemLeftSwiped()
+//    override fun onUnselect(item: LibraryRV) {
+//
+////        rvBinding.btnSelect.setImageDrawable(requireContext().getDrawable(R.drawable.circle_select))
+////        rvBinding.btnSelect.tag = MyState.Unselected
+////        libraryViewModel.onclickSelectableItem(item,false)
+////        Toast.makeText(context, "onUnselect", Toast.LENGTH_SHORT).show()
+//    }
+
+//    override fun onScrollLeft(distanceX: Float, rvBinding: ItemCoverCardBaseBinding) {
+////        binding.btnDelete.visibility = View.VISIBLE
+////        binding.btnEditWhole.visibility = View.VISIBLE
+////        binding.stubMain.layoutParams.width = distanceX.toInt()
+////        libraryViewModel.makeItemLeftSwiped()
+//    }
+
+    override fun openNext(item: LibraryRV) {
+        when(item.type){
+            LibRVViewType.Folder,LibRVViewType.FlashCardCover -> libraryViewModel.openNextFile(item)
+            LibRVViewType.StringCard -> createCardViewModel.onClickEditCard(item)
+        }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+}
+class LibRVTouchListner(val view:View,
+                        context: Context,
+                        val item: LibraryRV,
+                        val clickListener: DataClickListener,
+                        val rvBinding: ItemCoverCardBaseBinding):MyTouchListener(context){
+
+    override fun onSingleTap() {
+        super.onSingleTap()
+        rvBinding.apply {
+            when(view){
+                baseContainer ->  {
+                    when(view.tag){
+                        LibRVState.Selectable -> {
+                            clickListener.onClickSelectableItem(item,btnSelect.isSelected.not())
+                            btnSelect.isSelected = btnSelect.isSelected.not()
+                        }
+                        LibRVState.LeftSwiped -> {
+                            btnEditWhole.visibility = View.GONE
+                            btnDelete.visibility = View.GONE
+                            view.tag = LibRVState.Plane
+                        }
+                        LibRVState.Plane -> clickListener.openNext(item)
+
+                    }
+                }
+                btnDelete -> clickListener.onClickDelete(item)
+                btnEditWhole -> clickListener.onClickEdit(item)
+                btnAddNewCard -> clickListener.onClickAddNewCardByPosition(item)
+
+            }
+
         }
+    }
+
+    override fun onLongClick() {
+        super.onLongClick()
+        rvBinding.apply {
+            when(view){
+                baseContainer -> {
+                    btnSelect.isSelected = true
+                    clickListener.onLongClickMain(item)
+                }
+            }
+
+        }
+
+    }
+
+    override fun onSwipeLeft() {
+        super.onSwipeLeft()
+        rvBinding.apply {
+
+            when(view){
+                stubMain -> {
+                    btnDelete.visibility = View.VISIBLE
+                    btnEditWhole.visibility = if(item.type==LibRVViewType.Folder||item.type == LibRVViewType.FlashCardCover) View.VISIBLE else return
+                }
+            }
+
+        }
+
+
+    }
+}

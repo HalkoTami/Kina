@@ -213,13 +213,14 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         recyclerView.children.iterator().forEachRemaining {
             val a = it.findViewById<ImageView>(R.id.btn_select)
             a.visibility = View.GONE
-            a.tag = HomeFragment.MyState.Unselected
+            a.isSelected = false
+
         }
 
     }
 
     //multiSelectMode
-    val _multipleSelectMode =  MutableLiveData<Boolean>()
+    private val _multipleSelectMode =  MutableLiveData<Boolean>()
     fun setMultipleSelectMode(boolean: Boolean){
         _multipleSelectMode.apply {
             value = boolean
@@ -233,6 +234,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
             }
             false -> {
+                setSelectedItem(mutableListOf())
 //                makeAllUnSelectableUnSelected()
                 when(_homeStatus.value){
                     true -> setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
@@ -244,6 +246,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 
     }
+    val multipleSlectMode:LiveData<Boolean> = _multipleSelectMode
 
     //selected Items
     private val _selectedItems = MutableLiveData<List<LibraryRV>>()
@@ -445,6 +448,7 @@ private val _action = MutableLiveData<NavDirections>()
     fun onClickImvFileStatusOrClose(recyclerView: RecyclerView){
         when(_multipleSelectMode.value){
             true -> {
+
                 makeRVUnSelectable(recyclerView)
 
                 setMultipleSelectMode(false)
@@ -466,20 +470,38 @@ private val _action = MutableLiveData<NavDirections>()
 
 
     }
+    fun changeItemSelected(item: LibraryRV, boolean: Boolean) {
+        if (boolean)  {
+            addToSelectedItem(item)
+
+        } else {
+            removeFromSelectedItem(item)
+
+
+        }
+
+
+    }
     fun changeItemSelected(item: LibraryRV, boolean: Boolean,btnSelect: ImageView) {
         if (boolean)  {
             btnSelect.isSelected = true
-            btnSelect.tag = HomeFragment.MyState.Selected
             addToSelectedItem(item)
 
         } else {
             removeFromSelectedItem(item)
 
             btnSelect.isSelected = false
-            btnSelect.tag = HomeFragment.MyState.Unselected
+
         }
 
 
+    }
+    fun onClickSelectableItem(item: LibraryRV,boolean: Boolean){
+        if (boolean)  {
+            addToSelectedItem(item)
+        } else {
+            removeFromSelectedItem(item)
+        }
     }
 
     fun onClickRVItem(rvBinding: ItemCoverCardBaseBinding,item: LibraryRV){
@@ -489,11 +511,17 @@ private val _action = MutableLiveData<NavDirections>()
                 false -> true
             }
             changeItemSelected(item,select,rvBinding.btnSelect)
+
         } else{
             val action = HomeFragmentDirections.libraryToLibrary()
             action.parentItemId = intArrayOf(item.id)
             setAction(action)
         }
+    }
+    fun openNextFile(item: LibraryRV){
+        val action = HomeFragmentDirections.libraryToLibrary()
+        action.parentItemId = intArrayOf(item.id)
+        setAction(action)
     }
 
 

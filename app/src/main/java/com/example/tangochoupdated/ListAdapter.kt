@@ -25,9 +25,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
+import com.example.tangochoupdated.room.enumclass.LibRVState
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.library.HomeFragment
+import com.example.tangochoupdated.ui.library.LibRVTouchListner
 
 
 /**
@@ -79,9 +81,13 @@ val mycontext: Context) :
         fun bind(item: LibraryRV, clickListener: DataClickListener ){
             item.position = adapterPosition
 
+//            親レイアウトのclick listener
+            val clickableViews = mutableListOf<View>()
+            clickableViews.add(binding.baseContainer)
 
 
             binding.stubMain.removeAllViews()
+
             when (item.type){
               LibRVViewType.Folder, LibRVViewType.FlashCardCover ->{
                   fileBinding = ItemCoverFileBinding.inflate(LayoutInflater.from(context))
@@ -111,6 +117,8 @@ val mycontext: Context) :
                           LibRVViewType.FlashCardCover -> context.getDrawable(R.drawable.icon_library_plane)
                           else -> throw IllegalArgumentException()
                       })
+                      clickableViews.add(btnAdd)
+
                   }
 
 
@@ -155,50 +163,69 @@ val mycontext: Context) :
                 LibRVViewType.MarkerCard,LibRVViewType.ChoiceCard,LibRVViewType.StringCard -> VISIBLE
                 else -> GONE
             }
+            binding.baseContainer.tag = LibRVState.Plane
             binding.btnSelect.visibility = GONE
-
-            binding.btnDelete.visibility = if(!item.leftSwiped) GONE else return
-            binding.btnEditWhole.visibility = if(!item.leftSwiped) GONE else return
-
-
-
-
-
-            binding.btnAddNewCard.setOnClickListener{
-                clickListener.onClickAddNewCardByPosition(item)
-            }
 //
-            binding.stubMain.setOnTouchListener (object:MyTouchListener(context){
-                override fun onSingleTap() {
-                    super.onSingleTap()
-                    when(item.type){
-                        LibRVViewType.StringCard -> clickListener.onCickEditCard(item)
-                        else ->  clickListener.onClickMain(item,binding)
-                    }
+            binding.btnDelete.visibility =  GONE
+            binding.btnEditWhole.visibility =  GONE
+
+//            ボタンのclicklitener
+            binding.apply {
+                clickableViews.addAll(arrayOf(
+                    btnDelete,btnSelect,btnEditWhole,btnAddNewCard,stubMain
+                ))
+
+            }
 
 
-                }
-
-                override fun onSwipeLeft() {
-                    super.onSwipeLeft()
-                    clickListener.onSwipeLeft(item,binding,fileBinding)
-
-                }
-
-                override fun onLongClick() {
-                    super.onLongClick()
-                    clickListener.onLongClickMain(item,binding)
+            clickableViews.onEach {
+                it.setOnTouchListener(LibRVTouchListner(it,context,item,clickListener,binding))
+            }
 
 
-                }
 
-//                scroll view にネスト化して　やりたいイベントはできそうだが後回し
-                override fun onScrollLeft() {
-                    super.onScrollLeft()
-
-
-                }
-            })
+//            binding.btnAddNewCard.setOnClickListener{
+//                clickListener.onClickAddNewCardByPosition(item)
+//            }
+//
+////
+//
+//
+//            binding.baseContainer
+////            binding.stubMain.setOnTouchListener (object:MyTouchListener(context){
+//                override fun onSingleTap() {
+//                    super.onSingleTap()
+////                    when(binding.baseContainer.tag){
+////                        LibRVState.Selectable -> onClickSelectableItem
+////                    }
+//                    when(item.type){
+//                        LibRVViewType.StringCard -> clickListener.onCickEditCard(item)
+//                        else ->  clickListener.onClickMain(item,binding)
+//                    }
+//
+//
+//                }
+//
+//                override fun onSwipeLeft() {
+//                    super.onSwipeLeft()
+//                    clickListener.onSwipeLeft(item,binding,fileBinding)
+//
+//                }
+//
+//                override fun onLongClick() {
+//                    super.onLongClick()
+//                    clickListener.onLongClickMain(item,binding)
+//
+//
+//                }
+//
+////                scroll view にネスト化して　やりたいイベントはできそうだが後回し
+//                override fun onScrollLeft() {
+//                    super.onScrollLeft()
+//
+//
+//                }
+//            })
 //
 
 
@@ -270,17 +297,20 @@ private object MyDiffCallback : DiffUtil.ItemCallback<LibraryRV>() {
  */
 
 interface DataClickListener {
-    fun onSwipeLeft(item :LibraryRV, rvBinding:ItemCoverCardBaseBinding, fileBinding: ItemCoverFileBinding)
-    fun onLongClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
-    fun onSelect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
-    fun onClickEdit(item: LibraryRV)
-    fun onCickEditCard(item: LibraryRV)
-    fun onClickAdd(item: LibraryRV)
+//    fun onSwipeLeft(item :LibraryRV, rvBinding:ItemCoverCardBaseBinding, fileBinding: ItemCoverFileBinding)
+
+//    fun onSelect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
+//fun onCickEditCard(item: LibraryRV)
+//    fun onClickAdd(item: LibraryRV)
+//    fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
+//    fun onScrollLeft(distanceX:Float, rvBinding: ItemCoverCardBaseBinding)
+//
+    fun onClickSelectableItem(item: LibraryRV,selected:Boolean)
     fun onClickDelete(item: LibraryRV)
-    fun onClickMain(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
-    fun onUnselect(item: LibraryRV, rvBinding: ItemCoverCardBaseBinding)
-    fun onScrollLeft(distanceX:Float, rvBinding: ItemCoverCardBaseBinding)
+    fun onClickEdit(item: LibraryRV)
+    fun openNext(item: LibraryRV)
     fun onClickAddNewCardByPosition(item:LibraryRV)
+    fun onLongClickMain(item: LibraryRV)
 
 
 }
