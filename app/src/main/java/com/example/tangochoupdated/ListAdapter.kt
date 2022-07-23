@@ -172,7 +172,7 @@ val mycontext: Context) :
 //            ボタンのclicklitener
             binding.apply {
                 clickableViews.addAll(arrayOf(
-                    btnDelete,btnSelect,btnEditWhole,btnAddNewCard,stubMain
+                    btnDelete,btnSelect,btnEditWhole,btnAddNewCard,
                 ))
 
             }

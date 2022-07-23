@@ -457,7 +457,7 @@ class LibRVTouchListner(val view:View,
         rvBinding.apply {
 
             when(view){
-                stubMain -> {
+                baseContainer -> {
                     btnDelete.visibility = View.VISIBLE
                     btnEditWhole.visibility = if(item.type==LibRVViewType.Folder||item.type == LibRVViewType.FlashCardCover) View.VISIBLE else return
                 }
