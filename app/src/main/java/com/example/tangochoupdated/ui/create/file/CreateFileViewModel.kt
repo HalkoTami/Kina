@@ -140,19 +140,12 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     val addFileActive : LiveData<Boolean> = _addFileActive
 
     fun setAddFileActive(boolean:Boolean){
-        val before = _addFileActive.value
-        if(before == boolean){
-            return
-        } else{
-            _addFileActive.value = boolean
-            if(boolean){
-                when(_mode.value){
-                    Mode.New -> setBottomMenuVisible(true)
-                    Mode.Edit -> setEditFilePopUpVisible(true)
-                }
+        _addFileActive.value = boolean
+        if(boolean){
+            when(_mode.value){
+                Mode.New -> setBottomMenuVisible(true)
+                Mode.Edit -> setEditFilePopUpVisible(true)
             }
-
-
         }
 
     }

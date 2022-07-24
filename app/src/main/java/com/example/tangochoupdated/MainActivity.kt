@@ -215,7 +215,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                             true -> {
                                 visibility = VISIBLE
                                 appearAnimator.start()
-                                setOnClickListener(null)
                             }
                             false ->{
                                 appearAnimator.doOnEnd {
