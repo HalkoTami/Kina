@@ -175,29 +175,9 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     }
 
-    fun reset():Boolean{
-        if(_bottomMenuVisible.value==true&&_editFilePopUpVisible.value == false){
-            setBottomMenuVisible(false)
-            setAddFileActive(false)
-            return true
-        }
-        else if (_editFilePopUpVisible.value == true){
-            setEditFilePopUpVisible(false)
-            setAddFileActive(false)
-            return true
-        } else return false
-
-    }
 
 
 
-
-
-    fun onClickAddTab(){
-        setBottomMenuVisible(true)
-
-
-    }
 
     fun onClickCreateFolder(){
         if(_bottomMenuClickable.value!!.createFile){

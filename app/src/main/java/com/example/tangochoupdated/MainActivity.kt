@@ -206,11 +206,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 //                visibility
                 popupAddFile.apply {
-                    val appearAnimator = AnimatorSet().apply {
-                        duration= 500
-                        play(ObjectAnimator.ofFloat(popupAddFile, View.ALPHA, 0f,1f ))
-                    }
+
                     editFilePopUpVisible.observe(this@MainActivity){
+                        val appearAnimator = AnimatorSet().apply {
+                            duration= 500
+                            play(ObjectAnimator.ofFloat(popupAddFile, View.ALPHA, 0f,1f ))
+                        }
                         when (it){
                             true -> {
                                 visibility = VISIBLE
@@ -300,9 +301,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             createFileBinding.apply {
                 bindingAddMenu.apply {
                     when(v){
-                        imvnewCard -> createFileViewModel.onCLickCreateFlashCardCover()
+                        imvnewCard -> createCardViewModel.onClickAddNewCardBottomBar()
                         imvnewTangocho -> createFileViewModel.onCLickCreateFlashCardCover()
-                        imvnewfolder -> createCardViewModel.onClickAddNewCardBottomBar()
+                        imvnewfolder -> createFileViewModel.onClickCreateFolder()
                     }
                 }
                 bindingCreateFile.apply {
@@ -319,8 +320,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                                 imvColGray -> setFileColor(ColorStatus.GRAY)
                                 imvColBlue -> setFileColor(ColorStatus.BLUE)
                                 imvColRed -> setFileColor(ColorStatus.RED)
-                                imvIconPalet -> lineLayColorPalet.children.onEach {
-                                   it.visibility = if(it.visibility == VISIBLE) GONE else VISIBLE
+                                imvIconPalet -> lineLayColorPalet.children.iterator().forEachRemaining {
+                                    it.visibility = if(it.visibility == VISIBLE) GONE else VISIBLE
                                 }
                             }
                         }
@@ -332,7 +333,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
     }
 
-
+//    Toast.makeText(this@MainActivity,"called",Toast.LENGTH_SHORT).show()
 
 
     fun changeColPalletCol(colorStatus: ColorStatus, selected:Boolean, colorPaletBinding: ColorPaletBinding){
