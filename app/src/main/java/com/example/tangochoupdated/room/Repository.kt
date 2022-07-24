@@ -2,7 +2,6 @@ package com.example.tangochoupdated.room
 
 import androidx.annotation.WorkerThread
 import com.example.tangochoupdated.room.dataclass.*
-import com.example.tangochoupdated.room.enumclass.FileStatus
 import kotlinx.coroutines.flow.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
@@ -32,7 +31,9 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
     val lastInsertedFile:Flow<Int> = libraryDao.getLastInsertedFile()
     fun mygetFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = libraryDao.myGetFileByParentFileId(parentFileId)
 
-    fun getPAndGPFiles(fileId: Int?):Flow<List<File>> = libraryDao.getPAndGPFileBychildId(fileId)
+    fun getPAndGPFiles(fileId: Int?):Flow<List<File>> = libraryDao.getAllAncestorsByChildFileId(fileId)
+    fun getAllDescendantsByFileId(fileId: Int?):Flow<List<File>> = libraryDao.getAllDescendantsByParentFileId(fileId)
+//    fun getAllDescendantsByFileIdWithCard(fileId: Int?):Flow<List<Any>> = libraryDao.getAllDescendantsByParentFileId2(fileId)
 
     fun getCardByCardId(cardId:Int?):Flow<CardAndTags> = cardDao.getCardAndTagsByCardId(cardId)
     val lastInsertedCard:Flow<Card?> = cardDao.getLastInsertedCard()
@@ -100,7 +101,7 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
 
     }
 
-    suspend fun deleteCard(item: Any) {
+    suspend fun delete(item: Any) {
         when (item) {
             is CardAndTagXRef -> cardAndTagXRefDao.delete(item)
             is Card -> cardDao.delete(item)
@@ -113,7 +114,7 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
         }
     }
 
-    suspend fun deleteCards(item: List<Any>) {
+    suspend fun deleteMultiple(item: List<Any>) {
         cardAndTagXRefDao.deleteMultiple(item.filterIsInstance<CardAndTagXRef>())
         cardDao.deleteMultiple(item.filterIsInstance<Card>())
         fileDao.deleteMultiple(item.filterIsInstance<File>())

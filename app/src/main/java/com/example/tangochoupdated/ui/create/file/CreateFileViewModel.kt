@@ -263,7 +263,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
     private val _txvHint = MutableLiveData<String>()
-    val txvHint:LiveData<String> = _txvHint
+    val txvHintText:LiveData<String> = _txvHint
 
     private fun setTxvHint(string: String){
         _txvHint.value = string

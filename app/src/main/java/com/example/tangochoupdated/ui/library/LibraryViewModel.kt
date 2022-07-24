@@ -150,6 +150,12 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _pAndgGP.value = list
     }
 
+    fun getAllDescendants(parentId:Int?):LiveData<List<Any>?> = repository.getAllDescendantsByFileId(parentId).asLiveData()
+    private val _allDescendants = MutableLiveData<List<Any>?>()
+    fun setAllDescendants(list: List<Any>?){
+        _allDescendants.value = list
+    }
+
     //    parent item as Library RV
     private val _myParentItem = MutableLiveData<LibraryRV?>()
 
@@ -555,7 +561,7 @@ private val _action = MutableLiveData<NavDirections>()
         updateMultiple(cards)
 
     }
-    private fun deleteSelectedItems(){
+    private fun safeDeleteSelectedItems(){
         val file = mutableListOf<File>()
         val cards = mutableListOf<Card>()
         _selectedItems.value?.onEach {
@@ -577,10 +583,38 @@ private val _action = MutableLiveData<NavDirections>()
 
 
     }
+    private fun deleteSelectedItems(){
+        val file = mutableListOf<File>()
+        val cards = mutableListOf<Card>()
+        _selectedItems.value?.onEach {
+            when(it.type){
+                LibRVViewType.Folder,LibRVViewType.FlashCardCover -> {
+                    file.add(it.file!!)
+                }
+                else -> {
+                    cards.add(it.card!!)
+
+                }
+            }
+
+        }
+        deleteMultiple(file)
+        deleteMultiple(cards)
+
+
+    }
     private fun updateMultiple(list:List<Any>){
         if (list.isNotEmpty()){
             viewModelScope.launch {
                 repository.updateMultiple(list)
+            }
+        }
+
+    }
+    private fun deleteMultiple(list:List<Any>){
+        if (list.isNotEmpty()){
+            viewModelScope.launch {
+                repository.deleteMultiple(list)
             }
         }
 

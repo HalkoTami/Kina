@@ -3,9 +3,7 @@ package com.example.tangochoupdated.room.dao
 import androidx.room.Query
 import androidx.room.RoomWarnings
 import androidx.room.Transaction
-import com.example.tangochoupdated.room.dataclass.Card
-import com.example.tangochoupdated.room.dataclass.CardAndTags
-import com.example.tangochoupdated.room.dataclass.File
+import com.example.tangochoupdated.room.dataclass.*
 import kotlinx.coroutines.flow.Flow
 
 interface LibraryDao {
@@ -17,6 +15,8 @@ interface LibraryDao {
     @Query("select * from tbl_file where not deleted AND NOT hasParent ")
     fun getFileWithoutParent(): Flow<List<File>>
 
+    @Query("select * from tbl_file where not deleted AND NOT hasParent ")
+    fun deleteFileWithoutParent(): Flow<List<File>>
 
 
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
@@ -46,7 +46,22 @@ interface LibraryDao {
             "UNION ALL" +
             " SELECT a.* from tbl_file a Inner JOIN generation g ON g.parentFileId = a.fileId )" +
             "SELECT * FROM generation b ")
-    fun getPAndGPFileBychildId(fileId: Int?):Flow<List<File>>
+    fun getAllAncestorsByChildFileId(fileId: Int?):Flow<List<File>>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("WITH  generation AS (" +
+            " select * from tbl_file where fileId = :fileId " +
+            "UNION ALL" +
+            " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
+            "SELECT * FROM generation b Inner Join tbl_card c ON c.belongingFileId = b.fileId")
+    fun getAllDescendantsByParentFileId(fileId: Int?):Flow<List<File>>
+
+
+
+
+
+
+
 //    " JOIN tbl_file parent ON parent.fileId = a.parentFileId"
 //
 //    uery("SELECT *  FROM file_xref p_c " +

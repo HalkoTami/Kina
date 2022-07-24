@@ -2,7 +2,6 @@ package com.example.tangochoupdated
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.Context
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.View
@@ -15,327 +14,121 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.animation.doOnEnd
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.children
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavAction
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.navArgs
 import com.example.tangochoupdated.databinding.ColorPaletBinding
 
 import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
 import com.example.tangochoupdated.databinding.MyActivityMainBinding
 import com.example.tangochoupdated.room.enumclass.ColorStatus
-import com.example.tangochoupdated.room.enumclass.StringFragFocusedOn
-import com.example.tangochoupdated.room.enumclass.Tab
-import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
-import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
-import com.example.tangochoupdated.ui.library.HomeFragmentArgs
-import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
-import com.example.tangochoupdated.ui.library.HomeFragment
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
+    private lateinit var factory:ViewModelFactory
 
-
-    lateinit var factory:ViewModelFactory
-
-    lateinit var baseviewModel: BaseViewModel
-    lateinit var createFileviewModel: CreateFileViewModel
+    lateinit var mainActivityViewModel: BaseViewModel
+    lateinit var createFileViewModel: CreateFileViewModel
     lateinit var createCardViewModel: CreateCardViewModel
     lateinit var stringCardViewModel: StringCardViewModel
     lateinit var libraryViewModel:LibraryViewModel
 
-    var filePopUpVisible = false
-
-
-
     private lateinit var binding: MyActivityMainBinding
     private lateinit var bnvBinding: ItemBottomNavigationBarBinding
+
+    private val  mainActivityClickableItem = mutableListOf<View>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
+//      全部のデータを消したいとき
 //        applicationContext.deleteDatabase("my_database")
-        factory = ViewModelFactory((application as RoomApplication).repository)
 
-        baseviewModel = ViewModelProvider(this,
-        ViewModelFactory((application as RoomApplication).repository)
-        )[BaseViewModel::class.java]
 
-        createFileviewModel = ViewModelProvider(this,
-            ViewModelFactory((application as RoomApplication).repository)
-        )[CreateFileViewModel::class.java]
-
-        createCardViewModel = ViewModelProvider(this,
-            ViewModelFactory((application as RoomApplication).repository)
-        )[CreateCardViewModel::class.java]
-
-        libraryViewModel =
-            ViewModelProvider(
-                this, factory
-            )[LibraryViewModel::class.java]
-
-        stringCardViewModel = ViewModelProvider(this)[StringCardViewModel::class.java]
+//        ー－－－mainActivityのviewー－－－
 
         binding = MyActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-        bnvBinding = binding.bnvBinding
-        bnvBinding.imvEditFile.setImageDrawable(getDrawable(R.drawable.icon_add_middlesize))
-
-
-
-        binding.mainTopConstrainLayout.requestFocus()
-
-
-
+//        navController の宣言
         val navHostFragment =
             supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
         val navCon = navHostFragment.navController
-
-
-
-        binding.createFileBinding.apply {
-            popupAddFile.visibility = GONE
-            frameBottomMenu.visibility = GONE
-        }
-
-//        /                新しいカードが挿入完了したら呼ばれる
-        var calledFirstTime = true
-        createCardViewModel.lastInsertedCardAndTags.observe(this){
-            if(!calledFirstTime){
-                createCardViewModel.setLastInsertedCardAndTags(it)
+        binding.apply {
+//        Focus request
+            mainTopConstrainLayout.requestFocus()
+//            初期view設定
+            bnvBinding.imvEditFile.setImageDrawable(getDrawable(R.drawable.icon_add_middlesize))
+            binding.createFileBinding.apply {
+                popupAddFile.visibility = GONE
+                frameBottomMenu.visibility = GONE
             }
-            calledFirstTime = false
+//       　　 viewをclickListenerに追加
+            mainActivityClickableItem.apply {
+                bnvBinding.apply {
+                    addAll(arrayOf(
+                        layout1,layout2,layout3
+                    ))
+                }
+                createFileBinding.apply {
+                    bindingAddMenu.apply {
+                        addAll(arrayOf(imvnewCard,imvnewTangocho,imvnewfolder))
+                    }
+                    bindingCreateFile.apply {
+                        addAll(arrayOf(btnCreateFile,btnClose))
+                        colPaletBinding.apply {
+                            addAll(arrayOf(
+                                imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet
+                            ))
+                        }
+                    }
+                }
+                onEach { it.setOnClickListener(this@MainActivity) }
+            }
+
         }
 
 
 
-        baseviewModel.setOnCreate()
-        createFileviewModel.onCreate()
+//        ー－－－－－－－
 
+//        ー－－－すべてのViewModelの作成ー－－－
+//         ViewModel Factory
+        factory = ViewModelFactory((application as RoomApplication).repository)
+//        viewModelの定義
+        mainActivityViewModel = ViewModelProvider(this,
+            ViewModelFactory((application as RoomApplication).repository)
+        )[BaseViewModel::class.java]
+        createFileViewModel = ViewModelProvider(this,
+            ViewModelFactory((application as RoomApplication).repository)
+        )[CreateFileViewModel::class.java]
+        createCardViewModel = ViewModelProvider(this,
+            ViewModelFactory((application as RoomApplication).repository)
+        )[CreateCardViewModel::class.java]
+        libraryViewModel = ViewModelProvider(this, factory
+            )[LibraryViewModel::class.java]
+        stringCardViewModel = ViewModelProvider(this)[StringCardViewModel::class.java]
+//      　ー－－－－－－－－－
 
+//        ー－－－mainActivityのviewModel 読み取りー－－－
 
-
-
-        baseviewModel.apply {
+        mainActivityViewModel.apply{
+//        初期設定
+            setOnCreate()
+//           タブの画面遷移
             action.observe(this@MainActivity){
                 navCon.navigate(it)
-
             }
-
-        }
-
-
-        createCardViewModel.action.observe(this){
-            if(it.fromSameFrag){
-                navCon.popBackStack()
-                navCon.navigate(it.action)
-
-            } else navCon.navigate(it.action)
-
-        }
-//        createCardViewModel.parentCard.observe(this){
-//            stringCardViewModel.setStringData(it?.card?.stringData)
-//        }
-
-
-
-
-//    add new file pop up -- bottom menu
-        createFileviewModel.bottomMenuClickable.observe(this){
-            binding.createFileBinding.bindingAddMenu.apply {
-                this.imvnewfolder.visibility = if(!it.createFile)  GONE else VISIBLE
-                this.imvnewTangocho.visibility =if (!it.createFlashCardCover)  GONE else VISIBLE
-                this.imvnewCard.visibility= if(!it.createCard) GONE else VISIBLE
-
-            }
-        }
-
-
-        createFileviewModel.bottomMenuVisible.observe(this){
-            val btmMenuAnimator = AnimatorSet().apply{
-                val a = ObjectAnimator.ofFloat(binding.createFileBinding.frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
-                val b = ObjectAnimator.ofFloat(binding.createFileBinding.frameBottomMenu, View.ALPHA,0f,1f)
-                playTogether(a,b)
-                duration = 500
-            }
-
-            when (it){
-                true -> {
-                    btmMenuAnimator.start()
-                    binding.createFileBinding.frameBottomMenu.visibility = VISIBLE
-
-
-
-                }
-                false ->{
-                    btmMenuAnimator.doOnEnd {
-                        binding.createFileBinding.frameBottomMenu.visibility = GONE }
-                    btmMenuAnimator.reverse()
-
-                }
-            }
-
-        }
-
-        libraryViewModel.parentItemId.observe(this@MainActivity){
-            createCardViewModel.setParentFlashCardCoverId(it)
-
-        }
-        binding.createFileBinding.bindingAddMenu.apply {
-            imvnewTangocho.setOnClickListener {
-                createFileviewModel.onCLickCreateFlashCardCover()
-            }
-            imvnewfolder.setOnClickListener {
-            createFileviewModel.onClickCreateFolder()
-            }
-            imvnewCard.setOnClickListener {
-                createFileviewModel.setAddFileActive(false)
-
-                createCardViewModel.onClickAddNewCardBottomBar()
-
-            }
-        }
-
-        //    add new file pop up -- edit file
-        createFileviewModel.editFilePopUpVisible.observe(this){
-            val appearAnimator = AnimatorSet().apply {
-                duration= 500
-                play(ObjectAnimator.ofFloat(binding.createFileBinding.popupAddFile, View.ALPHA, 0f,1f ))
-            }
-            when (it){
-                true -> {
-
-                    binding.createFileBinding.popupAddFile.visibility = VISIBLE
-                    appearAnimator.start()
-                    binding.createFileBinding.popupAddFile.setOnClickListener(null)
-
-                }
-                false ->{
-                    appearAnimator.doOnEnd {
-                        binding.createFileBinding.popupAddFile.visibility = GONE
-                    }
-                    appearAnimator.reverse()
-
-                }
-            }
-
-        }
-//        add new File pop up Data
-        binding.createFileBinding.bindingCreateFile.apply {
-            createFileviewModel.txvLeftTop.observe(this@MainActivity){
-                txvFileTitle.text = it
-            }
-            createFileviewModel.txvHint.observe(this@MainActivity){
-                txvHint.text = it
-            }
-
-            var previousColor:ColorStatus?
-            previousColor = null
-
-
-            createFileviewModel.fileColor.observe(this@MainActivity){
-
-
-                val a = binding.createFileBinding.bindingCreateFile.colPaletBinding
-
-                if(previousColor == null){
-                    makeAllColPaletUnselected(a)
-
-                } else{
-                    changeColPalletCol(previousColor!!,false,a)
-                }
-                changeColPalletCol(it,true,a)
-                previousColor = it
-
-
-
-            }
-
-
-            binding.createFileBinding.bindingCreateFile.colPaletBinding.apply {
-                imvColBlue.setOnClickListener{createFileviewModel.setFileColor(ColorStatus.BLUE)}
-                imvColGray.setOnClickListener{ createFileviewModel.setFileColor(ColorStatus.GRAY)}
-                imvColRed.setOnClickListener{createFileviewModel.setFileColor(ColorStatus.RED)}
-                imvColYellow.setOnClickListener { createFileviewModel.setFileColor(ColorStatus.YELLOW) }
-            }
-
-
-            var start = true
-            createFileviewModel.lastInsetedFileId.observe(this@MainActivity){
-                if(start){
-                    start = false
-                    return@observe
-                } else{
-                    createFileviewModel.setLastInsertedFileId(it)
-                }
-
-
-            }
-            createFileviewModel.parentFileStock.observe(this@MainActivity){
-                Toast.makeText(this@MainActivity,"stock size ${it.size}",Toast.LENGTH_SHORT).show()
-            }
-            btnCreateFile.setOnClickListener {
-                if(edtCreatefile.text.isEmpty()){
-                    edtCreatefile.hint = "タイトルが必要です"
-                } else{
-                    createFileviewModel.onClickFinish(edtCreatefile.text!!.toString())
-                }
-
-            }
-            createFileviewModel.txvFileTitleText.observe(this@MainActivity){
-                edtCreatefile.text = it
-            }
-
-//
-
-        }
-
-
-//         background
-
-        createFileviewModel.addFileActive.observe(this@MainActivity){ boolean ->
-            binding.createFileBinding.apply {
-                when(boolean){
-                    true ->{
-                        root.visibility = VISIBLE
-                        bindingCreateFile.btnClose.setOnClickListener {
-                            createFileviewModel.setAddFileActive(false)
-                        }
-                        background.setOnClickListener{
-                            createFileviewModel.setAddFileActive(false)
-                        }
-                    }
-                    false -> {
-                        root.visibility = GONE
-                        this@MainActivity.filePopUpVisible = false
-                    }
-                }
-
-            }
-
-
-
-        }
-
-
-//        bottom navigation bar
-//
-        baseviewModel.bnvVisibility.observe(this@MainActivity){
+//            ナビゲーションバーのUi変化
+            bnvVisibility.observe(this@MainActivity){
                 binding.frameBnv.visibility = if(it == true) VISIBLE else GONE
             }
-        bnvBinding.apply {
-
-
-            layout1.apply {
-                baseviewModel.bnvLayout1View.observe(this@MainActivity){
+            binding.bnvBinding.apply {
+                bnvLayout1View.observe(this@MainActivity){
                     bnvImv1.setImageDrawable(getDrawable(it.drawableId))
                     bnvImv1.setPadding(it.padding)
                     bnvTxv1.text = it.tabName
@@ -344,16 +137,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         false -> GONE
                     }
                 }
-                setOnClickListener {
-                    baseviewModel.onClickTab1()
-                }
-            }
-            layout2.setOnClickListener {
-                createFileviewModel.onClickImvAddBnv()
-
-            }
-            layout3.apply {
-                baseviewModel.bnvLayout3View.observe(this@MainActivity){
+                bnvLayout3View.observe(this@MainActivity){
                     imv3.setImageDrawable(getDrawable(it.drawableId))
                     imv3.setPadding(it.padding)
                     txv3.text = it.tabName
@@ -362,22 +146,190 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         false -> GONE
                     }
                 }
-                setOnClickListener {
-                    baseviewModel.onClickTab3()
-
-                }
             }
         }
 
+//        ー－－－ー－－－
+
+//        ー－－－CreateFileViewModelの読み取りー－－－
+
+        createFileViewModel.apply{
+//            初期設定
+            onCreate()
+            binding.createFileBinding.apply {
+//            すべてのvisibility
+                addFileActive.observe(this@MainActivity){ boolean ->
+                    when(boolean){
+                        true ->{
+                            root.visibility = VISIBLE
+                        }
+                        false -> {
+                            root.visibility = GONE
+                        }
+                    }
+                }
+//            ー－－－追加メニューUIー－－－
+
+                bottomMenuClickable.observe(this@MainActivity){
+                    bindingAddMenu.apply {
+                        this.imvnewfolder.visibility = if(!it.createFile)  GONE else VISIBLE
+                        this.imvnewTangocho.visibility =if (!it.createFlashCardCover)  GONE else VISIBLE
+                        this.imvnewCard.visibility= if(!it.createCard) GONE else VISIBLE
+                    }
+                }
+                frameBottomMenu.apply {
+                    bottomMenuVisible.observe(this@MainActivity){
+                        val btmMenuAnimator = AnimatorSet().apply{
+                            val a = ObjectAnimator.ofFloat(frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
+                            val b = ObjectAnimator.ofFloat(frameBottomMenu, View.ALPHA,0f,1f)
+                            playTogether(a,b)
+                            duration = 500
+                        }
+                        when (it){
+                            true -> {
+                                btmMenuAnimator.start()
+                                visibility = VISIBLE
+                            }
+                            false ->{
+                                btmMenuAnimator.doOnEnd {
+                                    visibility = GONE }
+                                btmMenuAnimator.reverse()
+                            }
+                        }
+                    }
+                }
 
 
-//   reset
+//            ー－－－追加メニューUIー－－－
+
+//            ーーーーファイル作成・編集UIー－－－
+
+//                visibility
+                popupAddFile.apply {
+                    val appearAnimator = AnimatorSet().apply {
+                        duration= 500
+                        play(ObjectAnimator.ofFloat(popupAddFile, View.ALPHA, 0f,1f ))
+                    }
+                    editFilePopUpVisible.observe(this@MainActivity){
+                        when (it){
+                            true -> {
+                                visibility = VISIBLE
+                                appearAnimator.start()
+                                setOnClickListener(null)
+                            }
+                            false ->{
+                                appearAnimator.doOnEnd {
+                                    visibility = GONE
+                                }
+                                appearAnimator.reverse()
+                            }
+                        }
+                    }
+                }
+//                UIへデータ反映
+                bindingCreateFile.apply {
+                    txvLeftTop.observe(this@MainActivity){
+                        txvFileTitle.text = it
+                    }
+                    txvHintText.observe(this@MainActivity){
+                        txvHint.text = it
+                    }
+                    var previousColor:ColorStatus?
+                    previousColor = null
+                    fileColor.observe(this@MainActivity){
+                        val a = colPaletBinding
+                        if(previousColor == null) makeAllColPaletUnselected(a)
+                        else changeColPalletCol(previousColor!!,false,a)
+                        changeColPalletCol(it,true,a)
+                        previousColor = it
+                    }
+                    var start = true
+                    lastInsetedFileId.observe(this@MainActivity){
+                        if(start){
+                            start = false
+                            return@observe
+                        } else createFileViewModel.setLastInsertedFileId(it)
+                    }
+                    createFileViewModel.txvFileTitleText.observe(this@MainActivity){
+                        edtCreatefile.text = it
+                    }
+                }
 
 
-    }
+//            ーーーーファイル作成・編集UIー－－－
+            }
+        }
+//        ー－－－ー－－－
+//        ー－－－LibraryViewModelの読み取りー－－－
+        libraryViewModel.parentItemId.observe(this@MainActivity){
+            createCardViewModel.setParentFlashCardCoverId(it)
+
+        }
+//        ー－－－ー－－－
+
+//        ー－－－CreateCardViewModelの読み取りー－－－
+
+        createCardViewModel.apply{
+            onCreate()
+            var calledFirstTime = true
+            lastInsertedCardAndTags.observe(this@MainActivity){
+                if(!calledFirstTime){
+                    createCardViewModel.setLastInsertedCardAndTags(it)
+                }
+                calledFirstTime = false
+            }
+            action.observe(this@MainActivity){
+                if(it.fromSameFrag){
+                    navCon.popBackStack()
+                    navCon.navigate(it.action)
+                } else navCon.navigate(it.action)
+            }
+        }
+
+//        ー－－－ー－－－
+ }
 
     override fun onClick(v: View?) {
+        binding.apply {
+            bnvBinding.apply {
+                when(v){
+                    layout1 -> mainActivityViewModel.onClickTab1()
+                    layout3 -> mainActivityViewModel.onClickTab3()
+                    layout2 -> createFileViewModel.onClickImvAddBnv()
+                }
+            }
+            createFileBinding.apply {
+                bindingAddMenu.apply {
+                    when(v){
+                        imvnewCard -> createFileViewModel.onCLickCreateFlashCardCover()
+                        imvnewTangocho -> createFileViewModel.onCLickCreateFlashCardCover()
+                        imvnewfolder -> createCardViewModel.onClickAddNewCardBottomBar()
+                    }
+                }
+                bindingCreateFile.apply {
+                    when(v){
+                        btnClose -> createFileViewModel.setAddFileActive(false)
+                        btnCreateFile ->
+                            if(edtCreatefile.text.isEmpty()) edtCreatefile.hint = "タイトルが必要です"
+                            else createFileViewModel.onClickFinish(edtCreatefile.text!!.toString())
+                    }
+                    colPaletBinding.apply {
+                        createFileViewModel.apply {
+                            when(v){
+                                imvColYellow -> setFileColor(ColorStatus.YELLOW)
+                                imvColGray -> setFileColor(ColorStatus.GRAY)
+                                imvColBlue -> setFileColor(ColorStatus.BLUE)
+                                imvColRed -> setFileColor(ColorStatus.RED)
+                                imvIconPalet -> lineLayColorPalet.children.onEach {
+                                   it.visibility = if(it.visibility == VISIBLE) GONE else VISIBLE
+                                }
+                            }
+                        }
 
+                    }
+                }
+            }
+        }
 
     }
 

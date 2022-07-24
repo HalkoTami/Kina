@@ -1,26 +1,8 @@
 package com.example.tangochoupdated
 
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.LayoutTransition
-import android.animation.ValueAnimator
-import android.app.ActionBar
-import android.content.ClipData
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.transition.ChangeBounds
-import android.transition.Scene
-import android.transition.TransitionManager
 import android.view.*
 import android.view.View.*
-import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
-import androidx.core.content.ContextCompat
-import androidx.core.view.children
-import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -28,8 +10,7 @@ import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.room.enumclass.LibRVState
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
-import com.example.tangochoupdated.ui.library.HomeFragment
-import com.example.tangochoupdated.ui.library.LibRVTouchListner
+import com.example.tangochoupdated.ui.library.LibRVTouchListener
 
 
 /**
@@ -179,7 +160,7 @@ val mycontext: Context) :
 
 
             clickableViews.onEach {
-                it.setOnTouchListener(LibRVTouchListner(it,context,item,clickListener,binding))
+                it.setOnTouchListener(LibRVTouchListener(it,context,item,clickListener,binding))
             }
 
 

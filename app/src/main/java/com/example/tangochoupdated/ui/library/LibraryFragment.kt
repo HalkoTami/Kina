@@ -123,6 +123,11 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             pAndGP(myId).observe(viewLifecycleOwner){
                 setPAndG(it)
                 createFileViewModel.setPAndG(it)
+//                binding.bindingSearch.edtLibrarySearch.hint = it?.size.toString()
+
+            }
+            getAllDescendants(myId).observe(viewLifecycleOwner){
+                setAllDescendants(it)
                 binding.bindingSearch.edtLibrarySearch.hint = it?.size.toString()
 
             }
@@ -210,6 +215,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         CustomLayout(requireContext())
 
 
+        homeFragClickListenerItem.add(binding.topMenuBarFrame.menuBinding.imvDeleteFile)
 
 
         homeFragClickListenerItem.onEach {
@@ -238,6 +244,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                         this.imvEditFile -> {
                            createFileViewModel.onClickEditFile(null)
                         }
+                        imvDeleteFile -> libraryViewModel.onDelete()
                     }
                 }
             }
@@ -404,12 +411,13 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     }
 
 }
-class LibRVTouchListner(val view:View,
-                        context: Context,
-                        val item: LibraryRV,
-                        val clickListener: DataClickListener,
-                        val rvBinding: ItemCoverCardBaseBinding):MyTouchListener(context){
+class LibRVTouchListener(val view:View,
+                         context: Context,
+                         val item: LibraryRV,
+                         val clickListener: DataClickListener,
+                         val rvBinding: ItemCoverCardBaseBinding):MyTouchListener(context){
 
+//    click後にtouch event を設定しなおすと親子関係のコンフリクトが防げそう
     override fun onSingleTap() {
         super.onSingleTap()
         rvBinding.apply {

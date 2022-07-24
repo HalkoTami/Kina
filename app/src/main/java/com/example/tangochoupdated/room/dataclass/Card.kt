@@ -4,6 +4,8 @@ import androidx.room.*
 import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.CardStatusConverter
 import com.example.tangochoupdated.room.enumclass.ColorStatus
+import com.example.tangochoupdated.room.rvclasses.LibRVViewType
+import com.example.tangochoupdated.room.rvclasses.LibraryRV
 
 
 @Entity(tableName = "tbl_card",
@@ -107,6 +109,12 @@ class CardAndTags (
     )
     val tags: List<File>
 )
+
+
+
+
+
+
 
 
 

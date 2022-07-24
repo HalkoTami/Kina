@@ -18,8 +18,12 @@ import kotlinx.coroutines.launch
 
 class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
 
+    fun onCreate(){
+        setFromSameFrag(false)
+    }
     fun onStart(){
         setSavingCard(false)
+
 
         setColPalletVisibility(true)
         setCardStatus(CardStatus.STRING)
