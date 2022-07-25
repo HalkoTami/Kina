@@ -8,7 +8,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
-import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -270,7 +269,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //        ー－－－CreateCardViewModelの読み取りー－－－
 
         createCardViewModel.apply{
-            onCreate()
+            onCreateViewModel()
             var calledFirstTime = true
             lastInsertedCardAndTags.observe(this@MainActivity){
                 if(!calledFirstTime){

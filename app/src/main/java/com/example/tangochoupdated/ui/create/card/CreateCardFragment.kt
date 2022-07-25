@@ -1,17 +1,11 @@
 package com.example.tangochoupdated.ui.create.card
 
 import android.content.Context
-import android.graphics.BlendMode
-import android.graphics.ColorFilter
-import android.graphics.PorterDuff
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.widget.ViewUtils
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -62,7 +56,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 
             createCardViewModel.apply{
 //            初期設定
-                onStart()
+                onStartFrag()
 
 //            DBからデータ下ろす
                 getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){ cardAndTags->
@@ -223,6 +217,11 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             }
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        createCardViewModel.onEndFrag()
     }
 
     override fun onAttach(context: Context) {
