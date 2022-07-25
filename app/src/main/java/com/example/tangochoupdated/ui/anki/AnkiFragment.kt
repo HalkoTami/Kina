@@ -8,9 +8,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.example.tangochoupdated.BaseViewModel
+import com.example.tangochoupdated.ui.mainactivity.BaseViewModel
 import com.example.tangochoupdated.databinding.FragmentAnkiHomeBinding
-import com.example.tangochoupdated.room.enumclass.Tab
 
 
 class AnkiFragment  : Fragment() {

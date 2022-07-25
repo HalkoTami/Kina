@@ -33,22 +33,25 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
     //    parentItemId
-    private val _parentItemId = MutableLiveData<Int>()
-    fun setParentItemId (id:Int?){
-        _parentItemId.value = id
-    }
-    val parentItemId:LiveData<Int> = _parentItemId
+//    private val _parentItemId = MutableLiveData<Int>()
+//    fun setParentItemId (id:Int?){
+//        _parentItemId.value = id
+//    }
+//    val parentItemId:LiveData<Int> = _parentItemId
 
 //    DBアクセス関連
 //    parent File from DB
     fun  parentFileFromDB(int: Int?):LiveData<File?> = repository.getFileByFileId(int).asLiveData()
-
     fun setParentFileFromDB (file: File?,home: Boolean){
         setMyParentItem(
             if(file==null) null
             else convertFileToLibraryRV(file)
         )
+        setHomeStatus(file==null)
+        _parentFile.value = file
     }
+    private val _parentFile = MutableLiveData<File>()
+    val parentFile:LiveData<File> = _parentFile
 
 
     //    child Files from DB
@@ -69,9 +72,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun childCardsFromDB(int: Int?):LiveData<List<CardAndTags>?> =  this.repository.getCardDataByFileId(int).asLiveData()
     private val _childCardsFromDB=MutableLiveData<List<CardAndTags>>()
     fun setChildCardsFromDB(list:List<CardAndTags>?,home: Boolean){
-
         _childCardsFromDB.value = list
-
         if(_myParentItem.value?.file?.fileStatus == FileStatus.TANGO_CHO_COVER){
             val b = mutableListOf<LibraryRV>()
             clearFinalList()
@@ -79,6 +80,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             setValueToFinalList(b)
         }
     }
+    val childCardsFromDB:LiveData<List<CardAndTags>> = _childCardsFromDB
 
 
     //    RVList
@@ -90,13 +92,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _myFinalList.apply {
             value = a
         }
-        if (a.isEmpty()) {
-            setFileEmptyStatus(true)
-
-        } else {
-            setFileEmptyStatus(false)
-        }
-
+        setFileEmptyStatus(a.isEmpty())
     }
 
     fun makeAllSelectable(){
@@ -149,6 +145,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun setPAndG(list: List<File>?){
         _pAndgGP.value = list
     }
+    val allAncestors :LiveData<List<File>?> = _pAndgGP
 
     fun getAllDescendants(parentId:Int?):LiveData<List<Any>?> = repository.getAllDescendantsByFileId(parentId).asLiveData()
     private val _allDescendants = MutableLiveData<List<Any>?>()
@@ -196,9 +193,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
         when(boolean){
             true ->{
-                setMLDTopText("home")
                 setTopBarLeftIMVDrawableId(R.drawable.icon_eye_opened)
                 setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
+                setMLDTopText("home")
             }
             false -> {
                 setMLDTopText("${_myParentItem.value!!.file!!.fileId}")
@@ -241,9 +238,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             }
             false -> {
                 setSelectedItem(mutableListOf())
-//                makeAllUnSelectableUnSelected()
-                when(_homeStatus.value){
-                    true -> setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
+                if(_homeStatus.value==true){
+                    setMLDTopText("home")
+                    setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
+                    setTopBarLeftIMVDrawableId(R.drawable.icon_eye_opened)
                 }
 
 
@@ -292,17 +290,21 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     val topText:LiveData<String> = _topText
 
 //    Top Left Icon
-    private val _topBarLeftIMVDrawableId = MutableLiveData<Int>()
+    class DrawableSetting(
+    val drawableId:Int,
+    val state:Int
+    )
+    private val _topBarLeftIMVDrawable = MutableLiveData<Int>()
     private fun setTopBarLeftIMVDrawableId(int: Int){
-        val before = _topBarLeftIMVDrawableId.value
+        val before = _topBarLeftIMVDrawable.value
         if(before == int){
             return
         }else {
-            _topBarLeftIMVDrawableId.value= int
+            _topBarLeftIMVDrawable.value= int
         }
 
     }
-    val topBarLeftIMVDrawableId:LiveData<Int> = _topBarLeftIMVDrawableId
+    val topBarLeftIMVDrawableId:LiveData<Int> = _topBarLeftIMVDrawable
 
     //    top right imv
     private val _topBarRightIMVDrawableId = MutableLiveData<Int>()
@@ -318,7 +320,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     //    file is  empty or not done
     private val _fileEmptyStatus =  MutableLiveData<Boolean>()
-    private fun setFileEmptyStatus(empty: Boolean,){
+    private fun setFileEmptyStatus(empty: Boolean){
         _fileEmptyStatus.apply {
             value = empty
         }
@@ -436,34 +438,20 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-    val navCon= MutableLiveData<NavController>()
-    fun setNavCon(navController: NavController){
-        navCon.value = navController
-    }
+//    val navCon= MutableLiveData<NavController>()
+//    fun setNavCon(navController: NavController){
+//        navCon.value = navController
+//    }
 //    navigation
 private val _action = MutableLiveData<NavDirections>()
     val action: LiveData<NavDirections> = _action
     fun setAction(navDirections: NavDirections){
         _action.value = navDirections
-        navCon.value!!.navigate(navDirections)
+
     }
 
 
 //    onclickEvents
-
-    fun onClickImvFileStatusOrClose(recyclerView: RecyclerView){
-        when(_multipleSelectMode.value){
-            true -> {
-
-                makeRVUnSelectable(recyclerView)
-
-                setMultipleSelectMode(false)
-                setHomeStatus(_homeStatus.value!!)
-
-            }
-            else -> return
-        }
-    }
     fun onClickimvSwitchMenu(){
         if(_homeStatus.value != true  ) {
             when (_menuOpened.value) {

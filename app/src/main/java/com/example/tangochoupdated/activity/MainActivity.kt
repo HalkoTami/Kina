@@ -1,4 +1,4 @@
-package com.example.tangochoupdated
+package com.example.tangochoupdated.activity
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -17,6 +17,10 @@ import androidx.core.view.children
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import com.example.tangochoupdated.ui.mainactivity.BaseViewModel
+import com.example.tangochoupdated.R
+import com.example.tangochoupdated.RoomApplication
+import com.example.tangochoupdated.ui.ViewModelFactory
 import com.example.tangochoupdated.databinding.ColorPaletBinding
 
 import com.example.tangochoupdated.databinding.ItemBottomNavigationBarBinding
@@ -28,7 +32,7 @@ import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
-    private lateinit var factory:ViewModelFactory
+    private lateinit var factory: ViewModelFactory
 
     lateinit var mainActivityViewModel: BaseViewModel
     lateinit var createFileViewModel: CreateFileViewModel
@@ -260,9 +264,22 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
 //        ー－－－ー－－－
 //        ー－－－LibraryViewModelの読み取りー－－－
-        libraryViewModel.parentItemId.observe(this@MainActivity){
-            createCardViewModel.setParentFlashCardCoverId(it)
-
+        libraryViewModel.apply {
+            action.observe(this@MainActivity){
+                navCon.navigate(it)
+            }
+            parentFile.observe(this@MainActivity){
+                createCardViewModel.setParentFlashCardCover(it)
+            }
+            childCardsFromDB.observe(this@MainActivity){
+                createCardViewModel.setSisterCards(it)
+            }
+            allAncestors.observe(this@MainActivity){
+                createFileViewModel.setPAndG(it)
+            }
+            myFinalList.observe(this@MainActivity){
+                createFileViewModel.setNewPosition(it.size+1)
+            }
         }
 //        ー－－－ー－－－
 

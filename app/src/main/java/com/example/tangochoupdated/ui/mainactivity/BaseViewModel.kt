@@ -1,15 +1,13 @@
-package com.example.tangochoupdated
+package com.example.tangochoupdated.ui.mainactivity
 
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
-import androidx.navigation.NavAction
 import androidx.navigation.NavDirections
+import com.example.tangochoupdated.R
 import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.File
-import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
-import com.example.tangochoupdated.ui.create.card.CreateCardFragmentDirections
 import com.example.tangochoupdated.ui.library.HomeFragmentDirections
 import kotlinx.coroutines.*
 

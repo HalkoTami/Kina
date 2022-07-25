@@ -73,6 +73,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private val _parentFlashCardCover = MutableLiveData<File?>()
     fun setParentFlashCardCover(file: File?){
         _parentFlashCardCover.value = file
+        setParentFlashCardCoverId(file?.fileId)
         if(file?.fileStatus == FileStatus.TANGO_CHO_COVER){
             setHasParentFlashCarCover(true)
         } else setHasParentFlashCarCover(false)
@@ -91,7 +92,6 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private val _parentFlashCardCoverId = MutableLiveData<Int?>()
     fun setParentFlashCardCoverId(int: Int?){
         _parentFlashCardCoverId.value = int
-
     }
 //    val parentFlashCardCoverId:LiveData<Int?> =_parentFlashCardCoverId
 

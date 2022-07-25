@@ -1,4 +1,4 @@
-package com.example.tangochoupdated
+package com.example.tangochoupdated.ui
 
 import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,7 @@ import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
-import java.security.Provider
+import com.example.tangochoupdated.ui.mainactivity.BaseViewModel
 
 class ViewModelFactory(private val repository: MyRoomRepository  ) : ViewModelProvider.NewInstanceFactory() {
 
