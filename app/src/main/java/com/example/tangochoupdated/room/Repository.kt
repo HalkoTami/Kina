@@ -2,6 +2,8 @@ package com.example.tangochoupdated.room
 
 import androidx.annotation.WorkerThread
 import com.example.tangochoupdated.room.dataclass.*
+import io.reactivex.Completable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
@@ -32,13 +34,24 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
     fun mygetFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = libraryDao.myGetFileByParentFileId(parentFileId)
 
     fun getPAndGPFiles(fileId: Int?):Flow<List<File>> = libraryDao.getAllAncestorsByChildFileId(fileId)
-    fun getAllDescendantsByFileId(fileId: Int?):Flow<List<File>> = libraryDao.getAllDescendantsByParentFileId(fileId)
+    fun getAllDescendantsByFileId(fileIdList: List<Int>?):Flow<List<File>> = libraryDao.getAllDescendantsFilesByParentFileId(fileIdList)
 //    fun getAllDescendantsByFileIdWithCard(fileId: Int?):Flow<List<Any>> = libraryDao.getAllDescendantsByParentFileId2(fileId)
 
     fun getCardByCardId(cardId:Int?):Flow<CardAndTags> = cardDao.getCardAndTagsByCardId(cardId)
     val lastInsertedCard:Flow<Card?> = cardDao.getLastInsertedCard()
 
 
+
+    fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {
+        Completable.fromAction { libraryDao.upDateChildFilesOfDeletedFile(deletedFileId,newParentFileId) }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
+    }
+    fun deleteFileAndAllDescendants(fileId:Int){
+        Completable.fromAction { libraryDao.deleteFileAndAllDescendants(fileId) }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
+    }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -122,6 +135,8 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
         markerDataDao.deleteMultiple(item.filterIsInstance<MarkerData>())
         choiceDao.deleteMultiple(item.filterIsInstance<Choice>())
     }
+
+
 }
 
 

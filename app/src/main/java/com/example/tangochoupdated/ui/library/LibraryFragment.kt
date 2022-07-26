@@ -20,11 +20,10 @@ import com.example.tangochoupdated.*
 
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
+import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.enumclass.LibRVState
-import com.example.tangochoupdated.room.enumclass.Tab
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
-import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
@@ -62,6 +61,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.isNestedScrollingEnabled = false
+
 //        clickListenerを追加
         homeFragClickListenerItem.apply {
             binding.apply {
@@ -73,6 +73,9 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                         addAll(arrayOf(
                             imvDeleteFile,imvEditFile,imvAnki))
                     }
+                }
+                popupConfirmDelete.apply {
+                    addAll(arrayOf(btnCommitDelete,btnDenial,btnCloseConfirm))
                 }
             }
             onEach { it.setOnClickListener(this@HomeFragment) }
@@ -98,10 +101,22 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             pAndGP(myId).observe(viewLifecycleOwner){
                 setPAndG(it)
             }
-            getAllDescendants(myId).observe(viewLifecycleOwner){
-                setAllDescendants(it)
-                binding.bindingSearch.edtLibrarySearch.hint = it?.size.toString()
+            getAllDescendants(mutableListOf(myId ?:4)).observe(viewLifecycleOwner){
+                Toast.makeText(context, "${it?.size}", Toast.LENGTH_SHORT).show()
             }
+            deletingItem.observe(viewLifecycleOwner){ list ->
+                val childFileIds = mutableListOf<Int>()
+                list.onEach {
+                    when(it.type) {
+                    LibRVViewType.FlashCardCover,LibRVViewType.Folder -> childFileIds.add(it.file!!.fileId)
+                    }
+                }
+                getAllDescendants(childFileIds).observe(viewLifecycleOwner){
+                    setDeletingItemChildrenFiles(it)
+//                    Toast.makeText(context, "${it?.size}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
 
 //            －－－－－－－－
 //            －－－－UIへの反映－－－－
@@ -153,6 +168,19 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                         }
                     }
                 }
+//                削除確認のポップアップ
+                popupConfirmDelete.apply {
+                    confirmPopUp.observe(viewLifecycleOwner){
+                        if(it.visible) visibility = View.VISIBLE
+                        else if(it.visible.not()) visibility = View.GONE
+                        txvConfirmDelete.text = it.txvConfirmText
+                        btnDenial.text = it.btnDenialText
+                        btnDenial.tag = it.confirmMode
+                        btnCommitDelete.text = it.btnCommitConfirmText
+                        btnCommitDelete.tag = it.confirmMode
+                    }
+
+                }
             }
 
 //            －－－－－－－－
@@ -178,7 +206,13 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                         this.imvEditFile -> {
                            createFileViewModel.onClickEditFile(null)
                         }
-                        imvDeleteFile -> libraryViewModel.onDelete()
+//                        imvDeleteFile -> libraryViewModel.onDelete()
+                    }
+                }
+                popupConfirmDelete.apply {
+                    when(v){
+                        btnCommitDelete -> libraryViewModel.onClickBtnCommitConfirm(v.tag as LibraryViewModel.ConfirmMode)
+                        btnDenial -> libraryViewModel.onClickBtnDenial(v.tag as LibraryViewModel.ConfirmMode)
                     }
                 }
             }
@@ -196,7 +230,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         Toast.makeText(context, "onclick edit", Toast.LENGTH_SHORT).show()
     }
     override fun onClickDelete(item: LibraryRV) {
-        Toast.makeText(context, "onClickDelete", Toast.LENGTH_SHORT).show()
+        libraryViewModel.onClickDeleteRVItem(item)
     }
     override fun onClickAddNewCardByPosition(item: LibraryRV) {
         createCardViewModel.onClickRVAddNewCard(item)

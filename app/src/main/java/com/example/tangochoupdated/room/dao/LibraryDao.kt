@@ -50,11 +50,22 @@ interface LibraryDao {
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("WITH  generation AS (" +
-            " select * from tbl_file where fileId = :fileId " +
+            " select * from tbl_file where fileId in (:fileId) " +
             "UNION ALL" +
             " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
-            "SELECT * FROM generation b Inner Join tbl_card c ON c.belongingFileId = b.fileId")
-    fun getAllDescendantsByParentFileId(fileId: Int?):Flow<List<File>>
+            "SELECT * FROM generation b ")
+    fun getAllDescendantsFilesByParentFileId(fileId: List<Int>?):Flow<List<File>>
+
+    @Query("UPDATE tbl_file SET parentFileId = :newParentFileId  WHERE parentFileId = :deletedFileId")
+    fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?)
+
+    @Query("DELETE FROM tbl_file  WHERE fileId in (" +
+            " WITH generation AS (" +
+            " select * from tbl_file where fileId = :fileId " +
+            "UNION ALL" +
+            " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId ) " +
+            "SELECT fileId FROM generation b )")
+    fun deleteFileAndAllDescendants(fileId:Int)
 
 
 

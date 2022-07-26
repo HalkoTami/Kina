@@ -5,11 +5,9 @@ import android.widget.ImageView
 import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.core.view.children
 import androidx.lifecycle.*
-import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
-import com.example.tangochoupdated.databinding.CreateCardBaseBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
 import com.example.tangochoupdated.room.MyRoomRepository
 import com.example.tangochoupdated.room.dataclass.Card
@@ -30,6 +28,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         setMultipleSelectMode(false)
         clearFinalList()
         setSelectedItem(mutableListOf())
+        setConfirmPopUpVisible(false,ConfirmMode.DeleteOnlyParent)
     }
 
     //    parentItemId
@@ -147,9 +146,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
     val allAncestors :LiveData<List<File>?> = _pAndgGP
 
-    fun getAllDescendants(parentId:Int?):LiveData<List<Any>?> = repository.getAllDescendantsByFileId(parentId).asLiveData()
-    private val _allDescendants = MutableLiveData<List<Any>?>()
-    fun setAllDescendants(list: List<Any>?){
+    fun getAllDescendants(parentIdList:List<Int>?):LiveData<List<File>?> = repository.getAllDescendantsByFileId(parentIdList).asLiveData()
+    private val _allDescendants = MutableLiveData<List<File>?>()
+    fun setAllDescendants(list: List<File>?){
         _allDescendants.value = list
     }
 
@@ -344,15 +343,55 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 
 //menu Visibility done
+
     private val _menuOpened =  MutableLiveData<Boolean>()
     private fun setMenuStatus(boolean: Boolean){
         _menuOpened.apply {
             value = boolean
         }
     }
-
     val menuViewMode:LiveData<Boolean> = _menuOpened
+//    －－－－Confirm PopUp－－－－
+    enum class ConfirmMode{
+        DeleteOnlyParent,DeleteWithChildren
+    }
 
+    class ConfirmPopUpView(
+        var visible:Boolean,
+        var btnDenialText:String,
+        var btnCommitConfirmText:String,
+        var txvConfirmText:String,
+        var confirmMode: ConfirmMode
+        )
+    private val _confirmPopUp =  MutableLiveData<ConfirmPopUpView>()
+    private fun setConfirmPopUpVisible(boolean: Boolean,confirmMode: ConfirmMode){
+        val single = (_deletingItems.value != null) && (_deletingItems.value!!.size == 1)
+
+        val btnDenialText:String
+        val txvConfirmText:String
+        when(confirmMode){
+            ConfirmMode.DeleteOnlyParent -> {
+                btnDenialText = "キャンセル"
+                txvConfirmText =
+                    if(single) "${_deletingItems.value!![0].file?.title ?:"カード"}を削除しますか？"
+                    else "選択中のアイテムを削除しますか？"
+            }
+            ConfirmMode.DeleteWithChildren ->{
+                btnDenialText = "削除しない"
+                txvConfirmText =
+                    if(single) "${_deletingItems.value!![0].file?.title }の中身をすべて削除しますか？"
+                    else "選択中のアイテムの中身をすべて削除しますか？"
+
+            }
+        }
+        _confirmPopUp.apply {
+            value = ConfirmPopUpView(boolean,btnDenialText,"削除する",txvConfirmText,confirmMode)
+        }
+    }
+    val confirmPopUp:LiveData<ConfirmPopUpView> = _confirmPopUp
+
+
+//    －－－－－－－－
 
     //menu Visibility done
     private val _leftSwipedItemExists =  MutableLiveData<Boolean>()
@@ -519,15 +558,15 @@ private val _action = MutableLiveData<NavDirections>()
     }
 
 
-    fun onDelete(){
-        when(_multipleSelectMode.value){
-            true -> deleteSelectedItems()
-            false -> deleteParentItem()
-            null -> throw IllegalArgumentException("multipleSelectMode not set yet ")
-        }
-        setMultipleSelectMode(false)
-        setMenuStatus(false)
-    }
+//    fun onDelete(){
+//        when(_multipleSelectMode.value){
+//            true -> deleteSelectedItems()
+//            false -> deleteParentItem()
+//            null -> throw IllegalArgumentException("multipleSelectMode not set yet ")
+//        }
+//        setMultipleSelectMode(false)
+//        setMenuStatus(false)
+//    }
     private fun deleteParentItem(){
         val file = mutableListOf<File>()
         val cards = mutableListOf<Card>()
@@ -549,6 +588,7 @@ private val _action = MutableLiveData<NavDirections>()
         updateMultiple(cards)
 
     }
+
     private fun safeDeleteSelectedItems(){
         val file = mutableListOf<File>()
         val cards = mutableListOf<Card>()
@@ -571,26 +611,131 @@ private val _action = MutableLiveData<NavDirections>()
 
 
     }
-    private fun deleteSelectedItems(){
-        val file = mutableListOf<File>()
-        val cards = mutableListOf<Card>()
-        _selectedItems.value?.onEach {
-            when(it.type){
-                LibRVViewType.Folder,LibRVViewType.FlashCardCover -> {
-                    file.add(it.file!!)
-                }
-                else -> {
-                    cards.add(it.card!!)
+//    private fun deleteSelectedItems(){
+//        val file = mutableListOf<File>()
+//        val cards = mutableListOf<Card>()
+//        _selectedItems.value?.onEach {
+//            when(it.type){
+//                LibRVViewType.Folder,LibRVViewType.FlashCardCover -> {
+//                    file.add(it.file!!)
+//                }
+//                else -> {
+//                    cards.add(it.card!!)
+//
+//                }
+//            }
+//
+//        }
+//        deleteMultiple(file)
+//        deleteMultiple(cards)
+//
+//
+//    }
 
-                }
+
+//    －－－－DB操作－－－－
+
+//    －－－－削除－－－－
+//    clickEvents
+    fun onClickDeleteRVItem(item:LibraryRV){
+        setDeletingItem(mutableListOf(item))
+        setConfirmPopUpVisible(true,ConfirmMode.DeleteOnlyParent)
+    }
+    fun onClickBtnCommitConfirm(mode: ConfirmMode){
+        when(mode){
+            ConfirmMode.DeleteOnlyParent -> if(_deletingItemChildrenFiles.value!!.size > 1){
+                setConfirmPopUpVisible(true,ConfirmMode.DeleteWithChildren)
+            } else{
+                deleteSingleFile(_deletingItems.value!![0].file!!,false)
+                setConfirmPopUpVisible(false,mode)
             }
-
+            ConfirmMode.DeleteWithChildren -> {
+                deleteSingleFile(_deletingItems.value!![0].file!!,true)
+                setConfirmPopUpVisible(false,ConfirmMode.DeleteOnlyParent)
+            }
         }
-        deleteMultiple(file)
-        deleteMultiple(cards)
-
+    }
+    fun onClickBtnDenial(mode: ConfirmMode){
+        when(mode){
+            ConfirmMode.DeleteOnlyParent -> {
+                setConfirmPopUpVisible(false,mode)
+                setDeletingItem(arrayListOf())
+            }
+            ConfirmMode.DeleteWithChildren ->{
+                val deletingIds = mutableListOf<Int>()
+                _deletingItems.value!!.onEach { deletingIds.add(it.id) }
+                deleteSingleFile(_deletingItems.value!![0].file!!,false)
+            }
+        }
 
     }
+    private val _deletingItems = MutableLiveData<List<LibraryRV>>()
+    private fun setDeletingItem(list:List<LibraryRV>){
+        _deletingItems.value = list
+    }
+    val deletingItem:LiveData<List<LibraryRV>> = _deletingItems
+
+    private val _deletingItemChildrenFiles = MutableLiveData<List<File>?>()
+    fun setDeletingItemChildrenFiles(list:List<File>?){
+        _deletingItemChildrenFiles.value = list
+    }
+//    val deletingItemChildren:LiveData<List<Any>> = repository
+
+
+
+//    シングル削除
+//    private fun deleteSingleItem(item:Any){
+//        when(item){
+//            is File
+//        }
+//
+//    }
+
+
+//    private fun deleteSingle(item: Any){
+//        viewModelScope.launch {
+//            repository.delete(item)
+//        }
+//    }
+
+
+//    fun deleteMultiple(list:List<LibraryRV>,deleteChildren:Boolean){
+//        val files = mutableListOf<File>()
+//        val cards = mutableListOf<Card>()
+//        list.onEach { when(it.type){
+//            LibRVViewType.Folder,LibRVViewType.FlashCardCover -> files.add(it.file!!)
+//            else -> cards.add(it.card!!) }
+//        }
+//        if (list.isNotEmpty()){
+//            viewModelScope.launch {
+//                if(deleteChildren){
+//                    files.onEach { repository.upDateChildFilesOfDeletedFile() }
+//                }
+//                repository.deleteMultiple(files)
+//
+//                repository.deleteMultiple(cards)
+//            }
+//        }
+//
+//    }
+
+    fun deleteSingleFile(file:File,deleteChildren:Boolean){
+        viewModelScope.launch {
+            if(!deleteChildren){
+                repository.upDateChildFilesOfDeletedFile(file.fileId,file.parentFileId)
+                repository.delete(file)
+            } else {
+                repository.deleteFileAndAllDescendants(file.fileId)
+            }
+        }
+
+    }
+
+
+//    －－－－－－－－
+
+
+//    －－－－－－－－
     private fun updateMultiple(list:List<Any>){
         if (list.isNotEmpty()){
             viewModelScope.launch {
@@ -599,14 +744,7 @@ private val _action = MutableLiveData<NavDirections>()
         }
 
     }
-    private fun deleteMultiple(list:List<Any>){
-        if (list.isNotEmpty()){
-            viewModelScope.launch {
-                repository.deleteMultiple(list)
-            }
-        }
 
-    }
 
 
     override fun onCleared() {
