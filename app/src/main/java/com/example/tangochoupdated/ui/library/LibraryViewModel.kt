@@ -18,7 +18,13 @@ import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
+import com.example.tangochoupdated.ui.create.Mode
+import io.reactivex.Single
+import io.reactivex.rxkotlin.toObservable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
 class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
@@ -146,11 +152,11 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
     val allAncestors :LiveData<List<File>?> = _pAndgGP
 
-    fun getAllDescendants(parentIdList:List<Int>?):LiveData<List<File>?> = repository.getAllDescendantsByFileId(parentIdList).asLiveData()
-    private val _allDescendants = MutableLiveData<List<File>?>()
-    fun setAllDescendants(list: List<File>?){
-        _allDescendants.value = list
-    }
+//    fun getAllDescendants(parentIdList:List<Int>?):LiveData<List<File>?> = repository.getAllDescendantsByFileId(parentIdList).asLiveData()
+//    private val _allDescendants = MutableLiveData<List<File>?>()
+//    fun setAllDescendants(list: List<File>?){
+//        _allDescendants.value = list
+//    }
 
     //    parent item as Library RV
     private val _myParentItem = MutableLiveData<LibraryRV?>()
@@ -643,11 +649,14 @@ private val _action = MutableLiveData<NavDirections>()
     }
     fun onClickBtnCommitConfirm(mode: ConfirmMode){
         when(mode){
-            ConfirmMode.DeleteOnlyParent -> if(_deletingItemChildrenFiles.value!!.size > 1){
-                setConfirmPopUpVisible(true,ConfirmMode.DeleteWithChildren)
-            } else{
-                deleteSingleFile(_deletingItems.value!![0].file!!,false)
-                setConfirmPopUpVisible(false,mode)
+            ConfirmMode.DeleteOnlyParent ->{
+
+                if(_deletingItemChildrenFiles.value!!.isNotEmpty()){
+                    setConfirmPopUpVisible(true,ConfirmMode.DeleteWithChildren)
+                } else{
+                    deleteSingleFile(_deletingItems.value!![0].file!!,false)
+                    setConfirmPopUpVisible(false,mode)
+                }
             }
             ConfirmMode.DeleteWithChildren -> {
                 deleteSingleFile(_deletingItems.value!![0].file!!,true)
@@ -665,13 +674,16 @@ private val _action = MutableLiveData<NavDirections>()
                 val deletingIds = mutableListOf<Int>()
                 _deletingItems.value!!.onEach { deletingIds.add(it.id) }
                 deleteSingleFile(_deletingItems.value!![0].file!!,false)
+                setConfirmPopUpVisible(false,ConfirmMode.DeleteOnlyParent)
             }
         }
 
     }
+    fun getAllDescendantsByFileId(fileIdList: Int?): LiveData<List<File>> = repository.getAllDescendantsByFileId(fileIdList).asLiveData()
     private val _deletingItems = MutableLiveData<List<LibraryRV>>()
     private fun setDeletingItem(list:List<LibraryRV>){
         _deletingItems.value = list
+
     }
     val deletingItem:LiveData<List<LibraryRV>> = _deletingItems
 
@@ -679,7 +691,7 @@ private val _action = MutableLiveData<NavDirections>()
     fun setDeletingItemChildrenFiles(list:List<File>?){
         _deletingItemChildrenFiles.value = list
     }
-//    val deletingItemChildren:LiveData<List<Any>> = repository
+    val deletingItemChildren:LiveData<List<File>?> = _deletingItemChildrenFiles
 
 
 

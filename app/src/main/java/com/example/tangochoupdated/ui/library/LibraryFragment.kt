@@ -28,6 +28,9 @@ import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.mainactivity.BaseViewModel
+import io.reactivex.Single
+import io.reactivex.rxkotlin.toObservable
+import io.reactivex.schedulers.Schedulers
 
 class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     private val args: HomeFragmentArgs by navArgs()
@@ -101,20 +104,22 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             pAndGP(myId).observe(viewLifecycleOwner){
                 setPAndG(it)
             }
-            getAllDescendants(mutableListOf(myId ?:4)).observe(viewLifecycleOwner){
-                Toast.makeText(context, "${it?.size}", Toast.LENGTH_SHORT).show()
-            }
+
+
             deletingItem.observe(viewLifecycleOwner){ list ->
-                val childFileIds = mutableListOf<Int>()
-                list.onEach {
-                    when(it.type) {
-                    LibRVViewType.FlashCardCover,LibRVViewType.Folder -> childFileIds.add(it.file!!.fileId)
+                if(list.isEmpty().not()){
+                    val childFileIds = mutableListOf<Int>()
+                    list.onEach {
+                        when(it.type) {
+                            LibRVViewType.FlashCardCover,LibRVViewType.Folder -> childFileIds.add(it.file!!.fileId)
+                        }
+                    }
+                    getAllDescendantsByFileId(list[0].file?.fileId).observe(viewLifecycleOwner){
+                        setDeletingItemChildrenFiles(it)
+                        Toast.makeText(requireContext(),"${it.size}",Toast.LENGTH_SHORT).show()
                     }
                 }
-                getAllDescendants(childFileIds).observe(viewLifecycleOwner){
-                    setDeletingItemChildrenFiles(it)
-//                    Toast.makeText(context, "${it?.size}", Toast.LENGTH_SHORT).show()
-                }
+
             }
 
 
@@ -190,6 +195,8 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         val root: View = binding.root
         return root
     }
+
+
 
 
 

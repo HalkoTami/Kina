@@ -277,11 +277,11 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     var createXREF:Boolean = false
     var fileInserted:Boolean = false
 
-    val lastInsetedFileId:LiveData<Int> = repository.lastInsertedFile.asLiveData()
+    val lastInsetedFileId:LiveData<Int?> = repository.lastInsertedFile.asLiveData()
     private val _lastInsertedFileId = MutableLiveData<Int>()
-    fun setLastInsertedFileId(int: Int){
+    fun setLastInsertedFileId(int: Int?){
         val before = _lastInsertedFileId.value
-        if(before == int){
+        if(before == int|| int!=null){
             return
         } else{
             _lastInsertedFileId.value = int

@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
 //      全部のデータを消したいとき
-//        applicationContext.deleteDatabase("my_database")
+        applicationContext.deleteDatabase("my_database")
 
 
 //        ー－－－mainActivityのviewー－－－

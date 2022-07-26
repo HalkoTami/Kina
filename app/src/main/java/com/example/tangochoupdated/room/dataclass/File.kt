@@ -17,7 +17,7 @@ data class File(
     @ColumnInfo var deleted: Boolean? = false,
     @ColumnInfo var colorStatus: ColorStatus = ColorStatus.GRAY,
     @ColumnInfo var fileStatus: FileStatus,
-    @ColumnInfo val parentFileId: Int?,
+    @ColumnInfo var parentFileId: Int?,
     @ColumnInfo(name= "library_order")
     var hasChild:Boolean = false,
     var hasParent:Boolean = false,

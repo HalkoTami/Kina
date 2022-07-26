@@ -64,20 +64,22 @@ public abstract class MyRoomDatabase : RoomDatabase() {
 
 
                     // Add sample words.
-//                    var file = File(
-//                        fileId = 0,
-//                        title = "タイトルなし",
-//                        deleted = false,
-//                        colorStatus=  ColorStatus.RED,
-//                        fileStatus = FileStatus.FOLDER,
-//                        hasChild = false,
-//                        hasParent = false,
-//                        libOrder = 0,
-//                        childFoldersAmount = 0,
-//                        childCardsAmount = 0,
-//                        childFlashCardCoversAmount = 0,
-//                        parentFileId = null)
-//                    fileDao.insert(file)
+                    var file = File(
+                        fileId = 0,
+                        title = "タイトルなし",
+                        deleted = false,
+                        colorStatus=  ColorStatus.RED,
+                        fileStatus = FileStatus.FOLDER,
+                        hasChild = false,
+                        hasParent = false,
+                        libOrder = 0,
+                        childFoldersAmount = 0,
+                        childCardsAmount = 0,
+                        childFlashCardCoversAmount = 0,
+                        parentFileId = null)
+                    fileDao.insert(file)
+                    file.parentFileId = 1
+                    fileDao.insert(file)
 
 
 
