@@ -45,6 +45,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 //        setParentFileStock(file)
 
     }
+    fun pAndGP(parentId:Int?):LiveData<List<File>?> = repository.getPAndGPFiles(parentId).asLiveData()
     val _pAndgGP = MutableLiveData<List<File>>()
     fun setPAndG(list: List<File>?){
         _pAndgGP.value = list

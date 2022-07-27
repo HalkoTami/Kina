@@ -17,10 +17,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
-
 import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
 import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
-import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.enumclass.LibRVState
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
@@ -28,9 +26,7 @@ import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.mainactivity.BaseViewModel
-import io.reactivex.Single
-import io.reactivex.rxkotlin.toObservable
-import io.reactivex.schedulers.Schedulers
+
 
 class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     private val args: HomeFragmentArgs by navArgs()
@@ -101,9 +97,9 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             childCardsFromDB(myId).observe(viewLifecycleOwner){
                 setChildCardsFromDB(it,myId ==null)
             }
-            pAndGP(myId).observe(viewLifecycleOwner){
-                setPAndG(it)
-            }
+//            pAndGP(myId).observe(viewLifecycleOwner){
+//                setPAndG(it)
+//            }
 
 
             deletingItem.observe(viewLifecycleOwner){ list ->
@@ -128,13 +124,20 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 //            recyclerView
             multipleSlectMode.observe(viewLifecycleOwner){ selectable->
-                recyclerView.children.iterator().forEachRemaining {
+
+                if(selectable){
+                    recyclerView.children.iterator().forEachRemaining {
                     it.findViewById<ConstraintLayout>(R.id.base_container).tag = if (selectable) LibRVState.Selectable else LibRVState.Plane
-                    it.findViewById<ImageView>(R.id.btn_select).visibility = if(selectable) View.VISIBLE else View.GONE
+                        it.findViewById<ImageView>(R.id.btn_select).visibility = View.VISIBLE
+                    }
+
                 }
             }
             myFinalList.observe(viewLifecycleOwner){
                 adapter.submitList(it)
+                adapter.notifyDataSetChanged()
+                binding.emptyBinding.root.visibility =
+                if(it.isEmpty()) View.VISIBLE else View.GONE
             }
 
             binding.apply {
@@ -149,12 +152,12 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                     topBarRightIMVDrawableId.observe(viewLifecycleOwner){
                         this.imvSwitchMenu.setImageDrawable(requireActivity().getDrawable(it))
                     }
-                    menuViewMode.observe(viewLifecycleOwner){
-                        when(it){
-                            true -> this.layEnd.visibility = View.VISIBLE
-                            false -> this.layEnd.visibility = View.GONE
-                        }
-                    }
+//                    menuViewMode.observe(viewLifecycleOwner){
+//                        when(it){
+//                            true -> this.layEnd.visibility = View.VISIBLE
+//                            false -> this.layEnd.visibility = View.GONE
+//                        }
+//                    }
                 }
 
 //                空だった時
@@ -162,16 +165,16 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                     fileEmptyText.observe(viewLifecycleOwner){
                         txvCenter.text = it
                     }
-                    fileEmptyStatus.observe(viewLifecycleOwner){
-                        when(it){
-                            true -> {
-                                root.visibility = View.VISIBLE
-                            }
-                            false ->{
-                                root.visibility = View.GONE
-                            }
-                        }
-                    }
+//                    fileEmptyStatus.observe(viewLifecycleOwner){
+//                        when(it){
+//                            true -> {
+//                                root.visibility = View.VISIBLE
+//                            }
+//                            false ->{
+//                                root.visibility = View.GONE
+//                            }
+//                        }
+//                    }
                 }
 //                削除確認のポップアップ
                 popupConfirmDelete.apply {
@@ -230,11 +233,15 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     override fun onLongClickMain(item: LibraryRV) {
         libraryViewModel.setMultipleSelectMode(true)
         libraryViewModel.onClickSelectableItem(item,true)
+//        recyclerView.children.iterator().forEachRemaining {
+//            it.findViewById<ImageView>(R.id.btn_select).visibility = View.VISIBLE
+//        }
+
     }
     override fun onClickEdit(item: LibraryRV) {
         createFileViewModel.onClickEditFile(item.file)
         createFileViewModel
-        Toast.makeText(context, "onclick edit", Toast.LENGTH_SHORT).show()
+
     }
     override fun onClickDelete(item: LibraryRV) {
         libraryViewModel.onClickDeleteRVItem(item)
@@ -257,8 +264,8 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     }
 
 }
-class LibRVTouchListener(val view:View,
-                         context: Context,
+class LibRVClickListener(val view:View,
+                         val context: Context,
                          val item: LibraryRV,
                          val clickListener: DataClickListener,
                          val rvBinding: ItemCoverCardBaseBinding):MyTouchListener(context){
@@ -294,18 +301,11 @@ class LibRVTouchListener(val view:View,
 
     override fun onLongClick() {
         super.onLongClick()
-        rvBinding.apply {
-            when(view){
-                baseContainer -> {
-                    btnSelect.isSelected = true
-                    clickListener.onLongClickMain(item)
-                }
-            }
-
-        }
+        rvBinding.btnSelect.isSelected = true
+//        rvBinding.btnSelect.visibility = View.VISIBLE
+        clickListener.onLongClickMain(item)
 
     }
-
     override fun onSwipeLeft() {
         super.onSwipeLeft()
         rvBinding.apply {
@@ -318,7 +318,6 @@ class LibRVTouchListener(val view:View,
             }
 
         }
-
 
     }
 }

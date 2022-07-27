@@ -19,12 +19,13 @@
         app:argType="integer[]"
             app:nullable="true"
             android:defaultValue="@null" />
-        <action
-            android:id="@+id/library_to_library"
-            app:destination="@id/fragmentLibrary">
 
-        </action>
     </fragment>
+    <action
+        android:id="@+id/library_to_library"
+        app:destination="@id/fragmentLibrary">
+
+    </action>
 
 <!--    <action-->
 <!--        android:id="@+id/action_to_create_card_nav"-->

@@ -10,8 +10,7 @@ import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.room.enumclass.LibRVState
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
-import com.example.tangochoupdated.ui.library.LibRVTouchListener
-
+import com.example.tangochoupdated.ui.library.LibRVClickListener
 
 /**
  * Custom Data Class for this adapter
@@ -64,7 +63,7 @@ val mycontext: Context) :
 
 //            親レイアウトのclick listener
             val clickableViews = mutableListOf<View>()
-            clickableViews.add(binding.baseContainer)
+
 
 
             binding.stubMain.removeAllViews()
@@ -151,6 +150,7 @@ val mycontext: Context) :
             binding.btnEditWhole.visibility =  GONE
 
 //            ボタンのclicklitener
+            clickableViews.add(binding.baseContainer)
             binding.apply {
                 clickableViews.addAll(arrayOf(
                     btnDelete,btnSelect,btnEditWhole,btnAddNewCard,
@@ -160,7 +160,7 @@ val mycontext: Context) :
 
 
             clickableViews.onEach {
-                it.setOnTouchListener(LibRVTouchListener(it,context,item,clickListener,binding))
+                it.setOnTouchListener(LibRVClickListener(it,context,item,clickListener,binding))
             }
 
 

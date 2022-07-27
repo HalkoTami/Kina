@@ -8,6 +8,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
+import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
 //      全部のデータを消したいとき
-        applicationContext.deleteDatabase("my_database")
+//        applicationContext.deleteDatabase("my_database")
 
 
 //        ー－－－mainActivityのviewー－－－
@@ -267,16 +268,20 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         libraryViewModel.apply {
             action.observe(this@MainActivity){
                 navCon.navigate(it)
+                Toast.makeText(this@MainActivity, "action called ", Toast.LENGTH_SHORT).show()
             }
             parentFile.observe(this@MainActivity){
                 createCardViewModel.setParentFlashCardCover(it)
+                createFileViewModel.pAndGP(it?.fileId).observe(this@MainActivity){
+                    createFileViewModel.setPAndG(it)
+                }
             }
             childCardsFromDB.observe(this@MainActivity){
                 createCardViewModel.setSisterCards(it)
             }
-            allAncestors.observe(this@MainActivity){
-                createFileViewModel.setPAndG(it)
-            }
+//            allAncestors.observe(this@MainActivity){
+//                createFileViewModel.setPAndG(it)
+//            }
             myFinalList.observe(this@MainActivity){
                 createFileViewModel.setNewPosition(it.size+1)
             }

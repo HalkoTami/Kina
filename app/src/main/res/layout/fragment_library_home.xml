@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -51,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <androidx.recyclerview.widget.RecyclerView
+                    android:nestedScrollingEnabled="false"
                     android:padding="10dp"
                     android:id="@+id/vocabCardRV"
                     android:layout_width="match_parent"
@@ -58,7 +59,7 @@
                     tools:listitem="@layout/item_cover_card_base" />
             </FrameLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <include
             android:id="@+id/emptyBinding"
