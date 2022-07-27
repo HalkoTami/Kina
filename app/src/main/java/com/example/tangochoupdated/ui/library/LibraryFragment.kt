@@ -24,23 +24,18 @@ import com.example.tangochoupdated.room.enumclass.LibRVState
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
-import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
-import com.example.tangochoupdated.ui.mainactivity.BaseViewModel
 
 
 class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     private val args: HomeFragmentArgs by navArgs()
 
     private lateinit var myNavCon:NavController
-    lateinit var recyclerView:RecyclerView
-    lateinit var adapter: LibraryListAdapter
+    private lateinit var recyclerView:RecyclerView
+    private lateinit var adapter: LibraryListAdapter
     private val  homeFragClickListenerItem = mutableListOf<View>()
-
-    private val sharedViewModel: BaseViewModel by activityViewModels()
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
-    private val stringCardViewModel : StringCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
 
     private var _binding: FragmentLibraryHomeBinding? = null
@@ -51,13 +46,15 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //        FragmentのviewBinding定義
+//        FragmentのviewBinding定義
         _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
 //       NavControllerの定義
-        myNavCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
+        myNavCon = requireActivity().findNavController(
+            requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id
+        )
 //        recyclerViewの定義
         recyclerView = binding.vocabCardRV
-        adapter = LibraryListAdapter(this,requireActivity())
+        adapter = LibraryListAdapter(this, requireActivity())
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.isNestedScrollingEnabled = false
@@ -68,16 +65,22 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                 topMenuBarFrame.imvSwitchMenu.setPadding(30)
                 topMenuBarFrame.apply {
                     layEnd.visibility = View.GONE
-                    addAll(arrayOf(
-                        imvFileStatusOrClose,imvSwitchMenu))
+                    addAll(
+                        arrayOf(
+                            imvFileStatusOrClose, imvSwitchMenu
+                        )
+                    )
                     menuBinding.apply {
-                        root.visibility =View.VISIBLE
-                        addAll(arrayOf(
-                            imvDeleteFile,imvEditFile,imvAnki))
+                        root.visibility = View.VISIBLE
+                        addAll(
+                            arrayOf(
+                                imvDeleteFile, imvEditFile, imvAnki
+                            )
+                        )
                     }
                 }
                 popupConfirmDelete.apply {
-                    addAll(arrayOf(btnCommitDelete,btnDenial,btnCloseConfirm))
+                    addAll(arrayOf(btnCommitDelete, btnDenial, btnCloseConfirm))
                 }
             }
             onEach { it.setOnClickListener(this@HomeFragment) }
@@ -91,103 +94,84 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 //            親アイテムのid
             val myId: Int? = args.parentItemId?.single()
-            parentFileFromDB(myId).observe(viewLifecycleOwner){
-                setParentFileFromDB(it, myId == null)
+            parentFileFromDB(myId).observe(viewLifecycleOwner) {
+                setParentFileFromDB(it)
             }
-            childFilesFromDB(myId).observe(viewLifecycleOwner){
-                setChildFilesFromDB(it,myId == null)
+            childFilesFromDB(myId).observe(viewLifecycleOwner) {
+                setChildFilesFromDB(it)
             }
-            childCardsFromDB(myId).observe(viewLifecycleOwner){
-                setChildCardsFromDB(it,myId ==null)
+            childCardsFromDB(myId).observe(viewLifecycleOwner) {
+                setChildCardsFromDB(it)
             }
-//            pAndGP(myId).observe(viewLifecycleOwner){
-//                setPAndG(it)
-//            }
-
-
-            deletingItem.observe(viewLifecycleOwner){ list ->
-                if(list.isEmpty().not()){
+            deletingItem.observe(viewLifecycleOwner) { list ->
+                if (list.isEmpty().not()) {
                     val childFileIds = mutableListOf<Int>()
                     list.onEach {
-                        when(it.type) {
-                            LibRVViewType.FlashCardCover,LibRVViewType.Folder -> childFileIds.add(it.file!!.fileId)
+                        when (it.type) {
+                            LibRVViewType.FlashCardCover, LibRVViewType.Folder -> childFileIds.add(
+                                it.file!!.fileId
+                            )
                         }
                     }
-                    getAllDescendantsByFileId(list[0].file?.fileId).observe(viewLifecycleOwner){
+                    getAllDescendantsByFileId(list[0].file?.fileId).observe(viewLifecycleOwner) {
                         setDeletingItemChildrenFiles(it)
-                        Toast.makeText(requireContext(),"${it.size}",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "${it.size}", Toast.LENGTH_SHORT).show()
                     }
                 }
-
             }
-
 
 //            －－－－－－－－
 //            －－－－UIへの反映－－－－
 
 //            recyclerView
-            multipleSlectMode.observe(viewLifecycleOwner){ selectable->
+            multipleSelectMode.observe(viewLifecycleOwner) { selectable ->
                 recyclerView.children.iterator().forEachRemaining {
-                    it.findViewById<ConstraintLayout>(R.id.base_container).tag = if (selectable) LibRVState.Selectable else LibRVState.Plane
-                    it.findViewById<ImageView>(R.id.btn_select).visibility = if (selectable) View.VISIBLE else View.GONE
+                    it.findViewById<ConstraintLayout>(R.id.base_container).tag =
+                        if (selectable) LibRVState.Selectable else LibRVState.Plane
+                    it.findViewById<ImageView>(R.id.btn_select).visibility =
+                        if (selectable) View.VISIBLE else View.GONE
                 }
             }
-            myFinalList.observe(viewLifecycleOwner){
+            myFinalList.observe(viewLifecycleOwner) {
                 adapter.submitList(it)
                 adapter.notifyDataSetChanged()
                 binding.emptyBinding.root.visibility =
-                if(it.isEmpty()) View.VISIBLE else View.GONE
+                    if (it.isEmpty()) View.VISIBLE else View.GONE
             }
 
             binding.apply {
 //                トップバー
                 topMenuBarFrame.apply {
-                    topBarUI.observe(viewLifecycleOwner){
+                    topBarUI.observe(viewLifecycleOwner) {
                         imvFileStatusOrClose.apply {
-                            if(tag != it.topBarLeftIMVDrawableId){
+                            if (tag != it.topBarLeftIMVDrawableId) {
                                 setImageDrawable(requireActivity().getDrawable(it.topBarLeftIMVDrawableId))
                                 tag = it.topBarLeftIMVDrawableId
                             }
                         }
-                        imvSwitchMenu.apply{
-                            if(tag != it.topBarRightDrawableId){
+                        imvSwitchMenu.apply {
+                            if (tag != it.topBarRightDrawableId) {
                                 setImageDrawable(requireActivity().getDrawable(it.topBarRightDrawableId))
                                 tag = it.topBarRightDrawableId
                             }
                         }
-                        if(txvTitle.text!=it.topBarText){
+                        if (txvTitle.text != it.topBarText) {
                             txvTitle.text = it.topBarText
                         }
                     }
-//                    menuViewMode.observe(viewLifecycleOwner){
-//                        when(it){
-//                            true -> this.layEnd.visibility = View.VISIBLE
-//                            false -> this.layEnd.visibility = View.GONE
-//                        }
-//                    }
                 }
 
 //                空だった時
                 emptyBinding.apply {
-                    fileEmptyText.observe(viewLifecycleOwner){
+                    fileEmptyText.observe(viewLifecycleOwner) {
                         txvCenter.text = it
                     }
-//                    fileEmptyStatus.observe(viewLifecycleOwner){
-//                        when(it){
-//                            true -> {
-//                                root.visibility = View.VISIBLE
-//                            }
-//                            false ->{
-//                                root.visibility = View.GONE
-//                            }
-//                        }
-//                    }
                 }
 //                削除確認のポップアップ
                 popupConfirmDelete.apply {
-                    confirmPopUp.observe(viewLifecycleOwner){
-                        if(it.visible) visibility = View.VISIBLE
-                        else if(it.visible.not()) visibility = View.GONE
+                    confirmPopUp.observe(viewLifecycleOwner) {
+                        if (it.visible) visibility = View.VISIBLE
+                        else if (it.visible.not()) visibility = View.GONE
                         txvConfirmDelete.text = it.txvConfirmText
                         btnDenial.text = it.btnDenialText
                         btnDenial.tag = it.confirmMode
@@ -202,8 +186,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         }
 
 //        －－－－－－－－
-        val root: View = binding.root
-        return root
+        return binding.root
     }
 
     override fun onAttach(context: Context) {
@@ -212,10 +195,8 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-
                 libraryViewModel.onClickBack()
                 myNavCon.popBackStack()
-
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -263,10 +244,6 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
     override fun onLongClickMain(item: LibraryRV) {
         libraryViewModel.setMultipleSelectMode(true)
         libraryViewModel.onClickSelectableItem(item,true)
-//        recyclerView.children.iterator().forEachRemaining {
-//            it.findViewById<ImageView>(R.id.btn_select).visibility = View.VISIBLE
-//        }
-
     }
     override fun onClickEdit(item: LibraryRV) {
         createFileViewModel.onClickEditFile(item.file)
@@ -297,8 +274,8 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 class LibRVClickListener(val view:View,
                          val context: Context,
                          val item: LibraryRV,
-                         val clickListener: DataClickListener,
-                         val rvBinding: ItemCoverCardBaseBinding):MyTouchListener(context){
+                         private val clickListener: DataClickListener,
+                         private val rvBinding: ItemCoverCardBaseBinding):MyTouchListener(context){
 
 //    click後にtouch event を設定しなおすと親子関係のコンフリクトが防げそう
     override fun onSingleTap() {
@@ -317,37 +294,28 @@ class LibRVClickListener(val view:View,
                             view.tag = LibRVState.Plane
                         }
                         LibRVState.Plane -> clickListener.openNext(item)
-
                     }
                 }
                 btnDelete -> clickListener.onClickDelete(item)
                 btnEditWhole -> clickListener.onClickEdit(item)
                 btnAddNewCard -> clickListener.onClickAddNewCardByPosition(item)
-
             }
-
         }
     }
-
     override fun onLongClick() {
         super.onLongClick()
         rvBinding.btnSelect.isSelected = true
-//        rvBinding.btnSelect.visibility = View.VISIBLE
         clickListener.onLongClickMain(item)
-
     }
     override fun onSwipeLeft() {
         super.onSwipeLeft()
         rvBinding.apply {
-
             when(view){
                 baseContainer -> {
                     btnDelete.visibility = View.VISIBLE
                     btnEditWhole.visibility = if(item.type==LibRVViewType.Folder||item.type == LibRVViewType.FlashCardCover) View.VISIBLE else return
                 }
             }
-
         }
-
     }
 }
