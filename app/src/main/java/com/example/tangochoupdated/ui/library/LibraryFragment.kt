@@ -66,9 +66,11 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             binding.apply {
                 topMenuBarFrame.imvSwitchMenu.setPadding(30)
                 topMenuBarFrame.apply {
+                    layEnd.visibility = View.GONE
                     addAll(arrayOf(
                         imvFileStatusOrClose,imvSwitchMenu))
                     menuBinding.apply {
+                        root.visibility =View.VISIBLE
                         addAll(arrayOf(
                             imvDeleteFile,imvEditFile,imvAnki))
                     }
@@ -124,13 +126,9 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 //            recyclerView
             multipleSlectMode.observe(viewLifecycleOwner){ selectable->
-
-                if(selectable){
-                    recyclerView.children.iterator().forEachRemaining {
+                recyclerView.children.iterator().forEachRemaining {
                     it.findViewById<ConstraintLayout>(R.id.base_container).tag = if (selectable) LibRVState.Selectable else LibRVState.Plane
-                        it.findViewById<ImageView>(R.id.btn_select).visibility = View.VISIBLE
-                    }
-
+                    it.findViewById<ImageView>(R.id.btn_select).visibility = if (selectable) View.VISIBLE else View.GONE
                 }
             }
             myFinalList.observe(viewLifecycleOwner){
@@ -143,14 +141,22 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
             binding.apply {
 //                トップバー
                 topMenuBarFrame.apply {
-                    topBarLeftIMVDrawableId.observe(viewLifecycleOwner){
-                        this.imvFileStatusOrClose.setImageDrawable(requireActivity().getDrawable(it))
-                    }
-                    topText.observe(viewLifecycleOwner){
-                        this.txvTitle.text = it
-                    }
-                    topBarRightIMVDrawableId.observe(viewLifecycleOwner){
-                        this.imvSwitchMenu.setImageDrawable(requireActivity().getDrawable(it))
+                    topBarUI.observe(viewLifecycleOwner){
+                        imvFileStatusOrClose.apply {
+                            if(tag != it.topBarLeftIMVDrawableId){
+                                setImageDrawable(requireActivity().getDrawable(it.topBarLeftIMVDrawableId))
+                                tag = it.topBarLeftIMVDrawableId
+                            }
+                        }
+                        imvSwitchMenu.apply{
+                            if(tag != it.topBarRightDrawableId){
+                                setImageDrawable(requireActivity().getDrawable(it.topBarRightDrawableId))
+                                tag = it.topBarRightDrawableId
+                            }
+                        }
+                        if(txvTitle.text!=it.topBarText){
+                            txvTitle.text = it.topBarText
+                        }
                     }
 //                    menuViewMode.observe(viewLifecycleOwner){
 //                        when(it){
@@ -207,7 +213,14 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         binding.apply {
             topMenuBarFrame.apply {
                 when(v){
-                    imvFileStatusOrClose -> libraryViewModel.setMultipleSelectMode(false)
+                    imvFileStatusOrClose -> if(v.tag== R.drawable.icon_close) libraryViewModel.setMultipleSelectMode(false)
+                    imvSwitchMenu -> {
+                        when(v.tag){
+                            R.drawable.icon_dot -> layEnd.visibility =  if(layEnd.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                            R.drawable.icon_inbox -> libraryViewModel.onClickInBox()
+                        }
+
+                    }
                 }
 
                 menuBinding.apply {

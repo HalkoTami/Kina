@@ -1,15 +1,10 @@
 package com.example.tangochoupdated.ui.library
 
-import android.view.View
-import android.widget.ImageView
 import androidx.compose.runtime.internal.illegalDecoyCallException
-import androidx.core.view.children
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
-import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.room.MyRoomRepository
-import com.example.tangochoupdated.room.dataclass.Card
 import com.example.tangochoupdated.room.dataclass.CardAndTags
 import com.example.tangochoupdated.room.dataclass.File
 //import com.example.tangochoupdated.room.dataclass.FileWithChild
@@ -17,13 +12,7 @@ import com.example.tangochoupdated.room.enumclass.CardStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
-import com.example.tangochoupdated.ui.create.Mode
-import io.reactivex.Single
-import io.reactivex.rxkotlin.toObservable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
 class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
@@ -51,9 +40,11 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //        )
         _parentFile.value = file
         setHomeStatus(file==null)
+        makeTopBarUIByParentFile(file)
+
     }
-    private val _parentFile = MutableLiveData<File>()
-    val parentFile:LiveData<File> = _parentFile
+    private val _parentFile = MutableLiveData<File?>()
+    val parentFile:LiveData<File?> = _parentFile
 
 
     //    child Files from DB
@@ -75,7 +66,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private val _childCardsFromDB=MutableLiveData<List<CardAndTags>>()
     fun setChildCardsFromDB(list:List<CardAndTags>?,home: Boolean){
         _childCardsFromDB.value = list
-        if(_parentFile.value?.fileStatus == FileStatus.TANGO_CHO_COVER){
+        if(_parentFile.value?.fileStatus == FileStatus.TANGO_CHO_COVER||_modeInBox.value == true){
             val b = mutableListOf<LibraryRV>()
             clearFinalList()
             list?.onEach { b.add(convertCardToLibraryRV(it)) }
@@ -177,9 +168,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private val _selectedItems = MutableLiveData<MutableList<LibraryRV>>()
     private fun setSelectedItem(list:MutableList<LibraryRV>){
         _selectedItems.value = list
-        if(_multipleSelectMode.value==true){
-            setMLDTopText("${list.size}個　選択中")
+        if(list.isEmpty().not()){
+            makeTopBarSelected(list.size)
         }
+
     }
     private fun addToSelectedItem(item: LibraryRV){
         val a = _selectedItems.value!!
@@ -304,29 +296,66 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 //    －－－－FragmentのUIデータ－－－－
 
+//    －－－－TopBar－－－－
+
+
+    class LibraryTopBar(
+        var topBarLeftIMVDrawableId:Int,
+        var topBarRightDrawableId:Int,
+        var topBarText:String
+    )
+    private val _topBarUI = MutableLiveData<LibraryTopBar>()
+    private fun setTopBarUI (libraryTopBar: LibraryTopBar){
+        _topBarUI.value = libraryTopBar
+    }
+    val topBarUI :LiveData<LibraryTopBar> = _topBarUI
+    private fun makeTopBarUIByParentFile(file:File?){
+        val a = LibraryTopBar(
+            topBarLeftIMVDrawableId =
+            if(file== null) R.drawable.icon_eye_opened else {
+                when(file.fileStatus){
+                    FileStatus.FOLDER -> R.drawable.icon_file
+                    FileStatus.TANGO_CHO_COVER -> R.drawable.icon_library_plane
+                    else -> throw IllegalArgumentException()
+                }
+            },
+            topBarText = if(file== null) "Home" else "${file.title}",
+            topBarRightDrawableId = if(file== null) R.drawable.icon_inbox else R.drawable.icon_dot
+        )
+        setTopBarUI(a)
+    }
+    private fun makeTopBarSelected(selectedItemSize:Int){
+        val a = LibraryTopBar(
+            topBarLeftIMVDrawableId = R.drawable.icon_close,
+            topBarText = "${selectedItemSize}個　選択中",
+            topBarRightDrawableId = R.drawable.icon_dot
+        )
+        setTopBarUI(a)
+    }
+//    ClickEvents
+    fun onClickInBox(){
+        setModeInBox(true)
+        val a = HomeFragmentDirections.libraryToLibrary()
+        setAction(a)
+
+    }
+    private val _modeInBox =  MutableLiveData<Boolean>()
+    private fun setModeInBox(boolean: Boolean){
+        _modeInBox.apply {
+            value = boolean
+        }
+    }
+
+
+
+//    －－－－－－－－
+
     private val _homeStatus =  MutableLiveData<Boolean>()
     private fun setHomeStatus(boolean: Boolean){
         _homeStatus.apply {
             value = boolean
         }
-        when(boolean){
-            true ->{
-                setTopBarLeftIMVDrawableId(R.drawable.icon_eye_opened)
-                setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
-                setMLDTopText("home")
-            }
-            false -> {
-                setMLDTopText("${_parentFile.value!!.fileId}")
-                setTopBarLeftIMVDrawableId(
-                    when(_parentFile.value!!.fileStatus){
-                        FileStatus.FOLDER ->R.drawable.icon_file
-                        FileStatus.TANGO_CHO_COVER ->R.drawable.icon_library_plane
-                        else -> throw  IllegalArgumentException("file status not appropriate")
-                    }
-                )
-            }
 
-        }
 
     }
     private val _multipleSelectMode =  MutableLiveData<Boolean>()
@@ -335,22 +364,15 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _multipleSelectMode.apply {
             value = boolean
         }
-
         when(boolean){
             true ->{
+                makeTopBarSelected(_selectedItems.value?.size ?:0)
 //                makeAllSelectable()
-                setTopBarLeftIMVDrawableId(R.drawable.icon_close)
-                setTopBarRightIMVDrawableId(R.drawable.icon_dot)
 
             }
             false -> {
+                makeTopBarUIByParentFile(_parentFile.value)
                 setSelectedItem(mutableListOf())
-                if(_homeStatus.value==true){
-                    setMLDTopText("home")
-                    setTopBarRightIMVDrawableId(R.drawable.icon_inbox)
-                    setTopBarLeftIMVDrawableId(R.drawable.icon_eye_opened)
-                }
-
 
             }
         }

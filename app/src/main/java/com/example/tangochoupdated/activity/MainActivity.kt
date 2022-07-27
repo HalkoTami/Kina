@@ -272,6 +272,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             }
             parentFile.observe(this@MainActivity){
                 createCardViewModel.setParentFlashCardCover(it)
+                createCardViewModel.setParentFlashCardCoverId(it?.fileId)
                 createFileViewModel.pAndGP(it?.fileId).observe(this@MainActivity){
                     createFileViewModel.setPAndG(it)
                 }
@@ -294,6 +295,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             onCreateViewModel()
             var calledFirstTime = true
             lastInsertedCardAndTags.observe(this@MainActivity){
+
                 if(!calledFirstTime){
                     createCardViewModel.setLastInsertedCardAndTags(it)
                 }
