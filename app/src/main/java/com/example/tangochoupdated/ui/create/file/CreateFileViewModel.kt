@@ -19,18 +19,13 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         setAddFileActive(false)
         setFileColor(ColorStatus.GRAY)
     }
-
-
     private val _parentFile = MutableLiveData<File?>()
     val parentFile:LiveData<File?> = _parentFile
     fun setParentFile(file: File?){
         _parentFile.value = file
-
         when(file){
             null ->{
                 setTxvLeftTop("home")
-
-
             }
             else -> {
                 when(_mode.value){
@@ -227,6 +222,15 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             }
         }
     }
+//    Todo popupのクラス作る
+    class popUpUI(
+        val visibility:Boolean,
+        val txvLeftTopText:String,
+        val txvHintText:String,
+        val drawableId:Int,
+        val edtTitleText:String,
+        val edtTitleHint:String
+    )
     private val _txvLeftTop = MutableLiveData<String>()
     val txvLeftTop:LiveData<String> = _txvLeftTop
 
