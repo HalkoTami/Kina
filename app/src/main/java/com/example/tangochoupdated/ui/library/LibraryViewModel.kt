@@ -40,7 +40,8 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //        )
         _parentFile.value = file
         setHomeStatus(file==null)
-        makeTopBarUIByParentFile(file)
+        if(_modeInBox.value == true) makeTopBarInBox() else
+        makeTopBarUIUnselected(file)
 
     }
     private val _parentFile = MutableLiveData<File?>()
@@ -193,8 +194,8 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
     }
     fun openNextFile(item: LibraryRV){
-        val action = HomeFragmentDirections.libraryToLibrary()
-        action.parentItemId = intArrayOf(item.id)
+        val action = HomeFragmentDirections.toLib()
+        action.parentItemId = intArrayOf(item.file!!.fileId)
         setAction(action)
     }
 
@@ -309,7 +310,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _topBarUI.value = libraryTopBar
     }
     val topBarUI :LiveData<LibraryTopBar> = _topBarUI
-    private fun makeTopBarUIByParentFile(file:File?){
+    private fun makeTopBarUIUnselected(file:File?){
         val a = LibraryTopBar(
             topBarLeftIMVDrawableId =
             if(file== null) R.drawable.icon_eye_opened else {
@@ -318,8 +319,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
                     FileStatus.TANGO_CHO_COVER -> R.drawable.icon_library_plane
                     else -> throw IllegalArgumentException()
                 }
-            },
-            topBarText = if(file== null) "Home" else "${file.title}",
+            }
+           ,
+            topBarText =  if(file== null) "Home" else "${file.title}",
             topBarRightDrawableId = if(file== null) R.drawable.icon_inbox else R.drawable.icon_dot
         )
         setTopBarUI(a)
@@ -332,10 +334,20 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         )
         setTopBarUI(a)
     }
+    private fun makeTopBarInBox(){
+        val a = LibraryTopBar(
+            topBarLeftIMVDrawableId = R.drawable.icon_inbox,
+            topBarText = "単語帳に入っていません",
+            topBarRightDrawableId = R.drawable.icon_dot
+        )
+        setTopBarUI(a)
+    }
+
 //    ClickEvents
     fun onClickInBox(){
         setModeInBox(true)
-        val a = HomeFragmentDirections.libraryToLibrary()
+        val a = HomeFragmentDirections.toLib()
+        a.parentItemId = null
         setAction(a)
 
     }
@@ -371,9 +383,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
             }
             false -> {
-                makeTopBarUIByParentFile(_parentFile.value)
+                if(_modeInBox.value == true) makeTopBarInBox() else
+                makeTopBarUIUnselected(_parentFile.value)
                 setSelectedItem(mutableListOf())
-
             }
         }
 
@@ -464,6 +476,11 @@ private val _action = MutableLiveData<NavDirections>()
     val action: LiveData<NavDirections> = _action
     fun setAction(navDirections: NavDirections){
         _action.value = navDirections
+    }
+    fun onClickBack(){
+        if(_modeInBox.value==true){
+            setModeInBox(false)
+        }
     }
 
 

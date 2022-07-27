@@ -157,7 +157,9 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
             Tab.TabLibrary -> return
             else -> {
                 setActiveTab(Tab.TabLibrary)
-                setAction(HomeFragmentDirections.toLib())
+                val a = HomeFragmentDirections.toLibHome()
+                a.parentItemId = null
+                setAction(a)
             }
         }
     }

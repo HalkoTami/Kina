@@ -12,20 +12,18 @@
         tools:layout="@layout/fragment_library_home" >
 
 
-
-
         <argument
-        android:name="parentItemId"
-        app:argType="integer[]"
+            android:name="parentItemId"
+             app:argType="integer[]"
             app:nullable="true"
-            android:defaultValue="@null" />
+            android:defaultValue="@null"
+            />
 
     </fragment>
-    <action
-        android:id="@+id/library_to_library"
-        app:destination="@id/fragmentLibrary">
-
-    </action>
+<!--    <action-->
+<!--        android:id="@+id/library_to_library"-->
+<!--        app:destination="@id/fragmentLibrary">-->
+<!--    </action>-->
 
 <!--    <action-->
 <!--        android:id="@+id/action_to_create_card_nav"-->
@@ -56,15 +54,19 @@
 
     <action
         android:id="@+id/to_lib"
+        app:destination="@+id/fragmentLibrary"/>
+
+    <action
+        android:id="@+id/to_lib_home"
         app:popUpTo="@id/mobile_navigation"
         app:destination="@+id/fragmentLibrary"/>
     <action
         android:id="@+id/to_anki"
         app:popUpTo="@id/mobile_navigation"
         app:destination="@+id/navigation_anki"/>
-    <action
-        android:id="@+id/to_create"
-        app:destination="@+id/navigation_create"/>
+<!--    <action-->
+<!--        android:id="@+id/to_create"-->
+<!--        app:destination="@+id/navigation_create"/>-->
 
 
     <fragment
