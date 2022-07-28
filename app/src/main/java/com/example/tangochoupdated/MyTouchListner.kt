@@ -1,9 +1,7 @@
 package com.example.tangochoupdated
 
 import android.content.Context
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import java.lang.Math.abs
 
 open class MyTouchListener(context: Context) : View.OnTouchListener {
@@ -100,3 +98,4 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
 
     }
 }
+

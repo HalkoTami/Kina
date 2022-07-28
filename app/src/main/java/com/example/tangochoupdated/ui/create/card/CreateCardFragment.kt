@@ -14,7 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.*
-import com.example.tangochoupdated.activity.MainActivity
+import com.example.tangochoupdated.ui.mainactivity.MainActivity
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.StringFragFocusedOn

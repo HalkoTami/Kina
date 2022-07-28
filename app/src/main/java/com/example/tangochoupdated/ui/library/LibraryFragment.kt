@@ -204,6 +204,13 @@ class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
             callback
         )
     }
+    fun makeAllUnClickable(){
+        homeFragClickListenerItem.onEach {
+            it.setOnClickListener(null)
+        }
+        Toast.makeText(requireActivity(),"called",Toast.LENGTH_SHORT).show()
+
+    }
 
 
 
