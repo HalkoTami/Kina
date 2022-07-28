@@ -1,16 +1,19 @@
 package com.example.tangochoupdated
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.view.*
 import android.view.View.*
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
+import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.LibRVState
 import com.example.tangochoupdated.room.rvclasses.LibRVViewType
 import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.library.LibRVClickListener
+
 
 /**
  * Custom Data Class for this adapter
@@ -65,8 +68,21 @@ val mycontext: Context) :
             val clickableViews = mutableListOf<View>()
 
 
-
+            fun getStrokeColResId(colorStatus: ColorStatus):Int{
+                return when(colorStatus){
+                    ColorStatus.GRAY -> R.color.gray
+                    ColorStatus.RED ->R.color.rvStrokeRed
+                    ColorStatus.BLUE -> R.color.rvStrokeBlue
+                    ColorStatus.YELLOW -> R.color.rvStrokeYellow
+                }
+            }
             binding.stubMain.removeAllViews()
+            val drawable = binding.stubMain.background as GradientDrawable
+            drawable.mutate()
+            drawable.setStroke(8,
+                context.getColor(getStrokeColResId(
+                item.card?.colorStatus ?:item.file?.colorStatus ?:ColorStatus.GRAY)))
+
 
             when (item.type){
               LibRVViewType.Folder, LibRVViewType.FlashCardCover ->{
@@ -162,52 +178,6 @@ val mycontext: Context) :
             clickableViews.onEach {
                 it.setOnTouchListener(LibRVClickListener(it,context,item,clickListener,binding))
             }
-
-
-
-//            binding.btnAddNewCard.setOnClickListener{
-//                clickListener.onClickAddNewCardByPosition(item)
-//            }
-//
-////
-//
-//
-//            binding.baseContainer
-////            binding.stubMain.setOnTouchListener (object:MyTouchListener(context){
-//                override fun onSingleTap() {
-//                    super.onSingleTap()
-////                    when(binding.baseContainer.tag){
-////                        LibRVState.Selectable -> onClickSelectableItem
-////                    }
-//                    when(item.type){
-//                        LibRVViewType.StringCard -> clickListener.onCickEditCard(item)
-//                        else ->  clickListener.onClickMain(item,binding)
-//                    }
-//
-//
-//                }
-//
-//                override fun onSwipeLeft() {
-//                    super.onSwipeLeft()
-//                    clickListener.onSwipeLeft(item,binding,fileBinding)
-//
-//                }
-//
-//                override fun onLongClick() {
-//                    super.onLongClick()
-//                    clickListener.onLongClickMain(item,binding)
-//
-//
-//                }
-//
-////                scroll view にネスト化して　やりたいイベントはできそうだが後回し
-//                override fun onScrollLeft() {
-//                    super.onScrollLeft()
-//
-//
-//                }
-//            })
-//
 
 
 

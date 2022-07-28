@@ -332,6 +332,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         setDeletingItem(mutableListOf(item))
         setConfirmPopUpVisible(true,ConfirmMode.DeleteOnlyParent)
     }
+    fun onClickDeleteParentItem(){
+        setDeletingItem(mutableListOf(convertFileToLibraryRV(_parentFile.value!!)))
+        setConfirmPopUpVisible(true,ConfirmMode.DeleteOnlyParent)
+    }
     fun onClickBtnCommitConfirm(mode: ConfirmMode){
         when(mode){
             ConfirmMode.DeleteOnlyParent ->{

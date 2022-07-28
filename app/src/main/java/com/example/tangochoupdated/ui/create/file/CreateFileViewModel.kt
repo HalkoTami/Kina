@@ -12,14 +12,12 @@ import com.example.tangochoupdated.room.dataclass.FileXRef
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
 import com.example.tangochoupdated.ui.create.Mode
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
@@ -31,7 +29,8 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     val parentFile:LiveData<File?> = _parentFile
     fun setParentFile(file: File?){
         _parentFile.value = file
-        setPAndG(getpAndGP(file?.parentFileId))
+//        setPAndG(getpAndGP(file?.parentFileId))
+//        setParentFileParent(getParentFile(file?.parentFileId))
 //        when(file){
 //            null ->{
 //                setTxvLeftTop("home")
@@ -58,9 +57,16 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             .map { it.map {
                 a.addAll(it)
             } }
-
         return a
     }
+    fun parentFileParent(id:Int?):LiveData<File> = repository.getFileByFileId(id).asLiveData()
+    val _parentFileParent = MutableLiveData<File?>()
+    fun setParentFileParent(file: File? ){
+        _parentFileParent.value = file
+    }
+
+
+    fun allAncestors(fileId:Int?):LiveData<List<File>?> = repository.getPAndGPFiles(fileId).asLiveData()
     val _pAndgGP = MutableLiveData<List<File>>()
     fun setPAndG(list: List<File>?){
         _pAndgGP.value = list
@@ -126,21 +132,6 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _mode = MutableLiveData<Mode>()
     fun setMode(mode: Mode){
         _mode.value = mode
-        when(mode){
-            Mode.Edit -> {
-                setDrawFileType(
-                    when(_parentFile.value!!.fileStatus){
-                        FileStatus.FOLDER -> R.drawable.icon_file_1
-                        FileStatus.TANGO_CHO_COVER -> R.drawable.icon_library_plane
-                        else -> throw IllegalArgumentException("editing FileStatus not correct")
-                    })
-                setTxvHint("タイトルを編集する")
-                setEdtHint("")
-                setTxvLeftTop("")
-                setTxvFileTitleText(SpannableStringBuilder(_parentFile.value!!.title))
-//                setFileColor(parentFile.value!!.colorStatus)
-            }
-        }
     }
 
 
@@ -211,7 +202,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     fun onClickEditFileTopBar(){
         setMode(Mode.Edit)
-        makeEditFilePopUp(null,_parentFile.value!!)
+        makeEditFilePopUp(_parentFileParent.value,_parentFile.value!!)
         setFileToEdit(_parentFile.value!!)
     }
     fun onClickEditFileInRV(editingFile:File){
@@ -269,7 +260,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private fun makeNewFilePopUp(parentfile: File?, fileType:FileStatus){
         val a = PopUpUI(
             visibility = View.VISIBLE,
-            txvLeftTopText = if(parentfile!=null) "${parentfile.title} >" else "",
+            txvLeftTopText = if(parentfile!=null) "${parentfile.title} >" else "home",
             txvHintText = if(fileType == FileStatus.FOLDER) "新しいフォルダを作る"
             else "新しい単語帳を作る",
             drawableId = if(fileType == FileStatus.FOLDER) R.drawable.icon_file
@@ -284,7 +275,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private fun makeEditFilePopUp(parentFile: File?, editingFile:File){
         val a = PopUpUI(
             visibility = View.VISIBLE,
-            txvLeftTopText = if(parentFile!=null) "${parentFile.title} >" else "",
+            txvLeftTopText = if(parentFile!=null) "${parentFile.title} >" else "home",
             txvHintText = "${editingFile.title}を編集する",
             drawableId =  if(editingFile.fileStatus == FileStatus.FOLDER) R.drawable.icon_file
             else R.drawable.icon_library_plane,

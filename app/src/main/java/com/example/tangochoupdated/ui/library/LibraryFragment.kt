@@ -95,6 +95,7 @@ class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
 //            親アイテムのid
             val myId: Int? = args.parentItemId?.single()
             parentFileFromDB(myId).observe(viewLifecycleOwner) {
+                Toast.makeText(requireActivity(),"${it?.parentFileId}",Toast.LENGTH_SHORT).show()
                 setParentFileFromDB(it)
             }
             childFilesFromDB(myId).observe(viewLifecycleOwner) {
@@ -230,11 +231,11 @@ class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
 
                 menuBinding.apply {
                     when(v){
-                        this.imvAnki ->{}
-                        this.imvEditFile -> {
+                        imvAnki ->{}
+                        imvEditFile -> {
                            createFileViewModel.onClickEditFileTopBar()
                         }
-//                        imvDeleteFile -> libraryViewModel.onDelete()
+                        imvDeleteFile -> libraryViewModel.onClickDeleteParentItem()
                     }
                 }
                 popupConfirmDelete.apply {

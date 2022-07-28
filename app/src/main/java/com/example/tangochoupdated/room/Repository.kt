@@ -3,6 +3,7 @@ package com.example.tangochoupdated.room
 import androidx.annotation.WorkerThread
 import com.example.tangochoupdated.room.dataclass.*
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
@@ -31,12 +32,12 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
 
     fun getCardDataByFileId(parentFileId: Int?):Flow<List<CardAndTags>>  = libraryDao.getCardsDataByFileId(parentFileId)
     fun getFileByFileId(fileId:Int?):Flow<File> = libraryDao.getFileByFileId(fileId)
+    
+        val lastInsertedFile:Flow<Int> = libraryDao.getLastInsertedFile()
+        fun mygetFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = libraryDao.myGetFileByParentFileId(parentFileId)
 
-    val lastInsertedFile:Flow<Int> = libraryDao.getLastInsertedFile()
-    fun mygetFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = libraryDao.myGetFileByParentFileId(parentFileId)
-
-    fun getPAndGPFiles(fileId: Int?):Flow<List<File>> = libraryDao.getAllAncestorsByChildFileId(fileId)
-    fun getAllDescendantsByFileId(fileIdList: Int?):Flow<List<File>> = libraryDao.getAllDescendantsFilesByParentFileId(fileIdList)
+        fun getPAndGPFiles(fileId: Int?):Flow<List<File>> = libraryDao.getAllAncestorsByChildFileId(fileId)
+        fun getAllDescendantsByFileId(fileIdList: Int?):Flow<List<File>> = libraryDao.getAllDescendantsFilesByParentFileId(fileIdList)
 //    fun getAllDescendantsByFileIdWithCard(fileId: Int?):Flow<List<Any>> = libraryDao.getAllDescendantsByParentFileId2(fileId)
 
         fun getCardByCardId(cardId:Int?):Flow<CardAndTags> = cardDao.getCardAndTagsByCardId(cardId)
@@ -138,6 +139,7 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
             choiceDao.deleteMultiple(item.filterIsInstance<Choice>())
         }
     }
+
 
 
 

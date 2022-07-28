@@ -67,7 +67,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/lightgreen"
                 android:alpha="0.5"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
 
     </FrameLayout>

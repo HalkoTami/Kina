@@ -78,8 +78,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
                         childFlashCardCoversAmount = 0,
                         parentFileId = null)
                     fileDao.insert(file)
-                    file.parentFileId = 1
-                    fileDao.insert(file)
+
 
 
 

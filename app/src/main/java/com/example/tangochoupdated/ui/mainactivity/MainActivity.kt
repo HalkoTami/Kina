@@ -238,6 +238,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 createCardViewModel.setParentFlashCardCover(it)
                 createCardViewModel.setParentFlashCardCoverId(it?.fileId)
                 createFileViewModel.setParentFile(it)
+                createFileViewModel.parentFileParent(it?.parentFileId).observe(this@MainActivity){
+                    createFileViewModel.setParentFileParent(it)
+                }
+                createFileViewModel.allAncestors(it?.fileId).observe(this@MainActivity){
+                    createFileViewModel.setPAndG(it)
+                }
             }
             childCardsFromDB.observe(this@MainActivity){
                 createCardViewModel.setSisterCards(it)

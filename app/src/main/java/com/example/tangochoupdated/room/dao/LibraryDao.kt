@@ -23,6 +23,9 @@ interface LibraryDao {
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
     fun getFileByFileId(lookingFileId:Int?): Flow<File>
 
+    @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
+    fun getFileByFileId2(lookingFileId:Int?): Single<List<File>>
+
 
 
     @Query("SELECT a.fileId FROM tbl_file a " +
@@ -73,7 +76,6 @@ interface LibraryDao {
 
 
 
-
 //    " JOIN tbl_file parent ON parent.fileId = a.parentFileId"
 //
 //    uery("SELECT *  FROM file_xref p_c " +
@@ -104,6 +106,7 @@ interface LibraryDao {
     fun getCardAmountByFileId(belongingFileId: Int):Flow<Int>
 
 //    Order by library_order asc
+    @Transaction
     @Query("select * FROM tbl_card " +
             "where not card_deleted AND belongingFileId is :belongingFileId ")
     fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<CardAndTags>>
