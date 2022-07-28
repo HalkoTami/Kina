@@ -8,7 +8,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+    <FrameLayout
+        android:background="@drawable/rectangle_green_stroke"
+        android:elevation="20dp"
+        android:id="@+id/popup_add_file"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <include
+            android:id="@+id/binding_create_file"
+            layout="@layout/add_popup"
+            android:visibility="visible"/>
+    </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/frame_bottomMenu"
+        android:background="@drawable/rectangle_green_stroke"
+        android:elevation="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginBottom="20dp"
+
+        app:layout_constraintBottom_toTopOf="@id/frame_bnv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <include
+            android:id="@+id/binding_add_menu"
+            layout="@layout/item_bottom_popup_add" />
+
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -20,6 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
         <androidx.fragment.app.FragmentContainerView
             app:defaultNavHost="true"
             app:navGraph="@navigation/mobile_navigation"
@@ -27,9 +61,11 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-        <include
-            android:id="@+id/create_file_Binding"
-            layout="@layout/fragment_create"/>
+        <View
+            android:id="@+id/frag_con_view_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/lightgreen"/>
 
     </FrameLayout>
 

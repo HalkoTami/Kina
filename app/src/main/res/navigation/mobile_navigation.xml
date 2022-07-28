@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragmentLibrary"
-        android:name="com.example.tangochoupdated.ui.library.HomeFragment"
+        android:name="com.example.tangochoupdated.ui.library.LibraryFragment"
         android:label="library"
         tools:layout="@layout/fragment_library_home" >
 

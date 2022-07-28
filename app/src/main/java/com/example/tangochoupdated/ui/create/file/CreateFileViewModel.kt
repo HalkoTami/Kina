@@ -1,7 +1,9 @@
 package com.example.tangochoupdated.ui.create.file
 
+import android.app.UiAutomation
 import android.text.Editable
 import android.text.SpannableStringBuilder
+import android.view.View
 import androidx.lifecycle.*
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.room.MyRoomRepository
@@ -9,38 +11,56 @@ import com.example.tangochoupdated.room.dataclass.File
 import com.example.tangochoupdated.room.dataclass.FileXRef
 import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.room.enumclass.FileStatus
-import com.example.tangochoupdated.room.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.Mode
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun onCreate(){
         setAddFileActive(false)
-        setFileColor(ColorStatus.GRAY)
     }
     private val _parentFile = MutableLiveData<File?>()
     val parentFile:LiveData<File?> = _parentFile
     fun setParentFile(file: File?){
         _parentFile.value = file
-        when(file){
-            null ->{
-                setTxvLeftTop("home")
-            }
-            else -> {
-                when(_mode.value){
-                    Mode.New -> setTxvLeftTop("${file.title.toString()} >")
-                    Mode.Edit -> setTxvLeftTop("")
-                }
-
-
-
-            }
-        }
+        setPAndG(getpAndGP(file?.parentFileId))
+//        when(file){
+//            null ->{
+//                setTxvLeftTop("home")
+//            }
+//            else -> {
+//                when(_mode.value){
+//                    Mode.New -> setTxvLeftTop("${file.title.toString()} >")
+//                    Mode.Edit -> setTxvLeftTop("")
+//                }
+//            }
+//        }
 //        setParentFileStock(file)
-
     }
-    fun pAndGP(parentId:Int?):LiveData<List<File>?> = repository.getPAndGPFiles(parentId).asLiveData()
+    val _position = MutableLiveData<Int>()
+    fun setPosition (int: Int){
+        _position.value = int
+    }
+
+
+    fun getpAndGP(parentId:Int?):List<File>{
+        val a = mutableListOf<File>()
+        Flowable.fromCallable { repository.getPAndGPFiles(parentId)}
+            .subscribeOn(Schedulers.io())
+            .map { it.map {
+                a.addAll(it)
+            } }
+
+        return a
+    }
     val _pAndgGP = MutableLiveData<List<File>>()
     fun setPAndG(list: List<File>?){
         _pAndgGP.value = list
@@ -118,7 +138,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 setEdtHint("")
                 setTxvLeftTop("")
                 setTxvFileTitleText(SpannableStringBuilder(_parentFile.value!!.title))
-                setFileColor(parentFile.value!!.colorStatus)
+//                setFileColor(parentFile.value!!.colorStatus)
             }
         }
     }
@@ -127,10 +147,6 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
 
-    private val _newPosition = MutableLiveData<Int>()
-    fun setNewPosition(int: Int){
-        _newPosition.value = int
-    }
 
     private val _addFileActive = MutableLiveData<Boolean>()
     val addFileActive : LiveData<Boolean> = _addFileActive
@@ -176,19 +192,32 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
     fun onClickCreateFolder(){
-        if(_bottomMenuClickable.value!!.createFile){
-            setEditFilePopUpVisible(true)
-            setCreatingFileType(FileStatus.FOLDER)
-        }
-
-
+        makeNewFilePopUp(_parentFile.value,FileStatus.FOLDER)
+        makeEmptyFileToCreate(FileStatus.FOLDER)
+        setMode(Mode.New)
+//        if(_bottomMenuClickable.value!!.createFile){
+//            setEditFilePopUpVisible(true)
+//            setCreatingFileType(FileStatus.FOLDER)
+//        }
     }
     fun onCLickCreateFlashCardCover(){
-        if(_bottomMenuClickable.value!!.createFlashCardCover){
-            setEditFilePopUpVisible(true)
-            setCreatingFileType(FileStatus.TANGO_CHO_COVER)
-        }
-
+        makeNewFilePopUp(_parentFile.value,FileStatus.TANGO_CHO_COVER)
+        makeEmptyFileToCreate(FileStatus.TANGO_CHO_COVER)
+        setMode(Mode.New)
+//        if(_bottomMenuClickable.value!!.createFlashCardCover){
+//            setEditFilePopUpVisible(true)
+//            setCreatingFileType(FileStatus.TANGO_CHO_COVER)
+//        }
+    }
+    fun onClickEditFileTopBar(){
+        setMode(Mode.Edit)
+        makeEditFilePopUp(null,_parentFile.value!!)
+        setFileToEdit(_parentFile.value!!)
+    }
+    fun onClickEditFileInRV(editingFile:File){
+        setMode(Mode.Edit)
+        makeEditFilePopUp(_parentFile.value,editingFile)
+        setFileToEdit(editingFile)
     }
 
     //    edit file popup Visibility
@@ -223,23 +252,60 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         }
     }
 //    Todo popupのクラス作る
-    class popUpUI(
-        val visibility:Boolean,
-        val txvLeftTopText:String,
-        val txvHintText:String,
-        val drawableId:Int,
-        val edtTitleText:String,
-        val edtTitleHint:String
+    class PopUpUI(
+        var visibility:Int,
+        var txvLeftTopText:String,
+        var txvHintText:String,
+        var drawableId:Int,
+        var edtTitleText:String,
+        var edtTitleHint:String,
+        var colorStatus: ColorStatus,
     )
+    private val _filePopUpUIData = MutableLiveData<PopUpUI>()
+    val filePopUpUIData:LiveData<PopUpUI> = _filePopUpUIData
+    private fun setFilePopUpUIData(popUpUI: PopUpUI){
+        _filePopUpUIData.value = popUpUI
+    }
+    private fun makeNewFilePopUp(parentfile: File?, fileType:FileStatus){
+        val a = PopUpUI(
+            visibility = View.VISIBLE,
+            txvLeftTopText = if(parentfile!=null) "${parentfile.title} >" else "",
+            txvHintText = if(fileType == FileStatus.FOLDER) "新しいフォルダを作る"
+            else "新しい単語帳を作る",
+            drawableId = if(fileType == FileStatus.FOLDER) R.drawable.icon_file
+            else R.drawable.icon_library_plane,
+            edtTitleHint = "タイトル",
+            edtTitleText = "",
+            colorStatus = ColorStatus.GRAY
+        )
+        setFilePopUpUIData(a)
+
+    }
+    private fun makeEditFilePopUp(parentFile: File?, editingFile:File){
+        val a = PopUpUI(
+            visibility = View.VISIBLE,
+            txvLeftTopText = if(parentFile!=null) "${parentFile.title} >" else "",
+            txvHintText = "${editingFile.title}を編集する",
+            drawableId =  if(editingFile.fileStatus == FileStatus.FOLDER) R.drawable.icon_file
+            else R.drawable.icon_library_plane,
+            edtTitleHint = "タイトルを編集",
+            edtTitleText = "${editingFile.title}",
+            colorStatus = editingFile.colorStatus
+        )
+        setFilePopUpUIData(a)
+    }
+    private fun makePopUpUIInvisible(){
+        val update = _filePopUpUIData.value
+        update!!.visibility = View.GONE
+        setFilePopUpUIData(update)
+    }
+
     private val _txvLeftTop = MutableLiveData<String>()
     val txvLeftTop:LiveData<String> = _txvLeftTop
 
     private fun setTxvLeftTop(string: String){
         _txvLeftTop.value = string
     }
-
-
-
     private val _txvHint = MutableLiveData<String>()
     val txvHintText:LiveData<String> = _txvHint
 
@@ -269,15 +335,12 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     private val _fileColor = MutableLiveData<ColorStatus>()
     val fileColor: LiveData<ColorStatus> = _fileColor
-    fun setFileColor(colorStatus: ColorStatus){
-        val previous = _fileColor.value
-        if(previous == colorStatus){
-            return
-        } else{
-            _fileColor.value = colorStatus
-        }
-
-
+    private fun changeFileColor(previous:PopUpUI, colorStatus: ColorStatus){
+        previous.colorStatus = colorStatus
+        setFilePopUpUIData(previous)
+    }
+    fun onClickColorPalet(colorStatus: ColorStatus){
+        changeFileColor(_filePopUpUIData.value!!,colorStatus)
     }
     var createXREF:Boolean = false
     var fileInserted:Boolean = false
@@ -308,64 +371,110 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 fileInserted = false
             }
         }
-
     }
 
+    private val _fileToCreate = MutableLiveData<File>()
+    private fun setFileToCreate(file: File){
+        _fileToCreate.value = file
+    }
+    private fun makeEmptyFileToCreate(fileStatus:FileStatus){
+        setFileToCreate(
+            File(fileId = 0,
+                title = null,
+                fileStatus = fileStatus ,
+                colorStatus = ColorStatus.GRAY,
+                childFlashCardCoversAmount = 0,
+                childCardsAmount = 0,
+                childFoldersAmount = 0,
+                hasChild = false,
+                deleted = false,
+                hasParent = false,
+                libOrder = _position.value ?:0,
+                parentFileId = _parentFile.value?.fileId
+            ))
+    }
+    private val _fileToEdit = MutableLiveData<File>()
+    private fun setFileToEdit(file: File){
+        _fileToEdit.value = file
+    }
 
 
 
     fun onClickFinish(title:String){
-        val parentFile = _parentFile.value
+        val data = _filePopUpUIData.value!!
 
         when(_mode.value ){
             Mode.New -> {
-                val newFile = File(
-                    fileId = 0,
-                    title = title,
-                    fileStatus = _creatingFileType.value!!,
-                    colorStatus = _fileColor.value!!,
-                    childFlashCardCoversAmount = 0,
-                    childCardsAmount = 0,
-                    childFoldersAmount = 0,
-                    hasChild = false,
-                    deleted = false,
-                    hasParent = when(_parentFile.value){
-                        null -> false
-                        else -> true
-                    },
-                    libOrder = 0,
-                    parentFileId = _parentFile.value?.fileId
-                )
+                val newFile = _fileToCreate.value!!
+                newFile.title = title
+                newFile.colorStatus = data.colorStatus
                 insertFile(newFile)
                 fileInserted = true
             }
             Mode.Edit -> {
-                val upDatingFile = File(
-                    fileId = parentFile!!.fileId,
-                    title = title,
-                    fileStatus = parentFile.fileStatus,
-                    colorStatus = _fileColor.value!!,
-                    childFlashCardCoversAmount = parentFile.childFlashCardCoversAmount,
-                    childCardsAmount = parentFile.childCardsAmount,
-                    childFoldersAmount = parentFile.childFoldersAmount,
-                    hasChild = parentFile.hasChild,
-                    deleted = false,
-                    hasParent = parentFile.hasParent,
-                    libOrder = parentFile.libOrder,
-                    parentFileId = parentFile.parentFileId
-                )
-                if(parentFile == upDatingFile) return
-                else upDateFile(upDatingFile)
-
+                val editingFile = _fileToEdit.value!!
+                editingFile.title = title
+                editingFile.colorStatus = data.colorStatus
+                upDateFile(editingFile)
             }
-
-
-
-
-
         }
+        makePopUpUIInvisible()
         setAddFileActive(false)
     }
+
+
+//    fun onClickFinish(title:String){
+//        val parentFile = _parentFile.value
+//
+//        when(_mode.value ){
+//            Mode.New -> {
+//                val newFile = File(
+//                    fileId = 0,
+//                    title = title,
+//                    fileStatus = _creatingFileType.value!!,
+//                    colorStatus = _fileColor.value!!,
+//                    childFlashCardCoversAmount = 0,
+//                    childCardsAmount = 0,
+//                    childFoldersAmount = 0,
+//                    hasChild = false,
+//                    deleted = false,
+//                    hasParent = when(_parentFile.value){
+//                        null -> false
+//                        else -> true
+//                    },
+//                    libOrder = 0,
+//                    parentFileId = _parentFile.value?.fileId
+//                )
+//                insertFile(newFile)
+//                fileInserted = true
+//            }
+//            Mode.Edit -> {
+//                val upDatingFile = File(
+//                    fileId = parentFile!!.fileId,
+//                    title = title,
+//                    fileStatus = parentFile.fileStatus,
+//                    colorStatus = _fileColor.value!!,
+//                    childFlashCardCoversAmount = parentFile.childFlashCardCoversAmount,
+//                    childCardsAmount = parentFile.childCardsAmount,
+//                    childFoldersAmount = parentFile.childFoldersAmount,
+//                    hasChild = parentFile.hasChild,
+//                    deleted = false,
+//                    hasParent = parentFile.hasParent,
+//                    libOrder = parentFile.libOrder,
+//                    parentFileId = parentFile.parentFileId
+//                )
+//                if(parentFile == upDatingFile) return
+//                else upDateFile(upDatingFile)
+//
+//            }
+//
+//
+//
+//
+//
+//        }
+//        setAddFileActive(false)
+//    }
     fun afterNewFileInserted(fileId: Int){
         val parentFile = _parentFile.value
         when(parentFile ){
@@ -388,14 +497,14 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
 //    onclick Events
-    fun onClickEditFile(childFile: File?){
-        if(childFile!=null){
-            setParentFile(childFile)
-        }
-        setMode(Mode.Edit)
-        setAddFileActive(true)
-
-    }
+//    fun onClickEditFile(childFile: File?){
+//        if(childFile!=null){
+//            setParentFile(childFile)
+//        }
+//        setMode(Mode.Edit)
+//        setAddFileActive(true)
+//
+//    }
 
 
     fun onClickImvAddBnv(){

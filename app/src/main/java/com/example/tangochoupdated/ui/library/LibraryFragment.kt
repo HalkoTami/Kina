@@ -27,8 +27,8 @@ import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 
 
-class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
-    private val args: HomeFragmentArgs by navArgs()
+class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
+    private val args: LibraryFragmentArgs by navArgs()
 
     private lateinit var myNavCon:NavController
     private lateinit var recyclerView:RecyclerView
@@ -83,7 +83,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                     addAll(arrayOf(btnCommitDelete, btnDenial, btnCloseConfirm))
                 }
             }
-            onEach { it.setOnClickListener(this@HomeFragment) }
+            onEach { it.setOnClickListener(this@LibraryFragment) }
         }
 //        －－－－LibraryViewModelの読み取り－－－－
 
@@ -225,7 +225,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
                     when(v){
                         this.imvAnki ->{}
                         this.imvEditFile -> {
-                           createFileViewModel.onClickEditFile(null)
+                           createFileViewModel.onClickEditFileTopBar()
                         }
 //                        imvDeleteFile -> libraryViewModel.onDelete()
                     }
@@ -246,7 +246,7 @@ class HomeFragment : Fragment(),DataClickListener,View.OnClickListener {
         libraryViewModel.onClickSelectableItem(item,true)
     }
     override fun onClickEdit(item: LibraryRV) {
-        createFileViewModel.onClickEditFile(item.file)
+        createFileViewModel.onClickEditFileInRV(item.file!!)
         createFileViewModel
 
     }

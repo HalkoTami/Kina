@@ -177,7 +177,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
     }
     fun openNextFile(item: LibraryRV){
-        val action = HomeFragmentDirections.toLib()
+        val action = LibraryFragmentDirections.toLib()
         action.parentItemId = intArrayOf(item.file!!.fileId)
         setAction(action)
     }
@@ -233,7 +233,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //    ClickEvents
     fun onClickInBox(){
         setModeInBox(true)
-        val a = HomeFragmentDirections.toLib()
+        val a = LibraryFragmentDirections.toLib()
         a.parentItemId = null
         setAction(a)
 

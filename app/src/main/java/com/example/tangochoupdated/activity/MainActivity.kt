@@ -4,6 +4,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -30,11 +31,12 @@ import com.example.tangochoupdated.room.enumclass.ColorStatus
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
+import com.example.tangochoupdated.ui.library.LibraryFragment
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var factory: ViewModelFactory
-
+    private lateinit var  navHostFragment : NavHostFragment
     lateinit var mainActivityViewModel: BaseViewModel
     lateinit var createFileViewModel: CreateFileViewModel
     lateinit var createCardViewModel: CreateCardViewModel
@@ -59,7 +61,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         binding = MyActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 //        navController の宣言
-        val navHostFragment =
+        navHostFragment =
             supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
         val navCon = navHostFragment.navController
         binding.apply {
@@ -67,28 +69,29 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             mainTopConstrainLayout.requestFocus()
 //            初期view設定
             bnvBinding.imvEditFile.setImageDrawable(getDrawable(R.drawable.icon_add_middlesize))
-            binding.createFileBinding.apply {
+            binding.apply {
                 popupAddFile.visibility = GONE
                 frameBottomMenu.visibility = GONE
+                makeAllColPaletUnselected(bindingCreateFile.colPaletBinding)
             }
+
 //       　　 viewをclickListenerに追加
             mainActivityClickableItem.apply {
+                add(fragConViewCover)
                 bnvBinding.apply {
                     addAll(arrayOf(
                         layout1,layout2,layout3
                     ))
                 }
-                createFileBinding.apply {
-                    bindingAddMenu.apply {
-                        addAll(arrayOf(imvnewCard,imvnewTangocho,imvnewfolder))
-                    }
-                    bindingCreateFile.apply {
-                        addAll(arrayOf(btnCreateFile,btnClose))
-                        colPaletBinding.apply {
-                            addAll(arrayOf(
-                                imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet
-                            ))
-                        }
+                bindingAddMenu.apply {
+                    addAll(arrayOf(imvnewCard,imvnewTangocho,imvnewfolder))
+                }
+                bindingCreateFile.apply {
+                    addAll(arrayOf(btnCreateFile,btnClose))
+                    colPaletBinding.apply {
+                        addAll(arrayOf(
+                            imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet
+                        ))
                     }
                 }
                 onEach { it.setOnClickListener(this@MainActivity) }
@@ -157,31 +160,32 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 //        ー－－－CreateFileViewModelの読み取りー－－－
 
-        createFileViewModel.apply{
+        binding.apply {
+            createFileViewModel.apply{
 //            初期設定
-            onCreate()
-            binding.createFileBinding.apply {
-//            すべてのvisibility
-                addFileActive.observe(this@MainActivity){ boolean ->
-                    when(boolean){
-                        true ->{
-                            root.visibility = VISIBLE
-                        }
-                        false -> {
-                            root.visibility = GONE
-                        }
-                    }
-                }
+                onCreate()
+//            binding.createFileBinding.apply {
+////            すべてのvisibility
+//                addFileActive.observe(this@MainActivity){ boolean ->
+//                    when(boolean){
+//                        true ->{
+//                            root.visibility = VISIBLE
+//                        }
+//                        false -> {
+//                            root.visibility = GONE
+//                        }
+//                    }
+//                }
 //            ー－－－追加メニューUIー－－－
 
                 bottomMenuClickable.observe(this@MainActivity){
-                    bindingAddMenu.apply {
+                    binding.bindingAddMenu.apply {
                         this.imvnewfolder.visibility = if(!it.createFile)  GONE else VISIBLE
                         this.imvnewTangocho.visibility =if (!it.createFlashCardCover)  GONE else VISIBLE
                         this.imvnewCard.visibility= if(!it.createCard) GONE else VISIBLE
                     }
                 }
-                frameBottomMenu.apply {
+                binding.frameBottomMenu.apply {
                     bottomMenuVisible.observe(this@MainActivity){
                         val btmMenuAnimator = AnimatorSet().apply{
                             val a = ObjectAnimator.ofFloat(frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
@@ -210,43 +214,67 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 //                visibility
                 popupAddFile.apply {
+                    var previousColor:ColorStatus? =null
+                    filePopUpUIData.observe(this@MainActivity){
+                        if(visibility!= it.visibility) visibility = it.visibility
+                        bindingCreateFile.apply {
+                            if(txvFileTitle.text != it.txvLeftTopText) txvFileTitle.text = it.txvLeftTopText
+                            if(txvHint.text!=it.txvHintText) txvHint.text=it.txvHintText
 
-                    editFilePopUpVisible.observe(this@MainActivity){
-                        val appearAnimator = AnimatorSet().apply {
-                            duration= 500
-                            play(ObjectAnimator.ofFloat(popupAddFile, View.ALPHA, 0f,1f ))
-                        }
-                        when (it){
-                            true -> {
-                                visibility = VISIBLE
-                                appearAnimator.start()
+                            if(previousColor!=it.colorStatus){
+                                changeColPalletCol(previousColor,false,colPaletBinding)
+                                changeColPalletCol(it.colorStatus,true,colPaletBinding)
+                                previousColor = it.colorStatus
                             }
-                            false ->{
-                                appearAnimator.doOnEnd {
-                                    visibility = GONE
-                                }
-                                appearAnimator.reverse()
+                            if(imvFileType.tag!= it.drawableId){
+                                imvFileType.setImageDrawable(getDrawable(it.drawableId))
+                                imvFileType.tag = it.drawableId
                             }
+                            edtCreatefile.apply {
+                                if(text.toString()!=it.edtTitleText) text= SpannableStringBuilder(it.edtTitleText)
+                                if(hint!= it.edtTitleHint) hint = it.edtTitleHint
+                            }
+
                         }
+
                     }
+
+//                    editFilePopUpVisible.observe(this@MainActivity){
+//                        val appearAnimator = AnimatorSet().apply {
+//                            duration= 500
+//                            play(ObjectAnimator.ofFloat(popupAddFile, View.ALPHA, 0f,1f ))
+//                        }
+//                        when (it){
+//                            true -> {
+//                                visibility = VISIBLE
+//                                appearAnimator.start()
+//                            }
+//                            false ->{
+//                                appearAnimator.doOnEnd {
+//                                    visibility = GONE
+//                                }
+//                                appearAnimator.reverse()
+//                            }
+//                        }
+//                    }
                 }
 //                UIへデータ反映
                 bindingCreateFile.apply {
-                    txvLeftTop.observe(this@MainActivity){
-                        txvFileTitle.text = it
-                    }
-                    txvHintText.observe(this@MainActivity){
-                        txvHint.text = it
-                    }
-                    var previousColor:ColorStatus?
-                    previousColor = null
-                    fileColor.observe(this@MainActivity){
-                        val a = colPaletBinding
-                        if(previousColor == null) makeAllColPaletUnselected(a)
-                        else changeColPalletCol(previousColor!!,false,a)
-                        changeColPalletCol(it,true,a)
-                        previousColor = it
-                    }
+//                    txvLeftTop.observe(this@MainActivity){
+//                        txvFileTitle.text = it
+//                    }
+//                    txvHintText.observe(this@MainActivity){
+//                        txvHint.text = it
+//                    }
+//                    var previousColor:ColorStatus?
+//                    previousColor = null
+//                    fileColor.observe(this@MainActivity){
+//                        val a = colPaletBinding
+//                        if(previousColor == null) makeAllColPaletUnselected(a)
+//                        else changeColPalletCol(previousColor!!,false,a)
+//                        changeColPalletCol(it,true,a)
+//                        previousColor = it
+//                    }
                     var start = true
                     lastInsetedFileId.observe(this@MainActivity){
                         if(start){
@@ -254,15 +282,17 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                             return@observe
                         } else createFileViewModel.setLastInsertedFileId(it)
                     }
-                    createFileViewModel.txvFileTitleText.observe(this@MainActivity){
-                        edtCreatefile.text = it
-                    }
+//                    createFileViewModel.txvFileTitleText.observe(this@MainActivity){
+//                        edtCreatefile.text = it
+//                    }
                 }
 
 
 //            ーーーーファイル作成・編集UIー－－－
             }
         }
+
+
 //        ー－－－ー－－－
 //        ー－－－LibraryViewModelの読み取りー－－－
         libraryViewModel.apply {
@@ -273,9 +303,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             parentFile.observe(this@MainActivity){
                 createCardViewModel.setParentFlashCardCover(it)
                 createCardViewModel.setParentFlashCardCoverId(it?.fileId)
-                createFileViewModel.pAndGP(it?.fileId).observe(this@MainActivity){
-                    createFileViewModel.setPAndG(it)
-                }
+                createFileViewModel.setParentFile(it)
+//                createFileViewModel.pAndGP(it?.fileId).observe(this@MainActivity){
+//                    createFileViewModel.setPAndG(it)
+//                }
             }
             childCardsFromDB.observe(this@MainActivity){
                 createCardViewModel.setSisterCards(it)
@@ -284,7 +315,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //                createFileViewModel.setPAndG(it)
 //            }
             myFinalList.observe(this@MainActivity){
-                createFileViewModel.setNewPosition(it.size+1)
+                createFileViewModel.setPosition(it.size+1)
             }
         }
 //        ー－－－ー－－－
@@ -314,14 +345,21 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
     override fun onClick(v: View?) {
         binding.apply {
-            bnvBinding.apply {
-                when(v){
-                    layout1 -> mainActivityViewModel.onClickTab1()
-                    layout3 -> mainActivityViewModel.onClickTab3()
-                    layout2 -> createFileViewModel.onClickImvAddBnv()
+            if(frameBottomMenu.visibility == VISIBLE){
+                frameBottomMenu.visibility = GONE
+                fragConViewCover.visibility = GONE
+            } else {
+                bnvBinding.apply {
+                    when(v){
+                        layout1 -> mainActivityViewModel.onClickTab1()
+                        layout3 -> mainActivityViewModel.onClickTab3()
+                        layout2 -> {
+                            frameBottomMenu.visibility = VISIBLE
+                            fragConViewCover.visibility = VISIBLE
+                            createFileViewModel.onClickImvAddBnv()
+                        }
+                    }
                 }
-            }
-            createFileBinding.apply {
                 bindingAddMenu.apply {
                     when(v){
                         imvnewCard -> createCardViewModel.onClickAddNewCardBottomBar()
@@ -339,10 +377,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     colPaletBinding.apply {
                         createFileViewModel.apply {
                             when(v){
-                                imvColYellow -> setFileColor(ColorStatus.YELLOW)
-                                imvColGray -> setFileColor(ColorStatus.GRAY)
-                                imvColBlue -> setFileColor(ColorStatus.BLUE)
-                                imvColRed -> setFileColor(ColorStatus.RED)
+                                imvColYellow -> onClickColorPalet(ColorStatus.YELLOW)
+                                imvColGray -> onClickColorPalet(ColorStatus.GRAY)
+                                imvColBlue -> onClickColorPalet(ColorStatus.BLUE)
+                                imvColRed -> onClickColorPalet(ColorStatus.RED)
                                 imvIconPalet -> lineLayColorPalet.children.iterator().forEachRemaining {
                                     it.visibility = if(it.visibility == VISIBLE) GONE else VISIBLE
                                 }
@@ -352,6 +390,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     }
                 }
             }
+
+
         }
 
     }
@@ -359,7 +399,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //    Toast.makeText(this@MainActivity,"called",Toast.LENGTH_SHORT).show()
 
 
-    fun changeColPalletCol(colorStatus: ColorStatus, selected:Boolean, colorPaletBinding: ColorPaletBinding){
+    fun changeColPalletCol(colorStatus: ColorStatus?, selected:Boolean, colorPaletBinding: ColorPaletBinding){
 
 
         val circle = getDrawable(R.drawable.circle)!!
@@ -385,6 +425,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     col = getColor(R.color.red)
                     imageView = this.imvColRed
                 }
+                else -> return
             }
         }
 
