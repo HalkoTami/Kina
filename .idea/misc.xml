@@ -56,9 +56,11 @@
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_answer.xml" value="0.1935" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_arrow.xml" value="0.3385" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_bookmark.xml" value="0.1935" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_card.xml" value="0.363" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_color_palet.xml" value="0.1935" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_color_palet_col.xml" value="0.1935" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_create_card.xml" value="0.1935" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_create_small.xml" value="0.363" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_data_selector.xml" value="0.1935" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_delete_cover.xml" value="0.1935" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_file.xml" value="0.34" />
@@ -68,10 +70,15 @@
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_move.xml" value="0.3385" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_move_col.xml" value="0.3385" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_move_left.xml" value="0.3385" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_new_card2.xml" value="0.363" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_new_file.xml" value="0.2235" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_new_file2.xml" value="0.363" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_new_flash_card.xml" value="0.363" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_quiz.xml" value="0.3275" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_save.xml" value="0.3055" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_save_and_back.xml" value="0.3385" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_tab_anki.xml" value="0.363" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/icon_tab_library.xml" value="0.363" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/iconanki.xml" value="0.3525" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/iconplanner.xml" value="0.332" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/save_and_back.xml" value="0.3385" />
