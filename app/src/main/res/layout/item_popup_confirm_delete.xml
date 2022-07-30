@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/popup_confirm_delete"
+    android:layout_width="300dp"
+    android:layout_height="200dp"
+    android:background="@drawable/gray_stroke_rectangle"
+    android:backgroundTint="@color/ofwhite"
+    app:layout_constraintTop_toTopOf="@id/main_frameLayout"
+    app:layout_constraintStart_toStartOf="@id/main_frameLayout"
+    app:layout_constraintBottom_toBottomOf="@id/main_frameLayout"
+    app:layout_constraintEnd_toEndOf="@id/main_frameLayout"
+    >
+    <TextView
+        android:id="@+id/txv_confirm_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="中身もすべて消去しますか？"
+        android:textSize="15sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_commit_delete"/>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/txv_confirm_delete"
+        app:layout_constraintStart_toStartOf="@id/txv_confirm_delete"
+        app:layout_constraintEnd_toEndOf="@id/txv_confirm_delete">
+
+
+        <ImageView
+            android:id="@+id/imv_containing_folder"
+            android:layout_width="12dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:src="@drawable/icon_file" />
+        <TextView
+            android:id="@+id/txv_containing_folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:layout_marginEnd="10dp"
+
+            android:text="10個"/>
+
+
+
+        <ImageView
+            android:id="@+id/imv_containing_flashcard"
+            android:layout_width="12dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:src="@drawable/icon_flashcard" />
+
+        <TextView
+            android:id="@+id/txv_containing_flashcard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="3個"
+            android:textSize="11sp" />
+
+
+
+        <ImageView
+            android:id="@+id/imv_containing_card"
+            android:layout_width="15dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:src="@drawable/icon_card" />
+
+        <TextView
+            android:id="@+id/txv_containing_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="500枚"
+            android:textSize="11sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <Button
+        android:id="@+id/btn_commit_delete"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:text="削除する"
+        app:layout_constraintStart_toEndOf="@id/btn_denial"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+        android:id="@+id/btn_denial"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:textSize="12sp"
+        android:text="キャンセル"
+        app:layout_constraintEnd_toStartOf="@id/btn_commit_delete"
+        app:layout_constraintBottom_toBottomOf="@id/btn_commit_delete"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <ImageView
+        android:id="@+id/btn_close_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/icon_close"
+        android:layout_margin="10dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

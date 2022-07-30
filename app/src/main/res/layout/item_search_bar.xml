@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="40dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/searchview">
-    <ImageView
-        android:id="@+id/imv_search"
-        app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="@string/icon_search"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/icon_search"
-        android:padding="5dp"/>
+    android:background="@drawable/gray_stroke_rectangle"
+    android:backgroundTint="@color/lightgray"
+    android:padding="8dp"
+    android:gravity="center_vertical">
 
     <EditText
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imv_search"
+
         android:id="@+id/edt_library_search"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:autofillHints="name"
+        android:text="けんさくするもの～～～"
+        android:textSize="14sp"
         android:background="@android:color/transparent" />
+    <TextView
+        android:id="@+id/txv_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+
+        android:text="キャンセル"/>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

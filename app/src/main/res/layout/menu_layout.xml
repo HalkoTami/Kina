@@ -1,43 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="170dp"
-    android:layout_height="45dp"
+    android:layout_width="wrap_content"
+    android:layout_height="35dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="false"
-    android:background="@drawable/gray_stroke_corner_10"
-    android:layout_gravity="center_vertical">
+    android:background="@drawable/gray_stroke_rectangle"
+    android:layout_gravity="center_vertical"
+    android:padding="5dp">
 
     <ImageView
 
-        android:id="@+id/imv_anki"
-        android:layout_width="wrap_content"
+        android:id="@+id/imv_move_to"
+        android:padding="5dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="match_parent"
-        android:src="@drawable/icon_anki_small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imv_edit_file"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/icon_move_to_folder"
+        />
 
     <ImageView
         android:id="@+id/imv_edit_file"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="match_parent"
-        android:src="@drawable/icon_edit_cover"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imv_delete_file"
-        app:layout_constraintStart_toEndOf="@id/imv_anki"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="3dp"
+        android:src="@drawable/icon_edit"
+         />
 
     <ImageView
         android:id="@+id/imv_delete_file"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="match_parent"
-        android:src="@drawable/icon_delete_cover"
+        android:src="@drawable/icon_trash"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imv_edit_file"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="3dp"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

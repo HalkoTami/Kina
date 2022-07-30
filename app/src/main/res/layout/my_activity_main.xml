@@ -27,7 +27,7 @@
 
     <FrameLayout
         android:id="@+id/frame_bottomMenu"
-        android:background="@drawable/rectangle_green_stroke"
+        android:background="@drawable/gray_stroke_rectangle"
         android:elevation="10dp"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
