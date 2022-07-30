@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:padding="5dp"
 
     android:layout_gravity="center_vertical">
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -14,7 +13,8 @@
 
 
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="70dp"
+        android:padding="10dp">
         <ImageView
             android:layout_margin="10dp"
             android:id="@+id/imv_go_back"
@@ -52,7 +52,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
-        android:layout_marginTop="3dp"
+        android:layout_margin="5dp"
         android:gravity="center_vertical">
 
         <ImageView

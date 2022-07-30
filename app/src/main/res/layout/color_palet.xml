@@ -1,66 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
+
     >
 
     <ImageView
+        android:layout_margin="5dp"
         android:id="@+id/imv_icon_palet"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/icon_color_palet_col"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/icon_pallet"
         app:layout_constraintHeight_max="35dp"
-
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/line_lay_color_palet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imv_icon_palet">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/imv_col_red"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="7dp"
-            android:src="@drawable/circle"
-            app:layout_constraintHeight_max="35dp"
-            />
+    <ImageView
+        android:id="@+id/imv_col_red"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="3dp"
+        android:layout_marginEnd="7dp"
+        android:background="@drawable/circle"
+        android:elevation="3dp"
+        android:src="@drawable/circle" />
 
-        <ImageView
-            android:id="@+id/imv_col_blue"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="7dp"
-            android:src="@drawable/circle" />
+    <ImageView
+        android:id="@+id/imv_col_blue"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="3dp"
+        android:layout_marginEnd="7dp"
+        android:background="@drawable/circle"
+        android:elevation="3dp"
+        android:src="@drawable/circle" />
 
-        <ImageView
-            android:id="@+id/imv_col_yellow"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="7dp"
-            android:src="@drawable/circle" />
+    <ImageView
+        android:id="@+id/imv_col_yellow"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="3dp"
+        android:layout_marginEnd="7dp"
+        android:background="@drawable/circle"
+        android:elevation="3dp"
+        android:src="@drawable/circle" />
 
-        <ImageView
-            android:id="@+id/imv_col_gray"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+    <ImageView
+        android:id="@+id/imv_col_gray"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
 
-            android:src="@drawable/circle"
-            />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
+        android:layout_margin="3dp"
+        android:background="@drawable/circle"
+        android:elevation="3dp"
+        android:src="@drawable/circle" />
 
 
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
