@@ -41,7 +41,7 @@
         <ImageView
             android:layout_width="10dp"
             android:layout_height="10dp"
-            android:src="@drawable/icon_poligon"/>
+            android:src="@drawable/icon_polygon"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
     <ImageView

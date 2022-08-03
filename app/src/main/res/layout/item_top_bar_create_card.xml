@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="15dp"
         android:layout_height="match_parent"
-        android:src="@drawable/icon_poligon"
+        android:src="@drawable/icon_polygon"
         android:rotation="180"/>
     <ImageView
         android:id="@+id/imv_save_and_back"

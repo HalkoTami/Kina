@@ -105,7 +105,7 @@
         android:background="@drawable/gray_stroke_rectangle"
         android:elevation="10dp">
         <include android:id="@+id/confirm_delete_popUp"
-            layout="@layout/item_popup_confirm_delete"/>
+            layout="@layout/item_popup_anki_setting"/>
     </FrameLayout>
 
 

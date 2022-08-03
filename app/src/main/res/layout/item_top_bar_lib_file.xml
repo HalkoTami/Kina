@@ -74,7 +74,7 @@
             android:layout_width="12dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:src="@drawable/icon_poligon" />
+            android:src="@drawable/icon_polygon" />
 
         <ImageView
             android:id="@+id/imv_parent_folder"
@@ -94,7 +94,7 @@
             android:layout_width="12dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:src="@drawable/icon_poligon" />
+            android:src="@drawable/icon_polygon" />
 
         <ImageView
             android:id="@+id/imv_flashcard_cover"
@@ -114,7 +114,7 @@
             android:layout_width="12dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:src="@drawable/icon_poligon" />
+            android:src="@drawable/icon_polygon" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

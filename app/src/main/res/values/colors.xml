@@ -22,6 +22,7 @@
     <color name="rvStrokeBlue">#D0E1FF</color>
     <color name="rvStrokeYellow">#FFF4CA</color>
     <color name="most_dark_gray" >#616161</color>
+    <color name="most_dark_green">#283731</color>
 
 
 </resources>

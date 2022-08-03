@@ -38,4 +38,10 @@
 
     </style>
 
+    <style name="EnumTextviewStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">3dp</item>
+
+
+    </style>
 </resources>
