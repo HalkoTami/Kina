@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+    <ImageView
+        android:layout_margin="10dp"
+        android:id="@+id/checkbox_anki_rv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_checkbox_checkable"
+        app:layout_constraintEnd_toStartOf="@id/anki_rv_binding_frame"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/anki_rv_binding_frame"
+        app:layout_constraintBottom_toBottomOf="@id/anki_rv_binding_frame"/>
+    <FrameLayout
+        app:layout_constraintStart_toEndOf="@id/checkbox_anki_rv"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/anki_rv_binding_frame"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include layout="@layout/item_cover_file"/>
+    </FrameLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linLay_children_data"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="@id/anki_rv_binding_frame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/anki_rv_binding_frame"
+        app:layout_constraintBottom_toTopOf="@id/imv_remembered_progress">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_file"
+            android:padding="3dp"/>
+        <TextView
+            android:layout_marginStart="5dp"
+            android:textSize="13sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3個"/>
+        <ImageView
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_flashcard"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="３個"/>
+        <ImageView
+            android:padding="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_card"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="200枚"/>
+        <TextView
+            android:layout_gravity="end"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:text="暗記済み"/>
+
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_gravity=""
+            android:id="@+id/txv_fraction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="22/30"
+            app:layout_constraintTop_toBottomOf="@id/anki_rv_binding_frame"
+            app:layout_constraintStart_toEndOf="@id/linLay_children_data"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <ImageView
+        android:id="@+id/imv_remembered_progress"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        android:src="@drawable/custom_progressbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txv_percentage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linLay_children_data" />
+    <TextView
+        android:id="@+id/txv_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="70%"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="@id/imv_remembered_progress"
+        app:layout_constraintStart_toEndOf="@id/imv_remembered_progress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/imv_remembered_progress"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
