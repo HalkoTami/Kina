@@ -20,43 +20,158 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-    </FrameLayout>
-
-
-
-    <FrameLayout
-        android:id="@+id/lay_search_view"
-        android:layout_margin="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        app:layout_constraintTop_toBottomOf="@id/topframelayout"
-        app:layout_constraintBottom_toTopOf="@id/main_frameLayout"
-        android:visibility="gone">
-
         <include
-            android:id="@+id/binding_search"
-            layout="@layout/item_search_bar" />
-
-
+            layout="@layout/item_top_bar_anki_home"/>
     </FrameLayout>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/conLay_anki_Box"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        app:layout_constraintTop_toBottomOf=""/>
-    <FrameLayout
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/topframelayout"
+        android:padding="10dp">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_heart"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <ImageView
+            android:id="@+id/imv_anki_box"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/barrier_box_right"
+            app:layout_constraintBottom_toTopOf="@id/txv_anki_box"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icon_inbox"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/barrier_box_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/txv_anki_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="暗記ボックス"/>
+        <androidx.constraintlayout.widget.Barrier
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/barrier_box_right"
+            app:constraint_referenced_ids="imv_anki_box,txv_anki_box"
+            app:barrierDirection="end"/>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linLay_inside_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/barrier_box_right"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imv_icon_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:src="@drawable/icon_card"
+                app:layout_constraintStart_toEndOf="@id/barrier_box_right"
+                app:layout_constraintTop_toTopOf="@id/imv_anki_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textSize="15sp"
+                android:text="200枚"
+                app:layout_constraintBottom_toBottomOf="@id/imv_icon_card"
+                app:layout_constraintStart_toEndOf="@id/imv_icon_card"
+                app:layout_constraintTop_toTopOf="@id/imv_icon_card" />
+
+            <ImageView
+                android:layout_marginStart="20dp"
+                android:id="@+id/imv_icon_remembered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_tab_anki" />
+
+            <TextView
+                android:layout_marginStart="10dp"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20枚暗記済み" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <FrameLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/barrier_box_right"
+            app:layout_constraintTop_toBottomOf="@+id/linLay_inside_data"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <include
+                layout="@layout/item_anki_data_graph"/>
+        </FrameLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_frameLayout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lay_search_view"
+        app:layout_constraintTop_toBottomOf="@id/conLay_anki_Box"
         android:layout_width="match_parent"
         android:layout_height="0dp">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linLay_tabChange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            app:layout_constraintVertical_weight="1"
+            app:layout_constraintBottom_toTopOf="@id/scrollview"
+            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:layout_marginEnd="20dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:text="すべての単語帳"
+                android:gravity="center"
+                android:background="@drawable/tab_bottom_rextangle"/>
+            <TextView
+                android:gravity="center"
+                android:layout_marginEnd="20dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="ライブラリ"/>
+            <TextView
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="お気に入り"/>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linLay_tabChange">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -73,7 +188,7 @@
         </androidx.core.widget.NestedScrollView>
 
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
         android:id="@+id/imv_search_loupe"
         android:layout_width="wrap_content"
@@ -102,7 +217,7 @@
         android:background="@drawable/gray_stroke_rectangle"
         android:elevation="10dp">
         <include android:id="@+id/confirm_delete_popUp"
-            layout="@layout/item_popup_anki_setting"/>
+            layout="@layout/item_popup_anki_setting_base"/>
     </FrameLayout>
 
 

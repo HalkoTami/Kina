@@ -10,11 +10,12 @@
           <corners android:radius="50dp"/>
         </shape>
       </item>
-      <item android:drawable="@drawable/icon_arrow"
-          android:top="12dp"
-          android:bottom="11dp"
-          android:left="14dp"
-          android:right="9dp"/>
+      <item android:left="16dp"
+          android:right="16dp"
+          android:bottom="26dp"
+          android:top="26dp"
+          android:drawable="@drawable/icon_back"
+          />
 
 
     </layer-list>

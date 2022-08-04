@@ -22,6 +22,7 @@
         app:layout_constraintTop_toTopOf="@id/imv_close_setting"
         app:layout_constraintBottom_toBottomOf="@id/imv_close_setting"
         android:text="暗記モードの設定"
+        android:layout_marginStart="10dp"
         android:textSize="11sp"
         app:layout_constraintStart_toEndOf="@id/imv_icon_setting"/>
 
@@ -37,7 +38,8 @@
         android:id="@+id/imv_icon_setting"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/icon_eye_opened"
+        android:src="@drawable/icon_setting"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/imv_close_setting"
         app:layout_constraintBottom_toBottomOf="@id/imv_close_setting"/>
@@ -81,7 +83,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/anki_setting_barrier_top"
         app:layout_constraintEnd_toEndOf="parent">
-        <include layout="@layout/anki_setting_content"/>
+        <include layout="@layout/item_popup_anki_setting_scrv_content"/>
 
     </FrameLayout>
 

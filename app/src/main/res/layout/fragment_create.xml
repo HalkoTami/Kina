@@ -18,7 +18,7 @@
         >
         <include
             android:id="@+id/binding_create_file"
-            layout="@layout/add_popup"
+            layout="@layout/item_popup_edit_file"
             android:visibility="visible"/>
     </FrameLayout>
 
