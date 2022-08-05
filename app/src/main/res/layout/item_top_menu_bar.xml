@@ -68,7 +68,7 @@
         <include
             android:visibility="gone"
             android:id="@+id/menu_binding"
-            layout="@layout/menu_layout" />
+            layout="@layout/lib_item_top_bar_menu" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,7 +30,7 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
             if(distanceX<0){
                 onScrollRight()
             } else{
-                onScrollLeft()
+                onScrollLeft(distanceX)
             }
             return false
         }
@@ -88,7 +88,7 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
     open fun onScrollRight(){
 
     }
-    open fun onScrollLeft(){
+    open fun onScrollLeft(distanceX: Float){
 
     }
     open fun onSingleTap(){

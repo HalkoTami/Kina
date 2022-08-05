@@ -8,13 +8,13 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.ui.mainactivity.BaseViewModel
-import com.example.tangochoupdated.databinding.FragmentAnkiHomeBinding
 
 
 class AnkiFragment  : Fragment() {
 
-    private var _binding: FragmentAnkiHomeBinding? = null
+    private var _binding: AnkiHomeFragBaseBinding? = null
     private val sharedViewModel: BaseViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
@@ -29,10 +29,10 @@ class AnkiFragment  : Fragment() {
         val ankiViewModel =
             ViewModelProvider(this)[AnkiViewModel::class.java]
 
-        _binding = FragmentAnkiHomeBinding.inflate(inflater, container, false)
+        _binding =  AnkiHomeFragBaseBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
+        val textView: TextView = binding.txvAnkiBox
         ankiViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }

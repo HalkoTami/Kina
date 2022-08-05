@@ -4,11 +4,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.R
-import com.example.tangochoupdated.room.MyRoomRepository
-import com.example.tangochoupdated.room.dataclass.File
-import com.example.tangochoupdated.room.enumclass.Tab
+import com.example.tangochoupdated.db.MyRoomRepository
+import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.enumclass.Tab
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
-import com.example.tangochoupdated.ui.library.LibraryFragment
 import com.example.tangochoupdated.ui.library.LibraryFragmentDirections
 import kotlinx.coroutines.*
 
@@ -123,31 +122,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     private val _activeTab = MutableLiveData<Tab>()
     val activeTab:LiveData<Tab> = _activeTab
     fun setActiveTab (tab:Tab){
-
-        val previousTab = _activeTab.value
-        if(tab == previousTab) return else{
-            _activeTab.apply {
-                value = tab
-            }
-            when(previousTab){
-                Tab.TabLibrary -> deactivateBnvLayout1View()
-                Tab.TabAnki -> deactivateBnvLayout3View()
-            }
-
-            when(tab){
-                Tab.TabLibrary ->{
-                    activateBnvLayout1View()
-                    setBnvVisibility(true)
-                }
-                Tab.TabAnki -> {
-                    activateBnvLayout3View()
-                    setBnvVisibility(true)
-                }
-                Tab.CreateCard -> {
-                    setBnvVisibility(false)
-                }
-            }
-        }
+        _activeTab.value = tab
 
 
 

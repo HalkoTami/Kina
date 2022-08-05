@@ -2,15 +2,15 @@ package com.example.tangochoupdated.ui.create.card
 
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
-import com.example.tangochoupdated.room.MyRoomRepository
-import com.example.tangochoupdated.room.dataclass.Card
-import com.example.tangochoupdated.room.dataclass.CardAndTags
-import com.example.tangochoupdated.room.dataclass.File
-import com.example.tangochoupdated.room.dataclass.StringData
-import com.example.tangochoupdated.room.enumclass.CardStatus
-import com.example.tangochoupdated.room.enumclass.ColorStatus
-import com.example.tangochoupdated.room.enumclass.FileStatus
-import com.example.tangochoupdated.room.rvclasses.LibraryRV
+import com.example.tangochoupdated.db.MyRoomRepository
+import com.example.tangochoupdated.db.dataclass.Card
+import com.example.tangochoupdated.db.dataclass.CardAndTags
+import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.dataclass.StringData
+import com.example.tangochoupdated.db.enumclass.CardStatus
+import com.example.tangochoupdated.db.enumclass.ColorStatus
+import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.Mode
 import com.example.tangochoupdated.ui.library.LibraryFragmentDirections
 import kotlinx.coroutines.launch

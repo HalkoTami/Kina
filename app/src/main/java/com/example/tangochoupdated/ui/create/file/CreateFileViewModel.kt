@@ -1,21 +1,16 @@
 package com.example.tangochoupdated.ui.create.file
 
-import android.app.UiAutomation
 import android.text.Editable
-import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.lifecycle.*
 import com.example.tangochoupdated.R
-import com.example.tangochoupdated.room.MyRoomRepository
-import com.example.tangochoupdated.room.dataclass.File
-import com.example.tangochoupdated.room.dataclass.FileXRef
-import com.example.tangochoupdated.room.enumclass.ColorStatus
-import com.example.tangochoupdated.room.enumclass.FileStatus
+import com.example.tangochoupdated.db.MyRoomRepository
+import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.dataclass.FileXRef
+import com.example.tangochoupdated.db.enumclass.ColorStatus
+import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.create.Mode
-import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

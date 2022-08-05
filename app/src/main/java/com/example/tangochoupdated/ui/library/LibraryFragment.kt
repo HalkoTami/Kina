@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.library
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -8,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -18,27 +18,28 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
-import com.example.tangochoupdated.databinding.FragmentLibraryHomeBinding
-import com.example.tangochoupdated.databinding.ItemCoverCardBaseBinding
-import com.example.tangochoupdated.room.enumclass.LibRVState
-import com.example.tangochoupdated.room.rvclasses.LibRVViewType
-import com.example.tangochoupdated.room.rvclasses.LibraryRV
+import com.example.tangochoupdated.databinding.LibraryFragBinding
+import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
+import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.db.enumclass.LibRVState
+import com.example.tangochoupdated.db.rvclasses.LibRVViewType
+import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 
 
-class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
+class LibraryFragment : Fragment(),View.OnClickListener {
     private val args: LibraryFragmentArgs by navArgs()
 
     private lateinit var myNavCon:NavController
     private lateinit var recyclerView:RecyclerView
     private lateinit var adapter: LibraryListAdapter
-    private val  homeFragClickListenerItem = mutableListOf<View>()
+    private val  LibFragClickListenerItem = mutableListOf<View>()
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
 
-    private var _binding: FragmentLibraryHomeBinding? = null
+    private var _binding: LibraryFragBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -47,44 +48,22 @@ class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
 //        FragmentのviewBinding定義
-        _binding = FragmentLibraryHomeBinding.inflate(inflater, container, false)
+        _binding = LibraryFragBinding.inflate(inflater, container, false)
 //       NavControllerの定義
         myNavCon = requireActivity().findNavController(
             requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id
         )
+//        viewの初期設定
+        resetView(binding)
 //        recyclerViewの定義
         recyclerView = binding.vocabCardRV
-        adapter = LibraryListAdapter(this, requireActivity())
+        adapter = LibraryListAdapter(createFileViewModel,createCardViewModel,libraryViewModel, requireActivity())
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.isNestedScrollingEnabled = false
+        recyclerView.isNestedScrollingEnabled = true
 
 //        clickListenerを追加
-        homeFragClickListenerItem.apply {
-            binding.apply {
-                topMenuBarFrame.imvSwitchMenu.setPadding(30)
-                topMenuBarFrame.apply {
-                    layEnd.visibility = View.GONE
-                    addAll(
-                        arrayOf(
-                            imvFileStatusOrClose, imvSwitchMenu
-                        )
-                    )
-                    menuBinding.apply {
-                        root.visibility = View.VISIBLE
-                        addAll(
-                            arrayOf(
-                                imvDeleteFile, imvEditFile, imvAnki
-                            )
-                        )
-                    }
-                }
-                popupConfirmDelete.apply {
-                    addAll(arrayOf(btnCommitDelete, btnDenial, btnCloseConfirm))
-                }
-            }
-            onEach { it.setOnClickListener(this@LibraryFragment) }
-        }
+        addToClickableItem(binding)
 //        －－－－LibraryViewModelの読み取り－－－－
 
         libraryViewModel.apply {
@@ -142,25 +121,37 @@ class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
 
             binding.apply {
 //                トップバー
-                topMenuBarFrame.apply {
-                    topBarUI.observe(viewLifecycleOwner) {
-                        imvFileStatusOrClose.apply {
-                            if (tag != it.topBarLeftIMVDrawableId) {
-                                setImageDrawable(requireActivity().getDrawable(it.topBarLeftIMVDrawableId))
-                                tag = it.topBarLeftIMVDrawableId
-                            }
+                if(myId == null) topBarHomeBinding.root.visibility = View.VISIBLE
+                else topBarFileBinding.root.visibility = View.VISIBLE
+                topBarMode.observe(viewLifecycleOwner) {
+                    resetView(binding)
+                    when(it){
+                        LibraryTopBarMode.Home -> topBarHomeBinding.root.visibility = View.VISIBLE
+                        LibraryTopBarMode.Multiselect -> topBarMultiselectBinding.root.visibility = View.VISIBLE
+                        LibraryTopBarMode.File -> {
+                            topframelayout.elevation = 0f
+                            topBarFileBinding.root.visibility = View.VISIBLE
                         }
-                        imvSwitchMenu.apply {
-                            if (tag != it.topBarRightDrawableId) {
-                                setImageDrawable(requireActivity().getDrawable(it.topBarRightDrawableId))
-                                tag = it.topBarRightDrawableId
-                            }
-                        }
-                        if (txvTitle.text != it.topBarText) {
-                            txvTitle.text = it.topBarText
-                        }
+                        else -> return@observe
                     }
                 }
+                parentFile.observe(viewLifecycleOwner){
+                    topBarFileBinding.apply {
+                        txvFileTitle.text = it?.title
+                        val fileIconDraw:Drawable? =
+                        when(it?.fileStatus){
+                            FileStatus.FOLDER -> requireActivity().getDrawable(R.drawable.icon_file)
+                            FileStatus.TANGO_CHO_COVER -> requireActivity().getDrawable(R.drawable.icon_flashcard)
+                            else -> return@observe
+                        }
+                        imvFileType.setImageDrawable(fileIconDraw)
+                    }
+                }
+                selectedItems.observe(viewLifecycleOwner){
+                    topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+                }
+
+
 
 //                空だった時
                 emptyBinding.apply {
@@ -169,17 +160,18 @@ class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
                     }
                 }
 //                削除確認のポップアップ
-                popupConfirmDelete.apply {
-                    confirmPopUp.observe(viewLifecycleOwner) {
-                        if (it.visible) visibility = View.VISIBLE
-                        else if (it.visible.not()) visibility = View.GONE
-                        txvConfirmDelete.text = it.txvConfirmText
-                        btnDenial.text = it.btnDenialText
-                        btnDenial.tag = it.confirmMode
-                        btnCommitDelete.text = it.btnCommitConfirmText
-                        btnCommitDelete.tag = it.confirmMode
+                confirmPopUp.observe(viewLifecycleOwner) {
+                    binding.apply {
+                        if (it.visible) frameLayConfirmDelete.visibility = View.VISIBLE
+                        else if (it.visible.not()) frameLayConfirmDelete.visibility = View.GONE
+                        confirmDeletePopUp.apply {
+                            txvConfirmDelete.text = it.txvConfirmText
+                            btnDenial.text = it.btnDenialText
+                            btnDenial.tag = it.confirmMode
+                            btnCommitDelete.text = it.btnCommitConfirmText
+                            btnCommitDelete.tag = it.confirmMode
+                        }
                     }
-
                 }
             }
 
@@ -188,6 +180,11 @@ class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 //        －－－－－－－－
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        resetView(binding)
     }
 
     override fun onAttach(context: Context) {
@@ -206,7 +203,7 @@ class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
         )
     }
     fun makeAllUnClickable(){
-        homeFragClickListenerItem.onEach {
+        LibFragClickListenerItem.onEach {
             it.setOnClickListener(null)
         }
         Toast.makeText(requireActivity(),"called",Toast.LENGTH_SHORT).show()
@@ -216,63 +213,52 @@ class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
 
 
     override fun onClick(v: View?) {
+        fun changeMenuVisibility(){
+            binding.topBarMultiselectBinding.frameLayMultiModeMenu.apply{
+                visibility =  if(this.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            }
+        }
+
         binding.apply {
-            topMenuBarFrame.apply {
-                when(v){
-                    imvFileStatusOrClose -> if(v.tag== R.drawable.icon_close) libraryViewModel.setMultipleSelectMode(false)
-                    imvSwitchMenu -> {
-                        when(v.tag){
-                            R.drawable.icon_dot -> layEnd.visibility =  if(layEnd.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-                            R.drawable.icon_inbox -> libraryViewModel.onClickInBox()
-                        }
-
-                    }
-                }
-
-                menuBinding.apply {
-                    when(v){
-                        imvAnki ->{}
-                        imvEditFile -> {
-                           createFileViewModel.onClickEditFileTopBar()
-                        }
-                        imvDeleteFile -> libraryViewModel.onClickDeleteParentItem()
-                    }
-                }
-                popupConfirmDelete.apply {
-                    when(v){
-                        btnCommitDelete -> libraryViewModel.onClickBtnCommitConfirm(v.tag as LibraryViewModel.ConfirmMode)
-                        btnDenial -> libraryViewModel.onClickBtnDenial(v.tag as LibraryViewModel.ConfirmMode)
-                    }
-                }
+            when(v){
+                topBarMultiselectBinding.imvClose                              ->  libraryViewModel.setMultipleSelectMode(false)
+                topBarMultiselectBinding.imvChangeMenuVisibility               -> changeMenuVisibility()
+                topBarMultiselectBinding.multiSelectMenuBinding.imvDeleteFile  -> libraryViewModel.onClickDeleteParentItem()
+                topBarHomeBinding.frameLayInBox                                -> libraryViewModel.onClickInBox()
+                confirmDeletePopUp.btnCommitDelete                             -> libraryViewModel.onClickBtnCommitConfirm(v.tag as LibraryViewModel.ConfirmMode)
+                confirmDeletePopUp.btnDenial                                   -> libraryViewModel.onClickBtnDenial(v.tag as LibraryViewModel.ConfirmMode)
             }
         }
     }
-
-
-    override fun onLongClickMain(item: LibraryRV) {
-        libraryViewModel.setMultipleSelectMode(true)
-        libraryViewModel.onClickSelectableItem(item,true)
-    }
-    override fun onClickEdit(item: LibraryRV) {
-        createFileViewModel.onClickEditFileInRV(item.file!!)
-        createFileViewModel
-
-    }
-    override fun onClickDelete(item: LibraryRV) {
-        libraryViewModel.onClickDeleteRVItem(item)
-    }
-    override fun onClickAddNewCardByPosition(item: LibraryRV) {
-        createCardViewModel.onClickRVAddNewCard(item)
-    }
-    override fun onClickSelectableItem(item: LibraryRV, selected: Boolean) {
-        libraryViewModel.onClickSelectableItem(item,selected)
-    }
-    override fun openNext(item: LibraryRV) {
-        when(item.type){
-            LibRVViewType.Folder,LibRVViewType.FlashCardCover -> libraryViewModel.openNextFile(item)
-            LibRVViewType.StringCard -> createCardViewModel.onClickEditCard(item)
+    fun resetView(binding: LibraryFragBinding){
+        val makeGone = mutableListOf<View>()
+        binding.apply {
+            makeGone.addAll(arrayOf(
+                topBarHomeBinding.root,
+                topBarMultiselectBinding.root,
+                topBarFileBinding.root,
+                frameLayConfirmDelete
+            ))
         }
+        makeGone.onEach { it.visibility = View.GONE }
     }
+    private fun addToClickableItem(binding: LibraryFragBinding){
+        binding.apply {
+            LibFragClickListenerItem.addAll(
+                arrayOf(
+                    topBarMultiselectBinding.imvClose,
+                    topBarMultiselectBinding.imvChangeMenuVisibility,
+                    topBarMultiselectBinding.multiSelectMenuBinding.imvDeleteFile,
+                    topBarHomeBinding.frameLayInBox,
+                    confirmDeletePopUp.btnCommitDelete,
+                    confirmDeletePopUp.btnDenial,
+                    )
+            )
+        }
+       LibFragClickListenerItem.onEach { it.setOnClickListener(this) }
+    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -282,18 +268,20 @@ class LibraryFragment : Fragment(),DataClickListener,View.OnClickListener {
 class LibRVClickListener(val view:View,
                          val context: Context,
                          val item: LibraryRV,
-                         private val clickListener: DataClickListener,
-                         private val rvBinding: ItemCoverCardBaseBinding):MyTouchListener(context){
+                         private val createFileViewModel: CreateFileViewModel,
+                         private val libraryViewModel: LibraryViewModel,
+                         private val createCardViewModel: CreateCardViewModel,
+                         private val rvBinding: LibraryFragRvItemBaseBinding):MyTouchListener(context){
 
 //    click後にtouch event を設定しなおすと親子関係のコンフリクトが防げそう
     override fun onSingleTap() {
         super.onSingleTap()
         rvBinding.apply {
             when(view){
-                baseContainer ->  {
+                baseContainer       ->  {
                     when(view.tag){
                         LibRVState.Selectable -> {
-                            clickListener.onClickSelectableItem(item,btnSelect.isSelected.not())
+                            libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
                             btnSelect.isSelected = btnSelect.isSelected.not()
                         }
                         LibRVState.LeftSwiped -> {
@@ -301,19 +289,25 @@ class LibRVClickListener(val view:View,
                             btnDelete.visibility = View.GONE
                             view.tag = LibRVState.Plane
                         }
-                        LibRVState.Plane -> clickListener.openNext(item)
+                        LibRVState.Plane -> {
+                            when(item.type){
+                                LibRVViewType.Folder,LibRVViewType.FlashCardCover -> libraryViewModel.openNextFile(item)
+                                LibRVViewType.StringCard -> createCardViewModel.onClickEditCard(item)
+                            }
+                        }
                     }
                 }
-                btnDelete -> clickListener.onClickDelete(item)
-                btnEditWhole -> clickListener.onClickEdit(item)
-                btnAddNewCard -> clickListener.onClickAddNewCardByPosition(item)
+                btnDelete       -> libraryViewModel.onClickDeleteRVItem(item)
+                btnEditWhole    -> createFileViewModel.onClickEditFileInRV(item.file!!)
+                btnAddNewCard   -> createCardViewModel.onClickRVAddNewCard(item)
             }
         }
     }
     override fun onLongClick() {
         super.onLongClick()
         rvBinding.btnSelect.isSelected = true
-        clickListener.onLongClickMain(item)
+        libraryViewModel.setMultipleSelectMode(true)
+        libraryViewModel.onClickSelectableItem(item,true)
     }
     override fun onSwipeLeft() {
         super.onSwipeLeft()

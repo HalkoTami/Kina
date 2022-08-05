@@ -16,8 +16,8 @@ import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.ui.mainactivity.MainActivity
 import com.example.tangochoupdated.databinding.*
-import com.example.tangochoupdated.room.enumclass.ColorStatus
-import com.example.tangochoupdated.room.enumclass.StringFragFocusedOn
+import com.example.tangochoupdated.db.enumclass.ColorStatus
+import com.example.tangochoupdated.db.enumclass.StringFragFocusedOn
 import com.example.tangochoupdated.ui.create.Mode
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.mainactivity.BaseViewModel
@@ -25,7 +25,7 @@ import com.example.tangochoupdated.ui.mainactivity.BaseViewModel
 
 class CreateCardFragment: Fragment(),View.OnClickListener {
 
-    private var _binding: CreateCardBaseBinding? = null
+    private var _binding: CreateCardFragBaseBinding? = null
     private val binding get() = _binding!!
 
     private val args :CreateCardFragmentArgs by navArgs()
@@ -49,7 +49,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = CreateCardBaseBinding.inflate(inflater, container, false)
+        _binding = CreateCardFragBaseBinding.inflate(inflater, container, false)
         mainNavCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
 
         val vlo = viewLifecycleOwner
@@ -64,7 +64,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){ cardAndTags->
                     if(cardAndTags!= null){
                         setParentCard(cardAndTags)
-                        txvTitle.text = cardAndTags.card.id.toString()
+                        createCardTopBarBinding.txvEditingFileTitle.text = cardAndTags.card.id.toString()
                     }
                     stringCardViewModel.setStringData(cardAndTags?.card?.stringData)
                 }
@@ -77,7 +77,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 
 
 //                Top Frame
-                layCreateCardTopBar.apply {
+                createCardTopBarBinding.apply {
 
 //                現在地 text view
                     txvPositionText.observe(viewLifecycleOwner){
@@ -105,21 +105,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 //            Color Pallet attribute
                createCardColPaletBinding.apply {
                    val palletBinding = this
-//                    pallet visibility
-                   createCardViewModel.colPalletVisibility.observe(viewLifecycleOwner){ visible->
-                       lineLayColorPalet.children.iterator().forEachRemaining {
-                           when(visible){
-                               true -> {
-                                   it.visibility = View.VISIBLE
-                               }
-                               false ->  {
-                                   it.visibility = View.GONE
-                               }
-                           }
-                       }
 
-
-                   }
 
 //                   Color Pallet attribute 2. change  each color
                    var previousColor: ColorStatus?
@@ -185,36 +171,25 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        createCardViewModel.apply {
-            binding.apply {
-                createCardColPaletBinding.apply {
-                        when(v){
-                            imvIconPalet -> {
-
-                                onClickColPaletIcon()
-                            }
-                            imvColBlue -> onClickEachColor(ColorStatus.BLUE)
-                            imvColRed -> onClickEachColor(ColorStatus.RED)
-                            imvColGray -> onClickEachColor(ColorStatus.GRAY)
-                            imvColYellow -> onClickEachColor(ColorStatus.YELLOW)
-                        }
+        binding.apply {
+            when(v){
+                createCardTopBarBinding.imvSaveAndBack  -> {
+                    createCardViewModel.onClickBack()
+                    mainNavCon.popBackStack()
                 }
-                when(v){
-                    imvSaveAndBack -> {
-//                        createCardViewModel.onClickSaveAndBack()
-                        stringCardViewModel.setFocusedOn(StringFragFocusedOn.FrontContent)
-
-                    }
-                    imvMode -> stringCardViewModel.setFocusedOn(StringFragFocusedOn.BackContent)
-                    //  移動操作
-                    btnInsertPrevious -> onClickBtnInsertPrevious()
-                    btnInsertNext -> onClickBtnInsertNext()
-                    btnNext ->  onClickBtnNext()
-                    btnPrevious -> onClickBtnPrevious()
-
+                //  移動操作
+                btnInsertPrevious                       -> createCardViewModel. onClickBtnInsertPrevious()
+                btnInsertNext                           -> createCardViewModel. onClickBtnInsertNext()
+                btnNext                                 ->  createCardViewModel. onClickBtnNext()
+                btnPrevious                             -> createCardViewModel. onClickBtnPrevious()
+                createCardColPaletBinding.imvIconPalet  -> {
+                    MainActivity().animateVisibility(createCardColPaletBinding.linLayColPallet,
+                        if(v.tag == View.VISIBLE) View.GONE else View.VISIBLE)
                 }
-
-
+                createCardColPaletBinding.imvColBlue    ->    createCardViewModel.onClickEachColor(ColorStatus.BLUE)
+                createCardColPaletBinding.imvColRed     ->     createCardViewModel.onClickEachColor(ColorStatus.RED)
+                createCardColPaletBinding.imvColGray    ->    createCardViewModel.onClickEachColor(ColorStatus.GRAY)
+                createCardColPaletBinding.imvColYellow  ->createCardViewModel. onClickEachColor(ColorStatus.YELLOW)
 
             }
         }

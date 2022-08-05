@@ -4,3 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
+enum class LibraryTopBarMode{
+    Home,File,Multiselect,InBox
+}

@@ -4,14 +4,14 @@ import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.R
-import com.example.tangochoupdated.room.MyRoomRepository
-import com.example.tangochoupdated.room.dataclass.CardAndTags
-import com.example.tangochoupdated.room.dataclass.File
+import com.example.tangochoupdated.db.MyRoomRepository
+import com.example.tangochoupdated.db.dataclass.CardAndTags
+import com.example.tangochoupdated.db.dataclass.File
 //import com.example.tangochoupdated.room.dataclass.FileWithChild
-import com.example.tangochoupdated.room.enumclass.CardStatus
-import com.example.tangochoupdated.room.enumclass.FileStatus
-import com.example.tangochoupdated.room.rvclasses.LibRVViewType
-import com.example.tangochoupdated.room.rvclasses.LibraryRV
+import com.example.tangochoupdated.db.enumclass.CardStatus
+import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.db.rvclasses.LibRVViewType
+import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
@@ -37,8 +37,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun  parentFileFromDB(int: Int?):LiveData<File?> = repository.getFileByFileId(int).asLiveData()
     fun setParentFileFromDB (file: File?){
         _parentFile.value = file
-        if(_modeInBox.value == true) makeTopBarInBox() else
-        makeTopBarUIUnselected(file)
+        makeTopBarUIUnselected()
     }
     private val _parentFile = MutableLiveData<File?>()
     val parentFile:LiveData<File?> = _parentFile
@@ -155,9 +154,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private fun setSelectedItem(list:MutableList<LibraryRV>){
         _selectedItems.value = list
         if(list.isEmpty().not()){
-            makeTopBarSelected(list.size)
+            setTopBarMode(LibraryTopBarMode.Multiselect)
         }
     }
+    val selectedItems:LiveData<MutableList<LibraryRV>> = _selectedItems
     private fun addToSelectedItem(item: LibraryRV){
         val a = _selectedItems.value!!
         a.add(item)
@@ -187,47 +187,18 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 //    －－－－TopBar－－－－
 
-    class LibraryTopBar(
-        var topBarLeftIMVDrawableId:Int,
-        var topBarRightDrawableId:Int,
-        var topBarText:String
-    )
-    private val _topBarUI = MutableLiveData<LibraryTopBar>()
-    private fun setTopBarUI (libraryTopBar: LibraryTopBar){
-        _topBarUI.value = libraryTopBar
+
+    private val _topBarMode = MutableLiveData<LibraryTopBarMode>()
+    private fun setTopBarMode (topBarMode: LibraryTopBarMode){
+        _topBarMode.value = topBarMode
     }
-    val topBarUI :LiveData<LibraryTopBar> = _topBarUI
-    private fun makeTopBarUIUnselected(file:File?){
-        val a = LibraryTopBar(
-            topBarLeftIMVDrawableId =
-            if(file== null) R.drawable.icon_eye_opened else {
-                when(file.fileStatus){
-                    FileStatus.FOLDER -> R.drawable.icon_file
-                    FileStatus.TANGO_CHO_COVER -> R.drawable.icon_library_plane
-                    else -> throw IllegalArgumentException()
-                }
-            }
-           ,
-            topBarText =  if(file== null) "Home" else "${file.title}",
-            topBarRightDrawableId = if(file== null) R.drawable.icon_inbox else R.drawable.icon_dot
+    val topBarMode :LiveData<LibraryTopBarMode> = _topBarMode
+    private fun makeTopBarUIUnselected(){
+        setTopBarMode(
+            if(_modeInBox.value==true)LibraryTopBarMode.InBox
+            else if(_parentFile.value!=null)LibraryTopBarMode.File
+            else LibraryTopBarMode.Home
         )
-        setTopBarUI(a)
-    }
-    private fun makeTopBarSelected(selectedItemSize:Int){
-        val a = LibraryTopBar(
-            topBarLeftIMVDrawableId = R.drawable.icon_close,
-            topBarText = "${selectedItemSize}個　選択中",
-            topBarRightDrawableId = R.drawable.icon_dot
-        )
-        setTopBarUI(a)
-    }
-    private fun makeTopBarInBox(){
-        val a = LibraryTopBar(
-            topBarLeftIMVDrawableId = R.drawable.icon_inbox,
-            topBarText = "単語帳に入っていません",
-            topBarRightDrawableId = R.drawable.icon_dot
-        )
-        setTopBarUI(a)
     }
 
 //    ClickEvents
@@ -253,10 +224,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             value = boolean
         }
         when(boolean){
-            true ->makeTopBarSelected(_selectedItems.value?.size ?:0)
+            true ->setTopBarMode(LibraryTopBarMode.Multiselect)
             false -> {
-                if(_modeInBox.value == true) makeTopBarInBox()
-                else makeTopBarUIUnselected(_parentFile.value)
+                makeTopBarUIUnselected()
                 setSelectedItem(mutableListOf())
             }
         }

@@ -7,20 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.tangochoupdated.R
-import com.example.tangochoupdated.databinding.CreateCardStringBinding
-import com.example.tangochoupdated.room.dataclass.StringData
-import com.example.tangochoupdated.room.enumclass.CardStatus
-import com.example.tangochoupdated.room.enumclass.StringFragFocusedOn
+import com.example.tangochoupdated.databinding.CreateCardFragStringFragBinding
+import com.example.tangochoupdated.db.dataclass.StringData
+import com.example.tangochoupdated.db.enumclass.CardStatus
+import com.example.tangochoupdated.db.enumclass.StringFragFocusedOn
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 
 class StringCardFragment : Fragment() {
 
-    private var _binding: CreateCardStringBinding? = null
+    private var _binding: CreateCardFragStringFragBinding? = null
     private val  createCardViewModel: CreateCardViewModel by activityViewModels()
     private val stringCardViewModel :StringCardViewModel by activityViewModels()
 
@@ -38,7 +37,7 @@ class StringCardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = CreateCardStringBinding.inflate(inflater, container, false)
+        _binding = CreateCardFragStringFragBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
 

@@ -3,7 +3,7 @@ package com.example.tangochoupdated.ui
 import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.tangochoupdated.room.MyRoomRepository
+import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.library.LibraryViewModel

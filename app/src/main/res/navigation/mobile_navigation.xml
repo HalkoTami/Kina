@@ -9,7 +9,7 @@
         android:id="@+id/fragmentLibrary"
         android:name="com.example.tangochoupdated.ui.library.LibraryFragment"
         android:label="library"
-        tools:layout="@layout/fragment_library_home" >
+        tools:layout="@layout/library_frag" >
 
 
         <argument
@@ -32,7 +32,7 @@
     <fragment
         android:id="@+id/fragmentCreateCard"
         android:name="com.example.tangochoupdated.ui.create.card.CreateCardFragment"
-        tools:layout="@layout/create_card_base">
+        tools:layout="@layout/create_card_frag_base">
 
         <argument
             android:name="parentFlashCardCoverId"
@@ -54,7 +54,11 @@
 
     <action
         android:id="@+id/to_lib"
-        app:destination="@+id/fragmentLibrary"/>
+        app:destination="@+id/fragmentLibrary"
+        app:enterAnim="@anim/slide_in_right_anim"
+        app:exitAnim="@anim/slide_out_left_anim"
+        app:popEnterAnim="@anim/slide_in_left_anim"
+        app:popExitAnim="@anim/slide_out_right_anim" />
 
     <action
         android:id="@+id/to_lib_home"
@@ -74,7 +78,7 @@
         android:name="com.example.tangochoupdated.ui.anki.AnkiFragment"
         android:label="anki"
 
-        tools:layout="@layout/fragment_anki_home" />
+        tools:layout="@layout/anki_home_frag_base" />
 
 
 
