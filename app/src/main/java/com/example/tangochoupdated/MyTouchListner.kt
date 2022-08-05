@@ -3,6 +3,7 @@ package com.example.tangochoupdated
 import android.content.Context
 import android.view.*
 import java.lang.Math.abs
+import kotlin.math.absoluteValue
 
 open class MyTouchListener(context: Context) : View.OnTouchListener {
 
@@ -30,7 +31,7 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
             if(distanceX<0){
                 onScrollRight()
             } else{
-                onScrollLeft(distanceX)
+                onScrollLeft((e2!!.x-e1!!.x).absoluteValue)
             }
             return false
         }

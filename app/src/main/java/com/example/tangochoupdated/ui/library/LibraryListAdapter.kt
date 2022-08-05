@@ -114,7 +114,7 @@ class LibraryListAdapter(
             binding.scrollViewMain.setOnTouchListener(object:MyTouchListener(context){
                 override fun onScrollLeft(distanceX: Float) {
                     super.onScrollLeft(distanceX)
-                    binding.scrollViewMain.layoutParams.width = 30
+                    fileBinding.txvFileTitle.text = distanceX.toString()
                 }
 
             })
