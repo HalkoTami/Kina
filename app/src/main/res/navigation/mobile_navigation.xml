@@ -49,16 +49,41 @@
 
 
     <action
-        android:id="@+id/to_create_card"
-        app:destination="@+id/fragmentCreateCard"/>
+        android:id="@+id/open_create_card"
+        app:destination="@+id/fragmentCreateCard"
+
+        />
+    <action
+        android:id="@+id/flip_next_create_card"
+        app:destination="@+id/fragmentCreateCard"
+        app:enterAnim="@anim/slide_in_right_anim"
+        app:exitAnim="@anim/slide_out_left_anim"
+        app:popEnterAnim="@anim/slide_in_left_anim"
+        app:popExitAnim="@anim/slide_out_right_anim"
+        />
+    <action
+        android:id="@+id/flip_previous_create_card"
+        app:destination="@+id/fragmentCreateCard"
+        app:enterAnim="@anim/slide_in_left_anim"
+        app:exitAnim="@anim/slide_out_right_anim"
+        app:popEnterAnim="@anim/slide_in_right_anim"
+        app:popExitAnim="@anim/slide_out_left_anim"
+        />
+
 
     <action
-        android:id="@+id/to_lib"
+        android:id="@+id/open_file"
         app:destination="@+id/fragmentLibrary"
         app:enterAnim="@anim/slide_in_right_anim"
         app:exitAnim="@anim/slide_out_left_anim"
         app:popEnterAnim="@anim/slide_in_left_anim"
         app:popExitAnim="@anim/slide_out_right_anim" />
+
+    <action
+        android:id="@+id/open_inbox"
+        app:destination="@+id/fragmentLibrary"
+        app:enterAnim="@anim/slide_in_up_anim"
+        app:popExitAnim="@anim/slide_out_up_anim" />
 
     <action
         android:id="@+id/to_lib_home"

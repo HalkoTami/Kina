@@ -32,6 +32,11 @@
                 android:id="@+id/top_bar_file_binding"
                 layout="@layout/library_frag_top_bar_file"
                 android:visibility="visible"/>
+            <include
+                android:id="@+id/top_bar_inbox_binding"
+                layout="@layout/library_frag_top_bar_inbox"
+                android:visibility="gone"
+                />
 
         </FrameLayout>
 

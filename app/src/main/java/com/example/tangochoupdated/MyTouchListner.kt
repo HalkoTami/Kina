@@ -31,7 +31,8 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
             if(distanceX<0){
                 onScrollRight()
             } else{
-                onScrollLeft((e2!!.x-e1!!.x).absoluteValue)
+                onScrollLeft((e2!!.x-e1!!.x).absoluteValue,e2)
+
             }
             return false
         }
@@ -76,8 +77,12 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         v!!.performClick()
+
         gestureDetector.onTouchEvent(event)
         return true
+    }
+    open fun onScrollLeftActionUp(){
+
     }
 
     open fun onSwipeRight() {}
@@ -89,7 +94,7 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
     open fun onScrollRight(){
 
     }
-    open fun onScrollLeft(distanceX: Float){
+    open fun onScrollLeft(distanceX: Float,motionEvent:MotionEvent?){
 
     }
     open fun onSingleTap(){

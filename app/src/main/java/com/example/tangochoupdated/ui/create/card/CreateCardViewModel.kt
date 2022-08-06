@@ -168,7 +168,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             val a = if(card?.belongingFileId!=null)intArrayOf(card.belongingFileId) else null
             val b = intArrayOf(card!!.id)
             val fromSameFrag = _fromSameFrag.value!!
-            setAction(CreateCardNav(LibraryFragmentDirections.toCreateCard(a,b),fromSameFrag))
+            setAction(CreateCardNav(LibraryFragmentDirections.openCreateCard(a,b),fromSameFrag))
 //            setMode(Mode.Edit)
         }
 
@@ -431,7 +431,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val a = intArrayOf(_parentCard.value!!.card.belongingFileId!!)
         val nextCardId =_sisterCards.value?.get(_position.value!! +1)!!.card.id
         val b = intArrayOf(nextCardId)
-        setAction(CreateCardNav(CreateCardFragmentDirections.toCreateCard(a,b),true,
+        setAction(CreateCardNav(CreateCardFragmentDirections.flipNextCreateCard(a,b),true,
         ) )
     } else return
 
@@ -449,7 +449,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         } else{
             val nextCardId =_sisterCards.value?.get(nowPosition-1)!!.card.id
             val b = intArrayOf(nextCardId)
-            setAction(CreateCardNav(CreateCardFragmentDirections.toCreateCard(a,b),true) )
+            setAction(CreateCardNav(CreateCardFragmentDirections.flipPreviousCreateCard(a,b),true) )
         }
     }
 
@@ -504,7 +504,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val a =if(item.card!!.belongingFileId== null) null else intArrayOf(item.card.belongingFileId!!)
         val b = intArrayOf(item.card.id)
         setFromSameFrag(false)
-        setAction(CreateCardNav( LibraryFragmentDirections.toCreateCard(a,b),false))
+        setAction(CreateCardNav( LibraryFragmentDirections.openCreateCard(a,b),false))
         setMode(Mode.Edit)
 
 

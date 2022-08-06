@@ -115,6 +115,7 @@
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable/tab_bottom_rextangle.xml" value="0.2815" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/activity_main.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/add_popup.xml" value="0.33" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/anki_flip_frag_base.xml" value="0.2261650277896537" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/anki_home_frag_base.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/anki_setting_content.xml" value="0.5" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/color_palet.xml" value="0.75" />
@@ -166,6 +167,7 @@
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_rv_item_file.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_top_bar_file.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_top_bar_home.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_top_bar_inbox.xml" value="0.2261650277896537" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_top_bar_multiselect_mode.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/main_activity.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/main_activity_bottom_navigation_bar.xml" value="0.2975630611372381" />

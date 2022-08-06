@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.*
 import android.view.View.*
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -60,19 +61,21 @@ class LibraryListAdapter(
                     ColorStatus.YELLOW -> R.color.rvStrokeYellow
                 }
             }
-            binding.scrollViewMain.removeAllViews()
+            binding.contentBindingFrame.removeAllViews()
 
 
             when (item.type){
               LibRVViewType.Folder, LibRVViewType.FlashCardCover ->{
                   fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-                  binding.scrollViewMain.addView(fileBinding.root)
+                  binding.contentBindingFrame.addView(fileBinding.root)
+                  binding.contentBindingFrame.layoutParams.height = 200
+                  binding.contentBindingFrame.requestLayout()
                   fileBinding.apply{
 
                       txvFileTitle.text = item.file?.title.toString()
                       imvFileType.setImageDrawable(when(item.type){
-                          LibRVViewType.Folder -> context.getDrawable(R.drawable.icon_file)
-                          LibRVViewType.FlashCardCover -> context.getDrawable(R.drawable.icon_library_plane)
+                          LibRVViewType.Folder -> AppCompatResources.getDrawable(context,R.drawable.icon_file)
+                          LibRVViewType.FlashCardCover -> AppCompatResources.getDrawable(context,R.drawable.icon_library_plane)
                           else -> throw IllegalArgumentException()
                       })
 
@@ -82,7 +85,7 @@ class LibraryListAdapter(
               }
               LibRVViewType.StringCard ->{
                   val stringBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
-                  binding.scrollViewMain.addView(stringBinding.root)
+                  binding.contentBindingFrame.addView(stringBinding.root)
 
                   val stringData = item.card?.stringData
 //                  stringData?.frontTitle
@@ -111,13 +114,6 @@ class LibraryListAdapter(
             binding.btnEditWhole.visibility =  GONE
 
 
-            binding.scrollViewMain.setOnTouchListener(object:MyTouchListener(context){
-                override fun onScrollLeft(distanceX: Float) {
-                    super.onScrollLeft(distanceX)
-                    fileBinding.txvFileTitle.text = distanceX.toString()
-                }
-
-            })
 
 
 //            ボタンのclicklitener

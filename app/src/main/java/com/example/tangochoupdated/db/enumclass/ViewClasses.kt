@@ -15,5 +15,5 @@ enum class StringFragFocusedOn{
     FrontTitle,FrontContent,BackTitle,BackContent,None
 }
 enum class LibRVState{
-    Selectable,LeftSwiped,Plane
+    Selectable,LeftSwiped,Plane,LeftSwiping
 }

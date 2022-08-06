@@ -1,5 +1,6 @@
 package com.example.tangochoupdated.ui.library
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -105,7 +107,7 @@ class LibraryFragment : Fragment(),View.OnClickListener {
 
 //            recyclerView
             multipleSelectMode.observe(viewLifecycleOwner) { selectable ->
-                recyclerView.children.iterator().forEachRemaining {
+                recyclerView.children.iterator().forEach {
                     it.findViewById<ConstraintLayout>(R.id.base_container).tag =
                         if (selectable) LibRVState.Selectable else LibRVState.Plane
                     it.findViewById<ImageView>(R.id.btn_select).visibility =
@@ -131,6 +133,9 @@ class LibraryFragment : Fragment(),View.OnClickListener {
                         LibraryTopBarMode.File -> {
                             topframelayout.elevation = 0f
                             topBarFileBinding.root.visibility = View.VISIBLE
+                        }
+                        LibraryTopBarMode.InBox -> {
+                            topBarInboxBinding.root.visibility = View.VISIBLE
                         }
                         else -> return@observe
                     }
@@ -221,26 +226,34 @@ class LibraryFragment : Fragment(),View.OnClickListener {
 
         binding.apply {
             when(v){
-                topBarMultiselectBinding.imvClose                              ->  libraryViewModel.setMultipleSelectMode(false)
-                topBarMultiselectBinding.imvChangeMenuVisibility               -> changeMenuVisibility()
-                topBarMultiselectBinding.multiSelectMenuBinding.imvDeleteFile  -> libraryViewModel.onClickDeleteParentItem()
-                topBarHomeBinding.frameLayInBox                                -> libraryViewModel.onClickInBox()
-                confirmDeletePopUp.btnCommitDelete                             -> libraryViewModel.onClickBtnCommitConfirm(v.tag as LibraryViewModel.ConfirmMode)
-                confirmDeletePopUp.btnDenial                                   -> libraryViewModel.onClickBtnDenial(v.tag as LibraryViewModel.ConfirmMode)
+                topBarMultiselectBinding.imvClose
+                    ->  libraryViewModel.setMultipleSelectMode(false)
+                topBarMultiselectBinding.imvChangeMenuVisibility
+                    -> changeMenuVisibility()
+                topBarMultiselectBinding.multiSelectMenuBinding.imvDeleteFile
+                    -> libraryViewModel.onClickDeleteParentItem()
+                topBarHomeBinding.frameLayInBox
+                    -> libraryViewModel.onClickInBox()
+                topBarInboxBinding.imvClose
+                    -> myNavCon.popBackStack()
+                confirmDeletePopUp.btnCommitDelete
+                    -> libraryViewModel.onClickBtnCommitConfirm(v.tag as LibraryViewModel.ConfirmMode)
+                confirmDeletePopUp.btnDenial
+                    -> libraryViewModel.onClickBtnDenial(v.tag as LibraryViewModel.ConfirmMode)
+
             }
         }
     }
     fun resetView(binding: LibraryFragBinding){
-        val makeGone = mutableListOf<View>()
         binding.apply {
-            makeGone.addAll(arrayOf(
-                topBarHomeBinding.root,
-                topBarMultiselectBinding.root,
-                topBarFileBinding.root,
-                frameLayConfirmDelete
-            ))
+            arrayOf(topBarInboxBinding.root,
+            topBarFileBinding.root,
+            topBarHomeBinding.root,
+            topBarMultiselectBinding.root).onEach {
+                it.visibility = View.GONE
+            }
         }
-        makeGone.onEach { it.visibility = View.GONE }
+
     }
     private fun addToClickableItem(binding: LibraryFragBinding){
         binding.apply {
@@ -284,11 +297,11 @@ class LibRVClickListener(val view:View,
                             libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
                             btnSelect.isSelected = btnSelect.isSelected.not()
                         }
-                        LibRVState.LeftSwiped -> {
-                            btnEditWhole.visibility = View.GONE
-                            btnDelete.visibility = View.GONE
-                            view.tag = LibRVState.Plane
-                        }
+//                        LibRVState.LeftSwiped -> {
+//                            btnEditWhole.visibility = View.GONE
+//                            btnDelete.visibility = View.GONE
+//                            view.tag = LibRVState.Plane
+//                        }
                         LibRVState.Plane -> {
                             when(item.type){
                                 LibRVViewType.Folder,LibRVViewType.FlashCardCover -> libraryViewModel.openNextFile(item)
@@ -303,21 +316,60 @@ class LibRVClickListener(val view:View,
             }
         }
     }
+
+    override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
+        super.onScrollLeft(distanceX, motionEvent)
+        rvBinding.apply {
+            if(btnDelete.visibility==View.GONE){
+                btnDelete.layoutParams.width = 1
+                btnEditWhole.layoutParams.width = 1
+                btnEditWhole.requestLayout()
+                btnDelete.requestLayout()
+                btnDelete.visibility= View.VISIBLE
+                btnEditWhole.visibility = View.VISIBLE
+            }else if(btnDelete.visibility==View.VISIBLE) {
+                if(rvBinding.root.tag!=LibRVState.LeftSwiping){
+                    rvBinding.root.tag = LibRVState.LeftSwiping
+                }
+
+                btnDelete.layoutParams.width = distanceX.toInt()/5
+                btnDelete.requestLayout()
+
+            }
+
+        }
+    }
     override fun onLongClick() {
         super.onLongClick()
         rvBinding.btnSelect.isSelected = true
         libraryViewModel.setMultipleSelectMode(true)
         libraryViewModel.onClickSelectableItem(item,true)
     }
-    override fun onSwipeLeft() {
-        super.onSwipeLeft()
-        rvBinding.apply {
-            when(view){
-                baseContainer -> {
-                    btnDelete.visibility = View.VISIBLE
-                    btnEditWhole.visibility = if(item.type==LibRVViewType.Folder||item.type == LibRVViewType.FlashCardCover) View.VISIBLE else return
-                }
-            }
-        }
+
+    override fun onScrollLeftActionUp() {
+        super.onScrollLeftActionUp()
+        Toast.makeText(context,"up",Toast.LENGTH_SHORT).show()
     }
+
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        if(event?.actionMasked==MotionEvent.ACTION_UP||event?.actionMasked==MotionEvent.ACTION_CANCEL){
+
+            if(rvBinding.root.tag== LibRVState.LeftSwiping){
+                Toast.makeText(context,"${rvBinding.btnDelete.width}",Toast.LENGTH_SHORT).show()
+            }
+
+        }
+        return super.onTouch(v, event)
+    }
+    //    override fun onSwipeLeft() {
+//        super.onSwipeLeft()
+//        rvBinding.apply {
+//            when(view){
+//                baseContainer -> {
+//                    btnDelete.visibility = View.VISIBLE
+//                    btnEditWhole.visibility = if(item.type==LibRVViewType.Folder||item.type == LibRVViewType.FlashCardCover) View.VISIBLE else return
+//                }
+//            }
+//        }
+//    }
 }

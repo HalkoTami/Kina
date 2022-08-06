@@ -10,6 +10,7 @@ import com.example.tangochoupdated.db.dataclass.File
 //import com.example.tangochoupdated.room.dataclass.FileWithChild
 import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import kotlinx.coroutines.cancel
@@ -27,6 +28,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         setMultipleSelectMode(false)
         setSelectedItem(mutableListOf())
         setConfirmPopUpVisible(false,ConfirmMode.DeleteOnlyParent)
+        if(_modeInBox.value== true)setTopBarMode(LibraryTopBarMode.InBox)
     }
 
 //
@@ -43,7 +45,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     val parentFile:LiveData<File?> = _parentFile
 //    ファイルの中のファイル（子供）
     fun childFilesFromDB(int: Int?):LiveData<List<File>> = this.repository.mygetFileDataByParentFileId(int).asLiveData()
-    private val _childFilesFromDB = MutableLiveData<List<File>>()
+    private val _childFilesFromDB = MutableLiveData<List<File>?>()
     fun setChildFilesFromDB (list: List<File>?){
         _childFilesFromDB.value = list
         if(_parentFile.value?.fileStatus != FileStatus.TANGO_CHO_COVER){
@@ -177,7 +179,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
     }
     fun openNextFile(item: LibraryRV){
-        val action = LibraryFragmentDirections.toLib()
+        val action = LibraryFragmentDirections.openFile()
         action.parentItemId = intArrayOf(item.file!!.fileId)
         setAction(action)
     }
@@ -204,9 +206,11 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //    ClickEvents
     fun onClickInBox(){
         setModeInBox(true)
-        val a = LibraryFragmentDirections.toLib()
+
+        val a = LibraryFragmentDirections.openInbox()
         a.parentItemId = null
         setAction(a)
+
 
     }
     private val _modeInBox =  MutableLiveData<Boolean>()
@@ -294,6 +298,15 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 //    －－－－－－－－
+//    －－－－TouchMode－－－－
+    private val _libRVState = MutableLiveData<LibRVState>()
+    fun setLibRVState (libRVState: LibRVState){
+        _libRVState.value = libRVState
+    }
+
+//    －－－－－－－－
+
+
 //    －－－－DB操作－－－－
 
 //    －－－－削除－－－－

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:padding="10dp"
+
+    android:layout_gravity="center_vertical">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+
+        android:src="@drawable/icon_inbox"
+        />
+
+    <TextView
+        android:id="@+id/txv_inbox_status"
+        android:layout_marginStart="10dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+
+        android:text="15個のアイテム"
+        android:gravity="center_vertical"
+
+        android:textSize="20sp"
+        />
+    <ImageView
+        android:layout_margin="10dp"
+        android:id="@+id/imv_move_to_flash_card"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+
+        android:src="@drawable/icon_move_to_flashcard_cover"
+        />
+
+    <ImageView
+        android:id="@+id/imv_close"
+        android:layout_margin="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/icon_close"/>
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
