@@ -51,7 +51,24 @@ class LibraryListAdapter(
 
 //            親レイアウトのclick listener
             val clickableViews = mutableListOf<View>()
-
+            fun addBaseBindingToClickableViews(){
+                binding.apply {
+                    clickableViews.addAll(arrayOf(
+                        baseContainer,
+                        btnDelete,
+                        btnSelect,
+                        btnAddNewCard,
+                        btnEditWhole
+                    ))
+                }
+            }
+            fun setTouchListenerToClickableViews(){
+                clickableViews.onEach { it.setOnTouchListener(
+                    LibRVClickListener(it,context,item,
+                        createFileViewModel,
+                        libraryViewModel,
+                        createCardViewModel, binding)) }
+            }
 
             fun getStrokeColResId(colorStatus: ColorStatus):Int{
                 return when(colorStatus){
@@ -109,30 +126,19 @@ class LibraryListAdapter(
             }
             binding.baseContainer.tag = LibRVState.Plane
             binding.btnSelect.visibility = GONE
-//
-            binding.btnDelete.visibility =  GONE
-            binding.btnEditWhole.visibility =  GONE
+            binding.linLaySwipeShow.visibility = GONE
 
 
 
 
-//            ボタンのclicklitener
-            clickableViews.apply {
-                addAll(arrayOf(
-                binding.baseContainer,
-                binding.btnDelete,
-                binding.btnSelect,
-                binding.btnAddNewCard,
-                ))
-                onEach { it.setOnTouchListener(
-                    LibRVClickListener(it,context,item,
-                        createFileViewModel,
-                        libraryViewModel,
-                        createCardViewModel, binding)) }
-            }
+
+//            clickableViews
+            addBaseBindingToClickableViews()
+            setTouchListenerToClickableViews()
             }
 
         }
+
 
 
     }

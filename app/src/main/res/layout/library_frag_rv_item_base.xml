@@ -35,7 +35,7 @@
         android:id="@+id/content_binding_frame"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/btn_delete"
+        app:layout_constraintEnd_toStartOf="@+id/linLay_swipe_show"
         app:layout_constraintStart_toEndOf="@+id/btn_select"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btn_add_new_card">
@@ -52,34 +52,40 @@
     </FrameLayout>
 
 
-    <ImageView
-        android:contentDescription="@string/btn_edit"
-        android:tag="@string/gone_on_long_click"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:id="@+id/btn_edit_whole"
-        android:src="@drawable/icon_edit"
-        app:layout_constraintEnd_toEndOf="@id/btn_delete"
-        app:layout_constraintBottom_toTopOf="@+id/btn_delete"
-        app:layout_constraintStart_toStartOf="@+id/btn_delete"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="visible"/>
-
-
-    <ImageView
-        android:contentDescription="@string/delete"
-        android:tag="@string/gone_on_long_click"
-        app:layout_constraintStart_toEndOf="@+id/content_binding_frame"
-        app:layout_constraintTop_toBottomOf="@id/btn_edit_whole"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linLay_swipe_show"
+        app:layout_constraintTop_toTopOf="@id/content_binding_frame"
+        app:layout_constraintStart_toEndOf="@id/content_binding_frame"
+        app:layout_constraintBottom_toBottomOf="@id/content_binding_frame"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/content_binding_frame"
-        android:id="@+id/btn_delete"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:src="@drawable/icon_trash"
-        android:visibility="visible"
-        />
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+        <ImageView
+            android:contentDescription="@string/btn_edit"
+            android:tag="@string/gone_on_long_click"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/btn_edit_whole"
+            android:src="@drawable/icon_edit"
+            android:visibility="visible"/>
+
+
+        <ImageView
+            android:contentDescription="@string/delete"
+            android:tag="@string/gone_on_long_click"
+
+            android:id="@+id/btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/icon_trash"
+            android:visibility="visible"
+            />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 
 

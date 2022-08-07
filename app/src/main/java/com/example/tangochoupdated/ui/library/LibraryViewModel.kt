@@ -3,14 +3,12 @@ package com.example.tangochoupdated.ui.library
 import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
-import com.example.tangochoupdated.R
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.CardAndTags
 import com.example.tangochoupdated.db.dataclass.File
 //import com.example.tangochoupdated.room.dataclass.FileWithChild
 import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import kotlinx.coroutines.cancel
@@ -57,7 +55,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 //    ファイルの中のカード
     fun childCardsFromDB(int: Int?):LiveData<List<CardAndTags>?> =  this.repository.getCardDataByFileId(int).asLiveData()
-    private val _childCardsFromDB=MutableLiveData<List<CardAndTags>>()
+    private val _childCardsFromDB=MutableLiveData<List<CardAndTags>?>()
     fun setChildCardsFromDB(list: List<CardAndTags>?){
         _childCardsFromDB.value = list
         if(_parentFile.value?.fileStatus == FileStatus.TANGO_CHO_COVER||_modeInBox.value == true){
@@ -67,7 +65,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             setValueToFinalList(b)
         }
     }
-    val childCardsFromDB:LiveData<List<CardAndTags>> = _childCardsFromDB
+    val childCardsFromDB:LiveData<List<CardAndTags>?> = _childCardsFromDB
 
 //    －－－－－－－－
 //    －－－－RecyclerView－－－－
@@ -298,11 +296,21 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 //    －－－－－－－－
-//    －－－－TouchMode－－－－
-    private val _libRVState = MutableLiveData<LibRVState>()
-    fun setLibRVState (libRVState: LibRVState){
-        _libRVState.value = libRVState
+//    －－－－recyclerView States－－－－
+    private val _makeUnSwiped = MutableLiveData<Boolean>()
+    fun makeAllUnSwiped (){
+        _makeUnSwiped.value = true
     }
+    val makeUnSwiped:LiveData<Boolean> = _makeUnSwiped
+
+    private val _leftSwipedItemExists = MutableLiveData<Boolean>()
+    fun setLeftSwipedItemExists (boolean: Boolean){
+        _leftSwipedItemExists.value = boolean
+    }
+    fun returnLeftSwipedItemExists ():Boolean?{
+        return  _leftSwipedItemExists.value
+    }
+
 
 //    －－－－－－－－
 

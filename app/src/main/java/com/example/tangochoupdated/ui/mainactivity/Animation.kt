@@ -3,14 +3,19 @@ package com.example.tangochoupdated.ui.mainactivity
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.os.Build
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import com.example.tangochoupdated.R
+import kotlin.math.absoluteValue
 
 class Animation {
     fun animateFrameBottomMenu(frameBottomMenu: FrameLayout, visibility:Int){
@@ -29,7 +34,9 @@ class Animation {
                 btmMenuAnimator.doOnEnd {
                     frameBottomMenu.visibility = View.GONE
                 }
-                btmMenuAnimator.reverse()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    btmMenuAnimator.reverse()
+                } else frameBottomMenu.visibility = View.GONE
             }
         }
     }
@@ -47,14 +54,17 @@ class Animation {
                 appearAnimator.doOnEnd {
                     popUpAddFile.visibility = View.GONE
                 }
-                appearAnimator.reverse()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    appearAnimator.reverse()
+                } else popUpAddFile.visibility = View.GONE
             }
         }
     }
+
     fun animateColPallet(colPallet:LinearLayoutCompat,visibility: Int){
         val eachColAnimation = mutableListOf<Animator>()
         var delay:Long = 0
-        colPallet.children.iterator().forEachRemaining { view->
+        colPallet.children.iterator().forEach { view->
             val a =  ObjectAnimator.ofFloat(view, View.TRANSLATION_X,-300f,0f)
             val b = ObjectAnimator.ofFloat(view,View.ALPHA,0f,1f)
             a.duration = 200
@@ -80,10 +90,39 @@ class Animation {
             }
             View.GONE ->{
                 mainAnimator.doOnEnd { colPallet.visibility = View.GONE }
-                mainAnimator.reverse()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    mainAnimator.reverse()
+                } else colPallet.visibility = View.GONE
 
             }
         }
 
     }
+    fun animateLibRVLeftSwipeLay(frameLayout: LinearLayoutCompat,visible:Boolean){
+        val disappearAnim = ValueAnimator.ofInt(frameLayout.width,1)
+        disappearAnim.duration = frameLayout.width* 5.toLong()
+        disappearAnim.addUpdateListener {
+            frameLayout.layoutParams.width = it.animatedValue as Int
+            frameLayout.requestLayout()
+        }
+        disappearAnim.doOnEnd {
+            frameLayout.children.iterator().forEach {
+                it.visibility = View.GONE
+            }
+            frameLayout.visibility = View.GONE
+        }
+
+        val appearAnim = ValueAnimator.ofInt(frameLayout.width,100)
+        appearAnim.duration = (100 - frameLayout.width).absoluteValue * 5.toLong()
+        appearAnim.addUpdateListener {
+            frameLayout.layoutParams.width = it.animatedValue as Int
+            frameLayout.requestLayout()
+        }
+        appearAnim.doOnEnd {
+            frameLayout.visibility = View.VISIBLE
+        }
+        if(!visible) disappearAnim.start()
+        else if (visible) appearAnim.start()
+    }
+
 }

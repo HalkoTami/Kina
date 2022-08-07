@@ -1,6 +1,6 @@
 package com.example.tangochoupdated.ui.library
 
-import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -8,8 +8,8 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.animation.doOnEnd
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -28,6 +28,7 @@ import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
+import com.example.tangochoupdated.ui.mainactivity.Animation
 
 
 class LibraryFragment : Fragment(),View.OnClickListener {
@@ -43,6 +44,7 @@ class LibraryFragment : Fragment(),View.OnClickListener {
 
     private var _binding: LibraryFragBinding? = null
     private val binding get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -119,6 +121,19 @@ class LibraryFragment : Fragment(),View.OnClickListener {
                 adapter.notifyDataSetChanged()
                 binding.emptyBinding.root.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.GONE
+            }
+            makeUnSwiped.observe(viewLifecycleOwner){
+                if(it){
+                    recyclerView.children.iterator().forEach { view ->
+                        val parent = view.findViewById<ConstraintLayout>(R.id.base_container)
+                        if(parent.tag == LibRVState.LeftSwiped){
+                            Animation().animateLibRVLeftSwipeLay(
+                                view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false)
+                            parent.tag = LibRVState.Plane
+                        }
+
+                    }
+                }
             }
 
             binding.apply {
@@ -292,23 +307,23 @@ class LibRVClickListener(val view:View,
         rvBinding.apply {
             when(view){
                 baseContainer       ->  {
-                    when(view.tag){
-                        LibRVState.Selectable -> {
-                            libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
-                            btnSelect.isSelected = btnSelect.isSelected.not()
-                        }
-//                        LibRVState.LeftSwiped -> {
-//                            btnEditWhole.visibility = View.GONE
-//                            btnDelete.visibility = View.GONE
-//                            view.tag = LibRVState.Plane
-//                        }
-                        LibRVState.Plane -> {
-                            when(item.type){
-                                LibRVViewType.Folder,LibRVViewType.FlashCardCover -> libraryViewModel.openNextFile(item)
-                                LibRVViewType.StringCard -> createCardViewModel.onClickEditCard(item)
+                    if(libraryViewModel.returnLeftSwipedItemExists()==true){
+                        libraryViewModel.makeAllUnSwiped()
+                    } else{
+                        when(view.tag){
+                            LibRVState.Selectable -> {
+                                libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
+                                btnSelect.isSelected = btnSelect.isSelected.not()
+                            }
+                            LibRVState.Plane -> {
+                                when(item.type){
+                                    LibRVViewType.Folder,LibRVViewType.FlashCardCover -> libraryViewModel.openNextFile(item)
+                                    LibRVViewType.StringCard -> createCardViewModel.onClickEditCard(item)
+                                }
                             }
                         }
                     }
+
                 }
                 btnDelete       -> libraryViewModel.onClickDeleteRVItem(item)
                 btnEditWhole    -> createFileViewModel.onClickEditFileInRV(item.file!!)
@@ -320,20 +335,21 @@ class LibRVClickListener(val view:View,
     override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
         super.onScrollLeft(distanceX, motionEvent)
         rvBinding.apply {
-            if(btnDelete.visibility==View.GONE){
-                btnDelete.layoutParams.width = 1
-                btnEditWhole.layoutParams.width = 1
-                btnEditWhole.requestLayout()
-                btnDelete.requestLayout()
-                btnDelete.visibility= View.VISIBLE
-                btnEditWhole.visibility = View.VISIBLE
-            }else if(btnDelete.visibility==View.VISIBLE) {
+            if(rvBinding.root.tag==LibRVState.Plane){
+                linLaySwipeShow.layoutParams.width = 1
+                linLaySwipeShow.requestLayout()
+                linLaySwipeShow.children.iterator().forEach {
+                    it.visibility = View.VISIBLE
+                }
+                linLaySwipeShow.visibility = View.VISIBLE
+                rvBinding.root.tag = LibRVState.LeftSwiping
+
+            }else if(rvBinding.root.tag==LibRVState.LeftSwiping) {
                 if(rvBinding.root.tag!=LibRVState.LeftSwiping){
                     rvBinding.root.tag = LibRVState.LeftSwiping
                 }
-
-                btnDelete.layoutParams.width = distanceX.toInt()/5
-                btnDelete.requestLayout()
+                linLaySwipeShow.layoutParams.width = distanceX.toInt()/5
+                linLaySwipeShow.requestLayout()
 
             }
 
@@ -346,30 +362,25 @@ class LibRVClickListener(val view:View,
         libraryViewModel.onClickSelectableItem(item,true)
     }
 
-    override fun onScrollLeftActionUp() {
-        super.onScrollLeftActionUp()
-        Toast.makeText(context,"up",Toast.LENGTH_SHORT).show()
-    }
+
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         if(event?.actionMasked==MotionEvent.ACTION_UP||event?.actionMasked==MotionEvent.ACTION_CANCEL){
-
             if(rvBinding.root.tag== LibRVState.LeftSwiping){
-                Toast.makeText(context,"${rvBinding.btnDelete.width}",Toast.LENGTH_SHORT).show()
+                if(rvBinding.linLaySwipeShow.width <50){
+                    Animation().animateLibRVLeftSwipeLay(rvBinding.linLaySwipeShow,false)
+                    rvBinding.root.tag = LibRVState.Plane
+                }
+                else if (rvBinding.linLaySwipeShow.width>=50){
+                    Animation().animateLibRVLeftSwipeLay(rvBinding.linLaySwipeShow ,true)
+                    rvBinding.root.tag = LibRVState.LeftSwiped
+                    libraryViewModel.setLeftSwipedItemExists(true)
+                }
+
             }
 
         }
         return super.onTouch(v, event)
     }
-    //    override fun onSwipeLeft() {
-//        super.onSwipeLeft()
-//        rvBinding.apply {
-//            when(view){
-//                baseContainer -> {
-//                    btnDelete.visibility = View.VISIBLE
-//                    btnEditWhole.visibility = if(item.type==LibRVViewType.Folder||item.type == LibRVViewType.FlashCardCover) View.VISIBLE else return
-//                }
-//            }
-//        }
-//    }
+
 }

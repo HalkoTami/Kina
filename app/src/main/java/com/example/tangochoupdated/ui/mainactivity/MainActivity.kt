@@ -1,5 +1,6 @@
 package com.example.tangochoupdated.ui.mainactivity
 
+import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
@@ -14,7 +15,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getColor
+import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.children
 import androidx.core.view.setPadding
@@ -75,7 +80,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //       　　 viewをclickListenerに追加
             mainActivityClickableItem.apply {
                 addAll(arrayOf(fragConViewCover, mainTopConstrainLayout))
-                bnvBinding.root.children.iterator().forEachRemaining {
+                bnvBinding.root.children.iterator().forEach {
                     add(it)
                 }
                 bindingAddMenu.apply {
@@ -312,7 +317,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                                 imvColGray -> onClickColorPalet(ColorStatus.GRAY)
                                 imvColBlue -> onClickColorPalet(ColorStatus.BLUE)
                                 imvColRed -> onClickColorPalet(ColorStatus.RED)
-                                imvIconPalet -> animateVisibility(colPaletBinding.linLayColPallet,if(imvIconPalet.tag == VISIBLE) GONE else VISIBLE)
+                                imvIconPalet -> arrayOf(imvColYellow,
+                                    imvColGray,
+                                    imvColBlue,
+                                    imvColRed,).onEach { it.visibility = View.GONE }
                                 else -> {
                                     animateVisibility(popupAddFile, GONE)
                                     fragConViewCover.visibility = GONE
@@ -368,19 +376,19 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         colorPaletBinding.apply {
             when(colorStatus) {
                 ColorStatus.GRAY -> {
-                    col = getColor(R.color.gray)
+                    col = getColor(this@MainActivity, R.color.gray)
                     imageView = this.imvColGray
                 }
                 ColorStatus.BLUE -> {
-                    col = getColor(R.color.blue)
+                    col = getColor(this@MainActivity, R.color.blue)
                     imageView = this.imvColBlue
                 }
                 ColorStatus.YELLOW -> {
-                    col = getColor(R.color.yellow)
+                    col = getColor(this@MainActivity, R.color.yellow)
                     imageView = this.imvColYellow
                 }
                 ColorStatus.RED -> {
-                    col = getColor(R.color.red)
+                    col = getColor(this@MainActivity, R.color.red)
                     imageView = this.imvColRed
                 }
                 else -> return
@@ -391,25 +399,27 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
         when(selected){
             true -> {
-                a.setStroke(2,getColor(R.color.white))
-                a.alpha = 0
+                a.setStroke(5,getColor(this@MainActivity, R.color.black))
+                a.setColor(col)
+                imageView.alpha = 1f
+                imageView.background = a
+                imageView.elevation = 10f
             }
             false -> {
-                a.setStroke(0,getColor(col))
-                a.alpha = 0.5f.toInt()
-            }
-            null -> {
+                a.setStroke(5,getColor(this@MainActivity, R.color.ofwhite))
                 a.setColor(col)
+                imageView.alpha = 0.4f
+                imageView.elevation = 0f
             }
         }
         imageView.setImageDrawable(a)
 
     }
     fun makeAllColPaletUnselected(colorPaletBinding: ItemColorPaletBinding){
-        changeColPalletCol(ColorStatus.RED,null,colorPaletBinding)
-        changeColPalletCol(ColorStatus.YELLOW,null,colorPaletBinding)
-        changeColPalletCol(ColorStatus.BLUE,null,colorPaletBinding)
-        changeColPalletCol(ColorStatus.GRAY,null,colorPaletBinding)
+        changeColPalletCol(ColorStatus.RED,false,colorPaletBinding)
+        changeColPalletCol(ColorStatus.YELLOW,false,colorPaletBinding)
+        changeColPalletCol(ColorStatus.BLUE,false,colorPaletBinding)
+        changeColPalletCol(ColorStatus.GRAY,false,colorPaletBinding)
     }
     fun changeTabView(previous:Tab?,tab: Tab,bnv: MainActivityBottomNavigationBarBinding){
         bnv.apply {
