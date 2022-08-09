@@ -9,6 +9,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
@@ -36,7 +37,6 @@ class LibraryFragment : Fragment(){
     private lateinit var myNavCon:NavController
     private lateinit var recyclerView:RecyclerView
     private lateinit var adapter: LibraryListAdapter
-    private val  LibFragClickListenerItem = mutableListOf<View>()
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
@@ -57,16 +57,17 @@ class LibraryFragment : Fragment(){
             requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id
         )
 //        viewの初期設定
-        resetView(binding)
+
 //        recyclerViewの定義
         recyclerView = binding.vocabCardRV
         adapter = LibraryListAdapter(createFileViewModel,createCardViewModel,libraryViewModel, requireActivity())
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.isNestedScrollingEnabled = true
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView.isNestedScrollingEnabled = false
+        resetView(binding)
 
 //        clickListenerを追加
-        addClickListenerToLibViews()
+        addClickListenerToLibViews(binding)
 //        －－－－LibraryViewModelの読み取り－－－－
 
         libraryViewModel.apply {
@@ -88,6 +89,7 @@ class LibraryFragment : Fragment(){
             }
             childCardsFromDB(myId).observe(viewLifecycleOwner) {
                 setChildCardsFromDB(it)
+                binding.topBarInboxBinding.txvInboxStatus.text = "${it?.size ?:0}個のアイテム"
             }
             deletingItem.observe(viewLifecycleOwner) { list ->
                 if (list.isEmpty().not()) {
@@ -110,32 +112,82 @@ class LibraryFragment : Fragment(){
 //            －－－－UIへの反映－－－－
 
 //            recyclerView
-            multipleSelectMode.observe(viewLifecycleOwner) { selectable ->
-                recyclerView.children.iterator().forEach {
-                    it.findViewById<ConstraintLayout>(R.id.base_container).tag =
-                        if (selectable) LibRVState.Selectable else LibRVState.Plane
-                    it.findViewById<ImageView>(R.id.btn_select).visibility =
-                        if (selectable) View.VISIBLE else View.GONE
-                }
-            }
+
             myFinalList.observe(viewLifecycleOwner) {
                 adapter.submitList(it)
                 binding.emptyBinding.root.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.GONE
             }
-            makeUnSwiped.observe(viewLifecycleOwner){
-                if(it){
-                    recyclerView.children.iterator().forEach { view ->
-                        val parent = view.findViewById<ConstraintLayout>(R.id.base_container)
-                        if(parent.tag == LibRVState.LeftSwiped){
-                            Animation().animateLibRVLeftSwipeLay(
-                                view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false)
+            recyclerViewMode.observe(viewLifecycleOwner){ rvState ->
+                when(rvState){
+                    LibRVState.Plane ->{
+                        recyclerView.children.iterator().forEach { view ->
+                            val parent = view.findViewById<ConstraintLayout>(R.id.base_container)
+                            if(parent.tag == LibRVState.LeftSwiped){
+                                Animation().animateLibRVLeftSwipeLay(
+                                    view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false)
+                            }
+                            if(parent.tag == LibRVState.Selectable){
+                                view.findViewById<ImageView>(R.id.btn_select).visibility = View.GONE
+                            }
                             parent.tag = LibRVState.Plane
                         }
 
                     }
+                    LibRVState.Selectable -> {
+                        recyclerView.children.iterator().forEach { view ->
+                            val parent = view.findViewById<ConstraintLayout>(R.id.base_container)
+                            view.findViewById<ImageView>(R.id.btn_select).apply {
+                                setImageDrawable(AppCompatResources.getDrawable(requireActivity(),R.drawable.select_rv_item))
+                                visibility = View.VISIBLE
+                            }
+//                            arrayOf(view.findViewById<ImageView>(R.id.btn_edt_front),
+//                                view.findViewById<ImageView>(R.id.btn_edt_back),
+//                            view.findViewById(R.id.btn_add_new_card))
+//                                .onEach {
+//                                    it.visibility = View.GONE
+//                                }
+
+                            parent.tag = LibRVState.Selectable
+                        }
+                        }
+
+                    LibRVState.SelectFileMoveTo ->{
+                        recyclerView.children.iterator().forEach { view ->
+                            val parent = view.findViewById<ConstraintLayout>(R.id.base_container)
+
+                            view.findViewById<ImageView>(R.id.btn_select).apply {
+                                setImageDrawable(
+                                    AppCompatResources.getDrawable(requireActivity(),if(
+                                        returnParentFile()?.fileStatus == FileStatus.TANGO_CHO_COVER
+                                    ) R.drawable.icon_move_to_flashcard_cover
+                                    else R.drawable.icon_move_to_folder
+                                    ))
+                                visibility = View.VISIBLE
+                            }
+
+                            parent.tag = LibRVState.SelectFileMoveTo
+                        }
+
+                    }
+                    LibRVState.Selected -> {
+                        recyclerView.children.iterator().forEach { view ->
+                            val parent = view.findViewById<ConstraintLayout>(R.id.base_container)
+                            view.findViewById<ImageView>(R.id.btn_select).apply {
+                                setImageDrawable(AppCompatResources.getDrawable(requireActivity(),R.drawable.select_rv_item))
+                                isSelected = true
+                                visibility = View.VISIBLE
+                            }
+
+                            parent.tag = LibRVState.Selected
+                        }
+
+                    }
+
                 }
+
             }
+
 
             binding.apply {
 //                トップバー
@@ -159,7 +211,15 @@ class LibraryFragment : Fragment(){
                     resetView(binding)
                     when(it){
                         LibraryTopBarMode.Home -> topBarHomeBinding.root.visibility = View.VISIBLE
-                        LibraryTopBarMode.Multiselect -> topBarMultiselectBinding.root.visibility = View.VISIBLE
+                        LibraryTopBarMode.Multiselect -> {
+                            topBarMultiselectBinding.root.visibility = View.VISIBLE
+                            topBarMultiselectBinding.multiSelectMenuBinding.imvMoveSelectedItems.setImageDrawable(
+                                AppCompatResources.getDrawable(requireActivity(),if(
+                                    returnParentFile()?.fileStatus == FileStatus.TANGO_CHO_COVER
+                                ) R.drawable.icon_move_to_flashcard_cover
+                                else R.drawable.icon_move_to_folder
+                            ))
+                        }
                         LibraryTopBarMode.File -> {
                             topframelayout.elevation = 0f
                             topBarFileBinding.root.visibility = View.VISIBLE
@@ -169,9 +229,6 @@ class LibraryFragment : Fragment(){
                         }
                         LibraryTopBarMode.ChooseFileMoveTo -> {
                             topBarChooseFileMoveToBinding.root.visibility = View.VISIBLE
-                            recyclerView.children.iterator().forEach {
-                                it.findViewById<ImageView>(R.id.btn_select).visibility = View.VISIBLE
-                            }
 
                         }
                         else -> return@observe
@@ -240,13 +297,7 @@ class LibraryFragment : Fragment(){
             callback
         )
     }
-    fun makeAllUnClickable(){
-        LibFragClickListenerItem.onEach {
-            it.setOnClickListener(null)
-        }
-        Toast.makeText(requireActivity(),"called",Toast.LENGTH_SHORT).show()
 
-    }
 
 
 
@@ -288,13 +339,16 @@ class LibraryFragment : Fragment(){
             topBarFileBinding.root,
             topBarHomeBinding.root,
             topBarMultiselectBinding.root,
-                topBarChooseFileMoveToBinding.root).onEach {
+                topBarChooseFileMoveToBinding.root,
+                confirmDeletePopUpBinding.root,
+            confirmDeleteChildrenPopUpBinding.root).onEach {
                 it.visibility = View.GONE
             }
+
         }
 
     }
-    private fun addClickListenerToLibViews(){
+    private fun addClickListenerToLibViews(binding: LibraryFragBinding){
         fun addTopBarViews(){
             val home = binding.topBarHomeBinding
             val file = binding.topBarFileBinding
@@ -308,15 +362,15 @@ class LibraryFragment : Fragment(){
                 file.lineLayGGFile,
                 file.lineLayGPFile,
                 inBox.imvMoveToFlashCard,
-                inBox.imvClose,
-                multi.imvClose,
+                inBox.imvCloseInbox,
+                multi.imvCloseMultiMode,
                 multi.imvSelectAll,
                 multi.imvChangeMenuVisibility,
                 multi.multiSelectMenuBinding.imvMoveSelectedItems,
                 multi.multiSelectMenuBinding.imvDeleteSelectedItems,
                 multi.multiSelectMenuBinding.imvSetFlagToSelectedItems,
                 moveTo.imvCloseChooseFileMoveTo
-                ).onEach { it.setOnClickListener { LibraryFragTopBarClickListener(binding,libraryViewModel, myNavCon) } }
+                ).onEach { it.setOnClickListener( LibraryFragTopBarClickListener(requireContext(), binding,libraryViewModel, myNavCon)) }
         }
         fun addConfirmDeletePopUp(){
             val onlyP = binding.confirmDeletePopUpBinding
@@ -329,13 +383,16 @@ class LibraryFragment : Fragment(){
                 deleteAllC.btnCommitDeleteAllChildren,
                 deleteAllC.btnDenyDeleteAllChildren
             )   .onEach {
-                it.setOnClickListener { LibraryPopUpConfirmDeleteClickListener(binding,libraryViewModel) }
+                it.setOnClickListener(LibraryPopUpConfirmDeleteClickListener(binding,libraryViewModel))
             }
         }
 
         addTopBarViews()
         addConfirmDeletePopUp()
     }
+
+
+
 
 
     override fun onDestroyView() {

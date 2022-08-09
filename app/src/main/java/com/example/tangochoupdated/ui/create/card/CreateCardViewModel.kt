@@ -159,13 +159,13 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
     val lastInsertedCardAndTags :LiveData<Card?> = repository.lastInsertedCard.asLiveData()
-    private val _lastInsertedCardAndTags = MutableLiveData<Card>()
+    private val _lastInsertedCardAndTags = MutableLiveData<Card?>()
     fun setLastInsertedCardAndTags(card: Card?){
         val before = _lastInsertedCardAndTags.value
         if((before?.id != card?.id) ) {
             _lastInsertedCardAndTags.value = card
 
-            val a = if(card?.belongingFileId!=null)intArrayOf(card.belongingFileId) else null
+            val a = if(_lastInsertedCardAndTags.value?.belongingFileId!=null)intArrayOf(_lastInsertedCardAndTags.value?.belongingFileId!!) else null
             val b = intArrayOf(card!!.id)
             val fromSameFrag = _fromSameFrag.value!!
             setAction(CreateCardNav(LibraryFragmentDirections.openCreateCard(a,b),fromSameFrag))

@@ -4,11 +4,13 @@ import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
+import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.CardAndTags
 import com.example.tangochoupdated.db.dataclass.File
 //import com.example.tangochoupdated.room.dataclass.FileWithChild
 import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import kotlinx.coroutines.cancel
@@ -23,10 +25,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 //    Fragment作成時に毎回呼び出す
     fun onStart(){
-        if(_topBarMode.value != LibraryTopBarMode.ChooseFileMoveTo) setMultipleSelectMode(false)
-        setSelectedItem(mutableListOf())
-        setConfirmPopUpVisible(false,ConfirmMode.DeleteOnlyParent)
-        if(_modeInBox.value== true)setTopBarMode(LibraryTopBarMode.InBox)
+    }
+    fun onCreate(){
+        clearSelectedItems()
     }
 
 //
@@ -37,10 +38,14 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun  parentFileFromDB(int: Int?):LiveData<File?> = repository.getFileByFileId(int).asLiveData()
     fun setParentFileFromDB (file: File?){
         _parentFile.value = file
-        makeTopBarUIUnselected()
+        changeTopBarMode()
+
     }
     private val _parentFile = MutableLiveData<File?>()
     val parentFile:LiveData<File?> = _parentFile
+    fun returnParentFile():File?{
+        return _parentFile.value
+    }
 //    今開いてるファイルの祖先
     fun  parentFileAncestorsFromDB(int: Int?):LiveData<List<File>?> = repository.getAllAncestorsByFileId(int).asLiveData()
     fun setParentFileAncestorsFromDB (ancestors: List<File>?){
@@ -57,6 +62,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     private val _parentFileAncestors = MutableLiveData<ParentFileAncestors>()
     val parentFileAncestors:LiveData<ParentFileAncestors> = _parentFileAncestors
+
 
 
 //    ファイルの中のファイル（子供）
@@ -76,7 +82,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private val _childCardsFromDB=MutableLiveData<List<CardAndTags>?>()
     fun setChildCardsFromDB(list: List<CardAndTags>?){
         _childCardsFromDB.value = list
-        if(_parentFile.value?.fileStatus == FileStatus.TANGO_CHO_COVER||_modeInBox.value == true){
+        if(_parentFile.value?.fileStatus == FileStatus.TANGO_CHO_COVER||(_modeInBox.value == true&&_chooseFileMoveToMode.value != true)){
             val b = mutableListOf<LibraryRV>()
             clearFinalList()
             list?.onEach { b.add(convertCardToLibraryRV(it)) }
@@ -176,6 +182,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
     }
     val selectedItems:LiveData<MutableList<LibraryRV>> = _selectedItems
+    private fun clearSelectedItems(){
+        setSelectedItem(mutableListOf())
+    }
     private fun addToSelectedItem(item: LibraryRV){
         val a = _selectedItems.value!!
         a.add(item)
@@ -202,6 +211,49 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 //    －－－－－－－－
 //    －－－－FragmentのUIデータ－－－－
+    private val _modeInBox = MutableLiveData<Boolean>()
+    private fun setModeInBox (boolean: Boolean){
+        _modeInBox.value = boolean
+        changeTopBarMode()
+    }
+
+    private val _chooseFileMoveToMode = MutableLiveData<Boolean>()
+    private fun setChooseFileMoveToMode (boolean: Boolean){
+        _chooseFileMoveToMode.value = boolean
+        changeTopBarMode()
+        changeRVMode()
+    }
+
+    private val _multipleSelectMode =  MutableLiveData<Boolean>()
+    val multipleSelectMode:LiveData<Boolean> = _multipleSelectMode
+    fun setMultipleSelectMode(boolean: Boolean){
+        _multipleSelectMode.apply {
+            value = boolean
+        }
+        changeTopBarMode()
+        changeRVMode()
+    }
+
+    private val _recyclerViewMode = MutableLiveData<LibRVState>()
+    private fun setRecyclerViewMode(libRVState: LibRVState){
+        _recyclerViewMode.value = libRVState
+    }
+    val recyclerViewMode:LiveData<LibRVState> = _recyclerViewMode
+    private fun changeRVMode(){
+        setRecyclerViewMode(
+            if(_multipleSelectMode.value == true)LibRVState.Selectable
+        else if(_chooseFileMoveToMode.value == true)LibRVState.SelectFileMoveTo
+        else LibRVState.Plane
+        )
+    }
+    fun returnRVMode():LibRVState?{
+        return _recyclerViewMode.value
+    }
+    fun makeAllRVItemsSelected(){
+        setSelectedItem(_myFinalList.value?.toMutableList() ?: mutableListOf())
+        setRecyclerViewMode(LibRVState.Selected)
+    }
+
 
 //    －－－－TopBar－－－－
 
@@ -211,46 +263,29 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _topBarMode.value = topBarMode
     }
     val topBarMode :LiveData<LibraryTopBarMode> = _topBarMode
-    private fun makeTopBarUIUnselected(){
-        setTopBarMode(
-            if(_modeInBox.value==true)LibraryTopBarMode.InBox
-            else if(_parentFile.value!=null)LibraryTopBarMode.File
-            else LibraryTopBarMode.Home
-        )
+    private fun changeTopBarMode(){
+        setTopBarMode(if(_multipleSelectMode.value == true) LibraryTopBarMode.Multiselect
+        else if (_chooseFileMoveToMode.value == true) LibraryTopBarMode.ChooseFileMoveTo
+        else{
+            if(_modeInBox.value == true) LibraryTopBarMode.InBox else
+            if(parentFile.value != null) LibraryTopBarMode.File else LibraryTopBarMode.Home
+        })
     }
 
 //    ClickEvents
     fun onClickInBox(){
         setModeInBox(true)
-
         val a = LibraryFragmentDirections.openInbox()
         a.parentItemId = null
         setAction(a)
 
-
     }
-    private val _modeInBox =  MutableLiveData<Boolean>()
-    private fun setModeInBox(boolean: Boolean){
-        _modeInBox.apply {
-            value = boolean
-        }
+    fun onClickCloseInBox(){
+        setModeInBox(false)
     }
 
 //    －－－－－－－－
-    private val _multipleSelectMode =  MutableLiveData<Boolean>()
-    val multipleSelectMode:LiveData<Boolean> = _multipleSelectMode
-    fun setMultipleSelectMode(boolean: Boolean){
-        _multipleSelectMode.apply {
-            value = boolean
-        }
-        when(boolean){
-            true ->setTopBarMode(LibraryTopBarMode.Multiselect)
-            false -> {
-                makeTopBarUIUnselected()
-                setSelectedItem(mutableListOf())
-            }
-        }
-    }
+
 //    空の際の表示
     private val _fileEmptyText =  MutableLiveData<String>()
     private fun setFileEmptyText(string: String){
@@ -308,18 +343,17 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _action.value = navDirections
     }
     fun onClickBack(){
-        if(_modeInBox.value==true){
+        if(_modeInBox.value ==true){
             setModeInBox(false)
         }
     }
 
+
 //    －－－－－－－－
 //    －－－－recyclerView States－－－－
-    private val _makeUnSwiped = MutableLiveData<Boolean>()
     fun makeAllUnSwiped (){
-        _makeUnSwiped.value = true
+        setRecyclerViewMode(LibRVState.Plane)
     }
-    val makeUnSwiped:LiveData<Boolean> = _makeUnSwiped
 
     private val _leftSwipedItemExists = MutableLiveData<Boolean>()
     fun setLeftSwipedItemExists (boolean: Boolean){
@@ -397,14 +431,39 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             }
         }
     }
+    private fun updateCards(cards:List<Card>){
+        viewModelScope.launch {
+            repository.updateMultiple(cards)
+        }
+    }
 
 //    －－－－－－－－
 //    －－－－ファイル移動－－－－
-    fun onClickMoveTo(){
-        setTopBarMode(LibraryTopBarMode.ChooseFileMoveTo)
+    fun onClickMoveInBoxCardToFlashCard(){
+        setMultipleSelectMode(true)
+        makeAllRVItemsSelected()
+    }
+//    fun chooseFlashCardMoveTo(){
+//        setChooseFileMoveToMode(true)
+//        val a  = LibraryFragmentDirections.openFile()
+//        a.parentItemId =if(_parentFile.value == null) null else intArrayOf(_parentFile.value!!.fileId)
+//        setAction(a)
+//    }
+    fun chooseFileMoveTo(){
+        setMultipleSelectMode(false)
+        setChooseFileMoveToMode(true)
         val a  = LibraryFragmentDirections.openFile()
         a.parentItemId =if(_parentFile.value == null) null else intArrayOf(_parentFile.value!!.fileId)
         setAction(a)
+    }
+    fun moveSelectedItemToFile(item:File){
+        val cards = mutableListOf<Card>()
+        val a = _selectedItems.value
+        a?.onEach { if(it.card!=null) {
+            it.card.belongingFileId = item.fileId
+            cards.add(it.card)
+        } }
+        updateCards(cards)
     }
 
 //    －－－－－－－－

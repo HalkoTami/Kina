@@ -33,7 +33,7 @@ class LibRVClickListener(val view: View,
                         libraryViewModel.makeAllUnSwiped()
                     } else{
                         when(view.tag){
-                            LibRVState.Selectable -> {
+                            LibRVState.Selectable,LibRVState.Selected -> {
                                 libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
                                 btnSelect.isSelected = btnSelect.isSelected.not()
                             }
@@ -47,6 +47,7 @@ class LibRVClickListener(val view: View,
                     }
 
                 }
+                btnSelect -> if(rvBinding.root.tag == LibRVState.SelectFileMoveTo) libraryViewModel.moveSelectedItemToFile(item.file!!)
                 btnDelete       -> libraryViewModel.onClickDeleteRVItem(item)
                 btnEditWhole    -> createFileViewModel.onClickEditFileInRV(item.file!!)
                 btnAddNewCard   -> createCardViewModel.onClickRVAddNewCard(item)

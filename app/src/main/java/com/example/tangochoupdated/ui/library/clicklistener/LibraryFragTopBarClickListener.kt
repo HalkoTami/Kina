@@ -1,9 +1,12 @@
+import android.content.Context
 import android.view.View
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.navigation.NavController
+import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.LibraryFragBinding
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 
-class LibraryFragTopBarClickListener(val binding: LibraryFragBinding,val libVM: LibraryViewModel,
+class LibraryFragTopBarClickListener(val context:Context,val binding: LibraryFragBinding,val libVM: LibraryViewModel,
 val navCon:NavController): View.OnClickListener{
     val home = binding.topBarHomeBinding
     val file = binding.topBarFileBinding
@@ -26,14 +29,25 @@ val navCon:NavController): View.OnClickListener{
                 file.txvGGrandParentFileTitle -> TODO()
                 file.txvGrandParentFileTitle -> TODO()
 
-                inBox.imvMoveToFlashCard -> TODO()
-                inBox.imvClose -> navCon.popBackStack()
+                inBox.imvMoveToFlashCard -> {
+                    binding.topBarMultiselectBinding.multiSelectMenuBinding.apply {
+                        imvMoveSelectedItems.setImageDrawable(AppCompatResources.getDrawable(context,R.drawable.icon_move_to_flashcard_cover))
+                        arrayOf(imvDeleteSelectedItems,imvSetFlagToSelectedItems).onEach {
+                            it.visibility = View.GONE
+                        }
+                    }
+                    libVM.onClickMoveInBoxCardToFlashCard()
+                }
+                inBox.imvCloseInbox -> {
+                    libVM.onClickCloseInBox()
+                    navCon.popBackStack()
+                }
 
-                multi.imvClose -> libVM.setMultipleSelectMode(false)
+                multi.imvCloseMultiMode -> libVM.setMultipleSelectMode(false)
                 multi.imvSelectAll -> TODO()
                 multi.imvChangeMenuVisibility -> changeMenuVisibility()
 
-                multi.multiSelectMenuBinding.imvMoveSelectedItems -> TODO()
+                multi.multiSelectMenuBinding.imvMoveSelectedItems -> libVM.chooseFileMoveTo()
                 multi.multiSelectMenuBinding.imvDeleteSelectedItems -> TODO()
                 multi.multiSelectMenuBinding.imvSetFlagToSelectedItems -> TODO()
 

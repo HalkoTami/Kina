@@ -11,6 +11,7 @@ class LibraryFragmentStatus(
     var parentFolder:LibraryParentFolder = LibraryParentFolder.Home,
     var multiselectMode:Boolean = false,
     var selectedItemAction: SelectedItemAction? = null,
+    var rvItemsEmpty:Boolean = true
     )
 class ConfirmDeletePopUpStatus(
     var confirmMode: ConfirmDeletePopUpMode = ConfirmDeletePopUpMode.AskDeleteParent

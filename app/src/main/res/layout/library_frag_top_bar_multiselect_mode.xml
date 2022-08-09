@@ -12,7 +12,7 @@
 
 
     <ImageView
-        android:id="@+id/imv_close"
+        android:id="@+id/imv_close_multi_mode"
         android:padding="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

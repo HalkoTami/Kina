@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.ColorStatus
+import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
@@ -126,7 +127,17 @@ class LibraryListAdapter(
                 else -> GONE
             }
             binding.baseContainer.tag = LibRVState.Plane
-            binding.btnSelect.visibility = GONE
+            if(libraryViewModel.returnRVMode()==LibRVState.SelectFileMoveTo){
+                binding.btnSelect.visibility = VISIBLE
+                val a = AppCompatResources.getDrawable(context,if(
+                    libraryViewModel.returnParentFile()?.fileStatus == FileStatus.TANGO_CHO_COVER
+                ) R.drawable.icon_move_to_flashcard_cover
+                else R.drawable.icon_move_to_folder
+                )
+                binding.btnSelect.setImageDrawable(a)
+                binding.root.tag = LibRVState.SelectFileMoveTo
+                binding.btnSelect.alpha = 0.5f
+            }else binding.btnSelect.visibility = GONE
             binding.linLaySwipeShow.visibility = GONE
 
 

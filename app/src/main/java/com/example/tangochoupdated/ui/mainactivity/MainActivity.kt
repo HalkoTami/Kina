@@ -226,6 +226,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //        ー－－－ー－－－
 //        ー－－－LibraryViewModelの読み取りー－－－
         libraryViewModel.apply {
+            onCreate()
             action.observe(this@MainActivity){
                 navCon.navigate(it)
                 Toast.makeText(this@MainActivity, "action called ", Toast.LENGTH_SHORT).show()

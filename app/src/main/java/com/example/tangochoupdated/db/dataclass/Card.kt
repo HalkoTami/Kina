@@ -21,7 +21,7 @@ data class Card(
     @PrimaryKey(autoGenerate = true)
     val id:Int,
     @ColumnInfo
-    val belongingFileId:Int?,
+    var belongingFileId:Int?,
 
     @Embedded(prefix = "belonging_" )
     var stringData: StringData?,
