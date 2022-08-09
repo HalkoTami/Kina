@@ -12,7 +12,7 @@
 
     <ImageView
 
-        android:id="@+id/imv_move_to"
+        android:id="@+id/imv_move_selected_items"
         android:padding="5dp"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -21,16 +21,16 @@
         />
 
     <ImageView
-        android:id="@+id/bnv_imv_add"
+        android:id="@+id/imv_set_flag_to_selected_items"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:padding="3dp"
-        android:src="@drawable/icon_edit"
+        android:src="@drawable/icon_flag"
          />
 
     <ImageView
-        android:id="@+id/imv_delete_file"
+        android:id="@+id/imv_delete_selected_items"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"

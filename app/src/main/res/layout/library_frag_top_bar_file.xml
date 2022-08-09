@@ -54,67 +54,87 @@
         android:layout_height="15dp"
         android:layout_margin="5dp"
         android:gravity="center_vertical">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lineLay_g_g_file">
 
-        <ImageView
-            android:id="@+id/imv_grand_parent_folder"
+            <ImageView
+            android:id="@+id/imv_g_grand_parent_file"
             android:layout_width="12dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:src="@drawable/icon_file" />
-        <TextView
-            android:id="@+id/txv_gran_parent_folder_title"
+            <TextView
+                android:id="@+id/txv_g_grand_parent_file_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+
+                android:text="ファイル名"/>
+
+            <ImageView
+                android:id="@+id/imv_gg_to_gp"
+                android:layout_width="12dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:src="@drawable/icon_polygon" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="11sp"
+            android:id="@+id/lineLay_g_p_file">
+            <ImageView
+                android:id="@+id/imv_grand_parent_file"
+                android:layout_width="12dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:src="@drawable/icon_file" />
+            <TextView
+                android:id="@+id/txv_grand_parent_file_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:text="ファイル名"/>
 
-            android:text="ファイル名"/>
+            <ImageView
+                android:id="@+id/imv_gp_to_p"
+                android:layout_width="12dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:src="@drawable/icon_polygon" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <ImageView
-            android:id="@+id/imv_g_to_p"
-            android:layout_width="12dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:src="@drawable/icon_polygon" />
-
-        <ImageView
-            android:id="@+id/imv_parent_folder"
-            android:layout_width="12dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:src="@drawable/icon_file" />
-        <TextView
-            android:id="@+id/txv_parent_folder_title"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="11sp"
-            android:text="ファイル名"/>
+            android:id="@+id/lineLay_parent_file">
+            <ImageView
+                android:id="@+id/imv_parent_file"
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:src="@drawable/icon_flashcard" />
+            <TextView
+                android:id="@+id/txv_parent_file_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:text="ファイル名"/>
 
-        <ImageView
-            android:id="@+id/imv_p_to_c"
-            android:layout_width="12dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:src="@drawable/icon_polygon" />
+            <ImageView
+                android:id="@+id/imv_p_to_none"
+                android:layout_width="12dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:src="@drawable/icon_polygon" />
 
-        <ImageView
-            android:id="@+id/imv_flashcard_cover"
-            android:layout_width="15dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:src="@drawable/icon_flashcard" />
-        <TextView
-            android:id="@+id/txv_flashcard_cover_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="11sp"
-            android:text="ファイル名"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <ImageView
-            android:id="@+id/imv_p_to_none"
-            android:layout_width="12dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:src="@drawable/icon_polygon" />
+
+
+
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

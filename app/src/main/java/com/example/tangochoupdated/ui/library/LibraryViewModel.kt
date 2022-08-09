@@ -23,7 +23,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 //    Fragment作成時に毎回呼び出す
     fun onStart(){
-        setMultipleSelectMode(false)
+        if(_topBarMode.value != LibraryTopBarMode.ChooseFileMoveTo) setMultipleSelectMode(false)
         setSelectedItem(mutableListOf())
         setConfirmPopUpVisible(false,ConfirmMode.DeleteOnlyParent)
         if(_modeInBox.value== true)setTopBarMode(LibraryTopBarMode.InBox)
@@ -41,6 +41,24 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
     private val _parentFile = MutableLiveData<File?>()
     val parentFile:LiveData<File?> = _parentFile
+//    今開いてるファイルの祖先
+    fun  parentFileAncestorsFromDB(int: Int?):LiveData<List<File>?> = repository.getAllAncestorsByFileId(int).asLiveData()
+    fun setParentFileAncestorsFromDB (ancestors: List<File>?){
+        if(ancestors != null){
+            val a = ParentFileAncestors(
+                gGrandPFile  = if(ancestors.size>=3) ancestors[2] else null,
+                gParentFile = if(ancestors.size>=2) ancestors[1] else null,
+                ParentFile = if(ancestors.isNotEmpty()) ancestors[0] else null
+            )
+            _parentFileAncestors.value = a
+        }
+
+    }
+
+    private val _parentFileAncestors = MutableLiveData<ParentFileAncestors>()
+    val parentFileAncestors:LiveData<ParentFileAncestors> = _parentFileAncestors
+
+
 //    ファイルの中のファイル（子供）
     fun childFilesFromDB(int: Int?):LiveData<List<File>> = this.repository.mygetFileDataByParentFileId(int).asLiveData()
     private val _childFilesFromDB = MutableLiveData<List<File>?>()
@@ -378,6 +396,15 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
                 repository.deleteFileAndAllDescendants(file.fileId)
             }
         }
+    }
+
+//    －－－－－－－－
+//    －－－－ファイル移動－－－－
+    fun onClickMoveTo(){
+        setTopBarMode(LibraryTopBarMode.ChooseFileMoveTo)
+        val a  = LibraryFragmentDirections.openFile()
+        a.parentItemId =if(_parentFile.value == null) null else intArrayOf(_parentFile.value!!.fileId)
+        setAction(a)
     }
 
 //    －－－－－－－－

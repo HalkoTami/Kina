@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.library
 
-import android.annotation.SuppressLint
+import LibraryFragTopBarClickListener
+import LibraryPopUpConfirmDeleteClickListener
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -21,17 +22,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryFragBinding
-import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
-import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.mainactivity.Animation
 
 
-class LibraryFragment : Fragment(),View.OnClickListener {
+class LibraryFragment : Fragment(){
     private val args: LibraryFragmentArgs by navArgs()
 
     private lateinit var myNavCon:NavController
@@ -67,7 +66,7 @@ class LibraryFragment : Fragment(),View.OnClickListener {
         recyclerView.isNestedScrollingEnabled = true
 
 //        clickListenerを追加
-        addToClickableItem(binding)
+        addClickListenerToLibViews()
 //        －－－－LibraryViewModelの読み取り－－－－
 
         libraryViewModel.apply {
@@ -80,6 +79,9 @@ class LibraryFragment : Fragment(),View.OnClickListener {
             parentFileFromDB(myId).observe(viewLifecycleOwner) {
                 Toast.makeText(requireActivity(),"${it?.parentFileId}",Toast.LENGTH_SHORT).show()
                 setParentFileFromDB(it)
+            }
+            parentFileAncestorsFromDB(myId).observe(viewLifecycleOwner){
+                setParentFileAncestorsFromDB(it)
             }
             childFilesFromDB(myId).observe(viewLifecycleOwner) {
                 setChildFilesFromDB(it)
@@ -118,7 +120,6 @@ class LibraryFragment : Fragment(),View.OnClickListener {
             }
             myFinalList.observe(viewLifecycleOwner) {
                 adapter.submitList(it)
-                adapter.notifyDataSetChanged()
                 binding.emptyBinding.root.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.GONE
             }
@@ -138,6 +139,20 @@ class LibraryFragment : Fragment(),View.OnClickListener {
 
             binding.apply {
 //                トップバー
+                parentFileAncestors.observe(viewLifecycleOwner){
+                    topBarFileBinding.apply {
+                        txvGGrandParentFileTitle.text = it.gGrandPFile?.title
+                        txvGrandParentFileTitle.text = it.gParentFile?.title
+                        txvParentFileTitle.text = it.ParentFile?.title
+                        lineLayGGFile.visibility =
+                        if(it.gGrandPFile != null) View.VISIBLE else View.GONE
+                        lineLayGPFile.visibility =
+                        if(it.gParentFile != null) View.VISIBLE else View.GONE
+                        lineLayParentFile.visibility =
+                        if(it.ParentFile != null) View.VISIBLE else View.GONE
+                    }
+                }
+
                 if(myId == null) topBarHomeBinding.root.visibility = View.VISIBLE
                 else topBarFileBinding.root.visibility = View.VISIBLE
                 topBarMode.observe(viewLifecycleOwner) {
@@ -151,6 +166,13 @@ class LibraryFragment : Fragment(),View.OnClickListener {
                         }
                         LibraryTopBarMode.InBox -> {
                             topBarInboxBinding.root.visibility = View.VISIBLE
+                        }
+                        LibraryTopBarMode.ChooseFileMoveTo -> {
+                            topBarChooseFileMoveToBinding.root.visibility = View.VISIBLE
+                            recyclerView.children.iterator().forEach {
+                                it.findViewById<ImageView>(R.id.btn_select).visibility = View.VISIBLE
+                            }
+
                         }
                         else -> return@observe
                     }
@@ -182,17 +204,13 @@ class LibraryFragment : Fragment(),View.OnClickListener {
 //                削除確認のポップアップ
                 confirmPopUp.observe(viewLifecycleOwner) {
                     binding.apply {
-                        if (it.visible) frameLayConfirmDelete.visibility = View.VISIBLE
-                        else if (it.visible.not()) frameLayConfirmDelete.visibility = View.GONE
-                        confirmDeletePopUp.apply {
-                            txvConfirmDelete.text = it.txvConfirmText
-                            btnDenial.text = it.btnDenialText
-                            btnDenial.tag = it.confirmMode
-                            btnCommitDelete.text = it.btnCommitConfirmText
-                            btnCommitDelete.tag = it.confirmMode
+                        when(it.confirmMode){
+
+
+                        }
                         }
                     }
-                }
+
             }
 
 //            －－－－－－－－
@@ -232,58 +250,91 @@ class LibraryFragment : Fragment(),View.OnClickListener {
 
 
 
-    override fun onClick(v: View?) {
-        fun changeMenuVisibility(){
-            binding.topBarMultiselectBinding.frameLayMultiModeMenu.apply{
-                visibility =  if(this.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-            }
-        }
-
-        binding.apply {
-            when(v){
-                topBarMultiselectBinding.imvClose
-                    ->  libraryViewModel.setMultipleSelectMode(false)
-                topBarMultiselectBinding.imvChangeMenuVisibility
-                    -> changeMenuVisibility()
-                topBarMultiselectBinding.multiSelectMenuBinding.imvDeleteFile
-                    -> libraryViewModel.onClickDeleteParentItem()
-                topBarHomeBinding.frameLayInBox
-                    -> libraryViewModel.onClickInBox()
-                topBarInboxBinding.imvClose
-                    -> myNavCon.popBackStack()
-                confirmDeletePopUp.btnCommitDelete
-                    -> libraryViewModel.onClickBtnCommitConfirm(v.tag as LibraryViewModel.ConfirmMode)
-                confirmDeletePopUp.btnDenial
-                    -> libraryViewModel.onClickBtnDenial(v.tag as LibraryViewModel.ConfirmMode)
-
-            }
-        }
-    }
+//    override fun onClick(v: View?) {
+//        fun changeMenuVisibility(){
+//            binding.topBarMultiselectBinding.frameLayMultiModeMenu.apply{
+//                visibility =  if(this.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+//            }
+//        }
+//
+//        binding.apply {
+//            when(v){
+//                topBarMultiselectBinding.imvClose
+//                    ->  libraryViewModel.setMultipleSelectMode(false)
+//                topBarMultiselectBinding.imvChangeMenuVisibility
+//                    -> changeMenuVisibility()
+//                topBarMultiselectBinding.multiSelectMenuBinding.imvDeleteFile
+//                    -> libraryViewModel.onClickDeleteParentItem()
+//                topBarMultiselectBinding.multiSelectMenuBinding.imvMoveTo
+//                        -> {
+//                    libraryViewModel.onClickMoveTo()
+//                    Toast.makeText(requireActivity(),"called",Toast.LENGTH_SHORT).show()
+//                }
+//                topBarHomeBinding.frameLayInBox
+//                    -> libraryViewModel.onClickInBox()
+//                topBarInboxBinding.imvClose
+//                    -> myNavCon.popBackStack()
+//                confirmDeletePopUp.btnCommitDelete
+//                    -> libraryViewModel.onClickBtnCommitConfirm(v.tag as LibraryViewModel.ConfirmMode)
+//                confirmDeletePopUp.btnDenial
+//                    -> libraryViewModel.onClickBtnDenial(v.tag as LibraryViewModel.ConfirmMode)
+//
+//            }
+//        }
+//    }
     fun resetView(binding: LibraryFragBinding){
         binding.apply {
             arrayOf(topBarInboxBinding.root,
             topBarFileBinding.root,
             topBarHomeBinding.root,
-            topBarMultiselectBinding.root).onEach {
+            topBarMultiselectBinding.root,
+                topBarChooseFileMoveToBinding.root).onEach {
                 it.visibility = View.GONE
             }
         }
 
     }
-    private fun addToClickableItem(binding: LibraryFragBinding){
-        binding.apply {
-            LibFragClickListenerItem.addAll(
-                arrayOf(
-                    topBarMultiselectBinding.imvClose,
-                    topBarMultiselectBinding.imvChangeMenuVisibility,
-                    topBarMultiselectBinding.multiSelectMenuBinding.imvDeleteFile,
-                    topBarHomeBinding.frameLayInBox,
-                    confirmDeletePopUp.btnCommitDelete,
-                    confirmDeletePopUp.btnDenial,
-                    )
-            )
+    private fun addClickListenerToLibViews(){
+        fun addTopBarViews(){
+            val home = binding.topBarHomeBinding
+            val file = binding.topBarFileBinding
+            val inBox = binding.topBarInboxBinding
+            val multi = binding.topBarMultiselectBinding
+            val moveTo = binding.topBarChooseFileMoveToBinding
+            arrayOf(
+                home.frameLayInBox,
+                home.imvBookMark,
+                file.imvGoBack,
+                file.lineLayGGFile,
+                file.lineLayGPFile,
+                inBox.imvMoveToFlashCard,
+                inBox.imvClose,
+                multi.imvClose,
+                multi.imvSelectAll,
+                multi.imvChangeMenuVisibility,
+                multi.multiSelectMenuBinding.imvMoveSelectedItems,
+                multi.multiSelectMenuBinding.imvDeleteSelectedItems,
+                multi.multiSelectMenuBinding.imvSetFlagToSelectedItems,
+                moveTo.imvCloseChooseFileMoveTo
+                ).onEach { it.setOnClickListener { LibraryFragTopBarClickListener(binding,libraryViewModel, myNavCon) } }
         }
-       LibFragClickListenerItem.onEach { it.setOnClickListener(this) }
+        fun addConfirmDeletePopUp(){
+            val onlyP = binding.confirmDeletePopUpBinding
+            val deleteAllC = binding.confirmDeleteChildrenPopUpBinding
+            arrayOf(
+                onlyP.btnCloseConfirmDeleteOnlyParentPopup,
+                onlyP.btnCommitDeleteOnlyParent,
+                onlyP.btnDenyDeleteOnlyParent,
+                deleteAllC.btnCloseConfirmDeleteOnlyParentPopup,
+                deleteAllC.btnCommitDeleteAllChildren,
+                deleteAllC.btnDenyDeleteAllChildren
+            )   .onEach {
+                it.setOnClickListener { LibraryPopUpConfirmDeleteClickListener(binding,libraryViewModel) }
+            }
+        }
+
+        addTopBarViews()
+        addConfirmDeletePopUp()
     }
 
 
@@ -293,94 +344,5 @@ class LibraryFragment : Fragment(),View.OnClickListener {
     }
 
 }
-class LibRVClickListener(val view:View,
-                         val context: Context,
-                         val item: LibraryRV,
-                         private val createFileViewModel: CreateFileViewModel,
-                         private val libraryViewModel: LibraryViewModel,
-                         private val createCardViewModel: CreateCardViewModel,
-                         private val rvBinding: LibraryFragRvItemBaseBinding):MyTouchListener(context){
-
-//    click後にtouch event を設定しなおすと親子関係のコンフリクトが防げそう
-    override fun onSingleTap() {
-        super.onSingleTap()
-        rvBinding.apply {
-            when(view){
-                baseContainer       ->  {
-                    if(libraryViewModel.returnLeftSwipedItemExists()==true){
-                        libraryViewModel.makeAllUnSwiped()
-                    } else{
-                        when(view.tag){
-                            LibRVState.Selectable -> {
-                                libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
-                                btnSelect.isSelected = btnSelect.isSelected.not()
-                            }
-                            LibRVState.Plane -> {
-                                when(item.type){
-                                    LibRVViewType.Folder,LibRVViewType.FlashCardCover -> libraryViewModel.openNextFile(item)
-                                    LibRVViewType.StringCard -> createCardViewModel.onClickEditCard(item)
-                                }
-                            }
-                        }
-                    }
-
-                }
-                btnDelete       -> libraryViewModel.onClickDeleteRVItem(item)
-                btnEditWhole    -> createFileViewModel.onClickEditFileInRV(item.file!!)
-                btnAddNewCard   -> createCardViewModel.onClickRVAddNewCard(item)
-            }
-        }
-    }
-
-    override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
-        super.onScrollLeft(distanceX, motionEvent)
-        rvBinding.apply {
-            if(rvBinding.root.tag==LibRVState.Plane){
-                linLaySwipeShow.layoutParams.width = 1
-                linLaySwipeShow.requestLayout()
-                linLaySwipeShow.children.iterator().forEach {
-                    it.visibility = View.VISIBLE
-                }
-                linLaySwipeShow.visibility = View.VISIBLE
-                rvBinding.root.tag = LibRVState.LeftSwiping
-
-            }else if(rvBinding.root.tag==LibRVState.LeftSwiping) {
-                if(rvBinding.root.tag!=LibRVState.LeftSwiping){
-                    rvBinding.root.tag = LibRVState.LeftSwiping
-                }
-                linLaySwipeShow.layoutParams.width = distanceX.toInt()/5
-                linLaySwipeShow.requestLayout()
-
-            }
-
-        }
-    }
-    override fun onLongClick() {
-        super.onLongClick()
-        rvBinding.btnSelect.isSelected = true
-        libraryViewModel.setMultipleSelectMode(true)
-        libraryViewModel.onClickSelectableItem(item,true)
-    }
 
 
-
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        if(event?.actionMasked==MotionEvent.ACTION_UP||event?.actionMasked==MotionEvent.ACTION_CANCEL){
-            if(rvBinding.root.tag== LibRVState.LeftSwiping){
-                if(rvBinding.linLaySwipeShow.width <50){
-                    Animation().animateLibRVLeftSwipeLay(rvBinding.linLaySwipeShow,false)
-                    rvBinding.root.tag = LibRVState.Plane
-                }
-                else if (rvBinding.linLaySwipeShow.width>=50){
-                    Animation().animateLibRVLeftSwipeLay(rvBinding.linLaySwipeShow ,true)
-                    rvBinding.root.tag = LibRVState.LeftSwiped
-                    libraryViewModel.setLeftSwipedItemExists(true)
-                }
-
-            }
-
-        }
-        return super.onTouch(v, event)
-    }
-
-}

@@ -15,8 +15,8 @@ import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
-import com.example.tangochoupdated.ui.library.LibRVClickListener
 import com.example.tangochoupdated.ui.library.LibraryViewModel
+import com.example.tangochoupdated.ui.library.clicklistener.LibRVClickListener
 
 
 /**
@@ -67,7 +67,8 @@ class LibraryListAdapter(
                     LibRVClickListener(it,context,item,
                         createFileViewModel,
                         libraryViewModel,
-                        createCardViewModel, binding)) }
+                        createCardViewModel, binding)
+                ) }
             }
 
             fun getStrokeColResId(colorStatus: ColorStatus):Int{

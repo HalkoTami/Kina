@@ -47,7 +47,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun getpAndGP(parentId:Int?):List<File>{
         val a = mutableListOf<File>()
-        Flowable.fromCallable { repository.getPAndGPFiles(parentId)}
+        Flowable.fromCallable { repository.getAllAncestorsByFileId(parentId)}
             .subscribeOn(Schedulers.io())
             .map { it.map {
                 a.addAll(it)
@@ -61,7 +61,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-    fun allAncestors(fileId:Int?):LiveData<List<File>?> = repository.getPAndGPFiles(fileId).asLiveData()
+    fun allAncestors(fileId:Int?):LiveData<List<File>?> = repository.getAllAncestorsByFileId(fileId).asLiveData()
     val _pAndgGP = MutableLiveData<List<File>>()
     fun setPAndG(list: List<File>?){
         _pAndgGP.value = list

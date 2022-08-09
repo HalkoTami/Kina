@@ -33,7 +33,7 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
         val lastInsertedFile:Flow<Int> = libraryDao.getLastInsertedFile()
         fun mygetFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = libraryDao.myGetFileByParentFileId(parentFileId)
 
-        fun getPAndGPFiles(fileId: Int?):Flow<List<File>> = libraryDao.getAllAncestorsByChildFileId(fileId)
+        fun getAllAncestorsByFileId(fileId: Int?):Flow<List<File>> = libraryDao.getAllAncestorsByChildFileId(fileId)
         fun getAllDescendantsByFileId(fileIdList: Int?):Flow<List<File>> = libraryDao.getAllDescendantsFilesByParentFileId(fileIdList)
 //    fun getAllDescendantsByFileIdWithCard(fileId: Int?):Flow<List<Any>> = libraryDao.getAllDescendantsByParentFileId2(fileId)
 
