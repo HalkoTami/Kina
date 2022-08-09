@@ -464,6 +464,8 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             cards.add(it.card)
         } }
         updateCards(cards)
+        clearSelectedItems()
+        setChooseFileMoveToMode(false)
     }
 
 //    －－－－－－－－

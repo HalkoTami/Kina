@@ -47,7 +47,9 @@ class LibRVClickListener(val view: View,
                     }
 
                 }
-                btnSelect -> if(rvBinding.root.tag == LibRVState.SelectFileMoveTo) libraryViewModel.moveSelectedItemToFile(item.file!!)
+                btnSelect -> {
+                    if(rvBinding.root.tag == LibRVState.SelectFileMoveTo) libraryViewModel.moveSelectedItemToFile(item.file!!)
+                }
                 btnDelete       -> libraryViewModel.onClickDeleteRVItem(item)
                 btnEditWhole    -> createFileViewModel.onClickEditFileInRV(item.file!!)
                 btnAddNewCard   -> createCardViewModel.onClickRVAddNewCard(item)
