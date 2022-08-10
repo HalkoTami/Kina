@@ -54,11 +54,19 @@ interface LibraryDao {
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("WITH  generation AS (" +
-            " select * from tbl_file where fileId = :fileId " +
+            " select * from tbl_file where fileId in(:fileIdList)  " +
             "UNION ALL" +
             " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
             "SELECT * FROM generation b ")
-    fun getAllDescendantsFilesByParentFileId(fileId: Int?):Flow<List<File>>
+    fun getAllDescendantsFilesByMultipleFileId(fileIdList: List<Int>):Flow<List<File>>
+
+    @Query("Select * from tbl_card where not card_deleted and belongingFileId in ( " +
+            "with generation AS (" +
+            " select * from tbl_file where fileId in(:fileIdList)  " +
+            "UNION ALL" +
+            " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
+            "SELECT fileId FROM generation b )")
+    fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
 
     @Query("UPDATE tbl_file SET parentFileId = :newParentFileId  WHERE parentFileId = :deletedFileId")
     fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?)
@@ -110,6 +118,10 @@ interface LibraryDao {
     @Query("select * FROM tbl_card " +
             "where not card_deleted AND belongingFileId is :belongingFileId ")
     fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<CardAndTags>>
+
+    @Query("select * FROM tbl_card " +
+            "where not card_deleted AND belongingFileId in(:fileIdList) ")
+    fun getCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
 
     @Query("select * from tbl_card where NOT card_deleted AND " +
             "belonging_markerTextPreview OR " +

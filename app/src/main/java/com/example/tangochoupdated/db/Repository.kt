@@ -28,13 +28,15 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
 //    fun getFileDataByParentFileId(parentFileId:Int?):Flow<FileWithChild> = libraryDao.getFileListByParentFileId(parentFileId)
 
     fun getCardDataByFileId(parentFileId: Int?):Flow<List<CardAndTags>>  = libraryDao.getCardsDataByFileId(parentFileId)
+    fun getCardsByMultipleFileId(fileIdList: List<Int>): Flow<List<Card>> = libraryDao.getCardsByMultipleFileId(fileIdList)
     fun getFileByFileId(fileId:Int?):Flow<File> = libraryDao.getFileByFileId(fileId)
     
         val lastInsertedFile:Flow<Int> = libraryDao.getLastInsertedFile()
         fun mygetFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = libraryDao.myGetFileByParentFileId(parentFileId)
 
         fun getAllAncestorsByFileId(fileId: Int?):Flow<List<File>> = libraryDao.getAllAncestorsByChildFileId(fileId)
-        fun getAllDescendantsByFileId(fileIdList: Int?):Flow<List<File>> = libraryDao.getAllDescendantsFilesByParentFileId(fileIdList)
+        fun getAllDescendantsFilesByMultipleFileId(fileIdList: List<Int>):Flow<List<File>> = libraryDao.getAllDescendantsFilesByMultipleFileId(fileIdList)
+        fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>> = libraryDao.getAllDescendantsCardsByMultipleFileId(fileIdList)
 //    fun getAllDescendantsByFileIdWithCard(fileId: Int?):Flow<List<Any>> = libraryDao.getAllDescendantsByParentFileId2(fileId)
 
         fun getCardByCardId(cardId:Int?):Flow<CardAndTags> = cardDao.getCardAndTagsByCardId(cardId)

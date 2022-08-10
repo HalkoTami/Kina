@@ -50,6 +50,7 @@
             android:layout_height="match_parent"
             android:src="@drawable/icon_inbox"/>
         <TextView
+            android:id="@+id/txv_inBox_card_amount"
             android:layout_width="wrap_content"
             android:minWidth="17dp"
             android:minHeight="17dp"

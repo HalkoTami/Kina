@@ -48,7 +48,7 @@ class LibraryListAdapter(
                  libraryViewModel: LibraryViewModel ,
                  createCardViewModel: CreateCardViewModel,
                  createFileViewModel: CreateFileViewModel){
-            item.position = adapterPosition
+            if(item.card!=null && item.card.libOrder!= adapterPosition) libraryViewModel.upDateCardPosition(adapterPosition,item.card)
 
 //            親レイアウトのclick listener
             val clickableViews = mutableListOf<View>()

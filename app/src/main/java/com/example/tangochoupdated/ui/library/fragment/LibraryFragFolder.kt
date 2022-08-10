@@ -4,6 +4,8 @@ import LibraryFragFileClickListener
 import LibraryPopUpConfirmDeleteClickListener
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.VectorDrawable
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -12,6 +14,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -26,6 +29,7 @@ import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryFragBinding
 import com.example.tangochoupdated.databinding.LibraryFragHomeBaseBinding
 import com.example.tangochoupdated.databinding.LibraryFragOpenFolderBaseBinding
+import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
@@ -34,6 +38,7 @@ import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.LibraryTopBarMode
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 import com.example.tangochoupdated.ui.mainactivity.Animation
+import com.example.tangochoupdated.ui.mainactivity.MainActivity
 
 
 class LibraryFragFolder :  Fragment(){
@@ -62,8 +67,28 @@ class LibraryFragFolder :  Fragment(){
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
+
+
         libraryViewModel.apply {
+            clearFinalList()
+            parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner){
+                setParentFileFromDB(it)
+                binding.topBarFileBinding.apply {
+                    txvFileTitle.text = it?.title ?:"タイトルなし"
+                    imvFileType.setImageDrawable(
+                        MainActivity().changeFileIconCol(it?.colorStatus ?:ColorStatus.GRAY,requireActivity())
+                    )
+                }
+            }
             childFilesFromDB(args.folderId.single()).observe(viewLifecycleOwner) {
+                val childFoldersAmount = it.filter { it.fileStatus == FileStatus.FOLDER }.size
+                val childFlashCardCoverAmount = it.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }.size
+                if(returnParentFile()?.childFoldersAmount!=childFoldersAmount){
+                    upDateContainingCardAmount(childFoldersAmount)
+                }
+                if(returnParentFile()?.childFlashCardCoversAmount!=childFlashCardCoverAmount){
+                    upDateContainingFlashCardAmount(childFlashCardCoverAmount)
+                }
                 setChildFilesFromDB(it)
             }
             myFinalList.observe(viewLifecycleOwner) {
@@ -71,8 +96,34 @@ class LibraryFragFolder :  Fragment(){
                 binding.emptyBinding.root.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.GONE
             }
+            parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner){
+                setParentFileAncestorsFromDB(it)
+            }
+            parentFileAncestors.observe(viewLifecycleOwner){
+                    binding.topBarFileBinding.apply {
+                        txvGGrandParentFileTitle.text = it.gGrandPFile?.title
+                        txvGrandParentFileTitle.text = it.gParentFile?.title
+                        txvParentFileTitle.text = it.ParentFile?.title
+                        lineLayGGFile.visibility =
+                        if(it.gGrandPFile != null) View.VISIBLE else View.GONE
+                        lineLayGPFile.visibility =
+                        if(it.gParentFile != null) View.VISIBLE else View.GONE
+                        lineLayParentFile.visibility =
+                        if(it.ParentFile != null) View.VISIBLE else View.GONE
+                    }
+                }
+            multipleSelectMode.observe(viewLifecycleOwner){
+                binding.topBarMultiselectBinding.root.visibility =if(it) View.VISIBLE else View.GONE
+                LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
+            }
+            makeAllUnSwiped.observe(viewLifecycleOwner){
+                if(it) LibraryFragmentBase().makeLibRVUnSwiped(recyclerView)
+            }
+            selectedItems.observe(viewLifecycleOwner){
+                binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+            }
 
-        }
+            }
         addTopBarViews()
         return binding.root
     }

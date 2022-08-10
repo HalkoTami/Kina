@@ -1,5 +1,6 @@
 import android.view.View
 import com.example.tangochoupdated.databinding.LibraryFragBinding
+import com.example.tangochoupdated.ui.library.ConfirmMode
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 
 class LibraryPopUpConfirmDeleteClickListener(val binding: LibraryFragBinding, val libVM: LibraryViewModel): View.OnClickListener{
@@ -8,12 +9,12 @@ class LibraryPopUpConfirmDeleteClickListener(val binding: LibraryFragBinding, va
     override fun onClick(v: View?) {
         binding.apply {
             when(v){
-                onlyP.btnCloseConfirmDeleteOnlyParentPopup -> TODO()
-                onlyP.btnCommitDeleteOnlyParent -> TODO()
-                onlyP.btnDenyDeleteOnlyParent -> TODO()
-                deleteAllC.btnCloseConfirmDeleteOnlyParentPopup -> TODO()
-                deleteAllC.btnCommitDeleteAllChildren -> TODO()
-                deleteAllC.btnDenyDeleteAllChildren -> TODO()
+                onlyP.btnCloseConfirmDeleteOnlyParentPopup -> libVM.setConfirmPopUpVisible(false,ConfirmMode.DeleteOnlyParent)
+                onlyP.btnCommitDeleteOnlyParent -> libVM.onClickBtnCommitConfirm(ConfirmMode.DeleteOnlyParent)
+                onlyP.btnDenyDeleteOnlyParent -> libVM.onClickBtnDenial(ConfirmMode.DeleteOnlyParent)
+                deleteAllC.btnCloseConfirmDeleteOnlyParentPopup -> binding.frameLayConfirmDelete.visibility = View.GONE
+                deleteAllC.btnCommitDeleteAllChildren -> libVM.onClickBtnCommitConfirm(ConfirmMode.DeleteWithChildren)
+                deleteAllC.btnDenyDeleteAllChildren -> libVM.onClickBtnDenial(ConfirmMode.DeleteWithChildren)
 
 
             }

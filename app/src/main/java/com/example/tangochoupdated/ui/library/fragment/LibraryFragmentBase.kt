@@ -2,7 +2,6 @@ package com.example.tangochoupdated.ui.library.fragment
 
 import LibraryPopUpConfirmDeleteClickListener
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -13,25 +12,18 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryFragBinding
-import com.example.tangochoupdated.databinding.LibraryFragInboxBaseBinding
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.ConfirmMode
-import com.example.tangochoupdated.ui.library.LibraryTopBarMode
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 import com.example.tangochoupdated.ui.mainactivity.Animation
 
@@ -56,14 +48,65 @@ class LibraryFragmentBase : Fragment(){
     ): View {
         _binding = LibraryFragBinding.inflate(inflater, container, false)
 
-        libraryViewModel.confirmPopUp.observe(viewLifecycleOwner){
-            when(it.confirmMode){
-                ConfirmMode.DeleteOnlyParent-> {
-                    binding.confirmDeletePopUpBinding.root.visibility = if(it.visible) View.VISIBLE else View.GONE
+
+
+        libraryViewModel.apply {
+            confirmPopUp.observe(viewLifecycleOwner){
+                val visibility = it.visible
+                if(!visibility){
+                    binding.confirmDeletePopUpBinding.root.visibility = View.GONE
+                    binding.confirmDeleteChildrenPopUpBinding.root.visibility = View.GONE
+                } else {
+                    when(it.confirmMode){
+                        ConfirmMode.DeleteOnlyParent-> binding.confirmDeletePopUpBinding.root.visibility = View.VISIBLE
+                        ConfirmMode.DeleteWithChildren -> binding.confirmDeleteChildrenPopUpBinding.root.visibility = View.VISIBLE
+                    }
                 }
-                ConfirmMode.DeleteWithChildren -> binding.confirmDeleteChildrenPopUpBinding.root.visibility = if(it.visible) View.VISIBLE else View.GONE
+            }
+            deletingItem.observe(viewLifecycleOwner){ list ->
+                if (returnParentFile()?.fileStatus!= FileStatus.TANGO_CHO_COVER&& list.isEmpty().not()) {
+                    val fileIds = mutableListOf<Int>()
+                    list.onEach { fileIds.add(it.id) }
+                    getAllDescendantsByFileId(fileIds).observe(viewLifecycleOwner) {
+                        setDeletingItemChildrenFiles(it)
+                    }
+                    getCardsByMultipleFileId(fileIds).observe(viewLifecycleOwner){
+                        setDeletingItemChildrenCards(it)
+                    }
+                }
+                binding.confirmDeletePopUpBinding.apply {
+                    txvConfirmDeleteOnlyParent.text =
+                    if(list.size==1){
+                        when(list[0].type){
+                            LibRVViewType.Folder,LibRVViewType.FlashCardCover ->
+                                "${list[0].file!!.title}を削除しますか？"
+                            else -> "カードを削除しますか？"
+                        }
+
+                    } else if(list.size>1){
+                        when(returnParentFile()?.fileStatus){
+                            FileStatus.TANGO_CHO_COVER -> "${list.size}のカードを削除しますか？"
+                            else -> "${list.size}のアイテムを削除しますか？"
+                        }
+                    } else ""
+                }
+
+            }
+            deletingItemChildrenFiles.observe(viewLifecycleOwner){ list ->
+                val folderAmount = list?.filter { it.fileStatus == FileStatus.FOLDER }?.size ?:0
+                val flashcardCoverAmount = list?.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }?.size ?:0
+                binding.confirmDeleteChildrenPopUpBinding.apply {
+                    txvContainingFolder.text = "${folderAmount}個"
+                    txvContainingFlashcard.text = "${flashcardCoverAmount}個"
+                }
+            }
+            deletingItemChildrenCards.observe(viewLifecycleOwner){ list->
+                val cardAmount = list?.size
+                binding.confirmDeleteChildrenPopUpBinding.txvContainingCard.text = "${cardAmount}枚"
             }
         }
+
+
 
         val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.frag_container_view) as NavHostFragment
         myNavCon = navHostFragment.navController
@@ -73,7 +116,6 @@ class LibraryFragmentBase : Fragment(){
             Toast.makeText(requireActivity(), "action called ", Toast.LENGTH_SHORT).show()
         }
 
-        binding.confirmDeletePopUpBinding.root.visibility  = View.VISIBLE
         addConfirmDeletePopUp()
         return binding.root
     }
@@ -97,6 +139,36 @@ class LibraryFragmentBase : Fragment(){
             this,  // LifecycleOwner
             callback
         )
+    }
+    fun changeLibRVSelectBtnVisibility(rv:RecyclerView,visible: Boolean){
+        rv.children.iterator().forEach { view ->
+            view.findViewById<ImageView>(R.id.btn_select).apply {
+                visibility =if(visible) View.VISIBLE else View.GONE
+            }
+        }
+    }
+    fun changeStringBtnVisibility(rv:RecyclerView,visible:Boolean){
+        rv.children.iterator().forEach { view ->
+            arrayOf(
+                view.findViewById<ImageView>(R.id.btn_edt_front),
+                view.findViewById<ImageView>(R.id.btn_edt_back),
+                view.findViewById(R.id.btn_add_new_card))
+                .onEach {
+                    it.visibility = if(visible)View.VISIBLE else View.GONE
+                }
+        }
+    }
+
+    fun makeLibRVUnSwiped(rv:RecyclerView){
+        rv.children.iterator().forEach { view ->
+            val parent = view.findViewById<ConstraintLayout>(R.id.base_container)
+            if(parent.tag == LibRVState.LeftSwiped){
+                Animation().animateLibRVLeftSwipeLay(
+                    view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false)
+            }
+            view.findViewById<ImageView>(R.id.btn_select).visibility = View.GONE
+            parent.tag = LibRVState.Plane
+        }
     }
 
     fun addConfirmDeletePopUp(){

@@ -71,24 +71,18 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private val _childFilesFromDB = MutableLiveData<List<File>?>()
     fun setChildFilesFromDB (list: List<File>?){
         _childFilesFromDB.value = list
-        if(_parentFile.value?.fileStatus != FileStatus.TANGO_CHO_COVER){
-            clearFinalList()
-            val b = mutableListOf<LibraryRV>()
-            list?.onEach { b.add(convertFileToLibraryRV(it)) }
-            setValueToFinalList(b)
-        }
+        val b = mutableListOf<LibraryRV>()
+        list?.onEach { b.add(convertFileToLibraryRV(it)) }
+        setValueToFinalList(b)
     }
 //    ファイルの中のカード
     fun childCardsFromDB(int: Int?):LiveData<List<CardAndTags>?> =  this.repository.getCardDataByFileId(int).asLiveData()
     private val _childCardsFromDB=MutableLiveData<List<CardAndTags>?>()
     fun setChildCardsFromDB(list: List<CardAndTags>?){
         _childCardsFromDB.value = list
-        if(_parentFile.value?.fileStatus == FileStatus.TANGO_CHO_COVER||(_modeInBox.value == true&&_chooseFileMoveToMode.value != true)){
-            val b = mutableListOf<LibraryRV>()
-            clearFinalList()
-            list?.onEach { b.add(convertCardToLibraryRV(it)) }
-            setValueToFinalList(b)
-        }
+        val b = mutableListOf<LibraryRV>()
+        list?.onEach { b.add(convertCardToLibraryRV(it)) }
+        setValueToFinalList(b)
     }
     val childCardsFromDB:LiveData<List<CardAndTags>?> = _childCardsFromDB
 
@@ -98,7 +92,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //    最終的なRVのアイテムリスト
     private val _myFinalList= MutableLiveData<List<LibraryRV>>()
     val myFinalList :LiveData<List<LibraryRV>> = _myFinalList
-    private fun setValueToFinalList(list:List<LibraryRV>){
+    fun setValueToFinalList(list:List<LibraryRV>){
         val comparator : Comparator<LibraryRV> = compareBy { it.position }
         val a = list.sortedWith(comparator)
         _myFinalList.apply {
@@ -110,9 +104,8 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
     }
 //    空にする
-    private fun clearFinalList(){
-        val a = mutableListOf<LibraryRV>()
-        _myFinalList.value = a
+    fun clearFinalList(){
+        setValueToFinalList(mutableListOf())
     }
 //    LibraryRVへの変換
     private fun convertFileToLibraryRV(file: File):LibraryRV{
@@ -238,6 +231,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         changeTopBarMode()
         changeRVMode()
     }
+    fun returnMultiSelectMode():Boolean?{
+        return _multipleSelectMode.value
+    }
 
     private val _recyclerViewMode = MutableLiveData<LibRVState>()
     private fun setRecyclerViewMode(libRVState: LibRVState){
@@ -280,13 +276,12 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //    ClickEvents
     fun onClickInBox(){
 
+
         val a = LibraryFragHomeDirections.openInbox()
         setAction(a)
 
     }
-    fun onClickCloseInBox(){
-        setModeInBox(false)
-    }
+
 
 //    －－－－－－－－
 
@@ -304,13 +299,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     class ConfirmPopUpView(
         var visible:Boolean,
-        var btnDenialText:String,
-        var btnCommitConfirmText:String,
-        var txvConfirmText:String,
         var confirmMode: ConfirmMode
     )
     private val _confirmPopUp =  MutableLiveData<ConfirmPopUpView>()
-    private fun setConfirmPopUpVisible(boolean: Boolean,confirmMode: ConfirmMode){
+    fun setConfirmPopUpVisible(boolean: Boolean,confirmMode: ConfirmMode){
         val single = (_deletingItems.value != null) && (_deletingItems.value!!.size == 1)
         val btnDenialText:String
         val txvConfirmText:String
@@ -329,7 +321,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             }
         }
         _confirmPopUp.apply {
-            value = ConfirmPopUpView(boolean,btnDenialText,"削除する",txvConfirmText,confirmMode)
+            value = ConfirmPopUpView(boolean,confirmMode)
         }
     }
     val confirmPopUp:LiveData<ConfirmPopUpView> = _confirmPopUp
@@ -353,9 +345,12 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 //    －－－－－－－－
 //    －－－－recyclerView States－－－－
+    private val _makeAllUnSwiped = MutableLiveData<Boolean>()
     fun makeAllUnSwiped (){
-        setRecyclerViewMode(LibRVState.Plane)
+        _makeAllUnSwiped.value = true
+        setLeftSwipedItemExists(false)
     }
+    val makeAllUnSwiped:LiveData<Boolean> = _makeAllUnSwiped
 
     private val _leftSwipedItemExists = MutableLiveData<Boolean>()
     fun setLeftSwipedItemExists (boolean: Boolean){
@@ -413,16 +408,25 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
 
     }
-    fun getAllDescendantsByFileId(fileIdList: Int?): LiveData<List<File>> = repository.getAllDescendantsByFileId(fileIdList).asLiveData()
+    fun getAllDescendantsByFileId(fileIdList: List<Int>): LiveData<List<File>> = repository.getAllDescendantsFilesByMultipleFileId(fileIdList).asLiveData()
+    fun getCardsByMultipleFileId(fileIdList: List<Int>): LiveData<List<Card>> = repository.getAllDescendantsCardsByMultipleFileId(fileIdList).asLiveData()
     private val _deletingItems = MutableLiveData<List<LibraryRV>>()
     private fun setDeletingItem(list:List<LibraryRV>){
         _deletingItems.value = list
     }
     val deletingItem:LiveData<List<LibraryRV>> = _deletingItems
+
     private val _deletingItemChildrenFiles = MutableLiveData<List<File>?>()
     fun setDeletingItemChildrenFiles(list:List<File>?){
         _deletingItemChildrenFiles.value = list
     }
+    val deletingItemChildrenFiles:LiveData<List<File>?> = _deletingItemChildrenFiles
+    private val _deletingItemChildrenCards = MutableLiveData<List<Card>?>()
+    fun setDeletingItemChildrenCards(list:List<Card>?){
+        _deletingItemChildrenCards.value = list
+    }
+    val deletingItemChildrenCards:LiveData<List<Card>?> = _deletingItemChildrenCards
+
     private fun deleteSingleFile(file:File, deleteChildren:Boolean){
         viewModelScope.launch {
             if(!deleteChildren){
@@ -437,6 +441,31 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         viewModelScope.launch {
             repository.updateMultiple(cards)
         }
+    }
+    private fun update(any:Any){
+        viewModelScope.launch {
+            repository.update(any)
+        }
+    }
+    fun upDateCardPosition(position:Int,card:Card){
+        val update = card
+        update.libOrder = position
+        update(card)
+    }
+    fun upDateContainingCardAmount(cardAmount:Int){
+        val update = _parentFile.value ?:return
+        update.childCardsAmount = cardAmount
+        update(update)
+    }
+    fun upDateContainingFolderAmount(folderAmount:Int){
+        val update = _parentFile.value ?:return
+        update.childFoldersAmount = folderAmount
+        update(update)
+    }
+    fun upDateContainingFlashCardAmount(flashCardCoverAmount:Int){
+        val update = _parentFile.value ?:return
+        update.childFlashCardCoversAmount = flashCardCoverAmount
+        update(update)
     }
 
 //    －－－－－－－－
@@ -462,6 +491,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         val a = _selectedItems.value
         a?.onEach { if(it.card!=null) {
             it.card.belongingFileId = item.fileId
+            it.card.libOrder = item.childCardsAmount + 1
             cards.add(it.card)
         } }
         updateCards(cards)

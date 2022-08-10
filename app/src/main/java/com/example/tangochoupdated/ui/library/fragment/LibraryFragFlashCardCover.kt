@@ -26,6 +26,7 @@ import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryFragBinding
 import com.example.tangochoupdated.databinding.LibraryFragHomeBaseBinding
 import com.example.tangochoupdated.databinding.LibraryFragOpenFlashCardCoverBaseBinding
+import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
@@ -34,6 +35,7 @@ import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.LibraryTopBarMode
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 import com.example.tangochoupdated.ui.mainactivity.Animation
+import com.example.tangochoupdated.ui.mainactivity.MainActivity
 
 
 class LibraryFragFlashCardCover  : Fragment(){
@@ -55,25 +57,67 @@ class LibraryFragFlashCardCover  : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val navHostFragment =
-            childFragmentManager.findFragmentById(binding.mainFrameLayout.id) as NavHostFragment
-        myNavCon = navHostFragment.navController
+
+        myNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
         _binding = LibraryFragOpenFlashCardCoverBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
         adapter = LibraryListAdapter(createFileViewModel,createCardViewModel,libraryViewModel, requireActivity())
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
+
+        binding.topBarFileBinding.imvFileType.setImageDrawable(AppCompatResources.getDrawable(requireActivity(),R.drawable.icon_flashcard))
+
         libraryViewModel.apply {
+            clearFinalList()
+            parentFileFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
+                binding.topBarFileBinding.txvFileTitle.text = it?.title ?:"タイトルなし"
+                binding.topBarFileBinding.imvFileType.setImageDrawable(
+                    MainActivity().changeFlashCardIconCol(it?.colorStatus ?:ColorStatus.GRAY,requireContext())
+                )
+                createCardViewModel.setParentFlashCardCover(it)
+            }
+            parentFileAncestorsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
+                setParentFileAncestorsFromDB(it)
+            }
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
                 setChildCardsFromDB(it)
+                if(returnParentFile()?.childCardsAmount!=it?.size){
+                    upDateContainingCardAmount(it?.size ?:0)
+                }
+                createCardViewModel.setSisterCards(it)
             }
             myFinalList.observe(viewLifecycleOwner) {
                 adapter.submitList(it)
                 binding.emptyBinding.root.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.GONE
             }
+            multipleSelectMode.observe(viewLifecycleOwner){
+                binding.topBarMultiselectBinding.root.visibility =if(it) View.VISIBLE else View.GONE
+                LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
+                LibraryFragmentBase().changeStringBtnVisibility(recyclerView,it)
+            }
+            makeAllUnSwiped.observe(viewLifecycleOwner){
+                if(it) LibraryFragmentBase().makeLibRVUnSwiped(recyclerView)
+            }
+            parentFileAncestors.observe(viewLifecycleOwner){
+                binding.topBarFileBinding.apply {
+                    txvGGrandParentFileTitle.text = it.gGrandPFile?.title
+                    txvGrandParentFileTitle.text = it.gParentFile?.title
+                    txvParentFileTitle.text = it.ParentFile?.title
+                    lineLayGGFile.visibility =
+                        if(it.gGrandPFile != null) View.VISIBLE else View.GONE
+                    lineLayGPFile.visibility =
+                        if(it.gParentFile != null) View.VISIBLE else View.GONE
+                    lineLayParentFile.visibility =
+                        if(it.ParentFile != null) View.VISIBLE else View.GONE
+                }
+            }
+            selectedItems.observe(viewLifecycleOwner){
+                binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+            }
 
+            addTopBarViews()
         }
         return binding.root
     }

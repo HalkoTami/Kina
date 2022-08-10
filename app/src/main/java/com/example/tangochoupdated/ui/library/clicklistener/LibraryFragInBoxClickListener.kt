@@ -31,12 +31,14 @@ class LibraryFragInBoxClickListener(val context:Context, val binding: LibraryFra
                     libVM.onClickMoveInBoxCardToFlashCard()
                 }
                 inBox.imvCloseInbox -> {
-                    libVM.onClickCloseInBox()
                     navCon.popBackStack()
                 }
 
                 multi.imvCloseMultiMode -> libVM.setMultipleSelectMode(false)
-                multi.imvSelectAll -> TODO()
+                multi.imvSelectAll ->{
+                    libVM.setMultipleSelectMode(true)
+                    libVM.makeAllRVItemsSelected()
+                }
                 multi.imvChangeMenuVisibility -> changeMenuVisibility()
 
                 multi.multiSelectMenuBinding.imvMoveSelectedItems -> libVM.chooseFileMoveTo()

@@ -64,7 +64,9 @@ class LibraryFragHome : Fragment(){
         myNavCon =  requireActivity().findNavController(R.id.frag_container_view)
 
 
+
         libraryViewModel.apply {
+            libraryViewModel.clearFinalList()
             childFilesFromDB(null).observe(viewLifecycleOwner) {
                 setChildFilesFromDB(it)
             }
@@ -73,12 +75,31 @@ class LibraryFragHome : Fragment(){
                 binding.emptyBinding.root.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.GONE
             }
+            multipleSelectMode.observe(viewLifecycleOwner){
+                binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
+                LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
+            }
+            makeAllUnSwiped.observe(viewLifecycleOwner){
+                if(it) LibraryFragmentBase().makeLibRVUnSwiped(recyclerView)
+            }
+            childCardsFromDB(null).observe(viewLifecycleOwner){
+                binding.topBarHomeBinding.txvInBoxCardAmount.apply {
+                    text = it?.size.toString()
+                    visibility = if(it?.size == 0) View.GONE else View.VISIBLE
+                }
+                createCardViewModel.setSisterCards(it)
+            }
+            selectedItems.observe(viewLifecycleOwner){
+                binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+            }
 
         }
         binding.topframelayout.setOnClickListener{
             libraryViewModel.onClickInBox()
         }
+
         addTopBarViews()
+
 
 
 

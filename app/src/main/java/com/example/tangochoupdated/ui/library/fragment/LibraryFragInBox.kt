@@ -55,7 +55,7 @@ class LibraryFragInBox  : Fragment(){
         savedInstanceState: Bundle?
     ): View {
         myNavCon =
-            requireActivity().findNavController(R.id.frag_container_view)
+            requireActivity().findNavController(R.id.lib_frag_con_view)
         _binding = LibraryFragInboxBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
         adapter = LibraryListAdapter(createFileViewModel,createCardViewModel,libraryViewModel, requireActivity())
@@ -65,14 +65,29 @@ class LibraryFragInBox  : Fragment(){
 
 
         libraryViewModel.apply {
+            clearFinalList()
+
             childCardsFromDB(null).observe(viewLifecycleOwner) {
                 setChildCardsFromDB(it)
+                binding.emptyBinding.root.visibility =
+                    if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
             }
             myFinalList.observe(viewLifecycleOwner) {
                 adapter.submitList(it)
-                binding.emptyBinding.root.visibility =
-                    if (it.isEmpty()) View.VISIBLE else View.GONE
+
             }
+            multipleSelectMode.observe(viewLifecycleOwner){
+                binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
+                LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
+                LibraryFragmentBase().changeStringBtnVisibility(recyclerView,it)
+            }
+            makeAllUnSwiped.observe(viewLifecycleOwner){
+                if(it) LibraryFragmentBase().makeLibRVUnSwiped(recyclerView)
+            }
+            selectedItems.observe(viewLifecycleOwner){
+                binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+            }
+
 
         }
         addTopBarViews()

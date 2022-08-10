@@ -1,5 +1,6 @@
 package com.example.tangochoupdated.ui.mainactivity
 
+import android.content.Context
 import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
@@ -282,7 +283,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             if(frameBottomMenu.visibility == VISIBLE){
                 bindingAddMenu.apply {
                     when(v){
-                        imvnewCard ->  createCardViewModel.onClickAddNewCardBottomBar()
+                        imvnewCard ->  {
+                            createCardViewModel.onClickAddNewCardBottomBar()
+                            fragConViewCover.visibility = GONE
+                        }
                         imvnewTangocho -> createFileViewModel.onCLickCreateFlashCardCover()
                         imvnewfolder -> createFileViewModel.onClickCreateFolder()
                         else -> {
@@ -414,6 +418,36 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             }
         }
         imageView.setImageDrawable(a)
+
+    }
+    fun changeFileIconCol(colorStatus: ColorStatus,context: Context):Drawable{
+        val drawable = AppCompatResources.getDrawable(context,R.drawable.icon_file_with_color) as LayerDrawable
+        val col = ContextCompat.getColor(context,
+            when(colorStatus) {
+                ColorStatus.GRAY -> R.color.gray
+                ColorStatus.BLUE -> R.color.blue
+                ColorStatus.YELLOW -> R.color.yellow
+                ColorStatus.RED -> R.color.red
+                else -> R.color.gray
+            }
+            )
+         drawable.findDrawableByLayerId(R.id.file_paint).setTint(col)
+        return  drawable
+
+    }
+    fun changeFlashCardIconCol(colorStatus: ColorStatus,context: Context):Drawable{
+        val drawable = AppCompatResources.getDrawable(context,R.drawable.icon_flashcard_with_col) as LayerDrawable
+        val col = ContextCompat.getColor(context,
+            when(colorStatus) {
+                ColorStatus.GRAY -> R.color.gray
+                ColorStatus.BLUE -> R.color.blue
+                ColorStatus.YELLOW -> R.color.yellow
+                ColorStatus.RED -> R.color.red
+                else -> R.color.gray
+            }
+        )
+        drawable.findDrawableByLayerId(R.id.icon_flashcard_paint).setTint(col)
+        return  drawable
 
     }
     fun makeAllColPaletUnselected(colorPaletBinding: ItemColorPaletBinding){

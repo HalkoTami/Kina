@@ -40,9 +40,11 @@
         android:background="@drawable/gray_stroke_rectangle"
         android:elevation="10dp">
         <include android:id="@+id/confirm_delete_popUp_binding"
-            layout="@layout/library_frag_popup_confirm_delete"/>
+            layout="@layout/library_frag_popup_confirm_delete"
+            android:visibility="gone"/>
         <include android:id="@+id/confirm_delete_children_popUp_binding"
-            layout="@layout/library_frag_popup_confirm_delete_all_children"/>
+            layout="@layout/library_frag_popup_confirm_delete_all_children"
+            android:visibility="gone"/>
     </FrameLayout>
 
 

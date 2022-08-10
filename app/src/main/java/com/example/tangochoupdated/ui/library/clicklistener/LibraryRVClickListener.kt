@@ -18,7 +18,7 @@ class LibRVClickListener(val view: View,
                          val context: Context,
                          val item: LibraryRV,
                          private val createFileViewModel: CreateFileViewModel,
-                         private val libraryViewModel: LibraryViewModel,
+                         private val lVM: LibraryViewModel,
                          private val createCardViewModel: CreateCardViewModel,
                          private val rvBinding: LibraryFragRvItemBaseBinding
 ): MyTouchListener(context){
@@ -29,28 +29,24 @@ class LibRVClickListener(val view: View,
         rvBinding.apply {
             when(view){
                 baseContainer       ->  {
-                    if(libraryViewModel.returnLeftSwipedItemExists()==true){
-                        libraryViewModel.makeAllUnSwiped()
-                    } else{
-                        when(view.tag){
-                            LibRVState.Selectable,LibRVState.Selected -> {
-                                libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
-                                btnSelect.isSelected = btnSelect.isSelected.not()
-                            }
-                            LibRVState.Plane -> {
-                                when(item.type){
-                                    LibRVViewType.Folder, LibRVViewType.FlashCardCover -> libraryViewModel.openNextFile(item)
-                                    LibRVViewType.StringCard -> createCardViewModel.onClickEditCard(item)
-                                }
-                            }
+                    if(lVM.returnLeftSwipedItemExists()==true){
+                        lVM.makeAllUnSwiped()
+                    }
+                    else if(lVM.returnMultiSelectMode()==true){
+                        lVM.onClickSelectableItem(item,btnSelect.isSelected.not())
+                        btnSelect.isSelected = btnSelect.isSelected.not()
+                    }else{
+                        when(item.type){
+                            LibRVViewType.Folder, LibRVViewType.FlashCardCover -> lVM.openNextFile(item)
+                            LibRVViewType.StringCard -> createCardViewModel.onClickEditCard(item)
                         }
                     }
 
                 }
                 btnSelect -> {
-                    if(rvBinding.root.tag == LibRVState.SelectFileMoveTo) libraryViewModel.moveSelectedItemToFile(item.file!!)
+                    if(rvBinding.root.tag == LibRVState.SelectFileMoveTo) lVM.moveSelectedItemToFile(item.file!!)
                 }
-                btnDelete       -> libraryViewModel.onClickDeleteRVItem(item)
+                btnDelete       -> lVM.onClickDeleteRVItem(item)
                 btnEditWhole    -> createFileViewModel.onClickEditFileInRV(item.file!!)
                 btnAddNewCard   -> createCardViewModel.onClickRVAddNewCard(item)
             }
@@ -82,8 +78,8 @@ class LibRVClickListener(val view: View,
     override fun onLongClick() {
         super.onLongClick()
         rvBinding.btnSelect.isSelected = true
-        libraryViewModel.setMultipleSelectMode(true)
-        libraryViewModel.onClickSelectableItem(item,true)
+        lVM.setMultipleSelectMode(true)
+        lVM.onClickSelectableItem(item,true)
     }
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         if(event?.actionMasked== MotionEvent.ACTION_UP||event?.actionMasked== MotionEvent.ACTION_CANCEL){
@@ -95,7 +91,7 @@ class LibRVClickListener(val view: View,
                 else if (rvBinding.linLaySwipeShow.width>=50){
                     Animation().animateLibRVLeftSwipeLay(rvBinding.linLaySwipeShow ,true)
                     rvBinding.root.tag = LibRVState.LeftSwiped
-                    libraryViewModel.setLeftSwipedItemExists(true)
+                    lVM.setLeftSwipedItemExists(true)
                 }
 
             }

@@ -55,19 +55,11 @@
         />
     <action
         android:id="@+id/flip_next_create_card"
-        app:destination="@+id/fragmentCreateCard"
-        app:enterAnim="@anim/slide_in_right_anim"
-        app:exitAnim="@anim/slide_out_left_anim"
-        app:popEnterAnim="@anim/slide_in_left_anim"
-        app:popExitAnim="@anim/slide_out_right_anim"
+        app:destination="@id/fragmentCreateCard"
         />
     <action
         android:id="@+id/flip_previous_create_card"
-        app:destination="@+id/fragmentCreateCard"
-        app:enterAnim="@anim/slide_in_left_anim"
-        app:exitAnim="@anim/slide_out_right_anim"
-        app:popEnterAnim="@anim/slide_in_right_anim"
-        app:popExitAnim="@anim/slide_out_left_anim"
+        app:destination="@id/fragmentCreateCard"
         />
 
 
