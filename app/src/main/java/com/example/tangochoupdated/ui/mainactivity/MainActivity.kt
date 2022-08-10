@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //       　　 viewをclickListenerに追加
             mainActivityClickableItem.apply {
                 addAll(arrayOf(fragConViewCover, mainTopConstrainLayout))
-                bnvBinding.root.children.iterator().forEach {
+                bnvBinding.bnvRoot.children.iterator().forEach {
                     add(it)
                 }
                 bindingAddMenu.apply {
@@ -127,9 +127,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //        初期設定
             setOnCreate()
 //           タブの画面遷移
-            action.observe(this@MainActivity){
-                navCon.navigate(it)
-            }
+//            action.observe(this@MainActivity){
+//                navCon.navigate(it)
+//            }
 //            ナビゲーションバーのUi変化
             bnvVisibility.observe(this@MainActivity){
                 binding.frameBnv.visibility = if(it == true) VISIBLE else GONE
@@ -227,10 +227,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //        ー－－－LibraryViewModelの読み取りー－－－
         libraryViewModel.apply {
             onCreate()
-            action.observe(this@MainActivity){
-                navCon.navigate(it)
-                Toast.makeText(this@MainActivity, "action called ", Toast.LENGTH_SHORT).show()
-            }
+//            action.observe(this@MainActivity){
+//                navCon.navigate(it)
+//                Toast.makeText(this@MainActivity, "action called ", Toast.LENGTH_SHORT).show()
+//            }
             parentFile.observe(this@MainActivity){
                 createCardViewModel.setParentFlashCardCover(it)
                 createCardViewModel.setParentFlashCardCoverId(it?.fileId)

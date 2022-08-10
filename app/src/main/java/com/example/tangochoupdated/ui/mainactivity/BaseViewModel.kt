@@ -8,7 +8,8 @@ import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.Tab
 import com.example.tangochoupdated.ui.anki.AnkiFragmentDirections
-import com.example.tangochoupdated.ui.library.LibraryFragmentDirections
+import com.example.tangochoupdated.ui.library.fragment.LibraryFragmentBase
+import com.example.tangochoupdated.ui.library.fragment.LibraryFragmentBaseDirections
 import kotlinx.coroutines.*
 
 
@@ -133,7 +134,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
             Tab.TabLibrary -> return
             else -> {
                 setActiveTab(Tab.TabLibrary)
-                val a = LibraryFragmentDirections.toLibHome()
+                val a = LibraryFragmentBaseDirections.toLibHome()
                 a.parentItemId = null
                 setAction(a)
             }

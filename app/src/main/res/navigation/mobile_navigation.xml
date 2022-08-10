@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragmentLibrary"
-        android:name="com.example.tangochoupdated.ui.library.LibraryFragment"
+        android:name="com.example.tangochoupdated.ui.library.fragment.LibraryFragmentBase"
         android:label="library"
         tools:layout="@layout/library_frag" >
 
@@ -20,6 +20,7 @@
             />
 
     </fragment>
+
 <!--    <action-->
 <!--        android:id="@+id/library_to_library"-->
 <!--        app:destination="@id/fragmentLibrary">-->
@@ -44,7 +45,6 @@
             app:argType="integer[]"
             app:nullable="true" />
     </fragment>
-
 
 
 

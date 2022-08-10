@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/library_navigation"
+    app:startDestination="@+id/fragLibraryHome">
+
+    <fragment
+        android:id="@+id/fragLibraryHome"
+        android:name="com.example.tangochoupdated.ui.library.fragment.LibraryFragHome"
+        android:label="library"
+        tools:layout="@layout/library_frag_home_base" >
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragLibraryFolder"
+        android:name="com.example.tangochoupdated.ui.library.fragment.LibraryFragFolder"
+        android:label="library"
+        tools:layout="@layout/library_frag_open_folder_base" >
+        <argument
+            android:name="folderId"
+            app:argType="integer[]"
+            />
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragLibraryFlashCardCover"
+        android:name="com.example.tangochoupdated.ui.library.fragment.LibraryFragFlashCardCover"
+        android:label="library"
+        tools:layout="@layout/library_frag_open_flash_card_cover_base" >
+        <argument
+            android:name="flashCardCoverId"
+            app:argType="integer[]"
+            />
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragLibrarySelectFileMoveTo"
+        android:name="com.example.tangochoupdated.ui.library.fragment.LibraryFragChooseFileMoveTo"
+        android:label="library"
+        tools:layout="@layout/library_frag_select_file_move_to_base" >
+        <argument
+            android:name="folderId"
+            app:argType="integer[]"
+            />
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragLibraryInBox"
+        android:name="com.example.tangochoupdated.ui.library.fragment.LibraryFragInBox"
+        android:label="library"
+        tools:layout="@layout/library_frag_inbox_base" >
+
+
+    </fragment>
+
+
+
+
+    <action
+        android:id="@+id/open_folder"
+        app:destination="@+id/fragLibraryFolder"
+        app:enterAnim="@anim/slide_in_right_anim"
+        app:exitAnim="@anim/slide_out_left_anim"
+        app:popEnterAnim="@anim/slide_in_left_anim"
+        app:popExitAnim="@anim/slide_out_right_anim" />
+    <action
+        android:id="@+id/open_flash_card_cover"
+        app:destination="@+id/fragLibraryFlashCardCover"
+        app:enterAnim="@anim/slide_in_right_anim"
+        app:exitAnim="@anim/slide_out_left_anim"
+        app:popEnterAnim="@anim/slide_in_left_anim"
+        app:popExitAnim="@anim/slide_out_right_anim" />
+
+    <action
+        android:id="@+id/open_inbox"
+        app:destination="@+id/fragLibraryInBox"
+        app:enterAnim="@anim/slide_in_up_anim"
+        app:popExitAnim="@anim/slide_out_up_anim" />
+
+    <action
+        android:id="@+id/to_lib_home"
+        app:popUpTo="@id/mobile_navigation"
+        app:destination="@+id/fragLibraryHome"/>
+    <action
+        android:id="@+id/select_file_move_to"
+        app:popUpTo="@id/mobile_navigation"
+        app:destination="@+id/fragLibrarySelectFileMoveTo"/>
+
+
+
+
+
+</navigation>

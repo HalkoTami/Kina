@@ -33,3 +33,6 @@ class ParentFileAncestors(
     val gParentFile: File?,
     val ParentFile:File?,
 )
+enum class ConfirmMode{
+    DeleteOnlyParent,DeleteWithChildren
+}

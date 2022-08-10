@@ -13,6 +13,7 @@ import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
+import com.example.tangochoupdated.ui.library.fragment.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
@@ -204,8 +205,12 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
     }
     fun openNextFile(item: LibraryRV){
-        val action = LibraryFragmentDirections.openFile()
-        action.parentItemId = intArrayOf(item.file!!.fileId)
+        val action =
+        when(item.type){
+            LibRVViewType.Folder->     LibraryFragFolderDirections.openFolder(intArrayOf(item.file!!.fileId))
+            LibRVViewType.FlashCardCover -> LibraryFragFlashCardCoverDirections.openFlashCardCover(intArrayOf(item.file!!.fileId))
+            else -> return
+        }
         setAction(action)
     }
 
@@ -274,9 +279,8 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 //    ClickEvents
     fun onClickInBox(){
-        setModeInBox(true)
-        val a = LibraryFragmentDirections.openInbox()
-        a.parentItemId = null
+
+        val a = LibraryFragHomeDirections.openInbox()
         setAction(a)
 
     }
@@ -297,9 +301,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 //    －－－－Confirm PopUp－－－－
 
-    enum class ConfirmMode{
-        DeleteOnlyParent,DeleteWithChildren
-    }
+
     class ConfirmPopUpView(
         var visible:Boolean,
         var btnDenialText:String,
@@ -452,8 +454,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun chooseFileMoveTo(){
         setMultipleSelectMode(false)
         setChooseFileMoveToMode(true)
-        val a  = LibraryFragmentDirections.openFile()
-        a.parentItemId =if(_parentFile.value == null) null else intArrayOf(_parentFile.value!!.fileId)
+        val a  = LibraryFragChooseFileMoveToDirections.selectFileMoveTo(intArrayOf(_parentFile.value!!.fileId))
         setAction(a)
     }
     fun moveSelectedItemToFile(item:File){

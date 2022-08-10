@@ -163,12 +163,23 @@
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/item_top_menu_bar.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/lib_item_top_bar_menu.xml" value="0.2261650277896537" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_home_base.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_inbox_base.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_lay__home_rv_empty.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_lay_file_rv_empty.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_lay_flash_card_cover_rv_empty.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_lay_folder_rv_empty.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_lay_inbox_rv_empty.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_lay_rv_empty.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_open_file_base.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_open_flash_card_cover_base.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_open_folder_base.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_popup_confirm_delete.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_popup_confirm_delete_all_children.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_rv_item_base.xml" value="0.45" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_rv_item_card_string.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_rv_item_file.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_select_file_move_to_base.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_top_bar_chooseFileMoveTo.xml" value="0.2261650277896537" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_top_bar_choose_file_move_to.xml" value="0.2261650277896537" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/library_frag_top_bar_file.xml" value="0.2975630611372381" />

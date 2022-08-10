@@ -12,7 +12,6 @@ import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.Mode
-import com.example.tangochoupdated.ui.library.LibraryFragmentDirections
 import kotlinx.coroutines.launch
 
 
@@ -168,7 +167,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             val a = if(_lastInsertedCardAndTags.value?.belongingFileId!=null)intArrayOf(_lastInsertedCardAndTags.value?.belongingFileId!!) else null
             val b = intArrayOf(card!!.id)
             val fromSameFrag = _fromSameFrag.value!!
-            setAction(CreateCardNav(LibraryFragmentDirections.openCreateCard(a,b),fromSameFrag))
+            setAction(CreateCardNav(CreateCardFragmentDirections.openCreateCard(a,b),fromSameFrag))
 //            setMode(Mode.Edit)
         }
 
@@ -504,7 +503,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val a =if(item.card!!.belongingFileId== null) null else intArrayOf(item.card.belongingFileId!!)
         val b = intArrayOf(item.card.id)
         setFromSameFrag(false)
-        setAction(CreateCardNav( LibraryFragmentDirections.openCreateCard(a,b),false))
+        setAction(CreateCardNav( CreateCardFragmentDirections.openCreateCard(a,b),false))
         setMode(Mode.Edit)
 
 
