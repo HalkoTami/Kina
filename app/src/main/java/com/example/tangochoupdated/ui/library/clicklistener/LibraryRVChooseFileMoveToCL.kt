@@ -1,20 +1,15 @@
 package com.example.tangochoupdated.ui.library.clicklistener
 
 import android.content.Context
-import android.view.MotionEvent
 import android.view.View
-import androidx.core.view.children
+import android.widget.Toast
 import com.example.tangochoupdated.MyTouchListener
 import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
 import com.example.tangochoupdated.databinding.LibraryFragRvItemFileBinding
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.LibRVState
-import com.example.tangochoupdated.db.rvclasses.LibRVViewType
-import com.example.tangochoupdated.db.rvclasses.LibraryRV
-import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
+import com.example.tangochoupdated.toastToDo
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.LibraryViewModel
-import com.example.tangochoupdated.ui.mainactivity.Animation
 
 class LibraryRVChooseFileMoveToCL(val view: View,
                                  val context: Context,
@@ -30,9 +25,8 @@ class LibraryRVChooseFileMoveToCL(val view: View,
         super.onSingleTap()
         rvBinding.apply {
             when(view){
-                baseContainer       ->  TODO()
-                btnSelect -> lVM.moveSelectedItemToFile(item)
-
+                baseContainer       ->  lVM.openChooseFileMoveTo(item)
+                btnSelect ->  toastToDo(context)
             }
         }
     }

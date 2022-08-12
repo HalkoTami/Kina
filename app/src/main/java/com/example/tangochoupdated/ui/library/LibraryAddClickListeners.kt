@@ -2,6 +2,7 @@ package com.example.tangochoupdated.ui.library
 
 import android.content.Context
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.*
@@ -37,9 +38,9 @@ class LibraryAddClickListeners{
             binding.imvCloseMultiMode,
             binding.imvSelectAll,
             binding.imvChangeMenuVisibility,
-            binding.multiSelectMenuBinding.imvMoveSelectedItems,
-            binding.multiSelectMenuBinding.imvDeleteSelectedItems,
-            binding.multiSelectMenuBinding.imvSetFlagToSelectedItems,
+            binding.multiSelectMenuBinding.linLayMoveSelectedItems,
+            binding.multiSelectMenuBinding.linLayDeleteSelectedItems,
+            binding.multiSelectMenuBinding.linLaySetFlagToSelectedItems,
         ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL(context, binding,libVM, navCon)) }
     }
 
@@ -62,10 +63,14 @@ class LibraryAddClickListeners{
             binding.imvCloseChooseFileMoveTo,
         ).onEach { it.setOnClickListener( LibFragTopBarChooseFileMoveToCL(context, binding,libVM, navCon)) }
     }
-    private fun fragLibSearchAddCL(imv:ImageView,searchBarBinding: ItemSearchBarBinding,libVM: LibraryViewModel, context: Context){
+    private fun fragLibSearchAddCL(imv:ImageView,
+                                   frameLay:FrameLayout,
+                                   searchBarBinding: ItemSearchBarBinding,
+                                   libVM: LibraryViewModel,
+                                   context: Context){
         arrayOf(imv).onEach {
             it.setOnClickListener(LibFragSearchBarCL(
-                context,imv,searchBarBinding,libVM
+                context,imv,frameLay, searchBarBinding,libVM
             ))
         }
     }
@@ -79,7 +84,7 @@ class LibraryAddClickListeners{
                          context: Context){
         fragLibHomeTopBarAddCL(binding.topBarHomeBinding,context,libVM,navCon)
         fragLibMultiTopBarAddCL(binding.topBarMultiselectBinding,libVM,context,navCon)
-        fragLibSearchAddCL(binding.imvSearchLoupe,binding.bindingSearch,libVM,context)
+        fragLibSearchAddCL(binding.imvSearchLoupe,binding.laySearchView, binding.bindingSearch,libVM,context)
     }
     fun fragLibFolderAddCL(binding: LibraryFragOpenFolderBaseBinding,
                          libVM: LibraryViewModel,
@@ -87,7 +92,7 @@ class LibraryAddClickListeners{
                          context: Context){
         fragLibFileTopBarAddCL(binding.topBarFileBinding,libVM,context,navCon)
         fragLibMultiTopBarAddCL(binding.topBarMultiselectBinding,libVM,context,navCon)
-        fragLibSearchAddCL(binding.imvSearchLoupe,binding.bindingSearch,libVM,context)
+        fragLibSearchAddCL(binding.imvSearchLoupe,binding.laySearchView, binding.bindingSearch,libVM,context)
     }
     fun fragLibFlashCardCoverAddCL(binding: LibraryFragOpenFlashCardCoverBaseBinding,
                          libVM: LibraryViewModel,
@@ -95,7 +100,7 @@ class LibraryAddClickListeners{
                          context: Context){
         fragLibFileTopBarAddCL(binding.topBarFileBinding,libVM,context,navCon)
         fragLibMultiTopBarAddCL(binding.topBarMultiselectBinding,libVM,context,navCon)
-        fragLibSearchAddCL(binding.imvSearchLoupe,binding.bindingSearch,libVM,context)
+        fragLibSearchAddCL(binding.imvSearchLoupe,binding.laySearchView, binding.bindingSearch,libVM,context)
     }
     fun fragLibInBoxAddCL(binding: LibraryFragInboxBaseBinding,
                          libVM: LibraryViewModel,
@@ -109,7 +114,7 @@ class LibraryAddClickListeners{
                           navCon:NavController,
                           context: Context){
         fragLibChooseFileMoveToTopBarAddCL(binding.topBarChooseFileMoveToBinding,libVM,context,navCon)
-        fragLibSearchAddCL(binding.imvSearchLoupe,binding.bindingSearch,libVM,context)
+        fragLibSearchAddCL(binding.imvSearchLoupe,binding.laySearchView, binding.bindingSearch,libVM,context)
     }
 
 

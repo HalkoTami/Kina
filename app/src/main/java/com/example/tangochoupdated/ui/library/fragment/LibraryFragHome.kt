@@ -15,7 +15,6 @@ import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.LibraryAddClickListeners
 import com.example.tangochoupdated.ui.library.LibraryViewModel
-import com.example.tangochoupdated.ui.library.clicklistener.LibraryRVFileCL
 import com.example.tangochoupdated.ui.library.listadapter.LibFragFileRVListAdapter
 
 
@@ -56,15 +55,19 @@ class LibraryFragHome : Fragment(){
                 binding.emptyBinding.root.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.GONE
             }
-            myFinalList.observe(viewLifecycleOwner) {
+            finalRVList.observe(viewLifecycleOwner) {
 
             }
             multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
+                binding.topBarHomeBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                 LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
             }
             makeAllUnSwiped.observe(viewLifecycleOwner){
                 if(it) LibraryFragmentBase().makeLibRVUnSwiped(recyclerView)
+            }
+            changeAllRVSelectedStatus.observe(viewLifecycleOwner){
+                LibraryFragmentBase().changeLibRVAllSelectedState(recyclerView,it)
             }
             childCardsFromDB(null).observe(viewLifecycleOwner){
                 binding.topBarHomeBinding.txvInBoxCardAmount.apply {
@@ -73,13 +76,10 @@ class LibraryFragHome : Fragment(){
                 }
                 createCardViewModel.setSisterCards(it)
             }
-            selectedItems.observe(viewLifecycleOwner){
+            selectedFiles.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
             }
 
-        }
-        binding.topframelayout.setOnClickListener{
-            libraryViewModel.onClickInBox()
         }
 
         LibraryAddClickListeners().fragLibHomeAddCL(binding,libraryViewModel,myNavCon,requireActivity())

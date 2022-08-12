@@ -66,7 +66,10 @@ class LibFragCardRVListAdapter(
             binding.btnAddNewCard.visibility = View.VISIBLE
             binding.linLaySwipeShow.visibility = GONE
 
+            if(libraryViewModel.returnMultiSelectMode()== true) binding.btnSelect.visibility = View.VISIBLE
+
         }
+
         }
 
 

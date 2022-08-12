@@ -18,7 +18,7 @@
         />
 
     <TextView
-        android:id="@+id/txv_inbox_status"
+        android:id="@+id/txv_choose_file_move_to"
         android:layout_marginStart="10dp"
         android:layout_width="0dp"
         android:layout_weight="1"

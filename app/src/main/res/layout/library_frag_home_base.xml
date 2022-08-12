@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:minHeight="70dp"
         android:elevation="10dp"
-        android:background="@color/white"
+
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,7 @@
         <include
             android:id="@+id/top_bar_home_binding"
             layout="@layout/library_frag_top_bar_home"
-            android:visibility="visible"/>
+            android:visibility="visible" />
         <include
             android:id="@+id/top_bar_multiselect_binding"
             layout="@layout/library_frag_top_bar_multiselect_mode"
@@ -36,16 +36,18 @@
 
     <FrameLayout
         android:id="@+id/lay_search_view"
-        android:layout_margin="5dp"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        app:layout_constraintTop_toBottomOf="@id/topframelayout"
-        app:layout_constraintBottom_toTopOf="@id/main_frameLayout"
-        android:visibility="gone">
+        android:layout_height="0.01dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="80dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@android:color/transparent">
 
         <include
             android:id="@+id/binding_search"
-            layout="@layout/item_search_bar" />
+            layout="@layout/item_search_bar"
+            android:visibility="visible"/>
 
 
     </FrameLayout>
@@ -75,13 +77,15 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     />
+
                 <androidx.recyclerview.widget.RecyclerView
-                    app:layout_constraintTop_toBottomOf="@id/imv_search_loupe"
-                    android:nestedScrollingEnabled="false"
-                    android:padding="10dp"
                     android:id="@+id/vocabCardRV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/imv_search_loupe"
+                    tools:layout_editor_absoluteX="0dp"
                     tools:listitem="@layout/library_frag_rv_item_base" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -74,9 +74,7 @@ class LibraryFragFolder :  Fragment(){
                 binding.emptyBinding.root.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.GONE
             }
-            myFinalList.observe(viewLifecycleOwner) {
 
-            }
             parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
             }
@@ -95,12 +93,16 @@ class LibraryFragFolder :  Fragment(){
                 }
             multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility =if(it) View.VISIBLE else View.GONE
+                binding.topBarFileBinding.topPart.visibility = if(!it) View.VISIBLE else View.INVISIBLE
                 LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
             }
             makeAllUnSwiped.observe(viewLifecycleOwner){
                 if(it) LibraryFragmentBase().makeLibRVUnSwiped(recyclerView)
             }
-            selectedItems.observe(viewLifecycleOwner){
+            changeAllRVSelectedStatus.observe(viewLifecycleOwner){
+                LibraryFragmentBase().changeLibRVAllSelectedState(recyclerView,it)
+            }
+            selectedFiles.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
             }
 

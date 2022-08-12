@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.library.clicklistener
 import android.content.Context
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.navigation.NavController
 import com.example.tangochoupdated.R
@@ -18,7 +19,7 @@ class LibFragTopBarHomeCL(val context:Context, val binding: LibraryFragTopBarHom
         binding.apply {
             when(v){
                 home.frameLayInBox-> libVM.onClickInBox()
-                home.imvBookMark -> TODO()
+                home.imvBookMark -> Toast.makeText(context,"todo",Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -2,10 +2,15 @@ package com.example.tangochoupdated
 
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.content.Context
 import android.view.View
+import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
+fun toastToDo(context:Context){
 
+    Toast.makeText(context,"toDo", Toast.LENGTH_SHORT).show()
+}
 
 
 fun appearByWidth(view: View,duration: Long):Animator{

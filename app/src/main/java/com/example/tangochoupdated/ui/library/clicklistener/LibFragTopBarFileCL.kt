@@ -22,13 +22,14 @@ class LibFragTopBarFileCL(val context:Context,
         binding.apply {
             when(v){
 
-                binding.imvGoBack -> navCon.popBackStack()
-                file.txvGGrandParentFileTitle -> TODO()
-                file.txvGrandParentFileTitle -> TODO()
-
-
-
-
+                imvGoBack -> navCon.popBackStack()
+                lineLayGGFile -> {
+                    navCon.popBackStack()
+                    navCon.popBackStack()
+                }
+                lineLayGPFile ->{
+                    navCon.popBackStack()
+                }
             }
         }
     }

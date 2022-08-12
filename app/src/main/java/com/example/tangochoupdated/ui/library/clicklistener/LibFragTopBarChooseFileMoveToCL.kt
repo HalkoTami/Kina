@@ -18,7 +18,7 @@ class LibFragTopBarChooseFileMoveToCL(val context:Context, val binding: LibraryF
         binding.apply {
             when(v){
 
-                moveTo.imvCloseChooseFileMoveTo -> TODO()
+                moveTo.imvCloseChooseFileMoveTo -> navCon.popBackStack()
 
 
             }

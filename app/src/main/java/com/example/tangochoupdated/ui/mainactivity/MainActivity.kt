@@ -1,20 +1,15 @@
 package com.example.tangochoupdated.ui.mainactivity
 
-import android.content.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import android.view.ContextMenu
-import android.view.Menu
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.view.textclassifier.TextClassifierEvent
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -247,7 +242,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //            allAncestors.observe(this@MainActivity){
 //                createFileViewModel.setPAndG(it)
 //            }
-            myFinalList.observe(this@MainActivity){
+            finalRVList.observe(this@MainActivity){
                 createFileViewModel.setPosition(it.size+1)
             }
         }

@@ -27,29 +27,27 @@ import com.example.tangochoupdated.ui.library.LibraryViewModel
  */
 
 
-class LibFragFileRVListAdapter(
+class LibFragChooseFileRVListAdapter(
     private val createFileViewModel: CreateFileViewModel,
     private val libraryViewModel: LibraryViewModel,
-    private val context: Context,
-    private val chooseFileMoveTo:Boolean) :
-    ListAdapter<File, LibFragFileRVListAdapter.LibFragFileViewHolder>(FileDiffCallback) {
+    private val context: Context, ) :
+    ListAdapter<File, LibFragChooseFileRVListAdapter.LibFragChooseFileViewHolder>(ChooseFileDiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibFragFileViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibFragChooseFileViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return LibFragFileViewHolder(LibraryFragRvItemBaseBinding.inflate(layoutInflater, parent, false),context)
+        return LibFragChooseFileViewHolder(LibraryFragRvItemBaseBinding.inflate(layoutInflater, parent, false),context)
     }
 
-    override fun onBindViewHolder(holder: LibFragFileViewHolder, position: Int) {
-        holder.bind(getItem(position),libraryViewModel,createFileViewModel,chooseFileMoveTo)
+    override fun onBindViewHolder(holder: LibFragChooseFileViewHolder, position: Int) {
+        holder.bind(getItem(position),libraryViewModel,createFileViewModel)
     }
 
-    class LibFragFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
+    class LibFragChooseFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
         RecyclerView.ViewHolder(binding.root){
         lateinit var fileBinding:LibraryFragRvItemFileBinding
         fun bind(item: File,
-                 libraryViewModel: LibraryViewModel ,
-                 createFileViewModel: CreateFileViewModel,
-                 chooseFileMoveTo: Boolean){
+                 libraryViewModel: LibraryViewModel,
+        createFileViewModel: CreateFileViewModel){
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
             fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
@@ -67,16 +65,14 @@ class LibFragFileRVListAdapter(
                     else -> throw IllegalArgumentException()
                 })
             }
-            LibraryAddClickListeners().fragLibFileRVAddCL(binding,fileBinding,context,item,libraryViewModel,createFileViewModel,chooseFileMoveTo)
-            if(chooseFileMoveTo){
-                binding.btnSelect.setImageDrawable(AppCompatResources.getDrawable(context,
+            LibraryAddClickListeners().fragLibFileRVAddCL(binding,fileBinding,context,item,libraryViewModel,createFileViewModel,true)
+            binding.btnSelect.setImageDrawable(AppCompatResources.getDrawable(context,
                 when(item.fileStatus){
                     FileStatus.FOLDER -> R.drawable.icon_move_to_folder
                     FileStatus.TANGO_CHO_COVER -> R.drawable.icon_move_to_flashcard_cover
                     else -> return
                 }))
-                binding.btnSelect.visibility = View.VISIBLE
-            }
+            binding.btnSelect.visibility = View.VISIBLE
             if(libraryViewModel.returnMultiSelectMode()== true) binding.btnSelect.visibility = View.VISIBLE
             binding.root.tag = LibRVState.Plane
             binding.btnAddNewCard.visibility = View.GONE
@@ -86,7 +82,7 @@ class LibFragFileRVListAdapter(
 
         }
     }
-private object FileDiffCallback : DiffUtil.ItemCallback<File>() {
+private object ChooseFileDiffCallback : DiffUtil.ItemCallback<File>() {
     override fun areItemsTheSame(oldItem: File, newItem: File): Boolean {
         return oldItem.fileId == newItem.fileId
     }

@@ -10,8 +10,10 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
@@ -112,10 +114,9 @@ class LibraryFragmentBase : Fragment(){
             }
         }
 
+        val a = childFragmentManager.findFragmentById(binding.libFragConView.id) as NavHostFragment
+        myNavCon = a.navController
 
-
-        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.frag_container_view) as NavHostFragment
-        myNavCon = navHostFragment.navController
         libraryViewModel.action.observe(viewLifecycleOwner){
             val a = childFragmentManager.findFragmentById(binding.libFragConView.id) as NavHostFragment
             a.navController.navigate(it)
@@ -150,6 +151,13 @@ class LibraryFragmentBase : Fragment(){
         rv.children.iterator().forEach { view ->
             view.findViewById<ImageView>(R.id.btn_select).apply {
                 visibility =if(visible) View.VISIBLE else View.GONE
+            }
+        }
+    }
+    fun changeLibRVAllSelectedState(rv:RecyclerView,selected:Boolean){
+        rv.children.iterator().forEach { view ->
+            view.findViewById<ImageView>(R.id.btn_select).apply {
+                isSelected = selected
             }
         }
     }

@@ -71,18 +71,14 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private val _childFilesFromDB = MutableLiveData<List<File>?>()
     fun setChildFilesFromDB (list: List<File>?){
         _childFilesFromDB.value = list
-        val b = mutableListOf<LibraryRV>()
-        list?.onEach { b.add(convertFileToLibraryRV(it)) }
-        setValueToFinalList(b)
+        setValueToFinalList(list?: mutableListOf())
     }
 //    ファイルの中のカード
     fun childCardsFromDB(int: Int?):LiveData<List<Card>?> =  this.repository.getCardDataByFileId(int).asLiveData()
     private val _childCardsFromDB=MutableLiveData<List<Card>?>()
     fun setChildCardsFromDB(list: List<Card>?){
         _childCardsFromDB.value = list
-        val b = mutableListOf<LibraryRV>()
-//        list?.onEach { b.add(convertCardToLibraryRV(it)) }
-//        setValueToFinalList(b)
+        setValueToFinalList(list?: mutableListOf())
     }
     val childCardsFromDB:LiveData<List<Card>?> = _childCardsFromDB
 
@@ -90,17 +86,11 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //    －－－－RecyclerView－－－－
 
 //    最終的なRVのアイテムリスト
-    private val _myFinalList= MutableLiveData<List<LibraryRV>>()
-    val myFinalList :LiveData<List<LibraryRV>> = _myFinalList
-    fun setValueToFinalList(list:List<LibraryRV>){
-        val comparator : Comparator<LibraryRV> = compareBy { it.position }
-        val a = list.sortedWith(comparator)
-        _myFinalList.apply {
-            value = a
-        }
-        if(a.isEmpty()){
-            setFileEmptyText(if(_parentFile.value == null) "まだデータがありません"
-            else "${_parentFile.value?.title}は空です")
+    private val _finalRVList= MutableLiveData<List<Any>>()
+    val finalRVList :LiveData<List<Any>> = _finalRVList
+    fun setValueToFinalList(list:List<Any>){
+        _finalRVList.apply {
+            value = list
         }
     }
 //    空にする
@@ -168,26 +158,54 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
     }
 //    selected Items
-    private val _selectedItems = MutableLiveData<MutableList<Any>>()
-    private fun setSelectedItem(list:MutableList<Any>){
-        _selectedItems.value = list
-        if(list.isEmpty().not()){
-            setTopBarMode(LibraryTopBarMode.Multiselect)
-        }
+    private val _selectedFiles = MutableLiveData<MutableList<File>>()
+    private fun setSelectedFiles(list:MutableList<File>){
+        _selectedFiles.value = list
     }
-    val selectedItems:LiveData<MutableList<Any>> = _selectedItems
-    private fun clearSelectedItems(){
-        setSelectedItem(mutableListOf())
+    private val _selectedCards = MutableLiveData<MutableList<Card>>()
+    private fun setSelectedCards(list:MutableList<Card>){
+        _selectedCards.value = list
+    }
+    fun returnSelectedCards():MutableList<Card>?{
+         return _selectedCards.value
+    }
+    fun returnSelectedFiles():MutableList<File>?{
+        return _selectedFiles.value
+    }
+    val selectedCards:LiveData<MutableList<Card>> = _selectedCards
+    val selectedFiles:LiveData<MutableList<File>> = _selectedFiles
+    fun clearSelectedItems(){
+        setSelectedCards(mutableListOf())
+        setSelectedFiles(mutableListOf())
     }
     private fun addToSelectedItem(item: Any){
-        val a = _selectedItems.value!!
-        a.add(item)
-        setSelectedItem(a)
+        when(item){
+            is Card -> {
+                val a = _selectedCards.value!!
+                a.add(item)
+                setSelectedCards(a)
+            }
+            is File -> {
+                val a = _selectedFiles.value!!
+                a.add(item)
+                setSelectedFiles(a)
+            }
+        }
+
     }
     private fun removeFromSelectedItem(item: Any){
-        val a = _selectedItems.value!!
-        a.remove(item)
-        setSelectedItem(a)
+        when(item){
+            is Card -> {
+                val a = _selectedCards.value!!
+                a.remove(item)
+                setSelectedCards(a)
+            }
+            is File -> {
+                val a = _selectedFiles.value!!
+                a.remove(item)
+                setSelectedFiles(a)
+            }
+        }
     }
 //    －－－－click Events－－－－
     fun onClickSelectableItem(item: Any,boolean: Boolean){
@@ -207,12 +225,17 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         setAction(action)
     }
 
+
 //    －－－－－－－－
 //    －－－－FragmentのUIデータ－－－－
     private val _modeInBox = MutableLiveData<Boolean>()
     fun setModeInBox (boolean: Boolean){
         _modeInBox.value = boolean
     }
+    fun returnModeInBox():Boolean?{
+        return _modeInBox.value
+    }
+    val modeInBox:LiveData<Boolean> = _modeInBox
 
     private val _chooseFileMoveToMode = MutableLiveData<Boolean>()
     private fun setChooseFileMoveToMode (boolean: Boolean){
@@ -226,6 +249,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun setMultipleSelectMode(boolean: Boolean){
         _multipleSelectMode.apply {
             value = boolean
+        }
+        if(!boolean) {
+            clearSelectedItems()
+            changeAllRVSelectedStatus(false)
         }
         changeTopBarMode()
         changeRVMode()
@@ -249,10 +276,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun returnRVMode():LibRVState?{
         return _recyclerViewMode.value
     }
-    fun makeAllRVItemsSelected(){
-        setSelectedItem(_myFinalList.value?.toMutableList() ?: mutableListOf())
-        setRecyclerViewMode(LibRVState.Selected)
-    }
+
 
 
 //    －－－－TopBar－－－－
@@ -340,6 +364,12 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         if(_modeInBox.value ==true){
             setModeInBox(false)
         }
+        if(_multipleSelectMode.value == true){
+            setMultipleSelectMode(false)
+        }
+        if(_confirmPopUp.value?.visible == true){
+            setConfirmPopUpVisible(false,ConfirmMode.DeleteOnlyParent)
+        }
     }
 
 
@@ -351,10 +381,32 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         setLeftSwipedItemExists(false)
     }
     val makeAllUnSwiped:LiveData<Boolean> = _makeAllUnSwiped
+    private val _changeAllRVSelectedStatus = MutableLiveData<Boolean>()
+    fun changeAllRVSelectedStatus (selected:Boolean){
+        _changeAllRVSelectedStatus.value = selected
+
+        if(selected){
+            if(returnModeInBox()==true||returnParentFile()?.fileStatus==FileStatus.TANGO_CHO_COVER){
+            val a = mutableListOf<Card>()
+            if(_childCardsFromDB.value!=null) a.addAll(_childCardsFromDB.value!!)
+            setSelectedCards(a)
+        } else {
+            val a = mutableListOf<File>()
+            if(_childFilesFromDB.value!=null) a.addAll(_childFilesFromDB.value!!)
+            setSelectedFiles(a)
+        }
+
+        } else {
+            clearSelectedItems()
+        }
+
+    }
+    val changeAllRVSelectedStatus:LiveData<Boolean> = _changeAllRVSelectedStatus
 
     private val _leftSwipedItemExists = MutableLiveData<Boolean>()
     fun setLeftSwipedItemExists (boolean: Boolean){
         _leftSwipedItemExists.value = boolean
+
     }
     fun returnLeftSwipedItemExists ():Boolean?{
         return  _leftSwipedItemExists.value
@@ -374,6 +426,13 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
     fun onClickDeleteParentItem(){
         setDeletingItem(mutableListOf(convertFileToLibraryRV(_parentFile.value!!)))
+        setConfirmPopUpVisible(true,ConfirmMode.DeleteOnlyParent)
+    }
+    fun onClickDeleteSelectedItems(){
+        val a = mutableListOf<Any>()
+        if(_selectedCards.value!=null) a.addAll(_selectedCards.value!!)
+        if(_selectedFiles.value!=null) a.addAll(_selectedFiles.value!!)
+        setDeletingItem(a)
         setConfirmPopUpVisible(true,ConfirmMode.DeleteOnlyParent)
     }
     fun onClickBtnCommitConfirm(mode: ConfirmMode){
@@ -442,6 +501,11 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             repository.updateMultiple(cards)
         }
     }
+    private fun updateFiles(files:List<File>){
+        viewModelScope.launch {
+            repository.updateMultiple(files)
+        }
+    }
     private fun update(any:Any){
         viewModelScope.launch {
             repository.update(any)
@@ -472,7 +536,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //    －－－－ファイル移動－－－－
     fun onClickMoveInBoxCardToFlashCard(){
         setMultipleSelectMode(true)
-        makeAllRVItemsSelected()
     }
 //    fun chooseFlashCardMoveTo(){
 //        setChooseFileMoveToMode(true)
@@ -480,21 +543,28 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //        a.parentItemId =if(_parentFile.value == null) null else intArrayOf(_parentFile.value!!.fileId)
 //        setAction(a)
 //    }
-    fun chooseFileMoveTo(){
-        setMultipleSelectMode(false)
+    fun openChooseFileMoveTo(item: File?){
         setChooseFileMoveToMode(true)
-        val a  = LibraryFragChooseFileMoveToDirections.selectFileMoveTo(intArrayOf(_parentFile.value!!.fileId))
+        val a  = LibraryFragChooseFileMoveToDirections.selectFileMoveTo(if(item!=null)intArrayOf(item.fileId) else null)
         setAction(a)
     }
+
+
     fun moveSelectedItemToFile(item:File){
         val cards = mutableListOf<Card>()
-        val a = _selectedItems.value
-        a?.onEach { if(it is Card) {
+        val files = mutableListOf<File>()
+        cards.addAll(_selectedCards.value!!)
+        files.addAll(_selectedFiles.value!!)
+
+        cards.onEach {
             it.belongingFileId = item.fileId
             it.libOrder = item.childCardsAmount + 1
-            cards.add(it)
-        } }
-        updateCards(cards)
+        }
+        files.onEach {
+            it.parentFileId = item.fileId
+            files.add(it)
+        }
+        updateFiles(files)
         clearSelectedItems()
         setChooseFileMoveToMode(false)
     }

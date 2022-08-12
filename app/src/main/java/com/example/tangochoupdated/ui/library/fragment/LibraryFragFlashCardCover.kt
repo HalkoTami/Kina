@@ -73,18 +73,17 @@ class LibraryFragFlashCardCover  : Fragment(){
                     if (it!=null &&it.isEmpty()) View.VISIBLE else View.GONE
                 createCardViewModel.setSisterCards(it)
             }
-            myFinalList.observe(viewLifecycleOwner) {
-//                adapter.submitList(it)
-//                binding.emptyBinding.root.visibility =
-//                    if (it.isEmpty()) View.VISIBLE else View.GONE
-            }
             multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility =if(it) View.VISIBLE else View.GONE
+                binding.topBarFileBinding.topPart.visibility = if(!it) View.VISIBLE else View.INVISIBLE
                 LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
                 LibraryFragmentBase().changeStringBtnVisibility(recyclerView,it)
             }
             makeAllUnSwiped.observe(viewLifecycleOwner){
                 if(it) LibraryFragmentBase().makeLibRVUnSwiped(recyclerView)
+            }
+            changeAllRVSelectedStatus.observe(viewLifecycleOwner){
+                LibraryFragmentBase().changeLibRVAllSelectedState(recyclerView,it)
             }
             parentFileAncestors.observe(viewLifecycleOwner){
                 binding.topBarFileBinding.apply {
@@ -99,7 +98,7 @@ class LibraryFragFlashCardCover  : Fragment(){
                         if(it.ParentFile != null) View.VISIBLE else View.GONE
                 }
             }
-            selectedItems.observe(viewLifecycleOwner){
+            selectedCards.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
             }
 

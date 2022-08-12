@@ -45,7 +45,6 @@ class LibraryFragInBox  : Fragment(){
 
 
         libraryViewModel.apply {
-            clearFinalList()
             setParentFileFromDB(null)
             setModeInBox(true)
 
@@ -57,13 +56,17 @@ class LibraryFragInBox  : Fragment(){
             }
             multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
+                binding.topBarInboxBinding.root.visibility = if(it) View.GONE else View.VISIBLE
                 LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
                 LibraryFragmentBase().changeStringBtnVisibility(recyclerView,it)
+            }
+            changeAllRVSelectedStatus.observe(viewLifecycleOwner){
+                LibraryFragmentBase().changeLibRVAllSelectedState(recyclerView,it)
             }
             makeAllUnSwiped.observe(viewLifecycleOwner){
                 if(it) LibraryFragmentBase().makeLibRVUnSwiped(recyclerView)
             }
-            selectedItems.observe(viewLifecycleOwner){
+            selectedCards.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
             }
 
