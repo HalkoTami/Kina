@@ -1,13 +1,11 @@
 package com.example.tangochoupdated.ui.library.fragment
 
-import LibraryPopUpConfirmDeleteClickListener
 import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
@@ -18,12 +16,15 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryFragBinding
+import com.example.tangochoupdated.db.dataclass.Card
+import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.ConfirmMode
+import com.example.tangochoupdated.ui.library.LibraryAddClickListeners
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 import com.example.tangochoupdated.ui.mainactivity.Animation
 
@@ -32,7 +33,6 @@ class LibraryFragmentBase : Fragment(){
 
     private lateinit var myNavCon:NavController
     private lateinit var recyclerView:RecyclerView
-    private lateinit var adapter: LibraryListAdapter
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
@@ -64,9 +64,11 @@ class LibraryFragmentBase : Fragment(){
                 }
             }
             deletingItem.observe(viewLifecycleOwner){ list ->
-                if (returnParentFile()?.fileStatus!= FileStatus.TANGO_CHO_COVER&& list.isEmpty().not()) {
+                if (list.isEmpty().not()) {
                     val fileIds = mutableListOf<Int>()
-                    list.onEach { fileIds.add(it.id) }
+                    list.onEach { when(it ){
+                        is File -> fileIds.add(it.fileId)
+                    } }
                     getAllDescendantsByFileId(fileIds).observe(viewLifecycleOwner) {
                         setDeletingItemChildrenFiles(it)
                     }
@@ -77,10 +79,14 @@ class LibraryFragmentBase : Fragment(){
                 binding.confirmDeletePopUpBinding.apply {
                     txvConfirmDeleteOnlyParent.text =
                     if(list.size==1){
-                        when(list[0].type){
-                            LibRVViewType.Folder,LibRVViewType.FlashCardCover ->
-                                "${list[0].file!!.title}を削除しますか？"
-                            else -> "カードを削除しますか？"
+                        when(list[0]){
+                            is File -> {
+                                val file = list[0] as File
+                                "${file.title}を削除しますか？"
+                            }
+                            is Card  -> "カードを削除しますか？"
+                            else -> ""
+
                         }
 
                     } else if(list.size>1){
@@ -116,7 +122,7 @@ class LibraryFragmentBase : Fragment(){
             Toast.makeText(requireActivity(), "action called ", Toast.LENGTH_SHORT).show()
         }
 
-        addConfirmDeletePopUp()
+        LibraryAddClickListeners().fragLibBaseAddCL(binding,libraryViewModel)
         return binding.root
     }
 
@@ -171,20 +177,6 @@ class LibraryFragmentBase : Fragment(){
         }
     }
 
-    fun addConfirmDeletePopUp(){
-        val onlyP = binding.confirmDeletePopUpBinding
-        val deleteAllC = binding.confirmDeleteChildrenPopUpBinding
-        arrayOf(
-            onlyP.btnCloseConfirmDeleteOnlyParentPopup,
-            onlyP.btnCommitDeleteOnlyParent,
-            onlyP.btnDenyDeleteOnlyParent,
-            deleteAllC.btnCloseConfirmDeleteOnlyParentPopup,
-            deleteAllC.btnCommitDeleteAllChildren,
-            deleteAllC.btnDenyDeleteAllChildren
-        )   .onEach {
-            it.setOnClickListener(LibraryPopUpConfirmDeleteClickListener(binding,libraryViewModel))
-        }
-    }
 }
 
 

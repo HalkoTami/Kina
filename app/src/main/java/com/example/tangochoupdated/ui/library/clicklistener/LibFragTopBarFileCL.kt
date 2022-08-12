@@ -1,3 +1,4 @@
+package com.example.tangochoupdated.ui.library.clicklistener
 import android.content.Context
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
@@ -9,10 +10,10 @@ import com.example.tangochoupdated.databinding.LibraryFragOpenFolderBaseBinding
 import com.example.tangochoupdated.databinding.LibraryFragTopBarFileBinding
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 
-class LibraryFragFileClickListener(val context:Context,
-                                   val binding: LibraryFragTopBarFileBinding,
-                                   val libVM: LibraryViewModel,
-                                   val navCon:NavController): View.OnClickListener{
+class LibFragTopBarFileCL(val context:Context,
+                          val binding: LibraryFragTopBarFileBinding,
+                          val libVM: LibraryViewModel,
+                          val navCon:NavController): View.OnClickListener{
 
     val file = binding
 

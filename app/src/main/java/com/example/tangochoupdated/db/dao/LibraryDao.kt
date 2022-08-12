@@ -114,10 +114,9 @@ interface LibraryDao {
     fun getCardAmountByFileId(belongingFileId: Int):Flow<Int>
 
 //    Order by library_order asc
-    @Transaction
     @Query("select * FROM tbl_card " +
             "where not card_deleted AND belongingFileId is :belongingFileId ")
-    fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<CardAndTags>>
+    fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<Card>>
 
     @Query("select * FROM tbl_card " +
             "where not card_deleted AND belongingFileId in(:fileIdList) ")

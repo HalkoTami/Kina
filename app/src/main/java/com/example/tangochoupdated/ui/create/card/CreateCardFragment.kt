@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -64,9 +65,9 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){ cardAndTags->
                     if(cardAndTags!= null){
                         setParentCard(cardAndTags)
-                        createCardTopBarBinding.txvEditingFileTitle.text = cardAndTags.card.id.toString()
+                        createCardTopBarBinding.txvEditingFileTitle.text = cardAndTags.id.toString()
                     }
-                    stringCardViewModel.setStringData(cardAndTags?.card?.stringData)
+                    stringCardViewModel.setStringData(cardAndTags?.stringData)
                 }
                 getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ sisters ->
                     setSisterCards(sisters!!)
@@ -127,7 +128,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 
                }
 //                移動ボタン
-                val gray = requireActivity().getColor(R.color.light_gray)
+                val gray = ContextCompat.getColor(requireActivity(), R.color.light_gray)
                 layNavigateButtons.apply {
                     btnPrevious.apply {
                         previousCardExists.observe(viewLifecycleOwner){

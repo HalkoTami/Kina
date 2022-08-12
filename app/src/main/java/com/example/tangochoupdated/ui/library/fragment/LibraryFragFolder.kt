@@ -1,44 +1,24 @@
 package com.example.tangochoupdated.ui.library.fragment
 
-import LibraryFragFileClickListener
-import LibraryPopUpConfirmDeleteClickListener
-import android.content.Context
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
-import android.graphics.drawable.VectorDrawable
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageView
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
-import com.example.tangochoupdated.databinding.LibraryFragBinding
-import com.example.tangochoupdated.databinding.LibraryFragHomeBaseBinding
 import com.example.tangochoupdated.databinding.LibraryFragOpenFolderBaseBinding
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.db.enumclass.LibRVState
-import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
-import com.example.tangochoupdated.ui.library.LibraryTopBarMode
+import com.example.tangochoupdated.ui.library.LibraryAddClickListeners
 import com.example.tangochoupdated.ui.library.LibraryViewModel
-import com.example.tangochoupdated.ui.mainactivity.Animation
-import com.example.tangochoupdated.ui.mainactivity.MainActivity
+import com.example.tangochoupdated.ui.library.listadapter.LibFragFileRVListAdapter
 
 
 class LibraryFragFolder :  Fragment(){
@@ -46,7 +26,7 @@ class LibraryFragFolder :  Fragment(){
 
     private lateinit var myNavCon:NavController
     private lateinit var recyclerView:RecyclerView
-    private lateinit var adapter: LibraryListAdapter
+
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
@@ -63,7 +43,7 @@ class LibraryFragFolder :  Fragment(){
         myNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
         _binding = LibraryFragOpenFolderBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
-        adapter = LibraryListAdapter(createFileViewModel,createCardViewModel,libraryViewModel, requireActivity())
+        val adapter = LibFragFileRVListAdapter(createFileViewModel,libraryViewModel,requireActivity(),false )
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
@@ -76,7 +56,7 @@ class LibraryFragFolder :  Fragment(){
                 binding.topBarFileBinding.apply {
                     txvFileTitle.text = it?.title ?:"タイトルなし"
                     imvFileType.setImageDrawable(
-                        MainActivity().changeFileIconCol(it?.colorStatus ?:ColorStatus.GRAY,requireActivity())
+                        GetCustomDrawables().getFileIconByCol(it?.colorStatus ?:ColorStatus.GRAY,requireActivity())
                     )
                 }
             }
@@ -90,11 +70,12 @@ class LibraryFragFolder :  Fragment(){
                     upDateContainingFlashCardAmount(childFlashCardCoverAmount)
                 }
                 setChildFilesFromDB(it)
-            }
-            myFinalList.observe(viewLifecycleOwner) {
                 adapter.submitList(it)
                 binding.emptyBinding.root.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.GONE
+            }
+            myFinalList.observe(viewLifecycleOwner) {
+
             }
             parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
@@ -124,7 +105,7 @@ class LibraryFragFolder :  Fragment(){
             }
 
             }
-        addTopBarViews()
+        LibraryAddClickListeners().fragLibFolderAddCL(binding,libraryViewModel,myNavCon,requireActivity())
         return binding.root
     }
 
@@ -133,24 +114,7 @@ class LibraryFragFolder :  Fragment(){
         super.onDestroyView()
         _binding = null
     }
-    fun addTopBarViews(){
 
-        val file = binding.topBarFileBinding
-        val multi = binding.topBarMultiselectBinding
-        arrayOf(
-            file.imvGoBack,
-            file.lineLayGGFile,
-            file.lineLayGPFile,
-
-            multi.imvCloseMultiMode,
-            multi.imvSelectAll,
-            multi.imvChangeMenuVisibility,
-            multi.multiSelectMenuBinding.imvMoveSelectedItems,
-            multi.multiSelectMenuBinding.imvDeleteSelectedItems,
-            multi.multiSelectMenuBinding.imvSetFlagToSelectedItems,
-
-        ).onEach { it.setOnClickListener( LibraryFragFileClickListener(requireContext(), binding.topBarFileBinding,libraryViewModel, myNavCon)) }
-    }
 
 }
 

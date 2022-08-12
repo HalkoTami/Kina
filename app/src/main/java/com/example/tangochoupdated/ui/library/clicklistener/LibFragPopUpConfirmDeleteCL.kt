@@ -1,9 +1,11 @@
+package com.example.tangochoupdated.ui.library.clicklistener
+
 import android.view.View
 import com.example.tangochoupdated.databinding.LibraryFragBinding
 import com.example.tangochoupdated.ui.library.ConfirmMode
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 
-class LibraryPopUpConfirmDeleteClickListener(val binding: LibraryFragBinding, val libVM: LibraryViewModel): View.OnClickListener{
+class LibFragPopUpConfirmDeleteCL(val binding: LibraryFragBinding, val libVM: LibraryViewModel): View.OnClickListener{
     val onlyP = binding.confirmDeletePopUpBinding
     val deleteAllC = binding.confirmDeleteChildrenPopUpBinding
     override fun onClick(v: View?) {

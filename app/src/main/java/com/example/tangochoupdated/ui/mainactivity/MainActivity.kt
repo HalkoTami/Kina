@@ -1,29 +1,25 @@
 package com.example.tangochoupdated.ui.mainactivity
 
-import android.content.Context
-import android.graphics.ColorFilter
+import android.content.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.view.ContextMenu
+import android.view.Menu
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.textclassifier.TextClassifierEvent
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
-import androidx.core.content.res.ResourcesCompat.getColor
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.children
-import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
@@ -56,6 +52,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
+
 //      全部のデータを消したいとき
 //        applicationContext.deleteDatabase("my_database")
 
@@ -64,6 +61,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 //        navController の宣言
         navHostFragment =
             supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
@@ -128,9 +126,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //        初期設定
             setOnCreate()
 //           タブの画面遷移
-//            action.observe(this@MainActivity){
-//                navCon.navigate(it)
-//            }
+            action.observe(this@MainActivity){
+                navCon.navigate(it)
+            }
 //            ナビゲーションバーのUi変化
             bnvVisibility.observe(this@MainActivity){
                 binding.frameBnv.visibility = if(it == true) VISIBLE else GONE
@@ -260,10 +258,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         createCardViewModel.apply{
             onCreateViewModel()
             var calledFirstTime = true
-            lastInsertedCardAndTags.observe(this@MainActivity){
+            lastInsertedCard.observe(this@MainActivity){
 
                 if(!calledFirstTime){
-                    createCardViewModel.setLastInsertedCardAndTags(it)
+                    createCardViewModel.setLastInsertedCard(it)
                 }
                 calledFirstTime = false
             }
@@ -277,6 +275,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 //        ー－－－ー－－－
  }
+
 
     override fun onClick(v: View?) {
         binding.apply {
@@ -420,36 +419,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         imageView.setImageDrawable(a)
 
     }
-    fun changeFileIconCol(colorStatus: ColorStatus,context: Context):Drawable{
-        val drawable = AppCompatResources.getDrawable(context,R.drawable.icon_file_with_color) as LayerDrawable
-        val col = ContextCompat.getColor(context,
-            when(colorStatus) {
-                ColorStatus.GRAY -> R.color.gray
-                ColorStatus.BLUE -> R.color.blue
-                ColorStatus.YELLOW -> R.color.yellow
-                ColorStatus.RED -> R.color.red
-                else -> R.color.gray
-            }
-            )
-         drawable.findDrawableByLayerId(R.id.file_paint).setTint(col)
-        return  drawable
 
-    }
-    fun changeFlashCardIconCol(colorStatus: ColorStatus,context: Context):Drawable{
-        val drawable = AppCompatResources.getDrawable(context,R.drawable.icon_flashcard_with_col) as LayerDrawable
-        val col = ContextCompat.getColor(context,
-            when(colorStatus) {
-                ColorStatus.GRAY -> R.color.gray
-                ColorStatus.BLUE -> R.color.blue
-                ColorStatus.YELLOW -> R.color.yellow
-                ColorStatus.RED -> R.color.red
-                else -> R.color.gray
-            }
-        )
-        drawable.findDrawableByLayerId(R.id.icon_flashcard_paint).setTint(col)
-        return  drawable
-
-    }
     fun makeAllColPaletUnselected(colorPaletBinding: ItemColorPaletBinding){
         changeColPalletCol(ColorStatus.RED,false,colorPaletBinding)
         changeColPalletCol(ColorStatus.YELLOW,false,colorPaletBinding)

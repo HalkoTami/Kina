@@ -13,16 +13,7 @@
       android:strokeWidth="2"
       android:fillColor="#00000000"
       android:strokeColor="#000000"/>
-  <path
-      android:pathData="M10.672,27.314L14.136,23.85"
-      android:strokeWidth="0.3"
-      android:fillColor="#00000000"
-      android:strokeColor="#000000"/>
-  <path
-      android:pathData="M21.185,4.599L28.056,11.471A1,1 0,0 1,28.056 12.885L14.95,25.992A1,1 51.198,0 1,13.535 25.992L6.664,19.12A1,1 0,0 1,6.664 17.706L19.771,4.599A1,1 0,0 1,21.185 4.599z"
-      android:strokeWidth="2"
-      android:strokeColor="#000000"/>
-  <path
-      android:pathData="M12.51,19.453L12.51,19.453A1.47,1.47 0,0 1,12.51 21.531L7.66,26.381A1.47,1.47 90,0 1,5.582 26.381L5.582,26.381A1.47,1.47 90,0 1,5.582 24.302L10.432,19.453A1.47,1.47 0,0 1,12.51 19.453z"
-      android:fillColor="#000000"/>
+
+
+  
 </vector>
