@@ -123,12 +123,17 @@ interface LibraryDao {
     fun getCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
 
     @Query("select * from tbl_card where NOT card_deleted AND " +
-            "belonging_markerTextPreview OR " +
+            "belonging_frontTitle OR " +
+            "belonging_backTitle OR " +
             "belonging_frontText OR " +
             "belonging_backText " +
-            "LIKE '%' || :search || '%' " +
-            "ORDER BY id DESC")
+            "LIKE '%' || :search || '%' ")
     fun searchCardsByWords(search:String):Flow<List<Card>>
+
+    @Query("select * from tbl_file where NOT deleted AND " +
+            "title  " +
+            "LIKE '%' || :search || '%' ")
+    fun searchFilesByWords(search:String):Flow<List<File>>
 
 
 }

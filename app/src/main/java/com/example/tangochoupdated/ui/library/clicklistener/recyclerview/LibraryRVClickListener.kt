@@ -1,4 +1,4 @@
-package com.example.tangochoupdated.ui.library.clicklistener
+package com.example.tangochoupdated.ui.library.clicklistener.recyclerview
 
 //import android.content.Context
 //import android.view.MotionEvent

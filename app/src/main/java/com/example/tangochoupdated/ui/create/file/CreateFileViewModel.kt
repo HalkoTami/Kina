@@ -10,9 +10,6 @@ import com.example.tangochoupdated.db.dataclass.FileXRef
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.create.Mode
-import io.reactivex.Flowable
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
@@ -45,15 +42,6 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-    fun getpAndGP(parentId:Int?):List<File>{
-        val a = mutableListOf<File>()
-        Flowable.fromCallable { repository.getAllAncestorsByFileId(parentId)}
-            .subscribeOn(Schedulers.io())
-            .map { it.map {
-                a.addAll(it)
-            } }
-        return a
-    }
     fun parentFileParent(id:Int?):LiveData<File> = repository.getFileByFileId(id).asLiveData()
     val _parentFileParent = MutableLiveData<File?>()
     fun setParentFileParent(file: File? ){
@@ -62,46 +50,46 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
     fun allAncestors(fileId:Int?):LiveData<List<File>?> = repository.getAllAncestorsByFileId(fileId).asLiveData()
-    val _pAndgGP = MutableLiveData<List<File>>()
+    val _pAndgGP = MutableLiveData<List<File>?>()
     fun setPAndG(list: List<File>?){
         _pAndgGP.value = list
         val file:Boolean
         val flashCardCover:Boolean
         val card:Boolean
 
-        when(_parentFile.value?.fileStatus){
-            null -> {
-                card = true
-                file = true
-                flashCardCover = true
-            }
-            FileStatus.FOLDER -> {
-
-                card = false
-                if(list!!.size < 3 ) {
-                    file = true
-                    flashCardCover = true
-                } else {
-                    file = false
-                    flashCardCover = list.size < 4
-                }
-            }
-            FileStatus.TANGO_CHO_COVER -> {
-                file = false
-                flashCardCover = false
-                card = true
-            }
-            else ->{
-                file = false
-                flashCardCover = false
-                card = false
-            }
-
-        }
-        setBottomMenuClickable(
-            BottomMenuClickable(file,flashCardCover,card
-            )
-        )
+//        when(_parentFile.value?.fileStatus){
+//            null -> {
+//                card = true
+//                file = true
+//                flashCardCover = true
+//            }
+//            FileStatus.FOLDER -> {
+//
+//                card = false
+//                if(list!!.size < 3 ) {
+//                    file = true
+//                    flashCardCover = true
+//                } else {
+//                    file = false
+//                    flashCardCover = list.size < 4
+//                }
+//            }
+//            FileStatus.TANGO_CHO_COVER -> {
+//                file = false
+//                flashCardCover = false
+//                card = true
+//            }
+//            else ->{
+//                file = false
+//                flashCardCover = false
+//                card = false
+//            }
+//
+//        }
+//        setBottomMenuClickable(
+//            BottomMenuClickable(file,flashCardCover,card
+//            )
+//        )
     }
 
     private val _parentFileStock = MutableLiveData<List<File>>()
@@ -149,16 +137,56 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
 //    add Bottom Menu
-    inner class BottomMenuClickable(
-        val createFile:Boolean,
-        val createFlashCardCover: Boolean,
-        val createCard: Boolean
+    class BottomMenuClickable(
+        var createFile:Boolean,
+        var createFlashCardCover: Boolean,
+        var createCard: Boolean
     )
     private val _bottomMenuClickable = MutableLiveData<BottomMenuClickable>()
     val bottomMenuClickable: LiveData<BottomMenuClickable> = _bottomMenuClickable
 
-    fun setBottomMenuClickable(bottomMenuClickable: BottomMenuClickable){
+    private fun setBottomMenuClickable(bottomMenuClickable: BottomMenuClickable){
         _bottomMenuClickable.value = bottomMenuClickable
+    }
+    fun makeAllBottomMenuClickable(){
+        setBottomMenuClickable(BottomMenuClickable(
+            true,true,true
+        ))
+    }
+
+    fun filterBottomMenuWhenInBox(){
+        setBottomMenuClickable(
+            BottomMenuClickable(
+                createFile =  false, createFlashCardCover = false, createCard = true)
+        )
+    }
+    fun filterBottomMenuWhenInChooseFileMoveTo(flashCard:Boolean,home:Boolean,ancestors: List<File>?){
+        setBottomMenuClickable(
+            BottomMenuClickable(
+                createFile = if(!flashCard)  (ancestors?.size ?: 0) < 3 else false,
+                createFlashCardCover = flashCard&&home,
+                createCard = false
+            ))
+
+    }
+    fun filterBottomMenuByAncestors(ancestors:List<File>, parentFile:File){
+        filterBottomMenuByFile(parentFile)
+        val folder = if(_bottomMenuClickable.value!!.createFile){
+            ancestors.size < 3
+        } else false
+        val change = _bottomMenuClickable.value!!
+        change.createFile = folder
+        setBottomMenuClickable(change)
+    }
+    private fun filterBottomMenuByFile(file:File){
+        setBottomMenuClickable(BottomMenuClickable(
+            createFile = file.fileStatus != FileStatus.TANGO_CHO_COVER,
+            createFlashCardCover = file.fileStatus != FileStatus.TANGO_CHO_COVER,
+            createCard = file.fileStatus == FileStatus.TANGO_CHO_COVER
+        )
+
+        )
+
     }
 
 
@@ -338,7 +366,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         if(before == int|| int!=null){
             return
         } else{
-            _lastInsertedFileId.value = int
+            _lastInsertedFileId.value = int!!
             if(fileInserted){
                 val a = mutableListOf<File>()
                 if(_pAndgGP.value != null){

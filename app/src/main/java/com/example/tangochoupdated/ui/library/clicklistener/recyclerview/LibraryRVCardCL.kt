@@ -1,4 +1,4 @@
-package com.example.tangochoupdated.ui.library.clicklistener
+package com.example.tangochoupdated.ui.library.clicklistener.recyclerview
 
 import android.content.Context
 import android.view.MotionEvent
@@ -6,22 +6,18 @@ import android.view.View
 import androidx.core.view.children
 import com.example.tangochoupdated.MyTouchListener
 import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
-import com.example.tangochoupdated.databinding.LibraryFragRvItemFileBinding
-import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.LibRVState
-import com.example.tangochoupdated.db.rvclasses.LibRVViewType
-import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
-import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 import com.example.tangochoupdated.ui.mainactivity.Animation
 
-class LibraryRVFileCL(val view: View,
-                                 val context: Context,
-                                 val item: File,
-                                 private val createFileViewModel: CreateFileViewModel,
-                                 private val lVM: LibraryViewModel,
-                                 private val rvBinding: LibraryFragRvItemBaseBinding,
+class LibraryRVCardCL(val view: View,
+                      val context: Context,
+                      val item: Card,
+                      private val createCardViewModel: CreateCardViewModel,
+                      private val lVM: LibraryViewModel,
+                      private val rvBinding: LibraryFragRvItemBaseBinding,
 ): MyTouchListener(context){
 
     //    click後にtouch event を設定しなおすと親子関係のコンフリクトが防げそう
@@ -37,15 +33,12 @@ class LibraryRVFileCL(val view: View,
                         lVM.onClickSelectableItem(item,btnSelect.isSelected.not())
                         btnSelect.isSelected = btnSelect.isSelected.not()
                     }else{
-                        lVM.openNextFile(item)
+                        createCardViewModel.onClickEditCard(item)
                     }
 
                 }
-                btnSelect -> {
-                    if(rvBinding.root.tag == LibRVState.SelectFileMoveTo) lVM.moveSelectedItemToFile(item)
-                }
+                btnSelect -> TODO()
                 btnDelete       -> lVM.onClickDeleteRVItem(item)
-                btnEditWhole    -> createFileViewModel.onClickEditFileInRV(item)
             }
         }
     }

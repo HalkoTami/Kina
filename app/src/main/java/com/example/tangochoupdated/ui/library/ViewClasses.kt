@@ -36,3 +36,6 @@ class ParentFileAncestors(
 enum class ConfirmMode{
     DeleteOnlyParent,DeleteWithChildren
 }
+enum class RVMode{
+    FILE,CARD,SEARCH,CHOOSE_FILE
+}

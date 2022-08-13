@@ -11,10 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryFragInboxBaseBinding
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
+import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
-import com.example.tangochoupdated.ui.library.LibraryAddClickListeners
+import com.example.tangochoupdated.ui.library.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.library.LibraryViewModel
-import com.example.tangochoupdated.ui.library.listadapter.LibFragCardRVListAdapter
+import com.example.tangochoupdated.ui.library.listadapter.LibFragPlaneRVListAdapter
 
 
 class LibraryFragInBox  : Fragment(){
@@ -24,7 +25,7 @@ class LibraryFragInBox  : Fragment(){
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
-
+    private val stringCardViewModel: StringCardViewModel by activityViewModels()
     private var _binding: LibraryFragInboxBaseBinding? = null
     private val binding get() = _binding!!
 
@@ -38,14 +39,19 @@ class LibraryFragInBox  : Fragment(){
             requireActivity().findNavController(R.id.lib_frag_con_view)
         _binding = LibraryFragInboxBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
-        val adapter = LibFragCardRVListAdapter(createCardViewModel,libraryViewModel,requireActivity())
+        val adapter= LibFragPlaneRVListAdapter(
+            createFileViewModel  = createFileViewModel,
+            libraryViewModel  = libraryViewModel,
+            context  = requireActivity(),
+            stringCardViewModel  = stringCardViewModel,
+            createCardViewModel  = createCardViewModel)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
 
 
+        createFileViewModel.filterBottomMenuWhenInBox()
         libraryViewModel.apply {
-            setParentFileFromDB(null)
             setModeInBox(true)
 
             childCardsFromDB(null).observe(viewLifecycleOwner) {
@@ -72,13 +78,14 @@ class LibraryFragInBox  : Fragment(){
 
 
         }
-        LibraryAddClickListeners().fragLibInBoxAddCL(binding,libraryViewModel,myNavCon,requireActivity())
+        LibrarySetUpFragment(libraryViewModel).setUpFragLibInBox(binding,myNavCon,requireActivity())
         return binding.root
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
+        libraryViewModel.setModeInBox(false)
         _binding = null
     }
 

@@ -36,28 +36,26 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //    －－－－observableなDBのデータを取ってくる－－－－
 
 //    今開いてるファイル
-    fun  parentFileFromDB(int: Int?):LiveData<File?> = repository.getFileByFileId(int).asLiveData()
-    fun setParentFileFromDB (file: File?){
+    fun  parentFileFromDB(int: Int?):LiveData<File> = repository.getFileByFileId(int).asLiveData()
+    fun setParentFileFromDB (file: File){
         _parentFile.value = file
         changeTopBarMode()
 
     }
-    private val _parentFile = MutableLiveData<File?>()
-    val parentFile:LiveData<File?> = _parentFile
+    private val _parentFile = MutableLiveData<File>()
+    val parentFile:LiveData<File> = _parentFile
     fun returnParentFile():File?{
         return _parentFile.value
     }
 //    今開いてるファイルの祖先
-    fun  parentFileAncestorsFromDB(int: Int?):LiveData<List<File>?> = repository.getAllAncestorsByFileId(int).asLiveData()
-    fun setParentFileAncestorsFromDB (ancestors: List<File>?){
-        if(ancestors != null){
-            val a = ParentFileAncestors(
-                gGrandPFile  = if(ancestors.size>=3) ancestors[2] else null,
-                gParentFile = if(ancestors.size>=2) ancestors[1] else null,
-                ParentFile = if(ancestors.isNotEmpty()) ancestors[0] else null
-            )
-            _parentFileAncestors.value = a
-        }
+    fun  parentFileAncestorsFromDB(int: Int?):LiveData<List<File>> = repository.getAllAncestorsByFileId(int).asLiveData()
+    fun setParentFileAncestorsFromDB (ancestors: List<File>){
+        val a = ParentFileAncestors(
+            gGrandPFile  = if(ancestors.size>=3) ancestors[2] else null,
+            gParentFile = if(ancestors.size>=2) ancestors[1] else null,
+            ParentFile = if(ancestors.isNotEmpty()) ancestors[0] else null
+        )
+        _parentFileAncestors.value = a
 
     }
 
@@ -243,6 +241,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         changeTopBarMode()
         changeRVMode()
     }
+    val chooseFileMoveToMode:LiveData<Boolean> =_chooseFileMoveToMode
 
     private val _multipleSelectMode =  MutableLiveData<Boolean>()
     val multipleSelectMode:LiveData<Boolean> = _multipleSelectMode
@@ -543,9 +542,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //        a.parentItemId =if(_parentFile.value == null) null else intArrayOf(_parentFile.value!!.fileId)
 //        setAction(a)
 //    }
-    fun openChooseFileMoveTo(){
-//        setChooseFileMoveToMode(true)
-        val a  = LibraryFragChooseFileMoveToDirections.selectFileMoveTo(null)
+    fun openChooseFileMoveTo(file:File?){
+        setChooseFileMoveToMode(true)
+        val a  = LibraryFragChooseFileMoveToDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))
         setAction(a)
     }
 

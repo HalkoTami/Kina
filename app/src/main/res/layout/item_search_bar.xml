@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:autofillHints="name"
-        android:text="けんさくするもの～～～"
+        android:hint="検索"
         android:textSize="14sp"
         android:background="@android:color/transparent" />
     <TextView

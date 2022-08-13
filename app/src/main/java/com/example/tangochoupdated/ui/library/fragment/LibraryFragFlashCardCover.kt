@@ -15,10 +15,11 @@ import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryFragOpenFlashCardCoverBaseBinding
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
+import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
-import com.example.tangochoupdated.ui.library.LibraryAddClickListeners
+import com.example.tangochoupdated.ui.library.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.library.LibraryViewModel
-import com.example.tangochoupdated.ui.library.listadapter.LibFragCardRVListAdapter
+import com.example.tangochoupdated.ui.library.listadapter.LibFragPlaneRVListAdapter
 
 
 class LibraryFragFlashCardCover  : Fragment(){
@@ -28,6 +29,8 @@ class LibraryFragFlashCardCover  : Fragment(){
     private lateinit var recyclerView:RecyclerView
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
+    private val stringCardViewModel: StringCardViewModel by activityViewModels()
+
     private val libraryViewModel: LibraryViewModel by activityViewModels()
 
     private var _binding: LibraryFragOpenFlashCardCoverBaseBinding? = null
@@ -43,7 +46,12 @@ class LibraryFragFlashCardCover  : Fragment(){
         myNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
         _binding = LibraryFragOpenFlashCardCoverBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
-        val adapter = LibFragCardRVListAdapter(createCardViewModel,libraryViewModel,requireActivity())
+        val adapter = LibFragPlaneRVListAdapter(
+            createFileViewModel  = createFileViewModel,
+            libraryViewModel  = libraryViewModel,
+            context  = requireActivity(),
+            stringCardViewModel  = stringCardViewModel,
+            createCardViewModel  = createCardViewModel)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
@@ -62,6 +70,7 @@ class LibraryFragFlashCardCover  : Fragment(){
             }
             parentFileAncestorsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
+                createFileViewModel.filterBottomMenuByAncestors(it,returnParentFile()!!)
             }
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
                 setChildCardsFromDB(it)
@@ -86,6 +95,7 @@ class LibraryFragFlashCardCover  : Fragment(){
                 LibraryFragmentBase().changeLibRVAllSelectedState(recyclerView,it)
             }
             parentFileAncestors.observe(viewLifecycleOwner){
+
                 binding.topBarFileBinding.apply {
                     txvGGrandParentFileTitle.text = it.gGrandPFile?.title
                     txvGrandParentFileTitle.text = it.gParentFile?.title
@@ -102,7 +112,7 @@ class LibraryFragFlashCardCover  : Fragment(){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
             }
 
-            LibraryAddClickListeners().fragLibFlashCardCoverAddCL(binding,libraryViewModel,myNavCon,requireActivity())
+            LibrarySetUpFragment(libraryViewModel).setUpFragLibFlashCardCover(binding,myNavCon,requireActivity())
         }
         return binding.root
     }

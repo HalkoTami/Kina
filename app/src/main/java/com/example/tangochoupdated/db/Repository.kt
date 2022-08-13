@@ -41,7 +41,8 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
 
         fun getCardByCardId(cardId:Int?):Flow<Card> = cardDao.getCardByCardId(cardId)
         val lastInsertedCard:Flow<Card?> = cardDao.getLastInsertedCard()
-
+        fun searchCardsByWords(search:String):Flow<List<Card>> = libraryDao.searchCardsByWords(search)
+        fun searchFilesByWords(search:String):Flow<List<File>> = libraryDao.searchFilesByWords(search)
 
 
         fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {

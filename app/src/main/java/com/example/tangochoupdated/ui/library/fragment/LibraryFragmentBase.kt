@@ -10,10 +10,8 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
@@ -22,11 +20,10 @@ import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
-import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.ConfirmMode
-import com.example.tangochoupdated.ui.library.LibraryAddClickListeners
+import com.example.tangochoupdated.ui.library.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.library.LibraryViewModel
 import com.example.tangochoupdated.ui.mainactivity.Animation
 
@@ -123,7 +120,7 @@ class LibraryFragmentBase : Fragment(){
             Toast.makeText(requireActivity(), "action called ", Toast.LENGTH_SHORT).show()
         }
 
-        LibraryAddClickListeners().fragLibBaseAddCL(binding,libraryViewModel)
+        LibrarySetUpFragment(libraryViewModel).setUpFragLibBase(binding)
         return binding.root
     }
 

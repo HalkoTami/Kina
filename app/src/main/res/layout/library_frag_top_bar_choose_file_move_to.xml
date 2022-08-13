@@ -11,6 +11,7 @@
 
 
     <ImageView
+        android:id="@+id/imv_file_move_to_status"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
 

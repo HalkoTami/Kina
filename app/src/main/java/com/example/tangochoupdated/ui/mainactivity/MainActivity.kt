@@ -29,6 +29,7 @@ import com.example.tangochoupdated.ui.create.card.CreateCardViewModel
 import com.example.tangochoupdated.ui.create.card.string.StringCardViewModel
 import com.example.tangochoupdated.ui.create.file.CreateFileViewModel
 import com.example.tangochoupdated.ui.library.LibraryViewModel
+import com.example.tangochoupdated.ui.library.SearchViewModel
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var factory: ViewModelFactory
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     lateinit var createCardViewModel: CreateCardViewModel
     lateinit var stringCardViewModel: StringCardViewModel
     lateinit var libraryViewModel:LibraryViewModel
+    lateinit var searchViewModel:SearchViewModel
 
     private lateinit var binding: MainActivityBinding
 
@@ -113,6 +115,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         libraryViewModel = ViewModelProvider(this, factory
             )[LibraryViewModel::class.java]
         stringCardViewModel = ViewModelProvider(this)[StringCardViewModel::class.java]
+        searchViewModel = ViewModelProvider(this,factory)[SearchViewModel::class.java]
 //      　ー－－－－－－－－－
 
 //        ー－－－mainActivityのviewModel 読み取りー－－－
