@@ -44,7 +44,6 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         myNavCon =  requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
         _binding = LibraryFragSelectFileMoveToBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
@@ -55,7 +54,7 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
         libraryViewModel.apply {
             val flashcard = returnParentFile()?.fileStatus == FileStatus.TANGO_CHO_COVER ||
                     returnModeInBox()==true
-            childFilesFromDB(args.folderId?.single()).observe(viewLifecycleOwner) {
+            childFilesFromDB(args.fileId?.single()).observe(viewLifecycleOwner) {
                 setChildFilesFromDB(it)
                 val list = if(flashcard){
                     it.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }
@@ -63,21 +62,21 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
                 adapter.submitList(list)
             }
 
-            binding.topBarChooseFileMoveToBinding.imvCloseChooseFileMoveTo.setImageDrawable(
-                AppCompatResources.getDrawable(requireActivity(),
-                    if(flashcard) R.drawable.icon_move_to_flashcard_cover else R.drawable.icon_move_to_folder
-                )
-            )
-
-            selectedFiles.observe(viewLifecycleOwner){
-                if(it.size == 0){
-                    libraryViewModel.setMultipleSelectMode(false)
-                    myNavCon.popBackStack()
-                }
-                binding.topBarChooseFileMoveToBinding.txvChooseFileMoveTo.text =
-                    if(flashcard) "${it?.size} 個のアイテムを単語帳に移動" else
-                        "${it?.size}個のアイテムをフォルダに移動"
-            }
+//            binding.topBarChooseFileMoveToBinding.imvCloseChooseFileMoveTo.setImageDrawable(
+//                AppCompatResources.getDrawable(requireActivity(),
+//                    if(flashcard) R.drawable.icon_move_to_flashcard_cover else R.drawable.icon_move_to_folder
+//                )
+//            )
+//
+//            selectedFiles.observe(viewLifecycleOwner){
+//                if(it.size == 0){
+//                    libraryViewModel.setMultipleSelectMode(false)
+//                    myNavCon.popBackStack()
+//                }
+//                binding.topBarChooseFileMoveToBinding.txvChooseFileMoveTo.text =
+//                    if(flashcard) "${it?.size} 個のアイテムを単語帳に移動" else
+//                        "${it?.size}個のアイテムをフォルダに移動"
+//            }
 
         }
         LibraryAddClickListeners().fragLibChooseFileMoveToAddCL(binding,libraryViewModel,myNavCon,requireActivity())

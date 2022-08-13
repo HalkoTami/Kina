@@ -5,8 +5,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.LibraryFragTopBarMultiselectModeBinding
+import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.toastToDo
 import com.example.tangochoupdated.ui.library.LibraryViewModel
+import com.example.tangochoupdated.ui.library.fragment.LibraryFragChooseFileMoveToDirections
 
 class LibFragTopBarMultiModeCL(val context: Context, val binding: LibraryFragTopBarMultiselectModeBinding, val libVM: LibraryViewModel,
                                val navCon: NavController
@@ -36,7 +38,7 @@ class LibFragTopBarMultiModeCL(val context: Context, val binding: LibraryFragTop
 
                 multi.multiSelectMenuBinding.linLayMoveSelectedItems -> {
                     if(notSelected)toastPleaseSelectItems()
-                        else libVM.openChooseFileMoveTo(null)
+                        else libVM.openChooseFileMoveTo()
                 }
                 multi.multiSelectMenuBinding.linLayDeleteSelectedItems -> if(notSelected)toastPleaseSelectItems()
                 else libVM.onClickDeleteSelectedItems()

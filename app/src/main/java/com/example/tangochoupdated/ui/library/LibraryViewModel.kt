@@ -543,9 +543,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //        a.parentItemId =if(_parentFile.value == null) null else intArrayOf(_parentFile.value!!.fileId)
 //        setAction(a)
 //    }
-    fun openChooseFileMoveTo(item: File?){
-        setChooseFileMoveToMode(true)
-        val a  = LibraryFragChooseFileMoveToDirections.selectFileMoveTo(if(item!=null)intArrayOf(item.fileId) else null)
+    fun openChooseFileMoveTo(){
+//        setChooseFileMoveToMode(true)
+        val a  = LibraryFragChooseFileMoveToDirections.selectFileMoveTo(null)
         setAction(a)
     }
 
@@ -565,6 +565,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             files.add(it)
         }
         updateFiles(files)
+        updateCards(cards)
         clearSelectedItems()
         setChooseFileMoveToMode(false)
     }

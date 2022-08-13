@@ -25,8 +25,8 @@ class LibraryRVChooseFileMoveToCL(val view: View,
         super.onSingleTap()
         rvBinding.apply {
             when(view){
-                baseContainer       ->  lVM.openChooseFileMoveTo(item)
-                btnSelect ->  toastToDo(context)
+                baseContainer       ->  lVM.openChooseFileMoveTo()
+                btnSelect ->  lVM.moveSelectedItemToFile(item)
             }
         }
     }

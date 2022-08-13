@@ -35,18 +35,7 @@
             />
 
     </fragment>
-    <fragment
-        android:id="@+id/fragLibrarySelectFileMoveTo"
-        android:name="com.example.tangochoupdated.ui.library.fragment.LibraryFragChooseFileMoveTo"
-        android:label="library"
-        tools:layout="@layout/library_frag_select_file_move_to_base" >
-        <argument
-            android:name="folderId"
-            app:argType="integer[]"
-            app:nullable="true"
-            />
 
-    </fragment>
     <fragment
         android:id="@+id/fragLibraryInBox"
         android:name="com.example.tangochoupdated.ui.library.fragment.LibraryFragInBox"
@@ -56,7 +45,18 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/fragLibrarySelectFileMoveTo"
+        android:name="com.example.tangochoupdated.ui.library.fragment.LibraryFragChooseFileMoveTo"
+        android:label="library"
+        tools:layout="@layout/library_frag_select_file_move_to_base" >
 
+
+        <argument
+            android:name="fileId"
+            app:argType="integer[]"
+            app:nullable="true"/>
+    </fragment>
 
 
     <action
@@ -86,7 +86,6 @@
         app:destination="@+id/fragLibraryHome"/>
     <action
         android:id="@+id/select_file_move_to"
-        app:popUpTo="@id/mobile_navigation"
         app:destination="@+id/fragLibrarySelectFileMoveTo"/>
 
 
