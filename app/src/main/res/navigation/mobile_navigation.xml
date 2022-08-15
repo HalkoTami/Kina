@@ -7,24 +7,30 @@
 
     <fragment
         android:id="@+id/fragmentLibrary"
-        android:name="com.example.tangochoupdated.ui.library.HomeFragment"
+        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase"
         android:label="library"
-        tools:layout="@layout/fragment_library_home" >
-
-
+        tools:layout="@layout/library_frag" >
 
 
         <argument
-        android:name="parentItemId"
-        app:argType="integer[]"
+            android:name="parentItemId"
+             app:argType="integer[]"
             app:nullable="true"
-            android:defaultValue="@null" />
-        <action
-            android:id="@+id/library_to_library"
-            app:destination="@id/fragmentLibrary">
+            android:defaultValue="@null"
+            />
 
-        </action>
     </fragment>
+    <fragment
+        android:id="@+id/navigation_anki"
+        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBase"
+        android:label="anki"
+
+        tools:layout="@layout/anki_frag_base" />
+
+<!--    <action-->
+<!--        android:id="@+id/library_to_library"-->
+<!--        app:destination="@id/fragmentLibrary">-->
+<!--    </action>-->
 
 <!--    <action-->
 <!--        android:id="@+id/action_to_create_card_nav"-->
@@ -32,8 +38,8 @@
 
     <fragment
         android:id="@+id/fragmentCreateCard"
-        android:name="com.example.tangochoupdated.ui.create.card.CreateCardFragment"
-        tools:layout="@layout/create_card_base">
+        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragment"
+        tools:layout="@layout/create_card_frag_base">
 
         <argument
             android:name="parentFlashCardCoverId"
@@ -48,30 +54,49 @@
 
 
 
+    <action
+        android:id="@+id/open_create_card"
+        app:destination="@+id/fragmentCreateCard"
+
+        />
+    <action
+        android:id="@+id/flip_next_create_card"
+        app:destination="@id/fragmentCreateCard"
+        />
+    <action
+        android:id="@+id/flip_previous_create_card"
+        app:destination="@id/fragmentCreateCard"
+        />
+
 
     <action
-        android:id="@+id/to_create_card"
-        app:destination="@+id/fragmentCreateCard"/>
+        android:id="@+id/open_file"
+        app:destination="@+id/fragmentLibrary"
+        app:enterAnim="@anim/slide_in_right_anim"
+        app:exitAnim="@anim/slide_out_left_anim"
+        app:popEnterAnim="@anim/slide_in_left_anim"
+        app:popExitAnim="@anim/slide_out_right_anim" />
 
     <action
-        android:id="@+id/to_lib"
+        android:id="@+id/open_inbox"
+        app:destination="@+id/fragmentLibrary"
+        app:enterAnim="@anim/slide_in_up_anim"
+        app:popExitAnim="@anim/slide_out_up_anim" />
+
+    <action
+        android:id="@+id/to_lib_home"
         app:popUpTo="@id/mobile_navigation"
         app:destination="@+id/fragmentLibrary"/>
     <action
         android:id="@+id/to_anki"
         app:popUpTo="@id/mobile_navigation"
         app:destination="@+id/navigation_anki"/>
-    <action
-        android:id="@+id/to_create"
-        app:destination="@+id/navigation_create"/>
+<!--    <action-->
+<!--        android:id="@+id/to_create"-->
+<!--        app:destination="@+id/navigation_create"/>-->
 
 
-    <fragment
-        android:id="@+id/navigation_anki"
-        android:name="com.example.tangochoupdated.ui.anki.AnkiFragment"
-        android:label="anki"
 
-        tools:layout="@layout/fragment_anki_home" />
 
 
 

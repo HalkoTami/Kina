@@ -1,0 +1,3 @@
+<rotate android:fromDegrees="180"
+    android:drawable="@drawable/icon_move"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

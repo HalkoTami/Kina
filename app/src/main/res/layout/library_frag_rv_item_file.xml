@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_height="80dp"
+        android:layout_width="match_parent"
+
+        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/gray_stroke_rectangle">
+
+        <!--    TODO タイトルの文字サイズフィット-->
+        <!--    TODO タイトルの文字サイズフィット-->
+        <!--    TODO タイトルの文字サイズフィット-->
+        <!--    TODO タイトルの文字サイズフィット-->
+        <ImageView
+            android:contentDescription="@string/cd_file_type"
+            android:id="@+id/imv_file_type"
+            android:layout_width="40dp"
+
+
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_file"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txv_file_title"
+
+
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+
+            android:maxLength="18"
+            android:maxLines="2"
+            android:textSize="20sp"
+            android:text="taitorudesuyo"
+
+            app:layout_constraintStart_toEndOf="@id/imv_file_type"
+            app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/icon_polygon"/>
+
+
+
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
+
+

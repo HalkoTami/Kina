@@ -1,0 +1,7 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:drawable="@drawable/icon_flashcard_back"/>
+  <item android:id="@+id/icon_flashcard_paint"
+      android:drawable="@drawable/icon_flashcard_paintable"/>
+  <item android:drawable="@drawable/icon_flashcard_front"/>
+
+</layer-list>

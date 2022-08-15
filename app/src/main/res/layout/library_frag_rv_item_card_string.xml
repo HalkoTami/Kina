@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_height="wrap_content"
+    android:maxHeight="120dp"
+    android:minHeight="80dp"
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/gray_stroke_corner_10">
+
+<!--TODO 文字数制限　行制限-->
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/guide_vertical_start"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="txv_front_title,txv_back_title"
+        />
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/guide_vertical_end"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="txv_front_text,txv_back_text"
+        />
+
+    <TextView
+        android:id="@+id/txv_front_title"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:minWidth="30dp"
+
+        android:maxWidth="100dp"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/line_horizontal"
+        app:layout_constraintEnd_toStartOf="@id/line_vertical"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txv_front_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:maxLines="3"
+        android:text=""
+
+        app:layout_constraintBottom_toTopOf="@id/line_horizontal"
+
+        app:layout_constraintEnd_toStartOf="@id/btn_edt_front"
+        app:layout_constraintStart_toEndOf="@id/line_vertical"
+
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txv_back_title"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:maxWidth="100dp"
+        android:minWidth="30dp"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/line_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line_horizontal" />
+
+    <TextView
+        android:id="@+id/txv_back_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:maxLines="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_edt_back"
+        app:layout_constraintStart_toEndOf="@+id/line_vertical"
+        app:layout_constraintTop_toBottomOf="@id/line_horizontal" />
+    <ImageView
+        tools:ignore="contentDescription"
+        android:id="@+id/line_horizontal"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="3dp"
+
+        android:background="@color/gray"/>
+
+    <ImageView
+        android:id="@+id/line_vertical"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guide_vertical_start"
+        app:layout_constraintEnd_toStartOf="@id/guide_vertical_end"
+        app:layout_constraintTop_toTopOf="parent"
+
+
+        tools:ignore="contentDescription" />
+
+    <ImageView
+        android:contentDescription="@string/edt_front"
+
+        android:id="@+id/btn_edt_front"
+        app:layout_constraintBottom_toTopOf="@id/line_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/txv_front_text"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:src="@drawable/icon_edit"
+        android:layout_margin="5dp"/>
+    <ImageView
+        android:contentDescription="@string/edt_back"
+        android:id="@+id/btn_edt_back"
+        app:layout_constraintStart_toEndOf="@id/txv_back_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:src="@drawable/icon_edit"
+        android:layout_margin="5dp"/>
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
