@@ -39,15 +39,20 @@ class AnkiBoxListAdapter(
         RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: Any, ){
-            binding.imvFileType.setImageDrawable(
-                AppCompatResources.getDrawable(context,
-                when(item.fileStatus){
-                    FileStatus.TANGO_CHO_COVER -> R.drawable.icon_flashcard
-                    FileStatus.FOLDER -> R.drawable.icon_file
-                    else -> return
-                })
-            )
-            binding.txvFileTitle.text = item.title
+            val content =
+            when(item){
+                is File -> {
+                    val binding = AnkiHomeFragRvItemFileBinding.inflate(LayoutInflater.from(context))
+
+                    binding.root
+                }
+                is Card -> {
+                    val binding = AnkiHomeFragRvItemCardBinding.inflate(LayoutInflater.from(context))
+                    binding.root
+                }
+                else -> return
+            }
+            binding.root.addView(content)
 
 
         }

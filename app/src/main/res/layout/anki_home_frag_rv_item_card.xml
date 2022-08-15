@@ -16,9 +16,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/icon_flag"
+        app:layout_constraintTop_toBottomOf="@id/checkbox_anki_rv"/>
+
 
     <FrameLayout
         android:layout_width="0dp"
+        android:layout_marginStart="10dp"
         android:layout_height="wrap_content"
         android:id="@+id/lineLay_file_data"
         android:orientation="horizontal"
@@ -42,22 +51,28 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/frameLay_graphs"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/lineLay_file_data"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lineLay_file_data"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center_vertical"
+        >
+
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_flag"/>
-        <ImageView
+            android:layout_marginEnd="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_checkbox"/>
         <TextView
-            android:layout_width="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="暗記済み"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="end"
             android:layout_height="wrap_content"
             android:text="最新暗記日　2022/02/03"/>
 
