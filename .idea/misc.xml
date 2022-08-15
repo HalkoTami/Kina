@@ -208,6 +208,10 @@
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/tamshi.xml" value="0.33" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/menu/bottom_nav_menu.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/xml/my_animation.xml" value="0.2975630611372381" />
+        <entry key="app/src/main/res/layout/anki_home_frag_base.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/anki_home_frag_popup_anki_box_favourite.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/anki_home_frag_rv_item.xml" value="0.13179347826086957" />
+        <entry key="app/src/main/res/layout/anki_home_frag_rv_item_file.xml" value="0.13179347826086957" />
       </map>
     </option>
   </component>
