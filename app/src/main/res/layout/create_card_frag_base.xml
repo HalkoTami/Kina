@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.create.card.CreateCardFragment">
+    tools:context=".ui.fragment.base_frag_con.CreateCardFragment">
 
     <FrameLayout
         android:id="@+id/lay_create_card_top_bar"

@@ -17,3 +17,7 @@ enum class StringFragFocusedOn{
 enum class LibRVState{
     Selectable,LeftSwiped,Plane,LeftSwiping,SelectFileMoveTo,Selected
 }
+
+enum class AnkiBoxTab{
+    AllFlashCardCovers, Library, Favourites
+}

@@ -56,6 +56,11 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
                 .subscribe()
         }
 
+//    anki box
+    val allFlashCardCover:Flow<List<File>> = libraryDao.getAllFlashCardCover()
+
+
+
         @Suppress("RedundantSuspendModifier")
         @WorkerThread
         suspend fun insert(item: Any){

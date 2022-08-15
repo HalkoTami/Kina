@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/anki_box_navigation"
+    app:startDestination="@id/allFlashCardCover_frag">
+    <fragment
+        android:name="com.example.tangochoupdated.ui.fragment.ankibox_frag_con.AllFlashCardCoversFragment"
+        tools:layout="@layout/full_rv"
+        android:id="@+id/allFlashCardCover_frag">
+
+        <argument
+            android:name="fileId"
+            app:argType="integer[]"
+            android:defaultValue="@null"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:name="com.example.tangochoupdated.ui.fragment.ankibox_frag_con.LibraryItemsFragment"
+        tools:layout="@layout/full_rv"
+        android:id="@+id/libraryItem_frag">
+        <argument
+            android:name="fileId"
+            app:argType="integer[]"
+            android:defaultValue="@null"
+            app:nullable="true" />
+        <argument
+            android:name="flashCard"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+
+    <fragment
+        android:name="com.example.tangochoupdated.ui.fragment.ankibox_frag_con.FavouriteAnkiBoxFragment"
+        tools:layout="@layout/full_rv"
+        android:id="@+id/ankiBoxFavourite_frag"/>
+
+    <action android:id="@+id/to_allFlashCardCover_frag"
+        app:destination="@+id/allFlashCardCover_frag"
+        app:popUpTo="@navigation/anki_box_navigation"/>
+
+    <action android:id="@+id/to_ankiBoxFavourite_frag"
+        app:popUpTo="@navigation/anki_box_navigation"
+        app:destination="@id/ankiBoxFavourite_frag"/>
+
+
+</navigation>

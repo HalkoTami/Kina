@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="120dp"
+    android:layout_margin="10dp"
     android:padding="10dp"
-    android:layout_marginBottom="20dp"
     android:background="@drawable/gray_stroke_rectangle">
     <ImageView
         android:id="@+id/checkbox_anki_rv"
@@ -15,105 +15,121 @@
         android:src="@drawable/icon_checkbox_checkable"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/lineLay_file_data"/>
+        />
+
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/lineLay_file_data"
+        android:orientation="horizontal"
         app:layout_constraintStart_toEndOf="@id/checkbox_anki_rv"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/lineLay_file_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center_vertical"
-        app:layout_constraintBottom_toTopOf="@id/linLay_children_data"
-        >
-
-        <ImageView
-            android:contentDescription="@string/cd_file_type"
-            android:id="@+id/imv_file_type"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/icon_file"
-
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/txv_file_title"
-
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:maxLength="18"
-            android:maxLines="2"
-            android:textSize="15sp"
-
-            android:text="taitorudにesuyo"
-
-            app:layout_constraintStart_toEndOf="@id/imv_file_type"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linLay_children_data"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_margin="5dp"
-        android:gravity="center_vertical"
-        app:layout_constraintStart_toStartOf="@id/lineLay_file_data"
-
-        app:layout_constraintTop_toBottomOf="@id/lineLay_file_data"
         app:layout_constraintBottom_toTopOf="@id/frameLay_graphs">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_file"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"/>
-        <TextView
-            android:layout_marginStart="5dp"
-            android:textSize="13sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3個"/>
-        <ImageView
+            app:layout_constraintBottom_toBottomOf="@id/lineLay_file_data"
+            app:layout_constraintStart_toEndOf="@id/checkbox_anki_rv"
+            app:layout_constraintTop_toTopOf="@id/lineLay_file_data"
+            android:contentDescription="@string/cd_file_type"
+            android:id="@+id/imv_file_type"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            app:layout_constraintVertical_weight="1"
             android:layout_marginStart="10dp"
-            android:layout_width="wrap_content"
+            android:src="@drawable/icon_file"
+
+            />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            app:layout_constraintStart_toEndOf="@id/imv_file_type"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_flashcard"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="３個"/>
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toTopOf="@id/frameLay_graphs"
+            android:orientation="vertical"
+            >
+
+
+
+            <TextView
+                android:id="@+id/txv_file_title"
+
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:maxLength="18"
+                android:maxLines="2"
+                android:textSize="15sp"
+
+                android:text="taitorudにesuyo"
+
+                app:layout_constraintStart_toEndOf="@id/imv_file_type"
+                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linLay_children_data"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="@id/lineLay_file_data"
+
+                app:layout_constraintTop_toBottomOf="@id/lineLay_file_data"
+                app:layout_constraintBottom_toTopOf="@id/frameLay_graphs">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_file"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"/>
+                <TextView
+                    android:layout_marginStart="5dp"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3個"/>
+                <ImageView
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_flashcard"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="３個"/>
+                <ImageView
+                    android:padding="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_card"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="200枚"/>
+
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
         <ImageView
-            android:padding="2dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_card"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="200枚"/>
-
-
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/icon_polygon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/lineLay_file_data"
+            app:layout_constraintBottom_toBottomOf="@id/lineLay_file_data"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
-    <ImageView
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:src="@drawable/icon_polygon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/lineLay_file_data"
-        app:layout_constraintBottom_toBottomOf="@id/linLay_children_data"/>
-    <androidx.constraintlayout.widget.Barrier
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/barrier_imv_open"
-        app:constraint_referenced_ids="linLay_children_data,lineLay_file_data"
-        app:barrierDirection="end"/>
+
+
+
+
+<!--    <androidx.constraintlayout.widget.Barrier-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/barrier_imv_open"-->
+<!--        app:constraint_referenced_ids="linLay_children_data,lineLay_file_data"-->
+<!--        app:barrierDirection="end"/>-->
 
     <FrameLayout
         android:id="@+id/frameLay_graphs"
@@ -121,7 +137,7 @@
         android:layout_height="50dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linLay_children_data"
+        app:layout_constraintTop_toBottomOf="@id/lineLay_file_data"
         app:layout_constraintBottom_toBottomOf="parent">
    <include
        layout="@layout/anki_home_frag_data_graph"/>

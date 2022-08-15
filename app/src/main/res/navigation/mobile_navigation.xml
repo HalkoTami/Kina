@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragmentLibrary"
-        android:name="com.example.tangochoupdated.ui.library.fragment.LibraryFragmentBase"
+        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase"
         android:label="library"
         tools:layout="@layout/library_frag" >
 
@@ -20,6 +20,12 @@
             />
 
     </fragment>
+    <fragment
+        android:id="@+id/navigation_anki"
+        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBase"
+        android:label="anki"
+
+        tools:layout="@layout/anki_frag_base" />
 
 <!--    <action-->
 <!--        android:id="@+id/library_to_library"-->
@@ -32,7 +38,7 @@
 
     <fragment
         android:id="@+id/fragmentCreateCard"
-        android:name="com.example.tangochoupdated.ui.create.card.CreateCardFragment"
+        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragment"
         tools:layout="@layout/create_card_frag_base">
 
         <argument
@@ -90,12 +96,7 @@
 <!--        app:destination="@+id/navigation_create"/>-->
 
 
-    <fragment
-        android:id="@+id/navigation_anki"
-        android:name="com.example.tangochoupdated.ui.anki.AnkiFragment"
-        android:label="anki"
 
-        tools:layout="@layout/anki_home_frag_base" />
 
 
 

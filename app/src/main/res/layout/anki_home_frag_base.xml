@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.library.LibraryFragment"
     android:id="@+id/top_con_lay">
 
 
@@ -138,9 +137,10 @@
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             app:layout_constraintVertical_weight="1"
-            app:layout_constraintBottom_toTopOf="@id/scrollview"
+            app:layout_constraintBottom_toTopOf="@id/anki_box_frag_con_view"
             app:layout_constraintTop_toTopOf="parent">
             <TextView
+                android:id="@+id/tab_AllFlashCardCover_to_AnkiBox"
                 android:layout_marginEnd="20dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -149,6 +149,7 @@
                 android:gravity="center"
                 android:background="@drawable/tab_bottom_rextangle"/>
             <TextView
+                android:id="@+id/tab_Library_to_AnkiBox"
                 android:gravity="center"
                 android:layout_marginEnd="20dp"
                 android:layout_width="0dp"
@@ -156,6 +157,7 @@
                 android:layout_height="match_parent"
                 android:text="ライブラリ"/>
             <TextView
+                android:id="@+id/tab_Favourites_to_AnkiBox"
                 android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -165,45 +167,41 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollview"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/anki_box_frag_con_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintVertical_weight="10"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linLay_tabChange">
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:nestedScrollingEnabled="false"
-                    android:padding="10dp"
-                    android:id="@+id/vocabCardRV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:listitem="@layout/anki_home_frag_rv_item" />
-            </FrameLayout>
-
-        </androidx.core.widget.NestedScrollView>
+            app:layout_constraintTop_toBottomOf="@id/linLay_tabChange"
+            app:navGraph="@navigation/anki_box_navigation"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95"
+        android:id="@+id/gl_btn_start_anki_bottom"/>
     <TextView
         android:id="@+id/imv_search_loupe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="カードを選ばすに暗記を開始"
-        android:padding="15dp"
-        android:textSize="16sp"
-        android:elevation="10dp"
-        android:textColor="@color/most_dark_gray"
-
-        android:background="@drawable/plane_green_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/top_con_lay"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="50dp"
+        android:background="@drawable/plane_green_button"
+        android:elevation="10dp"
+        android:padding="15dp"
+        android:text="カードを選ばすに暗記を開始"
+
+        android:textColor="@color/most_dark_gray"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/gl_btn_start_anki_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
          />
 
     <FrameLayout

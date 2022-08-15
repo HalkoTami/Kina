@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context=".ui.mainactivity.MainActivity"
+    tools:context=".activity.MainActivity"
     android:id="@+id/top_con_lay">
 
 
@@ -62,7 +62,7 @@
         android:layout_height="0dp">
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollview"
+            android:id="@+id/anki_box_frag_con_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <androidx.constraintlayout.widget.ConstraintLayout

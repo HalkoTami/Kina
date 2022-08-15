@@ -135,5 +135,11 @@ interface LibraryDao {
             "LIKE '%' || :search || '%' ")
     fun searchFilesByWords(search:String):Flow<List<File>>
 
+    @Query("select * from tbl_file where NOT deleted AND " +
+            "fileStatus = 0  ")
+    fun getAllFlashCardCover():Flow<List<File>>
+
+
+
 
 }
