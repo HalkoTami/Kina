@@ -39,7 +39,7 @@ class LibraryItemsFragment  : Fragment() {
         val root: View = binding.root
 
         val adapter = ViewSetUp().setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity())
-        viewModel.getLibraryItemsFromDB(args.fileId?.single()).observe(viewLifecycleOwner){
+        viewModel.getLibraryFilesFromDB(args.fileId?.single()).observe(viewLifecycleOwner){
             adapter.submitList(it)
         }
 

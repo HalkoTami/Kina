@@ -55,6 +55,8 @@ class AnkiBoxListAdapter(
             binding.root.addView(content)
 
 
+
+
         }
 
         }
