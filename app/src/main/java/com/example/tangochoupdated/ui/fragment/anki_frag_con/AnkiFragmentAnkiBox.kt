@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
+import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiViewModel
@@ -36,6 +37,8 @@ class AnkiFragmentAnkiBox  : Fragment() {
         val root: View = binding.root
 
         binding.apply {
+            linLayTabChange.tag = AnkiBoxTab.AllFlashCardCovers
+            tabAllFlashCardCoverToAnkiBox.isSelected = true
             arrayOf(tabFavouritesToAnkiBox,tabLibraryToAnkiBox,tabAllFlashCardCoverToAnkiBox).onEach {
                 it.setOnClickListener(AnkiBoxTabChangeCL(binding,viewModel))
             }

@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="120dp"
-    android:layout_margin="10dp"
+    android:layout_height="wrap_content"
     android:padding="10dp"
     android:background="@drawable/gray_stroke_rectangle">
     <ImageView
@@ -84,6 +83,7 @@
                     android:paddingTop="3dp"
                     android:paddingBottom="3dp"/>
                 <TextView
+                    android:id="@+id/txv_anki_box_folder_amount"
                     android:layout_marginStart="5dp"
                     android:textSize="13sp"
                     android:layout_width="wrap_content"
@@ -95,6 +95,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_flashcard"/>
                 <TextView
+                    android:id="@+id/txv_anki_box_flashCard_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="３個"/>
@@ -104,6 +105,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_card"/>
                 <TextView
+                    android:id="@+id/txv_anki_box_Card_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="200枚"/>
@@ -134,7 +136,7 @@
     <FrameLayout
         android:id="@+id/frameLay_graphs"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lineLay_file_data"

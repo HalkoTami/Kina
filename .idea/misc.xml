@@ -208,14 +208,25 @@
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/layout/tamshi.xml" value="0.33" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/menu/bottom_nav_menu.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/xml/my_animation.xml" value="0.2975630611372381" />
+        <entry key="app/src/main/res/drawable/custom_progressbar.xml" value="0.277" />
+        <entry key="app/src/main/res/drawable/gray_stroke_rectangle.xml" value="0.353" />
+        <entry key="app/src/main/res/drawable/plane_green_button.xml" value="0.223" />
+        <entry key="app/src/main/res/drawable/rectangle.xml" value="0.353" />
+        <entry key="app/src/main/res/drawable/rectangle_light_green.xml" value="0.353" />
+        <entry key="app/src/main/res/drawable/rectangle_progressbar.xml" value="0.353" />
         <entry key="app/src/main/res/layout/anki_flip_frag_check_answer_string_frag.xml" value="0.27239583333333334" />
         <entry key="app/src/main/res/layout/anki_flip_frag_look_string_frag.xml" value="0.27239583333333334" />
         <entry key="app/src/main/res/layout/anki_flip_frag_type_answer_string_frag.xml" value="0.27239583333333334" />
         <entry key="app/src/main/res/layout/anki_home_frag_base.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/anki_home_frag_data_graph.xml" value="0.33" />
         <entry key="app/src/main/res/layout/anki_home_frag_popup_anki_box_favourite.xml" value="0.1" />
         <entry key="app/src/main/res/layout/anki_home_frag_rv_item.xml" value="0.13179347826086957" />
         <entry key="app/src/main/res/layout/anki_home_frag_rv_item_file.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_planner_home.xml" value="0.27239583333333334" />
+        <entry key="app/src/main/res/layout/main_activity.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/main_activity_bottom_navigation_bar.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/main_activity_popup_edit_file.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/main_activity_popup_menu_create.xml" value="0.21822916666666667" />
       </map>
     </option>
   </component>

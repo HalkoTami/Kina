@@ -13,6 +13,7 @@ import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
+import com.example.tangochoupdated.ui.view_set_up.AnkiBoxViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
@@ -23,19 +24,20 @@ import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
 
 class AnkiBoxListAdapter(
+    private val ankiBoxViewSetUp: AnkiBoxViewSetUp,
     private val context: Context) :
     ListAdapter<Any, AnkiBoxListAdapter.AnkiBoxItemViewHolder>(SearchDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnkiBoxItemViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return AnkiBoxItemViewHolder(AnkiHomeFragRvItemBinding.inflate(layoutInflater, parent, false),context)
+        return AnkiBoxItemViewHolder(AnkiHomeFragRvItemBinding.inflate(layoutInflater, parent, false),context,ankiBoxViewSetUp)
     }
 
     override fun onBindViewHolder(holder: AnkiBoxItemViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class AnkiBoxItemViewHolder (private val binding: AnkiHomeFragRvItemBinding,val context: Context) :
+    class AnkiBoxItemViewHolder (private val binding: AnkiHomeFragRvItemBinding,val context: Context,val ankiBoxViewSetUp: AnkiBoxViewSetUp) :
         RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: Any, ){
@@ -43,7 +45,7 @@ class AnkiBoxListAdapter(
             when(item){
                 is File -> {
                     val binding = AnkiHomeFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-
+                    ankiBoxViewSetUp.setUpRVFileBinding(binding, item)
 
                     binding.root
                 }

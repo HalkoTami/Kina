@@ -14,7 +14,7 @@ import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.databinding.FullRvBinding
 import com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragFlashCardCoverArgs
 import com.example.tangochoupdated.ui.listadapter.AnkiBoxListAdapter
-import com.example.tangochoupdated.ui.view_set_up.ViewSetUp
+import com.example.tangochoupdated.ui.view_set_up.AnkiBoxViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiViewModel
 import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
@@ -37,8 +37,8 @@ class LibraryItemsFragment  : Fragment() {
 
         _binding =  FullRvBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        val adapter = ViewSetUp().setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity())
+        val viewSetUp = AnkiBoxViewSetUp(viewModel, requireActivity())
+        val adapter = viewSetUp.setUpAnkiBoxRVListAdapter(binding.recyclerView,)
         viewModel.getLibraryFilesFromDB(args.fileId?.single()).observe(viewLifecycleOwner){
             adapter.submitList(it)
         }

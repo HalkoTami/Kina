@@ -61,6 +61,7 @@ class LibraryFragFolder :  Fragment(){
             clearFinalList()
             parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileFromDB(it)
+                createFileViewModel.setParentFile(it)
                 binding.topBarFileBinding.apply {
                     txvFileTitle.text = it?.title ?:"タイトルなし"
                     imvFileType.setImageDrawable(

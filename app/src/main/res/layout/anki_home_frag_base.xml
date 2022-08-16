@@ -147,7 +147,7 @@
                 android:layout_height="35dp"
                 android:text="すべての単語帳"
                 android:gravity="center"
-                android:background="@drawable/tab_bottom_rextangle"/>
+                android:background="@drawable/selector_tab_rectangle"/>
             <TextView
                 android:id="@+id/tab_Library_to_AnkiBox"
                 android:gravity="center"
@@ -155,14 +155,16 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:text="ライブラリ"/>
+                android:text="ライブラリ"
+                android:background="@drawable/selector_tab_rectangle"/>
             <TextView
                 android:id="@+id/tab_Favourites_to_AnkiBox"
                 android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:text="お気に入り"/>
+                android:text="お気に入り"
+                android:background="@drawable/selector_tab_rectangle"/>
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>

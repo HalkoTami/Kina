@@ -1,6 +1,9 @@
 package com.example.tangochoupdated.ui.listener.menuBar
 
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.StateListDrawable
 import android.view.View
+import android.widget.TextView
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
@@ -14,6 +17,19 @@ class AnkiBoxTabChangeCL(
                          private val ankiBoxFrag:AnkiHomeFragBaseBinding,
                          private val ankiBoxVM:AnkiBoxFragViewModel
                          ): View.OnClickListener {
+
+    fun changeSelectedTab(select:AnkiBoxTab,before:AnkiBoxTab){
+        fun getTextView(tab:AnkiBoxTab):TextView{
+            return when(tab){
+                AnkiBoxTab.AllFlashCardCovers-> ankiBoxFrag.tabAllFlashCardCoverToAnkiBox
+                AnkiBoxTab.Library -> ankiBoxFrag.tabLibraryToAnkiBox
+                AnkiBoxTab.Favourites -> ankiBoxFrag.tabFavouritesToAnkiBox
+            }
+        }
+        getTextView(select).isSelected = true
+        ankiBoxFrag.linLayTabChange.tag = select
+        getTextView(before).isSelected = false
+    }
     override fun onClick(v: View?) {
         ankiBoxFrag.apply {
             when(v){
@@ -21,17 +37,19 @@ class AnkiBoxTabChangeCL(
                     ankiBoxVM.setTabChangeAction(
                         AllFlashCardCoversFragmentDirections.toAllFlashCardCoverFrag()
                     )
-                    linLayTabChange.tag = AnkiBoxTab.AllFlashCardCovers
+                    changeSelectedTab(AnkiBoxTab.AllFlashCardCovers,linLayTabChange.tag as AnkiBoxTab)
                 }
                 tabLibraryToAnkiBox -> if(linLayTabChange.tag != AnkiBoxTab.Library){
-
-                    linLayTabChange.tag = AnkiBoxTab.Library
+                    ankiBoxVM.setTabChangeAction(
+                        LibraryItemsFragmentDirections.toLibraryItemsFrag()
+                    )
+                    changeSelectedTab(AnkiBoxTab.Library,linLayTabChange.tag as AnkiBoxTab)
                 }
                 tabFavouritesToAnkiBox -> if(linLayTabChange.tag != AnkiBoxTab.Favourites){
                     ankiBoxVM.setTabChangeAction(
                         FavouriteAnkiBoxFragmentDirections.toAnkiBoxFavouriteFrag()
                     )
-                    linLayTabChange.tag = AnkiBoxTab.Favourites
+                    changeSelectedTab(AnkiBoxTab.Favourites,linLayTabChange.tag as AnkiBoxTab)
                 }
             }
         }

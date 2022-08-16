@@ -59,6 +59,7 @@ class LibraryFragHome : Fragment(){
 
 
         createCardViewModel.setParentFlashCardCover(null)
+        createFileViewModel.setParentFile(null)
         createFileViewModel.makeAllBottomMenuClickable()
         libraryViewModel.apply {
             libraryViewModel.clearFinalList()

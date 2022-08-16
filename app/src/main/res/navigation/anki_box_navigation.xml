@@ -42,6 +42,8 @@
     <action android:id="@+id/to_ankiBoxFavourite_frag"
         app:popUpTo="@navigation/anki_box_navigation"
         app:destination="@id/ankiBoxFavourite_frag"/>
-
+    <action android:id="@+id/to_libraryItems_frag"
+        app:popUpTo="@navigation/anki_box_navigation"
+        app:destination="@id/libraryItem_frag"/>
 
 </navigation>

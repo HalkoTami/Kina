@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/conLay_graphs"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="80dp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/linLay_children_data"
@@ -21,19 +21,56 @@
         android:gravity="end"
         android:layout_height="wrap_content"
         android:text="暗記完了"/>
-    <ImageView
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/imv_remembered_progress"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:maxHeight="20dp"
         app:layout_constraintVertical_weight="1"
-        android:src="@drawable/custom_progressbar"
 
         android:layout_marginStart="10dp"
-        app:layout_constraintEnd_toStartOf="@id/txv_percentage"
+        app:layout_constraintEnd_toStartOf="@id/txv_remembered_percentage"
         app:layout_constraintStart_toEndOf="@id/barrier_progress_bar_start"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/imv_opened_progress"/>
+        app:layout_constraintBottom_toTopOf="@id/imv_opened_progress">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_remembered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0"
+            />
+        <ImageView
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/rectangle" />
+        <ImageView
+            android:layout_marginStart="10dp"
+            android:id="@+id/graph_remembered"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guide_remembered"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/rectangle_light_green"/>
+
+        <ImageView
+            android:id="@+id/imv_remembered_end_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/group_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guide_remembered"
+            android:layout_marginEnd="-20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
         android:id="@+id/txv_opened_progress"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +95,7 @@
         app:layout_constraintStart_toEndOf="@id/barrier_progress_bar_start"
         app:layout_constraintTop_toBottomOf="@id/imv_remembered_progress" />
     <TextView
-        android:id="@+id/txv_percentage"
+        android:id="@+id/txv_remembered_percentage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="70%"
