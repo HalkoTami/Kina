@@ -47,11 +47,14 @@ class AnkiBoxViewSetUp(val ankiBoxVM:AnkiBoxFragViewModel,
             txvAnkiBoxFlashCardAmount.text = file.descendantsData.descendantsFlashCardsCoversAmount.toString()
             txvAnkiBoxFolderAmount.text = file.descendantsData.descendantsFoldersAmount.toString()
 
-            val rememberedPercentage = floor(file.rememberedCardAmount.toFloat()/file.descendantsData.descendantsCardsAmount.toFloat()*10.0).toFloat()
+            val rememberedPercentage =
+                if(file.descendantsData.descendantsCardsAmount!=0)
+                    floor(file.rememberedCardAmount.toFloat()/file.descendantsData.descendantsCardsAmount.toFloat()*10.0)
+            else 0.0
             ankiBoxGraphBinding.apply {
                 txvRememberedPercentage.text =
-                rememberedPercentage.toString()
-                guideRemembered.setGuidelinePercent(rememberedPercentage)
+                "${rememberedPercentage}" +"%"
+                guideRemembered.setGuidelinePercent(rememberedPercentage.toFloat())
                 if(graphRemembered.width<imvRememberedEndIcon.width){
                     val a = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
                     a.marginEnd = -imvRememberedEndIcon.width

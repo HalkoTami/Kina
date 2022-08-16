@@ -5,6 +5,7 @@ import android.view.View
 import androidx.lifecycle.*
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.db.MyRoomRepository
+import com.example.tangochoupdated.db.dataclass.ChildData
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.FileXRef
 import com.example.tangochoupdated.db.enumclass.ColorStatus
@@ -401,7 +402,6 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 title = null,
                 fileStatus = fileStatus ,
                 colorStatus = ColorStatus.GRAY,
-                hasChild = false,
                 deleted = false,
                 hasParent = false,
                 libOrder = _position.value ?:0,
