@@ -44,6 +44,7 @@ class AnkiBoxListAdapter(
                 is File -> {
                     val binding = AnkiHomeFragRvItemFileBinding.inflate(LayoutInflater.from(context))
 
+
                     binding.root
                 }
                 is Card -> {

@@ -164,7 +164,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         if((before?.id != card?.id) ) {
             _lastInsertedCard.value = card
 
-            val a = if(_lastInsertedCard.value?.belongingFileId!=null)intArrayOf(_lastInsertedCard.value?.belongingFileId!!) else null
+            val a = if(_lastInsertedCard.value?.belongingFlashCardCoverId!=null)intArrayOf(_lastInsertedCard.value?.belongingFlashCardCoverId!!) else null
             val b = intArrayOf(card!!.id)
             val fromSameFrag = _fromSameFrag.value!!
             setAction(CreateCardNav(CreateCardFragmentDirections.openCreateCard(a,b),fromSameFrag))
@@ -310,7 +310,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             quizData = if(_cardStatus.value!=CardStatus.CHOICE) null else null,
             markerData = if(_cardStatus.value!=CardStatus.CHOICE) null else null,
             stringData = if(_cardStatus.value!=CardStatus.STRING) null else _stringData.value,
-            belongingFileId = _parentFlashCardCover.value?.fileId,
+            belongingFlashCardCoverId = _parentFlashCardCover.value?.fileId,
             remembered = false
         )
         insert(newCard)
@@ -325,7 +325,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             quizData = null,
             markerData = null,
             stringData = null,
-            belongingFileId = parentFlashCardCoverId,
+            belongingFlashCardCoverId = parentFlashCardCoverId,
             remembered = false
         )
         insert(newCard)
@@ -400,7 +400,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         setOpenCreateCard(true)
         setFromSameFrag(true)
         setGetStringData(true)
-        val a = intArrayOf(_parentCard.value!!.belongingFileId!!)
+        val a = intArrayOf(_parentCard.value!!.belongingFlashCardCoverId!!)
         val nowCard = _sisterCards.value!!.find { it.id == _parentCard.value!!.id }
         val nowPosition = _sisterCards.value!!.indexOf(nowCard)
         createNewCardNextToPosition(nowPosition,previous = true,a.single(),true)
@@ -410,7 +410,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         setOpenCreateCard(true)
         setFromSameFrag(true)
         setGetStringData(true)
-        val a = if (_parentCard.value!!.belongingFileId!=null) intArrayOf(_parentCard.value!!.belongingFileId!!) else null
+        val a = if (_parentCard.value!!.belongingFlashCardCoverId!=null) intArrayOf(_parentCard.value!!.belongingFlashCardCoverId!!) else null
         val nowCard = _sisterCards.value!!.find { it.id == _parentCard.value!!.id }
         val nowPosition = _sisterCards.value!!.indexOf(nowCard)
         createNewCardNextToPosition(nowPosition + 1  ,false,a?.single(),true)
@@ -427,7 +427,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 //    val nowPosition = _sisterCards.value!!.indexOf(now)
 
     if(_nextCardExists.value==true){
-        val a = intArrayOf(_parentCard.value!!.belongingFileId!!)
+        val a = intArrayOf(_parentCard.value!!.belongingFlashCardCoverId!!)
         val nextCardId =_sisterCards.value?.get(_position.value!! +1)!!.id
         val b = intArrayOf(nextCardId)
         setAction(
@@ -440,7 +440,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun onClickBtnPrevious(){
         setGetStringData(true)
         setFromSameFrag(true)
-        val a = intArrayOf(_parentCard.value!!.belongingFileId!!)
+        val a = intArrayOf(_parentCard.value!!.belongingFlashCardCoverId!!)
         val nowCard = _sisterCards.value!!.find { it.id == _parentCard.value!!.id }
         val nowPosition = _sisterCards.value!!.indexOf(nowCard)
         if(nowPosition == 0 ){
@@ -478,7 +478,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 //        setAction(CreateCardFragmentDirections.toCreateCard(parentFileId,null))
         setOpenCreateCard(true)
         setFromSameFrag(false)
-        createNewCardNextToPosition(item.card!!.libOrder +1,false,item.card.belongingFileId,false)
+        createNewCardNextToPosition(item.card!!.libOrder +1,false,item.card.belongingFlashCardCoverId,false)
     }
     fun onClickAddNewCardBottomBar(){
         setOpenCreateCard(true)
@@ -502,7 +502,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
     fun onClickEditCard(item: Card){
         setOpenCreateCard(true)
-        val a =if(item.belongingFileId== null) null else intArrayOf(item.belongingFileId!!)
+        val a =if(item.belongingFlashCardCoverId== null) null else intArrayOf(item.belongingFlashCardCoverId!!)
         val b = intArrayOf(item.id)
         setFromSameFrag(false)
         setAction(CreateCardNav( CreateCardFragmentDirections.openCreateCard(a,b),false))

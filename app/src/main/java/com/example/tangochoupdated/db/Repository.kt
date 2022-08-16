@@ -2,6 +2,7 @@ package com.example.tangochoupdated.db
 
 import androidx.annotation.WorkerThread
 import com.example.tangochoupdated.db.dataclass.*
+import com.example.tangochoupdated.db.enumclass.FileStatus
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.*
@@ -44,8 +45,30 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
         fun searchCardsByWords(search:String):Flow<List<Card>> = libraryDao.searchCardsByWords(search)
         fun searchFilesByWords(search:String):Flow<List<File>> = libraryDao.searchFilesByWords(search)
 
+    enum class UpdateFileAmount{
+        Folder,FlashCardCover,Card
+    }
+        fun upDateChild(fileId: Int ,which:UpdateFileAmount){
+            Completable.fromAction{when(which){
+                UpdateFileAmount.FlashCardCover -> libraryDao.upDateFileChildFlashCardCoversAmount(fileId)
+                UpdateFileAmount.Folder -> libraryDao.upDateFileChildFlashCardCoversAmount(fileId)
+                UpdateFileAmount.Card -> libraryDao.upDateFileChildCardsAmount(fileId)
+            } }
+                .subscribeOn(Schedulers.io())
+                .subscribe()
+        }
+    fun upDateAncestors(childFileId: Int ,which:UpdateFileAmount){
+        Completable.fromAction{when(which){
+            UpdateFileAmount.FlashCardCover -> libraryDao.upDateAncestorsFlashCardCoverAmount(childFileId)
+            UpdateFileAmount.Folder -> libraryDao.upDateAncestorsFolderAmount(childFileId)
+            UpdateFileAmount.Card -> libraryDao.upDateAncestorsCardAmount(childFileId)
+        } }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
+    }
 
-        fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {
+
+    fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {
             Completable.fromAction { libraryDao.upDateChildFilesOfDeletedFile(deletedFileId,newParentFileId) }
                 .subscribeOn(Schedulers.io())
                 .subscribe()
@@ -67,8 +90,30 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
 
             when (item) {
                 is CardAndTagXRef -> cardAndTagXRefDao.insert(item)
-                is Card -> cardDao.insert(item)
-                is File -> { fileDao.insert(item) }
+                is Card -> {
+                    cardDao.insert(item)
+                    val flashCardCoverId = item.belongingFlashCardCoverId
+                    if(flashCardCoverId!=null){
+                        upDateChild(flashCardCoverId,UpdateFileAmount.Card)
+                        upDateAncestors(flashCardCoverId,UpdateFileAmount.Card)
+                    }
+                }
+                is File -> { fileDao.insert(item)
+                    val parentFileId = item.parentFileId
+                if(parentFileId!=null){
+                    when (item.fileStatus){
+                        FileStatus.FOLDER -> {
+                            upDateAncestors(parentFileId,UpdateFileAmount.Folder)
+                            upDateChild(parentFileId,UpdateFileAmount.Folder)
+                        }
+                        FileStatus.TANGO_CHO_COVER ->{
+                            upDateAncestors(parentFileId,UpdateFileAmount.FlashCardCover)
+                            upDateChild(parentFileId,UpdateFileAmount.Folder)
+                        }
+                    }
+                }
+
+                }
                 is User -> userDao.insert(item)
                 is MarkerData -> markerDataDao.insert(item)
                 is Choice -> choiceDao.insert(item)

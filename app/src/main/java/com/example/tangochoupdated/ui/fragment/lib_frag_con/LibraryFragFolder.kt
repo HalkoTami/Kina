@@ -64,19 +64,13 @@ class LibraryFragFolder :  Fragment(){
                 binding.topBarFileBinding.apply {
                     txvFileTitle.text = it?.title ?:"タイトルなし"
                     imvFileType.setImageDrawable(
-                        GetCustomDrawables().getFileIconByCol(it?.colorStatus ?:ColorStatus.GRAY,requireActivity())
+                        GetCustomDrawables(requireActivity()).getFolderIconByCol(it?.colorStatus ?:ColorStatus.GRAY,)
                     )
                 }
             }
             childFilesFromDB(args.folderId.single()).observe(viewLifecycleOwner) {
                 val childFoldersAmount = it.filter { it.fileStatus == FileStatus.FOLDER }.size
                 val childFlashCardCoverAmount = it.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }.size
-                if(returnParentFile()?.childFoldersAmount!=childFoldersAmount){
-                    upDateContainingCardAmount(childFoldersAmount)
-                }
-                if(returnParentFile()?.childFlashCardCoversAmount!=childFlashCardCoverAmount){
-                    upDateContainingFlashCardAmount(childFlashCardCoverAmount)
-                }
                 setChildFilesFromDB(it)
                 adapter.submitList(it)
                 binding.emptyBinding.root.visibility =

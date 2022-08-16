@@ -55,6 +55,7 @@ class LibraryFragInBox  : Fragment(){
         libraryViewModel.apply {
             setModeInBox(true)
 
+            createCardViewModel.setParentFlashCardCover(null)
             childCardsFromDB(null).observe(viewLifecycleOwner) {
                 setChildCardsFromDB(it)
                 adapter.submitList(it)

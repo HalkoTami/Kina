@@ -6,11 +6,24 @@ import android.graphics.drawable.LayerDrawable
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import com.example.tangochoupdated.R
+import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.ColorStatus
+import com.example.tangochoupdated.db.enumclass.FileStatus
 
-class GetCustomDrawables{
-    fun getFileIconByCol(colorStatus: ColorStatus, context: Context): Drawable {
-        val drawable = AppCompatResources.getDrawable(context, R.drawable.icon_file_with_color) as LayerDrawable
+class GetCustomDrawables(val context: Context){
+    fun appCon(id:Int):Drawable{
+        return AppCompatResources.getDrawable(context,id)!!
+    }
+    fun getFileIconByFile(file: File):Drawable{
+        return when(file.fileStatus){
+            FileStatus.FOLDER -> getFolderIconByCol(file.colorStatus)
+            FileStatus.TANGO_CHO_COVER -> getFlashCardIconByCol(file.colorStatus)
+            else -> appCon(R.drawable.icon_eye_opened)
+        }
+    }
+
+    fun getFolderIconByCol(colorStatus: ColorStatus,): Drawable {
+        val drawable = appCon(R.drawable.icon_file_with_color) as LayerDrawable
         val col = ContextCompat.getColor(context,
             when(colorStatus) {
                 ColorStatus.GRAY -> R.color.gray
@@ -24,8 +37,8 @@ class GetCustomDrawables{
         return  drawable
 
     }
-    fun getFlashCardIconByCol(colorStatus: ColorStatus, context: Context): Drawable {
-        val drawable = AppCompatResources.getDrawable(context, R.drawable.icon_flashcard_with_col) as LayerDrawable
+    fun getFlashCardIconByCol(colorStatus: ColorStatus, ): Drawable {
+        val drawable = appCon(R.drawable.icon_flashcard_with_col) as LayerDrawable
         val col = ContextCompat.getColor(context,
             when(colorStatus) {
                 ColorStatus.GRAY -> R.color.gray

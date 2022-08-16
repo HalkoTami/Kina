@@ -21,7 +21,7 @@ data class Card(
     @PrimaryKey(autoGenerate = true)
     val id:Int,
     @ColumnInfo
-    var belongingFileId:Int?,
+    var belongingFlashCardCoverId:Int?,
 
     @Embedded(prefix = "belonging_" )
     var stringData: StringData?,
@@ -40,7 +40,7 @@ data class Card(
     @ColumnInfo(name ="card_color")
     val colorStatus: ColorStatus?,
 
-)
+    )
 
 
 //Todo val と var の正しい振り分け

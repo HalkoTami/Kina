@@ -2,6 +2,7 @@ package com.example.tangochoupdated.ui.fragment.lib_frag_con
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -66,19 +67,20 @@ class LibraryFragFlashCardCover  : Fragment(){
                 setParentFileFromDB(it)
                 binding.topBarFileBinding.txvFileTitle.text = it?.title ?:"タイトルなし"
                 binding.topBarFileBinding.imvFileType.setImageDrawable(
-                    GetCustomDrawables().getFlashCardIconByCol(it?.colorStatus ?:ColorStatus.GRAY,requireContext())
+                    GetCustomDrawables(requireContext()).getFlashCardIconByCol(it?.colorStatus ?:ColorStatus.GRAY,)
                 )
                 createCardViewModel.setParentFlashCardCover(it)
+                Toast.makeText(requireActivity(),"${it.childData.childCardsAmount}",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(),"${it.descendantsData.descendantsCardsAmount}",Toast.LENGTH_SHORT).show()
+
             }
             parentFileAncestorsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
+
                 createFileViewModel.filterBottomMenuByAncestors(it,returnParentFile()!!)
             }
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
                 setChildCardsFromDB(it)
-                if(returnParentFile()?.childCardsAmount!=it?.size){
-                    upDateContainingCardAmount(it?.size ?:0)
-                }
                 adapter.submitList(it)
                 binding.emptyBinding.root.visibility =
                     if (it!=null &&it.isEmpty()) View.VISIBLE else View.GONE

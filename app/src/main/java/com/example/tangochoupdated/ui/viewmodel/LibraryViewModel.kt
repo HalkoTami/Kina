@@ -521,21 +521,8 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         update.libOrder = position
         update(card)
     }
-    fun upDateContainingCardAmount(cardAmount:Int){
-        val update = _parentFile.value ?:return
-        update.childCardsAmount = cardAmount
-        update(update)
-    }
-    fun upDateContainingFolderAmount(folderAmount:Int){
-        val update = _parentFile.value ?:return
-        update.childFoldersAmount = folderAmount
-        update(update)
-    }
-    fun upDateContainingFlashCardAmount(flashCardCoverAmount:Int){
-        val update = _parentFile.value ?:return
-        update.childFlashCardCoversAmount = flashCardCoverAmount
-        update(update)
-    }
+
+
 
 //    －－－－－－－－
 //    －－－－ファイル移動－－－－
@@ -562,8 +549,8 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         files.addAll(_selectedFiles.value!!)
 
         cards.onEach {
-            it.belongingFileId = item.fileId
-            it.libOrder = item.childCardsAmount + 1
+            it.belongingFlashCardCoverId = item.fileId
+            it.libOrder = item.childData.childCardsAmount + 1
         }
         files.onEach {
             it.parentFileId = item.fileId

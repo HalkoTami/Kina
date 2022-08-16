@@ -372,19 +372,19 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         } else{
             _lastInsertedFileId.value = int!!
             if(fileInserted){
-                val a = mutableListOf<File>()
-                if(_pAndgGP.value != null){
-                    a.addAll(_pAndgGP.value!!)
-                    a.onEach {
-                        when(_creatingFileType.value){
-                            FileStatus.FOLDER -> it.childFoldersAmount += 1
-                            FileStatus.TANGO_CHO_COVER -> it.childFlashCardCoversAmount += 1
-                        }
-
-                    }
-                    upDateMultipleFiles(a)
-
-                }
+//                val a = mutableListOf<File>()
+//                if(_pAndgGP.value != null){
+//                    a.addAll(_pAndgGP.value!!)
+//                    a.onEach {
+//                        when(_creatingFileType.value){
+//                            FileStatus.FOLDER -> it.childFoldersAmount += 1
+//                            FileStatus.TANGO_CHO_COVER -> it.childFlashCardCoversAmount += 1
+//                        }
+//
+//                    }
+//                    upDateMultipleFiles(a)
+//
+//                }
 
                 fileInserted = false
             }
@@ -401,9 +401,6 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 title = null,
                 fileStatus = fileStatus ,
                 colorStatus = ColorStatus.GRAY,
-                childFlashCardCoversAmount = 0,
-                childCardsAmount = 0,
-                childFoldersAmount = 0,
                 hasChild = false,
                 deleted = false,
                 hasParent = false,

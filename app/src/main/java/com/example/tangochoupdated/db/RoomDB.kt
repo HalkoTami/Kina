@@ -71,9 +71,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
                         hasChild = false,
                         hasParent = false,
                         libOrder = 0,
-                        childFoldersAmount = 0,
-                        childCardsAmount = 0,
-                        childFlashCardCoversAmount = 0,
+                        childData = ChildData(),
                         parentFileId = null)
                     fileDao.insert(file)
 

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5a63df9ae45b7565aca8e677521850e5",
+    "identityHash": "74dac01af2af78196bf90f19aacc6756",
     "entities": [
       {
         "tableName": "tbl_card",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `belongingFileId` INTEGER, `card_type` INTEGER NOT NULL, `card_deleted` INTEGER, `card_remembered` INTEGER, `library_order` INTEGER NOT NULL, `card_color` INTEGER, `belonging_frontTitle` TEXT, `belonging_backTitle` TEXT, `belonging_frontText` TEXT, `belonging_backText` TEXT, `belonging_markerTextPreview` TEXT, `belonging_answerChoiceId` INTEGER, `belonging_answerPreview` TEXT, `belonging_question` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `belongingFlashCardCoverId` INTEGER, `card_type` INTEGER NOT NULL, `card_deleted` INTEGER, `card_remembered` INTEGER, `library_order` INTEGER NOT NULL, `card_color` INTEGER, `belonging_frontTitle` TEXT, `belonging_backTitle` TEXT, `belonging_frontText` TEXT, `belonging_backText` TEXT, `belonging_markerTextPreview` TEXT, `belonging_answerChoiceId` INTEGER, `belonging_answerPreview` TEXT, `belonging_question` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,8 +15,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "belongingFileId",
-            "columnName": "belongingFileId",
+            "fieldPath": "belongingFlashCardCoverId",
+            "columnName": "belongingFlashCardCoverId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -130,7 +130,7 @@
       },
       {
         "tableName": "tbl_file",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fileId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT DEFAULT 'title', `deleted` INTEGER, `colorStatus` INTEGER NOT NULL, `fileStatus` INTEGER NOT NULL, `parentFileId` INTEGER, `library_order` INTEGER NOT NULL, `hasParent` INTEGER NOT NULL, `libOrder` INTEGER, `childFoldersAmount` INTEGER NOT NULL, `childFlashCardCoversAmount` INTEGER NOT NULL, `childCardsAmount` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fileId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT DEFAULT 'title', `deleted` INTEGER, `colorStatus` INTEGER NOT NULL, `fileStatus` INTEGER NOT NULL, `parentFileId` INTEGER, `library_order` INTEGER NOT NULL, `hasParent` INTEGER NOT NULL, `libOrder` INTEGER, `rememberedCardAmount` INTEGER NOT NULL, `childFoldersAmount` INTEGER NOT NULL, `childFlashCardCoversAmount` INTEGER NOT NULL, `childCardsAmount` INTEGER NOT NULL, `descendantsFoldersAmount` INTEGER NOT NULL, `descendantsFlashCardsCoversAmount` INTEGER NOT NULL, `descendantsCardsAmount` INTEGER NOT NULL, `flippedNeverAmount` INTEGER NOT NULL, `flippedOnceAmount` INTEGER NOT NULL, `flippedTwiceAmount` INTEGER NOT NULL, `flippedThreeTimesAmount` INTEGER NOT NULL, `flippedFourTimesAmount` INTEGER NOT NULL, `flippedFiveTimesAmount` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "fileId",
@@ -188,20 +188,80 @@
             "notNull": false
           },
           {
-            "fieldPath": "childFoldersAmount",
+            "fieldPath": "rememberedCardAmount",
+            "columnName": "rememberedCardAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "childData.childFoldersAmount",
             "columnName": "childFoldersAmount",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "childFlashCardCoversAmount",
+            "fieldPath": "childData.childFlashCardCoversAmount",
             "columnName": "childFlashCardCoversAmount",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "childCardsAmount",
+            "fieldPath": "childData.childCardsAmount",
             "columnName": "childCardsAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descendantsData.descendantsFoldersAmount",
+            "columnName": "descendantsFoldersAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descendantsData.descendantsFlashCardsCoversAmount",
+            "columnName": "descendantsFlashCardsCoversAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descendantsData.descendantsCardsAmount",
+            "columnName": "descendantsCardsAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedNeverAmount",
+            "columnName": "flippedNeverAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedOnceAmount",
+            "columnName": "flippedOnceAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedTwiceAmount",
+            "columnName": "flippedTwiceAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedThreeTimesAmount",
+            "columnName": "flippedThreeTimesAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedFourTimesAmount",
+            "columnName": "flippedFourTimesAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedFiveTimesAmount",
+            "columnName": "flippedFiveTimesAmount",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -476,7 +536,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5a63df9ae45b7565aca8e677521850e5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '74dac01af2af78196bf90f19aacc6756')"
     ]
   }
 }
