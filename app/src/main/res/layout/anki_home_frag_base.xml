@@ -27,7 +27,7 @@
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/conLay_anki_Box"
+        android:id="@+id/linLay_anki_Box"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         app:layout_constraintTop_toBottomOf="@id/topframelayout"
@@ -46,22 +46,40 @@
                 android:src="@drawable/icon_heart"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
-            <ImageView
+            <ProgressBar
 
+                android:indeterminateOnly="false"
+                android:max="100"
+
+                android:progressDrawable="@drawable/ring_anki_box"
                 android:id="@+id/ring_anki_box"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ring_anki_box"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintBottom_toTopOf="@id/imv_anki_box"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:id="@+id/imv_remembered_end_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/group_2"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/ring_anki_box"
+                app:layout_constraintEnd_toEndOf="@id/ring_anki_box"
+                app:layout_constraintBottom_toBottomOf="@id/ring_anki_box"
+                app:layout_constraintTop_toTopOf="@id/ring_anki_box"
+
+                />
             <TextView
+                android:id="@+id/txv_inside_ring"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="70"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@id/ring_anki_box"
                 app:layout_constraintEnd_toEndOf="@id/ring_anki_box"
                 app:layout_constraintBottom_toBottomOf="@id/ring_anki_box"
@@ -80,13 +98,14 @@
             android:id="@+id/top_graph"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:padding="5dp"
+            android:paddingTop="5dp"
             android:layout_height="match_parent"
-            app:layout_constraintStart_toEndOf="@id/conLay_anki_Box"
+            app:layout_constraintStart_toEndOf="@id/linLay_anki_Box"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <include
+                android:id="@+id/anki_box_graph_binding"
                 layout="@layout/anki_home_frag_data_graph_large"/>
         </FrameLayout>
 
@@ -101,7 +120,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/conLay_anki_Box"
+        app:layout_constraintTop_toBottomOf="@id/linLay_anki_Box"
         android:layout_width="match_parent"
         android:layout_height="0dp">
         <androidx.appcompat.widget.LinearLayoutCompat

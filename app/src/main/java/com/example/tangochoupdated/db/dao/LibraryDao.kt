@@ -99,6 +99,15 @@ interface LibraryDao {
             "SELECT fileId FROM generation b )")
     fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
 
+    @Query(
+        "Select id from tbl_card where not card_deleted and belongingFlashCardCoverId in ( " +
+                "with generation AS (" +
+                " select * from tbl_file where fileId in(:fileIdList)  " +
+                "UNION ALL" +
+                " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
+                "SELECT fileId FROM generation b )")
+    fun getDescendantsCardsIdsByMultipleFileId(fileIdList: List<Int>):Flow<List<Int>>
+
     @Query("UPDATE tbl_file SET parentFileId = :newParentFileId  WHERE parentFileId = :deletedFileId")
     fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?)
 

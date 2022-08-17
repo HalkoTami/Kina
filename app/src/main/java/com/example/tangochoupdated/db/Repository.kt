@@ -38,9 +38,11 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
         fun getAllAncestorsByFileId(fileId: Int?):Flow<List<File>> = libraryDao.getAllAncestorsByChildFileId(fileId)
         fun getAllDescendantsFilesByMultipleFileId(fileIdList: List<Int>):Flow<List<File>> = libraryDao.getAllDescendantsFilesByMultipleFileId(fileIdList)
         fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>> = libraryDao.getAllDescendantsCardsByMultipleFileId(fileIdList)
+    fun getDescendantsCardsIsByMultipleFileId(fileIdList: List<Int>):Flow<List<Int>> = libraryDao.getDescendantsCardsIdsByMultipleFileId(fileIdList)
 //    fun getAllDescendantsByFileIdWithCard(fileId: Int?):Flow<List<Any>> = libraryDao.getAllDescendantsByParentFileId2(fileId)
 
         fun getCardByCardId(cardId:Int?):Flow<Card> = cardDao.getCardByCardId(cardId)
+    fun getCardsByMultipleCardId(cardIds:List<Int>):Flow<List<Card>> = cardDao.getCardByMultipleCardIds(cardIds)
         val lastInsertedCard:Flow<Card?> = cardDao.getLastInsertedCard()
         fun searchCardsByWords(search:String):Flow<List<Card>> = libraryDao.searchCardsByWords(search)
         fun searchFilesByWords(search:String):Flow<List<File>> = libraryDao.searchFilesByWords(search)

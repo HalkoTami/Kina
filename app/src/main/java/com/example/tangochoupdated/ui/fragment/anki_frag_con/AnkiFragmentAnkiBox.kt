@@ -5,22 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
+import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiViewModel
-import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
+import java.lang.Math.abs
 
 
 class AnkiFragmentAnkiBox  : Fragment() {
@@ -48,14 +46,84 @@ class AnkiFragmentAnkiBox  : Fragment() {
                 it.setOnClickListener(AnkiBoxTabChangeCL(binding,viewModel))
             }
         }
-        viewModel.tabChangeAction.observe(viewLifecycleOwner){
-            val a = childFragmentManager.findFragmentById(binding.ankiBoxFragConView.id) as NavHostFragment
-            a.navController.navigate(it)
-            Toast.makeText(requireActivity(), "navigated ", Toast.LENGTH_SHORT).show()
+        viewModel.apply{
+            tabChangeAction.observe(viewLifecycleOwner){
+                val a = childFragmentManager.findFragmentById(binding.ankiBoxFragConView.id) as NavHostFragment
+                a.navController.navigate(it)
+                Toast.makeText(requireActivity(), "navigated ", Toast.LENGTH_SHORT).show()
+            }
+            ankiBoxFileIds.observe(viewLifecycleOwner){
+                getDescendantsCardIds(it).observe(viewLifecycleOwner){
+                    setAnkiBoxCardIds(it)
+                }
+            }
+            ankiBoxCardIds.observe(viewLifecycleOwner){
+                getCardsFromDBByMultipleCardIds(it).observe(viewLifecycleOwner){
+                    setAnkiBoxItems(it)
+                }
+            }
+            setAnkiBoxItems(emptyList())
+            ankiBoxItems.observe(viewLifecycleOwner) {
+                setUpAnkiBoxRing(it)
+                setUpGraphs(it)
+               if (it.isEmpty()){
+                    binding.linLayAnkiBox.alpha = 0.3f
+                   binding.imvRememberedEndIcon.visibility = View.GONE
+                    binding.linLayAnkiBox.isClickable = false
+                } else {
+                   binding.linLayAnkiBox.alpha = 1f
+                   binding.imvRememberedEndIcon.visibility = View.VISIBLE
+                   binding.linLayAnkiBox.isClickable = true
+               }
+            }
+
+
+
+            return root
         }
+    }
+    fun setUpAnkiBoxRing(list:MutableList<Card>){
+        val radious:Double
+        val rememberedCards = list.filter { it.remembered == true }.size
+        if(list.isNotEmpty()){
+
+            val rememberedPercentage =
+            if(rememberedCards!=0){
+                (list.filter { it.remembered == true }.size/list.size).toDouble()
+
+            } else {
+                1.0
+            }
+            binding.ringAnkiBox.progress = rememberedPercentage.toInt()
+            360*rememberedPercentage
+            radious = Math.toRadians(360*rememberedPercentage-90.0)
 
 
-        return root
+
+
+
+        } else{
+            radious = Math.toRadians(-90.0)
+        }
+        val dx: Float = (binding.ringAnkiBox.width-binding.imvRememberedEndIcon.width)/2 * Math.cos(radious).toFloat()
+        val dy: Float = (binding.ringAnkiBox.height-binding.imvRememberedEndIcon.width)/2  * Math.sin(radious).toFloat()
+        binding.imvRememberedEndIcon.translationX = dx
+        binding.imvRememberedEndIcon.translationY =dy
+        binding.txvInsideRing.text = "$rememberedCards/${list.size}"
+
+
+    }
+    fun setUpGraphs(list: MutableList<Card>){
+        val rememberedCards = list.filter { it.remembered == true }.size
+        val rememberedPercentage =
+            if(rememberedCards!=0){
+                (list.filter { it.remembered == true }.size/list.size).toDouble()
+
+            } else {
+                0.0
+            }
+        binding.ankiBoxGraphBinding.guideRemembered.setGuidelinePercent(rememberedPercentage.toFloat())
+
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)

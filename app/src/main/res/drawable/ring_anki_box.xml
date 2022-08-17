@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape
+            android:thickness="10dp"
+            android:shape="ring"
+            android:type="sweep"
+            android:useLevel="false">
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item >
-        <shape  android:shape="ring"
-            android:innerRadius="40dp"
-            android:thicknessRatio="20" android:useLevel="false">
-            <size android:width="100dp" android:height="100dp"/>
-            <stroke android:width="4dp" android:color="@color/lightgreen" />
-            <solid android:color="@color/lightgreen"/>
-
+            <solid android:color="@color/light_gray"/>
         </shape>
     </item>
-</selector>
+
+    <item android:id="@android:id/progress">
+        <rotate
+            android:fromDegrees="270"
+            android:toDegrees="270">
+
+            <shape
+                android:thickness="10dp"
+                android:shape="ring"
+                android:type="sweep"
+                android:useLevel="true">
+
+                <solid android:color="@color/lightgreen"/>
+                <corners android:radius="8dp"/>
+            </shape>
+        </rotate>
+    </item>
+</layer-list>

@@ -5,6 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.core.view.children
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import com.example.tangochoupdated.MyTouchListener
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
@@ -27,11 +28,17 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 class AnkiBoxFileRVCL(val item: File,
                   private val tab:AnkiBoxTab,
                       private val binding:AnkiHomeFragRvItemFileBinding,
-                      val ankiBoxVM:AnkiBoxFragViewModel
+                      val ankiBoxVM:AnkiBoxFragViewModel,
 ): View.OnClickListener{
     override fun onClick(p0: View?) {
         when(p0){
-            binding.checkboxAnkiRv -> ankiBoxVM.onClickCheckBox(item)
+            binding.checkboxAnkiRv -> {
+                if(p0.isSelected){
+                    ankiBoxVM.removeFromAnkiBoxFileIds(item.fileId)
+                } else ankiBoxVM.addToAnkiBoxFileIds(listOf(item.fileId))
+                p0.isSelected = !p0.isSelected
+
+            }
             binding.root -> {
                 when(tab){
                     AnkiBoxTab.Favourites -> {

@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
 
-        android:src="@drawable/icon_checkbox_checkable"
+        android:src="@drawable/checkbox_selector"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
@@ -136,14 +136,15 @@
     <FrameLayout
         android:id="@+id/frameLay_graphs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lineLay_file_data"
         app:layout_constraintBottom_toBottomOf="parent">
-   <include
-       android:id="@+id/anki_box_graph_binding"
-       layout="@layout/anki_home_frag_data_graph_large"/>
+        <include
+            android:id="@+id/rv_graph_binding"
+            layout="@layout/anki_home_frag_data_graph_small"/>
+
 
     </FrameLayout>
 

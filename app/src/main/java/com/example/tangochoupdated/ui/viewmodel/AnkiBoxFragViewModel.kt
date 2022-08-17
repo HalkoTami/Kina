@@ -27,6 +27,16 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun setLibraryCardsAsAnkiBox(list: List<Card>){
         _libraryCardsAsAnkiBox.value = list
     }
+    fun getCardsFromDBByMultipleCardIds(cardIds:List<Int>) :LiveData<List<Card>> = repository.getCardsByMultipleCardId(cardIds).asLiveData()
+
+    fun getDescendantsCardIds(fileIdList:List<Int>) :LiveData<List<Int>> = repository.getDescendantsCardsIsByMultipleFileId(fileIdList).asLiveData()
+    val _ankiBoxItems = MutableLiveData<MutableList<Card>>()
+    fun setAnkiBoxItems(list: List<Card>){
+        val a = mutableListOf<Card>()
+        a.addAll(list)
+        _ankiBoxItems.value = a
+    }
+    val ankiBoxItems :LiveData<MutableList<Card>> = _ankiBoxItems
 
     private val _tabChangeAction = MutableLiveData<NavDirections>()
     fun setTabChangeAction (navDirections: NavDirections){
@@ -36,7 +46,49 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     val text: LiveData<String> = _text
 
+    private val _ankiBoxFileIds = MutableLiveData<MutableList<Int>>()
+    fun addToAnkiBoxFileIds(list: List<Int>){
+        val a = mutableListOf<Int>()
+        a.addAll(_ankiBoxFileIds.value ?: mutableListOf())
+        a.addAll(list)
+        setAnkiBoxFileIds(a)
+
+    }
+    fun removeFromAnkiBoxFileIds(id:Int){
+        val a = mutableListOf<Int>()
+        a.addAll(_ankiBoxFileIds.value ?: mutableListOf())
+        a.remove(id)
+        setAnkiBoxFileIds(a)
+
+    }
+    fun setAnkiBoxFileIds (list:MutableList<Int>){
+        _ankiBoxFileIds.value = list
+    }
+    val ankiBoxFileIds:LiveData<MutableList<Int>> = _ankiBoxFileIds
+    private val _ankiBoxCardIds = MutableLiveData<MutableList<Int>>()
+    fun addToAnkiBoxCardIds(list: List<Int>){
+        val a = mutableListOf<Int>()
+        a.addAll(_ankiBoxCardIds.value ?: mutableListOf())
+        a.addAll(list)
+        setAnkiBoxCardIds(a)
+
+    }
+    fun setAnkiBoxCardIds (list:List<Int>){
+        val a = mutableListOf<Int>()
+        a.addAll(list)
+        _ankiBoxCardIds.value = a
+    }
+
+    fun addToAnkiBoxItems(list: List<Card>){
+        val a = mutableListOf<Card>()
+        a.addAll(_ankiBoxItems.value ?: mutableListOf())
+        a.addAll(list)
+        setAnkiBoxItems(a)
+
+    }
+    val ankiBoxCardIds:LiveData<MutableList<Int>> = _ankiBoxCardIds
     fun onClickCheckBox(item:Any){
+
 
     }
 }
