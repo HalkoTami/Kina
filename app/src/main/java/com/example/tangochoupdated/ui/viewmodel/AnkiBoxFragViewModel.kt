@@ -35,4 +35,8 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     val tabChangeAction :LiveData<NavDirections> = _tabChangeAction
 
     val text: LiveData<String> = _text
+
+    fun onClickCheckBox(item:Any){
+
+    }
 }

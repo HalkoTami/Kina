@@ -143,7 +143,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
    <include
        android:id="@+id/anki_box_graph_binding"
-       layout="@layout/anki_home_frag_data_graph"/>
+       layout="@layout/anki_home_frag_data_graph_large"/>
 
     </FrameLayout>
 

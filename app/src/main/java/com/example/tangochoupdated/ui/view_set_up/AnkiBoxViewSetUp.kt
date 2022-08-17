@@ -13,15 +13,20 @@ import androidx.core.view.marginEnd
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
+import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiHomeFragRvItemFileBinding
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
 import com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiFragmentAnkiBox
 import com.example.tangochoupdated.ui.listadapter.AnkiBoxListAdapter
+import com.example.tangochoupdated.ui.listener.recyclerview.AnkiBoxFileRVCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import kotlin.math.floor
 
 class AnkiBoxViewSetUp(val ankiBoxVM:AnkiBoxFragViewModel,
-                       val context: Context) {
+                       val context: Context,
+                       val tab:AnkiBoxTab) {
+
 
     val getDraw = GetCustomDrawables(context)
     fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,): AnkiBoxListAdapter {
@@ -46,6 +51,11 @@ class AnkiBoxViewSetUp(val ankiBoxVM:AnkiBoxFragViewModel,
             txvAnkiBoxCardAmount.text = file.descendantsData.descendantsCardsAmount.toString()
             txvAnkiBoxFlashCardAmount.text = file.descendantsData.descendantsFlashCardsCoversAmount.toString()
             txvAnkiBoxFolderAmount.text = file.descendantsData.descendantsFoldersAmount.toString()
+            arrayOf(root,checkboxAnkiRv).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
+                file,
+                ankiBoxVM = ankiBoxVM,
+                binding = binding,
+                tab = tab)) }
 
             val rememberedPercentage =
                 if(file.descendantsData.descendantsCardsAmount!=0)
