@@ -4,21 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.databinding.FullRvBinding
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
-import com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragFlashCardCoverArgs
-import com.example.tangochoupdated.ui.listadapter.AnkiBoxListAdapter
-import com.example.tangochoupdated.ui.view_set_up.AnkiBoxViewSetUp
+import com.example.tangochoupdated.ui.view_set_up.AnkiBoxChildrenFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiViewModel
-import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
 
 
 class LibraryItemsFragment  : Fragment() {
@@ -38,7 +30,7 @@ class LibraryItemsFragment  : Fragment() {
 
         _binding =  FullRvBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val viewSetUp = AnkiBoxViewSetUp(viewModel, requireActivity(),AnkiBoxTab.Library)
+        val viewSetUp = AnkiBoxChildrenFragViewSetUp(viewModel, requireActivity(),AnkiBoxTab.Library)
         val adapter = viewSetUp.setUpAnkiBoxRVListAdapter(binding.recyclerView,)
         val fileId = args.fileId?.single()
         when(args.flashCard){

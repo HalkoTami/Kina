@@ -28,21 +28,12 @@ import com.example.tangochoupdated.ui.listener.recyclerview.AnkiBoxFileRVCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import kotlin.math.floor
 
-class AnkiBoxViewSetUp(val ankiBoxVM:AnkiBoxFragViewModel,
-                       val context: Context,
-                       val bindingAnkiBoxFrag:AnkiHomeFragBaseBinding) {
+class AnkiBoxChildrenFragViewSetUp(val ankiBoxVM:AnkiBoxFragViewModel,
+                                   val context: Context,
+                                   val tab: AnkiBoxTab) {
 
 
-    fun ankiBoxFragAddCL(){
-        bindingAnkiBoxFrag.apply {
-            arrayOf(tabFavouritesToAnkiBox,tabLibraryToAnkiBox,tabAllFlashCardCoverToAnkiBox).onEach {
-                it.setOnClickListener(AnkiBoxTabChangeCL(bindingAnkiBoxFrag,ankiBoxVM))
-            }
-            btnStartAnki.setOnClickListener(AnkiBoxFragBaseCL(bindingAnkiBoxFrag,ankiBoxVM))
-        }
 
-
-    }
 
     val getDraw = GetCustomDrawables(context)
     fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,): AnkiBoxListAdapter {
@@ -125,39 +116,5 @@ class AnkiBoxViewSetUp(val ankiBoxVM:AnkiBoxFragViewModel,
         view.translationX = dx
         view.translationY =dy
     }
-    fun setUpAnkiBoxRing(list: MutableList<Card>){
-        val rememberedPercentage = 0.50
-//            getRememberedPercentage(list)
-        val rememberedCardsSize = list.filter { it.remembered == true }.size
-        bindingAnkiBoxFrag. ringBinding.apply {
-            ringProgressBar.progress = rememberedPercentage.times(100).toInt()
-            moveViewInCircle(rememberedPercentage,imvRememberedEndIcon,ringProgressBar.layoutParams.width)
-            txvInsideRing.text = "$rememberedCardsSize/${list.size}"
-        }
 
-
-
-    }
-    fun setUpFlipProgressBar(list: MutableList<Card>){
-        val per1 = getFlippedPercentage(list,1)
-        val per2 = getFlippedPercentage(list,2)
-        val per3 = getFlippedPercentage(list,3)
-        val per4 = getFlippedPercentage(list,4)
-        fun getPercentage(per:Double):Int{
-            return per.times(100).toInt()
-        }
-
-        bindingAnkiBoxFrag. flipGraphBinding.apply {
-            progressBarFlipped1.progress =      getPercentage(per1)
-            progressBarFlipped2.progress =      getPercentage(per2)
-            progressBarFlipped3.progress =      getPercentage(per3)
-            progressBarFlippedAbove4.progress = getPercentage(per4)
-            txv1.translationX =  root.width*per1.toFloat()
-            txv2.translationX = root.width*per2.toFloat()
-            txv3.translationX = root.width*per3.toFloat()
-            txv4Above.translationX = root.width*per4.toFloat()
-
-        }
-
-    }
 }

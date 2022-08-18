@@ -248,7 +248,6 @@
                         android:maxWidth="100dp"
                         android:padding="5dp"
                         android:text="回答入力を\nミスしたカード"
-                        android:textColor="@color/white"
                         android:textSize="11sp"
                         app:layout_constraintBottom_toBottomOf="@id/checkbox_filter_typed_answer"
                         app:layout_constraintStart_toEndOf="@id/checkbox_filter_typed_answer"
@@ -261,6 +260,7 @@
                         android:background="@drawable/selector_txv_rectangle_right"
                         android:maxLines="2"
                         android:padding="5dp"
+                        android:textColor="@color/selectable_txv_color"
                         android:text="回答入力を\n正解したカード"
                         android:textSize="11sp"
                         app:layout_constraintStart_toEndOf="@id/txv_filter_typed_answer_missed"
@@ -290,7 +290,7 @@
                         android:maxLines="2"
                         android:padding="5dp"
                         android:text="未暗記のカード"
-                        android:textColor="@color/white"
+                        android:textColor="@color/selectable_txv_color"
                         android:textSize="11sp"
                         app:layout_constraintTop_toBottomOf="@id/txv_filter_typed_answer_missed" />
 
@@ -302,6 +302,7 @@
                         android:background="@drawable/selector_txv_rectangle_right"
                         android:text="暗記済のカード"
                         android:textSize="11sp"
+                        android:textColor="@color/selectable_txv_color"
                         app:layout_constraintBottom_toBottomOf="@id/txv_filter_card_not_remembered"
                         app:layout_constraintStart_toEndOf="@id/txv_filter_card_not_remembered"
                         app:layout_constraintTop_toTopOf="@id/txv_filter_card_not_remembered" />
@@ -322,10 +323,10 @@
                         android:id="@+id/txv_filter_with_flag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/setting_txv_rectangle_left"
+                        android:background="@drawable/selector_txv_rectangle_left"
                         android:padding="5dp"
                         android:text="フラグ付き"
-                        android:textColor="@color/white"
+                        android:textColor="@color/selectable_txv_color"
                         android:textSize="11sp" />
 
                     <TextView
@@ -335,6 +336,7 @@
                         android:background="@drawable/selector_txv_rectangle_right"
                         android:padding="5dp"
                         android:text="フラグなし"
+                        android:textColor="@color/selectable_txv_color"
                         android:textSize="11sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 

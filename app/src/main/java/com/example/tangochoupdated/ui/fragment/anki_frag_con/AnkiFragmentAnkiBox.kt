@@ -1,8 +1,6 @@
 package com.example.tangochoupdated.ui.fragment.anki_frag_con
 
-import android.animation.ObjectAnimator
 import android.content.Context
-import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,9 +18,8 @@ import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
-import com.example.tangochoupdated.ui.view_set_up.AnkiBoxViewSetUp
+import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
-import java.lang.Math.abs
 
 
 class AnkiFragmentAnkiBox  : Fragment() {
@@ -42,7 +39,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
 
         _binding =  AnkiHomeFragBaseBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val viewSetUp = AnkiBoxViewSetUp(
+        val viewSetUp = AnkiBoxFragViewSetUp(
             ankiBoxVM = viewModel,
             context =  requireActivity(),
             bindingAnkiBoxFrag = binding,

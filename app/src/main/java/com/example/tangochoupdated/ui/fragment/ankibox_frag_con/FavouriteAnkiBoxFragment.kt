@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
-import com.example.tangochoupdated.ui.viewmodel.AnkiViewModel
 import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
 
 
@@ -27,8 +26,6 @@ class FavouriteAnkiBoxFragment  : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val ankiViewModel =
-            ViewModelProvider(this)[AnkiViewModel::class.java]
 
         _binding =  AnkiHomeFragBaseBinding.inflate(inflater, container, false)
         val root: View = binding.root

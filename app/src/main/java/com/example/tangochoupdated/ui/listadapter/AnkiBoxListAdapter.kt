@@ -2,20 +2,13 @@ package com.example.tangochoupdated.ui.listadapter
 
 import android.content.Context
 import android.view.*
-import android.view.View.*
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.db.enumclass.LibRVState
-import com.example.tangochoupdated.ui.view_set_up.AnkiBoxViewSetUp
-import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
+import com.example.tangochoupdated.ui.view_set_up.AnkiBoxChildrenFragViewSetUp
 
 
 /**
@@ -24,7 +17,7 @@ import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
 
 class AnkiBoxListAdapter(
-    private val ankiBoxViewSetUp: AnkiBoxViewSetUp,
+    private val ankiBoxViewSetUp: AnkiBoxChildrenFragViewSetUp,
     private val context: Context) :
     ListAdapter<Any, AnkiBoxListAdapter.AnkiBoxItemViewHolder>(SearchDiffCallback) {
 
@@ -37,7 +30,7 @@ class AnkiBoxListAdapter(
         holder.bind(getItem(position))
     }
 
-    class AnkiBoxItemViewHolder (private val binding: AnkiHomeFragRvItemBinding,val context: Context,val ankiBoxViewSetUp: AnkiBoxViewSetUp) :
+    class AnkiBoxItemViewHolder (private val binding: AnkiHomeFragRvItemBinding,val context: Context,val ankiBoxViewSetUp: AnkiBoxChildrenFragViewSetUp) :
         RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: Any, ){
@@ -45,7 +38,7 @@ class AnkiBoxListAdapter(
             when(item){
                 is File -> {
                     val binding = AnkiHomeFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-                    ankiBoxViewSetUp.setUpRVFileBinding(binding, item)
+                    ankiBoxViewSetUp.setUpRVFileBinding(binding, item,ankiBoxViewSetUp.tab)
 
                     binding.root
                 }
