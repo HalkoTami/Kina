@@ -83,7 +83,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/anki_setting_barrier_top"
         app:layout_constraintEnd_toEndOf="parent">
-        <include layout="@layout/anki_home_frag_popup_anki_setting_scroll_view_content"/>
+        <include android:id="@+id/binding_setting_content"
+            layout="@layout/anki_home_frag_popup_anki_setting_scroll_view_content"/>
 
     </FrameLayout>
 

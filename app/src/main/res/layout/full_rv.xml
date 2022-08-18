@@ -14,7 +14,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/anki_home_frag_rv_item"
+        tools:listitem="@layout/anki_home_frag_rv_item_file"
         />
 
 </androidx.core.widget.NestedScrollView>

@@ -132,6 +132,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             when(_mode.value){
                 Mode.New -> setBottomMenuVisible(true)
                 Mode.Edit -> setEditFilePopUpVisible(true)
+                else -> return
             }
         }
 
@@ -268,6 +269,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 setEdtHint("単語帳のタイトル")
 
             }
+            else -> return
         }
     }
 //    Todo popupのクラス作る
@@ -432,6 +434,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 editingFile.colorStatus = data.colorStatus
                 upDateFile(editingFile)
             }
+            else -> return
         }
         makePopUpUIInvisible()
         setAddFileActive(false)

@@ -10,7 +10,8 @@ import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 
-class GetCustomDrawables(val context: Context){
+class
+GetCustomDrawables(val context: Context){
     fun appCon(id:Int):Drawable{
         return AppCompatResources.getDrawable(context,id)!!
     }

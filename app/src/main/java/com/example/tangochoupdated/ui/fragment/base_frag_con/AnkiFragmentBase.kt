@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.databinding.AnkiFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
-import com.example.tangochoupdated.ui.viewmodel.AnkiViewModel
+import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
 
 
@@ -19,6 +19,7 @@ class AnkiFragmentBase  : Fragment() {
 
     private var _binding: AnkiFragBaseBinding? = null
     private val sharedViewModel: BaseViewModel by activityViewModels()
+    private val ankiSettingVM: AnkiSettingPopUpViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -34,6 +35,22 @@ class AnkiFragmentBase  : Fragment() {
         _binding =  AnkiFragBaseBinding.inflate(inflater, container, false)
 //        val a = childFragmentManager.findFragmentById(binding.ankiFragContainerView.id) as NavHostFragment
 //        val myNavCon = a.navController
+        binding.bindingSetting.apply {
+            ankiSettingVM.apply {
+                active.observe(viewLifecycleOwner){
+                    binding.frameLayAnkiSetting.visibility = if(it) View.VISIBLE else View.GONE
+                }
+                bindingSettingContent.apply {
+                    ankiFilter.observe(viewLifecycleOwner){
+
+                    }
+                }
+
+            }
+
+        }
+
+
 
         val root: View = binding.root
 

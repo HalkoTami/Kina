@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout
+        android:id="@+id/frameLay_percentage_icons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <FrameLayout
+            android:id="@+id/once_percentage"
+            android:layout_width="30dp"
+            android:layout_height="20dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/percentage_container" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="2dp"
+                android:paddingTop="2dp"
+                android:text="100"
+                android:textSize="11sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/twice_percentage"
+            android:layout_width="30dp"
+            android:layout_height="20dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/percentage_container" />
+            <TextView
+                android:paddingTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:layout_gravity="center"
+                android:textSize="11sp"/>
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/three_percentage"
+            android:layout_width="30dp"
+            android:layout_height="20dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/percentage_container" />
+            <TextView
+                android:paddingTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:layout_gravity="center"
+                android:textSize="11sp"/>
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/four_above_percentage"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/percentage_container" />
+            <TextView
+                android:paddingTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:layout_gravity="center"
+                android:textSize="11sp"/>
+        </FrameLayout>
+    </FrameLayout>
+
+</layout>

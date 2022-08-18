@@ -8,16 +8,18 @@
     android:background="@drawable/gray_stroke_rectangle">
     <ImageView
         android:id="@+id/checkbox_anki_rv"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
 
-        android:src="@drawable/checkbox_selector"
+
+        android:src="@drawable/selector_anki_box"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
+        android:layout_marginEnd="10dp"
         android:layout_height="wrap_content"
         android:id="@+id/lineLay_file_data"
         android:orientation="horizontal"
@@ -25,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center_vertical"
-        app:layout_constraintBottom_toTopOf="@id/frameLay_graphs">
+        app:layout_constraintBottom_toTopOf="@id/lineLay_graphs">
         <ImageView
             app:layout_constraintBottom_toBottomOf="@id/lineLay_file_data"
             app:layout_constraintStart_toEndOf="@id/checkbox_anki_rv"
@@ -133,20 +135,34 @@
 <!--        app:constraint_referenced_ids="linLay_children_data,lineLay_file_data"-->
 <!--        app:barrierDirection="end"/>-->
 
-    <FrameLayout
-        android:id="@+id/frameLay_graphs"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lineLay_file_data"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <include
-            android:id="@+id/rv_graph_binding"
-            layout="@layout/anki_home_frag_data_graph_small"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lineLay_graphs"
+        android:orientation="vertical">
+        <FrameLayout
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include
+                layout="@layout/progress_bar_remembered_rectangle"/>
+        </FrameLayout>
+        <FrameLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <include layout="@layout/progress_bar_flipped"/>
+        </FrameLayout>
 
+    </LinearLayout>
 
-    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

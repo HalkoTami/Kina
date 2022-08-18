@@ -39,7 +39,7 @@ data class Card(
     var libOrder: Int,
     @ColumnInfo(name ="card_color")
     val colorStatus: ColorStatus?,
-
+    var timesFlipped:Int = 0
     )
 
 

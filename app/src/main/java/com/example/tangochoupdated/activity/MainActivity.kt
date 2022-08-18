@@ -114,6 +114,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             )[LibraryViewModel::class.java]
         val ankiInBoxViewModel = ViewModelProvider(this, factory
         )[AnkiBoxFragViewModel::class.java]
+        val ankiSettingViewModel = ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
         stringCardViewModel = ViewModelProvider(this)[StringCardViewModel::class.java]
         searchViewModel = ViewModelProvider(this,factory)[SearchViewModel::class.java]
 //      　ー－－－－－－－－－
@@ -413,6 +414,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 imageView.alpha = 0.4f
                 imageView.elevation = 0f
             }
+            else -> return
         }
         imageView.setImageDrawable(a)
 

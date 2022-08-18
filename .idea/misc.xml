@@ -211,7 +211,27 @@
         <entry key="app/src/main/res/drawable/checkbox_selector.xml" value="0.34" />
         <entry key="app/src/main/res/drawable/circle.xml" value="0.34" />
         <entry key="app/src/main/res/drawable/custom_progressbar.xml" value="0.277" />
+        <entry key="app/src/main/res/drawable/custome_pregress_bar_rectangle.xml" value="0.194" />
+        <entry key="app/src/main/res/drawable/custome_progress_bar_rectangle.xml" value="0.2515" />
         <entry key="app/src/main/res/drawable/gray_stroke_rectangle.xml" value="0.353" />
+        <entry key="app/src/main/res/drawable/icon_anki_selector.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_ankibox_putIn.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_ankibox_put_in.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/icon_ankibox_put_out.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_arrow.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_back.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_book_mark.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_checkbox.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_checkbox_checkable.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_checkbox_checked.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_checked_box.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_inbox.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_move.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_move_col.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_move_left.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_move_to_flashcard_cover.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_polygon.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/icon_save_and_back.xml" value="0.2515" />
         <entry key="app/src/main/res/drawable/percentage_container.xml" value="0.34" />
         <entry key="app/src/main/res/drawable/plane_green_button.xml" value="0.223" />
         <entry key="app/src/main/res/drawable/progress_percentage.xml" value="0.34" />
@@ -219,29 +239,45 @@
         <entry key="app/src/main/res/drawable/rectangle.xml" value="0.353" />
         <entry key="app/src/main/res/drawable/rectangle_light_green.xml" value="0.353" />
         <entry key="app/src/main/res/drawable/rectangle_progressbar.xml" value="0.353" />
+        <entry key="app/src/main/res/drawable/rectangle_txv_bg_left_selectable.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/rectangle_txv_bg_left_selected.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/rectangle_txv_bg_right_selectable.xml" value="0.2515" />
         <entry key="app/src/main/res/drawable/ring_anki_box.xml" value="0.34" />
+        <entry key="app/src/main/res/drawable/selector_anki_box.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/selector_polygon.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/selector_tab_anki.xml" value="0.2515" />
         <entry key="app/src/main/res/drawable/selector_tab_rectangle.xml" value="0.353" />
+        <entry key="app/src/main/res/drawable/selector_txv_rectangle_left.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/selector_txv_rectangle_right.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/setting_txv_rectangle_left.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/setting_txv_rectangle_right.xml" value="0.2515" />
         <entry key="app/src/main/res/drawable/tab_bottom_rextangle.xml" value="0.353" />
         <entry key="app/src/main/res/layout/anki_flip_frag_check_answer_string_frag.xml" value="0.27239583333333334" />
         <entry key="app/src/main/res/layout/anki_flip_frag_look_string_frag.xml" value="0.27239583333333334" />
         <entry key="app/src/main/res/layout/anki_flip_frag_type_answer_string_frag.xml" value="0.27239583333333334" />
         <entry key="app/src/main/res/layout/anki_frag_base.xml" value="0.3380208333333333" />
-        <entry key="app/src/main/res/layout/anki_home_frag_base.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/anki_home_frag_base.xml" value="0.22" />
         <entry key="app/src/main/res/layout/anki_home_frag_data_graph.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/anki_home_frag_data_graph_large.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/anki_home_frag_data_graph_large.xml" value="0.33" />
         <entry key="app/src/main/res/layout/anki_home_frag_data_graph_small.xml" value="0.3380208333333333" />
         <entry key="app/src/main/res/layout/anki_home_frag_popup_anki_box_favourite.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/anki_home_frag_popup_anki_setting_base.xml" value="0.3380208333333333" />
         <entry key="app/src/main/res/layout/anki_home_frag_popup_anki_setting_scroll_view_content.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/anki_home_frag_rv_item.xml" value="0.13179347826086957" />
         <entry key="app/src/main/res/layout/anki_home_frag_rv_item_card.xml" value="0.4036458333333333" />
-        <entry key="app/src/main/res/layout/anki_home_frag_rv_item_file.xml" value="0.341747572815534" />
+        <entry key="app/src/main/res/layout/anki_home_frag_rv_item_file.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_planner_home.xml" value="0.27239583333333334" />
+        <entry key="app/src/main/res/layout/full_rv.xml" value="0.3380208333333333" />
         <entry key="app/src/main/res/layout/library_frag_inbox_base.xml" value="0.3380208333333333" />
         <entry key="app/src/main/res/layout/library_frag_top_bar_home.xml" value="0.3380208333333333" />
         <entry key="app/src/main/res/layout/main_activity.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/main_activity_bottom_navigation_bar.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/main_activity_popup_edit_file.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/main_activity_popup_menu_create.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/percentage_icons.xml" value="0.3380208333333333" />
+        <entry key="app/src/main/res/layout/progress_bar_flipped.xml" value="0.33697916666666666" />
+        <entry key="app/src/main/res/layout/progress_bar_remembered_rectangle.xml" value="0.3380208333333333" />
+        <entry key="app/src/main/res/layout/progress_bar_remembered_ring.xml" value="0.5" />
       </map>
     </option>
   </component>

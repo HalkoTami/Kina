@@ -10,72 +10,72 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/linLay_children_data"
     app:layout_constraintBottom_toBottomOf="parent"
+    android:padding="10dp"
 
     >
 
+
     <TextView
         android:id="@+id/txv_remembered_progress"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginEnd="10dp"
         android:lines="2"
         android:text="暗記\n完了"
-        app:layout_constraintBottom_toBottomOf="@id/imv_remembered_progress"
-        app:layout_constraintEnd_toStartOf="@+id/imv_remembered_progress"
-        app:layout_constraintStart_toStartOf="@id/txv_opened_progress"
-        app:layout_constraintTop_toTopOf="@id/imv_remembered_progress" />
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/frameLay_progressbar_remembered"
+        app:layout_constraintEnd_toStartOf="@id/frameLay_progressbar_remembered"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/frameLay_progressbar_remembered" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/imv_remembered_progress"
-        android:layout_marginTop="20dp"
+    <FrameLayout
+        android:id="@+id/frameLay_progressbar_remembered"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintEnd_toStartOf="@id/txv_remembered_percentage"
-        app:layout_constraintStart_toStartOf="@id/imv_opened_progress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/txv_remembered_progress"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/imv_opened_progress">
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide_remembered"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5"
-            />
-
-        <ImageView
-            android:id="@+id/graph_remembered_background"
+        app:layout_constraintBottom_toTopOf="@id/frameLay_flipped_progress"
+        app:layout_constraintVertical_weight="1">
+        <ProgressBar
+            android:id="@+id/progressbar_remembered"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/rectangle_progressbar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/light_gray"
-            tools:layout_editor_absoluteX="0dp" />
-
+            android:max="100"
+            android:indeterminateOnly="false"
+            android:progress="60"
+            android:background="@drawable/rectangle_progressbar"
+            android:backgroundTint="@color/light_gray"
+            android:progressTint="@color/darkgreen"
+            android:progressDrawable="@drawable/custome_progress_bar_rectangle"
+            />
+        <TextView
+            android:id="@+id/txv_remembered_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="70%"
+            android:layout_marginStart="5dp" />
         <ImageView
-            android:id="@+id/graph_remembered"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/rectangle_progressbar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/guide_remembered"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/lightgreen" />
+            android:id="@+id/imv_remembered_end_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/group_2"
+            android:layout_marginEnd="-20dp"
+
+            />
+    </FrameLayout>
 
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/txv_opened_progress"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/imv_opened_progress"
-        app:layout_constraintEnd_toStartOf="@id/imv_opened_progress"
+        app:layout_constraintTop_toTopOf="@id/frameLay_flipped_progress"
+        app:layout_constraintBottom_toBottomOf="@id/frameLay_flipped_progress"
+        app:layout_constraintEnd_toStartOf="@id/frameLay_flipped_progress"
         android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/imv_opened_progress"
-        android:layout_marginBottom="20dp"
+
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_weight="1"
@@ -83,116 +83,42 @@
         android:layout_height="wrap_content"
         android:lines="2"
         android:text="開いた\n回数"/>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/imv_opened_progress"
+
+    <FrameLayout
+        android:id="@+id/frameLay_flipped_progress"
         android:layout_width="0dp"
         app:layout_constraintHorizontal_weight="1"
         android:layout_height="0dp"
+
         app:layout_constraintVertical_weight="2"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toTopOf="@id/frameLay_percentage_icons"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/txv_opened_progress"
-        app:layout_constraintTop_toBottomOf="@id/imv_remembered_progress" >
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide_once_flipped"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.9"
-            />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide_twice_flipped"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.6"
-            />
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrier_flip_graph_bottom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="imv_flip_progress_background,
-            imv_flip_once_progress,imv_flip_twice_progress,imv_flip_three_progress,
-            imv_flip_four_above_progress"/>
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide_three_flipped"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.3"
-            />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide_four_above_flipped"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.1"
-            />
+        app:layout_constraintStart_toStartOf="@id/frameLay_progressbar_remembered"
+        app:layout_constraintTop_toBottomOf="@id/frameLay_progressbar_remembered" >
+        <include layout="@layout/progress_bar_flipped"/>
 
-        <ImageView
-            android:id="@+id/imv_flip_progress_background"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/rectangle_progressbar"
-            app:layout_constraintBottom_toTopOf="@id/once_percentage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_weight="5"
-            app:tint="@color/light_gray" />
 
-        <ImageView
-            android:id="@+id/imv_flip_once_progress"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/rectangle_progressbar"
-            app:layout_constraintBottom_toTopOf="@id/once_percentage"
-            app:layout_constraintEnd_toEndOf="@id/guide_once_flipped"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_weight="5"
-            app:tint="@color/lightgreen" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="3dp"
-            android:text="1"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/imv_flip_once_progress"
-            app:layout_constraintEnd_toEndOf="@+id/imv_flip_once_progress" />
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/frameLay_percentage_icons"
+        android:layout_width="0dp"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
 
-        <ImageView
-            android:id="@+id/imv_flip_twice_progress"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/rectangle_progressbar"
-            app:layout_constraintBottom_toTopOf="@id/once_percentage"
-            app:layout_constraintEnd_toEndOf="@id/guide_twice_flipped"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_weight="5"
-            app:tint="@color/darkgreen" />
+        app:layout_constraintStart_toStartOf="@id/frameLay_flipped_progress"
+        app:layout_constraintEnd_toEndOf="@id/frameLay_flipped_progress"
+        app:layout_constraintTop_toBottomOf="@id/frameLay_flipped_progress">
 
         <FrameLayout
             android:id="@+id/once_percentage"
             android:layout_width="30dp"
             android:layout_height="20dp"
-            app:layout_constraintVertical_weight="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guide_once_flipped"
-
-            android:layout_marginStart="-30dp"
-
-            app:layout_constraintTop_toBottomOf="@id/imv_flip_once_progress">
+            app:layout_constraintVertical_weight="1">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -211,12 +137,7 @@
         <FrameLayout
             android:id="@+id/twice_percentage"
             android:layout_width="30dp"
-            android:layout_height="20dp"
-            app:layout_constraintVertical_weight="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guide_twice_flipped"
-
-            app:layout_constraintTop_toTopOf="@id/once_percentage">
+            android:layout_height="20dp">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -233,12 +154,7 @@
         <FrameLayout
             android:id="@+id/three_percentage"
             android:layout_width="30dp"
-            android:layout_height="20dp"
-            app:layout_constraintVertical_weight="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guide_three_flipped"
-
-            app:layout_constraintTop_toTopOf="@id/once_percentage">
+            android:layout_height="20dp">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -256,11 +172,7 @@
             android:id="@+id/four_above_percentage"
             android:layout_width="30dp"
             android:layout_height="20dp"
-            app:layout_constraintVertical_weight="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guide_four_above_flipped"
-
-            app:layout_constraintTop_toTopOf="@id/once_percentage">
+            >
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -274,75 +186,8 @@
                 android:layout_gravity="center"
                 android:textSize="11sp"/>
         </FrameLayout>
+    </FrameLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="3dp"
-            android:text="2"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/imv_flip_progress_background"
-            app:layout_constraintEnd_toEndOf="@+id/imv_flip_twice_progress" />
-
-        <ImageView
-            android:id="@+id/imv_flip_three_progress"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/rectangle_progressbar"
-            app:layout_constraintBottom_toTopOf="@id/once_percentage"
-            app:layout_constraintEnd_toEndOf="@id/guide_three_flipped"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_weight="5"
-            app:tint="@color/blue" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="3dp"
-            android:text="3"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/imv_flip_progress_background"
-            app:layout_constraintEnd_toEndOf="@+id/imv_flip_three_progress" />
-
-        <ImageView
-            android:id="@+id/imv_flip_four_above_progress"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/rectangle_progressbar"
-            app:layout_constraintBottom_toTopOf="@id/once_percentage"
-            app:layout_constraintEnd_toEndOf="@id/guide_four_above_flipped"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_weight="5"
-            app:tint="@color/red" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="3dp"
-            android:text="4+"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/imv_flip_progress_background"
-            app:layout_constraintEnd_toEndOf="@+id/imv_flip_four_above_progress" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <TextView
-        android:id="@+id/txv_remembered_percentage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="70%"
-        android:layout_marginStart="5dp"
-        app:layout_constraintTop_toTopOf="@id/imv_remembered_progress"
-        app:layout_constraintStart_toEndOf="@id/imv_remembered_progress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/imv_remembered_progress"/>
 
 
 

@@ -112,6 +112,7 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
                             upDateAncestors(parentFileId,UpdateFileAmount.FlashCardCover)
                             upDateChild(parentFileId,UpdateFileAmount.Folder)
                         }
+                        else -> return
                     }
                 }
 

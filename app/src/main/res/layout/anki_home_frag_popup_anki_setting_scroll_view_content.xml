@@ -52,9 +52,8 @@
                     android:id="@+id/imv_order_option_visibility"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/icon_polygon"
+                    android:src="@drawable/selector_polygon"
                     app:layout_constraintStart_toEndOf="@id/txv_parent_order_mode"
-                    android:rotation="180"
                     app:layout_constraintTop_toTopOf="@id/txv_parent_order_mode"
                     app:layout_constraintBottom_toBottomOf="@id/txv_parent_order_mode"/>
 
@@ -74,8 +73,7 @@
                 android:id="@+id/imv_filter_option_visibility"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:src="@drawable/icon_polygon"
-                android:rotation="180"
+                android:src="@drawable/selector_polygon"
                 android:layout_marginStart="10dp"
                 app:layout_constraintStart_toEndOf="@id/txv_filter_setting"
                 app:layout_constraintTop_toTopOf="@id/txv_filter_setting"
@@ -140,7 +138,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_checkbox_checkable"/>
+                android:src="@drawable/selector_checkbox"/>
 
             <androidx.constraintlayout.widget.Barrier
                 android:layout_width="wrap_content"
@@ -166,7 +164,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_checkbox_checkable"/>
+                android:src="@drawable/selector_checkbox"/>
 
             <TextView
                 android:id="@+id/txv_reverse_sides"
@@ -185,7 +183,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_checkbox_checkable"/>
+                android:src="@drawable/selector_checkbox"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/conLay_filter_setting"
                 android:visibility="visible"
@@ -205,7 +203,7 @@
                     android:id="@+id/checkbox_filter_typed_answer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_checkbox_checkable"
+                    android:src="@drawable/selector_checkbox"
                     app:layout_constraintBottom_toBottomOf="@id/linLay_filter_typed_answer"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/linLay_filter_typed_answer" />
@@ -215,7 +213,7 @@
                     android:id="@+id/checkbox_filter_card_remember_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_checkbox_checked"
+                    android:src="@drawable/selector_checkbox"
                     app:layout_constraintBottom_toBottomOf="@id/lineLay_filter_remember_status"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/lineLay_filter_remember_status" />
@@ -225,7 +223,7 @@
                     android:id="@+id/checkbox_filter_flag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_checkbox_checkable"
+                    android:src="@drawable/selector_checkbox"
                     app:layout_constraintBottom_toBottomOf="@id/lineLay_filter_flag"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/lineLay_filter_flag" />
@@ -245,7 +243,7 @@
                         style="@style/EnumTextviewStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/setting_txv_rectangle_left"
+                        android:background="@drawable/selector_txv_rectangle_left"
                         android:lines="2"
                         android:maxWidth="100dp"
                         android:padding="5dp"
@@ -260,7 +258,7 @@
                         android:id="@+id/txv_filter_typed_answer_correct"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/setting_txv_rectangle_right"
+                        android:background="@drawable/selector_txv_rectangle_right"
                         android:maxLines="2"
                         android:padding="5dp"
                         android:text="回答入力を\n正解したカード"
@@ -279,7 +277,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/setting_txv_rectangle_right"
                     android:gravity="center_vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/checkbox_filter_card_remember_status"
@@ -289,7 +286,7 @@
                         android:id="@+id/txv_filter_card_not_remembered"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/setting_txv_rectangle_left"
+                        android:background="@drawable/selector_txv_rectangle_left"
                         android:maxLines="2"
                         android:padding="5dp"
                         android:text="未暗記のカード"
@@ -302,6 +299,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
+                        android:background="@drawable/selector_txv_rectangle_right"
                         android:text="暗記済のカード"
                         android:textSize="11sp"
                         app:layout_constraintBottom_toBottomOf="@id/txv_filter_card_not_remembered"
@@ -334,7 +332,7 @@
                         android:id="@+id/txv_filter_without_flag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/setting_txv_rectangle_right"
+                        android:background="@drawable/selector_txv_rectangle_right"
                         android:padding="5dp"
                         android:text="フラグなし"
                         android:textSize="11sp" />
@@ -342,30 +340,34 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/line_lay_parent_order"
-                app:layout_constraintTop_toBottomOf="@id/line_lay_parent_order"
-                android:orientation="vertical"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/gray_stroke_rectangle"
+                android:orientation="vertical"
                 android:padding="10dp"
-                android:layout_marginTop="10dp">
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="@id/line_lay_parent_order"
+                app:layout_constraintTop_toBottomOf="@id/line_lay_parent_order">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ライブラリ"
-                    android:layout_marginBottom="20dp"/>
+                    android:layout_marginBottom="20dp"
+                    android:text="ライブラリ" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ランダム"
-                    android:layout_marginBottom="20dp"/>
+                    android:layout_marginBottom="20dp"
+                    android:text="ランダム" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="回答入力ミスが多い順"/>
+                    android:text="回答入力ミスが多い順" />
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>
