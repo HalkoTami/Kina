@@ -244,6 +244,7 @@
         <entry key="app/src/main/res/drawable/rectangle_txv_bg_right_selectable.xml" value="0.2515" />
         <entry key="app/src/main/res/drawable/ring_anki_box.xml" value="0.34" />
         <entry key="app/src/main/res/drawable/selector_anki_box.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/selector_checkbox.xml" value="0.2515" />
         <entry key="app/src/main/res/drawable/selector_polygon.xml" value="0.2515" />
         <entry key="app/src/main/res/drawable/selector_tab_anki.xml" value="0.2515" />
         <entry key="app/src/main/res/drawable/selector_tab_rectangle.xml" value="0.353" />

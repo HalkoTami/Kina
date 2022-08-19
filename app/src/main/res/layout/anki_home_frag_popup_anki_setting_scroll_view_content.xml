@@ -344,29 +344,33 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/lineLay_order_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/gray_stroke_rectangle"
                 android:orientation="vertical"
                 android:padding="10dp"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:layout_constraintStart_toStartOf="@id/line_lay_parent_order"
                 app:layout_constraintTop_toBottomOf="@id/line_lay_parent_order">
 
                 <TextView
+                    android:id="@+id/txv_order_library"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:text="ライブラリ" />
 
                 <TextView
+                    android:id="@+id/txv_order_random"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:text="ランダム" />
 
                 <TextView
+                    android:id="@+id/txv_order_most_missed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="回答入力ミスが多い順" />

@@ -10,7 +10,7 @@ import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
-import com.example.tangochoupdated.ui.create.Mode
+import com.example.tangochoupdated.db.enumclass.Mode
 import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentDirections
 import kotlinx.coroutines.launch
 
@@ -180,7 +180,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
     private val _mode = MutableLiveData<Mode>()
-    private fun setMode(mode:Mode){
+    private fun setMode(mode: Mode){
         val before = _mode.value
         if(before == mode) return else{
             _mode.value = mode

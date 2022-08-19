@@ -17,7 +17,7 @@ import com.example.tangochoupdated.*
 import com.example.tangochoupdated.activity.MainActivity
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.ui.create.Mode
+import com.example.tangochoupdated.db.enumclass.Mode
 import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel

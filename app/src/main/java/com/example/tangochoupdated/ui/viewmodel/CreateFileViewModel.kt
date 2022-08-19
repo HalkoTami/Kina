@@ -5,12 +5,11 @@ import android.view.View
 import androidx.lifecycle.*
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.db.MyRoomRepository
-import com.example.tangochoupdated.db.dataclass.ChildData
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.FileXRef
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.ui.create.Mode
+import com.example.tangochoupdated.db.enumclass.Mode
 import kotlinx.coroutines.launch
 
 class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {

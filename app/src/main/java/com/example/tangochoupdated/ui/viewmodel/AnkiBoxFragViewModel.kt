@@ -10,6 +10,9 @@ import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 
 class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
+    fun onCreate(){
+        setAnkiBoxItems(mutableListOf())
+    }
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is Anki Fragment"
