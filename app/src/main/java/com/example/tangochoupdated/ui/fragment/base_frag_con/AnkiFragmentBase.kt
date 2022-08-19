@@ -14,6 +14,7 @@ import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFragBaseBinding
 import com.example.tangochoupdated.db.enumclass.AnkiFilter
 import com.example.tangochoupdated.ui.view_set_up.AnkiBaseFragViewSetUp
+import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
 
@@ -23,6 +24,7 @@ class AnkiFragmentBase  : Fragment() {
     private var _binding: AnkiFragBaseBinding? = null
     private val sharedViewModel: BaseViewModel by activityViewModels()
     private val ankiSettingVM: AnkiSettingPopUpViewModel by activityViewModels()
+    private val ankiFragViewModel : AnkiFragBaseViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -39,8 +41,8 @@ class AnkiFragmentBase  : Fragment() {
         val a = childFragmentManager.findFragmentById(binding.ankiFragContainerView.id) as NavHostFragment
         val myNavCon = a.navController
 
-        val viewSetUp = AnkiBaseFragViewSetUp(ankiSettingVM,binding,requireActivity())
-        viewSetUp.ankiSettingPopUpAddCL()
+        val viewSetUp = AnkiBaseFragViewSetUp(ankiFragViewModel, binding,requireActivity())
+        viewSetUp.ankiSettingPopUpAddCL(ankiSettingVM)
         binding.bindingSetting.apply {
             ankiSettingVM.apply {
                 start()
@@ -54,6 +56,9 @@ class AnkiFragmentBase  : Fragment() {
 
             }
 
+        }
+        ankiFragViewModel.tabChangeAction.observe(viewLifecycleOwner){
+            myNavCon.navigate(it)
         }
 
 

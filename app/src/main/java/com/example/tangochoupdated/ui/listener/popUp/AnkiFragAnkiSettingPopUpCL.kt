@@ -11,11 +11,14 @@ import com.example.tangochoupdated.databinding.AnkiHomeFragPopupAnkiSettingBaseB
 import com.example.tangochoupdated.db.enumclass.AnkiFilter
 import com.example.tangochoupdated.db.enumclass.AnkiOrder
 import com.example.tangochoupdated.db.enumclass.AutoFlip
+import com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiFragFlipBaseFragmentDirections
+import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 import org.w3c.dom.Text
 
 class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBinding,
                                  val settingVM: AnkiSettingPopUpViewModel,
+                                 val baseViewModel:AnkiFragBaseViewModel,
                                  val context: Context ): View.OnClickListener{
 
     override fun onClick(v: View?) {
@@ -73,7 +76,10 @@ class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBi
                             txvOrderMostMissed                          -> setAnkiOrder(AnkiOrder.MostMissed)
                             txvOrderRandom                              -> setAnkiOrder(AnkiOrder.Random)
                             imvCloseSetting                             ->  setActive(false)
-                            btnStartAnki                                -> setActive(false)
+                            btnStartAnki                                -> {
+                                setActive(false)
+                                baseViewModel.setAnkiFragChangeAction(AnkiFragFlipBaseFragmentDirections.toFlipFrag())
+                            }
                             else -> {
                                 val filterChange = returnAnkiFilter() ?:AnkiFilter()
                                 filterChange.apply {

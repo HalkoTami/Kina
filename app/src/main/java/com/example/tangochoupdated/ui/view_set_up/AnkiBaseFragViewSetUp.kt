@@ -29,16 +29,17 @@ import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.listener.popUp.AnkiFragAnkiSettingPopUpCL
 import com.example.tangochoupdated.ui.listener.recyclerview.AnkiBoxFileRVCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
+import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 import kotlin.math.floor
 
-class AnkiBaseFragViewSetUp(val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel,
+class AnkiBaseFragViewSetUp(val baseViewModel: AnkiFragBaseViewModel,
                             val bindingBase:AnkiFragBaseBinding,
                             val context: Context) {
     val white = ContextCompat.getColor(context,R.color.white)
     val green = ContextCompat.getColor(context,R.color.most_dark_green)
 
-    fun ankiSettingPopUpAddCL(){
+    fun ankiSettingPopUpAddCL(ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel){
         bindingBase.bindingSetting.apply {
             val binding = bindingBase.bindingSetting
             bindingSettingContent.apply {
@@ -64,7 +65,7 @@ class AnkiBaseFragViewSetUp(val ankiSettingPopUpViewModel: AnkiSettingPopUpViewM
                     imvCloseSetting,
                     btnStartAnki,
                     ).onEach {
-                        it.setOnClickListener(AnkiFragAnkiSettingPopUpCL(binding,ankiSettingPopUpViewModel,context))
+                        it.setOnClickListener(AnkiFragAnkiSettingPopUpCL(binding,ankiSettingPopUpViewModel,baseViewModel,context))
                 }
             }
         }

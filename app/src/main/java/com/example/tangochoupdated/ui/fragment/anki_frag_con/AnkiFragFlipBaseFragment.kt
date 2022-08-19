@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
+import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
@@ -24,12 +25,12 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 
 
-class AnkiFragmentAnkiBox  : Fragment() {
+class AnkiFragFlipBaseFragment  : Fragment() {
 
-    private var _binding: AnkiHomeFragBaseBinding? = null
-    private val viewModel: AnkiBoxFragViewModel by activityViewModels()
+    private var _binding: AnkiFlipFragBaseBinding? = null
+    private val boxViewModel: AnkiBoxFragViewModel by activityViewModels()
     private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
-    private val flipViewModel: AnkiFlipFragViewModel by activityViewModels()
+    private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -41,55 +42,27 @@ class AnkiFragmentAnkiBox  : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding =  AnkiHomeFragBaseBinding.inflate(inflater, container, false)
+        _binding =  AnkiFlipFragBaseBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val viewSetUp = AnkiBoxFragViewSetUp(
-            ankiBoxVM = viewModel,
-            context =  requireActivity(),
-            bindingAnkiBoxFrag = binding,
-        )
-        viewSetUp.ankiBoxFragAddCL(settingVM)
-
-        binding.apply {
-            linLayTabChange.tag = AnkiBoxTab.AllFlashCardCovers
-            tabAllFlashCardCoverToAnkiBox.isSelected = true
-            arrayOf(tabFavouritesToAnkiBox,tabLibraryToAnkiBox,tabAllFlashCardCoverToAnkiBox).onEach {
-                it.setOnClickListener(AnkiBoxTabChangeCL(binding,viewModel))
+        flipBaseViewModel.apply {
+            setParentPosition(0)
+            parentPosition.observe(viewLifecycleOwner){
+               getCardFromDB(returnFlipItems()[it].id).observe(viewLifecycleOwner){
+                   setParentCard(it)
+               }
+            }
+            parentCard.observe(viewLifecycleOwner){
+                binding.topBinding.txvCardPosition.text = "${it.id}/${returnFlipItems().size}"
             }
         }
-        viewModel.apply{
-            tabChangeAction.observe(viewLifecycleOwner){
-                val a = childFragmentManager.findFragmentById(binding.ankiBoxFragConView.id) as NavHostFragment
-                a.navController.navigate(it)
-                Toast.makeText(requireActivity(), "navigated ", Toast.LENGTH_SHORT).show()
-            }
-            ankiBoxFileIds.observe(viewLifecycleOwner){
-                getDescendantsCardIds(it).observe(viewLifecycleOwner){
-                    setAnkiBoxCardIds(it)
-                }
-            }
-            ankiBoxCardIds.observe(viewLifecycleOwner){
-                getCardsFromDBByMultipleCardIds(it).observe(viewLifecycleOwner){
-                    setAnkiBoxItems(it)
-                    flipViewModel.setAnkiFlipItems(it)
-
-                }
-            }
-
-            viewSetUp.apply {
-                ankiBoxItems.observe(viewLifecycleOwner) {
-                    setUpAnkiBoxRing(it)
-                    setUpFlipProgressBar(it)
-                    binding.btnStartAnki.text = if(it.isEmpty()) "カードを選ばず暗記" else "暗記開始"
-
-                }
-            }
 
 
-
-
-            return root
+        binding.btnFlipNext.setOnClickListener {
+            flipBaseViewModel.setParentPosition(flipBaseViewModel.returnParentPosition()+1)
         }
+
+
+        return root
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)

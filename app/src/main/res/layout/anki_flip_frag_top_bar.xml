@@ -21,7 +21,7 @@
         />
 
     <TextView
-        android:id="@+id/txv_title"
+        android:id="@+id/txv_card_position"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:text="表　22/30"

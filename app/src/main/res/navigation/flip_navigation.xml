@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/flip_navigation">
+    <fragment android:id="@+id/flip_string_look_frag"
+        android:name="com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragment"
+        tools:layout="@layout/anki_flip_frag_look_string_frag"/>
+    <fragment android:id="@+id/flip_string_type_answer_frag"
+        android:name="com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragment"
+        tools:layout="@layout/anki_flip_frag_type_answer_string_frag"/>
+
+
+
+</navigation>

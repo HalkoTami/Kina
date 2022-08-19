@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view_set_up.LibraryFragment"
     android:id="@+id/top_con_lay">
 
 
@@ -21,6 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <include
+            android:id="@+id/top_binding"
             layout="@layout/anki_flip_frag_top_bar"/>
     </FrameLayout>
     <FrameLayout
@@ -58,6 +58,7 @@
             android:layout_height="match_parent"
             android:src="@drawable/icon_add"/>
         <ImageView
+            android:id="@+id/btn_flip_next"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:src="@drawable/icon_move_right"
@@ -66,14 +67,17 @@
 
 
     </LinearLayout>
-    <ImageView
+    <FrameLayout
         android:id="@+id/imv_flip_progress"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:src="@drawable/custom_progressbar"
         app:layout_constraintBottom_toTopOf="@id/linLay_bottom"
-        app:layout_constraintTop_toBottomOf="@id/fragConView_flip"/>
+        app:layout_constraintTop_toBottomOf="@id/fragConView_flip">
+        <include android:id="@+id/progressBar_binding"
+            layout="@layout/progress_bar_remembered_rectangle"/>
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/checkbox_remembered"
@@ -98,19 +102,6 @@
         app:layout_constraintTop_toTopOf="@+id/fragConView_flip"
         app:layout_constraintEnd_toEndOf="@id/fragConView_flip"
         android:layout_margin="20dp"/>
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/fragConView_flip"
-        app:layout_constraintStart_toStartOf="@id/fragConView_flip"
-        app:layout_constraintEnd_toEndOf="@id/fragConView_flip"
-        app:layout_constraintBottom_toBottomOf="@id/fragConView_flip"
-        android:elevation="10dp"
-        android:background="@drawable/gray_stroke_rectangle">
-
-        <include
-            layout="@layout/anki_home_frag_popup_anki_setting_base"/>
-    </FrameLayout>
 
 
 

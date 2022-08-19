@@ -115,6 +115,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val ankiInBoxViewModel = ViewModelProvider(this, factory
         )[AnkiBoxFragViewModel::class.java]
         ankiInBoxViewModel.onCreate()
+        val ankiBaseViewModel = ViewModelProvider(this,factory)[AnkiFragBaseViewModel::class.java]
+        val ankiFlipFragViewModel = ViewModelProvider(this,factory)[AnkiFlipFragViewModel::class.java]
         val ankiSettingViewModel = ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
         stringCardViewModel = ViewModelProvider(this)[StringCardViewModel::class.java]
         searchViewModel = ViewModelProvider(this,factory)[SearchViewModel::class.java]
