@@ -95,7 +95,7 @@
         <include
             android:id="@+id/emptyBinding"
             layout="@layout/library_frag_lay_home_rv_empty"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
     </FrameLayout>
 
 

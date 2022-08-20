@@ -2,7 +2,6 @@ package com.example.tangochoupdated.db.dao
 
 import androidx.room.Query
 import androidx.room.RoomWarnings
-import androidx.room.Transaction
 import com.example.tangochoupdated.db.dataclass.*
 import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow

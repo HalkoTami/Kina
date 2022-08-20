@@ -5,16 +5,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
+    <ImageView
+
+        android:id="@+id/imv_character"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/txv_center"
+        android:src="@drawable/tosaka_crying"
+        app:layout_constraintWidth_percent="0.3"
+        app:layout_constraintHeight_percent="0.2"/>
+
     <TextView
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+
         android:id="@+id/txv_center"
-        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="まだないよ！！"
-        android:background="@android:color/transparent" />
+        android:padding="10dp"
+        app:layout_constraintWidth_percent="0.6"
+        android:lines="3"
+        android:text="まだカードがないよ\n下のボタンから作ってね"
+        android:textColor="@color/darkgray"
+        android:textSize="13sp"
+        android:background="@drawable/gray_stroke_corner_10" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

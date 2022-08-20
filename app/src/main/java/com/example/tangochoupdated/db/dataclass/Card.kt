@@ -7,14 +7,6 @@ import com.example.tangochoupdated.db.enumclass.ColorStatus
 
 
 @Entity(tableName = "tbl_card",
-//    indices = [Index("id", unique = true),
-//              Index("belongingFileId", unique = true, )],
-//    foreignKeys = [ForeignKey(entity = File::class,
-//        parentColumns = arrayOf("fileId"),
-//        childColumns = arrayOf("belongingFileId"),
-//        onDelete = ForeignKey.SET_NULL,
-//        onUpdate = ForeignKey.CASCADE
-//    )]
 )
 @TypeConverters(CardStatusConverter::class)
 data class Card(

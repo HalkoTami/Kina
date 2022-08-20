@@ -30,6 +30,14 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun returnParentPosition():Int{
         return _parentPosition.value ?:0
     }
+    private val _front = MutableLiveData<Boolean>()
+    fun setFront(boolean: Boolean){
+        _front.value = boolean
+    }
+    val front :LiveData<Boolean> = _front
+    fun returnFront():Boolean?{
+        return _front.value
+    }
 
 
     val _ankiFlipItems = MutableLiveData<MutableList<Card>>()

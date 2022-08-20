@@ -20,6 +20,7 @@ import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
+import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
@@ -44,6 +45,8 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
         _binding =  AnkiFlipFragBaseBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        val viewSetUp = AnkiFlipFragViewSetUp(binding)
+        viewSetUp.setUpCL()
         flipBaseViewModel.apply {
             setParentPosition(0)
             parentPosition.observe(viewLifecycleOwner){

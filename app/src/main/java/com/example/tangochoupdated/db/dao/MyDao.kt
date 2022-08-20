@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.db
 
 import androidx.room.*
+import com.example.tangochoupdated.db.dao.BaseDao
 import com.example.tangochoupdated.db.dataclass.*
 import kotlinx.coroutines.flow.Flow
 
@@ -8,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class MyDao{
 
     @Dao
-    abstract class CardDao(): BaseDao<Card>{
+    abstract class CardDao(): BaseDao<Card> {
         @Query("select * from tbl_card where not card_deleted AND id = :cardId ")
         abstract fun getCardByCardId(cardId:Int?): Flow<Card>
 
@@ -31,7 +32,7 @@ abstract class MyDao{
     @Dao
     abstract class ChoiceDao: BaseDao<Choice>
     @Dao
-    abstract class FileDao: BaseDao<File>{
+    abstract class FileDao: BaseDao<File> {
     }
     @Dao
     abstract class MarkerDataDao: BaseDao<MarkerData>
@@ -44,7 +45,7 @@ abstract class MyDao{
     @Dao
     abstract class CardAndTagXRefDao: BaseDao<CardAndTagXRef>
     @Dao
-    abstract class FileXRefDao:BaseDao<FileXRef>
+    abstract class FileXRefDao: BaseDao<FileXRef>
 
 
 

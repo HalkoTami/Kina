@@ -1,4 +1,4 @@
-package com.example.tangochoupdated.db
+package com.example.tangochoupdated.db.dao
 
 import androidx.room.*
 

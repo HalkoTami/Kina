@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiFlipFragLookStringFragBinding
+import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
@@ -35,6 +36,19 @@ class FlipStringFragment  : Fragment() {
 
         _binding =  AnkiFlipFragLookStringFragBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        binding.apply {
+            flipBaseViewModel.apply {
+                parentCard.observe(viewLifecycleOwner){
+                    val data = it.stringData
+                    txvTitle.text = if(returnFront()==true) data?.frontTitle else data?.backTitle
+                    txvContent.text = if(returnFront()==true) data?.frontText else data?.backText
+
+                }
+            }
+
+        }
+
 
 
 

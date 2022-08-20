@@ -23,17 +23,14 @@
             android:id="@+id/top_binding"
             layout="@layout/anki_flip_frag_top_bar"/>
     </FrameLayout>
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragConView_flip"
         android:layout_width="match_parent"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/flip_navigation"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/topframelayout"
-        app:layout_constraintBottom_toTopOf="@id/imv_flip_progress">
-
-
-        <include
-            layout="@layout/anki_flip_frag_check_answer_string_frag"/>
-    </FrameLayout>
+        app:layout_constraintBottom_toTopOf="@id/imv_flip_progress"/>
 
 
     <LinearLayout
@@ -43,14 +40,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:paddingBottom="10dp">
         <ImageView
+            android:id="@+id/btn_flip_previous"
 
             android:layout_gravity="start"
 
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:src="@drawable/icon_move_left"/>
+            android:src="@drawable/icon_move"/>
         <ImageView
+            android:id="@+id/btn_add_card"
             android:layout_gravity="center_horizontal"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -58,10 +57,11 @@
             android:layout_height="match_parent"
             android:src="@drawable/icon_add"/>
         <ImageView
+            android:rotation="180"
             android:id="@+id/btn_flip_next"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:src="@drawable/icon_move_right"
+            android:src="@drawable/icon_move"
             android:layout_gravity="end"
             android:layout_weight="1"/>
 
@@ -80,22 +80,24 @@
     </FrameLayout>
 
     <ImageView
-        android:id="@+id/checkbox_remembered"
+        android:id="@+id/btn_remembered"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="20dp"
-        android:src="@drawable/icon_checkbox_checkable"
+        android:src="@drawable/selector_remembered"
         app:layout_constraintBottom_toBottomOf="@id/fragConView_flip"
         app:layout_constraintEnd_toEndOf="@id/fragConView_flip"/>
     <ImageView
+        android:id="@+id/btn_setFlag"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/icon_flag_clickable"
-        app:layout_constraintBottom_toBottomOf="@id/checkbox_remembered"
-        app:layout_constraintEnd_toStartOf="@id/checkbox_remembered"
-        app:layout_constraintTop_toTopOf="@id/checkbox_remembered"
+        app:layout_constraintBottom_toBottomOf="@id/btn_remembered"
+        app:layout_constraintEnd_toStartOf="@id/btn_remembered"
+        app:layout_constraintTop_toTopOf="@id/btn_remembered"
         android:layout_marginEnd="10dp"/>
     <ImageView
+        android:id="@+id/imv_edit_card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_edit"
