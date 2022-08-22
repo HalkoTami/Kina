@@ -16,6 +16,8 @@ abstract class MyDao{
         @Query("select * from tbl_card where not card_deleted AND id in (:cardIds)  ")
         abstract fun getCardByMultipleCardIds(cardIds:List<Int>): Flow<List<Card>>
 
+        @Query("select * from tbl_card where not card_deleted  ")
+        abstract fun getAllCards(): Flow<List<Card>>
         @Transaction
         @Query("select * from tbl_card where not card_deleted AND id = :cardId ")
         abstract fun getCardAndTagsByCardId(cardId:Int?): Flow<CardAndTags>

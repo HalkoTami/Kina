@@ -75,9 +75,9 @@ class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBi
                             txvOrderLibrary                             -> setAnkiOrder(AnkiOrder.Library)
                             txvOrderMostMissed                          -> setAnkiOrder(AnkiOrder.MostMissed)
                             txvOrderRandom                              -> setAnkiOrder(AnkiOrder.Random)
-                            imvCloseSetting                             ->  setActive(false)
+                            imvCloseSetting                             ->  baseViewModel.setSettingVisible(false)
                             btnStartAnki                                -> {
-                                setActive(false)
+                                baseViewModel.setSettingVisible(false)
                                 baseViewModel.setAnkiFragChangeAction(AnkiFragFlipBaseFragmentDirections.toFlipFrag())
                             }
                             else -> {

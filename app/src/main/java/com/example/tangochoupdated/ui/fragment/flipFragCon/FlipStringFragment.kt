@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -41,8 +42,9 @@ class FlipStringFragment  : Fragment() {
             flipBaseViewModel.apply {
                 parentCard.observe(viewLifecycleOwner){
                     val data = it.stringData
-                    txvTitle.text = if(returnFront()==true) data?.frontTitle else data?.backTitle
-                    txvContent.text = if(returnFront()==true) data?.frontText else data?.backText
+                    txvTitle.text = if(returnFront()) data?.frontTitle else data?.backTitle
+                    txvContent.text = if(returnFront()) data?.frontText else data?.backText
+                    Toast.makeText(requireActivity(),"called",Toast.LENGTH_SHORT).show()
 
                 }
             }

@@ -1,11 +1,12 @@
 package com.example.tangochoupdated.ui.viewmodel
 
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.db.MyRoomRepository
-import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.enumclass.AnkiFragment
+import com.example.tangochoupdated.db.enumclass.FragmentTree
+import com.example.tangochoupdated.db.enumclass.StartFragment
 import com.example.tangochoupdated.db.enumclass.Tab
 import com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBaseDirections
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBaseDirections
@@ -28,32 +29,35 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
     setBnvVisibility(true)
     }
     //    parent FlashCardCover
-    val parentFile = MutableLiveData<File?>()
-    fun setParentFile(file: File?){
-        parentFile.value = file
-    }
 
+
+
+    private val _activeFragment = MutableLiveData<FragmentTree>()
+    val activeFragment:LiveData<FragmentTree> = _activeFragment
+    fun setActiveFragment(fragmentTree: FragmentTree){
+        val previous = _activeFragment.value
+        if (fragmentTree == previous) return else {
+            _activeFragment.value = fragmentTree
+        }
+        if(fragmentTree.startFragment== StartFragment.EditCard||
+                fragmentTree.ankiFragment == AnkiFragment.Flip)
+            setBnvVisibility(false) else setBnvVisibility(true)
+
+    }
+    fun returnActiveFragment():FragmentTree?{
+        return _activeFragment.value
+    }
 
     private val _bnvVisibility = MutableLiveData<Boolean>()
     val bnvVisibility:LiveData<Boolean> = _bnvVisibility
-    private fun setBnvVisibility(boolean: Boolean){
+    fun setBnvVisibility(boolean: Boolean){
         val previous = _bnvVisibility.value
         if (boolean == previous) return else {
             _bnvVisibility.value = boolean
         }
 
     }
-    private val _backStackEntry = MutableLiveData<FragmentManager.BackStackEntry>()
-    fun setBackStackEntry(backStackEntry: FragmentManager.BackStackEntry){
-        val before = _backStackEntry.value
-        if (before!= backStackEntry){
-            _backStackEntry.value = backStackEntry
-        } else return
 
-    }
-    fun returnBackStackEntry():FragmentManager.BackStackEntry{
-        return  _backStackEntry.value!!
-    }
 
 
 //    bnv each View Change

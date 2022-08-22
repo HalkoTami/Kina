@@ -21,6 +21,7 @@ import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
+import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 
 
@@ -30,7 +31,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
     private val viewModel: AnkiBoxFragViewModel by activityViewModels()
     private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
     private val flipViewModel: AnkiFlipFragViewModel by activityViewModels()
-
+    private val ankiBaseViewModel:AnkiFragBaseViewModel by activityViewModels()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -47,7 +48,8 @@ class AnkiFragmentAnkiBox  : Fragment() {
             ankiBoxVM = viewModel,
             context =  requireActivity(),
             bindingAnkiBoxFrag = binding,
-        )
+            ankiBaseViewModel = ankiBaseViewModel
+            )
         viewSetUp.ankiBoxFragAddCL(settingVM)
 
         binding.apply {
@@ -58,6 +60,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
             }
         }
         viewModel.apply{
+
             tabChangeAction.observe(viewLifecycleOwner){
                 val a = childFragmentManager.findFragmentById(binding.ankiBoxFragConView.id) as NavHostFragment
                 a.navController.navigate(it)
@@ -75,6 +78,15 @@ class AnkiFragmentAnkiBox  : Fragment() {
 
                 }
             }
+            modeCardsNotSelected.observe(viewLifecycleOwner){
+                if(it){
+                    flipViewModel.getAllCardsFromDB.observe(viewLifecycleOwner){
+                        flipViewModel.setAnkiFlipItems(it)
+                    }
+
+                }
+            }
+
 
             viewSetUp.apply {
                 ankiBoxItems.observe(viewLifecycleOwner) {

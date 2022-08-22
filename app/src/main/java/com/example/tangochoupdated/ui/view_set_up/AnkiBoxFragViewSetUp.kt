@@ -26,12 +26,14 @@ import com.example.tangochoupdated.ui.listener.AnkiBoxFragBaseCL
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.listener.recyclerview.AnkiBoxFileRVCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
+import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 import kotlin.math.floor
 
 class AnkiBoxFragViewSetUp(val ankiBoxVM:AnkiBoxFragViewModel,
                            val context: Context,
-                           val bindingAnkiBoxFrag:AnkiHomeFragBaseBinding) {
+                           val bindingAnkiBoxFrag:AnkiHomeFragBaseBinding,
+                           val ankiBaseViewModel:AnkiFragBaseViewModel) {
 
 
     fun ankiBoxFragAddCL(ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel){
@@ -40,7 +42,7 @@ class AnkiBoxFragViewSetUp(val ankiBoxVM:AnkiBoxFragViewModel,
                 it.setOnClickListener(AnkiBoxTabChangeCL(bindingAnkiBoxFrag,ankiBoxVM))
             }
             btnStartAnki.setOnClickListener(AnkiBoxFragBaseCL(
-                ankiSettingPopUpViewModel, bindingAnkiBoxFrag,ankiBoxVM))
+                ankiSettingPopUpViewModel, bindingAnkiBoxFrag,ankiBaseViewModel,ankiBoxVM))
         }
 
 

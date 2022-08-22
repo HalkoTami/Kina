@@ -17,7 +17,9 @@ import com.example.tangochoupdated.*
 import com.example.tangochoupdated.activity.MainActivity
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.ColorStatus
+import com.example.tangochoupdated.db.enumclass.FragmentTree
 import com.example.tangochoupdated.db.enumclass.Mode
+import com.example.tangochoupdated.db.enumclass.StartFragment
 import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
@@ -31,7 +33,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
     private val args : CreateCardFragmentArgs by navArgs()
 
     private val clickableViews = mutableListOf<View>()
-
+    private val baseViewModel: BaseViewModel by activityViewModels()
     private val  createCardViewModel: CreateCardViewModel by activityViewModels()
 //    private lateinit var stringCardViewModel: StringCardViewModel
     private val mainViewModel : BaseViewModel by activityViewModels()
@@ -51,6 +53,12 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 
         _binding = CreateCardFragBaseBinding.inflate(inflater, container, false)
         mainNavCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
+
+        baseViewModel.apply {
+            val activeFragment = returnActiveFragment() ?: FragmentTree()
+            activeFragment.startFragment = StartFragment.EditCard
+            setActiveFragment(activeFragment)
+        }
 
         val vlo = viewLifecycleOwner
         binding.apply {

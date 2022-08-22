@@ -18,11 +18,13 @@ import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
+import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 
 
@@ -30,6 +32,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
     private var _binding: AnkiFlipFragBaseBinding? = null
     private val boxViewModel: AnkiBoxFragViewModel by activityViewModels()
+    private val ankiBaseViewModel: AnkiFragBaseViewModel by activityViewModels()
     private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
 
@@ -45,24 +48,38 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
         _binding =  AnkiFlipFragBaseBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val viewSetUp = AnkiFlipFragViewSetUp(binding)
+
+        val viewSetUp = AnkiFlipFragViewSetUp(binding,flipBaseViewModel,requireActivity(),ankiBaseViewModel,settingVM)
+        val frag = childFragmentManager.findFragmentById(binding.fragConViewFlip.id) as NavHostFragment
+        val navCon = frag.navController
+
         viewSetUp.setUpCL()
         flipBaseViewModel.apply {
             setParentPosition(0)
-            parentPosition.observe(viewLifecycleOwner){
-               getCardFromDB(returnFlipItems()[it].id).observe(viewLifecycleOwner){
-                   setParentCard(it)
-               }
+            setFront(
+                !settingVM.returnReverseCardSide()
+            )
+            if(boxViewModel.returnAnkiBoxItems().isNullOrEmpty()){
+                getAllCardsFromDB.observe(viewLifecycleOwner){
+                    setAnkiFlipItems(it)
+                }
             }
-            parentCard.observe(viewLifecycleOwner){
-                binding.topBinding.txvCardPosition.text = "${it.id}/${returnFlipItems().size}"
+            boxViewModel.ankiBoxItems
+            parentPosition.observe(viewLifecycleOwner){ parentPosition ->
+                val newCardId = if(returnFlipItems().size > parentPosition) returnFlipItems()[parentPosition].id else return@observe
+                getCardFromDB(newCardId).observe(viewLifecycleOwner){
+                    setParentCard(it)
+                    navCon.navigate(FlipStringFragmentDirections.toFlipString())
+                }
             }
+            front.observe(viewLifecycleOwner){
+                val side = if(it)"表" else "裏"
+                binding.topBinding.txvCardPosition.text = side + "  ${returnParentPosition()}/${returnFlipItems().size}"
+            }
+
         }
 
 
-        binding.btnFlipNext.setOnClickListener {
-            flipBaseViewModel.setParentPosition(flipBaseViewModel.returnParentPosition()+1)
-        }
 
 
         return root

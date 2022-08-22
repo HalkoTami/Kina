@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
@@ -22,21 +23,39 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     val parentCard :LiveData<Card> = _parentCard
 
+    val getAllCardsFromDB:LiveData<List<Card>> = repository.allCards.asLiveData()
+
     private val _parentPosition = MutableLiveData<Int>()
     fun setParentPosition(position: Int){
+        if(position<0) return
         _parentPosition.value = position
     }
     val parentPosition :LiveData<Int> = _parentPosition
     fun returnParentPosition():Int{
         return _parentPosition.value ?:0
     }
+    private val _setting = MutableLiveData<AnkiSettingPopUpViewModel>()
+    fun setSetting(viewModel:AnkiSettingPopUpViewModel){
+        _setting.value = viewModel
+    }
+
+    fun flipNext(reverseMode:Boolean){
+        if((reverseMode&&returnFront())||(reverseMode.not()&&returnFront().not()))
+            setParentPosition(returnParentPosition()+1)
+        setFront(returnFront().not())
+    }
+    fun flipPrevious(reverseMode:Boolean){
+        if((reverseMode&&returnFront().not())||(reverseMode.not()&&returnFront()))
+            setParentPosition(returnParentPosition()-1)
+        setFront(returnFront().not())
+    }
     private val _front = MutableLiveData<Boolean>()
     fun setFront(boolean: Boolean){
         _front.value = boolean
     }
     val front :LiveData<Boolean> = _front
-    fun returnFront():Boolean?{
-        return _front.value
+    fun returnFront():Boolean{
+        return _front.value ?:true
     }
 
 
@@ -50,5 +69,11 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         return  _ankiFlipItems.value ?: mutableListOf()
     }
     val ankiFlipItems :LiveData<MutableList<Card>> = _ankiFlipItems
+
+    private val _flipAction = MutableLiveData<NavDirections>()
+    fun setFlipAction (navDirections: NavDirections){
+        _flipAction.value = navDirections
+    }
+    val flipAction :LiveData<NavDirections> = _flipAction
 
 }

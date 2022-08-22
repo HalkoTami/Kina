@@ -19,13 +19,16 @@ import com.example.tangochoupdated.databinding.LibraryFragBinding
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.db.enumclass.FragmentTree
 import com.example.tangochoupdated.db.enumclass.LibRVState
+import com.example.tangochoupdated.db.enumclass.StartFragment
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.ConfirmMode
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
 
 
 class LibraryFragmentBase : Fragment(){
@@ -35,6 +38,7 @@ class LibraryFragmentBase : Fragment(){
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
+    private val baseViewModel: BaseViewModel by activityViewModels()
 
     private var _binding: LibraryFragBinding? = null
     private val binding get() = _binding!!
@@ -47,6 +51,12 @@ class LibraryFragmentBase : Fragment(){
     ): View {
         _binding = LibraryFragBinding.inflate(inflater, container, false)
 
+
+        baseViewModel.apply {
+            val activeFragment = returnActiveFragment() ?: FragmentTree()
+             activeFragment.startFragment = StartFragment.Library
+            setActiveFragment(activeFragment)
+        }
 
 
         libraryViewModel.apply {
@@ -115,8 +125,9 @@ class LibraryFragmentBase : Fragment(){
         myNavCon = a.navController
 
         libraryViewModel.action.observe(viewLifecycleOwner){
-            val a = childFragmentManager.findFragmentById(binding.libFragConView.id) as NavHostFragment
-            a.navController.navigate(it)
+            if(libraryViewModel.returnParentFile()?.fileStatus!=FileStatus.TANGO_CHO_COVER){
+                myNavCon.navigate(it)
+            }
             Toast.makeText(requireActivity(), "action called ", Toast.LENGTH_SHORT).show()
         }
 

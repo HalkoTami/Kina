@@ -13,18 +13,20 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFragBaseBinding
 import com.example.tangochoupdated.db.enumclass.AnkiFilter
+import com.example.tangochoupdated.db.enumclass.FragmentTree
+import com.example.tangochoupdated.db.enumclass.StartFragment
 import com.example.tangochoupdated.ui.view_set_up.AnkiBaseFragViewSetUp
-import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
-import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
 class AnkiFragmentBase  : Fragment() {
 
     private var _binding: AnkiFragBaseBinding? = null
-    private val sharedViewModel: BaseViewModel by activityViewModels()
+    private val baseViewModel: BaseViewModel by activityViewModels()
     private val ankiSettingVM: AnkiSettingPopUpViewModel by activityViewModels()
     private val ankiFragViewModel : AnkiFragBaseViewModel by activityViewModels()
+    private val ankiBoxViewModel: AnkiBoxFragViewModel by activityViewModels()
+    private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -41,25 +43,31 @@ class AnkiFragmentBase  : Fragment() {
         val a = childFragmentManager.findFragmentById(binding.ankiFragContainerView.id) as NavHostFragment
         val myNavCon = a.navController
 
-        val viewSetUp = AnkiBaseFragViewSetUp(ankiFragViewModel, binding,requireActivity())
-        viewSetUp.ankiSettingPopUpAddCL(ankiSettingVM)
-        binding.bindingSetting.apply {
-            ankiSettingVM.apply {
-                start()
-                setActive(true)
-                active.observe(viewLifecycleOwner){
-                    if(it){
-                        viewSetUp.setUpSettingContent(returnAnkiFilter()!!)
-                    }
-                    binding.frameLayAnkiSetting.visibility = if(it) View.VISIBLE else View.GONE
-                }
+        baseViewModel.apply {
+            val activeFragment = returnActiveFragment() ?: FragmentTree()
+            activeFragment.startFragment = StartFragment.Anki
+            setActiveFragment(activeFragment)
+        }
 
+        val viewSetUp = AnkiBaseFragViewSetUp(ankiFragViewModel, binding,requireActivity(),ankiSettingVM)
+        viewSetUp.addCL()
+        ankiSettingVM.start()
+        ankiFragViewModel.apply {
+            tabChangeAction.observe(viewLifecycleOwner){
+                myNavCon.navigate(it)
+            }
+            settingVisible.observe(viewLifecycleOwner){ settingVisible ->
+                if(settingVisible){
+                    viewSetUp.setUpSettingContent(ankiSettingVM.returnAnkiFilter()!!)
+                }
+                arrayOf(binding.frameLayAnkiSetting,binding.viewAnkiSettingBG).onEach {
+                   it.visibility = if(settingVisible) View.VISIBLE else View.GONE
+                }
             }
 
+
         }
-        ankiFragViewModel.tabChangeAction.observe(viewLifecycleOwner){
-            myNavCon.navigate(it)
-        }
+
 
 
 

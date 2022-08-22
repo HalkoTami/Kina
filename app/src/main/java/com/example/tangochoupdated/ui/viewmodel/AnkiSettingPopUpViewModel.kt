@@ -85,12 +85,11 @@ class AnkiSettingPopUpViewModel : ViewModel() {
     fun setReverseCardSide(boolean: Boolean){
         _reverseCardSide.value = boolean
     }
+    fun returnReverseCardSide():Boolean{
+        return _reverseCardSide.value ?:false
+    }
     val reverseCardSide:LiveData<Boolean> = _reverseCardSide
 
-    private val _active = MutableLiveData<Boolean>()
-    fun setActive(boolean: Boolean){
-        _active.value = boolean
-    }
-    val active:LiveData<Boolean> = _active
+
 
 }

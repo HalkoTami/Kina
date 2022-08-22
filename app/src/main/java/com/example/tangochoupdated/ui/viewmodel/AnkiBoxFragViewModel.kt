@@ -32,12 +32,16 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     fun getCardsFromDBByMultipleCardIds(cardIds:List<Int>) :LiveData<List<Card>> = repository.getCardsByMultipleCardId(cardIds).asLiveData()
 
+
     fun getDescendantsCardIds(fileIdList:List<Int>) :LiveData<List<Int>> = repository.getDescendantsCardsIsByMultipleFileId(fileIdList).asLiveData()
-    val _ankiBoxItems = MutableLiveData<MutableList<Card>>()
+    private val _ankiBoxItems = MutableLiveData<MutableList<Card>>()
     fun setAnkiBoxItems(list: List<Card>){
         val a = mutableListOf<Card>()
         a.addAll(list)
         _ankiBoxItems.value = a
+    }
+    fun returnAnkiBoxItems():List<Card>?{
+        return  _ankiBoxItems.value
     }
     val ankiBoxItems :LiveData<MutableList<Card>> = _ankiBoxItems
 
@@ -94,4 +98,13 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
     }
+
+    private val _modeCardsNotSelected = MutableLiveData<Boolean>()
+    fun setModeCardsNotSelected(boolean: Boolean){
+        _modeCardsNotSelected.value = boolean
+    }
+    fun returnModeCardsNotSelected():Boolean?{
+        return _modeCardsNotSelected.value
+    }
+    val modeCardsNotSelected:LiveData<Boolean> = _modeCardsNotSelected
 }

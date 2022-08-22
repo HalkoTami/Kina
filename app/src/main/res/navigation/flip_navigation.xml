@@ -10,6 +10,9 @@
     <fragment android:id="@+id/flip_string_type_answer_frag"
         android:name="com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragment"
         tools:layout="@layout/anki_flip_frag_type_answer_string_frag"/>
+    <action android:id="@+id/to_flip_string"
+        app:destination="@id/flip_string_look_frag"
+        app:popUpTo="@id/flip_navigation"/>
 
 
 

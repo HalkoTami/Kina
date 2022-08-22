@@ -35,11 +35,19 @@ import kotlin.math.floor
 
 class AnkiBaseFragViewSetUp(val baseViewModel: AnkiFragBaseViewModel,
                             val bindingBase:AnkiFragBaseBinding,
-                            val context: Context) {
+                            val context: Context,
+                            val ankiSettingVM:AnkiSettingPopUpViewModel) {
     val white = ContextCompat.getColor(context,R.color.white)
     val green = ContextCompat.getColor(context,R.color.most_dark_green)
 
-    fun ankiSettingPopUpAddCL(ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel){
+    fun addCL(){
+        ankiSettingPopUpAddCL()
+        bindingBase.viewAnkiSettingBG.setOnClickListener {
+            baseViewModel.setSettingVisible(false)
+        }
+    }
+
+    fun ankiSettingPopUpAddCL(){
         bindingBase.bindingSetting.apply {
             val binding = bindingBase.bindingSetting
             bindingSettingContent.apply {
@@ -65,7 +73,7 @@ class AnkiBaseFragViewSetUp(val baseViewModel: AnkiFragBaseViewModel,
                     imvCloseSetting,
                     btnStartAnki,
                     ).onEach {
-                        it.setOnClickListener(AnkiFragAnkiSettingPopUpCL(binding,ankiSettingPopUpViewModel,baseViewModel,context))
+                        it.setOnClickListener(AnkiFragAnkiSettingPopUpCL(binding,ankiSettingVM,baseViewModel,context))
                 }
             }
         }

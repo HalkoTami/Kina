@@ -15,5 +15,12 @@ class AnkiFragBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
         _ankiFragChangeAction.value = navDirections
     }
     val tabChangeAction :LiveData<NavDirections> = _ankiFragChangeAction
+    private val _settingVisible = MutableLiveData<Boolean>()
+    fun setSettingVisible(boolean: Boolean){
+        _settingVisible.value = boolean
+    }
+    val settingVisible:LiveData<Boolean> = _settingVisible
+
+
 
 }
