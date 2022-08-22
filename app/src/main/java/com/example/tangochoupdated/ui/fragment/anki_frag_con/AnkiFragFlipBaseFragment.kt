@@ -22,10 +22,7 @@ import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDir
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
-import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
 class AnkiFragFlipBaseFragment  : Fragment() {
@@ -35,7 +32,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
     private val ankiBaseViewModel: AnkiFragBaseViewModel by activityViewModels()
     private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
-
+    private val baseViewModel: BaseViewModel by activityViewModels()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -53,7 +50,9 @@ class AnkiFragFlipBaseFragment  : Fragment() {
         val frag = childFragmentManager.findFragmentById(binding.fragConViewFlip.id) as NavHostFragment
         val navCon = frag.navController
 
-        viewSetUp.setUpCL()
+        viewSetUp.setUpViewStart()
+        baseViewModel.setBnvVisibility(false)
+
         flipBaseViewModel.apply {
             setParentPosition(0)
             setFront(
@@ -64,7 +63,6 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                     setAnkiFlipItems(it)
                 }
             }
-            boxViewModel.ankiBoxItems
             parentPosition.observe(viewLifecycleOwner){ parentPosition ->
                 val newCardId = if(returnFlipItems().size > parentPosition) returnFlipItems()[parentPosition].id else return@observe
                 getCardFromDB(newCardId).observe(viewLifecycleOwner){
@@ -72,9 +70,14 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                     navCon.navigate(FlipStringFragmentDirections.toFlipString())
                 }
             }
+            parentCard.observe(viewLifecycleOwner){
+                binding.btnRemembered.isSelected =  it.remembered ?:false
+            }
             front.observe(viewLifecycleOwner){
                 val side = if(it)"表" else "裏"
+                viewSetUp.applyProgress(returnParentPosition(),returnFlipItems().size,it,settingVM.returnReverseCardSide())
                 binding.topBinding.txvCardPosition.text = side + "  ${returnParentPosition()}/${returnFlipItems().size}"
+                navCon.navigate(FlipStringFragmentDirections.toFlipString())
             }
 
         }
@@ -90,7 +93,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-                val navCon = requireActivity().findViewById<FragmentContainerView>(R.id.anki_box_frag_con_view).findNavController()
+                val navCon = requireActivity().findViewById<FragmentContainerView>(R.id.anki_frag_container_view).findNavController()
                 navCon.popBackStack()
             }
         }
@@ -102,6 +105,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        baseViewModel.setBnvVisibility(true)
         _binding = null
     }
 }

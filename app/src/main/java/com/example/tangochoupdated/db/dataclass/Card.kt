@@ -13,7 +13,7 @@ data class Card(
     @PrimaryKey(autoGenerate = true)
     val id:Int,
     @ColumnInfo
-    var belongingFlashCardCoverId:Int?,
+    var belongingFlashCardCoverId:Int? = null,
 
     @Embedded(prefix = "belonging_" )
     var stringData: StringData?,
@@ -24,13 +24,11 @@ data class Card(
     @ColumnInfo(name = "card_type")
     var cardStatus: CardStatus,
     @ColumnInfo(name = "card_deleted")
-    var deleted:Boolean?,
-    @ColumnInfo(name ="card_remembered")
-    val remembered: Boolean?,
+    var deleted:Boolean = false,
+    var remembered: Boolean = false,
     @ColumnInfo(name= "library_order")
-    var libOrder: Int,
-    @ColumnInfo(name ="card_color")
-    val colorStatus: ColorStatus?,
+    var libOrder: Int = 0,
+    var colorStatus: ColorStatus = ColorStatus.GRAY,
     var timesFlipped:Int = 0
     )
 

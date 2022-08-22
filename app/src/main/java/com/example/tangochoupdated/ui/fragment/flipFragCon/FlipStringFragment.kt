@@ -62,7 +62,7 @@ class FlipStringFragment  : Fragment() {
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-                val navCon = requireActivity().findViewById<FragmentContainerView>(R.id.anki_box_frag_con_view).findNavController()
+                val navCon = requireActivity().findViewById<FragmentContainerView>(R.id.anki_frag_container_view).findNavController()
                 navCon.popBackStack()
             }
         }

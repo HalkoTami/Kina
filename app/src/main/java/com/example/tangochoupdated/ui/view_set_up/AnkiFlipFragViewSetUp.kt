@@ -12,6 +12,20 @@ class AnkiFlipFragViewSetUp(private val bindingBase:AnkiFlipFragBaseBinding,
                             private val fragmentActivity: FragmentActivity,
                             private val ankiBaseViewModel:AnkiFragBaseViewModel,
                             private val settingPopUpViewModel: AnkiSettingPopUpViewModel) {
+    fun setUpViewStart(){
+        bindingBase.progressBarBinding.frameLayProgressbarRemembered.removeView(bindingBase.progressBarBinding.imvRememberedEndIcon)
+        setUpCL()
+    }
+    fun applyProgress(parentPosition:Int,flipItems:Int,frontSide:Boolean,reverseSides:Boolean){
+
+        val postion:Int =  if((frontSide&&reverseSides.not())||(frontSide.not()&&reverseSides))(parentPosition + 1)*2-1
+        else (parentPosition+1)*2
+        val all = flipItems*2
+        bindingBase.progressBarBinding.progressbarRemembered.progress =
+            (postion/all.toDouble()*100 ).toInt()
+
+
+    }
     fun setUpCL(){
         bindingBase.apply {
             topBinding.apply {

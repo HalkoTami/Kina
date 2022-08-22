@@ -1,14 +1,12 @@
 package com.example.tangochoupdated.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
+import kotlinx.coroutines.launch
 
 class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 
@@ -27,7 +25,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     private val _parentPosition = MutableLiveData<Int>()
     fun setParentPosition(position: Int){
-        if(position<0) return
+        if(position<0||returnFlipItems().size-1<position) return else
         _parentPosition.value = position
     }
     val parentPosition :LiveData<Int> = _parentPosition
@@ -40,14 +38,21 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
     fun flipNext(reverseMode:Boolean){
-        if((reverseMode&&returnFront())||(reverseMode.not()&&returnFront().not()))
+        val changeCard = (reverseMode&&returnFront())||(reverseMode.not()&&returnFront().not())
+        val isLastCard = (returnParentPosition()==returnFlipItems().size-1)
+        if(changeCard)
             setParentPosition(returnParentPosition()+1)
-        setFront(returnFront().not())
+        if(!(isLastCard&&changeCard))
+            setFront(returnFront().not())
+
     }
     fun flipPrevious(reverseMode:Boolean){
-        if((reverseMode&&returnFront().not())||(reverseMode.not()&&returnFront()))
+        val changeCard = (reverseMode&&returnFront().not())||(reverseMode.not()&&returnFront())
+        val isFirstCard = (returnParentPosition()==0)
+        if(changeCard)
             setParentPosition(returnParentPosition()-1)
-        setFront(returnFront().not())
+        if(!(isFirstCard&&changeCard))
+            setFront(returnFront().not())
     }
     private val _front = MutableLiveData<Boolean>()
     fun setFront(boolean: Boolean){
@@ -70,10 +75,14 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     val ankiFlipItems :LiveData<MutableList<Card>> = _ankiFlipItems
 
-    private val _flipAction = MutableLiveData<NavDirections>()
-    fun setFlipAction (navDirections: NavDirections){
-        _flipAction.value = navDirections
+    fun changeRememberStatus(){
+        val change = _parentCard.value ?:return
+        change.remembered = change.remembered.not()
+        viewModelScope.launch {
+            repository.update(change)
+        }
     }
-    val flipAction :LiveData<NavDirections> = _flipAction
+
+
 
 }

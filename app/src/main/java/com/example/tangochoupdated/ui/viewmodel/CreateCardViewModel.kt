@@ -305,7 +305,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             id = 0,
             libOrder =  _position.value!!,
             deleted = false,
-            colorStatus = _cardColor.value,
+            colorStatus = _cardColor.value ?:ColorStatus.GRAY,
             cardStatus = _cardStatus.value!!,
             quizData = if(_cardStatus.value!=CardStatus.CHOICE) null else null,
             markerData = if(_cardStatus.value!=CardStatus.CHOICE) null else null,

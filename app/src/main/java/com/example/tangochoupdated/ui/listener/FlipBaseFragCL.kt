@@ -31,7 +31,10 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                     imvAnkiSetting -> ankiBaseViewModel.setSettingVisible(true)
                     imvAnkiSetting -> TODO()
                     btnSetFlag -> TODO()
-                    btnRemembered -> TODO()
+                    btnRemembered -> {
+                        v.isSelected = !v.isSelected
+                        flipViewModel.changeRememberStatus()
+                    }
                     btnFlipNext -> flipViewModel.flipNext(settingPopUpViewModel.returnReverseCardSide())
                     btnFlipPrevious -> flipViewModel.flipPrevious(settingPopUpViewModel.returnReverseCardSide())
                     btnAddCard -> TODO()

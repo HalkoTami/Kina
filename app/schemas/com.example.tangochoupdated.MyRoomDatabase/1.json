@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "39b238985da7bc08eb571980a7453dd4",
+    "identityHash": "470ca483c6067d280c3645ce403f7eb5",
     "entities": [
       {
         "tableName": "tbl_card",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `belongingFlashCardCoverId` INTEGER, `card_type` INTEGER NOT NULL, `card_deleted` INTEGER, `card_remembered` INTEGER, `library_order` INTEGER NOT NULL, `card_color` INTEGER, `timesFlipped` INTEGER NOT NULL, `belonging_frontTitle` TEXT, `belonging_backTitle` TEXT, `belonging_frontText` TEXT, `belonging_backText` TEXT, `belonging_markerTextPreview` TEXT, `belonging_answerChoiceId` INTEGER, `belonging_answerPreview` TEXT, `belonging_question` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `belongingFlashCardCoverId` INTEGER, `card_type` INTEGER NOT NULL, `card_deleted` INTEGER NOT NULL, `remembered` INTEGER NOT NULL, `library_order` INTEGER NOT NULL, `colorStatus` INTEGER NOT NULL, `timesFlipped` INTEGER NOT NULL, `belonging_frontTitle` TEXT, `belonging_backTitle` TEXT, `belonging_frontText` TEXT, `belonging_backText` TEXT, `belonging_markerTextPreview` TEXT, `belonging_answerChoiceId` INTEGER, `belonging_answerPreview` TEXT, `belonging_question` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -30,13 +30,13 @@
             "fieldPath": "deleted",
             "columnName": "card_deleted",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "remembered",
-            "columnName": "card_remembered",
+            "columnName": "remembered",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "libOrder",
@@ -46,9 +46,9 @@
           },
           {
             "fieldPath": "colorStatus",
-            "columnName": "card_color",
+            "columnName": "colorStatus",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "timesFlipped",
@@ -542,7 +542,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '39b238985da7bc08eb571980a7453dd4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '470ca483c6067d280c3645ce403f7eb5')"
     ]
   }
 }
