@@ -10,17 +10,17 @@ abstract class MyDao{
 
     @Dao
     abstract class CardDao(): BaseDao<Card> {
-        @Query("select * from tbl_card where not card_deleted AND id = :cardId ")
+        @Query("select * from tbl_card where not deleted AND id = :cardId ")
         abstract fun getCardByCardId(cardId:Int?): Flow<Card>
 
-        @Query("select * from tbl_card where not card_deleted AND id in (:cardIds)  ")
+        @Query("select * from tbl_card where not deleted AND id in (:cardIds)  ")
         abstract fun getCardByMultipleCardIds(cardIds:List<Int>): Flow<List<Card>>
 
-        @Query("select * from tbl_card where not card_deleted  ")
+        @Query("select * from tbl_card where not deleted  ")
         abstract fun getAllCards(): Flow<List<Card>>
         @Transaction
-        @Query("select * from tbl_card where not card_deleted AND id = :cardId ")
-        abstract fun getCardAndTagsByCardId(cardId:Int?): Flow<CardAndTags>
+//        @Query("select * from tbl_card where not deleted AND id = :cardId ")
+//        abstract fun getCardAndTagsByCardId(cardId:Int?): Flow<CardAndTags>
 
 
         @Query("SELECT * FROM tbl_card a " +

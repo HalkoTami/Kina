@@ -6,14 +6,26 @@ import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.enumclass.FlipAction
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringCheckAnswerFragmentDirections
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragment
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragmentDirections
 import kotlinx.coroutines.launch
 
 class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is Anki Fragment"
+
+    private val _flipAction = MutableLiveData<FlipAction>()
+    fun setFlipAction (flipAction: FlipAction){
+        _flipAction.value = flipAction
     }
+    fun returnFlipAction():FlipAction{
+        return _flipAction.value ?:FlipAction.LookStringFront
+    }
+    val flipAction :LiveData<FlipAction> = _flipAction
+
     fun getCardFromDB(cardId:Int) :LiveData<Card> = repository.getCardByCardId(cardId).asLiveData()
     val _parentCard = MutableLiveData<Card>()
     fun setParentCard(card: Card){
@@ -29,6 +41,17 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         _parentPosition.value = position
     }
     val parentPosition :LiveData<Int> = _parentPosition
+
+
+    private val _typedAnswer = MutableLiveData<String>()
+    fun setTypedAnswer(string: String){
+            _typedAnswer.value = string
+    }
+    fun returnTypedAnswer():String{
+        return _typedAnswer.value ?:""
+    }
+    val typedAnswer :LiveData<String> = _typedAnswer
+
     fun returnParentPosition():Int{
         return _parentPosition.value ?:0
     }
@@ -36,23 +59,75 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun setSetting(viewModel:AnkiSettingPopUpViewModel){
         _setting.value = viewModel
     }
-
-    fun flipNext(reverseMode:Boolean){
-        val changeCard = (reverseMode&&returnFront())||(reverseMode.not()&&returnFront().not())
-        val isLastCard = (returnParentPosition()==returnFlipItems().size-1)
-        if(changeCard)
-            setParentPosition(returnParentPosition()+1)
-        if(!(isLastCard&&changeCard))
-            setFront(returnFront().not())
-
+    fun checkFront():Boolean{
+        return (returnFlipAction() == FlipAction.LookStringFront)||(returnFlipAction() == FlipAction.TypeAnswerString)
     }
-    fun flipPrevious(reverseMode:Boolean){
-        val changeCard = (reverseMode&&returnFront().not())||(reverseMode.not()&&returnFront())
+    fun checkBack():Boolean{
+        return (returnFlipAction() == FlipAction.LookStringBack)||(returnFlipAction() == FlipAction.CheckAnswerString)
+    }
+    fun checkChangeToNextCard(reverseMode: Boolean):Boolean{
+        return  (reverseMode&&checkFront())||(reverseMode.not()&&checkBack())
+    }
+    fun checkChangeToPreviouscard(reverseMode: Boolean):Boolean{
+        return (reverseMode&&checkBack())||(reverseMode.not()&&checkFront())
+    }
+    fun checkPositionIsOnStartEdge(reverseMode: Boolean):Boolean{
+        return (returnParentPosition() == 0&&checkChangeToPreviouscard(reverseMode))
+    }
+    fun checkPositionIsOnEndEdge(reverseMode: Boolean):Boolean{
+        return (returnParentPosition() == returnFlipItems().size -1&&checkChangeToNextCard(reverseMode))
+    }
+
+
+    fun flipNext(reverseMode:Boolean,typeAnswer:Boolean):NavDirections?{
+        val changeCard = checkChangeToNextCard(reverseMode)
+        val changeOnlySide = (reverseMode.not()&&checkFront())||(reverseMode&&checkBack())
+//        val flipToFront = (changeCard&&reverseMode.not())||(changeOnlySide&&reverseMode)
+//        val flipToBack = (changeCard&&reverseMode)||(changeOnlySide&&reverseMode.not())
+//        val isLastCard = (returnParentPosition()==returnFlipItems().size-1)
+
+        return if(checkPositionIsOnEndEdge(reverseMode))
+            null else {
+                if(changeCard){
+                setParentPosition(returnParentPosition()+1)
+                }
+           val action = getFlipAction(returnFlipAction())
+            setFlipAction(action)
+            translateFlipAction(action)
+        }
+    }
+    fun getFlipAction(fragmentNow:FlipAction):FlipAction{
+        return when(fragmentNow){
+            FlipAction.LookStringFront -> FlipAction.LookStringBack
+            FlipAction.LookStringBack -> FlipAction.LookStringFront
+            FlipAction.TypeAnswerString -> FlipAction.CheckAnswerString
+            FlipAction.CheckAnswerString -> FlipAction.TypeAnswerString }
+    }
+    fun translateFlipAction(flipAction: FlipAction):NavDirections{
+        return when(flipAction){
+            FlipAction.CheckAnswerString -> FlipStringCheckAnswerFragmentDirections.toCheckAnswerString("returnTypedAnswer()")
+            FlipAction.TypeAnswerString -> FlipStringTypeAnswerFragmentDirections.toTypeAnswerString()
+            FlipAction.LookStringBack,FlipAction.LookStringFront -> FlipStringFragmentDirections.toFlipString()
+        }
+    }
+    fun flipPrevious(reverseMode:Boolean,typeAnswer: Boolean):NavDirections?{
+
+        val changeCard = checkChangeToPreviouscard(reverseMode)
         val isFirstCard = (returnParentPosition()==0)
-        if(changeCard)
-            setParentPosition(returnParentPosition()-1)
-        if(!(isFirstCard&&changeCard))
-            setFront(returnFront().not())
+
+//        if(!(isFirstCard&&changeCard))
+//            setFront(returnFront().not())
+        return if(checkPositionIsOnStartEdge(reverseMode))
+            null else {
+                if(changeCard){
+                    setParentPosition(returnParentPosition()-1)
+                }
+            val action = getFlipAction(returnFlipAction())
+            setFlipAction(action)
+            translateFlipAction(action)
+        }
+
+
     }
     private val _front = MutableLiveData<Boolean>()
     fun setFront(boolean: Boolean){

@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.fragment.anki_frag_con
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,11 +19,18 @@ import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
+import com.example.tangochoupdated.db.enumclass.AnkiFragments
+import com.example.tangochoupdated.db.enumclass.CardStatus
+import com.example.tangochoupdated.db.enumclass.FlipAction
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragmentDirections
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
+import java.time.Duration
+import java.time.LocalDateTime
+import java.util.*
 
 
 class AnkiFragFlipBaseFragment  : Fragment() {
@@ -45,14 +53,15 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
         _binding =  AnkiFlipFragBaseBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        val viewSetUp = AnkiFlipFragViewSetUp(binding,flipBaseViewModel,requireActivity(),ankiBaseViewModel,settingVM)
         val frag = childFragmentManager.findFragmentById(binding.fragConViewFlip.id) as NavHostFragment
         val navCon = frag.navController
+        val viewSetUp = AnkiFlipFragViewSetUp(binding,flipBaseViewModel,requireActivity(),ankiBaseViewModel,settingVM,navCon)
+
 
         viewSetUp.setUpViewStart()
         baseViewModel.setBnvVisibility(false)
 
+        ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         flipBaseViewModel.apply {
             setParentPosition(0)
             setFront(
@@ -67,18 +76,34 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                 val newCardId = if(returnFlipItems().size > parentPosition) returnFlipItems()[parentPosition].id else return@observe
                 getCardFromDB(newCardId).observe(viewLifecycleOwner){
                     setParentCard(it)
-                    navCon.navigate(FlipStringFragmentDirections.toFlipString())
                 }
+                binding.topBinding.txvCardPosition.text = "  ${returnParentPosition()+1}/${returnFlipItems().size}"
             }
+            var time  = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                LocalDateTime.now()
+            } else null
+            var card:Card? = null
+
             parentCard.observe(viewLifecycleOwner){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val opened = LocalDateTime.now()
+                    val a = Duration.between(time,LocalDateTime.now())
+                    a.seconds
+                    time = opened
+                    Toast.makeText(requireActivity(),"${card?.stringData?.frontText } ${a.seconds}",Toast.LENGTH_SHORT).show()
+                }
                 binding.btnRemembered.isSelected =  it.remembered ?:false
+                card = it
+
             }
-            front.observe(viewLifecycleOwner){
-                val side = if(it)"表" else "裏"
-                viewSetUp.applyProgress(returnParentPosition(),returnFlipItems().size,it,settingVM.returnReverseCardSide())
-                binding.topBinding.txvCardPosition.text = side + "  ${returnParentPosition()}/${returnFlipItems().size}"
-                navCon.navigate(FlipStringFragmentDirections.toFlipString())
+            flipAction.observe(viewLifecycleOwner){
+                viewSetUp.applyProgress(returnParentPosition(),
+                    returnFlipItems().size,
+                    (it == FlipAction.LookStringFront||it == FlipAction.TypeAnswerString),
+                    settingVM.returnReverseCardSide())
             }
+
+
 
         }
 

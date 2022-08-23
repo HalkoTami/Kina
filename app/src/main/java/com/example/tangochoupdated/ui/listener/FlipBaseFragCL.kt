@@ -17,17 +17,15 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                      val flipViewModel:AnkiFlipFragViewModel,
                      val ankiBaseViewModel:AnkiFragBaseViewModel,
-                     val activity:FragmentActivity,
+                     val ankiFlipFrag:FragmentActivity,
+                     val flipNavCon:NavController,
                      val settingPopUpViewModel: AnkiSettingPopUpViewModel): View.OnClickListener {
 
     override fun onClick(v: View?) {
         binding.apply {
             topBinding.apply {
                 when(v){
-                    imvBack -> {
-                       val navCon = activity.findViewById<FragmentContainerView>(R.id.anki_frag_container_view).findNavController()
-                        navCon.popBackStack()
-                    }
+                    imvBack -> ankiFlipFrag.onBackPressed()
                     imvAnkiSetting -> ankiBaseViewModel.setSettingVisible(true)
                     imvAnkiSetting -> TODO()
                     btnSetFlag -> TODO()
@@ -35,8 +33,17 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                         v.isSelected = !v.isSelected
                         flipViewModel.changeRememberStatus()
                     }
-                    btnFlipNext -> flipViewModel.flipNext(settingPopUpViewModel.returnReverseCardSide())
-                    btnFlipPrevious -> flipViewModel.flipPrevious(settingPopUpViewModel.returnReverseCardSide())
+                    btnFlipNext -> {
+                        settingPopUpViewModel.apply {
+                            flipNavCon.navigate(flipViewModel.flipNext(returnReverseCardSide(),returnTypeAnswer()) ?:return )
+                        }
+
+                    }
+                    btnFlipPrevious -> {
+                        settingPopUpViewModel.apply {
+                            flipNavCon.navigate(flipViewModel.flipPrevious(returnReverseCardSide(),returnTypeAnswer()) ?:return )
+                        }
+                    }
                     btnAddCard -> TODO()
                 }
             }

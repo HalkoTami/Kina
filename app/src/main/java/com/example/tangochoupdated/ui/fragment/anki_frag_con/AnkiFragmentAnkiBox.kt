@@ -17,6 +17,7 @@ import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
+import com.example.tangochoupdated.db.enumclass.AnkiFragments
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
@@ -61,11 +62,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
         }
         viewModel.apply{
 
-            tabChangeAction.observe(viewLifecycleOwner){
-                val a = childFragmentManager.findFragmentById(binding.ankiBoxFragConView.id) as NavHostFragment
-                a.navController.navigate(it)
-                Toast.makeText(requireActivity(), "navigated ", Toast.LENGTH_SHORT).show()
-            }
+            ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
             ankiBoxFileIds.observe(viewLifecycleOwner){
                 getDescendantsCardIds(it).observe(viewLifecycleOwner){
                     setAnkiBoxCardIds(it)

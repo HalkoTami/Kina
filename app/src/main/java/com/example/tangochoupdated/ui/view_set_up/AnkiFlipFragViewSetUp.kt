@@ -11,7 +11,8 @@ class AnkiFlipFragViewSetUp(private val bindingBase:AnkiFlipFragBaseBinding,
                             private val viewModel:AnkiFlipFragViewModel,
                             private val fragmentActivity: FragmentActivity,
                             private val ankiBaseViewModel:AnkiFragBaseViewModel,
-                            private val settingPopUpViewModel: AnkiSettingPopUpViewModel) {
+                            private val settingPopUpViewModel: AnkiSettingPopUpViewModel,
+                            private val flipNavCon:NavController) {
     fun setUpViewStart(){
         bindingBase.progressBarBinding.frameLayProgressbarRemembered.removeView(bindingBase.progressBarBinding.imvRememberedEndIcon)
         setUpCL()
@@ -38,7 +39,7 @@ class AnkiFlipFragViewSetUp(private val bindingBase:AnkiFlipFragBaseBinding,
                     btnFlipNext,
                     btnFlipPrevious,
                     btnAddCard).onEach {
-                        it.setOnClickListener(FlipBaseFragCL(bindingBase,viewModel,ankiBaseViewModel, fragmentActivity,settingPopUpViewModel))
+                        it.setOnClickListener(FlipBaseFragCL(bindingBase,viewModel,ankiBaseViewModel, fragmentActivity,flipNavCon, settingPopUpViewModel))
                 }
             }
 

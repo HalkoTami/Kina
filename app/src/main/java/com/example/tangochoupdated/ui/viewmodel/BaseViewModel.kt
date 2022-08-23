@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.db.MyRoomRepository
-import com.example.tangochoupdated.db.enumclass.AnkiFragment
+import com.example.tangochoupdated.db.enumclass.AnkiFragments
 import com.example.tangochoupdated.db.enumclass.FragmentTree
 import com.example.tangochoupdated.db.enumclass.StartFragment
 import com.example.tangochoupdated.db.enumclass.Tab
@@ -40,7 +40,7 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
             _activeFragment.value = fragmentTree
         }
         if(fragmentTree.startFragment== StartFragment.EditCard||
-                fragmentTree.ankiFragment == AnkiFragment.Flip)
+                fragmentTree.ankiFragment == AnkiFragments.Flip)
             setBnvVisibility(false) else setBnvVisibility(true)
 
     }

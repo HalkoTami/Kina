@@ -8,8 +8,20 @@ import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.enumclass.AnkiFragments
+import com.example.tangochoupdated.db.enumclass.FlipAction
 
 class AnkiFragBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
+    private val _activeFragment = MutableLiveData<AnkiFragments>()
+    fun setActiveFragment (ankiFragments: AnkiFragments){
+        _activeFragment.value = ankiFragments
+    }
+    fun returnActiveFragment(): AnkiFragments {
+        return _activeFragment.value ?: AnkiFragments.AnkiBox
+    }
+    val activeFragment :LiveData<AnkiFragments> = _activeFragment
+
+
     private val _ankiFragChangeAction = MutableLiveData<NavDirections>()
     fun setAnkiFragChangeAction (navDirections: NavDirections){
         _ankiFragChangeAction.value = navDirections

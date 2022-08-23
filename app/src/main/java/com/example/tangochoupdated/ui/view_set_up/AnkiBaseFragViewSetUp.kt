@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.WrappedDrawable
 import androidx.core.view.marginEnd
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
@@ -36,7 +37,8 @@ import kotlin.math.floor
 class AnkiBaseFragViewSetUp(val baseViewModel: AnkiFragBaseViewModel,
                             val bindingBase:AnkiFragBaseBinding,
                             val context: Context,
-                            val ankiSettingVM:AnkiSettingPopUpViewModel) {
+                            val ankiSettingVM:AnkiSettingPopUpViewModel,
+                            val ankiNavCon:NavController) {
     val white = ContextCompat.getColor(context,R.color.white)
     val green = ContextCompat.getColor(context,R.color.most_dark_green)
 
@@ -73,7 +75,7 @@ class AnkiBaseFragViewSetUp(val baseViewModel: AnkiFragBaseViewModel,
                     imvCloseSetting,
                     btnStartAnki,
                     ).onEach {
-                        it.setOnClickListener(AnkiFragAnkiSettingPopUpCL(binding,ankiSettingVM,baseViewModel,context))
+                        it.setOnClickListener(AnkiFragAnkiSettingPopUpCL(binding,ankiSettingVM,baseViewModel,context,ankiNavCon))
                 }
             }
         }

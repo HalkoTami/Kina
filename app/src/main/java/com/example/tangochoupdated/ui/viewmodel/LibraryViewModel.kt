@@ -5,7 +5,7 @@ import androidx.lifecycle.*
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.db.dataclass.CardAndTags
+
 import com.example.tangochoupdated.db.dataclass.File
 //import com.example.tangochoupdated.room.dataclass.FileWithChild
 import com.example.tangochoupdated.db.enumclass.CardStatus
@@ -130,37 +130,37 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             else -> illegalDecoyCallException("unknown class")
         }
     }
-    private fun convertCardToLibraryRV(card: CardAndTags): LibraryRV {
-        when (card.card.cardStatus) {
-            CardStatus.STRING -> return LibraryRV(
-                type = LibRVViewType.StringCard,
-                position = card.card.libOrder,
-                file = null,
-                card = card.card,
-                tag = card.tags,
-                id = card.card.id
-            )
-            CardStatus.CHOICE -> return LibraryRV(
-                type = LibRVViewType.ChoiceCard,
-                position = card.card.libOrder,
-                file = null,
-                card = card.card,
-                tag = card.tags,
-                id = card.card.id
-            )
-
-            CardStatus.MARKER -> return LibraryRV(
-                type = LibRVViewType.MarkerCard,
-                position = card.card.libOrder,
-                file = null,
-                card = card.card,
-                tag = card.tags,
-                id = card.card.id
-            )
-
-            else -> illegalDecoyCallException("unknown class")
-        }
-    }
+//    private fun convertCardToLibraryRV(card: CardAndTags): LibraryRV {
+//        when (card.card.cardStatus) {
+//            CardStatus.STRING -> return LibraryRV(
+//                type = LibRVViewType.StringCard,
+//                position = card.card.libOrder,
+//                file = null,
+//                card = card.card,
+//                tag = card.tags,
+//                id = card.card.id
+//            )
+//            CardStatus.CHOICE -> return LibraryRV(
+//                type = LibRVViewType.ChoiceCard,
+//                position = card.card.libOrder,
+//                file = null,
+//                card = card.card,
+//                tag = card.tags,
+//                id = card.card.id
+//            )
+//
+//            CardStatus.MARKER -> return LibraryRV(
+//                type = LibRVViewType.MarkerCard,
+//                position = card.card.libOrder,
+//                file = null,
+//                card = card.card,
+//                tag = card.tags,
+//                id = card.card.id
+//            )
+//
+//            else -> illegalDecoyCallException("unknown class")
+//        }
+//    }
 //    selected Items
     private val _selectedFiles = MutableLiveData<MutableList<File>>()
     private fun setSelectedFiles(list:MutableList<File>){

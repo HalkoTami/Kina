@@ -90,7 +90,7 @@ interface LibraryDao {
 
 
     @Query(
-        "Select * from tbl_card where not card_deleted and belongingFlashCardCoverId in ( " +
+        "Select * from tbl_card where not deleted and belongingFlashCardCoverId in ( " +
             "with generation AS (" +
             " select * from tbl_file where fileId in(:fileIdList)  " +
             "UNION ALL" +
@@ -99,7 +99,7 @@ interface LibraryDao {
     fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
 
     @Query(
-        "Select id from tbl_card where not card_deleted and belongingFlashCardCoverId in ( " +
+        "Select id from tbl_card where not deleted and belongingFlashCardCoverId in ( " +
                 "with generation AS (" +
                 " select * from tbl_file where fileId in(:fileIdList)  " +
                 "UNION ALL" +
@@ -161,25 +161,25 @@ interface LibraryDao {
 //        " and a.parentFileId = :fileId  ")
 
 
-    @Query("select count(id) from tbl_card where not card_deleted AND belongingFlashCardCoverId = :belongingFileId")
+    @Query("select count(id) from tbl_card where not deleted AND belongingFlashCardCoverId = :belongingFileId")
     fun getCardAmountByFileId(belongingFileId: Int):Flow<Int>
 
 //    Order by library_order asc
     @Query("select * FROM tbl_card " +
-            "where not card_deleted AND belongingFlashCardCoverId is :belongingFileId "
+            "where not deleted AND belongingFlashCardCoverId is :belongingFileId "
     )
     fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<Card>>
 
     @Query("select * FROM tbl_card " +
-            "where not card_deleted AND belongingFlashCardCoverId in(:fileIdList) "
+            "where not deleted AND belongingFlashCardCoverId in(:fileIdList) "
     )
     fun getCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
 
-    @Query("select * from tbl_card where NOT card_deleted AND " +
-            "belonging_frontTitle OR " +
-            "belonging_backTitle OR " +
-            "belonging_frontText OR " +
-            "belonging_backText " +
+    @Query("select * from tbl_card where NOT deleted AND " +
+            "frontTitle OR " +
+            "frontText OR " +
+            "backTitle OR " +
+            "backText " +
             "LIKE '%' || :search || '%' ")
     fun searchCardsByWords(search:String):Flow<List<Card>>
 

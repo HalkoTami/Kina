@@ -20,7 +20,7 @@ class AutoFlip(
 class FragmentTree(
     var startFragment:StartFragment = StartFragment.Library,
     var libraryFragment:LibraryFragment = LibraryFragment.Home,
-    var ankiFragment: AnkiFragment = AnkiFragment.AnkiBox,
+    var ankiFragment: AnkiFragments = AnkiFragments.AnkiBox,
     var flipFragment: FlipFragment = FlipFragment.StringLook
 )
 enum class StartFragment{
@@ -29,9 +29,12 @@ enum class StartFragment{
 enum class LibraryFragment{
     ChooseFileMoveTo,FlashCardCover,Folder,Home,InBox
 }
-enum class AnkiFragment{
+enum class AnkiFragments{
     AnkiBox,Flip
 }
 enum class FlipFragment{
     StringLook,StringType
+}
+enum class FlipAction{
+    LookStringFront,LookStringBack,TypeAnswerString,CheckAnswerString
 }

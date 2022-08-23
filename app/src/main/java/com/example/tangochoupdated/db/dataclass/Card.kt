@@ -15,18 +15,19 @@ data class Card(
     @ColumnInfo
     var belongingFlashCardCoverId:Int? = null,
 
-    @Embedded(prefix = "belonging_" )
+    @Embedded
     var stringData: StringData?,
-    @Embedded(prefix = "belonging_")
+    @Embedded
     val markerData: MarkerPreviewData?,
-    @Embedded(prefix = "belonging_")
+    @Embedded
     val quizData: QuizData?,
-    @ColumnInfo(name = "card_type")
+    @ColumnInfo
     var cardStatus: CardStatus,
-    @ColumnInfo(name = "card_deleted")
+    @ColumnInfo
     var deleted:Boolean = false,
     var remembered: Boolean = false,
-    @ColumnInfo(name= "library_order")
+    var flag:Boolean = false,
+    @ColumnInfo
     var libOrder: Int = 0,
     var colorStatus: ColorStatus = ColorStatus.GRAY,
     var timesFlipped:Int = 0
@@ -58,21 +59,6 @@ data class MarkerPreviewData(
 
 
 @Entity(
-    indices = [Index("cardId", unique = true),
-              Index("tagId", unique = true)],
-
-    foreignKeys = [
-        ForeignKey(
-            entity = File::class,
-            parentColumns = arrayOf("fileId"),
-            childColumns = arrayOf("tagId")
-        ),
-        ForeignKey(
-            entity = Card::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("cardId")
-        )
-    ]
 )
 data class CardAndTagXRef(
     @PrimaryKey
@@ -81,22 +67,13 @@ data class CardAndTagXRef(
 )
 
 
-class CardAndTags (
-    @Embedded
-    val card: Card,
-
-    @Relation(
-        entity = File::class,
-        parentColumn = "id",
-        entityColumn = "fileId",
-        associateBy = Junction(
-            value = CardAndTagXRef::class,
-            parentColumn = "cardId",
-            entityColumn = "tagId"
-        )
-    )
-    val tags: List<File>
-)
+//class CardAndTags (
+//    @Embedded
+//    val card: Card,
+//
+//    @Embedded
+//    val tags: List<File>
+//)
 
 
 

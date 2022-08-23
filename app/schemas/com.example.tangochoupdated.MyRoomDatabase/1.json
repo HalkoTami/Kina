@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "470ca483c6067d280c3645ce403f7eb5",
+    "identityHash": "9a3e16dc4a5218adc5c41f7cb0818f5d",
     "entities": [
       {
         "tableName": "tbl_card",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `belongingFlashCardCoverId` INTEGER, `card_type` INTEGER NOT NULL, `card_deleted` INTEGER NOT NULL, `remembered` INTEGER NOT NULL, `library_order` INTEGER NOT NULL, `colorStatus` INTEGER NOT NULL, `timesFlipped` INTEGER NOT NULL, `belonging_frontTitle` TEXT, `belonging_backTitle` TEXT, `belonging_frontText` TEXT, `belonging_backText` TEXT, `belonging_markerTextPreview` TEXT, `belonging_answerChoiceId` INTEGER, `belonging_answerPreview` TEXT, `belonging_question` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `belongingFlashCardCoverId` INTEGER, `cardStatus` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `remembered` INTEGER NOT NULL, `flag` INTEGER NOT NULL, `libOrder` INTEGER NOT NULL, `colorStatus` INTEGER NOT NULL, `timesFlipped` INTEGER NOT NULL, `frontTitle` TEXT, `backTitle` TEXT, `frontText` TEXT, `backText` TEXT, `markerTextPreview` TEXT, `answerChoiceId` INTEGER, `answerPreview` TEXT, `question` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -22,13 +22,13 @@
           },
           {
             "fieldPath": "cardStatus",
-            "columnName": "card_type",
+            "columnName": "cardStatus",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "deleted",
-            "columnName": "card_deleted",
+            "columnName": "deleted",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -39,8 +39,14 @@
             "notNull": true
           },
           {
+            "fieldPath": "flag",
+            "columnName": "flag",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "libOrder",
-            "columnName": "library_order",
+            "columnName": "libOrder",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -58,49 +64,49 @@
           },
           {
             "fieldPath": "stringData.frontTitle",
-            "columnName": "belonging_frontTitle",
+            "columnName": "frontTitle",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "stringData.backTitle",
-            "columnName": "belonging_backTitle",
+            "columnName": "backTitle",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "stringData.frontText",
-            "columnName": "belonging_frontText",
+            "columnName": "frontText",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "stringData.backText",
-            "columnName": "belonging_backText",
+            "columnName": "backText",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "markerData.markerTextPreview",
-            "columnName": "belonging_markerTextPreview",
+            "columnName": "markerTextPreview",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "quizData.answerChoiceId",
-            "columnName": "belonging_answerChoiceId",
+            "columnName": "answerChoiceId",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
             "fieldPath": "quizData.answerPreview",
-            "columnName": "belonging_answerPreview",
+            "columnName": "answerPreview",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "quizData.question",
-            "columnName": "belonging_question",
+            "columnName": "question",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -440,7 +446,7 @@
       },
       {
         "tableName": "CardAndTagXRef",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cardId` INTEGER NOT NULL, `tagId` INTEGER NOT NULL, PRIMARY KEY(`cardId`), FOREIGN KEY(`tagId`) REFERENCES `tbl_file`(`fileId`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`cardId`) REFERENCES `tbl_card`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cardId` INTEGER NOT NULL, `tagId` INTEGER NOT NULL, PRIMARY KEY(`cardId`))",
         "fields": [
           {
             "fieldPath": "cardId",
@@ -461,50 +467,8 @@
           ],
           "autoGenerate": false
         },
-        "indices": [
-          {
-            "name": "index_CardAndTagXRef_cardId",
-            "unique": true,
-            "columnNames": [
-              "cardId"
-            ],
-            "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_CardAndTagXRef_cardId` ON `${TABLE_NAME}` (`cardId`)"
-          },
-          {
-            "name": "index_CardAndTagXRef_tagId",
-            "unique": true,
-            "columnNames": [
-              "tagId"
-            ],
-            "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_CardAndTagXRef_tagId` ON `${TABLE_NAME}` (`tagId`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "tbl_file",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "tagId"
-            ],
-            "referencedColumns": [
-              "fileId"
-            ]
-          },
-          {
-            "table": "tbl_card",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "cardId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "indices": [],
+        "foreignKeys": []
       },
       {
         "tableName": "file_xref",
@@ -542,7 +506,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '470ca483c6067d280c3645ce403f7eb5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9a3e16dc4a5218adc5c41f7cb0818f5d')"
     ]
   }
 }

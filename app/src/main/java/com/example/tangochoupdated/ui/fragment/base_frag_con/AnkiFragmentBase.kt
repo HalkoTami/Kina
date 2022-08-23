@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFragBaseBinding
 import com.example.tangochoupdated.db.enumclass.AnkiFilter
+import com.example.tangochoupdated.db.enumclass.FlipAction
 import com.example.tangochoupdated.db.enumclass.FragmentTree
 import com.example.tangochoupdated.db.enumclass.StartFragment
 import com.example.tangochoupdated.ui.view_set_up.AnkiBaseFragViewSetUp
@@ -49,7 +50,7 @@ class AnkiFragmentBase  : Fragment() {
             setActiveFragment(activeFragment)
         }
 
-        val viewSetUp = AnkiBaseFragViewSetUp(ankiFragViewModel, binding,requireActivity(),ankiSettingVM)
+        val viewSetUp = AnkiBaseFragViewSetUp(ankiFragViewModel, binding,requireActivity(),ankiSettingVM,myNavCon)
         viewSetUp.addCL()
         ankiSettingVM.start()
         ankiFragViewModel.apply {
@@ -62,6 +63,14 @@ class AnkiFragmentBase  : Fragment() {
                 }
                 arrayOf(binding.frameLayAnkiSetting,binding.viewAnkiSettingBG).onEach {
                    it.visibility = if(settingVisible) View.VISIBLE else View.GONE
+                }
+            }
+            ankiSettingVM.typeAnswer.observe(viewLifecycleOwner){
+                if(it){
+                    if(flipBaseViewModel.checkFront())
+                        flipBaseViewModel.setFlipAction(FlipAction.TypeAnswerString)
+                    else if (flipBaseViewModel.checkBack())
+                        flipBaseViewModel.setFlipAction(FlipAction.CheckAnswerString)
                 }
             }
 

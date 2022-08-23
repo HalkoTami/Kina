@@ -6,9 +6,11 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiHomeFragPopupAnkiSettingBaseBinding
 import com.example.tangochoupdated.db.enumclass.AnkiFilter
+import com.example.tangochoupdated.db.enumclass.AnkiFragments
 import com.example.tangochoupdated.db.enumclass.AnkiOrder
 import com.example.tangochoupdated.db.enumclass.AutoFlip
 import com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiFragFlipBaseFragmentDirections
@@ -19,7 +21,8 @@ import org.w3c.dom.Text
 class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBinding,
                                  val settingVM: AnkiSettingPopUpViewModel,
                                  val baseViewModel:AnkiFragBaseViewModel,
-                                 val context: Context ): View.OnClickListener{
+                                 val context: Context ,
+                                 val navCon:NavController): View.OnClickListener{
 
     override fun onClick(v: View?) {
         fun changeSelectedStateAndVisibility(stateView:View,visibilityChangeView:View){
@@ -78,7 +81,11 @@ class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBi
                             imvCloseSetting                             ->  baseViewModel.setSettingVisible(false)
                             btnStartAnki                                -> {
                                 baseViewModel.setSettingVisible(false)
-                                baseViewModel.setAnkiFragChangeAction(AnkiFragFlipBaseFragmentDirections.toFlipFrag())
+                                when(baseViewModel.returnActiveFragment()){
+                                    AnkiFragments.AnkiBox -> navCon.navigate(AnkiFragFlipBaseFragmentDirections.toFlipFrag())
+                                    AnkiFragments.Flip -> return
+                                }
+
                             }
                             else -> {
                                 val filterChange = returnAnkiFilter() ?:AnkiFilter()

@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiFlipFragLookStringFragBinding
+import com.example.tangochoupdated.db.enumclass.FlipAction
 import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
@@ -42,9 +43,18 @@ class FlipStringFragment  : Fragment() {
             flipBaseViewModel.apply {
                 parentCard.observe(viewLifecycleOwner){
                     val data = it.stringData
-                    txvTitle.text = if(returnFront()) data?.frontTitle else data?.backTitle
-                    txvContent.text = if(returnFront()) data?.frontText else data?.backText
-                    Toast.makeText(requireActivity(),"called",Toast.LENGTH_SHORT).show()
+
+                    when(returnFlipAction()) {
+                        FlipAction.LookStringFront ->{
+                            txvTitle.text = data?.frontTitle ?:"表"
+                            txvContent.text = data?.frontText
+                        }
+                        FlipAction.LookStringBack -> {
+                            txvTitle.text = data?.backTitle ?:"裏"
+                            txvContent.text = data?.backText
+                        }
+                        else -> txvContent.text = "hoko"
+                    }
 
                 }
             }
