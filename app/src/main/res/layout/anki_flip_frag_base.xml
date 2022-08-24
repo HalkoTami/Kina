@@ -105,7 +105,31 @@
         app:layout_constraintEnd_toEndOf="@id/fragConView_flip"
         android:layout_margin="20dp"/>
 
+    <TextView
+        android:id="@+id/txv_countDown"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
+        android:text="13"
+        android:gravity="center"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintWidth_percent="0.2"
+        android:layout_margin="10dp"
 
+        app:layout_constraintBottom_toTopOf="@id/imv_flip_progress"
+
+        app:layout_constraintStart_toStartOf="parent"
+        />
+    <ImageView
+        android:id="@+id/btn_stop_count"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.08"
+
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/txv_countDown"
+        app:layout_constraintTop_toTopOf="@id/txv_countDown"
+        app:layout_constraintStart_toEndOf="@id/txv_countDown"
+        android:src="@drawable/selector_stop_count"/>
 
 
 

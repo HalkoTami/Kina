@@ -38,7 +38,8 @@ class AnkiFlipFragViewSetUp(private val bindingBase:AnkiFlipFragBaseBinding,
                     btnRemembered,
                     btnFlipNext,
                     btnFlipPrevious,
-                    btnAddCard).onEach {
+                    btnAddCard,
+                    btnStopCount).onEach {
                         it.setOnClickListener(FlipBaseFragCL(bindingBase,viewModel,ankiBaseViewModel, fragmentActivity,flipNavCon, settingPopUpViewModel))
                 }
             }

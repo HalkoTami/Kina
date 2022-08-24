@@ -1,5 +1,7 @@
 package com.example.tangochoupdated.db.enumclass
 
+import android.animation.ValueAnimator
+import android.view.animation.Animation
 import com.example.tangochoupdated.db.dataclass.Card
 
 enum class Mode{
@@ -44,9 +46,18 @@ enum class FlipAction{
 enum class Count{
     Start,End
 }
+enum class AnimationAttributes{
+    StartAnim,EndAnim,Pause,Resume
+}
 class CountFlip(
     var count:Count? = null,
     var countIfLongerThan:Int = 10,
     var flipSaved:Boolean = false,
     var countingCard:Card
+)
+
+class AnimationController(
+    val animation:ValueAnimator,
+    var attributes: AnimationAttributes? = null
+
 )

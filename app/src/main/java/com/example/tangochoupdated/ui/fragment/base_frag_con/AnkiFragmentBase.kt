@@ -65,14 +65,14 @@ class AnkiFragmentBase  : Fragment() {
                    it.visibility = if(settingVisible) View.VISIBLE else View.GONE
                 }
             }
-            ankiSettingVM.typeAnswer.observe(viewLifecycleOwner){
-                if(it){
-                    if(flipBaseViewModel.checkFront())
-                        flipBaseViewModel.setFlipAction(FlipAction.TypeAnswerString)
-                    else if (flipBaseViewModel.checkBack())
-                        flipBaseViewModel.setFlipAction(FlipAction.CheckAnswerString)
-                }
-            }
+//            ankiSettingVM.typeAnswer.observe(viewLifecycleOwner){
+//                if(it){
+//                    if(flipBaseViewModel.checkFront())
+//                        flipBaseViewModel.setFlipAction(FlipAction.TypeAnswerString)
+//                    else if (flipBaseViewModel.checkBack())
+//                        flipBaseViewModel.setFlipAction(FlipAction.CheckAnswerString)
+//                }
+//            }
 
 
         }

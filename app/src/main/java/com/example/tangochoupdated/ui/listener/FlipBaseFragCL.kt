@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
+import com.example.tangochoupdated.db.enumclass.AnimationAttributes
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
@@ -20,7 +21,7 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                      val ankiBaseViewModel:AnkiFragBaseViewModel,
                      val ankiFlipFrag:FragmentActivity,
                      val flipNavCon:NavController,
-                     val settingPopUpViewModel: AnkiSettingPopUpViewModel): View.OnClickListener {
+                     val settingPopUpViewModel: AnkiSettingPopUpViewModel, ): View.OnClickListener {
 
     override fun onClick(v: View?) {
         binding.apply {
@@ -49,6 +50,10 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                         }
                     }
                     btnAddCard -> TODO()
+                    btnStopCount -> {
+                        v.isSelected = !v.isSelected
+                        if(v.isSelected) flipViewModel.controlCountDownAnim(AnimationAttributes.Pause) else flipViewModel.controlCountDownAnim(AnimationAttributes.Resume)
+                    }
                 }
             }
         }

@@ -1,14 +1,22 @@
 package com.example.tangochoupdated.ui.fragment.anki_frag_con
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnPause
+import androidx.core.animation.doOnStart
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -98,6 +106,40 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                 binding.btnSetFlag.isSelected = it.flag
                 binding.topBinding.txvCardPosition.text = "id:${it.id} position:${returnParentPosition()+1}/ size:${returnFlipItems().size}"
             }
+            fun getCountDownAnim(sec:Int):ValueAnimator{
+                val animation = ValueAnimator.ofInt(sec)
+                animation.apply {
+                    duration = (sec * 1000).toLong()
+                    doOnStart{
+                        binding.txvCountDown.visibility = View.VISIBLE
+                        binding.btnStopCount.isSelected = false
+                        binding.btnStopCount.visibility = View.VISIBLE
+                    }
+                    doOnPause {
+                        binding.btnStopCount.isSelected = true
+                    }
+                    addUpdateListener {
+                        val a =(it.duration - it.currentPlayTime)/1000
+                        binding.txvCountDown.text = a.toString()
+                    }
+                    doOnEnd {
+                        navCon.navigate(flipNext(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer()) ?:return@doOnEnd)
+                    }
+
+                }
+                return animation
+            }
+            countDownAnim.observe(viewLifecycleOwner){
+                when(it.attributes){
+                    AnimationAttributes.StartAnim -> it.animation.start()
+                    AnimationAttributes.EndAnim -> it.animation.end()
+                    AnimationAttributes.Pause -> it.animation.pause()
+                    AnimationAttributes.Resume -> it.animation.resume()
+                    else ->  return@observe
+                }
+
+            }
+
             flipAction.observe(viewLifecycleOwner){
                 viewSetUp.applyProgress(returnParentPosition(),
                     returnFlipItems().size,
@@ -105,8 +147,24 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                     settingVM.returnReverseCardSide())
                 if(settingVM.returnAutoFlip().active){
                     val sec = settingVM.returnAutoFlip().seconds
-                    Thread.sleep(sec.toLong()*1000)
-                    flipNext(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer())
+                    if(returnCountDownAnim() == null){
+                        setCountDownAnim(AnimationController(getCountDownAnim(sec)))
+                    }
+                    controlCountDownAnim(AnimationAttributes.StartAnim)
+
+                }
+            }
+            settingVM.autoFlip.observe(viewLifecycleOwner){
+                if(it.active){
+                    flipBaseViewModel.setCountDownAnim(AnimationController(getCountDownAnim(it.seconds),AnimationAttributes.StartAnim))
+
+                } else {
+                    flipBaseViewModel.apply {
+                        if(returnCountDownAnim()!=null){
+                            controlCountDownAnim(AnimationAttributes.EndAnim)
+                        }
+
+                    }
                 }
             }
 
@@ -119,6 +177,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
         return root
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(

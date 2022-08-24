@@ -6,6 +6,8 @@ import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.enumclass.AnimationAttributes
+import com.example.tangochoupdated.db.enumclass.AnimationController
 import com.example.tangochoupdated.db.enumclass.CountFlip
 import com.example.tangochoupdated.db.enumclass.FlipAction
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringCheckAnswerFragmentDirections
@@ -38,13 +40,20 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     val flipAction :LiveData<FlipAction> = _flipAction
 
 
-    val _parentCardId = MutableLiveData<Int>()
-    fun setParentCardId(int: Int){
-        _parentCardId.value = int
+    private val _countDownAnim = MutableLiveData<AnimationController>()
+    fun setCountDownAnim(animationController: AnimationController){
+        _countDownAnim.value = animationController
     }
-    fun returnParentCardId():Int?{
-        return _parentCardId.value
+    fun returnCountDownAnim():AnimationController?{
+        return _countDownAnim.value
     }
+    val countDownAnim:LiveData<AnimationController> = _countDownAnim
+    fun controlCountDownAnim(attributes: AnimationAttributes){
+        val a = returnCountDownAnim()!!
+        a.attributes = attributes
+        setCountDownAnim(a)
+    }
+
     fun getCardFromDB(cardId:Int) :LiveData<Card> = repository.getCardByCardId(cardId).asLiveData()
     val _parentCard = MutableLiveData<Card>()
     fun setParentCard(card: Card){
