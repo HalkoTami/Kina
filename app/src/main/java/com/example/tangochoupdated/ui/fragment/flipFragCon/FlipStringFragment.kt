@@ -11,9 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiFlipFragLookStringFragBinding
+import com.example.tangochoupdated.db.enumclass.Count
+import com.example.tangochoupdated.db.enumclass.CountFlip
 import com.example.tangochoupdated.db.enumclass.FlipAction
 import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
@@ -25,6 +28,7 @@ class FlipStringFragment  : Fragment() {
 
     private var _binding: AnkiFlipFragLookStringFragBinding? = null
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
+    private val args: FlipStringFragmentArgs by navArgs()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -38,22 +42,29 @@ class FlipStringFragment  : Fragment() {
 
         _binding =  AnkiFlipFragLookStringFragBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        val cardId = args.cardId
+        val front = args.front
 
         binding.apply {
             flipBaseViewModel.apply {
-                parentCard.observe(viewLifecycleOwner){
+                getCardFromDB(args.cardId).observe(viewLifecycleOwner){
+                    setParentCard(it)
                     val data = it.stringData
-
-                    when(returnFlipAction()) {
-                        FlipAction.LookStringFront ->{
-                            txvTitle.text = data?.frontTitle ?:"表"
+                    Toast.makeText(requireActivity(),"${it.timesFlipped}",Toast.LENGTH_SHORT).show()
+                    when(front) {
+                        true ->{
+                            txvTitle.text =  "表" + it.id +  it.timesFlipped.toString()
+//                                data?.frontTitle ?:"表"
                             txvContent.text = data?.frontText
+                            setCountFlip(CountFlip(count = Count.Start, countingCard = it))
+                            setFlipAction(FlipAction.LookStringFront)
                         }
-                        FlipAction.LookStringBack -> {
-                            txvTitle.text = data?.backTitle ?:"裏"
+                        false  -> {
+                            txvTitle.text ="裏" + it.id + it.timesFlipped.toString()
+//                                data?.backTitle ?:"裏"
                             txvContent.text = data?.backText
+                            setFlipAction(FlipAction.LookStringBack)
                         }
-                        else -> txvContent.text = "hoko"
                     }
 
                 }
@@ -84,6 +95,18 @@ class FlipStringFragment  : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        flipBaseViewModel.apply {
+
+            val a = returnCountFlip()
+            if(a!=null){
+                if(returnFlipAction()==FlipAction.LookStringBack){
+                    a.count = Count.End
+                    setCountFlip(a)
+                }
+                Toast.makeText(requireActivity(),"${a.count}",Toast.LENGTH_SHORT).show()
+            }
+
+        }
         _binding = null
     }
 }

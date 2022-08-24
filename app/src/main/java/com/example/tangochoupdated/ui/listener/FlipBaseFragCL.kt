@@ -3,6 +3,7 @@ package com.example.tangochoupdated.ui.listener
 import android.content.Context
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.NavController
@@ -28,7 +29,10 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                     imvBack -> ankiFlipFrag.onBackPressed()
                     imvAnkiSetting -> ankiBaseViewModel.setSettingVisible(true)
                     imvAnkiSetting -> TODO()
-                    btnSetFlag -> TODO()
+                    btnSetFlag -> {
+                        v.isSelected = v.isSelected
+                        flipViewModel.changeFlagStatus()
+                    }
                     btnRemembered -> {
                         v.isSelected = !v.isSelected
                         flipViewModel.changeRememberStatus()

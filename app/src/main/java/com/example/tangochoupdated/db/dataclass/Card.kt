@@ -58,7 +58,7 @@ data class MarkerPreviewData(
 )
 
 
-@Entity(
+@Entity(tableName = "tbl_card_file_x_ref"
 )
 data class CardAndTagXRef(
     @PrimaryKey

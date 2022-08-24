@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiFlipFragTypeAnswerStringFragBinding
@@ -22,7 +23,7 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 class FlipStringTypeAnswerFragment  : Fragment() {
 
     private var _binding: AnkiFlipFragTypeAnswerStringFragBinding? = null
-
+    private val args: FlipStringTypeAnswerFragmentArgs by navArgs()
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
@@ -37,10 +38,14 @@ class FlipStringTypeAnswerFragment  : Fragment() {
 
         _binding =  AnkiFlipFragTypeAnswerStringFragBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        flipBaseViewModel.setFlipAction(FlipAction.TypeAnswerString)
-        flipBaseViewModel.parentCard.observe(viewLifecycleOwner){
-            binding.txvFlipTitle.text = it.id.toString()
+        flipBaseViewModel.apply {
+            setFlipAction(FlipAction.TypeAnswerString)
+            flipBaseViewModel.getCardFromDB(args.cardId).observe(viewLifecycleOwner){
+                setParentCard(it)
+                binding.txvFlipTitle.text = it.id.toString()
+            }
         }
+
 
 
 

@@ -10,11 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiFlipFragCheckAnswerStringFragBinding
 import com.example.tangochoupdated.databinding.AnkiFlipFragTypeAnswerStringFragBinding
 import com.example.tangochoupdated.db.enumclass.FlipAction
+import com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragFlashCardCoverArgs
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
@@ -23,6 +25,7 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 class FlipStringCheckAnswerFragment  : Fragment() {
 
     private var _binding: AnkiFlipFragCheckAnswerStringFragBinding? = null
+    private val args: FlipStringCheckAnswerFragmentArgs by navArgs()
 
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
 
@@ -38,10 +41,14 @@ class FlipStringCheckAnswerFragment  : Fragment() {
 
         _binding =  AnkiFlipFragCheckAnswerStringFragBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        flipBaseViewModel.setFlipAction(FlipAction.CheckAnswerString)
-        flipBaseViewModel.parentCard.observe(viewLifecycleOwner){
-           binding.txvFlipTitle.text =   it.stringData?.frontText
+        flipBaseViewModel.apply {
+            setFlipAction(FlipAction.CheckAnswerString)
+            flipBaseViewModel.getCardFromDB(args.cardId).observe(viewLifecycleOwner){
+                setParentCard(it)
+                binding.txvFlipTitle.text =   it.stringData?.frontText
+            }
         }
+
 
 
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9a3e16dc4a5218adc5c41f7cb0818f5d",
+    "identityHash": "4c5fe6656b351928dbd8e1013fca8bcf",
     "entities": [
       {
         "tableName": "tbl_card",
@@ -445,7 +445,7 @@
         "foreignKeys": []
       },
       {
-        "tableName": "CardAndTagXRef",
+        "tableName": "tbl_card_file_x_ref",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cardId` INTEGER NOT NULL, `tagId` INTEGER NOT NULL, PRIMARY KEY(`cardId`))",
         "fields": [
           {
@@ -506,7 +506,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9a3e16dc4a5218adc5c41f7cb0818f5d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4c5fe6656b351928dbd8e1013fca8bcf')"
     ]
   }
 }

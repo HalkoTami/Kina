@@ -6,18 +6,33 @@
     app:startDestination="@id/flip_string_look_frag">
     <fragment android:id="@+id/flip_string_look_frag"
         android:name="com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragment"
-        tools:layout="@layout/anki_flip_frag_look_string_frag"/>
+        tools:layout="@layout/anki_flip_frag_look_string_frag">
+        <argument android:name="front"
+            app:argType="boolean"
+            android:defaultValue="false"/>
+        <argument android:name="cardId"
+            app:argType="integer"
+            android:defaultValue="1"/>
+    </fragment>
     <fragment android:id="@+id/flip_string_type_answer_frag"
         android:name="com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragment"
         tools:layout="@layout/anki_flip_frag_type_answer_string_frag">
+        <argument android:name="answer_is_back"
+            app:argType="boolean"/>
+        <argument android:name="cardId"
+            app:argType="integer" />
 
     </fragment>
     <fragment android:id="@+id/flip_string_check_answer_frag"
         android:name="com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringCheckAnswerFragment"
         tools:layout="@layout/anki_flip_frag_check_answer_string_frag">
+        <argument android:name="answer_is_back"
+            app:argType="boolean"/>
         <argument
             android:name="typedAnswer"
             app:argType="string" />
+        <argument android:name="cardId"
+            app:argType="integer" />
 
     </fragment>
 

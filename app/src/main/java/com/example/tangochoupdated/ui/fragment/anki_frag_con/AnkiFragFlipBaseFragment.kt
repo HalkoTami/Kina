@@ -18,10 +18,8 @@ import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
-import com.example.tangochoupdated.db.enumclass.AnkiFragments
-import com.example.tangochoupdated.db.enumclass.CardStatus
-import com.example.tangochoupdated.db.enumclass.FlipAction
+import com.example.tangochoupdated.db.enumclass.*
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragment
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragmentDirections
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
@@ -64,6 +62,8 @@ class AnkiFragFlipBaseFragment  : Fragment() {
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         flipBaseViewModel.apply {
             setParentPosition(0)
+//            val action = FlipStringFragmentDirections.toFlipString()
+//            navCon.navigate(action)
             setFront(
                 !settingVM.returnReverseCardSide()
             )
@@ -72,35 +72,42 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                     setAnkiFlipItems(it)
                 }
             }
-            parentPosition.observe(viewLifecycleOwner){ parentPosition ->
-                val newCardId = if(returnFlipItems().size > parentPosition) returnFlipItems()[parentPosition].id else return@observe
-                getCardFromDB(newCardId).observe(viewLifecycleOwner){
-                    setParentCard(it)
-                }
-                binding.topBinding.txvCardPosition.text = "  ${returnParentPosition()+1}/${returnFlipItems().size}"
-            }
-            var time  = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                LocalDateTime.now()
-            } else null
-            var card:Card? = null
 
-            parentCard.observe(viewLifecycleOwner){
+
+
+
+            var start :LocalDateTime? = null
+            countFlip.observe(viewLifecycleOwner){
+                if(it.flipSaved) Toast.makeText(requireActivity(),"flip saved",Toast.LENGTH_SHORT).show()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val opened = LocalDateTime.now()
-                    val a = Duration.between(time,LocalDateTime.now())
-                    a.seconds
-                    time = opened
-                    Toast.makeText(requireActivity(),"${card?.stringData?.frontText } ${a.seconds}",Toast.LENGTH_SHORT).show()
+                    when(it.count) {
+                        Count.Start -> start = LocalDateTime.now()
+                        Count.End -> {
+                            val duration = Duration.between(start ?:return@observe,LocalDateTime.now()).seconds
+                            if(duration>5){
+                                updateFlipped(it.countingCard)
+                                Toast.makeText(requireActivity(),"flip saved",Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        null -> return@observe
+                    }
                 }
+            }
+            parentCard.observe(viewLifecycleOwner){
                 binding.btnRemembered.isSelected =  it.remembered ?:false
-                card = it
-
+                binding.btnSetFlag.isSelected = it.flag
+                binding.topBinding.txvCardPosition.text = "id:${it.id} position:${returnParentPosition()+1}/ size:${returnFlipItems().size}"
             }
             flipAction.observe(viewLifecycleOwner){
                 viewSetUp.applyProgress(returnParentPosition(),
                     returnFlipItems().size,
                     (it == FlipAction.LookStringFront||it == FlipAction.TypeAnswerString),
                     settingVM.returnReverseCardSide())
+                if(settingVM.returnAutoFlip().active){
+                    val sec = settingVM.returnAutoFlip().seconds
+                    Thread.sleep(sec.toLong()*1000)
+                    flipNext(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer())
+                }
             }
 
 

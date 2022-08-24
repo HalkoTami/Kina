@@ -145,6 +145,13 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
 
 
         }
+    fun updateCardFlippedTime(card:Card){
+        Completable.fromAction { libraryDao.upDateCardFlippedTimes(card.id)
+            libraryDao.upDateAncestorsFlipCount(card.id,card.belongingFlashCardCoverId)
+        }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
+    }
 
 
         suspend fun update(item: Any) {

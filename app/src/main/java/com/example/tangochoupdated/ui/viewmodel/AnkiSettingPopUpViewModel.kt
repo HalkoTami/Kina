@@ -63,8 +63,8 @@ class AnkiSettingPopUpViewModel : ViewModel() {
         _autoFlip.value = autoFlip
     }
     val autoFlip:LiveData<AutoFlip> = _autoFlip
-    fun returnAutoFlip():AutoFlip?{
-        return _autoFlip.value
+    fun returnAutoFlip():AutoFlip{
+        return _autoFlip.value ?:AutoFlip()
     }
 
 

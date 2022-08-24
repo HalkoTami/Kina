@@ -78,6 +78,25 @@ interface LibraryDao {
             "SELECT fileId FROM generation b ) ")
     fun upDateAncestorsFlashCardCoverAmount(fileId: Int)
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("UPDATE tbl_file " +
+            "SET flippedOnceAmount = (select  Count( id  ) from tbl_card where timesFlipped = 1 and belongingFlashCardCoverId = :fileId )" +
+            "and  flippedTwiceAmount = (select  Count( id  ) from tbl_card where timesFlipped = 2 and belongingFlashCardCoverId = :fileId )" +
+            "and flippedThreeTimesAmount = (select  Count( id  ) from tbl_card where timesFlipped = 3 and belongingFlashCardCoverId = :fileId )" +
+            "and flippedFourTimesAmount = (select  Count( id  ) from tbl_card where timesFlipped >= 4 and belongingFlashCardCoverId = :fileId )" +
+            " WHERE fileId in ( WITH  generation AS (" +
+            " select c.* from tbl_file c Inner Join tbl_card_file_x_ref b " +
+            " on b.cardId = :upDatedCardId and b.tagId = c.fileId " +
+            " or c.fileId = :fileId " +
+            "UNION ALL" +
+            " SELECT a.* from tbl_file a " +
+            " Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
+            "SELECT fileId FROM generation b  )")
+    fun upDateAncestorsFlipCount(upDatedCardId:Int,fileId: Int?)
+
+    @Query("UPDATE tbl_card SET timesFlipped = timesFlipped +1   WHERE id = :cardId")
+    fun upDateCardFlippedTimes(cardId: Int)
+
 
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

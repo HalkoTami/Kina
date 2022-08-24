@@ -159,8 +159,8 @@ class LibrarySetUpItems(val libVM: LibraryViewModel){
                     checkMatchTxv.addAll(arrayOf(txvBackTitle,txvFrontTitle,txvBackText,txvBackText))
                 }
                 setUpRVStringCardBinding(binding,item.stringData,item,createCardViewModel,stringCardViewModel)
-                binding.txvFrontTitle.text = item.libOrder.toString()
-                binding.txvBackTitle.text = item.id.toString()
+                binding.txvFrontTitle.text = "order "+ item.libOrder.toString()
+                binding.txvBackTitle.text ="id " + item.id.toString()
                 binding.root
             }
             CardStatus.CHOICE -> TODO()

@@ -1,4 +1,7 @@
 package com.example.tangochoupdated.db.enumclass
+
+import com.example.tangochoupdated.db.dataclass.Card
+
 enum class Mode{
     New, Edit
 }
@@ -38,3 +41,12 @@ enum class FlipFragment{
 enum class FlipAction{
     LookStringFront,LookStringBack,TypeAnswerString,CheckAnswerString
 }
+enum class Count{
+    Start,End
+}
+class CountFlip(
+    var count:Count? = null,
+    var countIfLongerThan:Int = 10,
+    var flipSaved:Boolean = false,
+    var countingCard:Card
+)
