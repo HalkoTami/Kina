@@ -31,7 +31,7 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                     imvAnkiSetting -> ankiBaseViewModel.setSettingVisible(true)
                     imvAnkiSetting -> TODO()
                     btnSetFlag -> {
-                        v.isSelected = v.isSelected
+                        v.isSelected = !v.isSelected
                         flipViewModel.changeFlagStatus()
                     }
                     btnRemembered -> {
@@ -52,7 +52,7 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                     btnAddCard -> TODO()
                     btnStopCount -> {
                         v.isSelected = !v.isSelected
-                        if(v.isSelected) flipViewModel.controlCountDownAnim(AnimationAttributes.Pause) else flipViewModel.controlCountDownAnim(AnimationAttributes.Resume)
+                        if(v.isSelected)flipViewModel.controlCountDownAnim(AnimationAttributes.Pause) else flipViewModel.controlCountDownAnim(AnimationAttributes.Resume)
                     }
                 }
             }

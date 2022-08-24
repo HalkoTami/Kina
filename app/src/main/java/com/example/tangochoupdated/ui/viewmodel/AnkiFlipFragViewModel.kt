@@ -44,14 +44,11 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun setCountDownAnim(animationController: AnimationController){
         _countDownAnim.value = animationController
     }
-    fun returnCountDownAnim():AnimationController?{
-        return _countDownAnim.value
-    }
     val countDownAnim:LiveData<AnimationController> = _countDownAnim
     fun controlCountDownAnim(attributes: AnimationAttributes){
-        val a = returnCountDownAnim()!!
+        val a = AnimationController()
         a.attributes = attributes
-        setCountDownAnim(a)
+        _countDownAnim.value = a
     }
 
     fun getCardFromDB(cardId:Int) :LiveData<Card> = repository.getCardByCardId(cardId).asLiveData()
@@ -246,7 +243,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     fun changeFlagStatus(){
         val change = _parentCard.value ?:return
-        change.flag = change.remembered.not()
+        change.flag = change.flag.not()
         viewModelScope.launch {
             repository.update(change)
         }

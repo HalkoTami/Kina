@@ -12,14 +12,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnPause
 import androidx.core.animation.doOnStart
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
@@ -59,6 +62,15 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
         _binding =  AnkiFlipFragBaseBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+
+
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val frag = childFragmentManager.findFragmentById(binding.fragConViewFlip.id) as NavHostFragment
         val navCon = frag.navController
         val viewSetUp = AnkiFlipFragViewSetUp(binding,flipBaseViewModel,requireActivity(),ankiBaseViewModel,settingVM,navCon)
@@ -106,35 +118,46 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                 binding.btnSetFlag.isSelected = it.flag
                 binding.topBinding.txvCardPosition.text = "id:${it.id} position:${returnParentPosition()+1}/ size:${returnFlipItems().size}"
             }
-            fun getCountDownAnim(sec:Int):ValueAnimator{
+            val textview = binding.txvCountDown
+            fun getCountDownAnim(sec:Int,txv:TextView,btnStop:ImageView,navController: NavController):ValueAnimator{
                 val animation = ValueAnimator.ofInt(sec)
                 animation.apply {
                     duration = (sec * 1000).toLong()
                     doOnStart{
                         binding.txvCountDown.visibility = View.VISIBLE
-                        binding.btnStopCount.isSelected = false
+                        btnStop.isSelected =  false
                         binding.btnStopCount.visibility = View.VISIBLE
                     }
-                    doOnPause {
-                        binding.btnStopCount.isSelected = true
+//                    doOnPause {
+//                        binding.btnStopCount.isSelected = true
+//                    }
+                    doOnCancel {
+                        it.removeAllListeners()
                     }
                     addUpdateListener {
                         val a =(it.duration - it.currentPlayTime)/1000
-                        binding.txvCountDown.text = a.toString()
+                        txv.text = a.toString()
                     }
                     doOnEnd {
-                        navCon.navigate(flipNext(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer()) ?:return@doOnEnd)
+                        navController.navigate(flipNext(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer()) ?:return@doOnEnd)
                     }
 
                 }
                 return animation
             }
+
+            var parentCountAnimation:ValueAnimator? = null
             countDownAnim.observe(viewLifecycleOwner){
                 when(it.attributes){
-                    AnimationAttributes.StartAnim -> it.animation.start()
-                    AnimationAttributes.EndAnim -> it.animation.end()
-                    AnimationAttributes.Pause -> it.animation.pause()
-                    AnimationAttributes.Resume -> it.animation.resume()
+                    AnimationAttributes.StartAnim ->    {
+                        parentCountAnimation?.cancel()
+                        parentCountAnimation = getCountDownAnim(settingVM.returnAutoFlip().seconds,binding.txvCountDown,binding.btnStopCount, navCon)
+                        parentCountAnimation?.start()
+                    }
+                    AnimationAttributes.EndAnim ->      parentCountAnimation?.end()
+                    AnimationAttributes.Pause ->        parentCountAnimation?.pause()
+                    AnimationAttributes.Resume ->       parentCountAnimation?.resume()
+                    AnimationAttributes.Cancel ->       parentCountAnimation?.cancel()
                     else ->  return@observe
                 }
 
@@ -146,22 +169,23 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                     (it == FlipAction.LookStringFront||it == FlipAction.TypeAnswerString),
                     settingVM.returnReverseCardSide())
                 if(settingVM.returnAutoFlip().active){
-                    val sec = settingVM.returnAutoFlip().seconds
-                    if(returnCountDownAnim() == null){
-                        setCountDownAnim(AnimationController(getCountDownAnim(sec)))
-                    }
-                    controlCountDownAnim(AnimationAttributes.StartAnim)
+//                    val sec = settingVM.returnAutoFlip().seconds
+//                    controlCountDownAnim(AnimationAttributes.Cancel)
+                    setCountDownAnim(AnimationController(AnimationAttributes.StartAnim))
 
                 }
             }
             settingVM.autoFlip.observe(viewLifecycleOwner){
                 if(it.active){
-                    flipBaseViewModel.setCountDownAnim(AnimationController(getCountDownAnim(it.seconds),AnimationAttributes.StartAnim))
+                    if(parentCountAnimation == null) {
+                        setCountDownAnim(AnimationController(AnimationAttributes.StartAnim))
+                    }
+
 
                 } else {
                     flipBaseViewModel.apply {
-                        if(returnCountDownAnim()!=null){
-                            controlCountDownAnim(AnimationAttributes.EndAnim)
+                        if(parentCountAnimation!=null){
+                            controlCountDownAnim(AnimationAttributes.Cancel)
                         }
 
                     }
@@ -174,8 +198,6 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
 
 
-
-        return root
     }
 
     override fun onAttach(context: Context) {
@@ -197,6 +219,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         baseViewModel.setBnvVisibility(true)
+        flipBaseViewModel.controlCountDownAnim(AnimationAttributes.EndAnim)
         _binding = null
     }
 }

@@ -47,7 +47,7 @@ enum class Count{
     Start,End
 }
 enum class AnimationAttributes{
-    StartAnim,EndAnim,Pause,Resume
+    StartAnim,EndAnim,Pause,Resume,Cancel
 }
 class CountFlip(
     var count:Count? = null,
@@ -57,7 +57,6 @@ class CountFlip(
 )
 
 class AnimationController(
-    val animation:ValueAnimator,
     var attributes: AnimationAttributes? = null
 
 )

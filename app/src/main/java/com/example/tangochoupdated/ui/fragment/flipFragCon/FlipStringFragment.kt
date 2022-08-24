@@ -45,25 +45,30 @@ class FlipStringFragment  : Fragment() {
         val cardId = args.cardId
         val front = args.front
 
+
         binding.apply {
             flipBaseViewModel.apply {
+                when(front){
+                    true -> {
+                        setFlipAction(FlipAction.LookStringFront)
+                    }
+                    false -> setFlipAction(FlipAction.LookStringBack)
+                }
                 getCardFromDB(args.cardId).observe(viewLifecycleOwner){
                     setParentCard(it)
                     val data = it.stringData
                     Toast.makeText(requireActivity(),"${it.timesFlipped}",Toast.LENGTH_SHORT).show()
                     when(front) {
                         true ->{
-                            txvTitle.text =  "表" + it.id +  it.timesFlipped.toString()
+                            txvTitle.text =  "表 めくった回数 " + it.timesFlipped.toString()
 //                                data?.frontTitle ?:"表"
                             txvContent.text = data?.frontText
                             setCountFlip(CountFlip(count = Count.Start, countingCard = it))
-                            setFlipAction(FlipAction.LookStringFront)
                         }
                         false  -> {
-                            txvTitle.text ="裏" + it.id + it.timesFlipped.toString()
+                            txvTitle.text ="裏  めくった回数 " +it.timesFlipped.toString()
 //                                data?.backTitle ?:"裏"
                             txvContent.text = data?.backText
-                            setFlipAction(FlipAction.LookStringBack)
                         }
                     }
 

@@ -91,7 +91,7 @@
         android:id="@+id/btn_setFlag"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/icon_flag_clickable"
+        android:src="@drawable/selector_flag"
         app:layout_constraintBottom_toBottomOf="@id/btn_remembered"
         app:layout_constraintEnd_toStartOf="@id/btn_remembered"
         app:layout_constraintTop_toTopOf="@id/btn_remembered"

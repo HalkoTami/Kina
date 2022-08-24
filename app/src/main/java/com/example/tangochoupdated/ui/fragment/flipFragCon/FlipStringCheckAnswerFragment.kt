@@ -26,6 +26,7 @@ class FlipStringCheckAnswerFragment  : Fragment() {
 
     private var _binding: AnkiFlipFragCheckAnswerStringFragBinding? = null
     private val args: FlipStringCheckAnswerFragmentArgs by navArgs()
+    private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
 
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
 
@@ -41,6 +42,7 @@ class FlipStringCheckAnswerFragment  : Fragment() {
 
         _binding =  AnkiFlipFragCheckAnswerStringFragBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
         flipBaseViewModel.apply {
             setFlipAction(FlipAction.CheckAnswerString)
             flipBaseViewModel.getCardFromDB(args.cardId).observe(viewLifecycleOwner){
