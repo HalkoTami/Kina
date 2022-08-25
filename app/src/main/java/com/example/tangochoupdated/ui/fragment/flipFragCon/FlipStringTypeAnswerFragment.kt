@@ -46,8 +46,6 @@ class FlipStringTypeAnswerFragment  : Fragment() {
             settingVM.apply {
                 onChildFragmentsStart(FlipFragments.TypeAnswerString,returnReverseCardSide(),returnAutoFlip().active)
             }
-//
-            val bottomMenu = requireActivity().findViewById<LinearLayoutCompat>(R.id.linLay_flip_bottom)
 
 
 
@@ -74,28 +72,6 @@ class FlipStringTypeAnswerFragment  : Fragment() {
 
         val viewSetUp = AnkiTypeAnswerFragViewSetUp(typeAndCheckViewModel)
         val rootView = binding.root
-//        rootView.viewTreeObserver.addOnGlobalLayoutListener(object :
-//            ViewTreeObserver.OnGlobalLayoutListener {
-//            override fun onGlobalLayout() {
-//
-//                val r = Rect()
-//                rootView.getWindowVisibleDisplayFrame(r)
-//                val heightDiff: Int = rootView.rootView.height - (r.bottom - r.top)
-//                if(up){
-//                    binding.root.requestFocus()
-//                    up = false
-//                }
-//                if (heightDiff>500) {
-//                    Toast.makeText(requireActivity(),"up", Toast.LENGTH_SHORT).show()
-//                   up = true
-//                    return
-//                }
-//
-//
-//
-//            }
-//        })
-
         rootView.viewTreeObserver.addOnGlobalLayoutListener(object:KeyboardListener(rootView,){
             override fun onKeyBoardAppear() {
                 super.onKeyBoardAppear()
@@ -114,20 +90,6 @@ class FlipStringTypeAnswerFragment  : Fragment() {
         return root
     }
 
-    fun hideKeyboard(context: Context) {
-        try {
-            (context as Activity).window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-            if (context.currentFocus != null && context.currentFocus!!
-                    .windowToken != null
-            ) {
-                (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-                    context.currentFocus!!.windowToken, 0
-                )
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     fun showSoftKeyboard(activity: Activity) {
 
@@ -150,6 +112,7 @@ class FlipStringTypeAnswerFragment  : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        typeAndCheckViewModel.addAnswer(args.cardId, flipBaseViewModel.returnTypedAnswer())
         _binding = null
     }
 }

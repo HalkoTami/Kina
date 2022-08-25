@@ -18,8 +18,23 @@ class AnkiFlipTypeAndCheckViewModel() : ViewModel() {
         } else return
 
     }
-    fun returnKeyBoardVisible():Boolean{
-        return _keyBoardVisible.value ?:false
-    }
     val keyBoardVisible :LiveData<Boolean> = _keyBoardVisible
+
+    private val _typedAnswers = MutableLiveData<MutableMap<Int,String>>()
+    private fun setTypedAnswers(map:MutableMap<Int,String>){
+        _typedAnswers.value = map
+    }
+    private fun returnTypedAnswers():MutableMap<Int,String>{
+        return _typedAnswers.value ?: mutableMapOf()
+    }
+    fun addAnswer(cardId:Int ,answer:String){
+        val a = returnTypedAnswers()
+        a.put(cardId,answer)
+        setTypedAnswers(a)
+    }
+    fun getAnswer(cardId: Int):String{
+        val b = returnTypedAnswers()
+        return b[cardId] ?:""
+    }
+
 }
