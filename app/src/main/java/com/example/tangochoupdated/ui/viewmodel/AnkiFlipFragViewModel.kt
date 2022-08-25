@@ -1,25 +1,27 @@
 package com.example.tangochoupdated.ui.viewmodel
 
 import androidx.lifecycle.*
-import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.AnimationAttributes
-import com.example.tangochoupdated.db.enumclass.AnimationController
-import com.example.tangochoupdated.db.enumclass.CountFlip
-import com.example.tangochoupdated.db.enumclass.FlipAction
+import com.example.tangochoupdated.db.enumclass.*
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringCheckAnswerFragmentDirections
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
-import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragment
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragmentDirections
 import kotlinx.coroutines.launch
 
 class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
-
+    fun onChildFragmentsStart(flipFragments: FlipFragments,
+                              reverseMode: Boolean,
+                              autoFlip: Boolean){
+        setFlipFragment(flipFragments)
+        changeProgress(reverseMode)
+        if(autoFlip){
+            setCountDownAnim(AnimationAttributes.StartAnim)
+        }
+    }
     private val _countFlip = MutableLiveData<CountFlip>()
     fun setCountFlip(countFlip: CountFlip){
         _countFlip.value = countFlip
@@ -30,26 +32,21 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     val countFlip:LiveData<CountFlip> = _countFlip
 
-    private val _flipAction = MutableLiveData<FlipAction>()
-    fun setFlipAction (flipAction: FlipAction){
-        _flipAction.value = flipAction
+    private val _flipFragment = MutableLiveData<FlipFragments>()
+    fun setFlipFragment (flipAction: FlipFragments){
+        _flipFragment.value = flipAction
     }
-    fun returnFlipAction():FlipAction{
-        return _flipAction.value ?:FlipAction.LookStringFront
+    fun returnFlipFragment():FlipFragments{
+        return _flipFragment.value ?:FlipFragments.LookStringFront
     }
-    val flipAction :LiveData<FlipAction> = _flipAction
+    val flipFragment :LiveData<FlipFragments> = _flipFragment
 
 
-    private val _countDownAnim = MutableLiveData<AnimationController>()
-    fun setCountDownAnim(animationController: AnimationController){
-        _countDownAnim.value = animationController
+    private val _countDownAnim = MutableLiveData<AnimationAttributes>()
+    fun setCountDownAnim(animationAttributes: AnimationAttributes){
+        _countDownAnim.value = animationAttributes
     }
-    val countDownAnim:LiveData<AnimationController> = _countDownAnim
-    fun controlCountDownAnim(attributes: AnimationAttributes){
-        val a = AnimationController()
-        a.attributes = attributes
-        _countDownAnim.value = a
-    }
+    val countDownAnim:LiveData<AnimationAttributes> = _countDownAnim
 
     fun getCardFromDB(cardId:Int) :LiveData<Card> = repository.getCardByCardId(cardId).asLiveData()
     val _parentCard = MutableLiveData<Card>()
@@ -88,10 +85,10 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         _setting.value = viewModel
     }
     fun checkFront():Boolean{
-        return (returnFlipAction() == FlipAction.LookStringFront)||(returnFlipAction() == FlipAction.TypeAnswerString)
+        return (returnFlipFragment() == FlipFragments.LookStringFront)||(returnFlipFragment() == FlipFragments.TypeAnswerString)
     }
     fun checkBack():Boolean{
-        return (returnFlipAction() == FlipAction.LookStringBack)||(returnFlipAction() == FlipAction.CheckAnswerString)
+        return (returnFlipFragment() == FlipFragments.LookStringBack)||(returnFlipFragment() == FlipFragments.CheckAnswerString)
     }
     fun checkChangeToNextCard(reverseMode: Boolean):Boolean{
         return  (reverseMode&&checkFront())||(reverseMode.not()&&checkBack())
@@ -105,6 +102,23 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun checkPositionIsOnEndEdge(reverseMode: Boolean):Boolean{
         return (returnParentPosition() == returnFlipItems().size -1&&checkChangeToNextCard(reverseMode))
     }
+    private val _flipProgress = MutableLiveData<Progress>()
+    fun setProgress(progress: Progress){
+        _flipProgress.value = progress
+    }
+    fun changeProgress(reverseMode: Boolean){
+        val first = when(returnFlipFragment()){
+            FlipFragments.LookStringBack     -> reverseMode
+            FlipFragments.LookStringFront    -> reverseMode.not()
+            FlipFragments.TypeAnswerString   -> true
+            FlipFragments.CheckAnswerString  -> false
+        }
+        val now = if(first) returnParentPosition()*2 -1 else returnParentPosition()*2
+        val all = returnFlipItems().size*2
+        setProgress(Progress(now,all))
+
+    }
+    val flipProgress : LiveData<Progress> = _flipProgress
 
 
     fun flipNext(reverseMode:Boolean,typeAnswer:Boolean):NavDirections?{

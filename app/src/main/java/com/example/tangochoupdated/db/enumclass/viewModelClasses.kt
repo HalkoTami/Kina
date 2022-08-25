@@ -40,7 +40,7 @@ enum class AnkiFragments{
 enum class FlipFragment{
     StringLook,StringType
 }
-enum class FlipAction{
+enum class FlipFragments{
     LookStringFront,LookStringBack,TypeAnswerString,CheckAnswerString
 }
 enum class Count{
@@ -59,4 +59,8 @@ class CountFlip(
 class AnimationController(
     var attributes: AnimationAttributes? = null
 
+)
+class Progress(
+    var now:Int,
+    var all:Int
 )

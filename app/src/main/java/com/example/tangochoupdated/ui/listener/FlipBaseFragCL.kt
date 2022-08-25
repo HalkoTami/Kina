@@ -52,7 +52,7 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                     btnAddCard -> TODO()
                     btnStopCount -> {
                         v.isSelected = !v.isSelected
-                        if(v.isSelected)flipViewModel.controlCountDownAnim(AnimationAttributes.Pause) else flipViewModel.controlCountDownAnim(AnimationAttributes.Resume)
+                        if(v.isSelected)flipViewModel.setCountDownAnim(AnimationAttributes.Pause) else flipViewModel.setCountDownAnim(AnimationAttributes.Resume)
                     }
                 }
             }

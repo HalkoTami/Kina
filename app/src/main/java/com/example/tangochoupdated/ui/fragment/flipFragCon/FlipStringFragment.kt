@@ -13,13 +13,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.R
-import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.AnkiFlipFragLookStringFragBinding
 import com.example.tangochoupdated.db.enumclass.Count
 import com.example.tangochoupdated.db.enumclass.CountFlip
-import com.example.tangochoupdated.db.enumclass.FlipAction
-import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
-import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
+import com.example.tangochoupdated.db.enumclass.FlipFragments
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 
@@ -29,6 +26,7 @@ class FlipStringFragment  : Fragment() {
     private var _binding: AnkiFlipFragLookStringFragBinding? = null
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
     private val args: FlipStringFragmentArgs by navArgs()
+    private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -48,12 +46,13 @@ class FlipStringFragment  : Fragment() {
 
         binding.apply {
             flipBaseViewModel.apply {
-                when(front){
-                    true -> {
-                        setFlipAction(FlipAction.LookStringFront)
-                    }
-                    false -> setFlipAction(FlipAction.LookStringBack)
+                settingVM.apply {
+                    onChildFragmentsStart(when(front){
+                        true -> FlipFragments.LookStringFront
+                        false -> FlipFragments.LookStringBack
+                    },returnReverseCardSide(),returnAutoFlip().active)
                 }
+
                 getCardFromDB(args.cardId).observe(viewLifecycleOwner){
                     setParentCard(it)
                     val data = it.stringData
@@ -104,7 +103,7 @@ class FlipStringFragment  : Fragment() {
 
             val a = returnCountFlip()
             if(a!=null){
-                if(returnFlipAction()==FlipAction.LookStringBack){
+                if(returnFlipFragment()==FlipFragments.LookStringBack){
                     a.count = Count.End
                     setCountFlip(a)
                 }
