@@ -74,9 +74,7 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
 
     fun observeAutoFlip(autoFlip: AutoFlip,parentCountAnimation:ValueAnimator?){
         if(autoFlip.active){
-            if(parentCountAnimation == null) {
-                flipViewModel.setCountDownAnim(AnimationAttributes.StartAnim)
-            }
+            flipViewModel.setCountDownAnim(AnimationAttributes.StartAnim)
         } else {
             flipBaseBinding.txvCountDown.visibility = View.GONE
             flipBaseBinding.btnStopCount.visibility = View.GONE

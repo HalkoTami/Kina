@@ -7,14 +7,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
+import com.example.tangochoupdated.activity.MainActivity
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.db.enumclass.*
 import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
@@ -31,6 +34,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
     private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
     private val baseViewModel: BaseViewModel by activityViewModels()
+    private val typeAndCheckViewModel: AnkiFlipTypeAndCheckViewModel by activityViewModels()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -59,6 +63,13 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
         viewSetUp.setUpViewStart()
         baseViewModel.setBnvVisibility(false)
+        typeAndCheckViewModel.keyBoardVisible.observe(viewLifecycleOwner){ visible ->
+            val views = arrayOf(binding.linLayFlipBottom,binding.btnRemembered,binding.btnSetFlag)
+            views.onEach {
+                it.visibility = if (visible) View.GONE else View.VISIBLE
+            }
+
+        }
 
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         flipBaseViewModel.apply {
@@ -125,7 +136,6 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                 settingVM.autoFlip.observe(viewLifecycleOwner){
                    viewSetUp.observeAutoFlip(it,parentCountAnimation)
                 }
-
 
 
 

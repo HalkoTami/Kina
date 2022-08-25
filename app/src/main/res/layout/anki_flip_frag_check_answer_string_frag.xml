@@ -50,7 +50,7 @@
 
     <ImageView
         android:layout_marginTop="20dp"
-        android:id="@+id/scrv_type_answer"
+        android:id="@+id/edt_type_answer"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         app:layout_constraintTop_toBottomOf="@id/scrv_typed_answer"
@@ -64,9 +64,10 @@
         android:layout_height="200dp"
         android:background="@drawable/gray_stroke_rectangle"
         app:layout_constraintTop_toBottomOf="@id/scrv_question"
-        app:layout_constraintBottom_toTopOf="@id/scrv_type_answer"
+        app:layout_constraintBottom_toTopOf="@id/edt_type_answer"
         android:padding="10dp">
         <TextView
+            android:id="@+id/txv_your_answer"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -39,10 +39,12 @@ class FlipStringCheckAnswerFragment  : Fragment() {
                 onChildFragmentsStart(FlipFragments.CheckAnswerString,returnReverseCardSide(),returnAutoFlip().active)
             }
 
+
             flipBaseViewModel.getCardFromDB(args.cardId).observe(viewLifecycleOwner){
                 setParentCard(it)
                 binding.txvFlipTitle.text =   it.stringData?.frontText
             }
+            binding.txvYourAnswer.text = args.typedAnswer
         }
 
 
