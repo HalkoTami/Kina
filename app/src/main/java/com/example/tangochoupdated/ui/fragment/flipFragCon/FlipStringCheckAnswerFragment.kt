@@ -10,6 +10,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.databinding.AnkiFlipFragCheckAnswerStringFragBinding
 import com.example.tangochoupdated.db.enumclass.FlipFragments
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
+import com.example.tangochoupdated.ui.viewmodel.AnkiFlipTypeAndCheckViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 
 
@@ -18,7 +19,7 @@ class FlipStringCheckAnswerFragment  : Fragment() {
     private var _binding: AnkiFlipFragCheckAnswerStringFragBinding? = null
     private val args: FlipStringCheckAnswerFragmentArgs by navArgs()
     private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
-
+    private val typeAndCheckViewModel: AnkiFlipTypeAndCheckViewModel by activityViewModels()
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
@@ -46,6 +47,7 @@ class FlipStringCheckAnswerFragment  : Fragment() {
             }
             binding.txvYourAnswer.text = args.typedAnswer
         }
+        typeAndCheckViewModel.getAnswer(args.cardId)
 
 
 
