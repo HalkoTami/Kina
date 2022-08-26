@@ -12,23 +12,21 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHeight_percent="0.11"
+        app:layout_constraintHeight_percent="0.15"
         android:id="@+id/linLay_answer_result"
         android:padding="5dp">
         <ImageView
             android:id="@+id/imv_tosaka"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.7"
             android:layout_height="match_parent"
             android:src="@drawable/tosaka_falling"/>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.5"
-        android:text="残念\n不正解!"
+        android:layout_weight="1"
         android:lines="2"
         android:gravity="center"
-        android:autoSizeTextType="uniform"
            >
 
             <TextView
@@ -37,10 +35,10 @@
                 app:layout_constraintStart_toEndOf="@id/imv_speak_bubble_polygon"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:lines="2"
-                android:autoSizeTextType="uniform"
-                android:padding="10dp"
+                android:textSize="11sp"
+                android:maxLines="2"
                 android:gravity="center"
+                android:textColor="@color/darkgray"
                 android:text="残念、\n不正解..."
                 android:background="@drawable/gray_stroke_rectangle"/>
             <ImageView
@@ -61,6 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/gray_stroke_rectangle">
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/linLay_in_row"
@@ -83,7 +82,7 @@
                 <TextView
                     android:id="@+id/txv_result_in_row"
                     android:layout_width="wrap_content"
-
+                    android:textColor="@color/darkgray"
                     android:gravity="center"
                     android:autoSizeTextType="uniform"
                     android:layout_height="match_parent"
@@ -132,27 +131,88 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    <TextView
-        android:id="@+id/txv_correct_answer"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/lineLay_correct_answer"
 
         app:layout_constraintTop_toBottomOf="@id/linLay_answer_result"
+        app:layout_constraintBottom_toTopOf="@id/linLay_your_answer"
         android:background="@drawable/gray_stroke_rectangle"
-        android:autoSizeTextType="uniform"
+        android:layout_marginBottom="10dp"
         android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:text="A.　１９８０年"
         android:textSize="25sp"
-        android:gravity="center"
-        android:maxLines="50" />
+        android:maxLines="50"
+        android:orientation="vertical"
+        android:padding="10dp">
+        <TextView
+            android:autoSizeTextType="uniform"
+            android:textStyle="bold"
+            android:textColor="@color/darkgray"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/txv_title"
+            android:text="タイトル"/>
+        <TextView
+            android:id="@+id/txv_correct_answer"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:textSize="20sp"
+            android:maxLines="5"
+            android:text="A. 1dee年"/>
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/txv_correct_answer"
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        app:layout_constraintTop_toBottomOf="@id/lineLay_correct_answer"
         android:background="@drawable/gray_stroke_rectangle"
-        android:id="@+id/txv_your_answer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/linLay_your_answer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="あなたの回答" />
+        android:layout_height="0dp"
+        android:text="あなたの回答"
+        android:orientation="vertical"
+        android:padding="10dp">
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@color/darkgray"
+        android:autoSizeTextType="uniform"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="あなたの回答"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/icon_missed"
+                android:layout_gravity="top"
+                android:layout_margin="10dp"/>
+            <TextView
+                android:id="@+id/txv_your_answer"
+
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:textSize="20sp"
+                android:maxLines="5"
+                android:text="A. 19c年"
+                />
+
+        </FrameLayout>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
 

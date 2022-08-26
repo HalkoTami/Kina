@@ -113,7 +113,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
             FlipFragments.TypeAnswerString   -> true
             FlipFragments.CheckAnswerString  -> false
         }
-        val now = if(first) returnParentPosition()*2 -1 else returnParentPosition()*2
+        val now = if(first) (returnParentPosition() +1) *2 -1 else (returnParentPosition()+1)*2
         val all = returnFlipItems().size*2
         setProgress(Progress(now,all))
 
@@ -121,6 +121,25 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     val flipProgress : LiveData<Progress> = _flipProgress
 
 
+    fun getStart(reverseMode: Boolean,typeAnswer: Boolean):NavDirections{
+         return when (typeAnswer) {
+            true -> {
+                FlipStringTypeAnswerFragmentDirections.toTypeAnswerString(
+                    reverseMode.not(),
+                    returnFlipItems()[0].id
+                )
+            }
+            false -> {
+                val cardId =returnFlipItems()[0].id
+                val action =
+                    FlipStringFragmentDirections.toFlipString(
+                    )
+                action.front = reverseMode.not()
+                action.cardId = cardId
+                return action
+            }
+        }
+    }
     fun flipNext(reverseMode:Boolean,typeAnswer:Boolean):NavDirections?{
         val changeCard = checkChangeToNextCard(reverseMode)
         val changeOnlySide = (reverseMode.not()&&checkFront())||(reverseMode&&checkBack())
@@ -128,7 +147,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 //        val flipToBack = (changeCard&&reverseMode)||(changeOnlySide&&reverseMode.not())
 //        val isLastCard = (returnParentPosition()==returnFlipItems().size-1)
         val oldPosition = returnParentPosition()
-        val newPosition = returnParentPosition() + 1
+        val newPosition = returnParentPosition()  + 1
         return if(checkPositionIsOnEndEdge(reverseMode))
             null else {
                 when(typeAnswer){
@@ -142,7 +161,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
                         false -> {
                             FlipStringCheckAnswerFragmentDirections.toCheckAnswerString(
                                 reverseMode.not(),
-                                returnTypedAnswer(),
+                                true,
                                 returnFlipItems()[oldPosition].id,
                             )
                         }
@@ -201,7 +220,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
                         setParentPosition(newPosition)
                         FlipStringCheckAnswerFragmentDirections.toCheckAnswerString(
                             reverseMode.not(),
-                            returnTypedAnswer(),
+                            false,
                             returnFlipItems()[newPosition].id,
                         )
                     }

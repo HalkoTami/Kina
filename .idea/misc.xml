@@ -25,9 +25,12 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/custome_progress_bar_rectangle.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/gray_stroke_rectangle.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.1975" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_edit.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_file_line.xml" value="0.1975" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_flag_clickable.xml" value="0.332" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_missed.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_polygon.xml" value="0.332" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_btn_edit_card.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_flag.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_stop_count.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/speak_bubble.xml" value="0.26" />
@@ -36,8 +39,8 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/speak_bubble_polygon_2.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/tosaka_falling_resize.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout-v26/anki_flip_frag_check_answer_string_frag.xml" value="0.184375" />
-        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_flip_frag_base.xml" value="0.33" />
-        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_flip_frag_check_answer_string_frag.xml" value="1.25" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_flip_frag_base.xml" value="0.2" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_flip_frag_check_answer_string_frag.xml" value="0.25" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_flip_frag_look_string_frag.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_flip_frag_type_answer_string_frag.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_frag_base.xml" value="0.3625" />

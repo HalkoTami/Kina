@@ -29,8 +29,8 @@
         <argument android:name="answer_is_back"
             app:argType="boolean"/>
         <argument
-            android:name="typedAnswer"
-            app:argType="string" />
+            android:name="check_answer"
+            app:argType="boolean" />
         <argument android:name="cardId"
             app:argType="integer" />
 

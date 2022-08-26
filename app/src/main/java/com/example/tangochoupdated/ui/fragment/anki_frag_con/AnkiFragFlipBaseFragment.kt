@@ -71,9 +71,21 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
         }
 
+
+        var start:Boolean = true
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         flipBaseViewModel.apply {
             setParentPosition(0)
+                getAllCardsFromDB.observe(viewLifecycleOwner){
+                    if(boxViewModel.returnAnkiBoxItems().isNullOrEmpty()){
+                        setAnkiFlipItems(it)
+                        if(start){
+                            navCon.navigate(getStart(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer()))
+                            start = false
+                        } else return@observe
+
+                    }
+                }
 //            val action = FlipStringFragmentDirections.toFlipString()
 //            navCon.navigate(action)
             setFront(
