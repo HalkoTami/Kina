@@ -70,6 +70,7 @@ class FlipStringTypeAnswerFragment  : Fragment() {
         }
         var up :Boolean = false
 
+
         val viewSetUp = AnkiTypeAnswerFragViewSetUp(typeAndCheckViewModel)
         val rootView = binding.root
         rootView.viewTreeObserver.addOnGlobalLayoutListener(object:KeyboardListener(rootView,){
