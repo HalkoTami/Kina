@@ -1,43 +1,67 @@
 package com.example.tangochoupdated.ui.customViews
 
-import android.R.attr
 import android.content.Context
-import android.graphics.Canvas
 import android.util.AttributeSet
 import android.widget.Toast
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.Paint
+import com.example.tangochoupdated.ui.listener.textSizeListener
 
 
 class MyTextView(context: Context,attributeSet: AttributeSet):androidx.appcompat.widget.AppCompatTextView(context,attributeSet){
 
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-
+        this.viewTreeObserver.addOnGlobalLayoutListener {
+            resize(this.text)
+        }
     }
-    override fun setText(text: CharSequence?, type: BufferType?) {
-        super.setText(text, type)
-        val bounds = android.graphics.Rect()
+
+
+
+
+
+    var resize = true
+    fun resize(text:CharSequence){
+        resize = false
+        val viewBounds = android.graphics.Rect()
         val textBound = android.graphics.Rect()
-        this.rootView.getWindowVisibleDisplayFrame(bounds)
-        val viewWidth = bounds.width()
-        val viewHeight = bounds.height()
-        this.paint.measureText(text.toString())
+        this.rootView.getWindowVisibleDisplayFrame(viewBounds)
+        val viewWidth = viewBounds.width()
+        val viewHeight = viewBounds.height()
+//        this.paint.measureText(text.toString())
+
         var size = this.textSize
-        this.paint.getTextBounds(text.toString(), 0, text?.length ?: 0,textBound)
+        val start = this. layout.getLineStart(4)
+
+        this.paint.measureText(text.toString())
+        val lineBound = android.graphics.Rect()
+        this.paint.getTextBounds(text.toString(),start, text.length?: 0,textBound)
+        this.paint.getTextBounds(text.toString(),0, text.length?: 0,lineBound)
+        var linewidth = lineBound.width()
         var textWidth = textBound.width()
         var textHeight = textBound.height()
-//            this.paint.measureText(text.toString())
-        Toast.makeText(this.context,"view ${bounds.width()} text ${textWidth}",Toast.LENGTH_SHORT).show()
-        while(viewWidth<textWidth){
-            this.isSingleLine = false
+//        while(viewWidth<textWidth){
+//
+//            size--
+//            this.textSize = size
+//            this.paint.getTextBounds(text.toString(), 0, text.length ?: 0,textBound)
+//            textWidth = textBound.width()
+//
+//        }
+        while(textWidth>viewWidth){
             size--
             this.textSize = size
-            this.paint.getTextBounds(text.toString(), 0, text?.length ?: 0,textBound)
+            this.onPreDraw()
+            this.paint.getTextBounds(text.toString(),this.layout.getLineStart(4), text.length?: 0,textBound)
             textWidth = textBound.width()
-
         }
+
+        resize = false
+    }
+
+
+
+    override fun setText(text: CharSequence?, type: BufferType?) {
+        super.setText(text, type)
 
     }
 }
