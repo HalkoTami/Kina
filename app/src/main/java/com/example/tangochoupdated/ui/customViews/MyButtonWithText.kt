@@ -3,6 +3,8 @@ package com.example.tangochoupdated.ui.customViews
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
@@ -26,6 +28,9 @@ class MyButtonWithText(context: Context, attributeSet: AttributeSet):androidx.ap
     }
     override fun setOnClickListener(l: OnClickListener?) {
         super.setOnClickListener(l)
+        if(l != null){
+            this.setOnClickListener(null)
+        }
         this.setOnTouchListener(object : MyTouchListener(this.context){
             override fun onDown() {
                 super.onDown()

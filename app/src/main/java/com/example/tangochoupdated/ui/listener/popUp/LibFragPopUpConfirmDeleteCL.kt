@@ -12,7 +12,7 @@ class LibFragPopUpConfirmDeleteCL(val binding: LibraryFragBinding, val libVM: Li
     override fun onClick(v: View?) {
         binding.apply {
             when(v){
-                onlyP.btnCloseConfirmDeleteOnlyParentPopup -> binding.frameLayConfirmDelete.visibility = View.GONE
+                onlyP.btnCloseConfirmDeleteOnlyParentPopup -> deletePopUpViewModel.setConfirmDeleteVisible(false)
                 onlyP.btnCommitDeleteOnlyParent -> {
                     deletePopUpViewModel.apply {
                         if(checkDeletingItemsHasChildren()) {
@@ -23,10 +23,10 @@ class LibFragPopUpConfirmDeleteCL(val binding: LibraryFragBinding, val libVM: Li
 
                 }
                 onlyP.btnDenyDeleteOnlyParent -> deletePopUpViewModel.setConfirmDeleteVisible(false,)
-                deleteAllC.btnCloseConfirmDeleteOnlyParentPopup -> binding.frameLayConfirmDelete.visibility = View.GONE
+                deleteAllC.btnCloseConfirmDeleteOnlyParentPopup -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
                 deleteAllC.btnDeleteAllChildren -> deletePopUpViewModel.deleteWithChildren()
                 deleteAllC.deleteOnlyFile -> deletePopUpViewModel.deleteOnlyFile()
-                deleteAllC.btnCancel -> binding.frameLayConfirmDelete.visibility = View.GONE
+                deleteAllC.btnCancel -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
 
 
             }
