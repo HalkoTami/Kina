@@ -5,11 +5,8 @@ import android.view.*
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
-import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
-import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
 /**
@@ -22,7 +19,8 @@ class LibFragPlaneRVListAdapter(
     private val libraryViewModel: LibraryViewModel,
     private val context: Context,
     private val stringCardViewModel: StringCardViewModel,
-    private val createCardViewModel: CreateCardViewModel
+    private val createCardViewModel: CreateCardViewModel,
+    private val deletePopUpViewModel: DeletePopUpViewModel
 ) :
     ListAdapter<Any, LibFragPlaneRVListAdapter.LibFragFileViewHolder>(SearchDiffCallback) {
 
@@ -32,7 +30,7 @@ class LibFragPlaneRVListAdapter(
     }
 
     override fun onBindViewHolder(holder: LibFragFileViewHolder, position: Int) {
-        holder.bind(getItem(position),libraryViewModel,createFileViewModel,createCardViewModel,stringCardViewModel)
+        holder.bind(getItem(position),libraryViewModel,createFileViewModel,createCardViewModel,stringCardViewModel, deletePopUpViewModel)
     }
 
     class LibFragFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
@@ -41,12 +39,13 @@ class LibFragPlaneRVListAdapter(
                  libraryViewModel: LibraryViewModel,
                  createFileViewModel: CreateFileViewModel,
                  createCardViewModel: CreateCardViewModel,
-                 stringCardViewModel: StringCardViewModel
+                 stringCardViewModel: StringCardViewModel,
+                 deletePopUpViewModel: DeletePopUpViewModel
         ){
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
 
-            LibrarySetUpItems(libraryViewModel).setUpRVBasePlane(
+            LibrarySetUpItems(libraryViewModel,deletePopUpViewModel).setUpRVBasePlane(
                 rvItemBaseBinding = binding,
                 item = item,
                 context = context,

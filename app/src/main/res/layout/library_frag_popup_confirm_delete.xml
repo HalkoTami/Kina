@@ -12,7 +12,7 @@
     app:layout_constraintBottom_toBottomOf="@id/main_frameLayout"
     app:layout_constraintEnd_toEndOf="@id/main_frameLayout"
     >
-    <TextView
+    <com.example.tangochoupdated.ui.customViews.MyTextView
         android:id="@+id/txv_confirm_delete_only_parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

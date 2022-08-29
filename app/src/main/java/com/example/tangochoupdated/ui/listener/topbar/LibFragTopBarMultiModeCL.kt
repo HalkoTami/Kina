@@ -6,10 +6,11 @@ import android.widget.Toast
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.LibraryFragTopBarMultiselectModeBinding
 import com.example.tangochoupdated.toastToDo
+import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
 class LibFragTopBarMultiModeCL(val context: Context, val binding: LibraryFragTopBarMultiselectModeBinding, val libVM: LibraryViewModel,
-                               val navCon: NavController
+                               val navCon: NavController,val deletePopUpViewModel:DeletePopUpViewModel
 ): View.OnClickListener{
     val multi = binding
     fun toastPleaseSelectItems(){
@@ -22,8 +23,8 @@ class LibFragTopBarMultiModeCL(val context: Context, val binding: LibraryFragTop
     }
 
     override fun onClick(v: View?) {
-        val notSelected = libVM.returnSelectedCards().isNullOrEmpty()&&libVM.returnSelectedFiles().isNullOrEmpty()
 
+        val notSelected = libVM.returnSelectedItems().isEmpty()
         binding.apply {
             when(v){
 
@@ -39,7 +40,10 @@ class LibFragTopBarMultiModeCL(val context: Context, val binding: LibraryFragTop
                         else libVM.openChooseFileMoveTo(null)
                 }
                 multi.multiSelectMenuBinding.linLayDeleteSelectedItems -> if(notSelected)toastPleaseSelectItems()
-                else libVM.onClickDeleteSelectedItems()
+                else {
+                    deletePopUpViewModel.setDeletingItem(libVM.returnSelectedItems())
+                    deletePopUpViewModel.setConfirmDeleteVisible(true)
+                }
                 multi.multiSelectMenuBinding.linLaySetFlagToSelectedItems -> if(notSelected)toastPleaseSelectItems()
                 else toastToDo(context)
 

@@ -19,6 +19,7 @@ import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 import com.example.tangochoupdated.ui.listadapter.LibFragChooseFileRVListAdapter
+import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 
 
 class LibraryFragChooseFileMoveTo  : Fragment(){
@@ -29,6 +30,7 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
+    private val deletePopUpViewModel:DeletePopUpViewModel by activityViewModels()
 
     private var _binding: LibraryFragSelectFileMoveToBaseBinding? = null
     private val binding get() = _binding!!
@@ -42,7 +44,7 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
         myNavCon =  requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
         _binding = LibraryFragSelectFileMoveToBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
-        val adapter = LibFragChooseFileRVListAdapter(createFileViewModel,libraryViewModel,requireActivity())
+        val adapter = LibFragChooseFileRVListAdapter(createFileViewModel,libraryViewModel,requireActivity(),deletePopUpViewModel)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
@@ -55,10 +57,10 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
                 }
             }
             childFilesFromDB(args.fileId?.single()).observe(viewLifecycleOwner) {
-                setChildFilesFromDB(it)
+                setParentRVItems(it)
                 val list = if(flashcard){
                     it.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }
-                } else it.filter { it.fileStatus == FileStatus.FOLDER && returnSelectedFiles()!!.contains(it).not()}
+                } else it.filter { it.fileStatus == FileStatus.FOLDER && returnSelectedItems().contains(it).not()}
                 adapter.submitList(list)
             }
             parentFileAncestorsFromDB(args.fileId?.single()).observe(viewLifecycleOwner){
@@ -73,8 +75,8 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
                 )
             )
             binding.topBarChooseFileMoveToBinding.txvChooseFileMoveTo.text =
-                    if(flashcard) "${returnSelectedCards()?.size} 個のアイテムを単語帳に移動" else
-                        "${returnSelectedFiles()?.size}個のアイテムをフォルダに移動"
+                    if(flashcard) "${returnSelectedItems().size} 個のアイテムを単語帳に移動" else
+                        "${returnSelectedItems().size}個のアイテムをフォルダに移動"
 
             chooseFileMoveToMode.observe(viewLifecycleOwner){
                 if(it == false){
@@ -83,7 +85,7 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
                 }
             }
         }
-        LibrarySetUpFragment(libraryViewModel).setUpFragLibChooseFileMoveTo(binding,myNavCon,requireActivity())
+        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibChooseFileMoveTo(binding,myNavCon,requireActivity())
 
         return binding.root
     }

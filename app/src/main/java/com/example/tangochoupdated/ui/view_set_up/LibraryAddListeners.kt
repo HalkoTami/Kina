@@ -7,16 +7,13 @@ import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.listener.*
 import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmDeleteCL
 import com.example.tangochoupdated.ui.listener.recyclerview.*
 import com.example.tangochoupdated.ui.listener.topbar.*
-import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
+import com.example.tangochoupdated.ui.viewmodel.*
 
-class LibraryAddListeners(val libVM: LibraryViewModel){
+class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: DeletePopUpViewModel){
 //    top Bars
     fun confirmDeletePopUpAddCL(binding: LibraryFragBinding,){
         val onlyP = binding.confirmDeletePopUpBinding
@@ -26,10 +23,10 @@ class LibraryAddListeners(val libVM: LibraryViewModel){
             onlyP.btnCommitDeleteOnlyParent,
             onlyP.btnDenyDeleteOnlyParent,
             deleteAllC.btnCloseConfirmDeleteOnlyParentPopup,
-            deleteAllC.btnCommitDeleteAllChildren,
-            deleteAllC.btnDenyDeleteAllChildren
+            deleteAllC.btnDeleteAllChildren,
+            deleteAllC.btnCancel
         )   .onEach {
-            it.setOnClickListener(LibFragPopUpConfirmDeleteCL(binding,libVM))
+            it.setOnClickListener(LibFragPopUpConfirmDeleteCL(binding,libVM, deletePopUpViewModel ))
         }
     }
     fun homeTopBarAddCL(binding: LibraryFragTopBarHomeBinding, context: Context, navCon: NavController){
@@ -46,7 +43,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel){
             binding.multiSelectMenuBinding.linLayMoveSelectedItems,
             binding.multiSelectMenuBinding.linLayDeleteSelectedItems,
             binding.multiSelectMenuBinding.linLaySetFlagToSelectedItems,
-        ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL(context, binding,libVM, navCon)) }
+        ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL(context, binding,libVM, navCon,deletePopUpViewModel)) }
     }
 
     fun inBoxTopBarAddCL(binding: LibraryFragTopBarInboxBinding, context: Context, navCon: NavController){
@@ -121,7 +118,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel){
             ) else it.setOnTouchListener(
                 LibraryRVFileCL(it,context,item,
                     createFileVM,
-                    libVM,binding)
+                    libVM,binding,deletePopUpViewModel)
             )
             }
         }
@@ -141,7 +138,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel){
                 btnEditWhole,
 
             ).onEach { it.setOnTouchListener(
-                LibraryRVCardCL(it,context,item,createCardViewModel,libVM,binding)
+                LibraryRVCardCL(it,context,item,createCardViewModel,libVM,binding,deletePopUpViewModel)
             )
             }
         }

@@ -30,7 +30,8 @@ class MyTextView(context: Context,attributeSet: AttributeSet):androidx.appcompat
 //        this.paint.measureText(text.toString())
 
         var size = this.textSize
-        val start = this. layout.getLineStart(4)
+        this.onPreDraw()
+        val start = this.layout.getLineStart(this.layout.lineCount)
 
         this.paint.measureText(text.toString())
         val lineBound = android.graphics.Rect()

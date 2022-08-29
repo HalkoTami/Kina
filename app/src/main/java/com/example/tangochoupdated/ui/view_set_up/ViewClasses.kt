@@ -30,7 +30,7 @@ class ParentFileAncestors(
     val ParentFile:File?,
 )
 enum class ConfirmMode{
-    DeleteOnlyParent,DeleteWithChildren
+    DeleteItem,DeleteWithChildren
 }
 enum class RVMode{
     FILE,CARD,SEARCH,CHOOSE_FILE

@@ -9,11 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.*
-import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
 /**
@@ -28,6 +25,7 @@ class LibFragSearchRVListAdapter(
     private val createCardViewModel: CreateCardViewModel,
     private val searchViewModel: SearchViewModel,
     private val lifecycleOwner: LifecycleOwner,
+    private val deletePopUpViewModel: DeletePopUpViewModel,
     private val context: Context,
 ) :
     ListAdapter<Any, LibFragSearchRVListAdapter.LibFragSearchRVViewHolder>(SearchDiffCallback) {
@@ -38,7 +36,7 @@ class LibFragSearchRVListAdapter(
     }
 
     override fun onBindViewHolder(holder: LibFragSearchRVViewHolder, position: Int) {
-        holder.bind(getItem(position),libraryViewModel,stringCardViewModel,createCardViewModel,searchViewModel,lifecycleOwner)
+        holder.bind(getItem(position),libraryViewModel,stringCardViewModel,createCardViewModel,searchViewModel,lifecycleOwner,deletePopUpViewModel)
     }
 
     class LibFragSearchRVViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
@@ -49,13 +47,14 @@ class LibFragSearchRVListAdapter(
                  stringCardViewModel: StringCardViewModel,
                  createCardViewModel: CreateCardViewModel,
                  searchViewModel: SearchViewModel,
-                 lifecycleOwner: LifecycleOwner){
+                 lifecycleOwner: LifecycleOwner,
+                 deletePopUpViewModel: DeletePopUpViewModel){
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
 
             fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
             binding.contentBindingFrame.addView(fileBinding.root)
-            LibrarySetUpItems(libraryViewModel).setUpRVSearchBase(
+            LibrarySetUpItems(libraryViewModel,deletePopUpViewModel).setUpRVSearchBase(
                 rvItemBaseBinding = binding,
                 stringCardViewModel = stringCardViewModel,
                 createCardViewModel = createCardViewModel,

@@ -119,6 +119,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val ankiFlipFragViewModel = ViewModelProvider(this,factory)[AnkiFlipFragViewModel::class.java]
         val ankiSettingViewModel = ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
         val typedAnswerViewModel = ViewModelProvider(this,factory)[AnkiFlipTypeAndCheckViewModel::class.java]
+        val deletePopUpViewModel = ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
         stringCardViewModel = ViewModelProvider(this)[StringCardViewModel::class.java]
         searchViewModel = ViewModelProvider(this,factory)[SearchViewModel::class.java]
 //      　ー－－－－－－－－－
@@ -244,13 +245,13 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     createFileViewModel.setPAndG(it)
                 }
             }
-            childCardsFromDB.observe(this@MainActivity){
-                createCardViewModel.setSisterCards(it)
-            }
+//            parentRVItems.observe(this@MainActivity){
+//                createCardViewModel.setSisterCards(it)
+//            }
 //            allAncestors.observe(this@MainActivity){
 //                createFileViewModel.setPAndG(it)
 //            }
-            finalRVList.observe(this@MainActivity){
+            parentRVItems.observe(this@MainActivity){
                 createFileViewModel.setPosition(it.size+1)
             }
         }

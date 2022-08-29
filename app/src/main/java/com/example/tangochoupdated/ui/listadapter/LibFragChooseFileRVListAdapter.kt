@@ -9,6 +9,7 @@ import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
+import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
 
@@ -20,7 +21,8 @@ import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 class LibFragChooseFileRVListAdapter(
     private val createFileViewModel: CreateFileViewModel,
     private val libraryViewModel: LibraryViewModel,
-    private val context: Context, ) :
+    private val context: Context,
+    private val deletePopUpViewModel: DeletePopUpViewModel) :
     ListAdapter<File, LibFragChooseFileRVListAdapter.LibFragChooseFileViewHolder>(FileDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibFragChooseFileViewHolder {
@@ -29,7 +31,7 @@ class LibFragChooseFileRVListAdapter(
     }
 
     override fun onBindViewHolder(holder: LibFragChooseFileViewHolder, position: Int) {
-        holder.bind(getItem(position),libraryViewModel,createFileViewModel)
+        holder.bind(getItem(position),libraryViewModel,createFileViewModel,deletePopUpViewModel)
     }
 
     class LibFragChooseFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
@@ -37,11 +39,12 @@ class LibFragChooseFileRVListAdapter(
 
         fun bind(item: File,
                  libraryViewModel: LibraryViewModel,
-                 createFileViewModel: CreateFileViewModel
+                 createFileViewModel: CreateFileViewModel,
+                 deletePopUpViewModel: DeletePopUpViewModel
         ){
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
-           LibrarySetUpItems(libraryViewModel).setUpRVBaseSelectFileMoveTo(
+           LibrarySetUpItems(libraryViewModel,deletePopUpViewModel).setUpRVBaseSelectFileMoveTo(
                rvItemBaseBinding = binding,
                item = item,
                context = context,

@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_commit_delete_all_children"/>
+        app:layout_constraintBottom_toTopOf="@id/linLay_buttons"/>
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,24 +81,46 @@
             android:text="500枚"
             android:textSize="11sp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
-    <Button
-        android:id="@+id/btn_commit_delete_all_children"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:text="削除する"
-        app:layout_constraintStart_toEndOf="@id/btn_deny_delete_all_children"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linLay_buttons"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-    <Button
-        android:id="@+id/btn_deny_delete_all_children"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:textSize="12sp"
-        android:text="キャンセル"
-        app:layout_constraintEnd_toStartOf="@id/btn_commit_delete_all_children"
-        app:layout_constraintBottom_toBottomOf="@id/btn_commit_delete_all_children"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.2"
+        android:layout_margin="10dp">
+        <com.example.tangochoupdated.ui.customViews.MyButtonWithText
+            android:textSize="11sp"
+            android:id="@+id/btn_cancel"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:backgroundTint="@color/light_gray"
+            android:layout_height="match_parent"
+            android:text="キャンセル"
+            />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"/>
+        <com.example.tangochoupdated.ui.customViews.MyButtonWithText
+            android:id="@+id/delete_only_file"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:layout_height="match_parent"
+            android:textSize="10sp"
+            android:maxLines="2"
+            android:text="ファイルのみ\n削除する"/>
+        <com.example.tangochoupdated.ui.customViews.MyButtonWithText
+            android:textSize="11sp"
+            android:id="@+id/btn_delete_all_children"
+            android:layout_margin="3dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="削除する"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
     <ImageView
         android:id="@+id/btn_close_confirm_delete_only_parent_popup"
         android:layout_width="wrap_content"

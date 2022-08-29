@@ -4,8 +4,9 @@
             android:shape="rectangle">
     <size android:height="70dp"/>
             <solid android:width="3dp"
-                android:color="@color/light_gray"/>
+                android:color="@color/lightgreen"/>
 
+    <corners android:radius="5dp"/>
 
         </shape>
 

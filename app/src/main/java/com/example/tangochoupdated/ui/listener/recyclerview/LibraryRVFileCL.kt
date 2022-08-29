@@ -11,6 +11,7 @@ import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 
 class LibraryRVFileCL(val view: View,
                       val context: Context,
@@ -18,6 +19,7 @@ class LibraryRVFileCL(val view: View,
                       private val createFileViewModel: CreateFileViewModel,
                       private val lVM: LibraryViewModel,
                       private val rvBinding: LibraryFragRvItemBaseBinding,
+                      private val deletePopUpViewModel: DeletePopUpViewModel
 ): MyTouchListener(context){
 
     //    click後にtouch event を設定しなおすと親子関係のコンフリクトが防げそう
@@ -40,7 +42,10 @@ class LibraryRVFileCL(val view: View,
                 btnSelect -> {
                     if(rvBinding.root.tag == LibRVState.SelectFileMoveTo) lVM.moveSelectedItemToFile(item)
                 }
-                btnDelete       -> lVM.onClickDeleteRVItem(item)
+                btnDelete       -> {
+                    deletePopUpViewModel.setDeletingItem(mutableListOf(item))
+                    deletePopUpViewModel.setConfirmDeleteVisible(true)
+                }
                 btnEditWhole    -> createFileViewModel.onClickEditFileInRV(item)
             }
         }

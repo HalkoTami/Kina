@@ -12,15 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryFragHomeBaseBinding
-import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
-import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.listadapter.LibFragSearchRVListAdapter
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
 class LibraryFragHome : Fragment(){
@@ -32,6 +29,7 @@ class LibraryFragHome : Fragment(){
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
     private val searchViewModel:SearchViewModel by activityViewModels()
+    private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
 
     private var _binding: LibraryFragHomeBaseBinding? = null
     private val binding get() = _binding!!
@@ -50,7 +48,8 @@ class LibraryFragHome : Fragment(){
             libraryViewModel  = libraryViewModel,
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
-            createCardViewModel  = createCardViewModel)
+            createCardViewModel  = createCardViewModel,
+            deletePopUpViewModel)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
@@ -81,7 +80,7 @@ class LibraryFragHome : Fragment(){
                 }
                 createCardViewModel.setSisterCards(it)
             }
-            selectedFiles.observe(viewLifecycleOwner){
+            selectedItems.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
             }
             binding.bindingSearch.edtLibrarySearch.addTextChangedListener {
@@ -89,7 +88,7 @@ class LibraryFragHome : Fragment(){
                     searchViewModel.setSearchText(it.toString())
                     searchViewModel.getFilesByWords(it.toString()).observe(viewLifecycleOwner){
                         val searchAdapter = LibFragSearchRVListAdapter(
-                            createFileViewModel,libraryViewModel,stringCardViewModel,createCardViewModel,searchViewModel,viewLifecycleOwner,requireActivity()
+                            createFileViewModel,libraryViewModel,stringCardViewModel,createCardViewModel,searchViewModel,viewLifecycleOwner,deletePopUpViewModel, requireActivity()
                         )
                         recyclerView.adapter = searchAdapter
                         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
@@ -100,7 +99,6 @@ class LibraryFragHome : Fragment(){
 
                 } else {
                     libraryViewModel.childFilesFromDB(null).observe(viewLifecycleOwner) {
-                        setChildFilesFromDB(it)
                         recyclerView.adapter = adapter
                         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
                         recyclerView.isNestedScrollingEnabled = false
@@ -113,7 +111,7 @@ class LibraryFragHome : Fragment(){
 
         }
 
-        LibrarySetUpFragment(libraryViewModel).setUpFragLibHome(binding,myNavCon,requireActivity())
+        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibHome(binding,myNavCon,requireActivity())
 
 
 

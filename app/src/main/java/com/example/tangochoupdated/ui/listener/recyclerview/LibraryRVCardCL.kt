@@ -11,6 +11,7 @@ import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 
 class LibraryRVCardCL(val view: View,
                       val context: Context,
@@ -18,6 +19,7 @@ class LibraryRVCardCL(val view: View,
                       private val createCardViewModel: CreateCardViewModel,
                       private val lVM: LibraryViewModel,
                       private val rvBinding: LibraryFragRvItemBaseBinding,
+                      private val deletePopUpViewModel: DeletePopUpViewModel
 ): MyTouchListener(context){
 
     //    click後にtouch event を設定しなおすと親子関係のコンフリクトが防げそう
@@ -38,7 +40,10 @@ class LibraryRVCardCL(val view: View,
 
                 }
                 btnSelect -> TODO()
-                btnDelete       -> lVM.onClickDeleteRVItem(item)
+                btnDelete       -> deletePopUpViewModel.apply{
+                    setDeletingItem(mutableListOf(item))
+                    setConfirmDeleteVisible(true)
+                }
             }
         }
     }

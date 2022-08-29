@@ -10,13 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryFragInboxBaseBinding
-import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
-import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
 class LibraryFragInBox  : Fragment(){
@@ -29,7 +26,7 @@ class LibraryFragInBox  : Fragment(){
     private val stringCardViewModel: StringCardViewModel by activityViewModels()
     private var _binding: LibraryFragInboxBaseBinding? = null
     private val binding get() = _binding!!
-
+    private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +42,7 @@ class LibraryFragInBox  : Fragment(){
             libraryViewModel  = libraryViewModel,
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
-            createCardViewModel  = createCardViewModel)
+            createCardViewModel  = createCardViewModel,deletePopUpViewModel)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
@@ -57,7 +54,7 @@ class LibraryFragInBox  : Fragment(){
 
             createCardViewModel.setParentFlashCardCover(null)
             childCardsFromDB(null).observe(viewLifecycleOwner) {
-                setChildCardsFromDB(it)
+                setParentRVItems(it ?: mutableListOf())
                 adapter.submitList(it)
                 binding.emptyBinding.root.visibility =
                     if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
@@ -74,13 +71,13 @@ class LibraryFragInBox  : Fragment(){
             makeAllUnSwiped.observe(viewLifecycleOwner){
                 if(it) LibraryFragmentBase().makeLibRVUnSwiped(recyclerView)
             }
-            selectedCards.observe(viewLifecycleOwner){
+            selectedItems.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
             }
 
 
         }
-        LibrarySetUpFragment(libraryViewModel).setUpFragLibInBox(binding,myNavCon,requireActivity())
+        LibrarySetUpFragment(libraryViewModel, deletePopUpViewModel).setUpFragLibInBox(binding,myNavCon,requireActivity())
         return binding.root
     }
 

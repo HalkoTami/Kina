@@ -19,14 +19,11 @@ import com.example.tangochoupdated.db.dataclass.StringData
 import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
-import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
-import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
-class LibrarySetUpItems(val libVM: LibraryViewModel){
-    private val addL = LibraryAddListeners(libVM)
+class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: DeletePopUpViewModel){
+    private val addL = LibraryAddListeners(libVM,deletePopUpViewModel)
 
     fun setUpRVFileBinding(fileBinding: LibraryFragRvItemFileBinding,
                            file: File,

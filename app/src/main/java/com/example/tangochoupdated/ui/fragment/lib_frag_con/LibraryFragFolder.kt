@@ -14,14 +14,11 @@ import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryFragOpenFolderBaseBinding
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
-import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
 class LibraryFragFolder :  Fragment(){
@@ -33,6 +30,7 @@ class LibraryFragFolder :  Fragment(){
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
+    private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
 
     private var _binding: LibraryFragOpenFolderBaseBinding? = null
     private val binding get() = _binding!!
@@ -51,7 +49,7 @@ class LibraryFragFolder :  Fragment(){
             libraryViewModel  = libraryViewModel,
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
-            createCardViewModel  = createCardViewModel)
+            createCardViewModel  = createCardViewModel,deletePopUpViewModel)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
@@ -70,9 +68,7 @@ class LibraryFragFolder :  Fragment(){
                 }
             }
             childFilesFromDB(args.folderId.single()).observe(viewLifecycleOwner) {
-                val childFoldersAmount = it.filter { it.fileStatus == FileStatus.FOLDER }.size
-                val childFlashCardCoverAmount = it.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }.size
-                setChildFilesFromDB(it)
+                setParentRVItems(it)
                 adapter.submitList(it)
                 binding.emptyBinding.root.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.GONE
@@ -106,12 +102,12 @@ class LibraryFragFolder :  Fragment(){
             changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                 LibraryFragmentBase().changeLibRVAllSelectedState(recyclerView,it)
             }
-            selectedFiles.observe(viewLifecycleOwner){
+            selectedItems.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
             }
 
             }
-        LibrarySetUpFragment(libraryViewModel).setUpFragLibFolder(binding,myNavCon,requireActivity())
+        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibFolder(binding,myNavCon,requireActivity())
         return binding.root
     }
 

@@ -3,10 +3,11 @@ package com.example.tangochoupdated.ui.view_set_up
 import android.content.Context
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.*
+import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
-class LibrarySetUpFragment(val libVM: LibraryViewModel){
-    private val addL = LibraryAddListeners(libVM)
+class LibrarySetUpFragment(val libVM: LibraryViewModel,deletePopUpViewModel: DeletePopUpViewModel){
+    private val addL = LibraryAddListeners(libVM,deletePopUpViewModel)
 
 
     fun setUpFragLibBase(binding: LibraryFragBinding){

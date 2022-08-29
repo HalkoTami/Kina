@@ -31,6 +31,7 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_flag_clickable.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_missed.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_polygon.xml" value="0.332" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/rectangle.xml" value="0.1935" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_btn_edit_card.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_flag.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_stop_count.xml" value="0.332" />
@@ -47,6 +48,8 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_frag_base.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_popup_anki_setting_scroll_view_content.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_string_frag.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_popup_confirm_delete.xml" value="0.3020833333333333" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_popup_confirm_delete_all_children.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/progress_bar_remembered_rectangle.xml" value="0.3625" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable-v23/card_amount.xml" value="0.2215" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable-v23/nav_btn.xml" value="0.334" />

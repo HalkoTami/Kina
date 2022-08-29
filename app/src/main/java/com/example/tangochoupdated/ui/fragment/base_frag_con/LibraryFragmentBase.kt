@@ -22,13 +22,10 @@ import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.FragmentTree
 import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.enumclass.StartFragment
-import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.ConfirmMode
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
-import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 import com.example.tangochoupdated.ui.animation.Animation
-import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
 class LibraryFragmentBase : Fragment(){
@@ -39,7 +36,7 @@ class LibraryFragmentBase : Fragment(){
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
     private val baseViewModel: BaseViewModel by activityViewModels()
-
+    private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
     private var _binding: LibraryFragBinding? = null
     private val binding get() = _binding!!
 
@@ -60,65 +57,64 @@ class LibraryFragmentBase : Fragment(){
 
 
         libraryViewModel.apply {
-            confirmPopUp.observe(viewLifecycleOwner){
-                val visibility = it.visible
-                if(!visibility){
-                    binding.confirmDeletePopUpBinding.root.visibility = View.GONE
-                    binding.confirmDeleteChildrenPopUpBinding.root.visibility = View.GONE
-                } else {
-                    when(it.confirmMode){
-                        ConfirmMode.DeleteOnlyParent-> binding.confirmDeletePopUpBinding.root.visibility = View.VISIBLE
-                        ConfirmMode.DeleteWithChildren -> binding.confirmDeleteChildrenPopUpBinding.root.visibility = View.VISIBLE
+            deletePopUpViewModel.apply {
+                confirmDeleteView.observe(viewLifecycleOwner){
+                    binding.confirmDeletePopUpBinding.apply {
+                        root.visibility = if(it.visible) View.VISIBLE else View.GONE
+                        txvConfirmDeleteOnlyParent.text = it.confirmText
                     }
                 }
-            }
-            deletingItem.observe(viewLifecycleOwner){ list ->
-                if (list.isEmpty().not()) {
-                    val fileIds = mutableListOf<Int>()
-                    list.onEach { when(it ){
-                        is File -> fileIds.add(it.fileId)
-                    } }
-                    getAllDescendantsByFileId(fileIds).observe(viewLifecycleOwner) {
-                        setDeletingItemChildrenFiles(it)
+                confirmDeleteWithChildrenView.observe(viewLifecycleOwner){
+                    binding.confirmDeleteChildrenPopUpBinding.apply {
+                        root.visibility =  if(it.visible) View.VISIBLE else View.GONE
+                        txvContainingFolder.text = "${it.containingFolder}個"
+                        txvContainingFlashcard.text = "${it.containingFlashCardCover}個"
+                        txvContainingCard.text = "${it.containingCards}枚"
                     }
-                    getCardsByMultipleFileId(fileIds).observe(viewLifecycleOwner){
-                        setDeletingItemChildrenCards(it)
-                    }
-                }
-                binding.confirmDeletePopUpBinding.apply {
-                    txvConfirmDeleteOnlyParent.text =
-                    if(list.size==1){
-                        when(list[0]){
-                            is File -> {
-                                val file = list[0] as File
-                                "${file.title}を削除しますか？"
-                            }
-                            is Card  -> "カードを削除しますか？"
-                            else -> ""
 
+                }
+                deletingItem.observe(viewLifecycleOwner){ list ->
+                    if (list.isEmpty().not()) {
+                        val fileIds = mutableListOf<Int>()
+                        list.onEach { when(it ){
+                            is File -> fileIds.add(it.fileId)
+                        } }
+                        getAllDescendantsByFileId(fileIds).observe(viewLifecycleOwner) {
+                            setDeletingItemChildrenFiles(it)
                         }
-
-                    } else if(list.size>1){
-                        when(returnParentFile()?.fileStatus){
-                            FileStatus.TANGO_CHO_COVER -> "${list.size}のカードを削除しますか？"
-                            else -> "${list.size}のアイテムを削除しますか？"
+                        getCardsByMultipleFileId(fileIds).observe(viewLifecycleOwner){
+                            setDeletingItemChildrenCards(it)
                         }
-                    } else ""
-                }
+                    }
 
-            }
-            deletingItemChildrenFiles.observe(viewLifecycleOwner){ list ->
-                val folderAmount = list?.filter { it.fileStatus == FileStatus.FOLDER }?.size ?:0
-                val flashcardCoverAmount = list?.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }?.size ?:0
-                binding.confirmDeleteChildrenPopUpBinding.apply {
-                    txvContainingFolder.text = "${folderAmount}個"
-                    txvContainingFlashcard.text = "${flashcardCoverAmount}個"
+
                 }
             }
-            deletingItemChildrenCards.observe(viewLifecycleOwner){ list->
-                val cardAmount = list?.size
-                binding.confirmDeleteChildrenPopUpBinding.txvContainingCard.text = "${cardAmount}枚"
-            }
+//            observe(viewLifecycleOwner){
+//                val visibility = it.visible
+//                if(!visibility){
+//                    binding.confirmDeletePopUpBinding.root.visibility = View.GONE
+//                    binding.confirmDeleteChildrenPopUpBinding.root.visibility = View.GONE
+//                } else {
+//                    when(it.confirmMode){
+//                        ConfirmMode.DeleteItem-> binding.confirmDeletePopUpBinding.root.visibility = View.VISIBLE
+//                        ConfirmMode.DeleteWithChildren -> binding.confirmDeleteChildrenPopUpBinding.root.visibility = View.VISIBLE
+//                    }
+//                }
+//            }
+
+//            deletingItemChildrenFiles.observe(viewLifecycleOwner){ list ->
+//                val folderAmount = list?.filter { it.fileStatus == FileStatus.FOLDER }?.size ?:0
+//                val flashcardCoverAmount = list?.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }?.size ?:0
+//                binding.confirmDeleteChildrenPopUpBinding.apply {
+//                    txvContainingFolder.text = "${folderAmount}個"
+//                    txvContainingFlashcard.text = "${flashcardCoverAmount}個"
+//                }
+//            }
+//            deletingItemChildrenCards.observe(viewLifecycleOwner){ list->
+//                val cardAmount = list?.size
+//                binding.confirmDeleteChildrenPopUpBinding.txvContainingCard.text = "${cardAmount}枚"
+//            }
         }
 
         val a = childFragmentManager.findFragmentById(binding.libFragConView.id) as NavHostFragment
@@ -131,7 +127,7 @@ class LibraryFragmentBase : Fragment(){
             Toast.makeText(requireActivity(), "action called ", Toast.LENGTH_SHORT).show()
         }
 
-        LibrarySetUpFragment(libraryViewModel).setUpFragLibBase(binding)
+        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibBase(binding)
         return binding.root
     }
 
