@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -49,6 +50,7 @@ class FlipStringTypeAnswerFragment  : Fragment() {
 
 
 
+
             binding.edtTypeAnswer.setOnFocusChangeListener { view, b ->
                 when(b){
                     true -> {
@@ -60,12 +62,11 @@ class FlipStringTypeAnswerFragment  : Fragment() {
             typeAndCheckViewModel.setKeyBoardVisible(true)
             binding.edtTypeAnswer.requestFocus()
 
-            binding.edtTypeAnswer.addTextChangedListener {
-                flipBaseViewModel.setTypedAnswer(it.toString())
-            }
+
             flipBaseViewModel.getCardFromDB(args.cardId).observe(viewLifecycleOwner){
                 setParentCard(it)
-                binding.txvFlipTitle.text = it.id.toString()
+                binding.txvFlipTitle.text = if(args.answerIsBack)it.stringData?.frontTitle ?:"表" else it.stringData?.backTitle ?:"裏"
+                binding.txvContent.text = if(args.answerIsBack)it.stringData?.frontText else it.stringData?.backText
             }
         }
         var up :Boolean = false
@@ -113,7 +114,8 @@ class FlipStringTypeAnswerFragment  : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        typeAndCheckViewModel.addAnswer(args.cardId, flipBaseViewModel.returnTypedAnswer())
+        typeAndCheckViewModel.addAnswer(args.cardId, binding.edtTypeAnswer.editableText.toString())
+        typeAndCheckViewModel.checkAnswer(flipBaseViewModel.returnParentCard()?:return,binding.edtTypeAnswer.text.toString(),args.answerIsBack)
         _binding = null
     }
 }

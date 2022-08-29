@@ -113,6 +113,7 @@
                     android:progressDrawable="@drawable/custome_progress_bar_rectangle"
                     />
                 <TextView
+                    android:id="@+id/txv_progress_answer_correct"
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -193,6 +194,7 @@
             android:layout_gravity="center"
             android:gravity="center">
             <ImageView
+                android:id="@+id/imv_result_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/icon_missed"

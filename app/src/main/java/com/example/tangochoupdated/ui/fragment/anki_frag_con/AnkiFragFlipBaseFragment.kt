@@ -97,6 +97,11 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                 }
             }
 
+            settingVM.typeAnswer.observe(viewLifecycleOwner){
+                if(it){
+                    binding.btnFlipPrevious.visibility = View.INVISIBLE
+                }
+            }
 
 
 

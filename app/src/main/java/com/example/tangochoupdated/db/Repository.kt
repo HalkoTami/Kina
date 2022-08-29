@@ -48,6 +48,11 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
         fun searchFilesByWords(search:String):Flow<List<File>> = libraryDao.searchFilesByWords(search)
 
     val allCards:Flow<List<Card>> = cardDao.getAllCards()
+
+//    activity
+    fun getCardActivity(cardId:Int):Flow<List<ActivityData>> = libraryDao.getActivityDataByCard(cardId)
+
+
     enum class UpdateFileAmount{
         Folder,FlashCardCover,Card
     }

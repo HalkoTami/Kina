@@ -8,14 +8,9 @@ import com.example.tangochoupdated.db.enumclass.ActivityStatusConverter
 @TypeConverters(ActivityStatusConverter::class)
 data class ActivityData(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "activity_id")
     val id: Int,
-    @ColumnInfo(name = "occurred_card_id")
-    var cardId:Int?,
-    @ColumnInfo(name = "occurred_file_id")
-    var fileId:Int?,
-    @ColumnInfo(name = "activity_status")
-    var activityStatus: ActivityStatus,
-    @ColumnInfo(name = "activity_daytime")
-    var dateTime: Int
+    var cardId:Int?= null,
+    var fileId:Int?= null,
+    val activityStatus: ActivityStatus,
+    val dateTime: String
 )

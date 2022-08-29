@@ -149,7 +149,8 @@ interface LibraryDao {
             "SELECT fileId FROM generation b )")
     fun deleteFileAndAllDescendants(fileId:Int)
 
-
+    @Query("SELECT * FROM tbl_activity_data  WHERE cardId = :cardId")
+    fun getActivityDataByCard(cardId: Int):Flow<List<ActivityData>>
 
 
 

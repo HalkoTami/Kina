@@ -4,6 +4,7 @@ import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.tangochoupdated.db.MyRoomRepository
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringCheckAnswerFragment
 import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
 
 class ViewModelFactory(private val repository: MyRoomRepository  ) : ViewModelProvider.NewInstanceFactory() {
@@ -20,6 +21,7 @@ class ViewModelFactory(private val repository: MyRoomRepository  ) : ViewModelPr
             modelClass.isAssignableFrom(AnkiBoxFragViewModel::class.java) -> AnkiBoxFragViewModel(repository)
             modelClass.isAssignableFrom(AnkiFragBaseViewModel::class.java) -> AnkiFragBaseViewModel(repository)
             modelClass.isAssignableFrom(AnkiFlipFragViewModel::class.java) -> AnkiFlipFragViewModel(repository)
+            modelClass.isAssignableFrom(AnkiFlipTypeAndCheckViewModel::class.java) -> AnkiFlipTypeAndCheckViewModel(repository)
             else ->  illegalDecoyCallException("unknown ViewModel class")
         }
         return a as T

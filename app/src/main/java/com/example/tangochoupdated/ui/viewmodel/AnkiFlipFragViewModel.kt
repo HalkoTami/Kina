@@ -85,22 +85,31 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         _setting.value = viewModel
     }
     fun checkFront():Boolean{
-        return (returnFlipFragment() == FlipFragments.LookStringFront)||(returnFlipFragment() == FlipFragments.TypeAnswerString)
+        return (returnFlipFragment() == FlipFragments.LookStringFront)
     }
     fun checkBack():Boolean{
-        return (returnFlipFragment() == FlipFragments.LookStringBack)||(returnFlipFragment() == FlipFragments.CheckAnswerString)
+        return (returnFlipFragment() == FlipFragments.LookStringBack)
     }
+
     fun checkChangeToNextCard(reverseMode: Boolean):Boolean{
         return  (reverseMode&&checkFront())||(reverseMode.not()&&checkBack())
+    }
+    fun checkFirstSide(reverseMode: Boolean):Boolean{
+        return (reverseMode&&checkBack())||(reverseMode.not()&&checkFront())
+                ||returnFlipFragment() == FlipFragments.TypeAnswerString
+    }
+    fun checkSecondSide(reverseMode: Boolean):Boolean{
+        return (reverseMode&&checkFront())||(reverseMode.not()&&checkBack())
+                ||returnFlipFragment() == FlipFragments.CheckAnswerString
     }
     fun checkChangeToPreviouscard(reverseMode: Boolean):Boolean{
         return (reverseMode&&checkBack())||(reverseMode.not()&&checkFront())
     }
     fun checkPositionIsOnStartEdge(reverseMode: Boolean):Boolean{
-        return (returnParentPosition() == 0&&checkChangeToPreviouscard(reverseMode))
+        return (returnParentPosition() == 0&&checkFirstSide(reverseMode))
     }
     fun checkPositionIsOnEndEdge(reverseMode: Boolean):Boolean{
-        return (returnParentPosition() == returnFlipItems().size -1&&checkChangeToNextCard(reverseMode))
+        return (returnParentPosition() == returnFlipItems().size -1&&checkSecondSide(reverseMode))
     }
     private val _flipProgress = MutableLiveData<Progress>()
     fun setProgress(progress: Progress){
