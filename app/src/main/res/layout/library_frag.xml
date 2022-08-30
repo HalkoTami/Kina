@@ -45,6 +45,9 @@
         <include android:id="@+id/confirm_delete_children_popUp_binding"
             layout="@layout/library_frag_popup_confirm_delete_all_children"
             android:visibility="gone"/>
+        <include android:id="@+id/edit_file_binding"
+            layout="@layout/main_activity_popup_edit_file"
+            android:visibility="gone"/>
     </FrameLayout>
 
 

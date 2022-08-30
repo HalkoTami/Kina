@@ -88,7 +88,7 @@
         android:layout_height="0dp"
         app:layout_constraintHeight_percent="0.2"
         android:layout_margin="10dp">
-        <com.example.tangochoupdated.ui.customViews.MyButtonWithText
+        <Button
             android:textSize="11sp"
             android:id="@+id/btn_cancel"
             android:layout_margin="3dp"
@@ -102,7 +102,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"/>
-        <com.example.tangochoupdated.ui.customViews.MyButtonWithText
+        <Button
             android:id="@+id/delete_only_file"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -111,7 +111,7 @@
             android:textSize="10sp"
             android:maxLines="2"
             android:text="ファイルのみ\n削除する"/>
-        <com.example.tangochoupdated.ui.customViews.MyButtonWithText
+        <Button
             android:textSize="11sp"
             android:id="@+id/btn_delete_all_children"
             android:layout_margin="3dp"

@@ -17,6 +17,7 @@
         <item name="android:textViewStyle">@style/TextAppearance.AppCompat.</item>
         <item name="imageButtonStyle">@style/Widget.AppCompat.ImageButton.</item>
         <item name="android:background">@android:color/transparent</item>
+        <item name="maxLines">1</item>
 
     </style>
 
@@ -33,6 +34,12 @@
     <style name="TextAppearance.AppCompat." parent="Widget.AppCompat.TextView">
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/text_color_gray</item>
+
+    </style>
+    <style name="MyTextViewStyle" >
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">none</item>
         <item name="android:textColor">@color/text_color_gray</item>
 
     </style>

@@ -18,11 +18,12 @@
         android:hint="検索"
         android:textSize="14sp"
         android:background="@android:color/transparent" />
-    <TextView
+    <com.example.tangochoupdated.ui.customViews.MyTextView
         android:id="@+id/txv_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:textSize="12sp"
 
         android:text="キャンセル"/>
 

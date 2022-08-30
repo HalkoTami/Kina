@@ -100,7 +100,6 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setConfirmDeleteVisible(visible: Boolean,){
         val single = returnDeletingItems().size == 1
         val singleItem = returnDeletingItems().single()
-
         val txvConfirmText:String = if(single && singleItem is File) "${singleItem.title}を削除しますか？"
         else "選択中のアイテムを削除しますか？"
         setConfirmDeleteView(ConfirmDeleteView(visible,txvConfirmText))

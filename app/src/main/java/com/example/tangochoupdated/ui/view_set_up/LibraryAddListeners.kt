@@ -15,9 +15,7 @@ import com.example.tangochoupdated.ui.viewmodel.*
 
 class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: DeletePopUpViewModel){
 //    top Bars
-    fun confirmDeletePopUpAddCL(binding: LibraryFragBinding,){
-        val onlyP = binding.confirmDeletePopUpBinding
-        val deleteAllC = binding.confirmDeleteChildrenPopUpBinding
+    fun confirmDeletePopUpAddCL(onlyP: LibraryFragPopupConfirmDeleteBinding,deleteAllC:LibraryFragPopupConfirmDeleteAllChildrenBinding){
         arrayOf(
             onlyP.btnCloseConfirmDeleteOnlyParentPopup,
             onlyP.btnCommitDeleteOnlyParent,
@@ -26,8 +24,13 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
             deleteAllC.btnDeleteAllChildren,
             deleteAllC.btnCancel
         )   .onEach {
-            it.setOnClickListener(LibFragPopUpConfirmDeleteCL(binding,libVM, deletePopUpViewModel ))
+            it.setOnClickListener(LibFragPopUpConfirmDeleteCL(onlyP,deleteAllC,libVM, deletePopUpViewModel ))
         }
+    }
+    fun fragChildMultiBaseAddCL(binding: LibraryChildFragWithMulModeBaseBinding,context: Context,navCon: NavController){
+        multiTopBarAddCL(binding.topBarMultiselectBinding,binding.multiSelectMenuBinding,binding.frameLayMultiModeMenu,context,navCon)
+        searchAddCL(binding.imvSearchLoupe,binding.laySearchView,binding.bindingSearch,context)
+
     }
     fun homeTopBarAddCL(binding: LibraryFragTopBarHomeBinding, context: Context, navCon: NavController){
         arrayOf(
@@ -35,15 +38,15 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
             binding.imvBookMark,
         ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(context, binding, libVM, navCon)) }
     }
-    fun multiTopBarAddCL(binding: LibraryFragTopBarMultiselectModeBinding, context: Context, navCon: NavController){
+    fun multiTopBarAddCL(binding: LibraryFragTopBarMultiselectModeBinding,menuBarBinding: LibItemTopBarMenuBinding,menuFrame:FrameLayout, context: Context, navCon: NavController){
         arrayOf(
             binding.imvCloseMultiMode,
             binding.imvSelectAll,
             binding.imvChangeMenuVisibility,
-            binding.multiSelectMenuBinding.linLayMoveSelectedItems,
-            binding.multiSelectMenuBinding.linLayDeleteSelectedItems,
-            binding.multiSelectMenuBinding.linLaySetFlagToSelectedItems,
-        ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL(context, binding,libVM, navCon,deletePopUpViewModel)) }
+            menuBarBinding.linLayMoveSelectedItems,
+            menuBarBinding.linLayDeleteSelectedItems,
+            menuBarBinding.linLaySetFlagToSelectedItems,
+        ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL(context, binding,menuBarBinding ,menuFrame,libVM, navCon,deletePopUpViewModel)) }
     }
 
     fun inBoxTopBarAddCL(binding: LibraryFragTopBarInboxBinding, context: Context, navCon: NavController){
@@ -52,13 +55,13 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
             binding.imvCloseInbox,
         ).onEach { it.setOnClickListener( LibFragTopBarInBoxCL(context, binding,libVM,navCon)) }
     }
-    fun fileTopBarAddCL(binding: LibraryFragTopBarFileBinding, context: Context, navCon: NavController){
+    fun fileTopBarAddCL(binding: LibraryFragTopBarFileBinding,ancestors:LibraryFragTopBarAncestorsBinding, context: Context, navCon: NavController){
         arrayOf(
             binding.imvGoBack,
-            binding.lineLayGGFile,
-            binding.lineLayGPFile,
+            ancestors.lineLayGGFile,
+            ancestors.lineLayGPFile,
 
-            ).onEach { it.setOnClickListener( LibFragTopBarFileCL(context, binding,libVM, navCon)) }
+            ).onEach { it.setOnClickListener( LibFragTopBarFileCL(context, binding,ancestors,libVM, navCon)) }
     }
     fun fragChooseFileMoveToTopBarAddCL(binding: LibraryFragTopBarChooseFileMoveToBinding, context: Context, navCon: NavController){
         arrayOf(

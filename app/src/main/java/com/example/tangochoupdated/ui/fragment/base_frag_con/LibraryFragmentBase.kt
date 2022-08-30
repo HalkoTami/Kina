@@ -25,6 +25,7 @@ import com.example.tangochoupdated.db.enumclass.StartFragment
 import com.example.tangochoupdated.ui.view_set_up.ConfirmMode
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
@@ -120,14 +121,16 @@ class LibraryFragmentBase : Fragment(){
         val a = childFragmentManager.findFragmentById(binding.libFragConView.id) as NavHostFragment
         myNavCon = a.navController
 
-        libraryViewModel.action.observe(viewLifecycleOwner){
-            if(libraryViewModel.returnParentFile()?.fileStatus!=FileStatus.TANGO_CHO_COVER){
-                myNavCon.navigate(it)
-            }
-            Toast.makeText(requireActivity(), "action called ", Toast.LENGTH_SHORT).show()
-        }
+//        libraryViewModel.action.observe(viewLifecycleOwner){
+//            if(libraryViewModel.returnParentFile()?.fileStatus!=FileStatus.TANGO_CHO_COVER){
+//                myNavCon.navigate(it)
+//            }
+//            Toast.makeText(requireActivity(), "action called ", Toast.LENGTH_SHORT).show()
+//        }
+        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel)
+        addListeners.confirmDeletePopUpAddCL(binding.confirmDeletePopUpBinding,binding.confirmDeleteChildrenPopUpBinding)
 
-        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibBase(binding)
+//        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibBase(binding)
         return binding.root
     }
 

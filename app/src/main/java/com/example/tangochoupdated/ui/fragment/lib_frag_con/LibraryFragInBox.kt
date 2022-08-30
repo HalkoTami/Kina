@@ -9,10 +9,11 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
-import com.example.tangochoupdated.databinding.LibraryFragInboxBaseBinding
+import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
+import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
@@ -24,7 +25,7 @@ class LibraryFragInBox  : Fragment(){
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
     private val stringCardViewModel: StringCardViewModel by activityViewModels()
-    private var _binding: LibraryFragInboxBaseBinding? = null
+    private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
     private val binding get() = _binding!!
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
 
@@ -35,7 +36,7 @@ class LibraryFragInBox  : Fragment(){
     ): View {
         myNavCon =
             requireActivity().findNavController(R.id.lib_frag_con_view)
-        _binding = LibraryFragInboxBaseBinding.inflate(inflater, container, false)
+        _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
         val adapter= LibFragPlaneRVListAdapter(
             createFileViewModel  = createFileViewModel,
@@ -48,20 +49,29 @@ class LibraryFragInBox  : Fragment(){
         recyclerView.isNestedScrollingEnabled = false
 
 
+        val topBarBinding = LibraryFragTopBarInboxBinding.inflate(inflater,container,false)
+        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel)
+        addListeners.inBoxTopBarAddCL(topBarBinding,requireActivity(),myNavCon)
+        binding.frameLayTopBar.addView(topBarBinding.root)
+
         createFileViewModel.filterBottomMenuWhenInBox()
         libraryViewModel.apply {
             setModeInBox(true)
 
             createCardViewModel.setParentFlashCardCover(null)
+            val emptyView = LibraryFragLayInboxRvEmptyBinding.inflate(inflater,container,false).root
             childCardsFromDB(null).observe(viewLifecycleOwner) {
                 setParentRVItems(it ?: mutableListOf())
                 adapter.submitList(it)
-                binding.emptyBinding.root.visibility =
-                    if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
+                if(it.isNullOrEmpty().not()){
+                    binding.mainFrameLayout.addView(emptyView)
+                } else {
+                    binding.mainFrameLayout.removeView(emptyView)
+                }
             }
             multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
-                binding.topBarInboxBinding.root.visibility = if(it) View.GONE else View.VISIBLE
+                topBarBinding.root.visibility = if(it) View.GONE else View.VISIBLE
                 LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
                 LibraryFragmentBase().changeStringBtnVisibility(recyclerView,it)
             }
@@ -77,7 +87,7 @@ class LibraryFragInBox  : Fragment(){
 
 
         }
-        LibrarySetUpFragment(libraryViewModel, deletePopUpViewModel).setUpFragLibInBox(binding,myNavCon,requireActivity())
+//        LibrarySetUpFragment(libraryViewModel, deletePopUpViewModel).setUpFragLibInBox(binding,myNavCon,requireActivity())
         return binding.root
     }
 

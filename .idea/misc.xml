@@ -29,6 +29,8 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_edit.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_file_line.xml" value="0.1975" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_flag_clickable.xml" value="0.332" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_flashcard.xml" value="0.3565" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_flashcard_flat.xml" value="0.3565" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_missed.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_polygon.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/rectangle.xml" value="0.1935" />
@@ -46,10 +48,27 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_flip_frag_look_string_frag.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_flip_frag_type_answer_string_frag.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_frag_base.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_base.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_popup_anki_setting_scroll_view_content.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_string_frag.xml" value="0.3625" />
-        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_popup_confirm_delete.xml" value="0.3020833333333333" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/full_rv.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/item_search_bar.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/lib_item_top_bar_menu.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_child_frag_base.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_child_frag_with_mul_mode_base.xml" value="0.18541666666666667" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_home_base.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_lay_folder_rv_empty.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_lay_rv_empty.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_popup_confirm_delete.xml" value="0.25" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_popup_confirm_delete_all_children.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_select_file_move_to_base.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_top_bar_ancestors.xml" value="0.33" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_top_bar_choose_file_move_to.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_top_bar_file.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_top_bar_home.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_top_bar_inbox.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_top_bar_multiselect_mode.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/progress_bar_remembered_rectangle.xml" value="0.3625" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable-v23/card_amount.xml" value="0.2215" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable-v23/nav_btn.xml" value="0.334" />

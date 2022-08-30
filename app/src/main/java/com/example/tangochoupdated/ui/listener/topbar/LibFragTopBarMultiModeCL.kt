@@ -2,22 +2,28 @@ package com.example.tangochoupdated.ui.listener.topbar
 
 import android.content.Context
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.navigation.NavController
+import com.example.tangochoupdated.databinding.LibItemTopBarMenuBinding
 import com.example.tangochoupdated.databinding.LibraryFragTopBarMultiselectModeBinding
 import com.example.tangochoupdated.toastToDo
 import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
-class LibFragTopBarMultiModeCL(val context: Context, val binding: LibraryFragTopBarMultiselectModeBinding, val libVM: LibraryViewModel,
-                               val navCon: NavController,val deletePopUpViewModel:DeletePopUpViewModel
+class LibFragTopBarMultiModeCL(val context: Context,
+                               val binding: LibraryFragTopBarMultiselectModeBinding,
+                               val menuBinding: LibItemTopBarMenuBinding,
+                               val menuFrame:FrameLayout,
+                               val libVM: LibraryViewModel,
+                               val navCon: NavController, val deletePopUpViewModel:DeletePopUpViewModel
 ): View.OnClickListener{
     val multi = binding
     fun toastPleaseSelectItems(){
         Toast.makeText(context,"アイテムを選択してください", Toast.LENGTH_SHORT).show()
     }
     fun changeMenuVisibility(){
-        multi.frameLayMultiModeMenu.apply{
+        menuFrame.apply{
             visibility =  if(this.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
     }
@@ -35,16 +41,16 @@ class LibFragTopBarMultiModeCL(val context: Context, val binding: LibraryFragTop
                 }
                 multi.imvChangeMenuVisibility -> changeMenuVisibility()
 
-                multi.multiSelectMenuBinding.linLayMoveSelectedItems -> {
+                menuBinding.linLayMoveSelectedItems -> {
                     if(notSelected)toastPleaseSelectItems()
                         else libVM.openChooseFileMoveTo(null)
                 }
-                multi.multiSelectMenuBinding.linLayDeleteSelectedItems -> if(notSelected)toastPleaseSelectItems()
+                menuBinding.linLayDeleteSelectedItems -> if(notSelected)toastPleaseSelectItems()
                 else {
                     deletePopUpViewModel.setDeletingItem(libVM.returnSelectedItems())
                     deletePopUpViewModel.setConfirmDeleteVisible(true)
                 }
-                multi.multiSelectMenuBinding.linLaySetFlagToSelectedItems -> if(notSelected)toastPleaseSelectItems()
+                menuBinding.linLaySetFlagToSelectedItems -> if(notSelected)toastPleaseSelectItems()
                 else toastToDo(context)
 
 

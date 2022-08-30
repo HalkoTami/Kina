@@ -2,49 +2,75 @@ package com.example.tangochoupdated.ui.customViews
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
-import android.widget.LinearLayout
+import android.view.ViewTreeObserver
 import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
-import com.example.tangochoupdated.MyTouchListener
-import com.example.tangochoupdated.R
-import com.example.tangochoupdated.ui.listener.textSizeListener
 
 
-class MyButtonWithText(context: Context, attributeSet: AttributeSet):androidx.appcompat.widget.AppCompatTextView(context,attributeSet){
+class MyButtonWithText(context: Context, attributeSet: AttributeSet):androidx.appcompat.widget.AppCompatButton(context,attributeSet){
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        this.background = AppCompatResources.getDrawable(this.context, R.drawable.rectangle_button)
-        this.setTextColor(ContextCompat.getColor(this.context,R.color.white))
-        this.gravity = Gravity.CENTER
-        this.elevation= 10f
-        this.viewTreeObserver.addOnGlobalLayoutListener {
-            resize(this.text)
+//        this.background = AppCompatResources.getDrawable(this.context, R.drawable.rectangle_button)
+//        this.setTextColor(ContextCompat.getColor(this.context,R.color.white))
+//        this.gravity = Gravity.CENTER
+//        this.elevation= 10f
+        this.viewTreeObserver.addOnGlobalLayoutListener (
+            object : ViewTreeObserver.OnGlobalLayoutListener{
+                override fun onGlobalLayout() {
+                    val myButtonWithText = this@MyButtonWithText
+                    myButtonWithText.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    val viewBounds = android.graphics.Rect()
+                    val lineBound = android.graphics.Rect()
+                    myButtonWithText. getWindowVisibleDisplayFrame(viewBounds)
+                    val viewWidth = viewBounds.width()-myButtonWithText.paddingEnd-myButtonWithText.paddingStart
+                    val viewHeight = myButtonWithText.height-myButtonWithText.paddingTop
+
+                    var size = myButtonWithText.textSize
+                    myButtonWithText.onPreDraw()
+                    val start = myButtonWithText.layout.getLineStart(0)
+
+                    myButtonWithText. paint.measureText(text.toString())
+                    val textBound = android.graphics.Rect()
+                    myButtonWithText.paint.getTextBounds(text.toString(),start, text.length?: 0,lineBound)
+                    var lastLineWidth = lineBound.width()
+                    while(lastLineWidth>viewWidth){
+                        size--
+                        myButtonWithText.textSize = size
+                        myButtonWithText.onPreDraw()
+                        myButtonWithText.paint.getTextBounds(text.toString(),myButtonWithText.layout.getLineStart(start), text.length?: 0,lineBound)
+                        lastLineWidth = lineBound.width()
+                    }
+                    var textHeight =  (lineBound.height()*2)*myButtonWithText.lineCount
+                    var outOfBound:Int= (textHeight-viewHeight)
+                    while(outOfBound>0){
+                        size--
+                        myButtonWithText.textSize = size
+                        myButtonWithText.onPreDraw()
+                        myButtonWithText.paint.getTextBounds(text.toString(),0, 1,lineBound)
+                        outOfBound=  ((lineBound.height())*2)*myButtonWithText.lineCount-viewHeight
+                    }
+                    Toast.makeText(myButtonWithText.context,"$text ${outOfBound},${lineBound.height()}",Toast.LENGTH_SHORT).show()
+
+                }
+            }
+        )
+    }
+
+    open class MyButtonTextListener(private val myButtonWithText: MyButtonWithText, private val height:Int): ViewTreeObserver.OnGlobalLayoutListener {
+        fun resize(text:CharSequence, height:Int){
+
+
+        }
+        override fun onGlobalLayout() {
+            resize(myButtonWithText.text,height)
+        }
+        open fun onKeyBoardAppear(){
+
+        }
+        open fun onKeyBoardDisappear(){
+
         }
     }
-    override fun setOnClickListener(l: OnClickListener?) {
-        super.setOnClickListener(l)
-        if(l != null){
-            this.setOnClickListener(null)
-        }
-        this.setOnTouchListener(object : MyTouchListener(this.context){
-            override fun onDown() {
-                super.onDown()
-                this@MyButtonWithText.elevation = 0f
-            }
-
-            override fun onSingleTap() {
-                super.onSingleTap()
-                l?.onClick(this@MyButtonWithText)
-                this@MyButtonWithText.elevation = 10f
-            }
-        })
-    }
-
 
 
 

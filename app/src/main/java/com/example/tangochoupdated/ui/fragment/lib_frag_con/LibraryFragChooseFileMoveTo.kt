@@ -85,7 +85,7 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
                 }
             }
         }
-        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibChooseFileMoveTo(binding,myNavCon,requireActivity())
+//        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibChooseFileMoveTo(binding,myNavCon,requireActivity())
 
         return binding.root
     }

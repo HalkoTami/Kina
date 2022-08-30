@@ -1,85 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/transparent">
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linLay_multi_top"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imv_change_menu_visibility"
-        android:background="@android:color/transparent"
 
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp"
 
-        android:gravity="center_vertical"
-        android:layout_gravity="center_vertical">
-
-
-        <ImageView
-            android:id="@+id/imv_close_multi_mode"
-            android:padding="2dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_close"
-            />
-        <ImageView
-            android:layout_margin="7dp"
-            android:id="@+id/imv_select_all"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-
-            android:src="@drawable/select_rv_item"
-            />
-
-        <TextView
-            android:id="@+id/txv_selecting_status"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-
-            android:text="10個選択中"
-            android:gravity="center_vertical"
-
-            android:textSize="20sp"/>
-
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-    <FrameLayout
-        app:layout_constraintTop_toTopOf="@id/linLay_multi_top"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toStartOf="@id/imv_change_menu_visibility"
-        android:id="@+id/frameLay_multi_mode_menu"
+    android:gravity="center_vertical"
+    android:layout_gravity="center_vertical">
+    <ImageView
+        android:id="@+id/imv_close_multi_mode"
+        android:minHeight="40dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|end"
-        android:elevation="3dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/gray_stroke_rectangle"
-        android:visibility="gone">
-        <include
-            android:id="@+id/multi_select_menu_binding"
-            layout="@layout/lib_item_top_bar_menu"
-            android:visibility="visible"/>
-    </FrameLayout>
+        android:src="@drawable/icon_close"
+        />
     <ImageView
-        app:layout_constraintStart_toEndOf="@id/linLay_multi_top"
-        app:layout_constraintTop_toTopOf="@id/linLay_multi_top"
-        app:layout_constraintBottom_toBottomOf="@id/linLay_multi_top"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:id="@+id/imv_select_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="20dp"
+
+        android:src="@drawable/select_rv_item"
+        />
+
+    <com.example.tangochoupdated.ui.customViews.MyTextView
+        android:id="@+id/txv_selecting_status"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+
+        android:text="10個選択中"
+        android:gravity="center_vertical"
+
+        android:textSize="20sp"/>
+    <ImageView
 
         android:id="@+id/imv_change_menu_visibility"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
 
         android:src="@drawable/icon_menu"
         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -11,12 +11,13 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
-import com.example.tangochoupdated.databinding.LibraryFragHomeBaseBinding
+import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.listadapter.LibFragSearchRVListAdapter
+import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
@@ -31,7 +32,7 @@ class LibraryFragHome : Fragment(){
     private val searchViewModel:SearchViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
 
-    private var _binding: LibraryFragHomeBaseBinding? = null
+    private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
     private val binding get() = _binding!!
 
 
@@ -41,7 +42,7 @@ class LibraryFragHome : Fragment(){
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = LibraryFragHomeBaseBinding.inflate(inflater, container, false)
+        _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
         val adapter= LibFragPlaneRVListAdapter(
             createFileViewModel  = createFileViewModel,
@@ -55,7 +56,10 @@ class LibraryFragHome : Fragment(){
         recyclerView.isNestedScrollingEnabled = false
         myNavCon =  requireActivity().findNavController(R.id.frag_container_view)
 
-
+        val topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
+        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel)
+        addListeners.homeTopBarAddCL(topBarBinding,requireActivity(),myNavCon)
+        binding.frameLayTopBar.addView(topBarBinding.root)
 
         createCardViewModel.setParentFlashCardCover(null)
         createFileViewModel.setParentFile(null)
@@ -64,7 +68,7 @@ class LibraryFragHome : Fragment(){
             libraryViewModel.clearFinalList()
             multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
-                binding.topBarHomeBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
+                topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                 LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
             }
             makeAllUnSwiped.observe(viewLifecycleOwner){
@@ -73,45 +77,45 @@ class LibraryFragHome : Fragment(){
             changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                 LibraryFragmentBase().changeLibRVAllSelectedState(recyclerView,it)
             }
-            childCardsFromDB(null).observe(viewLifecycleOwner){
-                binding.topBarHomeBinding.txvInBoxCardAmount.apply {
+            val emptyView = LibraryFragLayHomeRvEmptyBinding.inflate(inflater,container,false).root
+            childFilesFromDB(null).observe(viewLifecycleOwner){
+                topBarBinding.txvInBoxCardAmount.apply {
                     text = it?.size.toString()
                     visibility = if(it?.size == 0) View.GONE else View.VISIBLE
                 }
-                createCardViewModel.setSisterCards(it)
+                adapter.submitList(it)
+                if(it.isNullOrEmpty()){
+                    binding.frameLayRvEmpty.addView(emptyView)
+                } else {
+                    binding.frameLayRvEmpty.removeView(emptyView)
+                }
+
             }
             selectedItems.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
             }
+            val searchAdapter = LibFragSearchRVListAdapter(
+                createFileViewModel,libraryViewModel,stringCardViewModel,createCardViewModel,searchViewModel,viewLifecycleOwner,deletePopUpViewModel, requireActivity()
+            )
+            val searchRv = binding.searchRvBinding.recyclerView
+            searchRv.adapter = searchAdapter
+            searchRv.layoutManager = LinearLayoutManager(requireActivity())
+            searchRv.isNestedScrollingEnabled = false
             binding.bindingSearch.edtLibrarySearch.addTextChangedListener {
                 if(it.toString()!=""){
                     searchViewModel.setSearchText(it.toString())
                     searchViewModel.getFilesByWords(it.toString()).observe(viewLifecycleOwner){
-                        val searchAdapter = LibFragSearchRVListAdapter(
-                            createFileViewModel,libraryViewModel,stringCardViewModel,createCardViewModel,searchViewModel,viewLifecycleOwner,deletePopUpViewModel, requireActivity()
-                        )
-                        recyclerView.adapter = searchAdapter
-                        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                        recyclerView.isNestedScrollingEnabled = false
+                        binding.searchRvBinding.root.visibility = View.VISIBLE
                         searchAdapter.submitList(it)
 
                     }
 
-                } else {
-                    libraryViewModel.childFilesFromDB(null).observe(viewLifecycleOwner) {
-                        recyclerView.adapter = adapter
-                        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                        recyclerView.isNestedScrollingEnabled = false
-                        adapter.submitList(it)
-                        binding.emptyBinding.root.visibility =
-                            if (it.isEmpty()) View.VISIBLE else View.GONE
-                    }
-                }
+                } else binding.searchRvBinding.root.visibility = View.GONE
             }
 
         }
 
-        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibHome(binding,myNavCon,requireActivity())
+//        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibHome(binding,myNavCon,requireActivity())
 
 
 

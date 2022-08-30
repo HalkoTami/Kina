@@ -2,6 +2,7 @@ package com.example.tangochoupdated.ui.fragment.lib_frag_con
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -11,13 +12,14 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
-import com.example.tangochoupdated.databinding.LibraryFragOpenFolderBaseBinding
+import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
+import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
@@ -32,7 +34,7 @@ class LibraryFragFolder :  Fragment(){
     private val libraryViewModel: LibraryViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
 
-    private var _binding: LibraryFragOpenFolderBaseBinding? = null
+    private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
     private val binding get() = _binding!!
 
 
@@ -42,7 +44,7 @@ class LibraryFragFolder :  Fragment(){
         savedInstanceState: Bundle?
     ): View {
         myNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
-        _binding = LibraryFragOpenFolderBaseBinding.inflate(inflater, container, false)
+        _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
         val adapter= LibFragPlaneRVListAdapter(
             createFileViewModel  = createFileViewModel,
@@ -54,24 +56,32 @@ class LibraryFragFolder :  Fragment(){
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
 
+        val topBarBinding = LibraryFragTopBarFileBinding.inflate(inflater,container,false)
+        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel)
+        addListeners.fileTopBarAddCL(topBarBinding,binding.ancestorsBinding,requireActivity(),myNavCon)
+        binding.frameLayTopBar.addView(topBarBinding.root)
 
         libraryViewModel.apply {
             clearFinalList()
             parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileFromDB(it)
                 createFileViewModel.setParentFile(it)
-                binding.topBarFileBinding.apply {
+                topBarBinding.apply {
                     txvFileTitle.text = it?.title ?:"タイトルなし"
                     imvFileType.setImageDrawable(
                         GetCustomDrawables(requireActivity()).getFolderIconByCol(it?.colorStatus ?:ColorStatus.GRAY,)
                     )
                 }
             }
+            val emptyView = LibraryFragLayFolderRvEmptyBinding.inflate(inflater,container,false).root
             childFilesFromDB(args.folderId.single()).observe(viewLifecycleOwner) {
                 setParentRVItems(it)
                 adapter.submitList(it)
-                binding.emptyBinding.root.visibility =
-                    if (it.isEmpty()) View.VISIBLE else View.GONE
+                if(it.isNullOrEmpty().not()){
+                    binding.mainFrameLayout.addView(emptyView)
+                } else {
+                    binding.mainFrameLayout.removeView(emptyView)
+                }
             }
 
             parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner){
@@ -79,7 +89,7 @@ class LibraryFragFolder :  Fragment(){
                 createFileViewModel.filterBottomMenuByAncestors(it,returnParentFile()!!)
             }
             parentFileAncestors.observe(viewLifecycleOwner){
-                    binding.topBarFileBinding.apply {
+                    binding.ancestorsBinding.apply {
                         txvGGrandParentFileTitle.text = it.gGrandPFile?.title
                         txvGrandParentFileTitle.text = it.gParentFile?.title
                         txvParentFileTitle.text = it.ParentFile?.title
@@ -93,7 +103,7 @@ class LibraryFragFolder :  Fragment(){
                 }
             multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility =if(it) View.VISIBLE else View.GONE
-                binding.topBarFileBinding.topPart.visibility = if(!it) View.VISIBLE else View.INVISIBLE
+                topBarBinding.root.visibility = if(!it) View.VISIBLE else View.INVISIBLE
                 LibraryFragmentBase().changeLibRVSelectBtnVisibility(recyclerView,it)
             }
             makeAllUnSwiped.observe(viewLifecycleOwner){
@@ -107,7 +117,7 @@ class LibraryFragFolder :  Fragment(){
             }
 
             }
-        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibFolder(binding,myNavCon,requireActivity())
+//        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibFolder(binding,myNavCon,requireActivity())
         return binding.root
     }
 

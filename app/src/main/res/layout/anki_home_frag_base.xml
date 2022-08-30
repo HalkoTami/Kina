@@ -9,7 +9,7 @@
 
 
     <FrameLayout
-        android:id="@+id/topframelayout"
+        android:id="@+id/frameLay_top_bar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:elevation="10dp"
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@id/topframelayout"
+        app:layout_constraintTop_toBottomOf="@id/frameLay_top_bar"
         app:layout_constraintBottom_toTopOf="@id/main_frameLayout">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/conLayankiBox"
