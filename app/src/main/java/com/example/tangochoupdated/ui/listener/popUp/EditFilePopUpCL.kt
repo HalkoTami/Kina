@@ -38,7 +38,7 @@ class EditFilePopUpCL(val bindingEditFile:MainActivityPopupEditFileBinding,
                         imvIconPalet -> arrayOf(imvColYellow,
                             imvColGray,
                             imvColBlue,
-                            imvColRed,).onEach { it.visibility = View.GONE }
+                            imvColRed,).onEach { if(it.visibility==View.INVISIBLE)it.visibility = View.VISIBLE else it.visibility= View.INVISIBLE }
                         else -> {
                             container.visibility = View.GONE
                             background.visibility = View.GONE

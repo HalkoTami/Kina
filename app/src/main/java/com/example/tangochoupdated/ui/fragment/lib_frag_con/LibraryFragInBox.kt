@@ -67,9 +67,9 @@ class LibraryFragInBox  : Fragment(){
                 setParentRVItems(it ?: mutableListOf())
                 adapter.submitList(it)
                 if(it.isNullOrEmpty().not()){
-                    binding.mainFrameLayout.addView(emptyView)
+                    binding.frameLayRvEmpty.addView(emptyView)
                 } else {
-                    binding.mainFrameLayout.removeView(emptyView)
+                    binding.frameLayRvEmpty.removeView(emptyView)
                 }
             }
             multipleSelectMode.observe(viewLifecycleOwner){

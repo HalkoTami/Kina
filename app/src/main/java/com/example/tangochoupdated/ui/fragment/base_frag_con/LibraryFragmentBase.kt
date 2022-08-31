@@ -59,6 +59,7 @@ class LibraryFragmentBase : Fragment(){
              activeFragment.startFragment = StartFragment.Library
             setActiveFragment(activeFragment)
         }
+        makeAllColPaletUnselected(binding.editFileBinding.colPaletBinding)
 
         binding.editFileBinding.apply {
             createFileViewModel.apply {
@@ -238,14 +239,14 @@ class LibraryFragmentBase : Fragment(){
                 a.setStroke(5, ContextCompat.getColor(requireActivity(), R.color.black))
                 a.setColor(col)
                 imageView.alpha = 1f
-                imageView.background = a
+//                imageView.background = a
                 imageView.elevation = 10f
             }
             false -> {
                 a.setStroke(5, ContextCompat.getColor(requireActivity(), R.color.ofwhite))
                 a.setColor(col)
                 imageView.alpha = 0.4f
-                imageView.elevation = 0f
+//                imageView.elevation = 0f
             }
             else -> return
         }

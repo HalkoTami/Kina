@@ -90,9 +90,9 @@ class LibraryFragFlashCardCover  : Fragment(){
                 adapter.submitList(it)
                 createCardViewModel.setSisterCards(it)
                 if(it.isNullOrEmpty().not()){
-                    binding.mainFrameLayout.addView(emptyView)
+                    binding.frameLayRvEmpty.addView(emptyView)
                 } else {
-                    binding.mainFrameLayout.removeView(emptyView)
+                    binding.frameLayRvEmpty.removeView(emptyView)
                 }
             }
             multipleSelectMode.observe(viewLifecycleOwner){

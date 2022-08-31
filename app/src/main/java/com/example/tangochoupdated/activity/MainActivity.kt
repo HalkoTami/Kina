@@ -130,9 +130,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //        初期設定
             setOnCreate()
 //           タブの画面遷移
-            action.observe(this@MainActivity){
-                navCon.navigate(it)
-            }
+//            action.observe(this@MainActivity){
+//                navCon.navigate(it)
+//            }
 //            ナビゲーションバーのUi変化
             bnvVisibility.observe(this@MainActivity){
                 binding.frameBnv.visibility = if(it == true) VISIBLE else GONE

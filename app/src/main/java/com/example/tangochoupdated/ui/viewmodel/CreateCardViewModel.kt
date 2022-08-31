@@ -433,7 +433,9 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val a = intArrayOf(_parentCard.value!!.belongingFlashCardCoverId!!)
         val nextCardId =_sisterCards.value?.get(_position.value!! +1)!!.id
         val b = intArrayOf(nextCardId)
-        val action = CreateCardFragmentDirections.flipCreateCard(a,b)
+        val action = CreateCardFragmentDirections.flipCreateCard()
+        action.cardId = b
+        action.parentFlashCardCoverId = a
         navController.navigate(action)
     } else return
 
@@ -451,7 +453,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         } else{
             val nextCardId =_sisterCards.value?.get(nowPosition-1)!!.id
             val b = intArrayOf(nextCardId)
-            val action = CreateCardFragmentDirections.flipCreateCard(a,b)
+            val action = CreateCardFragmentDirections.flipCreateCard()
+            action.cardId = b
             navController.navigate(action)
         }
     }

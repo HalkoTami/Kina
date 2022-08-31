@@ -78,9 +78,9 @@ class LibraryFragFolder :  Fragment(){
                 setParentRVItems(it)
                 adapter.submitList(it)
                 if(it.isNullOrEmpty().not()){
-                    binding.mainFrameLayout.addView(emptyView)
+                    binding.frameLayRvEmpty.addView(emptyView)
                 } else {
-                    binding.mainFrameLayout.removeView(emptyView)
+                    binding.frameLayRvEmpty.removeView(emptyView)
                 }
             }
 

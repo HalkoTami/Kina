@@ -81,10 +81,7 @@ class LibraryFragHome : Fragment(){
             }
             val emptyView = LibraryFragLayHomeRvEmptyBinding.inflate(inflater,container,false).root
             childFilesFromDB(null).observe(viewLifecycleOwner){
-                topBarBinding.txvInBoxCardAmount.apply {
-                    text = it?.size.toString()
-                    visibility = if(it?.size == 0) View.GONE else View.VISIBLE
-                }
+
                 adapter.submitList(it)
                 if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)
@@ -92,6 +89,13 @@ class LibraryFragHome : Fragment(){
                     binding.frameLayRvEmpty.removeView(emptyView)
                 }
 
+            }
+            childCardsFromDB(null).observe(viewLifecycleOwner){
+                createCardViewModel.setSisterCards(it)
+                topBarBinding.txvInBoxCardAmount.apply {
+                    text = it?.size.toString()
+                    visibility = if(it?.size == 0) View.GONE else View.VISIBLE
+                }
             }
             selectedItems.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
