@@ -21,6 +21,52 @@
 
     </style>
 
+    <style name="PopUpTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:gravity">center</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMaxTextSize">15sp</item>
+        <item name="autoSizeMinTextSize">5sp</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+    <style name="PopUpButton" parent="TextAppearance.AppCompat.Widget.Button">
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMaxTextSize">11sp</item>
+        <item name="autoSizeMinTextSize">3sp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundColor">@color/lightgreen</item>
+        <item name="android:minHeight">50dp</item>
+<!--        <item name="android:minWidth">0dp</item>-->
+        <item name="android:maxHeight">0dp</item>
+<!--        <item name="android:minWidth">80dp</item>-->
+        <item name="android:maxWidth">0dp</item>
+<!--        <item name="maxWidth">0dp</item>-->
+        <item name="minWidth">0dp</item>
+
+    </style>
+    <style name="colorPalletCircle">
+        <item name="android:minHeight">20dp</item>
+        <item name="android:minWidth">20dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="elevation">3dp</item>
+        <item name="android:src">@drawable/circle</item>
+    </style>
+
+    <style name="popUpTextViewSmall" parent="Widget.AppCompat.TextView">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">none</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMaxTextSize">12sp</item>
+        <item name="autoSizeMinTextSize">2sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/text_color_gray</item>
+
+    </style>
+
     <style name="Widget.AppCompat.ImageButton." parent="Widget.AppCompat.ImageButton">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:layout_margin">5dp</item>

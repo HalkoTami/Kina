@@ -31,23 +31,55 @@
 
     <FrameLayout
         android:id="@+id/frameLay_confirm_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintStart_toStartOf="@id/lib_frag_con_view"
+        app:layout_constraintEnd_toEndOf="@id/lib_frag_con_view"
+        app:layout_constraintTop_toTopOf="@id/lib_frag_con_view"
+        app:layout_constraintBottom_toBottomOf="@id/lib_frag_con_view"
+        android:background="@drawable/gray_stroke_rectangle"
+        android:visibility="gone"
+        android:elevation="10dp">
+        <include android:id="@+id/confirm_delete_popUp_binding"
+            layout="@layout/library_frag_popup_confirm_delete"
+            android:visibility="visible"/>
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/frameLay_confirm_delete_with_children"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintHeight_percent="0.4"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/lib_frag_con_view"
         app:layout_constraintEnd_toEndOf="@id/lib_frag_con_view"
         app:layout_constraintTop_toTopOf="@id/lib_frag_con_view"
         app:layout_constraintBottom_toBottomOf="@id/lib_frag_con_view"
         android:background="@drawable/gray_stroke_rectangle"
         android:elevation="10dp">
-        <include android:id="@+id/confirm_delete_popUp_binding"
-            layout="@layout/library_frag_popup_confirm_delete"
-            android:visibility="gone"/>
+
         <include android:id="@+id/confirm_delete_children_popUp_binding"
             layout="@layout/library_frag_popup_confirm_delete_all_children"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
+    </FrameLayout>
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/frameLay_edit_file"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintHeight_percent="0.4"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/lib_frag_con_view"
+        app:layout_constraintEnd_toEndOf="@id/lib_frag_con_view"
+        app:layout_constraintTop_toTopOf="@id/lib_frag_con_view"
+        app:layout_constraintBottom_toBottomOf="@id/lib_frag_con_view"
+        android:background="@drawable/gray_stroke_rectangle"
+        android:elevation="10dp">
         <include android:id="@+id/edit_file_binding"
             layout="@layout/main_activity_popup_edit_file"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
     </FrameLayout>
 
 

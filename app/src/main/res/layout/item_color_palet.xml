@@ -2,59 +2,38 @@
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:id="@+id/linLay_col_pallet"
 
     >
 
     <ImageView
-        android:layout_margin="5dp"
+        android:layout_weight="1.5"
         android:id="@+id/imv_icon_palet"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="25dp"
+        android:minHeight="25dp"
         android:src="@drawable/icon_pallet"
-        app:layout_constraintHeight_max="35dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
     <ImageView
-        android:id="@+id/imv_col_red"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="3dp"
-        android:layout_marginEnd="7dp"
-        android:elevation="3dp"
-        android:src="@drawable/circle" />
+        style="@style/colorPalletCircle"
+        android:id="@+id/imv_col_red" />
 
     <ImageView
         android:id="@+id/imv_col_blue"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="3dp"
-        android:layout_marginEnd="7dp"
-        android:elevation="3dp"
-        android:src="@drawable/circle" />
+        style="@style/colorPalletCircle" />
 
     <ImageView
         android:id="@+id/imv_col_yellow"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="3dp"
-        android:layout_marginEnd="7dp"
-        android:alpha="0.3"
-        android:elevation="3dp"
-        android:src="@drawable/circle" />
+        style="@style/colorPalletCircle" />
 
     <ImageView
         android:id="@+id/imv_col_gray"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-
-        android:layout_margin="3dp"
-        android:elevation="3dp"
-        android:src="@drawable/circle" />
+        style="@style/colorPalletCircle" />
 
 
 

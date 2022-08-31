@@ -4,4 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="animation_my">100f</dimen>
     <dimen name="searchbar_height">40dp</dimen>
+    <item name="popUpButton_height_percentage" format="float" type="integer">0.25</item>
+    <item name="popUpText_width_percentage" format="float" type="integer">0.8</item>
 </resources>

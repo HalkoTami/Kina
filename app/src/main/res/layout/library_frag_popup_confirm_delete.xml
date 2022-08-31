@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/popup_confirm_delete"
-    android:layout_width="300dp"
-    android:layout_height="200dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/gray_stroke_rectangle"
     android:backgroundTint="@color/ofwhite"
     app:layout_constraintTop_toTopOf="@id/main_frameLayout"
@@ -12,32 +12,39 @@
     app:layout_constraintBottom_toBottomOf="@id/main_frameLayout"
     app:layout_constraintEnd_toEndOf="@id/main_frameLayout"
     >
-    <com.example.tangochoupdated.ui.customViews.MyTextView
+    <TextView
+        style="@style/PopUpTextView"
+        android:layout_height="0dp"
         android:id="@+id/txv_confirm_delete_only_parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="を削除し"
-        android:maxLines="1"
-        android:textSize="15sp"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="@integer/popUpText_width_percentage"
+        android:text="samplesamplesamoekdedbiuedbweuduwedbwbdeubd"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btn_commit_delete_only_parent"/>
 
     <Button
+        style="@style/PopUpButton"
         android:id="@+id/btn_commit_delete_only_parent"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.3"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintHeight_percent="@integer/popUpButton_height_percentage"
         android:text="削除する"
         app:layout_constraintStart_toEndOf="@id/btn_deny_delete_only_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
     <Button
+       style="@style/PopUpButton"
         android:id="@+id/btn_deny_delete_only_parent"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:textSize="12sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintWidth_percent="0.3"
+
+        android:backgroundTint="@color/light_gray"
+        app:layout_constraintHeight_percent="@integer/popUpButton_height_percentage"
         android:text="キャンセル"
         app:layout_constraintEnd_toStartOf="@id/btn_commit_delete_only_parent"
         app:layout_constraintBottom_toBottomOf="@id/btn_commit_delete_only_parent"
@@ -49,6 +56,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/icon_close"
-        android:layout_margin="10dp"/>
+        android:padding="10dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

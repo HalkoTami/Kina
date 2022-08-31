@@ -1,133 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/popup_confirm_delete"
-    android:layout_width="300dp"
-    android:layout_height="200dp"
-    android:background="@drawable/gray_stroke_rectangle"
-    android:backgroundTint="@color/ofwhite"
-    app:layout_constraintTop_toTopOf="@id/main_frameLayout"
-    app:layout_constraintStart_toStartOf="@id/main_frameLayout"
-    app:layout_constraintBottom_toBottomOf="@id/main_frameLayout"
-    app:layout_constraintEnd_toEndOf="@id/main_frameLayout"
-    >
-    <TextView
-        android:id="@+id/txv_confirm_delete_all_children"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="中身もすべて消去しますか？"
-        android:textSize="15sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/linLay_buttons"/>
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@id/txv_confirm_delete_all_children"
-        app:layout_constraintStart_toStartOf="@id/txv_confirm_delete_all_children"
-        app:layout_constraintEnd_toEndOf="@id/txv_confirm_delete_all_children">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
 
-        <ImageView
-            android:id="@+id/imv_containing_folder"
-            android:layout_width="12dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:src="@drawable/icon_file" />
-        <TextView
-            android:id="@+id/txv_containing_folder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="11sp"
-            android:layout_marginEnd="10dp"
-
-            android:text="10個"/>
-
-
-
-        <ImageView
-            android:id="@+id/imv_containing_flashcard"
-            android:layout_width="12dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:src="@drawable/icon_flashcard" />
-
-        <TextView
-            android:id="@+id/txv_containing_flashcard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="3個"
-            android:textSize="11sp" />
-
-
-
-        <ImageView
-            android:id="@+id/imv_containing_card"
-            android:layout_width="15dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:src="@drawable/icon_card" />
-
-        <TextView
-            android:id="@+id/txv_containing_card"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="500枚"
-            android:textSize="11sp" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linLay_buttons"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/popup_confirm_delete"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.2"
-        android:layout_margin="10dp">
-        <Button
-            android:textSize="11sp"
-            android:id="@+id/btn_cancel"
-            android:layout_margin="3dp"
-            android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:background="@drawable/gray_stroke_rectangle"
+        android:backgroundTint="@color/ofwhite"
+        >
+        <TextView
+            android:layout_marginTop="10dp"
+            style="@style/PopUpTextView"
+            android:id="@+id/txv_confirm_delete_all_children"
             android:layout_width="0dp"
-            android:backgroundTint="@color/light_gray"
-            android:layout_height="match_parent"
-            android:text="キャンセル"
-            />
-        <Space
+            android:gravity="bottom|center"
+            android:padding="10dp"
+            app:layout_constraintWidth_percent="@integer/popUpText_width_percentage"
+            android:layout_height="0dp"
+            android:text="中身もすべて消去しますか？"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/linLay_containing_data"/>
+        <FrameLayout
+            android:id="@+id/linLay_containing_data"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"/>
-        <Button
-            android:id="@+id/delete_only_file"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_margin="3dp"
-            android:layout_height="match_parent"
-            android:textSize="10sp"
-            android:maxLines="2"
-            android:text="ファイルのみ\n削除する"/>
-        <Button
-            android:textSize="11sp"
-            android:id="@+id/btn_delete_all_children"
-            android:layout_margin="3dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:text="削除する"/>
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/linLay_buttons"
+            android:gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/txv_confirm_delete_all_children"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_gravity="top|center"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:id="@+id/imv_containing_folder"
+                    android:layout_width="12dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2dp"
+                    android:src="@drawable/icon_file" />
+                <TextView
+                    style="@style/popUpTextViewSmall"
 
-    <ImageView
-        android:id="@+id/btn_close_confirm_delete_only_parent_popup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/icon_close"
-        android:layout_margin="10dp"/>
+                    android:id="@+id/txv_containing_folder"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+                    android:text="10個"/>
+
+
+
+                <ImageView
+                    android:id="@+id/imv_containing_flashcard"
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content"
+
+                    android:src="@drawable/icon_flashcard" />
+
+                <TextView
+                    style="@style/popUpTextViewSmall"
+                    android:id="@+id/txv_containing_flashcard"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="heyhey"
+                     />
+
+
+
+                <ImageView
+                    android:id="@+id/imv_containing_card"
+                    android:layout_width="12dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2dp"
+                    android:src="@drawable/icon_card" />
+
+                <TextView
+                    style="@style/popUpTextViewSmall"
+                    android:id="@+id/txv_containing_card"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="hoyhoy"
+                    android:layout_height="wrap_content"
+                    />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/linLay_buttons"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/linLay_containing_data"
+            android:gravity="bottom"
+            android:layout_margin="10dp">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center_vertical">
+                <Button
+                    style="@style/PopUpButton"
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/light_gray"
+                    android:layout_height="wrap_content"
+                    android:text="キャンセル"
+                    />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"/>
+                <Button
+                    app:layout_constraintStart_toEndOf="@id/btn_cancel"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btn_delete_all_children"
+                    style="@style/PopUpButton"
+                    android:id="@+id/delete_only_file"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:maxLines="2"
+                    android:layout_height="wrap_content"
+                    android:text="ファイルのみ\n削除する"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.05"/>
+                <Button
+
+                    style="@style/PopUpButton"
+                    android:id="@+id/btn_delete_all_children"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="削除する"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </FrameLayout>
+
+
+
+        <ImageView
+            android:id="@+id/btn_close_confirm_delete_only_parent_popup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/icon_close"
+            android:padding="10dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
