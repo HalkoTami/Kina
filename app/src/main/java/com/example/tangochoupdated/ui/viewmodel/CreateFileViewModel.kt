@@ -360,7 +360,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         setFilePopUpUIData(previous)
     }
     fun onClickColorPalet(colorStatus: ColorStatus){
-        changeFileColor(_filePopUpUIData.value!!,colorStatus)
+        changeFileColor(_filePopUpUIData.value!! ,colorStatus)
     }
     var createXREF:Boolean = false
     var fileInserted:Boolean = false

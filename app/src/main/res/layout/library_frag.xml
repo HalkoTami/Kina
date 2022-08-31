@@ -71,7 +71,7 @@
             android:visibility="visible"/>
     </FrameLayout>
     <FrameLayout
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/frameLay_edit_file"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.7"

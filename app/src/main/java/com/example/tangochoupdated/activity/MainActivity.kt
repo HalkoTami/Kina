@@ -348,7 +348,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         bnvImvTabAnki,bnvTxvTabAnki       -> mainActivityViewModel.onClickTab3()
                         bnvImvAdd                         -> {
                             animateVisibility(frameBottomMenu, VISIBLE)
-                            fragConViewCover.visibility = VISIBLE
+//                            fragConViewCover.visibility = VISIBLE
                             createFileViewModel.onClickImvAddBnv()
                         }
                     }
