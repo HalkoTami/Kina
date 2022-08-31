@@ -18,7 +18,7 @@
         android:hint="検索"
         android:textSize="14sp"
         android:background="@android:color/transparent" />
-    <com.example.tangochoupdated.ui.customViews.MyTextView
+    <TextView
         android:id="@+id/txv_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

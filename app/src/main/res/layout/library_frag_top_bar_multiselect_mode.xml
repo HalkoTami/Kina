@@ -28,7 +28,7 @@
         android:src="@drawable/select_rv_item"
         />
 
-    <com.example.tangochoupdated.ui.customViews.MyTextView
+    <TextView
         android:id="@+id/txv_selecting_status"
         android:layout_width="0dp"
         android:layout_weight="1"

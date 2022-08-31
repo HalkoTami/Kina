@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavController
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
 import com.example.tangochoupdated.databinding.LibraryFragRvItemCardStringBinding
@@ -22,8 +23,8 @@ import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
-class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: DeletePopUpViewModel){
-    private val addL = LibraryAddListeners(libVM,deletePopUpViewModel)
+class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: DeletePopUpViewModel,navController: NavController){
+    private val addL = LibraryAddListeners(libVM,deletePopUpViewModel, libNavCon = navController )
 
     fun setUpRVFileBinding(fileBinding: LibraryFragRvItemFileBinding,
                            file: File,
@@ -43,6 +44,7 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
         item: Card,
         createCardViewModel: CreateCardViewModel,
         stringCardViewModel: StringCardViewModel,
+        mainNavController: NavController
     ){
         stringBinding.apply {
             stringBinding.txvFrontTitle.text = stringData?.frontTitle.toString()
@@ -54,12 +56,14 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
             binding = stringBinding,
             item = item,
             createCardViewModel = createCardViewModel,
-            stringCardViewModel = stringCardViewModel
+            stringCardViewModel = stringCardViewModel,
+            mainNavController = mainNavController
         )
 
     }
     fun setUpRVBaseFile(
         rvItemBaseBinding: LibraryFragRvItemBaseBinding,
+        binding:LibraryFragRvItemFileBinding,
         item: File,
         context: Context,
     ):Array<TextView>{
@@ -80,13 +84,14 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
         context: Context,
         createFileViewModel: CreateFileViewModel,
     ){
+        val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
         addL.fileRVAddCL(
             rvItemBaseBinding,
             context,
             item,
             createFileViewModel,
             true)
-        setUpRVBaseFile(rvItemBaseBinding, item, context)
+        setUpRVBaseFile(rvItemBaseBinding,fileBinding, item, context)
 
         rvItemBaseBinding.btnSelect.apply {
             setImageDrawable(AppCompatResources.getDrawable(context,
@@ -106,10 +111,12 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
         createCardViewModel: CreateCardViewModel,
         createFileViewModel: CreateFileViewModel,
         stringCardViewModel: StringCardViewModel,
+        mainNavController: NavController
     ){
         when(item){
             is File -> {
-                setUpRVBaseFile(rvItemBaseBinding, item, context)
+                val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
+                setUpRVBaseFile(rvItemBaseBinding,fileBinding, item, context)
                 addL.fileRVAddCL(
                     rvItemBaseBinding,
                     context,
@@ -119,7 +126,7 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
                 rvItemBaseBinding.btnAddNewCard.visibility = View.GONE
             }
             is Card -> {
-                setUpRVBaseCard(rvItemBaseBinding, item, context, createCardViewModel,  stringCardViewModel)
+                setUpRVBaseCard(rvItemBaseBinding, item, context, createCardViewModel,  stringCardViewModel,mainNavController)
                 addL.cardRVAddCL( rvItemBaseBinding,
                     context,
                     item,
@@ -147,6 +154,7 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
         context: Context,
         createCardViewModel: CreateCardViewModel,
         stringCardViewModel: StringCardViewModel,
+        mainNavController: NavController,
     ):ArrayList<TextView>{
         val checkMatchTxv = arrayListOf<TextView>()
         val cardContent = when(item.cardStatus){
@@ -155,7 +163,7 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
                 binding.apply{
                     checkMatchTxv.addAll(arrayOf(txvBackTitle,txvFrontTitle,txvBackText,txvBackText))
                 }
-                setUpRVStringCardBinding(binding,item.stringData,item,createCardViewModel,stringCardViewModel)
+                setUpRVStringCardBinding(binding,item.stringData,item,createCardViewModel,stringCardViewModel,mainNavController)
                 binding.txvFrontTitle.text = "order "+ item.libOrder.toString()
                 binding.txvBackTitle.text ="id " + item.id.toString()
                 binding.root
@@ -178,12 +186,14 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
                           createCardViewModel: CreateCardViewModel,
                           stringCardViewModel: StringCardViewModel,
                           searchViewModel: SearchViewModel,
-                          lifecycleOwner: LifecycleOwner){
+                          lifecycleOwner: LifecycleOwner,
+                          mainNavController: NavController){
 
         val checkMatchTxv = mutableListOf<TextView>()
         when(item){
             is File ->{
-                checkMatchTxv.addAll(setUpRVBaseFile(rvItemBaseBinding, item, context))
+                val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
+                checkMatchTxv.addAll(setUpRVBaseFile(rvItemBaseBinding,fileBinding, item, context))
             }
             is Card -> {
                 checkMatchTxv.addAll(setUpRVBaseCard(
@@ -191,8 +201,8 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
                     item,
                     context,
                     createCardViewModel,
-                    stringCardViewModel
-                ))
+                    stringCardViewModel,
+                mainNavController = mainNavController))
             }
             else -> return
         }
@@ -200,7 +210,7 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
             rvItemBaseBinding,
             item,
             createCardViewModel,
-            libVM)
+            libVM,mainNavController)
         rvItemBaseBinding.btnAddNewCard.visibility = View.GONE
         rvItemBaseBinding.linLaySwipeShow.visibility = View.GONE
         searchViewModel.searchingText.observe(lifecycleOwner){ search ->

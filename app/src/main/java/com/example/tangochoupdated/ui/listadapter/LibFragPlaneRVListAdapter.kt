@@ -2,6 +2,7 @@ package com.example.tangochoupdated.ui.listadapter
 
 import android.content.Context
 import android.view.*
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
@@ -20,7 +21,9 @@ class LibFragPlaneRVListAdapter(
     private val context: Context,
     private val stringCardViewModel: StringCardViewModel,
     private val createCardViewModel: CreateCardViewModel,
-    private val deletePopUpViewModel: DeletePopUpViewModel
+    private val deletePopUpViewModel: DeletePopUpViewModel,
+    private val libNavController: NavController,
+    private val mainNavController: NavController
 ) :
     ListAdapter<Any, LibFragPlaneRVListAdapter.LibFragFileViewHolder>(SearchDiffCallback) {
 
@@ -30,7 +33,8 @@ class LibFragPlaneRVListAdapter(
     }
 
     override fun onBindViewHolder(holder: LibFragFileViewHolder, position: Int) {
-        holder.bind(getItem(position),libraryViewModel,createFileViewModel,createCardViewModel,stringCardViewModel, deletePopUpViewModel)
+        holder.bind(getItem(position),libraryViewModel,createFileViewModel,createCardViewModel,
+            stringCardViewModel, deletePopUpViewModel,libNavController,mainNavController)
     }
 
     class LibFragFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
@@ -40,18 +44,22 @@ class LibFragPlaneRVListAdapter(
                  createFileViewModel: CreateFileViewModel,
                  createCardViewModel: CreateCardViewModel,
                  stringCardViewModel: StringCardViewModel,
-                 deletePopUpViewModel: DeletePopUpViewModel
+                 deletePopUpViewModel: DeletePopUpViewModel,
+                 navController:NavController,
+                 mainNavController: NavController
         ){
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
 
-            LibrarySetUpItems(libraryViewModel,deletePopUpViewModel).setUpRVBasePlane(
+
+            LibrarySetUpItems(libraryViewModel,deletePopUpViewModel,navController).setUpRVBasePlane(
                 rvItemBaseBinding = binding,
                 item = item,
                 context = context,
                 createCardViewModel = createCardViewModel,
                 createFileViewModel = createFileViewModel,
-                stringCardViewModel = stringCardViewModel
+                stringCardViewModel = stringCardViewModel,
+                mainNavController = mainNavController
 
             )
 

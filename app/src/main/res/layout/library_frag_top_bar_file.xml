@@ -22,7 +22,7 @@
         android:src="@drawable/icon_flashcard"
         />
 
-    <com.example.tangochoupdated.ui.customViews.MyTextView
+    <TextView
         android:layout_marginStart="10dp"
         android:id="@+id/txv_file_title"
         android:layout_width="0dp"

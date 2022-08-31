@@ -1,4 +1,4 @@
-package com.example.tangochoupdated.ui.fragment
+package com.example.tangochoupdated.ui.fragment.chooseCardType_frag_con
 
 import android.content.Context
 import android.os.*

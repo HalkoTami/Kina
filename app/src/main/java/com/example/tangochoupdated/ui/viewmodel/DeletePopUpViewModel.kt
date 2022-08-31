@@ -39,17 +39,46 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setDeletingItemChildrenFiles(list:List<File>?){
         _deletingItemChildrenFiles.value = list
     }
-    fun returnDeletingItemChildrenFiles():List<File>{
+    private fun returnDeletingItemChildrenFiles():List<File>{
         return _deletingItemChildrenFiles.value ?: mutableListOf()
     }
-    val deletingItemChildrenFiles:LiveData<List<File>?> = _deletingItemChildrenFiles
+//    val deletingItemChildrenFiles:LiveData<List<File>?> = _deletingItemChildrenFiles
     private val _deletingItemChildrenCards = MutableLiveData<List<Card>?>()
     fun setDeletingItemChildrenCards(list:List<Card>?){
         _deletingItemChildrenCards.value = list
     }
-    fun returnDeletingItemChildrenCards():List<Card>{
+    private fun returnDeletingItemChildrenCards():List<Card>{
        return  _deletingItemChildrenCards.value ?: mutableListOf()
     }
+    fun setContainingFilesAmount(list:List<File>){
+        val a = returnConfirmDeleteWithChildrenView()
+        a.containingFolder = list.filter { it.fileStatus == FileStatus.FOLDER }.size
+        a.containingFlashCardCover = list.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }.size
+        setConfirmDeleteWithChildrenView(a)
+    }
+    fun setContainingCardsAmount(list:List<Card>){
+        val a = returnConfirmDeleteWithChildrenView()
+        a.containingCards = list.size
+        setConfirmDeleteWithChildrenView(a)
+    }
+    fun setDeleteText(deletingItems:List<Any>){
+        val a = returnConfirmDeleteView()
+        val single = deletingItems.size == 1
+        val singleItem = returnDeletingItems().single()
+        a.confirmText = if(single && singleItem is File) "${singleItem.title}を削除しますか？"
+        else "選択中のアイテムを削除しますか？"
+        setConfirmDeleteView(a)
+    }
+
+    fun setDeleteWithChildrenText(deletingItems:List<Any>){
+        val a = returnConfirmDeleteWithChildrenView()
+        val single = deletingItems.size == 1
+        val singleItem = returnDeletingItems().single()
+        a.confirmText = if(single && singleItem is File) "${singleItem.title}の中身をすべて削除しますか？"
+        else "中身をすべて削除しますか？"
+        setConfirmDeleteWithChildrenView(a)
+    }
+
 
 
     val deletingItemChildrenCards:LiveData<List<Card>?> = _deletingItemChildrenCards
@@ -73,47 +102,52 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
 
 
     class ConfirmDeleteView(
-        var visible:Boolean,
-        var confirmText:String
+        var visible:Boolean = false,
+        var confirmText:String = ""
     )
     class ConfirmDeleteWithChildrenView(
-        var visible:Boolean,
-        var confirmText:String,
-        var containingCards:Int,
-        var containingFlashCardCover:Int,
-        var containingFolder:Int,
+        var visible:Boolean = false,
+        var confirmText:String = "",
+        var containingCards:Int = 0,
+        var containingFlashCardCover:Int = 0,
+        var containingFolder:Int = 0,
 
-    )
+        )
 
 
     private val _confirmDeleteView =  MutableLiveData<ConfirmDeleteView>()
     private fun setConfirmDeleteView(confirmDeleteView: ConfirmDeleteView){
         _confirmDeleteView.value = confirmDeleteView
     }
+    private fun returnConfirmDeleteView():ConfirmDeleteView{
+        return _confirmDeleteView.value ?:ConfirmDeleteView()
+    }
     val confirmDeleteView:LiveData<ConfirmDeleteView> = _confirmDeleteView
     private val _confirmDeleteWithChildrenView =  MutableLiveData<ConfirmDeleteWithChildrenView>()
     private fun setConfirmDeleteWithChildrenView(confirmDeleteWithChildrenView: ConfirmDeleteWithChildrenView){
         _confirmDeleteWithChildrenView.value = confirmDeleteWithChildrenView
     }
+    private fun returnConfirmDeleteWithChildrenView():ConfirmDeleteWithChildrenView{
+        return _confirmDeleteWithChildrenView.value ?: ConfirmDeleteWithChildrenView()
+    }
     val confirmDeleteWithChildrenView:LiveData<ConfirmDeleteWithChildrenView> = _confirmDeleteWithChildrenView
 
     fun setConfirmDeleteVisible(visible: Boolean,){
-        val single = returnDeletingItems().size == 1
-        val singleItem = returnDeletingItems().single()
-        val txvConfirmText:String = if(single && singleItem is File) "${singleItem.title}を削除しますか？"
-        else "選択中のアイテムを削除しますか？"
-        setConfirmDeleteView(ConfirmDeleteView(visible,txvConfirmText))
+        val a = returnConfirmDeleteView()
+        if(a.visible!=visible){
+            a.visible = visible
+            setConfirmDeleteView(a)
+        }
+
     }
     fun setConfirmDeleteWithChildrenVisible(visible: Boolean,){
-        val single = returnDeletingItems().size == 1
-        val singleItem = returnDeletingItems().single()
-        val txvConfirmText:String = if(single && singleItem is File) "${singleItem.title}の中身をすべて削除しますか？"
-        else "中身をすべて削除しますか？"
-        setConfirmDeleteWithChildrenView(ConfirmDeleteWithChildrenView(visible,txvConfirmText,
-        containingCards = returnDeletingItemChildrenCards().size,
-            containingFlashCardCover = returnDeletingItemChildrenFiles().filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }.size,
-            containingFolder = returnDeletingItemChildrenFiles().filter { it.fileStatus == FileStatus.FOLDER }.size
-            ))
+        val a = returnConfirmDeleteWithChildrenView()
+        if(a.visible!=visible){
+            a.visible = visible
+            setConfirmDeleteWithChildrenView(a)
+        }
+
     }
+
 
 }

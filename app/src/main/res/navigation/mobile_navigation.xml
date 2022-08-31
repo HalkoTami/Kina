@@ -38,18 +38,9 @@
 
     <fragment
         android:id="@+id/fragmentCreateCard"
-        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragment"
-        tools:layout="@layout/create_card_frag_base">
+        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBase"
+        tools:layout="@layout/create_card_frag_main">
 
-        <argument
-            android:name="parentFlashCardCoverId"
-            app:argType="integer[]"
-            app:nullable="true"
-            />
-        <argument
-            android:name="cardId"
-            app:argType="integer[]"
-            app:nullable="true" />
     </fragment>
 
 
@@ -58,14 +49,6 @@
         android:id="@+id/open_create_card"
         app:destination="@+id/fragmentCreateCard"
 
-        />
-    <action
-        android:id="@+id/flip_next_create_card"
-        app:destination="@id/fragmentCreateCard"
-        />
-    <action
-        android:id="@+id/flip_previous_create_card"
-        app:destination="@id/fragmentCreateCard"
         />
 
 

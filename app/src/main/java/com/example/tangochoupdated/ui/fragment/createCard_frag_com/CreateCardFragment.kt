@@ -1,4 +1,4 @@
-package com.example.tangochoupdated.ui.fragment.base_frag_con
+package com.example.tangochoupdated.ui.fragment.createCard_frag_com
 
 import android.content.Context
 import android.os.Bundle
@@ -20,6 +20,7 @@ import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FragmentTree
 import com.example.tangochoupdated.db.enumclass.Mode
 import com.example.tangochoupdated.db.enumclass.StartFragment
+import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
@@ -39,7 +40,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
     private val mainViewModel : BaseViewModel by activityViewModels()
     private val stringCardViewModel : StringCardViewModel by activityViewModels()
 
-    lateinit var mainNavCon:NavController
+    lateinit var cardNavCon:NavController
 
     var finish = false
 
@@ -52,8 +53,8 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
     ): View {
 
         _binding = CreateCardFragBaseBinding.inflate(inflater, container, false)
-        mainNavCon = requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
-
+        cardNavCon =requireActivity().findViewById<FragmentContainerView>(R.id.create_card_frag_con).findNavController()
+        val mainNavCon =  requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
         baseViewModel.apply {
             val activeFragment = returnActiveFragment() ?: FragmentTree()
             activeFragment.startFragment = StartFragment.EditCard
@@ -118,7 +119,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 //                   Color Pallet attribute 2. change  each color
                    var previousColor: ColorStatus?
                    previousColor = null
-                   val mainActivity = activity as MainActivity
+                   val mainActivity = LibraryFragmentBase()
                    cardColor.observe(viewLifecycleOwner){
                        mainActivity.apply {
                            if(previousColor == null) makeAllColPaletUnselected(palletBinding)
@@ -183,13 +184,13 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             when(v){
                 createCardTopBarBinding.imvSaveAndBack  -> {
                     createCardViewModel.onClickBack()
-                    mainNavCon.popBackStack()
+                    cardNavCon.popBackStack()
                 }
                 //  移動操作
                 btnInsertPrevious                       -> createCardViewModel. onClickBtnInsertPrevious()
                 btnInsertNext                           -> createCardViewModel. onClickBtnInsertNext()
-                btnNext                                 ->  createCardViewModel. onClickBtnNext()
-                btnPrevious                             -> createCardViewModel. onClickBtnPrevious()
+                btnNext                                 ->  createCardViewModel. onClickBtnNext(cardNavCon)
+                btnPrevious                             -> createCardViewModel. onClickBtnPrevious(cardNavCon)
                 createCardColPaletBinding.imvIconPalet  -> {
                     MainActivity().animateVisibility(createCardColPaletBinding.linLayColPallet,
                         if(v.tag == View.VISIBLE) View.GONE else View.VISIBLE)
@@ -217,7 +218,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             override fun handleOnBackPressed() {
 
                 createCardViewModel.onClickBack()
-                mainNavCon.popBackStack()
+                cardNavCon.popBackStack()
 
             }
         }

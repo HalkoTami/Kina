@@ -2,7 +2,6 @@ package com.example.tangochoupdated.ui.fragment.lib_frag_con
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -14,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
@@ -26,7 +23,7 @@ import com.example.tangochoupdated.ui.viewmodel.*
 class LibraryFragFolder :  Fragment(){
     private val args: LibraryFragFolderArgs by navArgs()
 
-    private lateinit var myNavCon:NavController
+    private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView
     private val stringCardViewModel: StringCardViewModel by activityViewModels()
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
@@ -43,7 +40,8 @@ class LibraryFragFolder :  Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        myNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
+        val mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
+        libNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
         _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
         val adapter= LibFragPlaneRVListAdapter(
@@ -51,14 +49,16 @@ class LibraryFragFolder :  Fragment(){
             libraryViewModel  = libraryViewModel,
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
-            createCardViewModel  = createCardViewModel,deletePopUpViewModel)
+            createCardViewModel  = createCardViewModel,deletePopUpViewModel,
+            mainNavController = mainNavCon,
+            libNavController = libNavCon)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
 
         val topBarBinding = LibraryFragTopBarFileBinding.inflate(inflater,container,false)
-        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel)
-        addListeners.fileTopBarAddCL(topBarBinding,binding.ancestorsBinding,requireActivity(),myNavCon)
+        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel,libNavCon)
+        addListeners.fileTopBarAddCL(topBarBinding,binding.ancestorsBinding,requireActivity(),libNavCon)
         binding.frameLayTopBar.addView(topBarBinding.root)
 
         libraryViewModel.apply {

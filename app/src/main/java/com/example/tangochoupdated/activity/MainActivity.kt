@@ -66,9 +66,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             mainTopConstrainLayout.requestFocus()
 //            初期view設定
             binding.apply {
-                popupAddFile.visibility = GONE
+//                popupAddFile.visibility = GONE
                 frameBottomMenu.visibility = GONE
-                makeAllColPaletUnselected(bindingCreateFile.colPaletBinding)
+//                makeAllColPaletUnselected(bindingCreateFile.colPaletBinding)
             }
 
 //       　　 viewをclickListenerに追加
@@ -80,14 +80,14 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 bindingAddMenu.apply {
                     addAll(arrayOf(imvnewCard,imvnewTangocho,imvnewfolder,root))
                 }
-                bindingCreateFile.apply {
-                    addAll(arrayOf(btnCreateFile,btnClose,root))
-                    colPaletBinding.apply {
-                        addAll(arrayOf(
-                            imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet
-                        ))
-                    }
-                }
+//                bindingCreateFile.apply {
+//                    addAll(arrayOf(btnCreateFile,btnClose,root))
+//                    colPaletBinding.apply {
+//                        addAll(arrayOf(
+//                            imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet
+//                        ))
+//                    }
+//                }
                 onEach { it.setOnClickListener(this@MainActivity) }
             }
 
@@ -180,45 +180,45 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //            ーーーーファイル作成・編集UIー－－－
 
 //                visibility
-                popupAddFile.apply {
-                    var previousColor:ColorStatus? =null
-                    filePopUpUIData.observe(this@MainActivity){
-                        if(visibility!= it.visibility)
-                            animateVisibility(popupAddFile,
-                                it.visibility
-                            )
-                        bindingCreateFile.apply {
-                            if(txvFileTitle.text != it.txvLeftTopText) txvFileTitle.text = it.txvLeftTopText
-                            if(txvHint.text!=it.txvHintText) txvHint.text=it.txvHintText
-
-                            if(previousColor!=it.colorStatus){
-                                changeColPalletCol(previousColor,false,colPaletBinding)
-                                changeColPalletCol(it.colorStatus,true,colPaletBinding)
-                                previousColor = it.colorStatus
-                            }
-                            if(imvFileType.tag!= it.drawableId){
-                                imvFileType.setImageDrawable(getDrawable(it.drawableId))
-                                imvFileType.tag = it.drawableId
-                            }
-                            edtCreatefile.apply {
-                                if(text.toString()!=it.edtTitleText) text= SpannableStringBuilder(it.edtTitleText)
-                                if(hint!= it.edtTitleHint) hint = it.edtTitleHint
-                            }
-
-                        }
-
-                    }
-                }
-//                UIへデータ反映
-                bindingCreateFile.apply {
-                    var start = true
-                    lastInsetedFileId.observe(this@MainActivity){
-                        if(start){
-                            start = false
-                            return@observe
-                        } else createFileViewModel.setLastInsertedFileId(it)
-                    }
-                }
+//                popupAddFile.apply {
+//                    var previousColor:ColorStatus? =null
+//                    filePopUpUIData.observe(this@MainActivity){
+//                        if(visibility!= it.visibility)
+//                            animateVisibility(popupAddFile,
+//                                it.visibility
+//                            )
+//                        bindingCreateFile.apply {
+//                            if(txvFileTitle.text != it.txvLeftTopText) txvFileTitle.text = it.txvLeftTopText
+//                            if(txvHint.text!=it.txvHintText) txvHint.text=it.txvHintText
+//
+//                            if(previousColor!=it.colorStatus){
+//                                changeColPalletCol(previousColor,false,colPaletBinding)
+//                                changeColPalletCol(it.colorStatus,true,colPaletBinding)
+//                                previousColor = it.colorStatus
+//                            }
+//                            if(imvFileType.tag!= it.drawableId){
+//                                imvFileType.setImageDrawable(getDrawable(it.drawableId))
+//                                imvFileType.tag = it.drawableId
+//                            }
+//                            edtCreatefile.apply {
+//                                if(text.toString()!=it.edtTitleText) text= SpannableStringBuilder(it.edtTitleText)
+//                                if(hint!= it.edtTitleHint) hint = it.edtTitleHint
+//                            }
+//
+//                        }
+//
+//                    }
+//                }
+////                UIへデータ反映
+//                bindingCreateFile.apply {
+//                    var start = true
+//                    lastInsetedFileId.observe(this@MainActivity){
+//                        if(start){
+//                            start = false
+//                            return@observe
+//                        } else createFileViewModel.setLastInsertedFileId(it)
+//                    }
+//                }
 
 
 //            ーーーーファイル作成・編集UIー－－－
@@ -265,7 +265,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             lastInsertedCard.observe(this@MainActivity){
 
                 if(!calledFirstTime){
-                    createCardViewModel.setLastInsertedCard(it)
+                    createCardViewModel.setLastInsertedCard(it,navCon)
                 }
                 calledFirstTime = false
             }
@@ -299,47 +299,48 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     animateVisibility(frameBottomMenu, GONE)
                 }
 
-            } else if(popupAddFile.visibility == VISIBLE){
-                createFileViewModel.apply {
-                    bindingCreateFile. apply {
-                        when(v){
-                            root -> return
-                            btnClose -> {
-                                animateVisibility(popupAddFile, GONE)
-                                fragConViewCover.visibility = GONE
-                            }
-                            btnCreateFile ->{
-                                if(edtCreatefile.text.toString() == "") {
-                                    edtCreatefile.hint = "タイトルが必要です"
-                                    return
-                                } else {
-                                    animateVisibility(popupAddFile, GONE)
-                                    fragConViewCover.visibility = GONE
-                                    createFileViewModel.onClickFinish(edtCreatefile.text!!.toString())
-                                }
-                            }
-                        }
-                        colPaletBinding.apply {
-                            when(v){
-                                imvColYellow -> onClickColorPalet(ColorStatus.YELLOW)
-                                imvColGray -> onClickColorPalet(ColorStatus.GRAY)
-                                imvColBlue -> onClickColorPalet(ColorStatus.BLUE)
-                                imvColRed -> onClickColorPalet(ColorStatus.RED)
-                                imvIconPalet -> arrayOf(imvColYellow,
-                                    imvColGray,
-                                    imvColBlue,
-                                    imvColRed,).onEach { it.visibility = View.GONE }
-                                else -> {
-                                    animateVisibility(popupAddFile, GONE)
-                                    fragConViewCover.visibility = GONE
-                                }
-                            }
-
-                        }
-                    }
-                }
-
             }
+//            else if(popupAddFile.visibility == VISIBLE){
+//                createFileViewModel.apply {
+//                    bindingCreateFile. apply {
+//                        when(v){
+//                            root -> return
+//                            btnClose -> {
+//                                animateVisibility(popupAddFile, GONE)
+//                                fragConViewCover.visibility = GONE
+//                            }
+//                            btnCreateFile ->{
+//                                if(edtCreatefile.text.toString() == "") {
+//                                    edtCreatefile.hint = "タイトルが必要です"
+//                                    return
+//                                } else {
+//                                    animateVisibility(popupAddFile, GONE)
+//                                    fragConViewCover.visibility = GONE
+//                                    createFileViewModel.onClickFinish(edtCreatefile.text!!.toString())
+//                                }
+//                            }
+//                        }
+//                        colPaletBinding.apply {
+//                            when(v){
+//                                imvColYellow -> onClickColorPalet(ColorStatus.YELLOW)
+//                                imvColGray -> onClickColorPalet(ColorStatus.GRAY)
+//                                imvColBlue -> onClickColorPalet(ColorStatus.BLUE)
+//                                imvColRed -> onClickColorPalet(ColorStatus.RED)
+//                                imvIconPalet -> arrayOf(imvColYellow,
+//                                    imvColGray,
+//                                    imvColBlue,
+//                                    imvColRed,).onEach { it.visibility = View.GONE }
+//                                else -> {
+//                                    animateVisibility(popupAddFile, GONE)
+//                                    fragConViewCover.visibility = GONE
+//                                }
+//                            }
+//
+//                        }
+//                    }
+//                }
+//
+//            }
             else{
                 bnvBinding.apply {
                     when(v){
@@ -368,7 +369,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             if(view.visibility==visibility) return
             else{
                 when(view.id){
-                    R.id.popup_add_file -> animatePopUpAddFile(view as FrameLayout,visibility)
+//                    R.id.popup_add_file -> animatePopUpAddFile(view as FrameLayout,visibility)
                     R.id.frame_bottomMenu->animateFrameBottomMenu(view as FrameLayout,visibility)
                     R.id.linLay_col_pallet ->animateColPallet(view as LinearLayoutCompat,visibility)
                 }
@@ -378,59 +379,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     }
 
 
-    fun changeColPalletCol(colorStatus: ColorStatus?, selected:Boolean?, colorPaletBinding: ItemColorPaletBinding){
-        val imageView:ImageView
-        val col:Int
-        colorPaletBinding.apply {
-            when(colorStatus) {
-                ColorStatus.GRAY -> {
-                    col = getColor(this@MainActivity, R.color.gray)
-                    imageView = this.imvColGray
-                }
-                ColorStatus.BLUE -> {
-                    col = getColor(this@MainActivity, R.color.blue)
-                    imageView = this.imvColBlue
-                }
-                ColorStatus.YELLOW -> {
-                    col = getColor(this@MainActivity, R.color.yellow)
-                    imageView = this.imvColYellow
-                }
-                ColorStatus.RED -> {
-                    col = getColor(this@MainActivity, R.color.red)
-                    imageView = this.imvColRed
-                }
-                else -> return
-            }
-        }
-        val a = imageView.drawable as GradientDrawable
-        a.mutate()
 
-        when(selected){
-            true -> {
-                a.setStroke(5,getColor(this@MainActivity, R.color.black))
-                a.setColor(col)
-                imageView.alpha = 1f
-                imageView.background = a
-                imageView.elevation = 10f
-            }
-            false -> {
-                a.setStroke(5,getColor(this@MainActivity, R.color.ofwhite))
-                a.setColor(col)
-                imageView.alpha = 0.4f
-                imageView.elevation = 0f
-            }
-            else -> return
-        }
-        imageView.setImageDrawable(a)
-
-    }
-
-    fun makeAllColPaletUnselected(colorPaletBinding: ItemColorPaletBinding){
-        changeColPalletCol(ColorStatus.RED,false,colorPaletBinding)
-        changeColPalletCol(ColorStatus.YELLOW,false,colorPaletBinding)
-        changeColPalletCol(ColorStatus.BLUE,false,colorPaletBinding)
-        changeColPalletCol(ColorStatus.GRAY,false,colorPaletBinding)
-    }
     fun changeTabView(previous:Tab?,tab: Tab,bnv: MainActivityBottomNavigationBarBinding){
         bnv.apply {
             val nowImv:ImageView

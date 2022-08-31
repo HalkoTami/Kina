@@ -15,10 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.example.tangochoupdated.databinding.LibraryFragLayFlashCardCoverRvEmptyBinding
-import com.example.tangochoupdated.databinding.LibraryFragOpenFlashCardCoverBaseBinding
 import com.example.tangochoupdated.databinding.LibraryFragTopBarFileBinding
 import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
@@ -29,7 +27,7 @@ import com.example.tangochoupdated.ui.viewmodel.*
 class LibraryFragFlashCardCover  : Fragment(){
     private val args: LibraryFragFlashCardCoverArgs by navArgs()
 
-    private lateinit var myNavCon:NavController
+    private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
@@ -46,8 +44,8 @@ class LibraryFragFlashCardCover  : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        myNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
+        val mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
+        libNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
         _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
         val adapter = LibFragPlaneRVListAdapter(
@@ -55,14 +53,17 @@ class LibraryFragFlashCardCover  : Fragment(){
             libraryViewModel  = libraryViewModel,
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
-            createCardViewModel  = createCardViewModel,deletePopUpViewModel)
+            createCardViewModel  = createCardViewModel,deletePopUpViewModel,
+
+            mainNavController = mainNavCon,
+            libNavController = libNavCon)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
 
         val topBarBinding = LibraryFragTopBarFileBinding.inflate(inflater,container,false)
-        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel)
-        addListeners.fileTopBarAddCL(topBarBinding,binding.ancestorsBinding,requireActivity(),myNavCon)
+        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel,libNavCon)
+        addListeners.fileTopBarAddCL(topBarBinding,binding.ancestorsBinding,requireActivity(),libNavCon)
         binding.frameLayTopBar.addView(topBarBinding.root)
         topBarBinding.imvFileType.setImageDrawable(AppCompatResources.getDrawable(requireActivity(),R.drawable.icon_flashcard))
 
@@ -70,7 +71,7 @@ class LibraryFragFlashCardCover  : Fragment(){
             clearFinalList()
             parentFileFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
                 setParentFileFromDB(it)
-                topBarBinding.txvFileTitle.text = it?.title ?:"タイトルなし"
+                topBarBinding.txvFileTitle.text = it.title ?:"タイトルなし"
                 topBarBinding.imvFileType.setImageDrawable(
                     GetCustomDrawables(requireContext()).getFlashCardIconByCol(it?.colorStatus ?:ColorStatus.GRAY,)
                 )
@@ -81,8 +82,7 @@ class LibraryFragFlashCardCover  : Fragment(){
             }
             parentFileAncestorsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
-
-                createFileViewModel.filterBottomMenuByAncestors(it,returnParentFile()!!)
+                createFileViewModel.filterBottomMenuByAncestors(it,returnParentFile() ?:return@observe)
             }
             val emptyView = LibraryFragLayFlashCardCoverRvEmptyBinding.inflate(inflater,container,false).root
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {

@@ -51,13 +51,15 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_frag_base.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_base.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_popup_anki_setting_scroll_view_content.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_base.xml" value="0.25679347826086957" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_main.xml" value="0.25679347826086957" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_string_frag.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/full_rv.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/item_color_palet.xml" value="0.33" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/item_search_bar.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/lib_item_top_bar_menu.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_child_frag_base.xml" value="0.3625" />
-        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_child_frag_with_mul_mode_base.xml" value="0.18541666666666667" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_child_frag_with_mul_mode_base.xml" value="0.18" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag.xml" value="0.2" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_home_base.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_lay_folder_rv_empty.xml" value="0.3625" />

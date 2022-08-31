@@ -13,7 +13,7 @@ import com.example.tangochoupdated.ui.listener.recyclerview.*
 import com.example.tangochoupdated.ui.listener.topbar.*
 import com.example.tangochoupdated.ui.viewmodel.*
 
-class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: DeletePopUpViewModel){
+class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: DeletePopUpViewModel,val libNavCon: NavController){
 //    top Bars
     fun confirmDeletePopUpAddCL(onlyP: LibraryFragPopupConfirmDeleteBinding,deleteAllC:LibraryFragPopupConfirmDeleteAllChildrenBinding){
         arrayOf(
@@ -27,6 +27,16 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
             it.setOnClickListener(LibFragPopUpConfirmDeleteCL(onlyP,deleteAllC,libVM, deletePopUpViewModel ))
         }
     }
+    fun multiTopBarAddCL(binding: LibraryFragTopBarMultiselectModeBinding,menuBarBinding: LibItemTopBarMenuBinding,menuFrame:FrameLayout, context: Context, navCon: NavController){
+        arrayOf(
+            binding.imvCloseMultiMode,
+            binding.imvSelectAll,
+            binding.imvChangeMenuVisibility,
+            menuBarBinding.linLayMoveSelectedItems,
+            menuBarBinding.linLayDeleteSelectedItems,
+            menuBarBinding.linLaySetFlagToSelectedItems,
+        ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL(context, binding,menuBarBinding ,menuFrame,libVM, navCon,deletePopUpViewModel)) }
+    }
     fun fragChildMultiBaseAddCL(binding: LibraryChildFragWithMulModeBaseBinding,context: Context,navCon: NavController){
         multiTopBarAddCL(binding.topBarMultiselectBinding,binding.multiSelectMenuBinding,binding.frameLayMultiModeMenu,context,navCon)
         searchAddCL(binding.imvSearchLoupe,binding.laySearchView,binding.bindingSearch,context)
@@ -38,16 +48,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
             binding.imvBookMark,
         ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(context, binding, libVM, navCon)) }
     }
-    fun multiTopBarAddCL(binding: LibraryFragTopBarMultiselectModeBinding,menuBarBinding: LibItemTopBarMenuBinding,menuFrame:FrameLayout, context: Context, navCon: NavController){
-        arrayOf(
-            binding.imvCloseMultiMode,
-            binding.imvSelectAll,
-            binding.imvChangeMenuVisibility,
-            menuBarBinding.linLayMoveSelectedItems,
-            menuBarBinding.linLayDeleteSelectedItems,
-            menuBarBinding.linLaySetFlagToSelectedItems,
-        ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL(context, binding,menuBarBinding ,menuFrame,libVM, navCon,deletePopUpViewModel)) }
-    }
+
 
     fun inBoxTopBarAddCL(binding: LibraryFragTopBarInboxBinding, context: Context, navCon: NavController){
         arrayOf(
@@ -84,7 +85,8 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
     fun searchRVAddCL(binding: LibraryFragRvItemBaseBinding,
                       item: Any,
                       createCardViewModel: CreateCardViewModel,
-                      libVM: LibraryViewModel
+                      libVM: LibraryViewModel,
+                      mainNavController: NavController
     ){ binding.apply {
         arrayOf(
             baseContainer,
@@ -93,8 +95,8 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
             LibraryRVSearchCL(item =  item,
                 createCardViewModel = createCardViewModel,
                 lVM = libVM,
-                rvBinding = binding
-        ))
+                rvBinding = binding,
+            navController = libNavCon, mainNavCon = mainNavController))
         }
     }
     }
@@ -115,11 +117,12 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
                     it,
                     context,
                     item,
+                    libNavCon,
                     libVM,
                     binding,
                 )
             ) else it.setOnTouchListener(
-                LibraryRVFileCL(it,context,item,
+                LibraryRVFileCL(it,context,item,libNavCon,
                     createFileVM,
                     libVM,binding,deletePopUpViewModel)
             )
@@ -141,7 +144,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
                 btnEditWhole,
 
             ).onEach { it.setOnTouchListener(
-                LibraryRVCardCL(it,context,item,createCardViewModel,libVM,binding,deletePopUpViewModel)
+                LibraryRVCardCL(it,context,item,libNavCon, createCardViewModel,libVM,binding,deletePopUpViewModel)
             )
             }
         }
@@ -150,7 +153,8 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
     fun cardRVStringAddCL(binding: LibraryFragRvItemCardStringBinding,
                           item: Card,
                           createCardViewModel: CreateCardViewModel,
-                          stringCardViewModel: StringCardViewModel
+                          stringCardViewModel: StringCardViewModel,
+                          mainNavController: NavController
     ) {
         binding.apply {
             arrayOf(
@@ -162,7 +166,8 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
                         item = item,
                         createCardViewModel = createCardViewModel,
                         stringCardViewModel = stringCardViewModel,
-                        binding = binding
+                        binding = binding,
+                        mainNavCon = mainNavController
                     )
                 )
             }

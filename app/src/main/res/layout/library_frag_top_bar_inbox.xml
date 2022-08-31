@@ -17,7 +17,7 @@
         android:src="@drawable/icon_inbox"
         />
 
-    <com.example.tangochoupdated.ui.customViews.MyTextView
+    <TextView
         android:id="@+id/txv_inbox_status"
         android:layout_marginStart="10dp"
         android:layout_width="0dp"

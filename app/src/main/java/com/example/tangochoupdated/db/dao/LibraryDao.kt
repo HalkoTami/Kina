@@ -104,7 +104,7 @@ interface LibraryDao {
             " select * from tbl_file where fileId in(:fileIdList)  " +
             "UNION ALL" +
             " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
-            "SELECT * FROM generation b ")
+            "SELECT * FROM generation b Where not b.fileId in(:fileIdList)")
     fun getAllDescendantsFilesByMultipleFileId(fileIdList: List<Int>):Flow<List<File>>
 
 
@@ -114,7 +114,7 @@ interface LibraryDao {
             " select * from tbl_file where fileId in(:fileIdList)  " +
             "UNION ALL" +
             " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
-            "SELECT fileId FROM generation b )")
+            "SELECT fileId FROM generation b where not b.fileId in (:fileIdList))")
     fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
 
     @Query(

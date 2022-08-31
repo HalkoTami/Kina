@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.viewmodel
 
 import androidx.lifecycle.*
+import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
@@ -11,7 +12,8 @@ import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import com.example.tangochoupdated.db.enumclass.Mode
-import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentDirections
+import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
+import com.example.tangochoupdated.ui.fragment.createCard_frag_com.CreateCardFragmentDirections
 import kotlinx.coroutines.launch
 
 
@@ -159,7 +161,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     val lastInsertedCard :LiveData<Card?> = repository.lastInsertedCard.asLiveData()
     private val _lastInsertedCard = MutableLiveData<Card?>()
-    fun setLastInsertedCard(card: Card?){
+    fun setLastInsertedCard(card: Card?,navController: NavController){
         val before = _lastInsertedCard.value
         if((before?.id != card?.id) ) {
             _lastInsertedCard.value = card
@@ -167,7 +169,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             val a = if(_lastInsertedCard.value?.belongingFlashCardCoverId!=null)intArrayOf(_lastInsertedCard.value?.belongingFlashCardCoverId!!) else null
             val b = intArrayOf(card!!.id)
             val fromSameFrag = _fromSameFrag.value!!
-            setAction(CreateCardNav(CreateCardFragmentDirections.openCreateCard(a,b),fromSameFrag))
+            val action = CreateCardFragmentBaseDirections.openCreateCard()
+            navController.navigate(action)
 //            setMode(Mode.Edit)
         }
 
@@ -419,7 +422,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
 
-    fun onClickBtnNext(){
+    fun onClickBtnNext(navController: NavController){
         setGetStringData(true)
     setFromSameFrag(true)
 
@@ -430,14 +433,12 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val a = intArrayOf(_parentCard.value!!.belongingFlashCardCoverId!!)
         val nextCardId =_sisterCards.value?.get(_position.value!! +1)!!.id
         val b = intArrayOf(nextCardId)
-        setAction(
-            CreateCardNav(
-                CreateCardFragmentDirections.flipNextCreateCard(a,b),true,
-        ) )
+        val action = CreateCardFragmentDirections.flipCreateCard(a,b)
+        navController.navigate(action)
     } else return
 
     }
-    fun onClickBtnPrevious(){
+    fun onClickBtnPrevious(navController: NavController){
         setGetStringData(true)
         setFromSameFrag(true)
         val a = intArrayOf(_parentCard.value!!.belongingFlashCardCoverId!!)
@@ -450,7 +451,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         } else{
             val nextCardId =_sisterCards.value?.get(nowPosition-1)!!.id
             val b = intArrayOf(nextCardId)
-            setAction(CreateCardNav(CreateCardFragmentDirections.flipPreviousCreateCard(a,b),true) )
+            val action = CreateCardFragmentDirections.flipCreateCard(a,b)
+            navController.navigate(action)
         }
     }
 
@@ -500,12 +502,12 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     enum class CursorPosition{
         Tag, FrontTitle, FrontContent, BackTitle, BackText
     }
-    fun onClickEditCard(item: Card){
+    fun onClickEditCard(item: Card,navController: NavController){
         setOpenCreateCard(true)
         val a =if(item.belongingFlashCardCoverId== null) null else intArrayOf(item.belongingFlashCardCoverId!!)
         val b = intArrayOf(item.id)
         setFromSameFrag(false)
-        setAction(CreateCardNav( CreateCardFragmentDirections.openCreateCard(a,b),false))
+//        setAction(CreateCardNav( CreateCardFragmentDirections.openCreateCard(a,b),false))
         setMode(Mode.Edit)
 
 

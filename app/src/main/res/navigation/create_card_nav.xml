@@ -3,16 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/create_card_nav"
-    app:startDestination="@id/navigation_stringCard">
+    app:startDestination="@id/fragment_createCard_Base">
     <fragment
-        android:id="@+id/navigation_stringCard"
-        tools:layout="@layout/create_card_frag_string_frag"
-        android:name="com.example.tangochoupdated.ui.fragment.StringCardFragment">
-
-
-
-
+        android:id="@+id/fragment_createCard_Base"
+        tools:layout="@layout/create_card_frag_base"
+        android:name="com.example.tangochoupdated.ui.fragment.createCard_frag_com.CreateCardFragment">
+        <argument
+            android:name="parentFlashCardCoverId"
+            app:argType="integer[]"
+            app:nullable="true"
+            />
+        <argument
+            android:name="cardId"
+            app:argType="integer[]"
+            app:nullable="true" />
 
     </fragment>
+    <action
+        android:id="@+id/flip_create_card"
+        app:destination="@id/fragment_createCard_Base"
+        app:popUpTo="@navigation/create_card_nav"
+        />
 
 </navigation>

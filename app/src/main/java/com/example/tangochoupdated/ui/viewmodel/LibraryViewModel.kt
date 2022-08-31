@@ -2,6 +2,7 @@ package com.example.tangochoupdated.ui.viewmodel
 
 import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.*
+import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
@@ -198,14 +199,14 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             removeFromSelectedItem(item)
         }
     }
-    fun openNextFile(item: File){
+    fun openNextFile(item: File,navController: NavController){
         val action =
         when(item.fileStatus){
             FileStatus.FOLDER->     LibraryFragFolderDirections.openFolder(intArrayOf(item.fileId))
             FileStatus.TANGO_CHO_COVER -> LibraryFragFlashCardCoverDirections.openFlashCardCover(intArrayOf(item.fileId))
             else -> return
         }
-        setAction(action)
+        navController.navigate(action)
     }
 
 
@@ -281,11 +282,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 //    ClickEvents
-    fun onClickInBox(){
-
-
+    fun onClickInBox(navController: NavController){
         val a = LibraryFragHomeDirections.openInbox()
-        setAction(a)
+        navController.navigate(a)
 
     }
 
@@ -440,10 +439,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //        a.parentItemId =if(_parentFile.value == null) null else intArrayOf(_parentFile.value!!.fileId)
 //        setAction(a)
 //    }
-    fun openChooseFileMoveTo(file:File?){
+    fun openChooseFileMoveTo(file:File?,navController: NavController){
         setChooseFileMoveToMode(true)
         val a  = LibraryFragChooseFileMoveToDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))
-        setAction(a)
+        navController.navigate(a)
     }
 
 

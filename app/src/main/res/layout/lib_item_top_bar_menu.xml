@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_move_to_folder" />
 
-        <com.example.tangochoupdated.ui.customViews.MyTextView
+        <TextView
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="5"
@@ -55,7 +55,7 @@
 
             android:src="@drawable/icon_trash" />
 
-        <com.example.tangochoupdated.ui.customViews.MyTextView
+        <TextView
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="5"
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_flag" />
 
-        <com.example.tangochoupdated.ui.customViews.MyTextView
+        <TextView
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="5"

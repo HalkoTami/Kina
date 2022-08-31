@@ -14,7 +14,7 @@ class LibFragTopBarHomeCL(val context:Context, val binding: LibraryFragTopBarHom
     override fun onClick(v: View?) {
         binding.apply {
             when(v){
-                home.frameLayInBox-> libVM.onClickInBox()
+                home.frameLayInBox-> libVM.onClickInBox(navCon)
                 home.imvBookMark -> Toast.makeText(context,"todo",Toast.LENGTH_SHORT).show()
             }
         }

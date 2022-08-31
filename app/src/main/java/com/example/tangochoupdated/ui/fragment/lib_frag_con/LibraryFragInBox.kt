@@ -3,6 +3,7 @@ package com.example.tangochoupdated.ui.fragment.lib_frag_con
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -10,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
-import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
@@ -19,7 +19,7 @@ import com.example.tangochoupdated.ui.viewmodel.*
 
 class LibraryFragInBox  : Fragment(){
 
-    private lateinit var myNavCon:NavController
+    private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
@@ -34,8 +34,8 @@ class LibraryFragInBox  : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        myNavCon =
-            requireActivity().findNavController(R.id.lib_frag_con_view)
+        val mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
+        libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
         _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
         val adapter= LibFragPlaneRVListAdapter(
@@ -43,15 +43,18 @@ class LibraryFragInBox  : Fragment(){
             libraryViewModel  = libraryViewModel,
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
-            createCardViewModel  = createCardViewModel,deletePopUpViewModel)
+            createCardViewModel  = createCardViewModel,deletePopUpViewModel,
+            libNavController = libNavCon,
+
+            mainNavController = mainNavCon)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
 
 
         val topBarBinding = LibraryFragTopBarInboxBinding.inflate(inflater,container,false)
-        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel)
-        addListeners.inBoxTopBarAddCL(topBarBinding,requireActivity(),myNavCon)
+        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel,libNavCon)
+        addListeners.inBoxTopBarAddCL(topBarBinding,requireActivity(),libNavCon)
         binding.frameLayTopBar.addView(topBarBinding.root)
 
         createFileViewModel.filterBottomMenuWhenInBox()

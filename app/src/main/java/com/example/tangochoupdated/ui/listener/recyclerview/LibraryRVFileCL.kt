@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.children
+import androidx.navigation.NavController
 import com.example.tangochoupdated.MyTouchListener
 import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
 import com.example.tangochoupdated.db.dataclass.File
@@ -16,6 +17,7 @@ import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 class LibraryRVFileCL(val view: View,
                       val context: Context,
                       val item: File,
+                      val navController: NavController,
                       private val createFileViewModel: CreateFileViewModel,
                       private val lVM: LibraryViewModel,
                       private val rvBinding: LibraryFragRvItemBaseBinding,
@@ -35,7 +37,7 @@ class LibraryRVFileCL(val view: View,
                         lVM.onClickSelectableItem(item,btnSelect.isSelected.not())
                         btnSelect.isSelected = btnSelect.isSelected.not()
                     }else{
-                        lVM.openNextFile(item)
+                        lVM.openNextFile(item,navController)
                     }
 
                 }

@@ -10,22 +10,22 @@
     tools:context=".activity.MainActivity">
 
 
-    <FrameLayout
-        android:background="@drawable/rectangle_green_stroke"
-        android:elevation="20dp"
-        android:id="@+id/popup_add_file"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-        <include
-            android:id="@+id/binding_create_file"
-            layout="@layout/main_activity_popup_edit_file"
-            android:visibility="visible"/>
-    </FrameLayout>
+<!--    <FrameLayout-->
+<!--        android:background="@drawable/rectangle_green_stroke"-->
+<!--        android:elevation="20dp"-->
+<!--        android:id="@+id/popup_add_file"-->
+<!--        android:layout_width="300dp"-->
+<!--        android:layout_height="250dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        >-->
+<!--        <include-->
+<!--            android:id="@+id/binding_create_file"-->
+<!--            layout="@layout/main_activity_popup_edit_file"-->
+<!--            android:visibility="visible"/>-->
+<!--    </FrameLayout>-->
 
     <FrameLayout
         android:id="@+id/frame_bottomMenu"

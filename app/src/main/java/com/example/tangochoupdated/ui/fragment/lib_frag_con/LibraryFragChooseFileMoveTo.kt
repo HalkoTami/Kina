@@ -44,7 +44,7 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
         myNavCon =  requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
         _binding = LibraryFragSelectFileMoveToBaseBinding.inflate(inflater, container, false)
         recyclerView = binding.vocabCardRV
-        val adapter = LibFragChooseFileRVListAdapter(createFileViewModel,libraryViewModel,requireActivity(),deletePopUpViewModel)
+        val adapter = LibFragChooseFileRVListAdapter(createFileViewModel,libraryViewModel,requireActivity(),deletePopUpViewModel,myNavCon)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false

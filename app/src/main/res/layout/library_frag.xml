@@ -28,6 +28,12 @@
 
     </androidx.fragment.app.FragmentContainerView>
 
+    <View
+        android:background="@color/lightgreen"
+        android:alpha="0.5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/background"/>
 
     <FrameLayout
         android:id="@+id/frameLay_confirm_delete"

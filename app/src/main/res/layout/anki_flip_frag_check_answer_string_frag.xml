@@ -200,7 +200,7 @@
                 android:src="@drawable/icon_missed"
                 android:layout_gravity="top"
                 android:layout_margin="10dp"/>
-            <com.example.tangochoupdated.ui.customViews.MyTextView
+            <TextView
                 android:id="@+id/txv_your_answer"
 
                 android:layout_width="match_parent"
