@@ -1,10 +1,8 @@
 package com.example.tangochoupdated.ui.listener.popUp
 
 import android.view.View
-import com.example.tangochoupdated.databinding.LibraryFragBinding
 import com.example.tangochoupdated.databinding.LibraryFragPopupConfirmDeleteAllChildrenBinding
 import com.example.tangochoupdated.databinding.LibraryFragPopupConfirmDeleteBinding
-import com.example.tangochoupdated.ui.view_set_up.ConfirmMode
 import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
@@ -26,7 +24,7 @@ class LibFragPopUpConfirmDeleteCL(val onlyP: LibraryFragPopupConfirmDeleteBindin
             }
             onlyP.btnDenyDeleteOnlyParent -> deletePopUpViewModel.setConfirmDeleteVisible(false,)
             deleteAllC.btnCloseConfirmDeleteOnlyParentPopup -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
-            deleteAllC.btnDeleteAllChildren -> deletePopUpViewModel.deleteWithChildren()
+            deleteAllC.btnDeleteAllChildren -> deletePopUpViewModel.deleteFileWithChildren()
             deleteAllC.deleteOnlyFile -> deletePopUpViewModel.deleteOnlyFile()
             deleteAllC.btnCancel -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
 

@@ -20,12 +20,12 @@
             />
 
     </fragment>
-    <fragment
-        android:id="@+id/navigation_anki"
-        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBase"
-        android:label="anki"
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_anki"-->
+<!--        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBase"-->
+<!--        android:label="anki"-->
 
-        tools:layout="@layout/anki_frag_base" />
+<!--        tools:layout="@layout/anki_frag_base" />-->
 
 <!--    <action-->
 <!--        android:id="@+id/library_to_library"-->
@@ -42,38 +42,54 @@
         tools:layout="@layout/create_card_frag_main">
 
     </fragment>
+    <fragment
+        android:id="@+id/fragmentAnki"
+        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBase"
+        tools:layout="@layout/anki_frag_base">
+
+    </fragment>
 
 
+    <action
+        android:id="@+id/to_anki"
+        app:destination="@+id/fragmentAnki"
+        app:popUpTo="@id/mobile_navigation"
+        />
 
     <action
         android:id="@+id/open_create_card"
         app:destination="@+id/fragmentCreateCard"
-
+        app:popUpTo="@id/mobile_navigation"
+        />
+    <action
+        android:id="@+id/to_library"
+        app:destination="@+id/fragmentLibrary"
+        app:popUpTo="@id/mobile_navigation"
         />
 
 
-    <action
-        android:id="@+id/open_file"
-        app:destination="@+id/fragmentLibrary"
-        app:enterAnim="@anim/slide_in_right_anim"
-        app:exitAnim="@anim/slide_out_left_anim"
-        app:popEnterAnim="@anim/slide_in_left_anim"
-        app:popExitAnim="@anim/slide_out_right_anim" />
+<!--    <action-->
+<!--        android:id="@+id/open_file"-->
+<!--        app:destination="@+id/fragmentLibrary"-->
+<!--        app:enterAnim="@anim/slide_in_right_anim"-->
+<!--        app:exitAnim="@anim/slide_out_left_anim"-->
+<!--        app:popEnterAnim="@anim/slide_in_left_anim"-->
+<!--        app:popExitAnim="@anim/slide_out_right_anim" />-->
 
-    <action
-        android:id="@+id/open_inbox"
-        app:destination="@+id/fragmentLibrary"
-        app:enterAnim="@anim/slide_in_up_anim"
-        app:popExitAnim="@anim/slide_out_up_anim" />
+<!--    <action-->
+<!--        android:id="@+id/open_inbox"-->
+<!--        app:destination="@+id/fragmentLibrary"-->
+<!--        app:enterAnim="@anim/slide_in_up_anim"-->
+<!--        app:popExitAnim="@anim/slide_out_up_anim" />-->
 
-    <action
-        android:id="@+id/to_lib_home"
-        app:popUpTo="@id/mobile_navigation"
-        app:destination="@+id/fragmentLibrary"/>
-    <action
-        android:id="@+id/to_anki"
-        app:popUpTo="@id/mobile_navigation"
-        app:destination="@+id/navigation_anki"/>
+<!--    <action-->
+<!--        android:id="@+id/to_lib_home"-->
+<!--        app:popUpTo="@id/mobile_navigation"-->
+<!--        app:destination="@+id/fragmentLibrary"/>-->
+<!--    <action-->
+<!--        android:id="@+id/to_anki"-->
+<!--        app:popUpTo="@id/mobile_navigation"-->
+<!--        app:destination="@+id/navigation_anki"/>-->
 <!--    <action-->
 <!--        android:id="@+id/to_create"-->
 <!--        app:destination="@+id/navigation_create"/>-->

@@ -1,8 +1,10 @@
 package com.example.tangochoupdated.ui.fragment.lib_frag_con
 
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -134,6 +136,21 @@ class LibraryFragHome : Fragment(){
         return binding.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
+            true // default to enabled
+        ) {
+            override fun handleOnBackPressed() {
+                if(!libraryViewModel.checkViewReset())
+                    libNavCon.popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,  // LifecycleOwner
+            callback
+        )
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

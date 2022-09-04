@@ -22,6 +22,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
             onlyP.btnDenyDeleteOnlyParent,
             deleteAllC.btnCloseConfirmDeleteOnlyParentPopup,
             deleteAllC.btnDeleteAllChildren,
+            deleteAllC.deleteOnlyFile,
             deleteAllC.btnCancel
         )   .onEach {
             it.setOnClickListener(LibFragPopUpConfirmDeleteCL(onlyP,deleteAllC,libVM, deletePopUpViewModel ))

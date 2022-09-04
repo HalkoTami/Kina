@@ -198,7 +198,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     private val _bottomMenuVisible = MutableLiveData<Boolean>()
     val bottomMenuVisible:LiveData<Boolean> = _bottomMenuVisible
-    private fun setBottomMenuVisible(boolean: Boolean){
+    fun setBottomMenuVisible(boolean: Boolean){
         _bottomMenuVisible.value = boolean
         if(boolean){
             setEditFilePopUpVisible(false)
@@ -214,6 +214,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         makeNewFilePopUp(_parentFile.value,FileStatus.FOLDER)
         makeEmptyFileToCreate(FileStatus.FOLDER)
         setMode(Mode.New)
+        setEditFilePopUpVisible(true)
 //        if(_bottomMenuClickable.value!!.createFile){
 //            setEditFilePopUpVisible(true)
 //            setCreatingFileType(FileStatus.FOLDER)
@@ -273,7 +274,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 //    Todo popupのクラス作る
     class PopUpUI(
-        var visibility:Int,
+//        var visibility:Int,
         var txvLeftTopText:String,
         var txvHintText:String,
         var drawableId:Int,
@@ -288,7 +289,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     private fun makeNewFilePopUp(parentfile: File?, fileType:FileStatus){
         val a = PopUpUI(
-            visibility = View.VISIBLE,
+//            visibility = View.VISIBLE,
             txvLeftTopText = if(parentfile!=null) "${parentfile.title} >" else "home",
             txvHintText = if(fileType == FileStatus.FOLDER) "新しいフォルダを作る"
             else "新しい単語帳を作る",
@@ -303,7 +304,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     private fun makeEditFilePopUp(parentFile: File?, editingFile:File){
         val a = PopUpUI(
-            visibility = View.VISIBLE,
+//            visibility = View.VISIBLE,
             txvLeftTopText = if(parentFile!=null) "${parentFile.title} >" else "home",
             txvHintText = "${editingFile.title}を編集する",
             drawableId =  if(editingFile.fileStatus == FileStatus.FOLDER) R.drawable.icon_file
@@ -315,9 +316,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         setFilePopUpUIData(a)
     }
     private fun makePopUpUIInvisible(){
-        val update = _filePopUpUIData.value
-        update!!.visibility = View.GONE
-        setFilePopUpUIData(update)
+
     }
 
     private val _txvLeftTop = MutableLiveData<String>()
@@ -435,7 +434,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             }
             else -> return
         }
-        makePopUpUIInvisible()
+        setEditFilePopUpVisible(false)
         setAddFileActive(false)
     }
 

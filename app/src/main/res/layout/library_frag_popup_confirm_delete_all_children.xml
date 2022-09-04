@@ -113,42 +113,51 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:gravity="center_vertical">
-                <Button
-                    style="@style/PopUpButton"
-                    android:id="@+id/btn_cancel"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/light_gray"
+                <FrameLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="キャンセル"
-                    />
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"/>
-                <Button
-                    app:layout_constraintStart_toEndOf="@id/btn_cancel"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btn_delete_all_children"
-                    style="@style/PopUpButton"
-                    android:id="@+id/delete_only_file"
-                    android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:maxLines="2"
-                    android:layout_height="wrap_content"
-                    android:text="ファイルのみ\n削除する"/>
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.05"/>
-                <Button
+                    android:paddingEnd="10dp">
+                    <Button
+                        style="@style/PopUpButton"
+                        android:id="@+id/btn_cancel"
+                        android:layout_width="wrap_content"
+                        android:backgroundTint="@color/light_gray"
+                        android:layout_height="wrap_content"
+                        android:text="キャンセル"
+                        />
+                </FrameLayout>
 
-                    style="@style/PopUpButton"
-                    android:id="@+id/btn_delete_all_children"
-                    android:layout_width="0dp"
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:paddingEnd="5dp"
+                    >
+                    <Button
+                        android:layout_gravity="end"
+                        style="@style/PopUpButton"
+                        android:id="@+id/delete_only_file"
+                        android:minWidth="70dp"
+                        android:layout_width="wrap_content"
+                        android:lines="2"
+                        android:layout_height="wrap_content"
+                        android:text="ファイルのみ\n削除する"/>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="削除する"/>
+                    android:layout_weight="1">
+                    <Button
+                        android:layout_gravity="end"
+                        style="@style/PopUpButton"
+                        android:id="@+id/btn_delete_all_children"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="削除する"/>
+                </FrameLayout>
+
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </FrameLayout>

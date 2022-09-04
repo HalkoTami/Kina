@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.*
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -22,9 +23,8 @@ import com.example.tangochoupdated.databinding.ItemColorPaletBinding
 import com.example.tangochoupdated.databinding.LibraryFragBinding
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.db.enumclass.FragmentTree
 import com.example.tangochoupdated.db.enumclass.LibRVState
-import com.example.tangochoupdated.db.enumclass.StartFragment
+import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
@@ -55,17 +55,20 @@ class LibraryFragmentBase : Fragment(){
         libNavCon = a.navController
 
         baseViewModel.apply {
-            val activeFragment = returnActiveFragment() ?: FragmentTree()
-             activeFragment.startFragment = StartFragment.Library
-            setActiveFragment(activeFragment)
+            setActiveFragment(MainFragment.Library)
         }
         makeAllColPaletUnselected(binding.editFileBinding.colPaletBinding)
 
         binding.editFileBinding.apply {
             createFileViewModel.apply {
+                editFilePopUpVisible.observe(viewLifecycleOwner){
+                    binding.frameLayEditFile.visibility = if(it)View.VISIBLE else View.GONE
+                    binding.background.visibility = if(it)View.VISIBLE else View.GONE
+                }
+
                 var previousColor: ColorStatus? =null
                 filePopUpUIData.observe(viewLifecycleOwner){
-                    binding.frameLayEditFile.visibility = it.visibility
+
                     if(txvFileTitle.text != it.txvLeftTopText) txvFileTitle.text = it.txvLeftTopText
                     if(txvHint.text!=it.txvHintText) txvHint.text=it.txvHintText
 
@@ -99,15 +102,21 @@ class LibraryFragmentBase : Fragment(){
 //        }
 
         libraryViewModel.apply {
+
             deletePopUpViewModel.apply {
+                toast.observe(viewLifecycleOwner){
+                    Toast.makeText(requireActivity(),it,Toast.LENGTH_SHORT).show()
+                }
                 confirmDeleteView.observe(viewLifecycleOwner){
                     binding.confirmDeletePopUpBinding.apply {
+                        binding.background.visibility = if(it.visible) View.VISIBLE else View.GONE
                         binding.frameLayConfirmDelete.visibility = if(it.visible) View.VISIBLE else View.GONE
                         txvConfirmDeleteOnlyParent.text = it.confirmText
                     }
                 }
                 confirmDeleteWithChildrenView.observe(viewLifecycleOwner){
                     binding.confirmDeleteChildrenPopUpBinding.apply {
+                        binding.background.visibility = if(it.visible) View.VISIBLE else View.GONE
                         binding.frameLayConfirmDeleteWithChildren.visibility =  if(it.visible) View.VISIBLE else View.GONE
                         txvContainingFolder.text = "${it.containingFolder}個"
                         txvContainingFlashcard.text = "${it.containingFlashCardCover}個"
@@ -139,7 +148,7 @@ class LibraryFragmentBase : Fragment(){
             binding.editFileBinding.apply {
                 colPaletBinding.apply {
                     arrayOf(
-                        imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,root
+                        imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,root,binding.background
                     ).onEach {
                         it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,binding.frameLayEditFile,binding.background,createFileViewModel)) }
                 }
@@ -198,7 +207,7 @@ class LibraryFragmentBase : Fragment(){
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-                libraryViewModel.onClickBack()
+                if(!libraryViewModel.checkViewReset())
                 libNavCon.popBackStack()
             }
         }

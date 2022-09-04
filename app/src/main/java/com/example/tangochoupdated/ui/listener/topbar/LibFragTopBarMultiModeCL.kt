@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.LibItemTopBarMenuBinding
 import com.example.tangochoupdated.databinding.LibraryFragTopBarMultiselectModeBinding
+import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.toastToDo
 import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
@@ -48,7 +49,12 @@ class LibFragTopBarMultiModeCL(val context: Context,
                 menuBinding.linLayDeleteSelectedItems -> if(notSelected)toastPleaseSelectItems()
                 else {
                     deletePopUpViewModel.setDeletingItem(libVM.returnSelectedItems())
-                    deletePopUpViewModel.setConfirmDeleteVisible(true)
+                    var card:Boolean = false
+                    deletePopUpViewModel.returnDeletingItems().onEach { card = it is Card }
+                    if(card){
+                        deletePopUpViewModel.deleteCard()
+                    } else deletePopUpViewModel.setConfirmDeleteVisible(true)
+
                 }
                 menuBinding.linLaySetFlagToSelectedItems -> if(notSelected)toastPleaseSelectItems()
                 else toastToDo(context)

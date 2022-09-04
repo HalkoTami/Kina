@@ -7,12 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
-import com.example.tangochoupdated.databinding.AnkiFragBaseBinding
-import com.example.tangochoupdated.databinding.CreateCardFragBaseBinding
 import com.example.tangochoupdated.databinding.CreateCardFragMainBinding
-import com.example.tangochoupdated.db.enumclass.FragmentTree
-import com.example.tangochoupdated.db.enumclass.StartFragment
-import com.example.tangochoupdated.ui.view_set_up.AnkiBaseFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
 
 

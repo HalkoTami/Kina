@@ -16,6 +16,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.children
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.application.RoomApplication
@@ -23,15 +24,18 @@ import com.example.tangochoupdated.databinding.ItemColorPaletBinding
 import com.example.tangochoupdated.databinding.MainActivityBinding
 import com.example.tangochoupdated.databinding.MainActivityBottomNavigationBarBinding
 import com.example.tangochoupdated.db.enumclass.ColorStatus
+import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.db.enumclass.Tab
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
 import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBaseDirections
+import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBaseDirections
 import com.example.tangochoupdated.ui.viewmodel.*
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var factory: ViewModelFactory
-    private lateinit var  navHostFragment : NavHostFragment
+    private lateinit var  mainNavCon : NavController
     lateinit var mainActivityViewModel: BaseViewModel
     lateinit var createFileViewModel: CreateFileViewModel
     lateinit var createCardViewModel: CreateCardViewModel
@@ -58,9 +62,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         setContentView(binding.root)
 
 //        navController の宣言
-        navHostFragment =
+        val navHostFragment =
             supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
-        val navCon = navHostFragment.navController
+        mainNavCon = navHostFragment.navController
         binding.apply {
 //        Focus request
             mainTopConstrainLayout.requestFocus()
@@ -74,9 +78,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //       　　 viewをclickListenerに追加
             mainActivityClickableItem.apply {
                 addAll(arrayOf(fragConViewCover, mainTopConstrainLayout))
-                bnvBinding.bnvRoot.children.iterator().forEach {
-                    add(it)
+                binding.bnvBinding.apply {
+                    addAll(arrayOf(bnvImvAdd,bnvImvTabAnki,bnvImvTabLibrary,bnvTxvTabLibrary,bnvTxvTabAnki))
                 }
+
                 bindingAddMenu.apply {
                     addAll(arrayOf(imvnewCard,imvnewTangocho,imvnewfolder,root))
                 }
@@ -92,7 +97,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             }
 
         }
-
+        changeTabView(null,MainFragment.Library,binding.bnvBinding)
 
 
 //        ー－－－－－－－
@@ -139,10 +144,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             }
             binding.apply {
                 var previousTab:Tab? = null
-                activeTab.observe(this@MainActivity){
-                    changeTabView(previousTab,it,bnvBinding)
-                    previousTab = it
-                }
+//                activeTab.observe(this@MainActivity){
+//                    changeTabView(previousTab,it,bnvBinding)
+//                    previousTab = it
+//                }
 //                bnvLayout3View.observe(this@MainActivity){
 //                    imv3.setImageDrawable(getDrawable(it.drawableId))
 //                    imv3.setPadding(it.padding)
@@ -171,6 +176,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         this.imvnewTangocho.visibility =if (!it.createFlashCardCover)  GONE else VISIBLE
                         this.imvnewCard.visibility= if(!it.createCard) GONE else VISIBLE
                     }
+                }
+                bottomMenuVisible.observe(this@MainActivity){
+                    binding.fragConViewCover.visibility = if(it) View.VISIBLE else View.GONE
                 }
 //
 
@@ -262,18 +270,18 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         createCardViewModel.apply{
             onCreateViewModel()
             var calledFirstTime = true
-            lastInsertedCard.observe(this@MainActivity){
-
-                if(!calledFirstTime){
-                    createCardViewModel.setLastInsertedCard(it,navCon)
-                }
-                calledFirstTime = false
-            }
+//            lastInsertedCard.observe(this@MainActivity){
+//
+//                if(!calledFirstTime){
+//                    createCardViewModel.setLastInsertedCard(it,mainNavCon)
+//                }
+//                calledFirstTime = false
+//            }
             action.observe(this@MainActivity){
                 if(it.fromSameFrag){
-                    navCon.popBackStack()
-                    navCon.navigate(it.action)
-                } else navCon.navigate(it.action)
+                    mainNavCon.popBackStack()
+                    mainNavCon.navigate(it.action)
+                } else mainNavCon.navigate(it.action)
             }
         }
 
@@ -297,6 +305,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         }
                     }
                     animateVisibility(frameBottomMenu, GONE)
+                    createFileViewModel.setBottomMenuVisible(false)
                 }
 
             }
@@ -343,9 +352,16 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //            }
             else{
                 bnvBinding.apply {
+                    val fragmentNow = mainActivityViewModel.returnActiveFragment()
                     when(v){
-                        bnvImvTabLibrary,bnvTxvTabLibrary -> mainActivityViewModel.onClickTab1()
-                        bnvImvTabAnki,bnvTxvTabAnki       -> mainActivityViewModel.onClickTab3()
+                        bnvImvTabLibrary,bnvTxvTabLibrary -> if(fragmentNow!=MainFragment.Library){
+                            mainNavCon.navigate(LibraryFragmentBaseDirections.toLibrary())
+                            changeTabView(fragmentNow,MainFragment.Library,binding.bnvBinding)
+                        }
+                        bnvImvTabAnki,bnvTxvTabAnki       -> if(fragmentNow!=MainFragment.Anki){
+                            mainNavCon.navigate(AnkiFragmentBaseDirections.toAnki())
+                            changeTabView(fragmentNow,MainFragment.Anki,binding.bnvBinding)
+                        }
                         bnvImvAdd                         -> {
                             animateVisibility(frameBottomMenu, VISIBLE)
 //                            fragConViewCover.visibility = VISIBLE
@@ -380,18 +396,18 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
 
-    fun changeTabView(previous:Tab?,tab: Tab,bnv: MainActivityBottomNavigationBarBinding){
+    fun changeTabView(previous:MainFragment?,tab: MainFragment,bnv: MainActivityBottomNavigationBarBinding){
         bnv.apply {
             val nowImv:ImageView
             val nowTxv:TextView
             val selectedDraw:Drawable
             when(tab){
-                Tab.TabAnki -> {
+                MainFragment.Anki -> {
                     nowImv = bnvImvTabAnki
                     nowTxv = bnvTxvTabAnki
                     selectedDraw = getDrawable(R.drawable.icon_tab_anki)!!
                 }
-                Tab.TabLibrary -> {
+                MainFragment.Library -> {
                     nowImv = bnvImvTabLibrary
                     nowTxv = bnvTxvTabLibrary
                     selectedDraw = getDrawable(R.drawable.icon_flashcard_with_col)!!
@@ -405,12 +421,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             val preTxv:TextView
             val selectableDraw:Drawable
             when(previous){
-                Tab.TabAnki -> {
+                MainFragment.Anki -> {
                     preImv = bnvImvTabAnki
                     preTxv = bnvTxvTabAnki
                     selectableDraw = getDrawable(R.drawable.icon_tab_anki)!!
                 }
-                Tab.TabLibrary -> {
+                MainFragment.Library -> {
                     preImv = bnvImvTabLibrary
                     preTxv = bnvTxvTabLibrary
                     selectableDraw = getDrawable(R.drawable.icon_flashcard)!!

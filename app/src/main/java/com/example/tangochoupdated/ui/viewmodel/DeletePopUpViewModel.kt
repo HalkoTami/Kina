@@ -14,15 +14,33 @@ import kotlinx.coroutines.launch
 
 class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
+    private val _toast= MutableLiveData<String>()
+    val toast :LiveData<String> = _toast
+    fun showToast(string: String){
+        _toast.value = string
+    }
     private fun deleteSingleFile(file: File, deleteChildren:Boolean){
         viewModelScope.launch {
             if(!deleteChildren){
                 repository.upDateChildFilesOfDeletedFile(file.fileId,file.parentFileId)
                 repository.delete(file)
+                showToast("${file.title}を削除しました")
             } else {
                 repository.deleteFileAndAllDescendants(file.fileId)
+                showToast("${file.title}と中身を削除しました")
             }
         }
+
+    }
+    private fun deleteMultipleFiles(file: List<File>, deleteChildren:Boolean){
+        file.onEach { deleteSingleFile(it,deleteChildren) }
+        showToast("選択中のアイテムを削除しました")
+    }
+    private fun deleteCards(cards: List<Card>, ){
+        viewModelScope.launch {
+            repository.deleteMultiple(cards)
+        }
+        showToast("${cards.size}枚のカードを削除しました")
     }
     fun getAllDescendantsByFileId(fileIdList: List<Int>): LiveData<List<File>> = repository.getAllDescendantsFilesByMultipleFileId(fileIdList).asLiveData()
     fun getCardsByMultipleFileId(fileIdList: List<Int>): LiveData<List<Card>> = repository.getAllDescendantsCardsByMultipleFileId(fileIdList).asLiveData()
@@ -87,13 +105,23 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         return returnDeletingItemChildrenCards().isEmpty().not()||returnDeletingItemChildrenFiles().isEmpty().not()
     }
     fun deleteOnlyFile(){
-        returnDeletingItems().onEach {
-            deleteSingleFile(it as File,false)
+        if(returnDeletingItems().size == 1){
+            deleteSingleFile(returnDeletingItems().single() as File,false)
+        } else {
+            deleteMultipleFiles(returnDeletingItems() as List<File>, false)
         }
+//        returnDeletingItems().onEach {
+//            deleteSingleFile(it as File,false)
+//        }
         setConfirmDeleteVisible(false)
         setConfirmDeleteWithChildrenVisible(false)
     }
-    fun deleteWithChildren(){
+    fun deleteCard(){
+        val a =returnDeletingItems()
+        val cards:List<Card> = a.filterIsInstance<Card>()
+        deleteCards(cards)
+    }
+    fun deleteFileWithChildren(){
         returnDeletingItems().onEach {
             deleteSingleFile(it as File,true)
         }

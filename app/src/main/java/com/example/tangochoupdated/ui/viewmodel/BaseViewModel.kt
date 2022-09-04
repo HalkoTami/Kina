@@ -6,7 +6,7 @@ import com.example.tangochoupdated.R
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.enumclass.AnkiFragments
 import com.example.tangochoupdated.db.enumclass.FragmentTree
-import com.example.tangochoupdated.db.enumclass.StartFragment
+import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.db.enumclass.Tab
 import com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBaseDirections
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBaseDirections
@@ -32,19 +32,19 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
 
 
 
-    private val _activeFragment = MutableLiveData<FragmentTree>()
-    val activeFragment:LiveData<FragmentTree> = _activeFragment
-    fun setActiveFragment(fragmentTree: FragmentTree){
+    private val _activeFragment = MutableLiveData<MainFragment>()
+    val activeFragment:LiveData<MainFragment> = _activeFragment
+    fun setActiveFragment(fragment: MainFragment){
         val previous = _activeFragment.value
-        if (fragmentTree == previous) return else {
-            _activeFragment.value = fragmentTree
+        if (fragment == previous) return else {
+            _activeFragment.value = fragment
         }
-        if(fragmentTree.startFragment== StartFragment.EditCard||
-                fragmentTree.ankiFragment == AnkiFragments.Flip)
-            setBnvVisibility(false) else setBnvVisibility(true)
+//        if(fragment == MainFragment.EditCard||
+//                fragment == AnkiFragments.Flip)
+//            setBnvVisibility(false) else setBnvVisibility(true)
 
     }
-    fun returnActiveFragment():FragmentTree?{
+    fun returnActiveFragment():MainFragment?{
         return _activeFragment.value
     }
 
@@ -137,9 +137,9 @@ class BaseViewModel(private val repository: MyRoomRepository):ViewModel(){
             Tab.TabLibrary -> return
             else -> {
                 setActiveTab(Tab.TabLibrary)
-                val a = LibraryFragmentBaseDirections.toLibHome()
-                a.parentItemId = null
-                setAction(a)
+//                val a = LibraryFragmentBaseDirections.toLibHome()
+//                a.parentItemId = null
+//                setAction(a)
             }
         }
     }

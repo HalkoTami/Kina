@@ -1,7 +1,5 @@
 package com.example.tangochoupdated.db.enumclass
 
-import android.animation.ValueAnimator
-import android.view.animation.Animation
 import com.example.tangochoupdated.db.dataclass.Card
 
 enum class Mode{
@@ -23,12 +21,12 @@ class AutoFlip(
     var seconds:Int = 20
 )
 class FragmentTree(
-    var startFragment:StartFragment = StartFragment.Library,
+    var startFragment:MainFragment = MainFragment.Library,
     var libraryFragment:LibraryFragment = LibraryFragment.Home,
     var ankiFragment: AnkiFragments = AnkiFragments.AnkiBox,
     var flipFragment: FlipFragment = FlipFragment.StringLook
 )
-enum class StartFragment{
+enum class MainFragment{
     Library,EditCard,Anki
 }
 enum class LibraryFragment{
@@ -63,4 +61,8 @@ class AnimationController(
 class Progress(
     var now:Int,
     var all:Int
+)
+class Toast(
+    var text:String,
+    var show:Boolean
 )

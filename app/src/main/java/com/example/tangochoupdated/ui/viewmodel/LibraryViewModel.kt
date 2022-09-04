@@ -77,6 +77,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun childCardsFromDB(int: Int?):LiveData<List<Card>?> =  this.repository.getCardDataByFileId(int).asLiveData()
 
 //    －－－－－－－－
+
+
+
 //    －－－－RecyclerView－－－－
 
 //    最終的なRVのアイテムリスト
@@ -315,13 +318,16 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private fun setAction(navDirections: NavDirections){
         _action.value = navDirections
     }
-    fun onClickBack(){
+    fun checkViewReset():Boolean{
         if(_modeInBox.value ==true){
             setModeInBox(false)
+            return true
         }
         if(_multipleSelectMode.value == true){
             setMultipleSelectMode(false)
+            return true
         }
+        return false
 //        if(_confirmPopUp.value?.visible == true){
 //            setConfirmPopUpVisible(false, ConfirmMode.DeleteItem)
 //        }

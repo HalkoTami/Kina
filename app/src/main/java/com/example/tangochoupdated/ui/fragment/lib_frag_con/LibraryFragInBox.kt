@@ -1,7 +1,9 @@
 package com.example.tangochoupdated.ui.fragment.lib_frag_con
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -54,6 +56,7 @@ class LibraryFragInBox  : Fragment(){
 
         val topBarBinding = LibraryFragTopBarInboxBinding.inflate(inflater,container,false)
         val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel,libNavCon)
+        addListeners.fragChildMultiBaseAddCL(binding,requireActivity(),libNavCon)
         addListeners.inBoxTopBarAddCL(topBarBinding,requireActivity(),libNavCon)
         binding.frameLayTopBar.addView(topBarBinding.root)
 
@@ -66,7 +69,7 @@ class LibraryFragInBox  : Fragment(){
             childCardsFromDB(null).observe(viewLifecycleOwner) {
                 setParentRVItems(it ?: mutableListOf())
                 adapter.submitList(it)
-                if(it.isNullOrEmpty().not()){
+                if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)
                 } else {
                     binding.frameLayRvEmpty.removeView(emptyView)
@@ -94,6 +97,21 @@ class LibraryFragInBox  : Fragment(){
         return binding.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
+            true // default to enabled
+        ) {
+            override fun handleOnBackPressed() {
+                if(!libraryViewModel.checkViewReset())
+                    libNavCon.popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,  // LifecycleOwner
+            callback
+        )
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

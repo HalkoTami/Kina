@@ -9,7 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.databinding.AnkiFragBaseBinding
 import com.example.tangochoupdated.db.enumclass.FragmentTree
-import com.example.tangochoupdated.db.enumclass.StartFragment
+import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.ui.view_set_up.AnkiBaseFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
 
@@ -38,11 +38,7 @@ class AnkiFragmentBase  : Fragment() {
         val a = childFragmentManager.findFragmentById(binding.ankiFragContainerView.id) as NavHostFragment
         val myNavCon = a.navController
 
-        baseViewModel.apply {
-            val activeFragment = returnActiveFragment() ?: FragmentTree()
-            activeFragment.startFragment = StartFragment.Anki
-            setActiveFragment(activeFragment)
-        }
+        baseViewModel.setActiveFragment(MainFragment.Anki)
 
         val viewSetUp = AnkiBaseFragViewSetUp(ankiFragViewModel, binding,requireActivity(),ankiSettingVM,myNavCon)
         viewSetUp.addCL()
