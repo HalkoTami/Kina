@@ -22,7 +22,7 @@ class LibFragPopUpConfirmDeleteCL(val onlyP: LibraryFragPopupConfirmDeleteBindin
                 }
 
             }
-            onlyP.btnDenyDeleteOnlyParent -> deletePopUpViewModel.setConfirmDeleteVisible(false,)
+            onlyP.btnCancel -> deletePopUpViewModel.setConfirmDeleteVisible(false,)
             deleteAllC.btnCloseConfirmDeleteOnlyParentPopup -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
             deleteAllC.btnDeleteAllChildren -> deletePopUpViewModel.deleteFileWithChildren()
             deleteAllC.deleteOnlyFile -> deletePopUpViewModel.deleteOnlyFile()

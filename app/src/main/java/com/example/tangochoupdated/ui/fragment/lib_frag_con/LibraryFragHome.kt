@@ -54,7 +54,7 @@ class LibraryFragHome : Fragment(){
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
             createCardViewModel  = createCardViewModel,
-            deletePopUpViewModel, mainNavController =mainNavCon, libNavController = libNavCon)
+            deletePopUpViewModel, mainNavController =mainNavCon, libNavController = libNavCon,)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false

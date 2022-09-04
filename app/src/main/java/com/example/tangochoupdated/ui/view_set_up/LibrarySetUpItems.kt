@@ -20,6 +20,7 @@ import com.example.tangochoupdated.db.dataclass.StringData
 import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
+import com.example.tangochoupdated.ui.listener.recyclerview.LibraryRVChooseFileMoveToCL
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
@@ -83,14 +84,15 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
         item: File,
         context: Context,
         createFileViewModel: CreateFileViewModel,
+        chooseFileMoveToViewModel: ChooseFileMoveToViewModel
     ){
         val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-        addL.fileRVAddCL(
+        addL.chooseFileMoveToRVAddCL(
+
             rvItemBaseBinding,
-            context,
             item,
-            createFileViewModel,
-            true)
+            chooseFileMoveToViewModel
+        )
         setUpRVBaseFile(rvItemBaseBinding,fileBinding, item, context)
 
         rvItemBaseBinding.btnSelect.apply {
@@ -111,7 +113,7 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
         createCardViewModel: CreateCardViewModel,
         createFileViewModel: CreateFileViewModel,
         stringCardViewModel: StringCardViewModel,
-        mainNavController: NavController
+        mainNavController: NavController,
     ){
         when(item){
             is File -> {
@@ -122,7 +124,7 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
                     context,
                     item,
                     createFileViewModel,
-                    false)
+                )
                 rvItemBaseBinding.btnAddNewCard.visibility = View.GONE
             }
             is Card -> {

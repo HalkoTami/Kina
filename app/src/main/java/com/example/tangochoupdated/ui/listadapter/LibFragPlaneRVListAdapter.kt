@@ -23,7 +23,7 @@ class LibFragPlaneRVListAdapter(
     private val createCardViewModel: CreateCardViewModel,
     private val deletePopUpViewModel: DeletePopUpViewModel,
     private val libNavController: NavController,
-    private val mainNavController: NavController
+    private val mainNavController: NavController,
 ) :
     ListAdapter<Any, LibFragPlaneRVListAdapter.LibFragFileViewHolder>(SearchDiffCallback) {
 
@@ -34,7 +34,7 @@ class LibFragPlaneRVListAdapter(
 
     override fun onBindViewHolder(holder: LibFragFileViewHolder, position: Int) {
         holder.bind(getItem(position),libraryViewModel,createFileViewModel,createCardViewModel,
-            stringCardViewModel, deletePopUpViewModel,libNavController,mainNavController)
+            stringCardViewModel, deletePopUpViewModel,libNavController,mainNavController,)
     }
 
     class LibFragFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
@@ -46,7 +46,7 @@ class LibFragPlaneRVListAdapter(
                  stringCardViewModel: StringCardViewModel,
                  deletePopUpViewModel: DeletePopUpViewModel,
                  navController:NavController,
-                 mainNavController: NavController
+                 mainNavController: NavController,
         ){
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
@@ -59,7 +59,7 @@ class LibFragPlaneRVListAdapter(
                 createCardViewModel = createCardViewModel,
                 createFileViewModel = createFileViewModel,
                 stringCardViewModel = stringCardViewModel,
-                mainNavController = mainNavController
+                mainNavController = mainNavController,
 
             )
 

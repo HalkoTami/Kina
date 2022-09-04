@@ -11,6 +11,7 @@ import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
+import com.example.tangochoupdated.ui.viewmodel.ChooseFileMoveToViewModel
 import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
@@ -25,7 +26,8 @@ class LibFragChooseFileRVListAdapter(
     private val libraryViewModel: LibraryViewModel,
     private val context: Context,
     private val deletePopUpViewModel: DeletePopUpViewModel,
-    private val navController: NavController) :
+    private val navController: NavController,
+    private val chooseFileMoveToViewModel: ChooseFileMoveToViewModel) :
     ListAdapter<File, LibFragChooseFileRVListAdapter.LibFragChooseFileViewHolder>(FileDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibFragChooseFileViewHolder {
@@ -34,7 +36,7 @@ class LibFragChooseFileRVListAdapter(
     }
 
     override fun onBindViewHolder(holder: LibFragChooseFileViewHolder, position: Int) {
-        holder.bind(getItem(position),libraryViewModel,createFileViewModel,deletePopUpViewModel,navController )
+        holder.bind(getItem(position),libraryViewModel,createFileViewModel,deletePopUpViewModel,navController,chooseFileMoveToViewModel)
     }
 
     class LibFragChooseFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
@@ -44,7 +46,8 @@ class LibFragChooseFileRVListAdapter(
                  libraryViewModel: LibraryViewModel,
                  createFileViewModel: CreateFileViewModel,
                  deletePopUpViewModel: DeletePopUpViewModel,
-                 navController: NavController
+                 navController: NavController,
+                 chooseFileMoveToViewModel: ChooseFileMoveToViewModel
         ){
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
@@ -53,6 +56,7 @@ class LibFragChooseFileRVListAdapter(
                item = item,
                context = context,
                createFileViewModel = createFileViewModel,
+               chooseFileMoveToViewModel
            )
 
         }

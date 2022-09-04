@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.view_set_up
 
 import android.content.Context
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.navigation.NavController
@@ -9,6 +10,7 @@ import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.ui.listener.*
 import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmDeleteCL
+import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmMoveToFileCL
 import com.example.tangochoupdated.ui.listener.recyclerview.*
 import com.example.tangochoupdated.ui.listener.topbar.*
 import com.example.tangochoupdated.ui.viewmodel.*
@@ -19,13 +21,22 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
         arrayOf(
             onlyP.btnCloseConfirmDeleteOnlyParentPopup,
             onlyP.btnCommitDeleteOnlyParent,
-            onlyP.btnDenyDeleteOnlyParent,
+            onlyP.btnCancel,
             deleteAllC.btnCloseConfirmDeleteOnlyParentPopup,
             deleteAllC.btnDeleteAllChildren,
             deleteAllC.deleteOnlyFile,
             deleteAllC.btnCancel
         )   .onEach {
             it.setOnClickListener(LibFragPopUpConfirmDeleteCL(onlyP,deleteAllC,libVM, deletePopUpViewModel ))
+        }
+    }
+    fun confirmMoveToFilePopUpAddCL(popUp: LibraryFragPopupConfirmMoveToFileBinding,chooseFileMoveToViewModel: ChooseFileMoveToViewModel){
+        arrayOf(
+            popUp.btnCancelMove,
+            popUp.btnCommitMove,
+            popUp.btnCloseConfirmMove
+        )   .onEach {
+            it.setOnClickListener(LibFragPopUpConfirmMoveToFileCL(popUp, chooseFileMoveToViewModel, ))
         }
     }
     fun multiTopBarAddCL(binding: LibraryFragTopBarMultiselectModeBinding,menuBarBinding: LibItemTopBarMenuBinding,menuFrame:FrameLayout, context: Context, navCon: NavController){
@@ -105,7 +116,6 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
                     context: Context,
                     item: File,
                     createFileVM: CreateFileViewModel,
-                    chooseFile:Boolean
     ){ binding.apply {
             arrayOf(
                 baseContainer,
@@ -113,22 +123,34 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
                 btnSelect,
                 btnAddNewCard,
                 btnEditWhole
-            ).onEach { if(chooseFile)it.setOnTouchListener(
-                LibraryRVChooseFileMoveToCL(
-                    it,
-                    context,
-                    item,
-                    libNavCon,
-                    libVM,
-                    binding,
-                )
-            ) else it.setOnTouchListener(
+            ).onEach { it.setOnTouchListener(
                 LibraryRVFileCL(it,context,item,libNavCon,
                     createFileVM,
                     libVM,binding,deletePopUpViewModel)
             )
             }
         }
+    }
+    fun chooseFileMoveToRVAddCL(binding: LibraryFragRvItemBaseBinding,
+                    item: File,
+                    chooseFileMoveToViewModel: ChooseFileMoveToViewModel
+    ){ binding.apply {
+        arrayOf(
+            baseContainer,
+            btnDelete,
+            btnSelect,
+            btnAddNewCard,
+            btnEditWhole
+        ).onEach { it.setOnClickListener(
+            LibraryRVChooseFileMoveToCL(
+                item,
+                libNavCon,
+                libVM,
+                binding,
+                chooseFileMoveToViewModel
+            ))
+        }
+    }
     }
 
     fun cardRVAddCL(binding: LibraryFragRvItemBaseBinding,

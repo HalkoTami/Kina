@@ -31,6 +31,7 @@ class LibraryFragInBox  : Fragment(){
     private val binding get() = _binding!!
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,7 +49,7 @@ class LibraryFragInBox  : Fragment(){
             createCardViewModel  = createCardViewModel,deletePopUpViewModel,
             libNavController = libNavCon,
 
-            mainNavController = mainNavCon)
+            mainNavController = mainNavCon,)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false

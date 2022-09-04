@@ -23,6 +23,7 @@ class ViewModelFactory(private val repository: MyRoomRepository  ) : ViewModelPr
             modelClass.isAssignableFrom(AnkiFlipFragViewModel::class.java) -> AnkiFlipFragViewModel(repository)
             modelClass.isAssignableFrom(AnkiFlipTypeAndCheckViewModel::class.java) -> AnkiFlipTypeAndCheckViewModel(repository)
             modelClass.isAssignableFrom(DeletePopUpViewModel::class.java) -> DeletePopUpViewModel(repository)
+            modelClass.isAssignableFrom(ChooseFileMoveToViewModel::class.java) -> ChooseFileMoveToViewModel(repository)
             else ->  illegalDecoyCallException("unknown ViewModel class")
         }
         return a as T

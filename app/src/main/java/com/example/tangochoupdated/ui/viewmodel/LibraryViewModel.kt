@@ -472,7 +472,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         }
 
         setSelectedItems(mutableListOf())
-        setChooseFileMoveToMode(false)
+//        setChooseFileMoveToMode(false)
     }
 
 //    －－－－－－－－

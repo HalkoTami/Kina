@@ -45,7 +45,7 @@
 <!--        <item name="android:minWidth">80dp</item>-->
         <item name="android:maxHeight">0dp</item>
 <!--        <item name="maxWidth">0dp</item>-->
-        <item name="android:minWidth">60dp</item>
+        <item name="android:minWidth">80dp</item>
 
     </style>
     <style name="colorPalletCircle">

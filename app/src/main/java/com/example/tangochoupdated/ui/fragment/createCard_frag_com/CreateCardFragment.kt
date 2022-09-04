@@ -84,6 +84,9 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                     setParentFlashCardCover(file)
                 }
 
+                lastInsertedCard.observe(viewLifecycleOwner){
+                        createCardViewModel.setLastInsertedCard(it,mainNavCon)
+            }
 
 //                Top Frame
                 createCardTopBarBinding.apply {

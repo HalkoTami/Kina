@@ -224,6 +224,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         makeNewFilePopUp(_parentFile.value,FileStatus.TANGO_CHO_COVER)
         makeEmptyFileToCreate(FileStatus.TANGO_CHO_COVER)
         setMode(Mode.New)
+        setEditFilePopUpVisible(true)
 //        if(_bottomMenuClickable.value!!.createFlashCardCover){
 //            setEditFilePopUpVisible(true)
 //            setCreatingFileType(FileStatus.TANGO_CHO_COVER)

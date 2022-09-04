@@ -120,6 +120,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val ankiInBoxViewModel = ViewModelProvider(this, factory
         )[AnkiBoxFragViewModel::class.java]
         ankiInBoxViewModel.onCreate()
+        val chooseFileMoveToViewModel = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
         val ankiBaseViewModel = ViewModelProvider(this,factory)[AnkiFragBaseViewModel::class.java]
         val ankiFlipFragViewModel = ViewModelProvider(this,factory)[AnkiFlipFragViewModel::class.java]
         val ankiSettingViewModel = ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]

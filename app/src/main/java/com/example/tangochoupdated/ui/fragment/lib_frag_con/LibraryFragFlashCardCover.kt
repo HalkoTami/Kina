@@ -58,7 +58,7 @@ class LibraryFragFlashCardCover  : Fragment(){
             createCardViewModel  = createCardViewModel,deletePopUpViewModel,
 
             mainNavController = mainNavCon,
-            libNavController = libNavCon)
+            libNavController = libNavCon, )
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
@@ -91,7 +91,7 @@ class LibraryFragFlashCardCover  : Fragment(){
                 setParentRVItems(it ?: mutableListOf())
                 adapter.submitList(it)
                 createCardViewModel.setSisterCards(it)
-                if(it.isNullOrEmpty().not()){
+                if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)
                 } else {
                     binding.frameLayRvEmpty.removeView(emptyView)
