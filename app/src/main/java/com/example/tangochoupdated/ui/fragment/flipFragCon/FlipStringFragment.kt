@@ -53,25 +53,28 @@ class FlipStringFragment  : Fragment() {
                     },returnReverseCardSide(),returnAutoFlip().active)
                 }
 
-                getCardFromDB(args.cardId).observe(viewLifecycleOwner){
-                    setParentCard(it)
-                    val data = it.stringData
-                    Toast.makeText(requireActivity(),"${it.timesFlipped}",Toast.LENGTH_SHORT).show()
-                    when(front) {
-                        true ->{
-                            txvTitle.text =  "表 めくった回数 " + it.timesFlipped.toString()
+                if(cardId!=null){
+                    getCardFromDB(args.cardId!!.single()).observe(viewLifecycleOwner){
+                        setParentCard(it)
+                        val data = it.stringData
+                        Toast.makeText(requireActivity(),"${it.timesFlipped}",Toast.LENGTH_SHORT).show()
+                        when(front) {
+                            true ->{
+                                txvTitle.text =  "表 めくった回数 " + it.timesFlipped.toString()
 //                                data?.frontTitle ?:"表"
-                            txvContent.text = data?.frontText
-                            setCountFlip(CountFlip(count = Count.Start, countingCard = it))
-                        }
-                        false  -> {
-                            txvTitle.text ="裏  めくった回数 " +it.timesFlipped.toString()
+                                txvContent.text = data?.frontText
+                                setCountFlip(CountFlip(count = Count.Start, countingCard = it))
+                            }
+                            false  -> {
+                                txvTitle.text ="裏  めくった回数 " +it.timesFlipped.toString()
 //                                data?.backTitle ?:"裏"
-                            txvContent.text = data?.backText
+                                txvContent.text = data?.backText
+                            }
                         }
-                    }
 
+                    }
                 }
+
             }
 
         }

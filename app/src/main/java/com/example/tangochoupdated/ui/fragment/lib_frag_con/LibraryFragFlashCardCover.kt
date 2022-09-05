@@ -65,6 +65,7 @@ class LibraryFragFlashCardCover  : Fragment(){
 
         val topBarBinding = LibraryFragTopBarFileBinding.inflate(inflater,container,false)
         val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel,libNavCon)
+        addListeners.fragChildMultiBaseAddCL(binding,requireActivity(),libNavCon)
         addListeners.fileTopBarAddCL(topBarBinding,binding.ancestorsBinding,requireActivity(),libNavCon)
         binding.frameLayTopBar.addView(topBarBinding.root)
         topBarBinding.imvFileType.setImageDrawable(AppCompatResources.getDrawable(requireActivity(),R.drawable.icon_flashcard))

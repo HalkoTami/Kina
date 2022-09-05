@@ -2,13 +2,17 @@ package com.example.tangochoupdated.ui.listadapter
 
 import android.content.Context
 import android.view.*
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxChildrenFragViewSetUp
+import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
+import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 
 
 /**
@@ -17,20 +21,26 @@ import com.example.tangochoupdated.ui.view_set_up.AnkiBoxChildrenFragViewSetUp
 
 
 class AnkiBoxListAdapter(
-    private val ankiBoxViewSetUp: AnkiBoxChildrenFragViewSetUp,
-    private val context: Context) :
+    private val context: Context,
+    private val ankiBoxFragViewModel: AnkiBoxFragViewModel,
+    private  val tab:AnkiBoxTab,
+    private val lifecycleOwner: LifecycleOwner) :
     ListAdapter<Any, AnkiBoxListAdapter.AnkiBoxItemViewHolder>(SearchDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnkiBoxItemViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return AnkiBoxItemViewHolder(AnkiHomeFragRvItemBinding.inflate(layoutInflater, parent, false),context,ankiBoxViewSetUp)
+        return AnkiBoxItemViewHolder(AnkiHomeFragRvItemBinding.inflate(layoutInflater, parent, false),context,ankiBoxFragViewModel,tab,lifecycleOwner)
     }
 
     override fun onBindViewHolder(holder: AnkiBoxItemViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class AnkiBoxItemViewHolder (private val binding: AnkiHomeFragRvItemBinding,val context: Context,val ankiBoxViewSetUp: AnkiBoxChildrenFragViewSetUp) :
+    class AnkiBoxItemViewHolder (private val binding: AnkiHomeFragRvItemBinding,
+                                 val context: Context,
+                                 val ankiBoxFragViewModel: AnkiBoxFragViewModel,
+                                 val tab: AnkiBoxTab,
+                                 val lifecycleOwner: LifecycleOwner) :
         RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: Any, ){
@@ -38,7 +48,7 @@ class AnkiBoxListAdapter(
             when(item){
                 is File -> {
                     val binding = AnkiHomeFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-                    ankiBoxViewSetUp.setUpRVFileBinding(binding, item,ankiBoxViewSetUp.tab)
+                    AnkiBoxFragViewSetUp().setUpRVFileBinding(binding, item,tab, ankiBoxVM = ankiBoxFragViewModel ,context,lifecycleOwner)
 
                     binding.root
                 }

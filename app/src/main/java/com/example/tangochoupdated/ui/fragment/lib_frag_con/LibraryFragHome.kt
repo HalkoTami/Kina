@@ -62,6 +62,7 @@ class LibraryFragHome : Fragment(){
 
         val topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
         val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel,libNavCon)
+        addListeners.fragChildMultiBaseAddCL(binding,requireActivity(),libNavCon)
         addListeners.homeTopBarAddCL(topBarBinding,requireActivity(),libNavCon)
         binding.frameLayTopBar.addView(topBarBinding.root)
 

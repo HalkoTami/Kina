@@ -113,7 +113,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                         Count.Start -> start = LocalDateTime.now()
                         Count.End -> {
                             val duration = Duration.between(start ?:return@observe,LocalDateTime.now()).seconds
-                            if(duration>5){
+                            if(duration>1){
                                 updateFlipped(it.countingCard)
                                 Toast.makeText(requireActivity(),"flip saved",Toast.LENGTH_SHORT).show()
                             }

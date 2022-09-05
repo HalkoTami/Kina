@@ -144,7 +144,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
                     FlipStringFragmentDirections.toFlipString(
                     )
                 action.front = reverseMode.not()
-                action.cardId = cardId
+                action.cardId = intArrayOf(cardId)
                 return action
             }
         }
@@ -182,7 +182,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
                         FlipStringFragmentDirections.toFlipString(
                         )
                         action.front = flipToFront
-                        action.cardId = cardId
+                        action.cardId = intArrayOf(cardId)
                         return action
                     }
                 }
@@ -246,7 +246,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
                         FlipStringFragmentDirections.toFlipString(
                         )
                     action.front = flipToFront
-                    action.cardId = cardId
+                    action.cardId = intArrayOf(cardId)
                     return action
                 }
             }

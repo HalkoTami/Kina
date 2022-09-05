@@ -8,11 +8,13 @@ import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
+import kotlinx.coroutines.flow.Flow
 
 class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun onCreate(){
         setAnkiBoxItems(mutableListOf())
     }
+    fun getAnkiBoxRVCards(fileId:Int): LiveData<List<Card>> = repository.getAnkiBoxRVCards(fileId).asLiveData()
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is Anki Fragment"
@@ -25,7 +27,7 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     val libraryFilesAsAnkiBox:LiveData<List<File>> = _libraryFilesAsAnkiBox
 
-    fun getLibraryCardsFromDB(parentFileId:Int?) :LiveData<List<Card>> = repository.getCardDataByFileId(parentFileId).asLiveData()
+    fun getCardsFromDB(parentFileId:Int?) :LiveData<List<Card>> = repository.getCardDataByFileId(parentFileId).asLiveData()
     private val _libraryCardsAsAnkiBox = MutableLiveData<List<Card>>()
     fun setLibraryCardsAsAnkiBox(list: List<Card>){
         _libraryCardsAsAnkiBox.value = list

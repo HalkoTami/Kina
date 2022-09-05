@@ -51,32 +51,33 @@ interface LibraryDao {
             "SELECT * FROM generation b ")
     fun getAllAncestorsByChildFileId(fileId: Int?): Flow<List<File>>
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("UPDATE tbl_file SET descendantsCardsAmount = descendantsCardsAmount + 1 " +
+    @Query("UPDATE tbl_file SET descendantsCardsAmount = descendantsCardsAmount + :amount " +
             " WHERE fileId in ( WITH  generation AS (" +
             " select * from tbl_file where fileId = :fileId  " +
             "UNION ALL" +
             " SELECT a.* from tbl_file a " +
             " Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
             "SELECT fileId FROM generation b ) ")
-    fun upDateAncestorsCardAmount(fileId: Int)
+    fun upDateAncestorsCardAmount(fileId: Int,amount: Int)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("UPDATE tbl_file SET descendantsFoldersAmount = descendantsFoldersAmount + 1 " +
+    @Query("UPDATE tbl_file SET descendantsFoldersAmount = descendantsFoldersAmount + :amount " +
             " WHERE fileId in ( WITH  generation AS (" +
             " select * from tbl_file where fileId = :fileId  " +
             "UNION ALL" +
             " SELECT a.* from tbl_file a " +
             " Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
             "SELECT fileId FROM generation b ) ")
-    fun upDateAncestorsFolderAmount(fileId: Int)
+    fun upDateAncestorsFolderAmount(fileId: Int,amount: Int)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("UPDATE tbl_file SET descendantsFlashCardsCoversAmount = descendantsFlashCardsCoversAmount + 1 " +
+    @Query("UPDATE tbl_file SET descendantsFlashCardsCoversAmount = descendantsFlashCardsCoversAmount + :amount " +
             " WHERE fileId in ( WITH  generation AS (" +
             " select * from tbl_file where fileId = :fileId  " +
             "UNION ALL" +
             " SELECT a.* from tbl_file a " +
             " Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
             "SELECT fileId FROM generation b ) ")
-    fun upDateAncestorsFlashCardCoverAmount(fileId: Int)
+    fun upDateAncestorsFlashCardCoverAmount(fileId: Int,amount:Int)
+
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("UPDATE tbl_file " +
@@ -93,6 +94,17 @@ interface LibraryDao {
             " Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
             "SELECT fileId FROM generation b  )")
     fun upDateAncestorsFlipCount(upDatedCardId:Int,fileId: Int?)
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("Select a.* from tbl_card a " +
+            "left join tbl_card_file_x_ref c " +
+            "on c.cardId = a.id and c.tagId = :fileId" +
+            " WHERE a.belongingFlashCardCoverId in ( WITH  generation AS (" +
+            " select * from tbl_file where fileId = :fileId " +
+            "Union ALL" +
+            " SELECT a.* from tbl_file a " +
+            " Inner JOIN generation g ON g.fileId = a.parentFileId ) " +
+            "SELECT fileId FROM generation b  )")
+    fun getAnkiBoxRVCards(fileId:Int):Flow<List<Card>>
 
     @Query("UPDATE tbl_card SET timesFlipped = timesFlipped +1   WHERE id = :cardId")
     fun upDateCardFlippedTimes(cardId: Int)
@@ -129,14 +141,14 @@ interface LibraryDao {
     @Query("UPDATE tbl_file SET parentFileId = :newParentFileId  WHERE parentFileId = :deletedFileId")
     fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?)
 
-    @Query("UPDATE tbl_file SET childFoldersAmount = childFoldersAmount + 1  WHERE fileId = :fileId")
-    fun upDateFileChildFoldersAmount(fileId: Int)
+    @Query("UPDATE tbl_file SET childFoldersAmount = childFoldersAmount + :amount  WHERE fileId = :fileId")
+    fun upDateFileChildFoldersAmount(fileId: Int,amount: Int)
 
-    @Query("UPDATE tbl_file SET childFlashCardCoversAmount = childFlashCardCoversAmount + 1  WHERE fileId = :fileId")
-    fun upDateFileChildFlashCardCoversAmount(fileId: Int)
+    @Query("UPDATE tbl_file SET childFlashCardCoversAmount = childFlashCardCoversAmount + :amount  WHERE fileId = :fileId")
+    fun upDateFileChildFlashCardCoversAmount(fileId: Int,amount: Int)
 
-    @Query("UPDATE tbl_file SET childCardsAmount = childCardsAmount + 1  WHERE fileId = :fileId")
-    fun upDateFileChildCardsAmount(fileId: Int)
+    @Query("UPDATE tbl_file SET childCardsAmount = childCardsAmount + :amount  WHERE fileId = :fileId")
+    fun upDateFileChildCardsAmount(fileId: Int,amount: Int)
 
 
 

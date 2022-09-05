@@ -41,6 +41,7 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
     fun getDescendantsCardsIsByMultipleFileId(fileIdList: List<Int>):Flow<List<Int>> = libraryDao.getDescendantsCardsIdsByMultipleFileId(fileIdList)
 //    fun getAllDescendantsByFileIdWithCard(fileId: Int?):Flow<List<Any>> = libraryDao.getAllDescendantsByParentFileId2(fileId)
 
+    fun getAnkiBoxRVCards(fileId:Int):Flow<List<Card>> = libraryDao.getAnkiBoxRVCards(fileId)
         fun getCardByCardId(cardId:Int?):Flow<Card> = cardDao.getCardByCardId(cardId)
     fun getCardsByMultipleCardId(cardIds:List<Int>):Flow<List<Card>> = cardDao.getCardByMultipleCardIds(cardIds)
         val lastInsertedCard:Flow<Card?> = cardDao.getLastInsertedCard()
@@ -56,24 +57,25 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
     enum class UpdateFileAmount{
         Folder,FlashCardCover,Card
     }
-        fun upDateChild(fileId: Int ,which:UpdateFileAmount){
+        fun upDateChild(fileId: Int ,which:UpdateFileAmount,amount:Int){
             Completable.fromAction{when(which){
-                UpdateFileAmount.FlashCardCover -> libraryDao.upDateFileChildFlashCardCoversAmount(fileId)
-                UpdateFileAmount.Folder -> libraryDao.upDateFileChildFlashCardCoversAmount(fileId)
-                UpdateFileAmount.Card -> libraryDao.upDateFileChildCardsAmount(fileId)
+                UpdateFileAmount.FlashCardCover -> libraryDao.upDateFileChildFlashCardCoversAmount(fileId,amount)
+                UpdateFileAmount.Folder -> libraryDao.upDateFileChildFlashCardCoversAmount(fileId,amount)
+                UpdateFileAmount.Card -> libraryDao.upDateFileChildCardsAmount(fileId,amount)
             } }
                 .subscribeOn(Schedulers.io())
                 .subscribe()
         }
-    fun upDateAncestors(childFileId: Int ,which:UpdateFileAmount){
+    fun upDateAncestors(childFileId: Int ,which:UpdateFileAmount,amount: Int){
         Completable.fromAction{when(which){
-            UpdateFileAmount.FlashCardCover -> libraryDao.upDateAncestorsFlashCardCoverAmount(childFileId)
-            UpdateFileAmount.Folder -> libraryDao.upDateAncestorsFolderAmount(childFileId)
-            UpdateFileAmount.Card -> libraryDao.upDateAncestorsCardAmount(childFileId)
+            UpdateFileAmount.FlashCardCover -> libraryDao.upDateAncestorsFlashCardCoverAmount(childFileId,amount)
+            UpdateFileAmount.Folder -> libraryDao.upDateAncestorsFolderAmount(childFileId,amount)
+            UpdateFileAmount.Card -> libraryDao.upDateAncestorsCardAmount(childFileId,amount)
         } }
             .subscribeOn(Schedulers.io())
             .subscribe()
     }
+
 
 
     fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {
@@ -102,8 +104,8 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
                     cardDao.insert(item)
                     val flashCardCoverId = item.belongingFlashCardCoverId
                     if(flashCardCoverId!=null){
-                        upDateChild(flashCardCoverId,UpdateFileAmount.Card)
-                        upDateAncestors(flashCardCoverId,UpdateFileAmount.Card)
+                        upDateChild(flashCardCoverId,UpdateFileAmount.Card,1)
+                        upDateAncestors(flashCardCoverId,UpdateFileAmount.Card,1)
                     }
                 }
                 is File -> { fileDao.insert(item)
@@ -111,12 +113,12 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
                 if(parentFileId!=null){
                     when (item.fileStatus){
                         FileStatus.FOLDER -> {
-                            upDateAncestors(parentFileId,UpdateFileAmount.Folder)
-                            upDateChild(parentFileId,UpdateFileAmount.Folder)
+                            upDateAncestors(parentFileId,UpdateFileAmount.Folder,1)
+                            upDateChild(parentFileId,UpdateFileAmount.Folder,1)
                         }
                         FileStatus.TANGO_CHO_COVER ->{
-                            upDateAncestors(parentFileId,UpdateFileAmount.FlashCardCover)
-                            upDateChild(parentFileId,UpdateFileAmount.Folder)
+                            upDateAncestors(parentFileId,UpdateFileAmount.FlashCardCover,1)
+                            upDateChild(parentFileId,UpdateFileAmount.Folder,1)
                         }
                         else -> return
                     }
@@ -156,6 +158,24 @@ private val fileXRefDao        : MyDao.FileXRefDao,) {
         }
             .subscribeOn(Schedulers.io())
             .subscribe()
+    }
+    fun upDateParentFile(item:Any,newParentFileId: Int?){
+        when (item){
+            is Card -> {
+                val oldParent = item.belongingFlashCardCoverId
+                if(oldParent!=null){
+                    upDateAncestors(oldParent,UpdateFileAmount.Card,-1)
+                    upDateChild(oldParent,UpdateFileAmount.Card,-1)
+                }
+                if(newParentFileId!=null){
+                    upDateAncestors(newParentFileId,UpdateFileAmount.Card,1)
+                    upDateChild(newParentFileId,UpdateFileAmount.Card,1)
+                }
+                val update = item
+                update.belongingFlashCardCoverId = newParentFileId
+            }
+        }
+
     }
 
 

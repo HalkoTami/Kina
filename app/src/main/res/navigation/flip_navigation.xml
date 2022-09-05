@@ -11,8 +11,9 @@
             app:argType="boolean"
             android:defaultValue="false"/>
         <argument android:name="cardId"
-            app:argType="integer"
-            android:defaultValue="1"/>
+            app:argType="integer[]"
+            app:nullable="true"
+            android:defaultValue="@null"/>
     </fragment>
     <fragment android:id="@+id/flip_string_type_answer_frag"
         android:name="com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragment"

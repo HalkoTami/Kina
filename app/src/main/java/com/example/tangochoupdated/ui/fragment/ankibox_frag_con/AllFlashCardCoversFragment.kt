@@ -9,7 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.databinding.FullRvBinding
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
-import com.example.tangochoupdated.ui.view_set_up.AnkiBoxChildrenFragViewSetUp
+import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 
 
@@ -33,20 +33,20 @@ class AllFlashCardCoversFragment  : Fragment() {
         val root: View = binding.root
 
         val fileId = args.fileId?.single()
+        val viewSetUp = AnkiBoxFragViewSetUp()
+        val adapter = viewSetUp
+            .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),viewModel,AnkiBoxTab.AllFlashCardCovers,viewLifecycleOwner)
 
-        val viewSetUp = AnkiBoxChildrenFragViewSetUp(viewModel, requireActivity(),AnkiBoxTab.AllFlashCardCovers)
         viewModel.apply {
             when(fileId){
                 null -> {
-                    val adapter = viewSetUp
-                        .setUpAnkiBoxRVListAdapter(binding.recyclerView)
+
                     allFlashCardCoverFromDB.observe(viewLifecycleOwner){
                         adapter.submitList(it)
                     }
                 }
                 else -> {
-                    val adapter = viewSetUp.setUpAnkiBoxRVListAdapter(binding.recyclerView)
-                    getLibraryCardsFromDB(fileId).observe(viewLifecycleOwner){
+                    getCardsFromDB(fileId).observe(viewLifecycleOwner){
                         adapter.submitList(it)
 
                     }

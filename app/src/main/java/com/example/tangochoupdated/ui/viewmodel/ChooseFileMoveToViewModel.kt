@@ -68,6 +68,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
         change.onEach {
             when(it ){
                 is Card -> {
+                    updateAncestorsAndChild(it)
                     it.belongingFlashCardCoverId = item.fileId
                     it.libOrder = item.childData.childCardsAmount + 1
 
@@ -87,6 +88,11 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     private fun update(any:Any){
         viewModelScope.launch {
             repository.update(any)
+        }
+    }
+    private fun updateAncestorsAndChild(beforeChange:Any){
+        viewModelScope.launch {
+            repository.upDateParentFile(beforeChange,returnFileMoveTo()?.fileId)
         }
     }
 }

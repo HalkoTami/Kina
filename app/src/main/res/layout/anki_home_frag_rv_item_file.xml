@@ -152,13 +152,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <include
+                android:id="@+id/remembered_progress_bar_binding"
                 layout="@layout/progress_bar_remembered_rectangle"/>
         </FrameLayout>
         <FrameLayout
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="30dp">
-            <include layout="@layout/progress_bar_flipped"/>
+            <include
+                android:id="@+id/flipped_progress_bar_binding"
+                layout="@layout/progress_bar_flipped"/>
         </FrameLayout>
 
     </LinearLayout>

@@ -46,12 +46,8 @@ class AnkiFragmentAnkiBox  : Fragment() {
         _binding =  AnkiHomeFragBaseBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val viewSetUp = AnkiBoxFragViewSetUp(
-            ankiBoxVM = viewModel,
-            context =  requireActivity(),
-            bindingAnkiBoxFrag = binding,
-            ankiBaseViewModel = ankiBaseViewModel
             )
-        viewSetUp.ankiBoxFragAddCL(settingVM)
+        viewSetUp.ankiBoxFragAddCL(settingVM,binding,viewModel,ankiBaseViewModel)
 
         binding.apply {
             linLayTabChange.tag = AnkiBoxTab.AllFlashCardCovers
@@ -87,8 +83,8 @@ class AnkiFragmentAnkiBox  : Fragment() {
 
             viewSetUp.apply {
                 ankiBoxItems.observe(viewLifecycleOwner) {
-                    setUpAnkiBoxRing(it)
-                    setUpFlipProgressBar(it)
+                    setUpAnkiBoxRing(it,binding.ringBinding)
+                    setUpFlipProgressBar(it,binding.flipGraphBinding)
                     binding.btnStartAnki.text = if(it.isEmpty()) "カードを選ばず暗記" else "暗記開始"
 
                 }
