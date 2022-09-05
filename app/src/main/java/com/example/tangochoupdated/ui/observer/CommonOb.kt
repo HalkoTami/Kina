@@ -7,5 +7,8 @@ class CommonOb {
     fun observeToast(context: Context,text:String,show:Boolean){
         if(show) Toast.makeText(context,text,Toast.LENGTH_SHORT).show()
     }
+    fun observeColPallet (){
+
+    }
 
 }

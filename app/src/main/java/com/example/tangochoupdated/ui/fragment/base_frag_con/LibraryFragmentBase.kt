@@ -29,6 +29,8 @@ import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
 import com.example.tangochoupdated.ui.observer.CommonOb
+import com.example.tangochoupdated.ui.observer.LibraryOb
+import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.*
 
@@ -60,7 +62,7 @@ class LibraryFragmentBase : Fragment(){
         baseViewModel.apply {
             setActiveFragment(MainFragment.Library)
         }
-        makeAllColPaletUnselected(binding.editFileBinding.colPaletBinding)
+        ColorPalletViewSetUp().makeAllColPalletUnselected(requireActivity(),binding.editFileBinding.colPaletBinding)
 
         chooseFileMoveToViewModel.apply {
             showToast.observe(viewLifecycleOwner){
@@ -74,27 +76,9 @@ class LibraryFragmentBase : Fragment(){
                     binding.frameLayEditFile.visibility = if(it)View.VISIBLE else View.GONE
                     binding.background.visibility = if(it)View.VISIBLE else View.GONE
                 }
-
-                var previousColor: ColorStatus? =null
                 filePopUpUIData.observe(viewLifecycleOwner){
-
-                    if(txvFileTitle.text != it.txvLeftTopText) txvFileTitle.text = it.txvLeftTopText
-                    if(txvHint.text!=it.txvHintText) txvHint.text=it.txvHintText
-
-                    if(previousColor!=it.colorStatus){
-                        changeColPalletCol(previousColor,false,colPaletBinding)
-                        changeColPalletCol(it.colorStatus,true,colPaletBinding)
-                        previousColor = it.colorStatus
-                    }
-                    if(imvFileType.tag!= it.drawableId){
-                        imvFileType.setImageDrawable(AppCompatResources.getDrawable(requireActivity(),it.drawableId))
-                        imvFileType.tag = it.drawableId
-                    }
-                    edtCreatefile.apply {
-                        if(text.toString()!=it.edtTitleText) text= SpannableStringBuilder(it.edtTitleText)
-                        if(hint!= it.edtTitleHint) hint = it.edtTitleHint
-                    }
-            }
+                    LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,requireActivity())
+                }
 
 
             }
@@ -163,45 +147,11 @@ class LibraryFragmentBase : Fragment(){
                 }
             }
 
-//            observe(viewLifecycleOwner){
-//                val visibility = it.visible
-//                if(!visibility){
-//                    binding.confirmDeletePopUpBinding.root.visibility = View.GONE
-//                    binding.confirmDeleteChildrenPopUpBinding.root.visibility = View.GONE
-//                } else {
-//                    when(it.confirmMode){
-//                        ConfirmMode.DeleteItem-> binding.confirmDeletePopUpBinding.root.visibility = View.VISIBLE
-//                        ConfirmMode.DeleteWithChildren -> binding.confirmDeleteChildrenPopUpBinding.root.visibility = View.VISIBLE
-//                    }
-//                }
-//            }
-
-//            deletingItemChildrenFiles.observe(viewLifecycleOwner){ list ->
-//                val folderAmount = list?.filter { it.fileStatus == FileStatus.FOLDER }?.size ?:0
-//                val flashcardCoverAmount = list?.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }?.size ?:0
-//                binding.confirmDeleteChildrenPopUpBinding.apply {
-//                    txvContainingFolder.text = "${folderAmount}個"
-//                    txvContainingFlashcard.text = "${flashcardCoverAmount}個"
-//                }
-//            }
-//            deletingItemChildrenCards.observe(viewLifecycleOwner){ list->
-//                val cardAmount = list?.size
-//                binding.confirmDeleteChildrenPopUpBinding.txvContainingCard.text = "${cardAmount}枚"
-//            }
         }
 
 
-
-//        libraryViewModel.action.observe(viewLifecycleOwner){
-//            if(libraryViewModel.returnParentFile()?.fileStatus!=FileStatus.TANGO_CHO_COVER){
-//                myNavCon.navigate(it)
-//            }
-//            Toast.makeText(requireActivity(), "action called ", Toast.LENGTH_SHORT).show()
-//        }
         val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel,libNavCon)
         addListeners.confirmDeletePopUpAddCL(binding.confirmDeletePopUpBinding,binding.confirmDeleteChildrenPopUpBinding)
-
-//        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibBase(binding)
         return binding.root
     }
 

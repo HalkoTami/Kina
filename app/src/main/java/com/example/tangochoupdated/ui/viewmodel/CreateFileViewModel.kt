@@ -239,12 +239,13 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         setMode(Mode.Edit)
         makeEditFilePopUp(_parentFile.value,editingFile)
         setFileToEdit(editingFile)
+        setEditFilePopUpVisible(true)
     }
 
     //    edit file popup Visibility
     private val _editFilePopUpVisible = MutableLiveData<Boolean>()
     val editFilePopUpVisible:LiveData<Boolean> = _editFilePopUpVisible
-    private fun setEditFilePopUpVisible(boolean: Boolean){
+    fun setEditFilePopUpVisible(boolean: Boolean){
         _editFilePopUpVisible.value = boolean
         if(boolean){
             setBottomMenuVisible(false)
@@ -282,6 +283,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         var edtTitleText:String,
         var edtTitleHint:String,
         var colorStatus: ColorStatus,
+        var previousColor: ColorStatus?
     )
     private val _filePopUpUIData = MutableLiveData<PopUpUI>()
     val filePopUpUIData:LiveData<PopUpUI> = _filePopUpUIData
@@ -298,7 +300,8 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             else R.drawable.icon_library_plane,
             edtTitleHint = "タイトル",
             edtTitleText = "",
-            colorStatus = ColorStatus.GRAY
+            colorStatus = ColorStatus.GRAY,
+            previousColor = _filePopUpUIData.value?.colorStatus
         )
         setFilePopUpUIData(a)
 
@@ -312,7 +315,8 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             else R.drawable.icon_library_plane,
             edtTitleHint = "タイトルを編集",
             edtTitleText = "${editingFile.title}",
-            colorStatus = editingFile.colorStatus
+            colorStatus = editingFile.colorStatus,
+            previousColor = _filePopUpUIData.value?.colorStatus
         )
         setFilePopUpUIData(a)
     }
@@ -356,6 +360,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _fileColor = MutableLiveData<ColorStatus>()
     val fileColor: LiveData<ColorStatus> = _fileColor
     private fun changeFileColor(previous: PopUpUI, colorStatus: ColorStatus){
+        previous.previousColor = previous.colorStatus
         previous.colorStatus = colorStatus
         setFilePopUpUIData(previous)
     }
