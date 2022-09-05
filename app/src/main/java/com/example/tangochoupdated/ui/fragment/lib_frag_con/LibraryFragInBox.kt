@@ -46,10 +46,12 @@ class LibraryFragInBox  : Fragment(){
             libraryViewModel  = libraryViewModel,
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
-            createCardViewModel  = createCardViewModel,deletePopUpViewModel,
-            libNavController = libNavCon,
+            createCardViewModel  = createCardViewModel,
+            parent = recyclerView,
+            deletePopUpViewModel = deletePopUpViewModel,
 
-            mainNavController = mainNavCon,)
+            mainNavController = mainNavCon,
+            libNavController = libNavCon,)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false

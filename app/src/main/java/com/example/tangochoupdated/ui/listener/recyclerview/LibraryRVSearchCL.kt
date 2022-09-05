@@ -20,7 +20,7 @@ class LibraryRVSearchCL(
     override fun onClick(v: View?) {
         rvBinding.apply {
             when(v){
-                baseContainer       ->  {
+                libRvBaseContainer       ->  {
                     if(item is File)lVM.openNextFile(item,navController)
                     if(item is Card)mainNavCon.navigate(CreateCardFragmentBaseDirections.openCreateCard())
                 }

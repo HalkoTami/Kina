@@ -130,18 +130,9 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                     val remPer = it.filter { it.remembered }.size.toDouble()/it.size
                     progressbarRemembered.progress = getPercentage(remPer)
                     val translation = progressbarRemembered.width*remPer.toFloat()-imvRememberedEndIcon.width/2
-
                     imvRememberedEndIcon.translationX = if(translation<0) 0f else translation
                 }
             }
-
-
-
-
-
-
-
-
         }
 
 

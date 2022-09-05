@@ -51,7 +51,10 @@ class LibraryFragFolder :  Fragment(){
             libraryViewModel  = libraryViewModel,
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
-            createCardViewModel  = createCardViewModel,deletePopUpViewModel,
+            createCardViewModel  = createCardViewModel,
+            parent = recyclerView,
+            deletePopUpViewModel = deletePopUpViewModel,
+
             mainNavController = mainNavCon,
             libNavController = libNavCon,)
         recyclerView.adapter = adapter

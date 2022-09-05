@@ -256,7 +256,7 @@ class LibraryFragmentBase : Fragment(){
 
     fun makeLibRVUnSwiped(rv:RecyclerView){
         rv.children.iterator().forEach { view ->
-            val parent = view.findViewById<ConstraintLayout>(R.id.base_container)
+            val parent = view.findViewById<ConstraintLayout>(R.id.lib_rv_base_container)
             if(parent.tag == LibRVState.LeftSwiped){
                 Animation().animateLibRVLeftSwipeLay(
                     view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false)

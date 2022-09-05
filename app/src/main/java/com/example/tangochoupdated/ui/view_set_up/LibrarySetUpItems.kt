@@ -1,15 +1,21 @@
 package com.example.tangochoupdated.ui.view_set_up
 
 import android.content.Context
+import android.graphics.Rect
+import android.os.Build
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
+import android.view.TouchDelegate
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
+import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
 import com.example.tangochoupdated.databinding.LibraryFragRvItemCardStringBinding
@@ -107,6 +113,7 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
 
     }
     fun setUpRVBasePlane(
+        parent:View,
         rvItemBaseBinding: LibraryFragRvItemBaseBinding,
         item: Any,
         context: Context,
@@ -119,6 +126,18 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
             is File -> {
                 val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
                 setUpRVBaseFile(rvItemBaseBinding,fileBinding, item, context)
+//                val r = Rect()
+//                rvItemBaseBinding.root.getHitRect(r)
+//                r.top -= 500
+//                r.bottom += 500
+//                val a = parent as RecyclerView
+//                a.children.iterator().forEach {it.setOnClickListener(null)  }
+//                parent.touchDelegate = TouchDelegate(
+//                    r,
+//                    rvItemBaseBinding.root
+//                )
+
+
                 addL.fileRVAddCL(
                     rvItemBaseBinding,
                     context,

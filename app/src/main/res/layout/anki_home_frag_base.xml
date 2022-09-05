@@ -129,7 +129,7 @@
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             app:layout_constraintVertical_weight="1"
-            app:layout_constraintBottom_toTopOf="@id/anki_box_frag_con_view"
+            app:layout_constraintBottom_toTopOf="@id/rv_cover"
             app:layout_constraintTop_toTopOf="parent">
             <TextView
                 android:id="@+id/tab_AllFlashCardCover_to_AnkiBox"
@@ -162,7 +162,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/anki_box_frag_con_view"
+            android:id="@+id/rv_cover"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"

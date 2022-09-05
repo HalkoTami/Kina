@@ -18,7 +18,7 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
         }
 
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
-            onSingleTap()
+            onSingleTap(e)
             return false
         }
 
@@ -28,17 +28,17 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
             distanceX: Float,
             distanceY: Float
         ): Boolean {
-            if(distanceX<0){
+            if((e2!!.x-e1!!.x) > 0){
                 onScrollRight()
             } else{
-                onScrollLeft((e2!!.x-e1!!.x).absoluteValue,e2)
-
+                onScrollLeft((e2!!.x-e1!!.x).absoluteValue,e1)
             }
+
             return false
         }
 
         override fun onLongPress(e: MotionEvent?) {
-            onLongClick()
+            onLongClick(e)
         }
 
         private val swipeThreshold = 100
@@ -48,6 +48,7 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
             onDown()
             return true
         }
+
 
 
 
@@ -75,8 +76,16 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
         }
     }
 
+    var down:Boolean = false
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         v!!.performClick()
+        when(event?.action){
+            MotionEvent.ACTION_DOWN -> down = true
+            MotionEvent.ACTION_UP -> down = false
+        }
+        if(down){
+            onMove(event)
+        }
 
         gestureDetector.onTouchEvent(event)
         return true
@@ -84,12 +93,15 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
     open fun onScrollLeftActionUp(){
 
     }
+    open fun onMove(event: MotionEvent?){
+
+    }
 
     open fun onSwipeRight() {}
 
     open fun onSwipeLeft() {}
 
-    open fun onLongClick(){}
+    open fun onLongClick(motionEvent: MotionEvent?){}
 
     open fun onScrollRight(){
 
@@ -97,7 +109,7 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
     open fun onScrollLeft(distanceX: Float,motionEvent:MotionEvent?){
 
     }
-    open fun onSingleTap(){
+    open fun onSingleTap(motionEvent: MotionEvent?){
 
     }
     open fun onDown(){

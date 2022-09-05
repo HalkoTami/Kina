@@ -17,8 +17,8 @@ class ImvChangeAlphaOnDown(context: Context, attrs: AttributeSet) : androidx.app
                 this@ImvChangeAlphaOnDown.alpha = 1f
             }
 
-            override fun onSingleTap() {
-                super.onSingleTap()
+            override fun onSingleTap(motionEvent: MotionEvent?) {
+                super.onSingleTap(motionEvent)
                 l?.onClick(this@ImvChangeAlphaOnDown)
                 this@ImvChangeAlphaOnDown.alpha = 0.3f
             }

@@ -95,6 +95,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             value = list
         }
     }
+    fun returnParentRVItems():List<Any>{
+        return _parentRVItems.value ?: mutableListOf()
+    }
 //    空にする
     fun clearFinalList(){
         setParentRVItems(mutableListOf())
@@ -230,6 +233,17 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun returnModeInBox():Boolean?{
         return _modeInBox.value
     }
+    class RvCover(
+        var height:Float,
+        var visible:Boolean
+    )
+    private val _rvCover = MutableLiveData<RvCover>()
+    val rvCover:LiveData<RvCover> = _rvCover
+
+    fun setRVCover (rvCover: RvCover){
+        _rvCover.value = rvCover
+    }
+
     val modeInBox:LiveData<Boolean> = _modeInBox
 
     private val _chooseFileMoveToMode = MutableLiveData<Boolean>()
@@ -363,6 +377,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _leftSwipedItemExists.value = boolean
 
     }
+    val leftSwipedItemExists:LiveData<Boolean> = _leftSwipedItemExists
     fun returnLeftSwipedItemExists ():Boolean?{
         return  _leftSwipedItemExists.value
     }

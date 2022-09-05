@@ -25,11 +25,11 @@ class LibraryRVCardCL(val view: View,
 ): MyTouchListener(context){
 
     //    click後にtouch event を設定しなおすと親子関係のコンフリクトが防げそう
-    override fun onSingleTap() {
-        super.onSingleTap()
+    override fun onSingleTap(motionEvent: MotionEvent?) {
+        super.onSingleTap(motionEvent)
         rvBinding.apply {
             when(view){
-                baseContainer       ->  {
+                libRvBaseContainer       ->  {
                     if(lVM.returnLeftSwipedItemExists()==true){
                         lVM.makeAllUnSwiped()
                     }
@@ -51,29 +51,30 @@ class LibraryRVCardCL(val view: View,
     }
     override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
         super.onScrollLeft(distanceX, motionEvent)
-        rvBinding.apply {
-            if(rvBinding.root.tag== LibRVState.Plane){
-                linLaySwipeShow.layoutParams.width = 1
-                linLaySwipeShow.requestLayout()
-                linLaySwipeShow.children.iterator().forEach {
-                    it.visibility = View.VISIBLE
-                }
-                linLaySwipeShow.visibility = View.VISIBLE
-                rvBinding.root.tag = LibRVState.LeftSwiping
-
-            }else if(rvBinding.root.tag== LibRVState.LeftSwiping) {
-                if(rvBinding.root.tag!= LibRVState.LeftSwiping){
-                    rvBinding.root.tag = LibRVState.LeftSwiping
-                }
-                linLaySwipeShow.layoutParams.width = distanceX.toInt()/5
-                linLaySwipeShow.requestLayout()
-
-            }
-
-        }
+//        rvBinding.apply {
+//            if(rvBinding.root.tag== LibRVState.Plane){
+//                linLaySwipeShow.layoutParams.width = 1
+//                linLaySwipeShow.requestLayout()
+//                linLaySwipeShow.children.iterator().forEach {
+//                    it.visibility = View.VISIBLE
+//                }
+//                linLaySwipeShow.visibility = View.VISIBLE
+//                rvBinding.root.tag = LibRVState.LeftSwiping
+//
+//            }else if(rvBinding.root.tag== LibRVState.LeftSwiping) {
+//                if(rvBinding.root.tag!= LibRVState.LeftSwiping){
+//                    rvBinding.root.tag = LibRVState.LeftSwiping
+//                }
+//                linLaySwipeShow.layoutParams.width = distanceX.toInt()/5
+//                linLaySwipeShow.requestLayout()
+//
+//            }
+//
+//        }
+        lVM.setRVCover(LibraryViewModel.RvCover(0f,true))
     }
-    override fun onLongClick() {
-        super.onLongClick()
+    override fun onLongClick(motionEvent: MotionEvent?) {
+        super.onLongClick(motionEvent)
         rvBinding.btnSelect.isSelected = true
         lVM.setMultipleSelectMode(true)
         lVM.onClickSelectableItem(item,true)

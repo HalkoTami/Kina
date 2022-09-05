@@ -1,9 +1,9 @@
 package com.example.tangochoupdated.ui.view_set_up
 
 import android.content.Context
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.compose.ui.unit.Constraints
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
@@ -17,6 +17,7 @@ import com.example.tangochoupdated.ui.viewmodel.*
 
 class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: DeletePopUpViewModel,val libNavCon: NavController){
 //    top Bars
+
     fun confirmDeletePopUpAddCL(onlyP: LibraryFragPopupConfirmDeleteBinding,deleteAllC:LibraryFragPopupConfirmDeleteAllChildrenBinding){
         arrayOf(
             onlyP.btnCloseConfirmDeleteOnlyParentPopup,
@@ -101,7 +102,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
                       mainNavController: NavController
     ){ binding.apply {
         arrayOf(
-            baseContainer,
+            libRvBaseContainer,
 
         ).onEach { it.setOnClickListener(
             LibraryRVSearchCL(item =  item,
@@ -118,7 +119,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
                     createFileVM: CreateFileViewModel,
     ){ binding.apply {
             arrayOf(
-                baseContainer,
+                libRvBaseContainer,
                 btnDelete,
                 btnSelect,
                 btnAddNewCard,
@@ -136,7 +137,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
                     chooseFileMoveToViewModel: ChooseFileMoveToViewModel
     ){ binding.apply {
         arrayOf(
-            baseContainer,
+            libRvBaseContainer,
             btnDelete,
             btnSelect,
             btnAddNewCard,
@@ -160,7 +161,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
     ){
         binding.apply {
             arrayOf(
-                baseContainer,
+                libRvBaseContainer,
                 btnDelete,
                 btnSelect,
                 btnAddNewCard,

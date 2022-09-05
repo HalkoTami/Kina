@@ -59,7 +59,7 @@
         android:layout_height="0dp">
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/anki_box_frag_con_view"
+            android:id="@+id/rv_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <androidx.constraintlayout.widget.ConstraintLayout

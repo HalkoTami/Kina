@@ -16,6 +16,7 @@ import com.example.tangochoupdated.ui.viewmodel.*
 
 
 class LibFragPlaneRVListAdapter(
+    private val parent:View,
     private val createFileViewModel: CreateFileViewModel,
     private val libraryViewModel: LibraryViewModel,
     private val context: Context,
@@ -34,7 +35,7 @@ class LibFragPlaneRVListAdapter(
 
     override fun onBindViewHolder(holder: LibFragFileViewHolder, position: Int) {
         holder.bind(getItem(position),libraryViewModel,createFileViewModel,createCardViewModel,
-            stringCardViewModel, deletePopUpViewModel,libNavController,mainNavController,)
+            stringCardViewModel, deletePopUpViewModel,libNavController,mainNavController,parent)
     }
 
     class LibFragFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
@@ -47,12 +48,14 @@ class LibFragPlaneRVListAdapter(
                  deletePopUpViewModel: DeletePopUpViewModel,
                  navController:NavController,
                  mainNavController: NavController,
+                 parent: View
         ){
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
 
 
             LibrarySetUpItems(libraryViewModel,deletePopUpViewModel,navController).setUpRVBasePlane(
+                parent = parent,
                 rvItemBaseBinding = binding,
                 item = item,
                 context = context,

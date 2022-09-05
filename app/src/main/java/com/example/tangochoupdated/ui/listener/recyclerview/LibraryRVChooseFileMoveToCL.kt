@@ -19,7 +19,7 @@ class LibraryRVChooseFileMoveToCL(
     override fun onClick(p0: View?) {
         rvBinding.apply {
             when(p0){
-                baseContainer       ->  lVM.openChooseFileMoveTo(item,navController)
+                libRvBaseContainer       ->  lVM.openChooseFileMoveTo(item,navController)
                 btnSelect ->  chooseFileMoveToViewModel.onClickRvBtnMove(item)
             }
         }

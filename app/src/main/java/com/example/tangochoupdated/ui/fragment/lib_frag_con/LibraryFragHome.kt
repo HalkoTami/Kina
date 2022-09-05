@@ -4,7 +4,12 @@ package com.example.tangochoupdated.ui.fragment.lib_frag_con
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.ImageView
+import android.widget.Toast.makeText
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.children
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -15,12 +20,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
+import com.example.tangochoupdated.db.enumclass.LibRVState
+import com.example.tangochoupdated.db.enumclass.Toast
+import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.listadapter.LibFragSearchRVListAdapter
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.*
+import java.io.File
+import kotlin.math.absoluteValue
 
 
 class LibraryFragHome : Fragment(){
@@ -54,13 +64,133 @@ class LibraryFragHome : Fragment(){
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
             createCardViewModel  = createCardViewModel,
-            deletePopUpViewModel, mainNavController =mainNavCon, libNavController = libNavCon,)
+            parent = recyclerView as View,
+            deletePopUpViewModel = deletePopUpViewModel,
+
+            mainNavController = mainNavCon,
+            libNavController = libNavCon,)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
         libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
-
         val topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
+
+        binding.rvCover.setOnTouchListener(object :MyTouchListener(requireActivity()){
+            override fun onDown() {
+                super.onDown()
+
+
+            }
+            override fun onSingleTap(motionEvent:MotionEvent?) {
+                super.onSingleTap(motionEvent)
+                val view = recyclerView.findChildViewUnder(motionEvent!!.x,motionEvent!!.y)
+                val lineLay = view?.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return
+                val conLay = view?.findViewById<ConstraintLayout>(R.id.lib_rv_base_container) ?:return
+                val btnSelect = view?.findViewById<ImageView>(R.id.btn_select) ?:return
+                val btnDelete = view?.findViewById<ImageView>(R.id.btn_delete) ?:return
+                val btnEditWhole = view?.findViewById<ImageView>(R.id.btn_edit_whole) ?:return
+                val position = recyclerView.getChildAdapterPosition(view)
+                val item = adapter.currentList[position] as com.example.tangochoupdated.db.dataclass.File
+                conLay.apply {
+                    when(view){
+                        conLay       ->  {
+                            if(libraryViewModel.returnLeftSwipedItemExists()==true){
+                                libraryViewModel.makeAllUnSwiped()
+                            }
+                            else if(libraryViewModel.returnMultiSelectMode()==true){
+                                libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
+                                btnSelect.isSelected = btnSelect.isSelected.not()
+                            }else{
+                                libraryViewModel.openNextFile(item,libNavCon)
+                            }
+
+                        }
+                        btnSelect -> {
+                            if(conLay.tag == LibRVState.SelectFileMoveTo) libraryViewModel.moveSelectedItemToFile(item)
+                        }
+                        btnDelete       -> {
+                            deletePopUpViewModel.setDeletingItem(mutableListOf(item))
+                            deletePopUpViewModel.setConfirmDeleteVisible(true)
+                        }
+                        btnEditWhole    -> createFileViewModel.onClickEditFileInRV(item)
+                    }
+                }
+            }
+            var startPosition :MotionEvent? = null
+            override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
+                super.onScrollLeft(distanceX, motionEvent)
+                startPosition = motionEvent
+                val view = recyclerView.findChildViewUnder(motionEvent!!.x,motionEvent!!.y)
+                val lineLay = view?.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return
+                val conLay = view?.findViewById<ConstraintLayout>(R.id.lib_rv_base_container) ?:return
+                conLay.apply {
+                    if(conLay.tag== LibRVState.Plane){
+                        lineLay.layoutParams.width = 1
+                        lineLay.requestLayout()
+                        lineLay.children.iterator().forEach {
+                            it.visibility = View.VISIBLE
+                        }
+                        lineLay.visibility = View.VISIBLE
+                        conLay.tag = LibRVState.LeftSwiping
+
+                    }else if(conLay.tag== LibRVState.LeftSwiping) {
+                        if(conLay.tag!= LibRVState.LeftSwiping){
+                            conLay.tag = LibRVState.LeftSwiping
+                        }
+                        lineLay.layoutParams.width = distanceX.toInt()/5
+                        lineLay.requestLayout()
+
+                    }
+
+                }
+            }
+            override fun onLongClick(motionEvent: MotionEvent?) {
+                super.onLongClick(motionEvent)
+                val view = recyclerView.findChildViewUnder(motionEvent!!.x,motionEvent!!.y)
+                val lineLay = view?.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return
+                val conLay = view?.findViewById<ConstraintLayout>(R.id.lib_rv_base_container) ?:return
+                val btnSelect = view?.findViewById<ImageView>(R.id.btn_select) ?:return
+                val btnDelete = view?.findViewById<ImageView>(R.id.btn_delete) ?:return
+                val btnEditWhole = view?.findViewById<ImageView>(R.id.btn_edit_whole) ?:return
+                val position = recyclerView.getChildAdapterPosition(view)
+                val item = adapter.currentList[position] as com.example.tangochoupdated.db.dataclass.File
+                btnSelect.isSelected = true
+                libraryViewModel.setMultipleSelectMode(true)
+                libraryViewModel.onClickSelectableItem(item,true)
+            }
+
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+
+                if(startPosition==null){
+                    startPosition = event
+                } else {
+                    if((event?.actionMasked== MotionEvent.ACTION_UP||event?.actionMasked== MotionEvent.ACTION_CANCEL)){
+                        val view = recyclerView.findChildViewUnder(startPosition!!.x,startPosition!!.y)
+                        val lineLay = view?.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return true
+                        val conLay = view?.findViewById<ConstraintLayout>(R.id.lib_rv_base_container) ?:return true
+                        if(conLay.tag== LibRVState.LeftSwiping){
+                            if(lineLay.layoutParams.width <25){
+                                Animation().animateLibRVLeftSwipeLay(lineLay,false)
+                                conLay.tag = LibRVState.Plane
+                            }
+                            else if (lineLay.layoutParams.width>=25){
+                                Animation().animateLibRVLeftSwipeLay(lineLay ,true)
+                                conLay.tag = LibRVState.LeftSwiped
+                                libraryViewModel.setLeftSwipedItemExists(true)
+                            }
+
+                        }
+
+                    }
+                }
+
+
+                return super.onTouch(v, event)
+            }
+
+        }
+        )
+
         val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel,libNavCon)
         addListeners.fragChildMultiBaseAddCL(binding,requireActivity(),libNavCon)
         addListeners.homeTopBarAddCL(topBarBinding,requireActivity(),libNavCon)
@@ -70,7 +200,13 @@ class LibraryFragHome : Fragment(){
         createFileViewModel.setParentFile(null)
         createFileViewModel.makeAllBottomMenuClickable()
         libraryViewModel.apply {
+            rvCover.observe(viewLifecycleOwner){
+                binding.rvCover.visibility = if(it.visible) View.VISIBLE else View.GONE
+            }
             libraryViewModel.clearFinalList()
+            leftSwipedItemExists.observe(viewLifecycleOwner){
+                setRVCover(LibraryViewModel.RvCover(0f,it.not()))
+            }
             multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
                 topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
@@ -84,8 +220,8 @@ class LibraryFragHome : Fragment(){
             }
             val emptyView = LibraryFragLayHomeRvEmptyBinding.inflate(inflater,container,false).root
             childFilesFromDB(null).observe(viewLifecycleOwner){
-
                 adapter.submitList(it)
+                setParentRVItems(it)
                 if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)
                 } else {

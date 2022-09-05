@@ -55,10 +55,12 @@ class LibraryFragFlashCardCover  : Fragment(){
             libraryViewModel  = libraryViewModel,
             context  = requireActivity(),
             stringCardViewModel  = stringCardViewModel,
-            createCardViewModel  = createCardViewModel,deletePopUpViewModel,
+            createCardViewModel  = createCardViewModel,
+            parent = recyclerView,
+            deletePopUpViewModel = deletePopUpViewModel,
 
             mainNavController = mainNavCon,
-            libNavController = libNavCon, )
+            libNavController = libNavCon,)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.isNestedScrollingEnabled = false
