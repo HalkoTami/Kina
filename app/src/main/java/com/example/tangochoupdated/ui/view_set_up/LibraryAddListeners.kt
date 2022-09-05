@@ -36,7 +36,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
             popUp.btnCommitMove,
             popUp.btnCloseConfirmMove
         )   .onEach {
-            it.setOnClickListener(LibFragPopUpConfirmMoveToFileCL(popUp, chooseFileMoveToViewModel, ))
+            it.setOnClickListener(LibFragPopUpConfirmMoveToFileCL(popUp, chooseFileMoveToViewModel,libNavCon))
         }
     }
     fun multiTopBarAddCL(binding: LibraryFragTopBarMultiselectModeBinding,menuBarBinding: LibItemTopBarMenuBinding,menuFrame:FrameLayout, context: Context, navCon: NavController){

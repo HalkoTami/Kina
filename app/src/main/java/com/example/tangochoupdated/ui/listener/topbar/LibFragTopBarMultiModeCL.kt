@@ -44,7 +44,9 @@ class LibFragTopBarMultiModeCL(val context: Context,
 
                 menuBinding.linLayMoveSelectedItems -> {
                     if(notSelected)toastPleaseSelectItems()
-                        else libVM.openChooseFileMoveTo(null,navCon)
+                        else {
+                            libVM.openChooseFileMoveTo(null,navCon)
+                    }
                 }
                 menuBinding.linLayDeleteSelectedItems -> if(notSelected)toastPleaseSelectItems()
                 else {

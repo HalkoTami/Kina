@@ -28,6 +28,7 @@ import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
+import com.example.tangochoupdated.ui.observer.CommonOb
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.*
 
@@ -41,6 +42,7 @@ class LibraryFragmentBase : Fragment(){
     private val libraryViewModel: LibraryViewModel by activityViewModels()
     private val baseViewModel: BaseViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
+    private val chooseFileMoveToViewModel:ChooseFileMoveToViewModel by activityViewModels()
     private var _binding: LibraryFragBinding? = null
     private val binding get() = _binding!!
 
@@ -59,6 +61,12 @@ class LibraryFragmentBase : Fragment(){
             setActiveFragment(MainFragment.Library)
         }
         makeAllColPaletUnselected(binding.editFileBinding.colPaletBinding)
+
+        chooseFileMoveToViewModel.apply {
+            showToast.observe(viewLifecycleOwner){
+                CommonOb().observeToast(requireActivity(),returnToastText(),it)
+            }
+        }
 
         binding.editFileBinding.apply {
             createFileViewModel.apply {
@@ -105,8 +113,8 @@ class LibraryFragmentBase : Fragment(){
         libraryViewModel.apply {
 
             deletePopUpViewModel.apply {
-                toast.observe(viewLifecycleOwner){
-                    Toast.makeText(requireActivity(),it,Toast.LENGTH_SHORT).show()
+                showToast.observe(viewLifecycleOwner){
+                    CommonOb().observeToast(requireActivity(),returnToastText(),it)
                 }
                 confirmDeleteView.observe(viewLifecycleOwner){
                     binding.confirmDeletePopUpBinding.apply {

@@ -62,6 +62,11 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
                 binding.frameLayConfirmMove.visibility = if(it) View.VISIBLE else View.GONE
             }
             setMovingItems(libraryViewModel.returnSelectedItems())
+            libraryViewModel.clearSelectedItems()
+            popUpText.observe(viewLifecycleOwner){
+                binding.confirmMoveToBinding.txvConfirmMove.text = it
+            }
+
 
         }
         libraryViewModel.apply {

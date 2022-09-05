@@ -11,6 +11,7 @@ import com.example.tangochoupdated.db.dataclass.File
 //import com.example.tangochoupdated.room.dataclass.FileWithChild
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
+import com.example.tangochoupdated.db.enumclass.LibraryFragment
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
 import com.example.tangochoupdated.ui.view_set_up.ConfirmMode
@@ -27,6 +28,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     /**
      *
      */
+    private val _parentFragment= MutableLiveData<LibraryFragment>()
+    fun setLibraryFragment(fragment: LibraryFragment){
+        _parentFragment.value = fragment
+    }
 //    －－－－初期設定－－－－
 
 
@@ -34,7 +39,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun onStart(){
     }
     fun onCreate(){
-        setSelectedItems(mutableListOf())
+        clearSelectedItems()
     }
 
 //
@@ -159,6 +164,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private fun setSelectedItems(list:MutableList<Any>){
         _selectedItems.value = list
     }
+    fun clearSelectedItems(){
+        setSelectedItems(mutableListOf())
+    }
     fun returnSelectedItems():MutableList<Any>{
         return _selectedItems.value ?: mutableListOf()
     }
@@ -239,7 +247,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             value = boolean
         }
         if(!boolean) {
-            setSelectedItems(mutableListOf())
+            clearSelectedItems()
             changeAllRVSelectedStatus(false)
         }
         changeTopBarMode()
@@ -471,8 +479,8 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             update(it)
         }
 
-        setSelectedItems(mutableListOf())
-//        setChooseFileMoveToMode(false)
+    clearSelectedItems()
+    //        setChooseFileMoveToMode(false)
     }
 
 //    －－－－－－－－

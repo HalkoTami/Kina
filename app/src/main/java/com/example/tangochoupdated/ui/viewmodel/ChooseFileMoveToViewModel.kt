@@ -1,19 +1,37 @@
 package com.example.tangochoupdated.ui.viewmodel
 
-import android.text.Editable
-import android.view.View
 import androidx.lifecycle.*
-import com.example.tangochoupdated.R
+import androidx.navigation.NavController
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.dataclass.FileXRef
-import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.db.enumclass.Mode
 import kotlinx.coroutines.launch
 
 class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() {
+    private val _toastText= MutableLiveData<String>()
+    val toastText :LiveData<String> = _toastText
+    fun setToastText(string: String){
+        _toastText.value = string
+    }
+    fun returnToastText():String{
+        return  _toastText.value ?:""
+    }
+
+    private val _showToast= MutableLiveData<Boolean>()
+    val showToast :LiveData<Boolean> = _showToast
+    fun setShowToast(boolean: Boolean){
+        _showToast.value = boolean
+    }
+    fun makeToastVisible(){
+        setShowToast(true)
+        setShowToast(false)
+    }
+    private val _popUpText= MutableLiveData<String>()
+    val popUpText :LiveData<String> = _popUpText
+    fun setPopUpText(string: String){
+        _popUpText.value = string
+    }
+
     private val _popUpVisible = MutableLiveData<Boolean>()
     fun setPopUpVisible(boolean: Boolean){
         _popUpVisible.value = boolean
@@ -36,7 +54,15 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     }
     val fileMoveTo:LiveData<File> = _fileMoveTo
 
-    fun moveSelectedItemToFile(item:File){
+    fun onClickRvBtnMove(item:File){
+        setToastText("${item.title}へ移動しました")
+        setPopUpText("選択中のアイテムを${item.title}へ移動しますか？")
+        setFileMoveTo(item)
+        setPopUpVisible(true)
+    }
+
+    fun moveSelectedItemToFile(navController: NavController){
+        val item = returnFileMoveTo() ?:return
         val change = returnMovingItems()
 
         change.onEach {
@@ -53,7 +79,10 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
             }
             update(it)
         }
+        makeToastVisible()
         setPopUpVisible(false)
+        navController.popBackStack()
+
     }
     private fun update(any:Any){
         viewModelScope.launch {

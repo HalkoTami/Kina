@@ -20,10 +20,7 @@ class LibraryRVChooseFileMoveToCL(
         rvBinding.apply {
             when(p0){
                 baseContainer       ->  lVM.openChooseFileMoveTo(item,navController)
-                btnSelect ->  {
-                    chooseFileMoveToViewModel.setFileMoveTo(item)
-                    chooseFileMoveToViewModel.setPopUpVisible(true)
-                }
+                btnSelect ->  chooseFileMoveToViewModel.onClickRvBtnMove(item)
             }
         }
     }

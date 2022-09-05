@@ -1,46 +1,57 @@
 package com.example.tangochoupdated.ui.viewmodel
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.*
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.AnkiFilter
-import com.example.tangochoupdated.db.enumclass.AnkiOrder
-import com.example.tangochoupdated.db.enumclass.AutoFlip
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.ui.view_set_up.ConfirmMode
 import kotlinx.coroutines.launch
 
 class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel() {
+    private val _toastText= MutableLiveData<String>()
+    val toastText :LiveData<String> = _toastText
+    fun setToastText(string: String){
+        _toastText.value = string
+    }
+    fun returnToastText():String{
+        return  _toastText.value ?:""
+    }
+    private val _showToast= MutableLiveData<Boolean>()
+    val showToast :LiveData<Boolean> = _showToast
+    fun setShowToast(boolean: Boolean){
+        _showToast.value = boolean
+    }
 
-    private val _toast= MutableLiveData<String>()
-    val toast :LiveData<String> = _toast
-    fun showToast(string: String){
-        _toast.value = string
+    fun makeToastVisible(){
+        setShowToast(true)
+        setShowToast(false)
     }
     private fun deleteSingleFile(file: File, deleteChildren:Boolean){
         viewModelScope.launch {
             if(!deleteChildren){
                 repository.upDateChildFilesOfDeletedFile(file.fileId,file.parentFileId)
                 repository.delete(file)
-                showToast("${file.title}を削除しました")
+                setToastText("${file.title}を削除しました")
+                makeToastVisible()
             } else {
                 repository.deleteFileAndAllDescendants(file.fileId)
-                showToast("${file.title}と中身を削除しました")
+                setToastText("${file.title}と中身を削除しました")
+                makeToastVisible()
             }
         }
 
     }
     private fun deleteMultipleFiles(file: List<File>, deleteChildren:Boolean){
         file.onEach { deleteSingleFile(it,deleteChildren) }
-        showToast("選択中のアイテムを削除しました")
+        setToastText("選択中のアイテムを削除しました")
+        makeToastVisible()
     }
     private fun deleteCards(cards: List<Card>, ){
         viewModelScope.launch {
             repository.deleteMultiple(cards)
         }
-        showToast("${cards.size}枚のカードを削除しました")
+        setToastText("${cards.size}枚のカードを削除しました")
+        makeToastVisible()
     }
     fun getAllDescendantsByFileId(fileIdList: List<Int>): LiveData<List<File>> = repository.getAllDescendantsFilesByMultipleFileId(fileIdList).asLiveData()
     fun getCardsByMultipleFileId(fileIdList: List<Int>): LiveData<List<Card>> = repository.getAllDescendantsCardsByMultipleFileId(fileIdList).asLiveData()
