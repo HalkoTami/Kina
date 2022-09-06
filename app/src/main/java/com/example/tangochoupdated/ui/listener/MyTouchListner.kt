@@ -28,10 +28,10 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
             distanceX: Float,
             distanceY: Float
         ): Boolean {
-            if((e2!!.x-e1!!.x) > 0){
-                onScrollRight()
-            } else{
+            if((e2!!.x-e1!!.x) < 0){
                 onScrollLeft((e2!!.x-e1!!.x).absoluteValue,e1)
+            } else{
+                onScrollRight()
             }
 
             return false

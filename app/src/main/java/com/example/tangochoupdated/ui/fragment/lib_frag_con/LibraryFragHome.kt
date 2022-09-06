@@ -76,11 +76,7 @@ class LibraryFragHome : Fragment(){
         val topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
 
         binding.rvCover.setOnTouchListener(object :MyTouchListener(requireActivity()){
-            override fun onDown() {
-                super.onDown()
 
-
-            }
             override fun onSingleTap(motionEvent:MotionEvent?) {
                 super.onSingleTap(motionEvent)
                 val view = recyclerView.findChildViewUnder(motionEvent!!.x,motionEvent!!.y)
@@ -117,9 +113,11 @@ class LibraryFragHome : Fragment(){
                 }
             }
             var startPosition :MotionEvent? = null
+            var swipingDistance:Float = 1f
             override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
                 super.onScrollLeft(distanceX, motionEvent)
                 startPosition = motionEvent
+                swipingDistance = distanceX
                 val view = recyclerView.findChildViewUnder(motionEvent!!.x,motionEvent!!.y)
                 val lineLay = view?.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return
                 val conLay = view?.findViewById<ConstraintLayout>(R.id.lib_rv_base_container) ?:return
@@ -137,7 +135,8 @@ class LibraryFragHome : Fragment(){
                         if(conLay.tag!= LibRVState.LeftSwiping){
                             conLay.tag = LibRVState.LeftSwiping
                         }
-                        lineLay.layoutParams.width = distanceX.toInt()/5
+
+                        lineLay.layoutParams.width = swipingDistance.toInt()/5 + 1
                         lineLay.requestLayout()
 
                     }
@@ -164,7 +163,7 @@ class LibraryFragHome : Fragment(){
                 if(startPosition==null){
                     startPosition = event
                 } else {
-                    if((event?.actionMasked== MotionEvent.ACTION_UP||event?.actionMasked== MotionEvent.ACTION_CANCEL)){
+                    if((event?.actionMasked== MotionEvent.ACTION_UP)){
                         val view = recyclerView.findChildViewUnder(startPosition!!.x,startPosition!!.y)
                         val lineLay = view?.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return true
                         val conLay = view?.findViewById<ConstraintLayout>(R.id.lib_rv_base_container) ?:return true

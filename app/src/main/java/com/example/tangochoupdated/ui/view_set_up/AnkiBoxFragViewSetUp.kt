@@ -1,27 +1,18 @@
 package com.example.tangochoupdated.ui.view_set_up
 
-import android.app.ActionBar
 import android.content.Context
-import android.graphics.drawable.LayerDrawable
-import android.graphics.drawable.ScaleDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.graphics.drawable.WrappedDrawable
-import androidx.core.view.marginEnd
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tangochoupdated.R
+
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
-import com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiFragmentAnkiBox
 import com.example.tangochoupdated.ui.listadapter.AnkiBoxListAdapter
 import com.example.tangochoupdated.ui.listener.AnkiBoxFragBaseCL
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
@@ -30,6 +21,7 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 import kotlin.math.floor
+
 
 class AnkiBoxFragViewSetUp() {
 //    val ankiBoxVM:AnkiBoxFragViewModel,
@@ -188,25 +180,54 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
     fun getPercentage(per:Double):Int{
         return per.times(100).toInt()
     }
+
+    fun setUpPercentageIcons(flippedBinding: ProgressBarFlippedBinding,
+                             percentageBinding:PercentageIconsBinding){
+
+        fun getWidth(percentage: Int):Float{
+            return (percentageBinding.root.width*percentage/100).toFloat()
+        }
+        val progress1 = flippedBinding.progressBarFlipped1.progress
+        val progress2 = flippedBinding.progressBarFlipped2.progress
+        val progress3 = flippedBinding.progressBarFlipped3.progress
+        val progress4above = flippedBinding.progressBarFlippedAbove4.progress
+        percentageBinding.apply {
+            oncePercentage.translationX       =        getWidth(progress1)
+            twicePercentage.translationX      =        getWidth(progress2)
+            threePercentage.translationX      =        getWidth(progress3)
+            fourAbovePercentage.translationX  =        getWidth(progress4above)
+            txvOncePercentage.text = progress1.toString()
+            txvTwicePercentage.text = progress2.toString()
+            txvThreePercentage.text = progress3.toString()
+            txvFourAbovePercentage.text = progress4above.toString()
+            arrayOf(oncePercentage,twicePercentage,threePercentage,fourAbovePercentage).onEach {
+                it.visibility = if(it.translationX == 0f )  View.INVISIBLE else View.VISIBLE
+                if(it.translationX + it.width > this.root.width) it.translationX = this.root.width.toFloat()
+            }
+        }
+
+
+    }
+    fun checkCovered(view1:View,view2: View):Boolean{
+        val location = IntArray(2)
+        view1.getLocationOnScreen(location)
+        val view1Right = location[0]
+        val view1Left = location[0]+ view1.layoutParams.width
+        val location2 = IntArray(2)
+        view2.getLocationOnScreen(location2)
+        val view2Right = location2[0]
+        val view2Left = location2[0]+ view2.layoutParams.width
+        return ((view1Right in view2Left..view2Right)
+                ||(view1Left in view2Left..view2Right))
+                ||(view1Left<=view2Left&& view1Right >= view2Right)
+    }
     fun setUpFlipProgressBar(list: MutableList<Card>,binding: ProgressBarFlippedBinding){
         val per1 = getFlippedPercentage(list,1)
         val per2 = getFlippedPercentage(list,2)
         val per3 = getFlippedPercentage(list,3)
         val per4 = getFlippedPercentage(list,4)
 
-        fun checkCovered(view1:View,view2: View):Boolean{
-            val location = IntArray(2)
-            view1.getLocationOnScreen(location)
-            val view1Right = location[0]
-            val view1Left = location[0]+ view1.layoutParams.width
-            val location2 = IntArray(2)
-            view2.getLocationOnScreen(location2)
-            val view2Right = location2[0]
-            val view2Left = location2[0]+ view2.layoutParams.width
-            return ((view1Right in view2Left..view2Right)
-                    ||(view1Left in view2Left..view2Right))
-                    ||(view1Left<=view2Left&& view1Right >= view2Right)
-        }
+
         binding. apply {
 
             progressBarFlipped1.progress =      getPercentage(per1)

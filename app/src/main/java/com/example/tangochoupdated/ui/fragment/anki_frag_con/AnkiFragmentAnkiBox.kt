@@ -81,6 +81,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
                 ankiBoxItems.observe(viewLifecycleOwner) {
                     setUpAnkiBoxRing(it,binding.ringBinding)
                     setUpFlipProgressBar(it,binding.flipGraphBinding)
+                    setUpPercentageIcons(binding.flipGraphBinding,binding.percentageIconBinding)
                     binding.btnStartAnki.text = if(it.isEmpty()) "カードを選ばず暗記" else "暗記開始"
 
                 }

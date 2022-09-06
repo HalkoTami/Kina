@@ -10,75 +10,62 @@
         >
 
         <FrameLayout
+            android:background="@color/white"
             android:id="@+id/once_percentage"
-            android:layout_width="30dp"
-            android:layout_height="20dp">
+            style="@style/FrameLayPercentageIcon">
             <ImageView
+                app:tint="@color/lightgreen"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/percentage_container" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="2dp"
-                android:paddingTop="2dp"
-                android:text="100"
-                android:textSize="11sp" />
+                android:text="11"
+                android:textColor="@color/lightgreen"
+                android:id="@+id/txv_once_percentage"
+                style="@style/PercentageIconTextView" />
         </FrameLayout>
 
         <FrameLayout
             android:id="@+id/twice_percentage"
-            android:layout_width="30dp"
-            android:layout_height="20dp">
+            style="@style/FrameLayPercentageIcon">
             <ImageView
+                app:tint="@color/darkgreen"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/percentage_container" />
             <TextView
-                android:paddingTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100"
-                android:layout_gravity="center"
-                android:textSize="11sp"/>
+                android:id="@+id/txv_twice_percentage"
+                android:textColor="@color/darkgreen"
+                style="@style/PercentageIconTextView" />
         </FrameLayout>
         <FrameLayout
             android:id="@+id/three_percentage"
-            android:layout_width="30dp"
-            android:layout_height="20dp">
+            style="@style/FrameLayPercentageIcon">
             <ImageView
+                app:tint="@color/most_dark_green"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/percentage_container" />
             <TextView
-                android:paddingTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100"
-                android:layout_gravity="center"
-                android:textSize="11sp"/>
+                android:id="@+id/txv_three_percentage"
+                android:textColor="@color/most_dark_green"
+                style="@style/PercentageIconTextView" />
         </FrameLayout>
         <FrameLayout
             android:id="@+id/four_above_percentage"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
+            style="@style/FrameLayPercentageIcon"
             >
             <ImageView
+                app:tint="@color/darkRed"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/percentage_container" />
             <TextView
-                android:paddingTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100"
-                android:layout_gravity="center"
-                android:textSize="11sp"/>
+                android:text="111"
+                android:id="@+id/txv_four_above_percentage"
+                android:textColor="@color/darkRed"
+                style="@style/PercentageIconTextView" />
         </FrameLayout>
     </FrameLayout>
 
