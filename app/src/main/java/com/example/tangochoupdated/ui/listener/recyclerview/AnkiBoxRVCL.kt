@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.listener.recyclerview
 
 import android.view.View
+import androidx.lifecycle.LifecycleOwner
 import com.example.tangochoupdated.databinding.AnkiHomeFragRvItemFileBinding
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
@@ -20,7 +21,6 @@ class AnkiBoxFileRVCL(val item: File,
                 if(p0.isSelected){
                     ankiBoxVM.removeFromAnkiBoxFileIds(item.fileId)
                 } else ankiBoxVM.addToAnkiBoxFileIds(listOf(item.fileId))
-                p0.isSelected = !p0.isSelected
 
             }
             binding.root -> {

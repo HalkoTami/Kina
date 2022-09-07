@@ -44,9 +44,10 @@ class AnkiFragmentBase  : Fragment() {
         viewSetUp.addCL()
         ankiSettingVM.start()
         ankiFragViewModel.apply {
-            tabChangeAction.observe(viewLifecycleOwner){
-                myNavCon.navigate(it)
-            }
+            setAnkiBoxNavCon(myNavCon)
+//            tabChangeAction.observe(viewLifecycleOwner){
+//                myNavCon.navigate(it)
+//            }
             settingVisible.observe(viewLifecycleOwner){ settingVisible ->
                 if(settingVisible){
                     viewSetUp.setUpSettingContent(ankiSettingVM.returnAnkiFilter()!!)

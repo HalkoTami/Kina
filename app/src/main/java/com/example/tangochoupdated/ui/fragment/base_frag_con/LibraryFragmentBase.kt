@@ -62,7 +62,7 @@ class LibraryFragmentBase : Fragment(){
         baseViewModel.apply {
             setActiveFragment(MainFragment.Library)
         }
-        ColorPalletViewSetUp().makeAllColPalletUnselected(requireActivity(),binding.editFileBinding.colPaletBinding)
+
 
         chooseFileMoveToViewModel.apply {
             showToast.observe(viewLifecycleOwner){
@@ -70,19 +70,19 @@ class LibraryFragmentBase : Fragment(){
             }
         }
 
-        binding.editFileBinding.apply {
-            createFileViewModel.apply {
-                editFilePopUpVisible.observe(viewLifecycleOwner){
-                    binding.frameLayEditFile.visibility = if(it)View.VISIBLE else View.GONE
-                    binding.background.visibility = if(it)View.VISIBLE else View.GONE
-                }
-                filePopUpUIData.observe(viewLifecycleOwner){
-                    LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,requireActivity())
-                }
-
-
-            }
-        }
+//        binding.editFileBinding.apply {
+//            createFileViewModel.apply {
+//                editFilePopUpVisible.observe(viewLifecycleOwner){
+//                    binding.frameLayEditFile.visibility = if(it)View.VISIBLE else View.GONE
+//                    binding.background.visibility = if(it)View.VISIBLE else View.GONE
+//                }
+//                filePopUpUIData.observe(viewLifecycleOwner){
+//                    LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,requireActivity())
+//                }
+//
+//
+//            }
+//        }
 //                UIへデータ反映
 //        bindingCreateFile.apply {
 //            var start = true
@@ -138,14 +138,14 @@ class LibraryFragmentBase : Fragment(){
 
                 }
             }
-            binding.editFileBinding.apply {
-                colPaletBinding.apply {
-                    arrayOf(
-                        imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,root,binding.background
-                    ).onEach {
-                        it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,binding.frameLayEditFile,binding.background,createFileViewModel)) }
-                }
-            }
+//            binding.editFileBinding.apply {
+//                colPaletBinding.apply {
+//                    arrayOf(
+//                        imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,root,binding.background
+//                    ).onEach {
+//                        it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,binding.frameLayEditFile,binding.background,createFileViewModel)) }
+//                }
+//            }
 
         }
 

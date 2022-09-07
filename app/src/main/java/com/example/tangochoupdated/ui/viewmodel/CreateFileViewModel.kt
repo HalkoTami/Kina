@@ -5,6 +5,8 @@ import android.view.View
 import androidx.lifecycle.*
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.db.MyRoomRepository
+import com.example.tangochoupdated.db.dataclass.Card
+import com.example.tangochoupdated.db.dataclass.CardAndTagXRef
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.FileXRef
 import com.example.tangochoupdated.db.enumclass.ColorStatus
@@ -207,9 +209,28 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
 
+    private fun insertXref(list:List<CardAndTagXRef>){
+        viewModelScope.launch {
+            repository.insertMultiple(list)
+        }
+    }
 
 
+    fun addCardsToFavourite(fileId:Int,list:List<Card>){
+        val xRef = mutableListOf<CardAndTagXRef>()
+        list.onEach { xRef.add(CardAndTagXRef(0,it.id,fileId)) }
+        insertXref(xRef)
+        setAddCardsToFavourite(false)
 
+    }
+    fun onClickCreateFile(fileStatus: FileStatus){
+        if(fileStatus == FileStatus.ANKI_BOX_FAVOURITE)
+            setAddCardsToFavourite(true)
+        makeNewFilePopUp(_parentFile.value,fileStatus)
+        makeEmptyFileToCreate(FileStatus.ANKI_BOX_FAVOURITE)
+        setMode(Mode.New)
+        setEditFilePopUpVisible(true)
+    }
     fun onClickCreateFolder(){
         makeNewFilePopUp(_parentFile.value,FileStatus.FOLDER)
         makeEmptyFileToCreate(FileStatus.FOLDER)
@@ -312,7 +333,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             txvLeftTopText = if(parentFile!=null) "${parentFile.title} >" else "home",
             txvHintText = "${editingFile.title}を編集する",
             drawableId =  if(editingFile.fileStatus == FileStatus.FOLDER) R.drawable.icon_file
-            else R.drawable.icon_library_plane,
+            else R.drawable.icon_flashcard,
             edtTitleHint = "タイトルを編集",
             edtTitleText = "${editingFile.title}",
             colorStatus = editingFile.colorStatus,
@@ -370,7 +391,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     var createXREF:Boolean = false
     var fileInserted:Boolean = false
 
-    val lastInsetedFileId:LiveData<Int?> = repository.lastInsertedFile.asLiveData()
+    val lastInseterdFileId:LiveData<Int> = repository.lastInsertedFile.asLiveData()
     private val _lastInsertedFileId = MutableLiveData<Int>()
     fun setLastInsertedFileId(int: Int?){
         val before = _lastInsertedFileId.value
@@ -419,6 +440,13 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         _fileToEdit.value = file
     }
 
+    private val _addCardsToFavourite = MutableLiveData<Boolean>()
+    fun setAddCardsToFavourite(boolean: Boolean){
+        _addCardsToFavourite.value = boolean
+    }
+    fun returnAddCardsToFavourite():Boolean{
+        return _addCardsToFavourite.value ?:false
+    }
 
 
     fun onClickFinish(title:String){

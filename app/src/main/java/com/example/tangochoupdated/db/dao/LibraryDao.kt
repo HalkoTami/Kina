@@ -30,7 +30,7 @@ interface LibraryDao {
     @Query("SELECT a.fileId FROM tbl_file a " +
             " INNER JOIN ( SELECT  MAX(fileId) fileId FROM tbl_file  ) b ON a.fileId = b.fileId"
     )
-    fun getLastInsertedFile():Flow<Int>
+    fun getLastInsertedFileId():Flow<Int>
 
 //    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
 //    @Query("""
@@ -40,7 +40,7 @@ interface LibraryDao {
 //        """)
 //    fun myGetFileByParentFileId(parentFileId: Int?): Flow<List<File>>
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM tbl_file su WHERE su.parentFileId is :fileId")
+    @Query("SELECT * FROM tbl_file su WHERE su.parentFileId is :fileId and not su.fileStatus = 3")
      fun myGetFileByParentFileId(fileId: Int?): Flow<List<File>>
 
      @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
@@ -87,7 +87,7 @@ interface LibraryDao {
             "and flippedFourTimesAmount = (select  Count( id  ) from tbl_card where timesFlipped >= 4 and belongingFlashCardCoverId = :fileId )" +
             " WHERE fileId in ( WITH  generation AS (" +
             " select c.* from tbl_file c Inner Join tbl_card_file_x_ref b " +
-            " on b.cardId = :upDatedCardId and b.tagId = c.fileId " +
+            " on b.cardFileXRefCardId = :upDatedCardId and b.cardFileXRefFileId = c.fileId " +
             " or c.fileId = :fileId " +
             "UNION ALL" +
             " SELECT a.* from tbl_file a " +
@@ -96,15 +96,28 @@ interface LibraryDao {
     fun upDateAncestorsFlipCount(upDatedCardId:Int,fileId: Int?)
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("Select a.* from tbl_card a " +
-            "left join tbl_card_file_x_ref c " +
-            "on c.cardId = a.id and c.tagId = :fileId" +
+            "left outer join tbl_card_file_x_ref x on " +
+            "a.id = x.cardFileXRefCardId"+
             " WHERE a.belongingFlashCardCoverId in ( WITH  generation AS (" +
             " select * from tbl_file where fileId = :fileId " +
             "Union ALL" +
-            " SELECT a.* from tbl_file a " +
-            " Inner JOIN generation g ON g.fileId = a.parentFileId ) " +
-            "SELECT fileId FROM generation b  )")
+            " SELECT d.* from tbl_file d " +
+            "Inner JOIN generation g ON g.fileId = d.parentFileId ) " +
+            "SELECT fileId FROM generation b  ) " +
+            "or x.cardFileXRefFileId = :fileId"
+
+            )
     fun getAnkiBoxRVCards(fileId:Int):Flow<List<Card>>
+//    "or c.cardFileXRefFileId = :fileId"
+//    "inner join tbl_card_file_x_ref c " +
+//    "on c.cardFileXRefCardId = a.id " +
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("select * from tbl_card a " +
+            "inner join tbl_card_file_x_ref b " +
+            "on a.id = b.cardFileXRefCardId " +
+            "where b.cardFileXRefFileId = :fileId"
+    )
+    fun getAnkiBoxFavouriteRVCards(fileId:Int):Flow<List<Card>>
 
     @Query("UPDATE tbl_card SET timesFlipped = timesFlipped +1   WHERE id = :cardId")
     fun upDateCardFlippedTimes(cardId: Int)
@@ -130,12 +143,15 @@ interface LibraryDao {
     fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
 
     @Query(
-        "Select id from tbl_card where not deleted and belongingFlashCardCoverId in ( " +
+        "Select a.id from tbl_card a " +
+                "left outer join tbl_card_file_x_ref b on a.id = b.cardFileXRefCardId where" +
+                " (not a.deleted and belongingFlashCardCoverId in ( " +
                 "with generation AS (" +
                 " select * from tbl_file where fileId in(:fileIdList)  " +
                 "UNION ALL" +
                 " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
-                "SELECT fileId FROM generation b )")
+                "SELECT fileId FROM generation b )) or b.cardFileXRefFileId  in(:fileIdList) "
+    )
     fun getDescendantsCardsIdsByMultipleFileId(fileIdList: List<Int>):Flow<List<Int>>
 
     @Query("UPDATE tbl_file SET parentFileId = :newParentFileId  WHERE parentFileId = :deletedFileId")
@@ -223,6 +239,9 @@ interface LibraryDao {
     @Query("select * from tbl_file where NOT deleted AND " +
             "fileStatus = 0  ")
     fun getAllFlashCardCover():Flow<List<File>>
+    @Query("select * from tbl_file where  " +
+            "fileStatus = 3  ")
+    fun getAllFavouriteAnkiBox():Flow<List<File>>
 
 
 

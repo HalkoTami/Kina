@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e5531dba7afdbfc0dee9fbcb541061f8",
+    "identityHash": "2570bebd17b766c30fabd6137599b933",
     "entities": [
       {
         "tableName": "tbl_card",
@@ -446,26 +446,32 @@
       },
       {
         "tableName": "tbl_card_file_x_ref",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cardId` INTEGER NOT NULL, `tagId` INTEGER NOT NULL, PRIMARY KEY(`cardId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cardFileXRefCardId` INTEGER NOT NULL, `cardFileXRefFileId` INTEGER NOT NULL)",
         "fields": [
           {
-            "fieldPath": "cardId",
-            "columnName": "cardId",
+            "fieldPath": "id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "tagId",
-            "columnName": "tagId",
+            "fieldPath": "cardFileXRefCardId",
+            "columnName": "cardFileXRefCardId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardFileXRefFileId",
+            "columnName": "cardFileXRefFileId",
             "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "cardId"
+            "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -506,7 +512,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e5531dba7afdbfc0dee9fbcb541061f8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2570bebd17b766c30fabd6137599b933')"
     ]
   }
 }

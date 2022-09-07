@@ -81,10 +81,11 @@ class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBi
                             imvCloseSetting                             ->  baseViewModel.setSettingVisible(false)
                             btnStartAnki                                -> {
                                 baseViewModel.setSettingVisible(false)
-                                when(baseViewModel.returnActiveFragment()){
-                                    AnkiFragments.AnkiBox -> navCon.navigate(AnkiFragFlipBaseFragmentDirections.toFlipFrag())
-                                    AnkiFragments.Flip -> return
-                                }
+//                                when(baseViewModel.returnActiveFragment()){
+//                                    AnkiFragments.AnkiBox -> navCon.navigate(AnkiFragFlipBaseFragmentDirections.toFlipFrag())
+//                                    AnkiFragments.Flip -> return
+//                                }
+                                baseViewModel.returnAnkiBoxNavCon()?.navigate(AnkiFragFlipBaseFragmentDirections.toFlipFrag())
 
                             }
                             else -> {

@@ -3,6 +3,7 @@ package com.example.tangochoupdated.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.enumclass.AnkiFragments
@@ -18,6 +19,13 @@ class AnkiFragBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
     val activeFragment :LiveData<AnkiFragments> = _activeFragment
 
 
+    private val _ankiBaseNavCon = MutableLiveData<NavController>()
+    fun setAnkiBoxNavCon(navController: NavController){
+        _ankiBaseNavCon.value = navController
+    }
+    fun returnAnkiBoxNavCon(): NavController?{
+        return _ankiBaseNavCon.value
+    }
     private val _ankiFragChangeAction = MutableLiveData<NavDirections>()
     fun setAnkiFragChangeAction (navDirections: NavDirections){
         _ankiFragChangeAction.value = navDirections

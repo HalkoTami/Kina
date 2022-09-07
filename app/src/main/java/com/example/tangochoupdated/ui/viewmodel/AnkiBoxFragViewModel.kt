@@ -1,31 +1,34 @@
 package com.example.tangochoupdated.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
+import com.example.tangochoupdated.db.dataclass.CardAndTagXRef
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
 import com.example.tangochoupdated.db.enumclass.AnkiBoxTabData
+import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.AllFlashCardCoversFragmentDirections
 import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.FavouriteAnkiBoxFragmentDirections
 import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.LibraryItemsFragmentDirections
+import kotlinx.coroutines.launch
 
 class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun onCreate(){
         setAnkiBoxItems(mutableListOf())
     }
     fun getAnkiBoxRVCards(fileId:Int): LiveData<List<Card>> = repository.getAnkiBoxRVCards(fileId).asLiveData()
+    fun getAnkiBoxFavouriteRVCards(fileId:Int): LiveData<List<Card>> = repository.getAnkiBoxFavouriteRVCards(fileId).asLiveData()
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is Anki Fragment"
     }
     val allFlashCardCoverFromDB: LiveData<List<File>> = repository.allFlashCardCover.asLiveData()
+    val allFavouriteAnkiBoxFromDB: LiveData<List<File>> = repository.allFavouriteAnkiBox.asLiveData()
+    val lastInsertedFileId:LiveData<Int> = repository.lastInsertedFile.asLiveData()
     fun getLibraryFilesFromDB(parentFileId:Int?) :LiveData<List<File>> = repository.mygetFileDataByParentFileId(parentFileId).asLiveData()
     private val _libraryFilesAsAnkiBox = MutableLiveData<List<File>>()
     fun setLibraryFilesAsAnkiBox(list: List<File>){
@@ -39,6 +42,43 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         _libraryCardsAsAnkiBox.value = list
     }
     fun getCardsFromDBByMultipleCardIds(cardIds:List<Int>) :LiveData<List<Card>> = repository.getCardsByMultipleCardId(cardIds).asLiveData()
+    private fun insertFile(file: File){
+        viewModelScope.launch {
+            repository.insert(file)
+        }
+    }
+
+    fun insertEmptyFavourite(){
+       insertFile(File(fileId = 0,
+           title = "okini",
+           fileStatus = FileStatus.ANKI_BOX_FAVOURITE ,
+           colorStatus = ColorStatus.GRAY,
+           deleted = false,
+           hasParent = false,
+           libOrder = 0,
+           parentFileId = null
+       ))
+        setAddCardsToFavourite(true)
+
+    }
+
+
+    private val _addCardsToFavourite = MutableLiveData<Boolean>()
+    fun setAddCardsToFavourite(boolean: Boolean){
+        _addCardsToFavourite.value = boolean
+    }
+    fun returnAddCardsToFavourite():Boolean{
+        return _addCardsToFavourite.value ?:false
+    }
+//    fun addCardsToFavourite(fileId:Int){
+//        val a = returnAnkiBoxItems()
+//        val xRef = mutableListOf<CardAndTagXRef>()
+//        a?.onEach { xRef.add(CardAndTagXRef(it.id,fileId)) }
+//        insertXref(xRef)
+//        setAddCardsToFavourite(false)
+//
+//    }
+
 
     private val _ankiBoxNavCon = MutableLiveData<NavController>()
     fun setAnkiBoxNavCon(navController: NavController){
@@ -159,6 +199,13 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         val a = mutableListOf<Card>()
         a.addAll(_ankiBoxItems.value ?: mutableListOf())
         a.addAll(list)
+        setAnkiBoxItems(a)
+
+    }
+    fun removeFromAnkiBoxItems(list: List<Card>){
+        val a = mutableListOf<Card>()
+        a.addAll(_ankiBoxItems.value ?: mutableListOf())
+        a.removeAll(list)
         setAnkiBoxItems(a)
 
     }

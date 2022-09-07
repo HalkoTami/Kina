@@ -23,6 +23,7 @@ import com.example.tangochoupdated.application.RoomApplication
 import com.example.tangochoupdated.databinding.ItemColorPaletBinding
 import com.example.tangochoupdated.databinding.MainActivityBinding
 import com.example.tangochoupdated.databinding.MainActivityBottomNavigationBarBinding
+import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.db.enumclass.Tab
@@ -31,6 +32,10 @@ import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
 import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBaseDirections
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBaseDirections
+import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
+import com.example.tangochoupdated.ui.observer.CommonOb
+import com.example.tangochoupdated.ui.observer.LibraryOb
+import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
@@ -66,6 +71,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
         mainNavCon = navHostFragment.navController
         binding.apply {
+
+
+
 //        Focus request
             mainTopConstrainLayout.requestFocus()
 //            初期view設定
@@ -129,6 +137,27 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         stringCardViewModel = ViewModelProvider(this)[StringCardViewModel::class.java]
         searchViewModel = ViewModelProvider(this,factory)[SearchViewModel::class.java]
 //      　ー－－－－－－－－－
+        binding.editFileBinding.apply {
+            ColorPalletViewSetUp().makeAllColPalletUnselected(this@MainActivity,binding.editFileBinding.colPaletBinding)
+            createFileViewModel.apply {
+                editFilePopUpVisible.observe(this@MainActivity){
+                    binding.frameLayEditFile.visibility = if(it)View.VISIBLE else View.GONE
+                    binding.fragConViewCover.visibility = if(it)View.VISIBLE else View.GONE
+                }
+                filePopUpUIData.observe(this@MainActivity){
+                    LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,this@MainActivity)
+                }
+
+
+            }
+            colPaletBinding.apply {
+                arrayOf(
+                    imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,root,binding.fragConViewCover
+                ).onEach {
+                    it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,binding.frameLayEditFile,binding.fragConViewCover,createFileViewModel)) }
+            }
+        }
+
 
 //        ー－－－mainActivityのviewModel 読み取りー－－－
 

@@ -61,9 +61,10 @@ data class MarkerPreviewData(
 @Entity(tableName = "tbl_card_file_x_ref"
 )
 data class CardAndTagXRef(
-    @PrimaryKey
-    val cardId: Int,
-    val tagId: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    var cardFileXRefCardId: Int,
+    var cardFileXRefFileId: Int,
 )
 
 

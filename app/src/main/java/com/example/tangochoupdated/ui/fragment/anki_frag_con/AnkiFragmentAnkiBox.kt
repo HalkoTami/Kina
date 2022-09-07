@@ -8,21 +8,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
-import com.example.tangochoupdated.db.enumclass.AnkiFragments
-import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
-import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
 class AnkiFragmentAnkiBox  : Fragment() {
@@ -32,6 +24,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
     private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
     private val flipViewModel: AnkiFlipFragViewModel by activityViewModels()
     private val ankiBaseViewModel:AnkiFragBaseViewModel by activityViewModels()
+    private val createFileViewModel: CreateFileViewModel by activityViewModels()
     lateinit var ankiBoxNavCon:NavController
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -52,7 +45,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
         val frag = childFragmentManager.findFragmentById(binding.fragConAnkiBoxTab.id) as NavHostFragment
         ankiBoxNavCon = frag.navController
 
-        viewSetUp.ankiBoxFragAddCL(settingVM,binding,ankiBoxViewModel,ankiBaseViewModel,ankiBoxNavCon)
+        viewSetUp.ankiBoxFragAddCL(settingVM,binding,ankiBoxViewModel,ankiBaseViewModel,createFileViewModel)
 //        binding.apply {
 //            linLayTabChange.tag = AnkiBoxFragments.AllFlashCardCovers
 //            tabAllFlashCardCoverToAnkiBox.isSelected = true
@@ -78,7 +71,17 @@ class AnkiFragmentAnkiBox  : Fragment() {
             }
 
         }
+        createFileViewModel.apply {
+            lastInseterdFileId.observe(viewLifecycleOwner){
+                if(returnAddCardsToFavourite())
+                    addCardsToFavourite(it,ankiBoxViewModel.returnAnkiBoxItems()?.toList() ?:return@observe)
+            }
+        }
+
         ankiBoxViewModel.apply{
+//            lastInsertedFileId.observe(viewLifecycleOwner){
+//                if(returnAddCardsToFavourite()) addCardsToFavourite(it) else return@observe
+//            }
             setAnkiBoxNavCon(ankiBoxNavCon)
             getAnkiBoxNavCon.observe(viewLifecycleOwner){
                 if(it) setAnkiBoxNavCon(ankiBoxNavCon)
@@ -92,6 +95,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
                     setAnkiBoxCardIds(it)
                 }
             }
+
             ankiBoxCardIds.observe(viewLifecycleOwner){
                 getCardsFromDBByMultipleCardIds(it).observe(viewLifecycleOwner){
                     setAnkiBoxItems(it)

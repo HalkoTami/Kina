@@ -40,14 +40,7 @@
             app:layout_constraintEnd_toStartOf="@id/top_graph"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_height="wrap_content">
-            <ImageView
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/icon_heart"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+
             <FrameLayout
                 android:id="@+id/FrameLay_ring"
                 android:layout_width="wrap_content"
@@ -63,7 +56,14 @@
                 <include android:id="@+id/ringBinding"
                     layout="@layout/progress_bar_remembered_ring"/>
             </FrameLayout>
-
+            <ImageView
+                android:id="@+id/btn_add_to_favourite_anki_box"
+                android:padding="10dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/icon_heart"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
             <ImageView
                 android:id="@+id/imv_anki_box"
                 app:layout_constraintBottom_toBottomOf="parent"

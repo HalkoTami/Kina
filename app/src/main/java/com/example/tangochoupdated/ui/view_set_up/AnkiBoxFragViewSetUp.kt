@@ -15,6 +15,7 @@ import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
+import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.listadapter.AnkiBoxListAdapter
 import com.example.tangochoupdated.ui.listener.AnkiBoxFragBaseCL
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
@@ -22,6 +23,7 @@ import com.example.tangochoupdated.ui.listener.recyclerview.AnkiBoxFileRVCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
+import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import kotlin.math.floor
 
 
@@ -45,13 +47,20 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                          binding:AnkiHomeFragBaseBinding,
                          ankiBoxVM:AnkiBoxFragViewModel,
                          ankiBaseViewModel:AnkiFragBaseViewModel,
-                         ankiBoxNavCon:NavController){
+                         createFileViewModel: CreateFileViewModel){
         binding.apply {
             arrayOf(tabFavouritesToAnkiBox,tabLibraryToAnkiBox,tabAllFlashCardCoverToAnkiBox).onEach {
                 it.setOnClickListener(AnkiBoxTabChangeCL(binding,ankiBoxVM,))
             }
-            btnStartAnki.setOnClickListener(AnkiBoxFragBaseCL(
-                ankiSettingPopUpViewModel, binding,ankiBaseViewModel,ankiBoxVM))
+            arrayOf(btnStartAnki,btnAddToFavouriteAnkiBox).onEach{
+                it.setOnClickListener(
+                    AnkiBoxFragBaseCL(
+                        ankiSettingPopUpViewModel,
+                        binding,
+                        ankiBaseViewModel,
+                        ankiBoxVM,createFileViewModel))
+            }
+
         }
 
 
@@ -65,12 +74,26 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                            lifecycleOwner: LifecycleOwner
 ){
         val getDraw = GetCustomDrawables(context)
+        fun setUpRVFileData(list: List<Card>){
+            val mList = list.toMutableList()
+            binding.txvAnkiBoxCardAmount.text = mList.size.toString()
+            setUpFlipProgressBar(mList,binding.flippedProgressBarBinding)
+            binding.rememberedProgressBarBinding.apply {
+                val remPer = list.filter { it.remembered }.size.toDouble()/list.size
+                progressbarRemembered.progress = getPercentage(remPer)
+                val translation = progressbarRemembered.width*remPer.toFloat()-imvRememberedEndIcon.width/2
+                imvRememberedEndIcon.translationX = if(translation<0) 0f else translation
+            }
+        }
         binding.apply {
+            ankiBoxVM.ankiBoxFileIds.observe(lifecycleOwner){
+                checkboxAnkiRv.isSelected = (it.contains(file.fileId))
+            }
             imvFileType.setImageDrawable(
                 getDraw.getFileIconByFile(file)
             )
             txvFileTitle.text = file.title
-            txvAnkiBoxCardAmount.text = file.descendantsData.descendantsCardsAmount.toString()
+
             txvAnkiBoxFlashCardAmount.text = file.descendantsData.descendantsFlashCardsCoversAmount.toString()
             txvAnkiBoxFolderAmount.text = file.descendantsData.descendantsFoldersAmount.toString()
             arrayOf(root,checkboxAnkiRv).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
@@ -79,20 +102,15 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                 binding = binding,
                 tab = tab)) }
             ankiBoxVM.getAnkiBoxRVCards(file.fileId).observe(lifecycleOwner){
-                val a = mutableListOf<Card>()
-                a.addAll(it)
-                setUpFlipProgressBar(a,binding.flippedProgressBarBinding)
-                rememberedProgressBarBinding.apply {
-                    val remPer = it.filter { it.remembered }.size.toDouble()/it.size
-                    progressbarRemembered.progress = getPercentage(remPer)
-                    val translation = progressbarRemembered.width*remPer.toFloat()-imvRememberedEndIcon.width/2
-                    imvRememberedEndIcon.translationX = if(translation<0) 0f else translation
-                }
+//
+                setUpRVFileData(it)
+
             }
+
         }
 
-
     }
+
 
     fun getRememberedPercentage(list: MutableList<Card>):Double{
         return if(list.size!=0) (list.filter { it.remembered == true }.size.toDouble()/list.size)
