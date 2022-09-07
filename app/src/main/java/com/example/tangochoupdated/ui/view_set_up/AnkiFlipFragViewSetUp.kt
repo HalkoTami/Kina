@@ -14,6 +14,7 @@ import com.example.tangochoupdated.ui.listener.FlipBaseFragCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
+import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 
 class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
                             private val flipViewModel:AnkiFlipFragViewModel,
@@ -23,7 +24,7 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
                             private val flipNavCon:NavController) {
     fun setUpViewStart(){
         flipBaseBinding.progressBarBinding.frameLayProgressbarRemembered.removeView(flipBaseBinding.progressBarBinding.imvRememberedEndIcon)
-        setUpCL()
+//        setUpCL()
     }
     fun getCountDownAnim(sec:Int, txv: TextView, btnStop: ImageView, navController: NavController): ValueAnimator {
         val animation = ValueAnimator.ofInt(sec)
@@ -52,10 +53,11 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
         flipBaseBinding.progressBarBinding.progressbarRemembered.progress = ((progress.now/progress.all.toDouble())*100 ).toInt()
 
     }
-    fun setUpCL(){
+    fun setUpCL(createFileViewModel: CreateFileViewModel){
         flipBaseBinding.apply {
             topBinding.apply {
                 arrayOf(
+
                     imvBack,
                     imvAnkiSetting,
                     imvAnkiSetting,
@@ -64,8 +66,8 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
                     btnFlipNext,
                     btnFlipPrevious,
                     btnAddCard,
-                    btnStopCount).onEach {
-                        it.setOnClickListener(FlipBaseFragCL(flipBaseBinding,flipViewModel,ankiBaseViewModel, flipBaseFragmentActivity,flipNavCon, settingViewModel))
+                    btnStopCount,).onEach {
+                        it.setOnClickListener(FlipBaseFragCL(flipBaseBinding,flipViewModel,ankiBaseViewModel, flipBaseFragmentActivity,flipNavCon, settingViewModel,createFileViewModel))
                 }
             }
 

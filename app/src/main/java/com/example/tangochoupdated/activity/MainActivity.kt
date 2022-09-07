@@ -10,6 +10,7 @@ import android.view.View.VISIBLE
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -139,22 +140,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //      　ー－－－－－－－－－
         binding.editFileBinding.apply {
             ColorPalletViewSetUp().makeAllColPalletUnselected(this@MainActivity,binding.editFileBinding.colPaletBinding)
-            createFileViewModel.apply {
-                editFilePopUpVisible.observe(this@MainActivity){
-                    binding.frameLayEditFile.visibility = if(it)View.VISIBLE else View.GONE
-                    binding.fragConViewCover.visibility = if(it)View.VISIBLE else View.GONE
-                }
-                filePopUpUIData.observe(this@MainActivity){
-                    LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,this@MainActivity)
-                }
 
-
-            }
             colPaletBinding.apply {
                 arrayOf(
-                    imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,root,binding.fragConViewCover
+                    imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,root,
                 ).onEach {
-                    it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,binding.frameLayEditFile,binding.fragConViewCover,createFileViewModel)) }
+                    it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,createFileViewModel)) }
             }
         }
 
@@ -200,6 +191,18 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 onCreate()
 //            ー－－－追加メニューUIー－－－
 
+                editFilePopUpVisible.observe(this@MainActivity){
+                    binding.frameLayEditFile.visibility = if(it)View.VISIBLE else View.GONE
+                    binding.fragConViewCover.visibility =  if(it||returnBottomMenuVisible())View.VISIBLE else View.GONE
+                }
+                filePopUpUIData.observe(this@MainActivity){
+                    LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,this@MainActivity)
+                }
+                bottomMenuVisible.observe(this@MainActivity){
+                    Toast.makeText(this@MainActivity,"called", Toast.LENGTH_SHORT).show()
+                    animateVisibility(binding.frameBottomMenu,if(it) View.VISIBLE else View.GONE)
+                    binding.fragConViewCover.visibility =  if(it)View.VISIBLE else View.GONE
+                }
                 bottomMenuClickable.observe(this@MainActivity){
                     binding.bindingAddMenu.apply {
                         this.imvnewfolder.visibility = if(!it.createFile)  GONE else VISIBLE
@@ -207,9 +210,15 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         this.imvnewCard.visibility= if(!it.createCard) GONE else VISIBLE
                     }
                 }
-                bottomMenuVisible.observe(this@MainActivity){
-                    binding.fragConViewCover.visibility = if(it) View.VISIBLE else View.GONE
-                }
+//                bottomMenuVisible.observe(this@MainActivity){
+//                    animateVisibility(frameBottomMenu,if(it) View.VISIBLE else View.GONE)
+////                    if(it) binding.fragConViewCover.visibility =  View.VISIBLE
+//                    Toast.makeText(this@MainActivity,"called", Toast.LENGTH_SHORT).show()
+//                }
+//                editFilePopUpVisible.observe(this@MainActivity){
+//                    animateVisibility(frameLayEditFile,if(it)View.VISIBLE else View.GONE)
+////                    if(it) binding.fragConViewCover.visibility =  View.VISIBLE
+//                }
 //
 
 
@@ -320,86 +329,44 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
     override fun onClick(v: View?) {
+
         binding.apply {
-            if(frameBottomMenu.visibility == VISIBLE){
-                bindingAddMenu.apply {
-                    when(v){
-                        imvnewCard ->  {
-                            createCardViewModel.onClickAddNewCardBottomBar()
-                            fragConViewCover.visibility = GONE
-                        }
-                        imvnewTangocho -> createFileViewModel.onCLickCreateFlashCardCover()
-                        imvnewfolder -> createFileViewModel.onClickCreateFolder()
-                        else -> {
-                            fragConViewCover.visibility = GONE
-                        }
+            bindingAddMenu.apply {
+                bnvBinding.apply {
+                val fragmentNow = mainActivityViewModel.returnActiveFragment()
+                when(v){
+                    bnvImvTabLibrary,bnvTxvTabLibrary -> if(fragmentNow!=MainFragment.Library){
+                        mainNavCon.navigate(LibraryFragmentBaseDirections.toLibrary())
+                        changeTabView(fragmentNow,MainFragment.Library,binding.bnvBinding)
                     }
-                    animateVisibility(frameBottomMenu, GONE)
+                    bnvImvTabAnki,bnvTxvTabAnki       -> if(fragmentNow!=MainFragment.Anki){
+                        mainNavCon.navigate(AnkiFragmentBaseDirections.toAnki())
+                        changeTabView(fragmentNow,MainFragment.Anki,binding.bnvBinding)
+                    }
+                    bnvImvAdd                         -> {
+
+//                            fragConViewCover.visibility = VISIBLE
+                        createFileViewModel.setBottomMenuVisible(true)
+//                            createFileViewModel.onClickImvAddBnv()
+                    }
+                    fragConViewCover -> {
                     createFileViewModel.setBottomMenuVisible(false)
+                    createFileViewModel.setEditFilePopUpVisible(false)
+                }
+                    imvnewCard ->  {
+                        createCardViewModel.onClickAddNewCardBottomBar()
+//                        fragConViewCover.visibility = GONE
+                    }
+                    imvnewTangocho -> createFileViewModel.onCLickCreateFlashCardCover()
+                    imvnewfolder -> createFileViewModel.onClickCreateFolder()
                 }
 
             }
-//            else if(popupAddFile.visibility == VISIBLE){
-//                createFileViewModel.apply {
-//                    bindingCreateFile. apply {
-//                        when(v){
-//                            root -> return
-//                            btnClose -> {
-//                                animateVisibility(popupAddFile, GONE)
-//                                fragConViewCover.visibility = GONE
-//                            }
-//                            btnCreateFile ->{
-//                                if(edtCreatefile.text.toString() == "") {
-//                                    edtCreatefile.hint = "タイトルが必要です"
-//                                    return
-//                                } else {
-//                                    animateVisibility(popupAddFile, GONE)
-//                                    fragConViewCover.visibility = GONE
-//                                    createFileViewModel.onClickFinish(edtCreatefile.text!!.toString())
-//                                }
-//                            }
-//                        }
-//                        colPaletBinding.apply {
-//                            when(v){
-//                                imvColYellow -> onClickColorPalet(ColorStatus.YELLOW)
-//                                imvColGray -> onClickColorPalet(ColorStatus.GRAY)
-//                                imvColBlue -> onClickColorPalet(ColorStatus.BLUE)
-//                                imvColRed -> onClickColorPalet(ColorStatus.RED)
-//                                imvIconPalet -> arrayOf(imvColYellow,
-//                                    imvColGray,
-//                                    imvColBlue,
-//                                    imvColRed,).onEach { it.visibility = View.GONE }
-//                                else -> {
-//                                    animateVisibility(popupAddFile, GONE)
-//                                    fragConViewCover.visibility = GONE
-//                                }
-//                            }
-//
-//                        }
-//                    }
-//                }
-//
-//            }
-            else{
-                bnvBinding.apply {
-                    val fragmentNow = mainActivityViewModel.returnActiveFragment()
-                    when(v){
-                        bnvImvTabLibrary,bnvTxvTabLibrary -> if(fragmentNow!=MainFragment.Library){
-                            mainNavCon.navigate(LibraryFragmentBaseDirections.toLibrary())
-                            changeTabView(fragmentNow,MainFragment.Library,binding.bnvBinding)
-                        }
-                        bnvImvTabAnki,bnvTxvTabAnki       -> if(fragmentNow!=MainFragment.Anki){
-                            mainNavCon.navigate(AnkiFragmentBaseDirections.toAnki())
-                            changeTabView(fragmentNow,MainFragment.Anki,binding.bnvBinding)
-                        }
-                        bnvImvAdd                         -> {
-                            animateVisibility(frameBottomMenu, VISIBLE)
-//                            fragConViewCover.visibility = VISIBLE
-                            createFileViewModel.onClickImvAddBnv()
-                        }
-                    }
-                }
+
             }
+
+
+
 
 
 
@@ -415,7 +382,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             if(view.visibility==visibility) return
             else{
                 when(view.id){
-//                    R.id.popup_add_file -> animatePopUpAddFile(view as FrameLayout,visibility)
+                    R.id.frameLay_edit_file -> animatePopUpAddFile(view as FrameLayout,visibility)
                     R.id.frame_bottomMenu->animateFrameBottomMenu(view as FrameLayout,visibility)
                     R.id.linLay_col_pallet ->animateColPallet(view as LinearLayoutCompat,visibility)
                 }

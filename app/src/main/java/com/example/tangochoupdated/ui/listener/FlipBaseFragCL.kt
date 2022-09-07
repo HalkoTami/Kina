@@ -14,6 +14,7 @@ import com.example.tangochoupdated.db.enumclass.AnimationAttributes
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
+import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 
 
 class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
@@ -21,7 +22,8 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                      val ankiBaseViewModel:AnkiFragBaseViewModel,
                      val ankiFlipFrag:FragmentActivity,
                      val flipNavCon:NavController,
-                     val settingPopUpViewModel: AnkiSettingPopUpViewModel, ): View.OnClickListener {
+                     val settingPopUpViewModel: AnkiSettingPopUpViewModel,
+                     val createFileViewModel: CreateFileViewModel): View.OnClickListener {
 
     override fun onClick(v: View?) {
         binding.apply {
@@ -49,7 +51,9 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                             flipNavCon.navigate(flipViewModel.flipPrevious(returnReverseCardSide(),returnTypeAnswer()) ?:return )
                         }
                     }
-                    btnAddCard -> TODO()
+                    btnAddCard -> {
+                        createFileViewModel.setBottomMenuVisible(true)
+                    }
                     btnStopCount -> {
                         v.isSelected = !v.isSelected
                         if(v.isSelected)flipViewModel.setCountDownAnim(AnimationAttributes.Pause) else flipViewModel.setCountDownAnim(AnimationAttributes.Resume)

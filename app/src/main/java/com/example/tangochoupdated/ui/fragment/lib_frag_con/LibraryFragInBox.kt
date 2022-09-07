@@ -63,7 +63,7 @@ class LibraryFragInBox  : Fragment(){
         addListeners.inBoxTopBarAddCL(topBarBinding,requireActivity(),libNavCon)
         binding.frameLayTopBar.addView(topBarBinding.root)
 
-        createFileViewModel.filterBottomMenuWhenInBox()
+        createFileViewModel.filterBottomMenuOnlyCard()
         libraryViewModel.apply {
             setModeInBox(true)
 

@@ -34,7 +34,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/view_anki_setting_BG"
+        android:id="@+id/view_anki_frag_con_cover"
         android:background="@color/blue"
         android:alpha="0.4"/>
 

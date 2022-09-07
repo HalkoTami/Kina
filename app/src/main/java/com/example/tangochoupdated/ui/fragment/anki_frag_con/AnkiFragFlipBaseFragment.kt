@@ -20,6 +20,9 @@ import com.example.tangochoupdated.R
 import com.example.tangochoupdated.activity.MainActivity
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.db.enumclass.*
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragment
+import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragmentDirections
 import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
 import java.time.Duration
@@ -35,6 +38,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
     private val baseViewModel: BaseViewModel by activityViewModels()
     private val typeAndCheckViewModel: AnkiFlipTypeAndCheckViewModel by activityViewModels()
+    private val createFileViewModel: CreateFileViewModel by activityViewModels()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -60,6 +64,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
         val navCon = frag.navController
         val viewSetUp = AnkiFlipFragViewSetUp(binding,flipBaseViewModel,requireActivity(),ankiBaseViewModel,settingVM,navCon)
 
+        viewSetUp.setUpCL(createFileViewModel)
 
         viewSetUp.setUpViewStart()
         baseViewModel.setBnvVisibility(false)
@@ -70,24 +75,25 @@ class AnkiFragFlipBaseFragment  : Fragment() {
             }
 
         }
+        createFileViewModel.filterBottomMenuOnlyCard()
+
 
 
         var start:Boolean = true
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         flipBaseViewModel.apply {
             setParentPosition(0)
+
                 getAllCardsFromDB.observe(viewLifecycleOwner){
                     if(boxViewModel.returnAnkiBoxItems().isNullOrEmpty()){
                         setAnkiFlipItems(it)
-                        if(start){
-                            navCon.navigate(getStart(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer()))
-                            start = false
-                        } else return@observe
-
                     }
+                    if(start){
+                        navCon.navigate(getStart(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer()))
+                        start = false
+                    } else return@observe
                 }
-//            val action = FlipStringFragmentDirections.toFlipString()
-//            navCon.navigate(action)
+
             setFront(
                 !settingVM.returnReverseCardSide()
             )

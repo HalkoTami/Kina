@@ -20,7 +20,7 @@ class AnkiBaseFragViewSetUp(val baseViewModel: AnkiFragBaseViewModel,
 
     fun addCL(){
         ankiSettingPopUpAddCL()
-        bindingBase.viewAnkiSettingBG.setOnClickListener {
+        bindingBase.viewAnkiFragConCover.setOnClickListener {
             baseViewModel.setSettingVisible(false)
         }
     }

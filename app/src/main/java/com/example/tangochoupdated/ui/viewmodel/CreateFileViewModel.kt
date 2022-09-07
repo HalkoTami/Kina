@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun onCreate(){
-        setAddFileActive(false)
+        setBottomMenuVisible(false)
     }
     private val _parentFile = MutableLiveData<File?>()
     val parentFile:LiveData<File?> = _parentFile
@@ -127,17 +127,17 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _addFileActive = MutableLiveData<Boolean>()
     val addFileActive : LiveData<Boolean> = _addFileActive
 
-    fun setAddFileActive(boolean:Boolean){
-        _addFileActive.value = boolean
-        if(boolean){
-            when(_mode.value){
-                Mode.New -> setBottomMenuVisible(true)
-                Mode.Edit -> setEditFilePopUpVisible(true)
-                else -> return
-            }
-        }
-
-    }
+//    fun setAddFileActive(boolean:Boolean){
+//        _addFileActive.value = boolean
+//        if(boolean){
+//            when(_mode.value){
+//                Mode.New -> setBottomMenuVisible(true)
+//                Mode.Edit -> setEditFilePopUpVisible(true)
+//                else -> return
+//            }
+//        }
+//
+//    }
 
 //    add Bottom Menu
     class BottomMenuClickable(
@@ -159,7 +159,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         )
     }
 
-    fun filterBottomMenuWhenInBox(){
+    fun filterBottomMenuOnlyCard(){
         setBottomMenuClickable(
             BottomMenuClickable(
                 createFile =  false, createFlashCardCover = false, createCard = true)
@@ -201,10 +201,19 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _bottomMenuVisible = MutableLiveData<Boolean>()
     val bottomMenuVisible:LiveData<Boolean> = _bottomMenuVisible
     fun setBottomMenuVisible(boolean: Boolean){
-        _bottomMenuVisible.value = boolean
-        if(boolean){
-            setEditFilePopUpVisible(false)
+        val before = _bottomMenuVisible.value
+        if(before!=boolean){
+            _bottomMenuVisible.value = boolean
+            if(boolean){
+                setEditFilePopUpVisible(false)
+            }
         }
+
+
+    }
+    fun returnBottomMenuVisible():Boolean{
+        return _bottomMenuVisible.value ?:false
+
 
     }
 
@@ -267,9 +276,12 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _editFilePopUpVisible = MutableLiveData<Boolean>()
     val editFilePopUpVisible:LiveData<Boolean> = _editFilePopUpVisible
     fun setEditFilePopUpVisible(boolean: Boolean){
-        _editFilePopUpVisible.value = boolean
-        if(boolean){
-            setBottomMenuVisible(false)
+        val before = _editFilePopUpVisible.value
+        if(before!=boolean){
+            if(boolean){
+                setBottomMenuVisible(false)
+            }
+            _editFilePopUpVisible.value = boolean
         }
 
     }
@@ -318,7 +330,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             txvHintText = if(fileType == FileStatus.FOLDER) "新しいフォルダを作る"
             else "新しい単語帳を作る",
             drawableId = if(fileType == FileStatus.FOLDER) R.drawable.icon_file
-            else R.drawable.icon_library_plane,
+            else R.drawable.icon_flashcard,
             edtTitleHint = "タイトル",
             edtTitleText = "",
             colorStatus = ColorStatus.GRAY,
@@ -469,7 +481,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             else -> return
         }
         setEditFilePopUpVisible(false)
-        setAddFileActive(false)
+        setEditFilePopUpVisible(false)
     }
 
 
@@ -559,7 +571,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun onClickImvAddBnv(){
         setMode(Mode.New)
-        setAddFileActive(true)
+        setBottomMenuVisible(true)
     }
     private fun insertFile(file: File){
         viewModelScope.launch {

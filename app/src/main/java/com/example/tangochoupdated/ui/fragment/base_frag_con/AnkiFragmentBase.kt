@@ -52,7 +52,7 @@ class AnkiFragmentBase  : Fragment() {
                 if(settingVisible){
                     viewSetUp.setUpSettingContent(ankiSettingVM.returnAnkiFilter()!!)
                 }
-                arrayOf(binding.frameLayAnkiSetting,binding.viewAnkiSettingBG).onEach {
+                arrayOf(binding.frameLayAnkiSetting,binding.viewAnkiFragConCover).onEach {
                    it.visibility = if(settingVisible) View.VISIBLE else View.GONE
                 }
             }
