@@ -116,6 +116,8 @@ class LibraryFragHome : Fragment(){
             var swipingDistance:Float = 1f
             override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
                 super.onScrollLeft(distanceX, motionEvent)
+                binding.frameLayTest.requestDisallowInterceptTouchEvent(true)
+
                 startPosition = motionEvent
                 swipingDistance = distanceX
                 val view = recyclerView.findChildViewUnder(motionEvent!!.x,motionEvent!!.y)

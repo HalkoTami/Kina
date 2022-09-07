@@ -5,14 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
-import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
+import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
 import com.example.tangochoupdated.db.enumclass.AnkiFragments
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
@@ -25,10 +28,11 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 class AnkiFragmentAnkiBox  : Fragment() {
 
     private var _binding: AnkiHomeFragBaseBinding? = null
-    private val viewModel: AnkiBoxFragViewModel by activityViewModels()
+    private val ankiBoxViewModel: AnkiBoxFragViewModel by activityViewModels()
     private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
     private val flipViewModel: AnkiFlipFragViewModel by activityViewModels()
     private val ankiBaseViewModel:AnkiFragBaseViewModel by activityViewModels()
+    lateinit var ankiBoxNavCon:NavController
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -43,18 +47,46 @@ class AnkiFragmentAnkiBox  : Fragment() {
         val root: View = binding.root
         val viewSetUp = AnkiBoxFragViewSetUp(
             )
-        viewSetUp.ankiBoxFragAddCL(settingVM,binding,viewModel,ankiBaseViewModel)
 
-        binding.apply {
-            linLayTabChange.tag = AnkiBoxTab.AllFlashCardCovers
-            tabAllFlashCardCoverToAnkiBox.isSelected = true
-            arrayOf(tabFavouritesToAnkiBox,tabLibraryToAnkiBox,tabAllFlashCardCoverToAnkiBox).onEach {
-                it.setOnClickListener(AnkiBoxTabChangeCL(binding,viewModel))
+
+        val frag = childFragmentManager.findFragmentById(binding.fragConAnkiBoxTab.id) as NavHostFragment
+        ankiBoxNavCon = frag.navController
+
+        viewSetUp.ankiBoxFragAddCL(settingVM,binding,ankiBoxViewModel,ankiBaseViewModel,ankiBoxNavCon)
+//        binding.apply {
+//            linLayTabChange.tag = AnkiBoxFragments.AllFlashCardCovers
+//            tabAllFlashCardCoverToAnkiBox.isSelected = true
+//            arrayOf(tabFavouritesToAnkiBox,tabLibraryToAnkiBox,tabAllFlashCardCoverToAnkiBox).onEach {
+//                it.setOnClickListener(AnkiBoxTabChangeCL(binding,ankiBoxViewModel,ankiBoxNavCon))
+//            }
+//        }
+        fun changeSelectedTab(select:AnkiBoxFragments, before:AnkiBoxFragments?){
+
+            if(before == select) return
+            else {
+                fun getTextView(tab:AnkiBoxFragments): TextView {
+                    return when(tab){
+                        AnkiBoxFragments.AllFlashCardCovers-> binding.tabAllFlashCardCoverToAnkiBox
+                        AnkiBoxFragments.Library -> binding.tabLibraryToAnkiBox
+                        AnkiBoxFragments.Favourites -> binding.tabFavouritesToAnkiBox
+                    }
+                }
+                getTextView(select).isSelected = true
+                binding.linLayTabChange.tag = select
+                if(before!=null)
+                getTextView(before).isSelected = false
             }
-        }
-        viewModel.apply{
 
-            ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
+        }
+        ankiBoxViewModel.apply{
+            setAnkiBoxNavCon(ankiBoxNavCon)
+            getAnkiBoxNavCon.observe(viewLifecycleOwner){
+                if(it) setAnkiBoxNavCon(ankiBoxNavCon)
+            }
+            currentChildFragment.observe(viewLifecycleOwner){
+                changeSelectedTab(it.currentTab,it.before)
+            }
+
             ankiBoxFileIds.observe(viewLifecycleOwner){
                 getDescendantsCardIds(it).observe(viewLifecycleOwner){
                     setAnkiBoxCardIds(it)
@@ -99,8 +131,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-                val navCon = requireActivity().findViewById<FragmentContainerView>(R.id.rv_cover).findNavController()
-                navCon.popBackStack()
+                ankiBoxNavCon.popBackStack()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(

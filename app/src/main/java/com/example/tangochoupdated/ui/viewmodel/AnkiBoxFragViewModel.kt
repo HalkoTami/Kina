@@ -4,11 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import kotlinx.coroutines.flow.Flow
+import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
+import com.example.tangochoupdated.db.enumclass.AnkiBoxTabData
+import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.AllFlashCardCoversFragmentDirections
+import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.FavouriteAnkiBoxFragmentDirections
+import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.LibraryItemsFragmentDirections
 
 class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun onCreate(){
@@ -34,6 +40,27 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     fun getCardsFromDBByMultipleCardIds(cardIds:List<Int>) :LiveData<List<Card>> = repository.getCardsByMultipleCardId(cardIds).asLiveData()
 
+    private val _ankiBoxNavCon = MutableLiveData<NavController>()
+    fun setAnkiBoxNavCon(navController: NavController){
+        _ankiBoxNavCon.value = navController
+    }
+    fun returnAnkiBoxNavCon():NavController?{
+        val navCon = _ankiBoxNavCon.value
+         if(navCon==null) {
+             getAnkiBoxNavConIfNull()
+         }
+        return _ankiBoxNavCon.value
+    }
+
+    private val _getAnkiBoxNavCon = MutableLiveData<Boolean>()
+    private fun setGetAnkiBoxNavCon(boolean: Boolean){
+        _getAnkiBoxNavCon.value = boolean
+    }
+    private fun getAnkiBoxNavConIfNull(){
+        setGetAnkiBoxNavCon(true)
+        setGetAnkiBoxNavCon(false)
+    }
+    val getAnkiBoxNavCon :LiveData<Boolean> = _getAnkiBoxNavCon
 
     fun getDescendantsCardIds(fileIdList:List<Int>) :LiveData<List<Int>> = repository.getDescendantsCardsIsByMultipleFileId(fileIdList).asLiveData()
     private val _ankiBoxItems = MutableLiveData<MutableList<Card>>()
@@ -47,11 +74,51 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     val ankiBoxItems :LiveData<MutableList<Card>> = _ankiBoxItems
 
-    private val _tabChangeAction = MutableLiveData<NavDirections>()
-    fun setTabChangeAction (navDirections: NavDirections){
-        _tabChangeAction.value = navDirections
+
+    private val _currentChildFragment = MutableLiveData<AnkiBoxTabData>()
+    fun setCurrentChildFragment (fragment: AnkiBoxFragments){
+        val before = _currentChildFragment.value
+        val data = AnkiBoxTabData(fragment,before?.currentTab)
+        _currentChildFragment.value = data
     }
-    val tabChangeAction :LiveData<NavDirections> = _tabChangeAction
+    fun returnCurrentChildFragment ():AnkiBoxFragments?{
+        return _currentChildFragment.value?.currentTab
+    }
+    val currentChildFragment :LiveData<AnkiBoxTabData> = _currentChildFragment
+
+    fun changeTab(tab:AnkiBoxFragments){
+        if(returnCurrentChildFragment()==tab) return else {
+            val action:NavDirections =
+                when(tab){
+                    AnkiBoxFragments.AllFlashCardCovers -> AllFlashCardCoversFragmentDirections.toAllFlashCardCoverFrag()
+                    AnkiBoxFragments.Favourites -> FavouriteAnkiBoxFragmentDirections.toAnkiBoxFavouriteFrag()
+                    AnkiBoxFragments.Library -> LibraryItemsFragmentDirections.toLibraryItemsFrag()
+                }
+            returnAnkiBoxNavCon()?.navigate(action)
+        }
+
+    }
+    fun openFile(item:File){
+        val action =
+        when(returnCurrentChildFragment()){
+            AnkiBoxFragments.AllFlashCardCovers ->{
+                val a = AllFlashCardCoversFragmentDirections.toAllFlashCardCoverFrag()
+                a.fileId = intArrayOf(item.fileId)
+                a
+            }
+            AnkiBoxFragments.Favourites -> {
+                return
+            }
+            AnkiBoxFragments.Library -> {
+                val a = LibraryItemsFragmentDirections.toLibraryItemsFrag()
+                a.fileId = intArrayOf(item.fileId)
+                a.flashCard = item.fileStatus == FileStatus.TANGO_CHO_COVER
+                a
+            }
+            null -> return
+        }
+        returnAnkiBoxNavCon()?.navigate(action)
+    }
 
     val text: LiveData<String> = _text
 

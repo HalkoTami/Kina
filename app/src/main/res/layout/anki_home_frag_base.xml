@@ -31,6 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
+        android:paddingEnd="10dp"
         app:layout_constraintTop_toBottomOf="@id/frameLay_top_bar"
         app:layout_constraintBottom_toTopOf="@id/main_frameLayout">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,8 +76,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
         <LinearLayout
             android:id="@+id/top_graph"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
 
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             app:layout_constraintVertical_weight="1"
-            app:layout_constraintBottom_toTopOf="@id/rv_cover"
+            app:layout_constraintBottom_toTopOf="@id/frag_con_anki_Box_tab"
             app:layout_constraintTop_toTopOf="parent">
             <TextView
                 android:id="@+id/tab_AllFlashCardCover_to_AnkiBox"
@@ -162,7 +162,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/rv_cover"
+            android:id="@+id/frag_con_anki_Box_tab"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"

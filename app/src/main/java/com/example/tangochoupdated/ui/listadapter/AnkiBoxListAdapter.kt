@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
-import com.example.tangochoupdated.ui.view_set_up.AnkiBoxChildrenFragViewSetUp
+import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 
@@ -23,7 +22,7 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 class AnkiBoxListAdapter(
     private val context: Context,
     private val ankiBoxFragViewModel: AnkiBoxFragViewModel,
-    private  val tab:AnkiBoxTab,
+    private  val tab:AnkiBoxFragments,
     private val lifecycleOwner: LifecycleOwner) :
     ListAdapter<Any, AnkiBoxListAdapter.AnkiBoxItemViewHolder>(SearchDiffCallback) {
 
@@ -39,7 +38,7 @@ class AnkiBoxListAdapter(
     class AnkiBoxItemViewHolder (private val binding: AnkiHomeFragRvItemBinding,
                                  val context: Context,
                                  val ankiBoxFragViewModel: AnkiBoxFragViewModel,
-                                 val tab: AnkiBoxTab,
+                                 val tab: AnkiBoxFragments,
                                  val lifecycleOwner: LifecycleOwner) :
         RecyclerView.ViewHolder(binding.root){
 

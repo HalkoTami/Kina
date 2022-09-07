@@ -5,14 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.compose.ui.geometry.Rect
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
+import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
 import com.example.tangochoupdated.ui.listadapter.AnkiBoxListAdapter
 import com.example.tangochoupdated.ui.listener.AnkiBoxFragBaseCL
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
@@ -30,7 +32,7 @@ class AnkiBoxFragViewSetUp() {
 //    val ankiBaseViewModel:AnkiFragBaseViewModel
 fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                               context: Context,
-                              ankiBoxVM: AnkiBoxFragViewModel,tab: AnkiBoxTab,
+                              ankiBoxVM: AnkiBoxFragViewModel, tab: AnkiBoxFragments,
                               lifecycleOwner: LifecycleOwner): AnkiBoxListAdapter {
     val adapter = AnkiBoxListAdapter(context,ankiBoxVM,tab,lifecycleOwner)
     recyclerView.adapter = adapter
@@ -42,10 +44,11 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
     fun ankiBoxFragAddCL(ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel,
                          binding:AnkiHomeFragBaseBinding,
                          ankiBoxVM:AnkiBoxFragViewModel,
-                         ankiBaseViewModel:AnkiFragBaseViewModel){
+                         ankiBaseViewModel:AnkiFragBaseViewModel,
+                         ankiBoxNavCon:NavController){
         binding.apply {
             arrayOf(tabFavouritesToAnkiBox,tabLibraryToAnkiBox,tabAllFlashCardCoverToAnkiBox).onEach {
-                it.setOnClickListener(AnkiBoxTabChangeCL(binding,ankiBoxVM))
+                it.setOnClickListener(AnkiBoxTabChangeCL(binding,ankiBoxVM,))
             }
             btnStartAnki.setOnClickListener(AnkiBoxFragBaseCL(
                 ankiSettingPopUpViewModel, binding,ankiBaseViewModel,ankiBoxVM))
@@ -55,47 +58,8 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
     }
 
 
-//
-//    fun dpToPx(dp: Int): Float {
-//        val metrics = context.resources.displayMetrics
-//        return dp * metrics.density
-//    }
-//
-//
-//    fun pxToDp(px: Int, context: Context): Float {
-//        val metrics = context.getResources().getDisplayMetrics()
-//        return px / metrics.density
-//    }
-
-
-
-//    fun setUpRVFileBinding(binding:AnkiHomeFragRvItemFileBinding,
-//                           file: File, tab: AnkiBoxTab ){
-//        binding.apply {
-//            imvFileType.setImageDrawable(
-//                getDraw.getFileIconByFile(file)
-//            )
-//            txvFileTitle.text = file.title
-//            txvAnkiBoxCardAmount.text = file.descendantsData.descendantsCardsAmount.toString()
-//            txvAnkiBoxFlashCardAmount.text = file.descendantsData.descendantsFlashCardsCoversAmount.toString()
-//            txvAnkiBoxFolderAmount.text = file.descendantsData.descendantsFoldersAmount.toString()
-//            arrayOf(root,checkboxAnkiRv).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
-//                file,
-//                ankiBoxVM = ankiBoxVM,
-//                binding = binding,
-//                tab = tab)) }
-//
-//
-//
-//
-//
-//
-//        }
-//
-//
-//    }
     fun setUpRVFileBinding(binding:AnkiHomeFragRvItemFileBinding,
-                           file: File, tab: AnkiBoxTab,
+                           file: File, tab: AnkiBoxFragments,
                            ankiBoxVM: AnkiBoxFragViewModel,
                            context:Context,
                            lifecycleOwner: LifecycleOwner
@@ -128,24 +92,6 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         }
 
 
-    }
-    fun setUpGraphBinding(binding: AnkiHomeFragDataGraphSmallBinding,file: File){
-        binding.apply {
-            val rememberedPercentage =
-                if(file.descendantsData.descendantsCardsAmount!=0)
-                    floor(file.rememberedCardAmount.toFloat()/file.descendantsData.descendantsCardsAmount.toFloat()*10.0)
-                else 0.0
-            txvRememberedPercentage.text =
-                "${rememberedPercentage}" +"%"
-            guideRemembered.setGuidelinePercent(rememberedPercentage.toFloat())
-            if(graphRemembered.width<imvRememberedEndIcon.width){
-                val a = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
-                a.marginEnd = -imvRememberedEndIcon.width
-                imvRememberedEndIcon.layoutParams = a
-            }
-
-
-        }
     }
 
     fun getRememberedPercentage(list: MutableList<Card>):Double{
@@ -234,6 +180,9 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
             progressBarFlipped2.progress =      getPercentage(per2)
             progressBarFlipped3.progress =      getPercentage(per3)
             progressBarFlippedAbove4.progress = getPercentage(per4)
+            arrayOf(txv1,txv2,txv3,txv4Above).onEach {
+                it.visibility = View.VISIBLE
+            }
             txv1.translationX =  root.width*per1.toFloat()
             txv2.translationX = root.width*per2.toFloat()
             txv3.translationX = root.width*per3.toFloat()

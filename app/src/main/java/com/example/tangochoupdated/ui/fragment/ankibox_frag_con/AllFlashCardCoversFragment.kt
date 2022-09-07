@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.databinding.FullRvBinding
-import com.example.tangochoupdated.db.enumclass.AnkiBoxTab
+import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 
@@ -17,7 +17,7 @@ class AllFlashCardCoversFragment  : Fragment() {
 
     private val args: AllFlashCardCoversFragmentArgs by navArgs()
     private var _binding: FullRvBinding? = null
-    private val viewModel: AnkiBoxFragViewModel by activityViewModels()
+    private val ankiBoxViewModel: AnkiBoxFragViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -35,14 +35,16 @@ class AllFlashCardCoversFragment  : Fragment() {
         val fileId = args.fileId?.single()
         val viewSetUp = AnkiBoxFragViewSetUp()
         val adapter = viewSetUp
-            .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),viewModel,AnkiBoxTab.AllFlashCardCovers,viewLifecycleOwner)
+            .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),ankiBoxViewModel,AnkiBoxFragments.AllFlashCardCovers,viewLifecycleOwner)
 
-        viewModel.apply {
+        ankiBoxViewModel.apply {
+            setCurrentChildFragment(AnkiBoxFragments.AllFlashCardCovers)
             when(fileId){
                 null -> {
 
                     allFlashCardCoverFromDB.observe(viewLifecycleOwner){
                         adapter.submitList(it)
+                        binding.recyclerView
                     }
                 }
                 else -> {

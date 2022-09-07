@@ -9,13 +9,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
+import com.example.tangochoupdated.databinding.FullRvBinding
+import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
+import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
 
 
 class FavouriteAnkiBoxFragment  : Fragment() {
 
-    private var _binding: AnkiHomeFragBaseBinding? = null
+    private var _binding: FullRvBinding? = null
     private val sharedViewModel: BaseViewModel by activityViewModels()
+    private val ankiBoxViewModel: AnkiBoxFragViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,10 +30,11 @@ class FavouriteAnkiBoxFragment  : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        _binding =  AnkiHomeFragBaseBinding.inflate(inflater, container, false)
+        _binding =  FullRvBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
+        ankiBoxViewModel.apply {
+            setCurrentChildFragment(AnkiBoxFragments.Favourites)
+        }
 
         return root
     }

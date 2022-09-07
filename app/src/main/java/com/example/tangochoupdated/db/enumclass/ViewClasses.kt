@@ -18,6 +18,10 @@ enum class LibRVState{
     Selectable,LeftSwiped,Plane,LeftSwiping,SelectFileMoveTo,Selected
 }
 
-enum class AnkiBoxTab{
+enum class AnkiBoxFragments{
     AllFlashCardCovers, Library, Favourites
 }
+class AnkiBoxTabData(
+    var currentTab:AnkiBoxFragments,
+    var before:AnkiBoxFragments?
+)

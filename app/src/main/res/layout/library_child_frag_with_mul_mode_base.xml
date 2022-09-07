@@ -91,25 +91,32 @@
         android:id="@+id/frameLay_test"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:padding="10dp"
-            android:id="@+id/vocabCardRV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="true"
-            tools:layout_editor_absoluteX="0dp"
-            tools:listitem="@layout/library_frag_rv_item_base" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:padding="10dp"
+                    android:id="@+id/vocabCardRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="true"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:listitem="@layout/library_frag_rv_item_base" />
+                <FrameLayout
+                    android:background="@color/lightgreen"
+                    android:alpha="0.5"
+                    android:id="@+id/rv_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </FrameLayout>
+
+            </FrameLayout>
+
+
     </androidx.core.widget.NestedScrollView>
 
-        <FrameLayout
-            android:background="@color/lightgreen"
-            android:alpha="0.5"
-            android:id="@+id/rv_cover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-
-        </FrameLayout>
 
 
 
