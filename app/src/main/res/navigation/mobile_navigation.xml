@@ -59,7 +59,6 @@
     <action
         android:id="@+id/open_create_card"
         app:destination="@+id/fragmentCreateCard"
-        app:popUpTo="@id/mobile_navigation"
         />
     <action
         android:id="@+id/to_library"

@@ -51,48 +51,48 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-    fun allAncestors(fileId:Int?):LiveData<List<File>?> = repository.getAllAncestorsByFileId(fileId).asLiveData()
-    val _pAndgGP = MutableLiveData<List<File>?>()
-    fun setPAndG(list: List<File>?){
-        _pAndgGP.value = list
-        val file:Boolean
-        val flashCardCover:Boolean
-        val card:Boolean
-
-//        when(_parentFile.value?.fileStatus){
-//            null -> {
-//                card = true
-//                file = true
-//                flashCardCover = true
-//            }
-//            FileStatus.FOLDER -> {
+//    fun allAncestors(fileId:Int?):LiveData<List<File>?> = repository.getAllAncestorsByFileId(fileId).asLiveData()
+//    val _pAndgGP = MutableLiveData<List<File>?>()
+//    fun setPAndG(list: List<File>?){
+//        _pAndgGP.value = list
+//        val file:Boolean
+//        val flashCardCover:Boolean
+//        val card:Boolean
 //
-//                card = false
-//                if(list!!.size < 3 ) {
-//                    file = true
-//                    flashCardCover = true
-//                } else {
-//                    file = false
-//                    flashCardCover = list.size < 4
-//                }
-//            }
-//            FileStatus.TANGO_CHO_COVER -> {
-//                file = false
-//                flashCardCover = false
-//                card = true
-//            }
-//            else ->{
-//                file = false
-//                flashCardCover = false
-//                card = false
-//            }
-//
-//        }
-//        setBottomMenuClickable(
-//            BottomMenuClickable(file,flashCardCover,card
-//            )
-//        )
-    }
+////        when(_parentFile.value?.fileStatus){
+////            null -> {
+////                card = true
+////                file = true
+////                flashCardCover = true
+////            }
+////            FileStatus.FOLDER -> {
+////
+////                card = false
+////                if(list!!.size < 3 ) {
+////                    file = true
+////                    flashCardCover = true
+////                } else {
+////                    file = false
+////                    flashCardCover = list.size < 4
+////                }
+////            }
+////            FileStatus.TANGO_CHO_COVER -> {
+////                file = false
+////                flashCardCover = false
+////                card = true
+////            }
+////            else ->{
+////                file = false
+////                flashCardCover = false
+////                card = false
+////            }
+////
+////        }
+////        setBottomMenuClickable(
+////            BottomMenuClickable(file,flashCardCover,card
+////            )
+////        )
+//    }
 
     private val _parentFileStock = MutableLiveData<List<File>>()
     val parentFileStock:LiveData<List<File>> = _parentFileStock
@@ -198,6 +198,10 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
 
+    fun makeBothPopUpGone(){
+        setBottomMenuVisible(false)
+        setEditFilePopUpVisible(false)
+    }
     private val _bottomMenuVisible = MutableLiveData<Boolean>()
     val bottomMenuVisible:LiveData<Boolean> = _bottomMenuVisible
     fun setBottomMenuVisible(boolean: Boolean){

@@ -9,11 +9,7 @@ import kotlin.coroutines.CoroutineContext
 class RoomApplication : Application() {
     private val myContext: CoroutineContext = SupervisorJob() + Dispatchers.Default
     private val myScope = CoroutineScope(myContext + CoroutineName("my name"))
-
-    // Using by lazy so the database and the repository are only created when they're needed
-    // rather than when the application starts
-    // ]
-    val database by lazy { MyRoomDatabase.getDatabase(this, myScope) }
+    private val database by lazy { MyRoomDatabase.getDatabase(this, myScope) }
     val repository by lazy { MyRoomRepository(
         cardDao = database.cardDao(),
         activityDataDao= database.activityDataDao(),

@@ -341,10 +341,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         _action.value = navDirections
     }
     fun checkViewReset():Boolean{
-        if(_modeInBox.value ==true){
-            setModeInBox(false)
-            return true
-        }
         if(_multipleSelectMode.value == true){
             setMultipleSelectMode(false)
             return true

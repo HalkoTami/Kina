@@ -17,17 +17,17 @@ import com.example.tangochoupdated.ui.fragment.createCard_frag_com.CreateCardFra
 import kotlinx.coroutines.launch
 
 
-class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
+class EditCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
 
     fun onCreateViewModel(){
         setFromSameFrag(false)
-        setOpenEditCard(false)
+        setOpenCreateCard(false)
     }
     fun onStartFrag(){
         setSavingCard(false)
 
 
-        setOpenEditCard(true)
+        setOpenCreateCard(true)
         setColPalletVisibility(true)
         setCardStatus(CardStatus.STRING)
         setCardColor(ColorStatus.GRAY)
@@ -37,21 +37,13 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
 
-    private val _openCreateCardBase = MutableLiveData<Boolean>()
-    fun setOpenCreateCardBase (boolean: Boolean){
-        _openCreateCardBase.value = boolean
-    }
-    val openCreateCardBase :LiveData<Boolean> = _openCreateCardBase
-    fun returnOpenCreateCardBase ():Boolean{
-        return _openCreateCardBase.value ?:false
-    }
 
     private val _openEditCard = MutableLiveData<Boolean>()
-    fun setOpenEditCard (boolean: Boolean){
+    fun setOpenCreateCard (boolean: Boolean){
         _openEditCard.value = boolean
     }
-    val openEditCard :LiveData<Boolean> = _openEditCard
-    fun returnOpenEditCard ():Boolean{
+    val openCreateCard :LiveData<Boolean> = _openEditCard
+    fun returnOpenCreateCard ():Boolean{
         return _openEditCard.value ?:false
     }
 
@@ -142,7 +134,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val before = _sisterCards.value
         _sisterCards.value = list
         if(before!=null && list != null && before.size > list.size){
-            setOpenEditCard(false)
+            setOpenCreateCard(false)
             var a = 0
             while(a < list.size){
                 val item = list[a]
@@ -412,7 +404,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     fun onClickBtnInsertPrevious(){
 
-        setOpenEditCard(true)
+        setOpenCreateCard(true)
         setFromSameFrag(true)
         setGetStringData(true)
         val a = intArrayOf(_parentCard.value!!.belongingFlashCardCoverId!!)
@@ -422,7 +414,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
     fun onClickBtnInsertNext(){
-        setOpenEditCard(true)
+        setOpenCreateCard(true)
         setFromSameFrag(true)
         setGetStringData(true)
         val a = if (_parentCard.value!!.belongingFlashCardCoverId!=null) intArrayOf(_parentCard.value!!.belongingFlashCardCoverId!!) else null
@@ -493,17 +485,14 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 //        } else intArrayOf(item.card.belongingFileId)
 //
 //        setAction(CreateCardFragmentDirections.toCreateCard(parentFileId,null))
-        setOpenEditCard(true)
+        setOpenCreateCard(true)
         setFromSameFrag(false)
         createNewCardNextToPosition(item.card!!.libOrder +1,false,item.card.belongingFlashCardCoverId,false)
     }
-    fun onClickAddNewCardBottomBar(mainNavCon:NavController){
+    fun onClickAddNewCardBottomBar(){
+        setOpenCreateCard(true)
+        setFromSameFrag(false)
         createNewCardNextToPosition((_sisterCards.value?.size ?:0)    ,false,_parentFlashCardCoverId.value,false)
-        setOpenEditCard(true)
-//        setFromSameFrag(false)
-        mainNavCon.navigate(CreateCardFragmentBaseDirections.openCreateCard())
-
-
 
 
 
@@ -521,7 +510,6 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         Tag, FrontTitle, FrontContent, BackTitle, BackText
     }
     fun onClickEditCard(item: Card,navController: NavController){
-        setOpenEditCard(false)
         setFromSameFrag(false)
         val a =if(item.belongingFlashCardCoverId== null) null else intArrayOf(item.belongingFlashCardCoverId!!)
         val b = intArrayOf(item.id)

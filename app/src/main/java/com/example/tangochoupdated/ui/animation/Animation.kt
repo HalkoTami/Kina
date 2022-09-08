@@ -19,7 +19,7 @@ class Animation {
             val a = ObjectAnimator.ofFloat(frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
             val b = ObjectAnimator.ofFloat(frameBottomMenu, View.ALPHA,0f,1f)
             playTogether(a,b)
-            duration = 500
+            duration = 200
         }
         when (visibility){
             View.VISIBLE -> {
@@ -38,7 +38,7 @@ class Animation {
     }
     fun animatePopUpAddFile(popUpAddFile: FrameLayout, visibility: Int){
         val appearAnimator = AnimatorSet().apply {
-            duration= 500
+            duration= 200
             play(ObjectAnimator.ofFloat(popUpAddFile, View.ALPHA, 0f,1f ))
         }
         when (visibility){

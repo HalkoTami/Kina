@@ -44,7 +44,7 @@ fun getAnkiBoxFavouriteRVCards(fileId:Int):Flow<List<Card>> = libraryDao.getAnki
     fun getAnkiBoxRVCards(fileId:Int):Flow<List<Card>> = libraryDao.getAnkiBoxRVCards(fileId)
         fun getCardByCardId(cardId:Int?):Flow<Card> = cardDao.getCardByCardId(cardId)
     fun getCardsByMultipleCardId(cardIds:List<Int>):Flow<List<Card>> = cardDao.getCardByMultipleCardIds(cardIds)
-        val lastInsertedCard:Flow<Card?> = cardDao.getLastInsertedCard()
+        val lastInsertedCard:Flow<Card> = cardDao.getLastInsertedCard()
         fun searchCardsByWords(search:String):Flow<List<Card>> = libraryDao.searchCardsByWords(search)
         fun searchFilesByWords(search:String):Flow<List<File>> = libraryDao.searchFilesByWords(search)
 

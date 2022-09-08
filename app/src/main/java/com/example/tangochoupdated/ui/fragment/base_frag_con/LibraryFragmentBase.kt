@@ -3,12 +3,9 @@ package com.example.tangochoupdated.ui.fragment.base_frag_con
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.SpannableStringBuilder
 import android.view.*
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -27,11 +24,9 @@ import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.ui.animation.Animation
-import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
 import com.example.tangochoupdated.ui.observer.CommonOb
-import com.example.tangochoupdated.ui.observer.LibraryOb
-import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
+import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
@@ -60,7 +55,7 @@ class LibraryFragmentBase : Fragment(){
         libNavCon = a.navController
 
         baseViewModel.apply {
-            setActiveFragment(MainFragment.Library)
+            setChildFragmentStatus(MainFragment.Library)
         }
 
 

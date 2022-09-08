@@ -10,16 +10,18 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.activity.MainActivity
 import com.example.tangochoupdated.databinding.*
+import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.db.enumclass.FragmentTree
 import com.example.tangochoupdated.db.enumclass.Mode
 import com.example.tangochoupdated.db.enumclass.MainFragment
+import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
@@ -32,8 +34,6 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
     private val binding get() = _binding!!
 
     private val args : CreateCardFragmentArgs by navArgs()
-
-    private val clickableViews = mutableListOf<View>()
     private val baseViewModel: BaseViewModel by activityViewModels()
     private val  createCardViewModel: CreateCardViewModel by activityViewModels()
 //    private lateinit var stringCardViewModel: StringCardViewModel
@@ -42,7 +42,6 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 
     lateinit var cardNavCon:NavController
 
-    var finish = false
 
 
 
@@ -51,20 +50,41 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        _binding = CreateCardFragBaseBinding.inflate(inflater, container, false)
-        cardNavCon =requireActivity().findViewById<FragmentContainerView>(R.id.create_card_frag_con).findNavController()
-        val mainNavCon =  requireActivity().findNavController(requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).id)
-        baseViewModel.apply {
-//            val activeFragment = returnActiveFragment() ?: FragmentTree()
-//            activeFragment.startFragment = MainFragment.EditCard
-            setActiveFragment(MainFragment.EditCard)
+        fun getNavConFromFragCon(fragConId:Int):NavController{
+            return requireActivity().findViewById<FragmentContainerView>(fragConId).findNavController()
+        }
+        fun setLateInitVars(){
+            _binding = CreateCardFragBaseBinding.inflate(inflater, container, false)
+            cardNavCon =getNavConFromFragCon(R.id.create_card_frag_con)
+        }
+        fun addClickListeners(){
+            binding.apply {
+                arrayOf(
+                    createCardTopBarBinding.imvSaveAndBack,
+                    createCardColPaletBinding.imvIconPalet,
+                    createCardColPaletBinding.imvColYellow,
+                    createCardColPaletBinding.imvColRed,
+                    createCardColPaletBinding.imvColGray,
+                    createCardColPaletBinding.imvColBlue,
+                    btnInsertPrevious,
+                    btnPrevious,
+                    btnNext,
+                    btnInsertNext
+                    ).onEach { it.setOnClickListener(this@CreateCardFragment) }
+            }
         }
 
-        val vlo = viewLifecycleOwner
+        setLateInitVars()
+        addClickListeners()
+        val parentCardFromDBObserver = Observer<Card>{ cardAndTags->
+            if(cardAndTags!= null){
+                createCardViewModel.setParentCard(cardAndTags)
+            }
+            stringCardViewModel.setStringData(cardAndTags?.stringData)
+        }
+
         binding.apply {
             binding.root.requestFocus()
-
             createCardViewModel.apply{
 //            初期設定
                 onStartFrag()
@@ -83,10 +103,6 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ file ->
                     setParentFlashCardCover(file)
                 }
-
-                lastInsertedCard.observe(viewLifecycleOwner){
-                        createCardViewModel.setLastInsertedCard(it,mainNavCon)
-            }
 
 //                Top Frame
                 createCardTopBarBinding.apply {
@@ -107,10 +123,8 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                         }
                     }
 //                    add to click listener
-                    clickableViews.addAll(arrayOf(
-                        imvSaveAndBack
-                    )
-                    )
+
+
 
 
                 }
@@ -125,17 +139,15 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                    val mainActivity = LibraryFragmentBase()
                    cardColor.observe(viewLifecycleOwner){
                        mainActivity.apply {
-                           if(previousColor == null) makeAllColPaletUnselected(palletBinding)
-                           else changeColPalletCol(previousColor!!,false,palletBinding)
-                           changeColPalletCol(it,true,palletBinding)
-                           previousColor = it
+//                           if(previousColor == null) makeAllColPaletUnselected(palletBinding)
+//                           else changeColPalletCol(previousColor!!,false,palletBinding)
+//                           changeColPalletCol(it,true,palletBinding)
+//                           previousColor = it
                        }
                    }
 
                    //                   addToClickListener
-                   clickableViews.addAll(arrayOf(
-                       imvIconPalet,imvColYellow,imvColRed,imvColGray,imvColBlue
-                   ))
+
 
                }
 //                移動ボタン
@@ -159,10 +171,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                     }
 
 //                    add to click listener
-                    clickableViews.addAll( arrayOf(
-                        btnInsertPrevious,btnPrevious,btnNext,btnInsertNext
-                    )
-                    )
+
 
 
                 }
@@ -175,9 +184,6 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             }
         }
 
-        clickableViews.onEach {
-            it.setOnClickListener(this)
-        }
 
         return binding.root
     }
@@ -195,7 +201,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 btnNext                                 ->  createCardViewModel. onClickBtnNext(cardNavCon)
                 btnPrevious                             -> createCardViewModel. onClickBtnPrevious(cardNavCon)
                 createCardColPaletBinding.imvIconPalet  -> {
-                    MainActivity().animateVisibility(createCardColPaletBinding.linLayColPallet,
+                    Animation().animateColPallet(createCardColPaletBinding.linLayColPallet,
                         if(v.tag == View.VISIBLE) View.GONE else View.VISIBLE)
                 }
                 createCardColPaletBinding.imvColBlue    ->    createCardViewModel.onClickEachColor(ColorStatus.BLUE)
