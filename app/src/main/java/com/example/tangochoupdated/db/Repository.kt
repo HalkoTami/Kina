@@ -88,6 +88,11 @@ fun getAnkiBoxFavouriteRVCards(fileId:Int):Flow<List<Card>> = libraryDao.getAnki
                 .subscribeOn(Schedulers.io())
                 .subscribe()
         }
+    fun upDateCardPosition(flashCardId:Int?,insertingPosition:Int){
+        Completable.fromAction { libraryDao.upDateCardsPositionBeforeInsert(flashCardId,insertingPosition) }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
+    }
 
 //    anki box
     val allFlashCardCover:Flow<List<File>> = libraryDao.getAllFlashCardCover()
@@ -102,6 +107,7 @@ fun getAnkiBoxFavouriteRVCards(fileId:Int):Flow<List<Card>> = libraryDao.getAnki
             when (item) {
                 is CardAndTagXRef -> cardAndTagXRefDao.insert(item)
                 is Card -> {
+                    upDateCardPosition(item.belongingFlashCardCoverId,item.libOrder)
                     cardDao.insert(item)
                     val flashCardCoverId = item.belongingFlashCardCoverId
                     if(flashCardCoverId!=null){

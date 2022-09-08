@@ -21,6 +21,8 @@ class CreateCardFragmentBase  : Fragment() {
     private val ankiBoxViewModel: AnkiBoxFragViewModel by activityViewModels()
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
     private val createCardViewModel:CreateCardViewModel by activityViewModels()
+    private val stringCardViewModel : StringCardViewModel by activityViewModels()
+
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -34,15 +36,27 @@ class CreateCardFragmentBase  : Fragment() {
 
 
         _binding =  CreateCardFragMainBinding.inflate(inflater, container, false)
-
+//
         val a = childFragmentManager.findFragmentById(binding.createCardFragCon.id) as NavHostFragment
         val cardNavCon = a.navController
         baseViewModel.setChildFragmentStatus(MainFragment.EditCard)
         createCardViewModel.apply {
-            lastInsertedCard.observe(viewLifecycleOwner){
-                if(returnOpenEditCard()) onClickEditCard(it,cardNavCon)
+//            lastInsertedCard.observe(viewLifecycleOwner) {
+//                if (returnOpenEditCard()) {
+//                    setParentCard(it)
+//                    onClickEditCard(it, cardNavCon)
+//                }
+//            }
+            createCardViewModel.parentCard.observe(viewLifecycleOwner){
+                if(createCardViewModel. returnOpenEditCard()){
+                    createCardViewModel.setOpenEditCard(false)
+                    createCardViewModel.onClickEditCard(it, cardNavCon)
+                }
+                stringCardViewModel.setParentCard(it)
             }
+
         }
+
 
 
 

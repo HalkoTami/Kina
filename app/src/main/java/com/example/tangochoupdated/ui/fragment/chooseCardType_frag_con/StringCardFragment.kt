@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -28,6 +29,7 @@ class StringCardFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+
 //   private val  stringViewModel: StringCardViewModel by activityViewModels()
 
 
@@ -42,13 +44,11 @@ class StringCardFragment : Fragment() {
         val root: View = binding.root
 
 
+        Toast.makeText(requireActivity(),"string called",Toast.LENGTH_SHORT).show()
 
         createCardViewModel.setCardStatus(CardStatus.STRING)
-
-
-
-
         binding.apply {
+            binding.edtFrontTitle.visibility = View.VISIBLE
 //            ヒント
             edtFrontTitle.hint = "表のタイトル"
             edtFrontContent.hint = "表"
@@ -56,14 +56,15 @@ class StringCardFragment : Fragment() {
             edtBackContent.hint = "裏"
 
             stringCardViewModel.apply {
-
 //                表示
-                stringData.observe(viewLifecycleOwner) {
-                    edtFrontTitle.text = SpannableStringBuilder(it?.frontTitle ?: "表")
-                    edtFrontContent.text = SpannableStringBuilder(it?.frontText ?: "")
-                    edtBackTitle.text = SpannableStringBuilder(it?.backTitle ?: "裏")
-                    edtBackContent.text = SpannableStringBuilder(it?.backText ?: "")
+                parentCard.observe(viewLifecycleOwner){
+                    val stringData = it?.stringData
+                    edtFrontTitle.text = SpannableStringBuilder(stringData?.frontTitle ?: "表")
+                    edtFrontContent.text = SpannableStringBuilder(stringData?.frontText ?: "")
+                    edtBackTitle.text = SpannableStringBuilder(stringData?.backTitle ?: "裏")
+                    edtBackContent.text = SpannableStringBuilder(stringData?.backText ?: "")
                 }
+
 
 //                キーボードフォーカス
                 focusedOn.observe(viewLifecycleOwner){
@@ -76,20 +77,6 @@ class StringCardFragment : Fragment() {
                     }
                 }
 
-            }
-
-//            テキストの内容を親に送る
-            createCardViewModel.getStringData.observe(viewLifecycleOwner){
-                if(it==true){
-                    createCardViewModel.setStringData(
-                        StringData(
-                            frontTitle =  if(edtFrontTitle.text.toString() == "表") null else edtFrontTitle.text.toString(),
-                            frontText =     edtFrontContent.text.toString(),
-                            backTitle = if(edtBackTitle.text.toString() == "裏") null else edtBackTitle.text.toString(),
-                            backText =  edtBackContent.text.toString()
-                        )
-                    )
-                } else return@observe
             }
 
 
@@ -117,7 +104,19 @@ class StringCardFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         requireActivity().findViewById<ConstraintLayout>(R.id.main_top_constrainLayout).requestFocus()
+        val frontTitle = binding.edtFrontTitle.text.toString()
+        val frontText =  binding.edtFrontContent.text.toString()
+        val backText =   binding.edtBackContent.text.toString()
+        val backTitle =  binding.edtBackTitle.text.toString()
+        val newStringData = StringData(
+            frontTitle = if(frontTitle=="表") null else frontTitle,
+            frontText =  frontText,
+            backText =   backText,
+            backTitle =  if(backTitle=="裏") null else backTitle
+        )
+        createCardViewModel.upDateCard(newStringData,stringCardViewModel.returnParentCard() ?:return)
 
+        Toast.makeText(requireActivity(),"string save called",Toast.LENGTH_SHORT).show()
         _binding = null
     }
 }

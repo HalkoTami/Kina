@@ -157,7 +157,8 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
     fun cardRVAddCL(binding: LibraryFragRvItemBaseBinding,
                     context: Context,
                     item: Card,
-                    createCardViewModel: CreateCardViewModel
+                    createCardViewModel: CreateCardViewModel,
+                    mainNavController: NavController
     ){
         binding.apply {
             arrayOf(
@@ -168,7 +169,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
                 btnEditWhole,
 
             ).onEach { it.setOnTouchListener(
-                LibraryRVCardCL(it,context,item,libNavCon, createCardViewModel,libVM,binding,deletePopUpViewModel)
+                LibraryRVCardCL(it,context,item,mainNavController, createCardViewModel,libVM,binding,deletePopUpViewModel)
             )
             }
         }
@@ -182,6 +183,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
     ) {
         binding.apply {
             arrayOf(
+                root,
                 btnEdtBack,
                 btnEdtFront,
             ).onEach {

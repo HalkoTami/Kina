@@ -59,13 +59,13 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
             stringBinding.txvBackTitle.text = stringData?.backTitle.toString()
             stringBinding.txvBackText.text = stringData?.backText.toString()
         }
-        addL.cardRVStringAddCL(
-            binding = stringBinding,
-            item = item,
-            createCardViewModel = createCardViewModel,
-            stringCardViewModel = stringCardViewModel,
-            mainNavController = mainNavController
-        )
+//        addL.cardRVStringAddCL(
+//            binding = stringBinding,
+//            item = item,
+//            createCardViewModel = createCardViewModel,
+//            stringCardViewModel = stringCardViewModel,
+//            mainNavController = mainNavController
+//        )
 
     }
     fun setUpRVBaseFile(
@@ -151,7 +151,7 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
                 addL.cardRVAddCL( rvItemBaseBinding,
                     context,
                     item,
-                    createCardViewModel)
+                    createCardViewModel,mainNavController)
                 rvItemBaseBinding.btnAddNewCard.visibility = View.VISIBLE
             }
         }

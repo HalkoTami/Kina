@@ -45,27 +45,25 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+
             android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/col_balet_frame"
            >
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-                <androidx.fragment.app.FragmentContainerView
-                    app:navGraph="@navigation/choose_card_type_nav"
+            <androidx.fragment.app.FragmentContainerView
+                    app:defaultNavHost="true"
                     android:id="@+id/frag_con_each_card_type"
-                    android:name="androidx.navigation.fragment.NavHostFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingBottom="70dp"
+                    android:name="androidx.navigation.fragment.NavHostFragment"
+                    app:navGraph="@navigation/choose_card_type_nav"
                     />
-            </FrameLayout>
+
 
 
         </ScrollView>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout

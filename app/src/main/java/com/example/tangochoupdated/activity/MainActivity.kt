@@ -44,18 +44,17 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //        applicationContext.deleteDatabase("my_database")
 //        ー－－－mainActivityのviewー－－－
 
-        fun getHostNavCon(findFragmentById:Int):NavController{
-            val navHostFragment = supportFragmentManager.findFragmentById(findFragmentById) as NavHostFragment
-            return navHostFragment.navController
-        }
         fun setMainActivityLateInitVars(){
+
             binding = MainActivityBinding.inflate(layoutInflater)
+            val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
             factory               = ViewModelFactory((application as RoomApplication).repository)
             mainActivityViewModel = ViewModelProvider(this)[BaseViewModel::class.java]
             createFileViewModel   = ViewModelProvider(this,factory)[CreateFileViewModel::class.java]
             createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
             libraryViewModel      = ViewModelProvider(this,factory)[LibraryViewModel::class.java]
-            mainNavCon            =   getHostNavCon(binding.fragContainerView.id)
+            mainNavCon            =   navHostFragment.navController
+
 
         }
         fun setUpMainActivityLayout(){
@@ -172,22 +171,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         val libraryParentFileObserver           = Observer<File>{
             createCardViewModel.setParentFlashCardCover(it)
-            createCardViewModel.setParentFlashCardCoverId(it?.fileId)
             createFileViewModel.setParentFile(it)
             createFileViewModel.parentFileParent(it?.parentFileId).observe(this@MainActivity,editFileParentFileObserver)
         }
         val libraryParentRVItemsObserver        = Observer<List<Any>>{
             createFileViewModel.setPosition(it.size+1)
-        }
-        val lastInsertedCardObserver            = Observer<Card>{
-            createCardViewModel.apply {
-                if(returnOpenEditCard()&&it!=null){
-                    Toast.makeText(this@MainActivity,"called", Toast.LENGTH_SHORT).show()
-                    setOpenEditCard(false)
-                    setParentCard(it)
-                    mainNavCon.navigate(CreateCardFragmentBaseDirections.openCreateCard())
-                }
-            }
         }
 //        ー－－－mainActivityのviewModel 読み取りー－－－
         mainActivityViewModel.setMainActivityNavCon(mainNavCon)
@@ -205,9 +193,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         libraryViewModel. onCreate()
         libraryViewModel.parentFile.observe(this@MainActivity,libraryParentFileObserver)
         libraryViewModel.parentRVItems.observe(this@MainActivity,libraryParentRVItemsObserver)
-//        ー－－－CreateCardViewModelの読み取りー－－－
-        createCardViewModel.onCreateViewModel()
-        createCardViewModel.lastInsertedCard.observe(this@MainActivity,lastInsertedCardObserver)
  }
 
     override fun onClick(v: View?) {
@@ -220,7 +205,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     bnvImvTabAnki,bnvTxvTabAnki       -> mainActivityViewModel.changeFragment(MainFragment.Anki)
                     bnvImvAdd                         -> createFileViewModel.setBottomMenuVisible(true)
                     fragConViewCover                  -> createFileViewModel.makeBothPopUpGone()
-                    imvnewCard                        -> createCardViewModel.onClickAddNewCardBottomBar(mainActivityViewModel.returnMainActivityNavCon() ?:return)
+                    imvnewCard                        -> {
+                        createCardViewModel.onClickAddNewCardBottomBar(mainNavCon)
+                    }
                     imvnewTangocho                    -> createFileViewModel.onCLickCreateFlashCardCover()
                     imvnewfolder                      -> createFileViewModel.onClickCreateFolder()
                 }

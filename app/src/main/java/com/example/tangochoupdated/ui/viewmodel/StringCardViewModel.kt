@@ -13,6 +13,9 @@ class StringCardViewModel:ViewModel() {
     fun setParentCard (card: Card?){
         _parentCard.value = card
     }
+    fun returnParentCard ():Card?{
+        return _parentCard.value
+    }
 
     fun onCreate(){
         setFocusedOn(StringFragFocusedOn.None)
@@ -28,9 +31,8 @@ class StringCardViewModel:ViewModel() {
     private val _stringData = MutableLiveData<StringData>()
     val stringData:LiveData<StringData> = _stringData
 
-    fun setStringData(stringData: StringData?){
+    fun setStringData(stringData: StringData){
         _stringData.value = stringData
-
 
     }
 

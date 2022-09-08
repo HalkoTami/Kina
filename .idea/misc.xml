@@ -58,6 +58,7 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_base.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_data_graph_large.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_data_graph_small.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_popup_anki_box_favourite.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_popup_anki_setting_scroll_view_content.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_rv_item.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_rv_item_card.xml" value="0.3625" />
@@ -65,6 +66,7 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_base.xml" value="0.25679347826086957" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_main.xml" value="0.25679347826086957" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_string_frag.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_top_bar.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/full_rv.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/item_color_palet.xml" value="0.33" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/item_search_bar.xml" value="0.3625" />
@@ -75,6 +77,7 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_home_base.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_inbox_base.xml" value="0.2223731884057971" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_lay_folder_rv_empty.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_lay_home_rv_empty.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_lay_rv_empty.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_popup_confirm_delete.xml" value="0.165" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_popup_confirm_delete_all_children.xml" value="0.375" />

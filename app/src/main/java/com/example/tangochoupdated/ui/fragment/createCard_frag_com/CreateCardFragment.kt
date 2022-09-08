@@ -5,26 +5,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.*
-import com.example.tangochoupdated.activity.MainActivity
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
+import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.db.enumclass.Mode
-import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.ui.animation.Animation
-import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
+import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
+import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
 import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.BaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
 
 
@@ -34,16 +33,12 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
     private val binding get() = _binding!!
 
     private val args : CreateCardFragmentArgs by navArgs()
-    private val baseViewModel: BaseViewModel by activityViewModels()
     private val  createCardViewModel: CreateCardViewModel by activityViewModels()
-//    private lateinit var stringCardViewModel: StringCardViewModel
-    private val mainViewModel : BaseViewModel by activityViewModels()
     private val stringCardViewModel : StringCardViewModel by activityViewModels()
 
     lateinit var cardNavCon:NavController
-
-
-
+    lateinit var cardTypeNavCon:NavController
+    lateinit var mainNavCon:NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +51,13 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         fun setLateInitVars(){
             _binding = CreateCardFragBaseBinding.inflate(inflater, container, false)
             cardNavCon =getNavConFromFragCon(R.id.create_card_frag_con)
+            mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
+        }
+        fun booleanToVisibility(visibility: Boolean):Int{
+            return if(visibility) View.VISIBLE else View.GONE
+        }
+        fun setAlphaByClickable(clickable:Boolean,view: View){
+            view.alpha=if(clickable) 1f else 0.5f
         }
         fun addClickListeners(){
             binding.apply {
@@ -73,116 +75,70 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                     ).onEach { it.setOnClickListener(this@CreateCardFragment) }
             }
         }
-
+////
         setLateInitVars()
         addClickListeners()
-        val parentCardFromDBObserver = Observer<Card>{ cardAndTags->
-            if(cardAndTags!= null){
-                createCardViewModel.setParentCard(cardAndTags)
+        cardNavCon.popBackStack()
+
+        val frag = childFragmentManager.findFragmentById(binding.fragConEachCardType.id) as NavHostFragment
+        cardTypeNavCon = frag.navController
+        val parentCardFromDBObserver = Observer<Card>{ card->
+            createCardViewModel.apply {
+                binding.createCardTopBarBinding.txvPosition.text =
+                    "${card.id} ${card.libOrder}/${returnSisterCards().size}"
+//                setAlphaByClickable(
+//                    getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.NEXT)!=null,
+//                    binding.btnNext)
+//                setAlphaByClickable(
+//                    getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.PREVIOUS)!=null,
+//                    binding.btnPrevious)
             }
-            stringCardViewModel.setStringData(cardAndTags?.stringData)
+
         }
-
-        binding.apply {
-            binding.root.requestFocus()
-            createCardViewModel.apply{
-//            初期設定
-                onStartFrag()
-
-//            DBからデータ下ろす
-                getParentCard(args.cardId?.single()).observe(viewLifecycleOwner){ cardAndTags->
-                    if(cardAndTags!= null){
-                        setParentCard(cardAndTags)
-                        createCardTopBarBinding.txvEditingFileTitle.text = cardAndTags.id.toString()
-                    }
-                    stringCardViewModel.setStringData(cardAndTags?.stringData)
-                }
-                getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ sisters ->
-                    setSisterCards(sisters!!)
-                }
-                getParentFlashCardCover(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner){ file ->
-                    setParentFlashCardCover(file)
-                }
-
-//                Top Frame
-                createCardTopBarBinding.apply {
-
-//                現在地 text view
-                    txvPositionText.observe(viewLifecycleOwner){
-                        txvPosition.text = it
-                    }
-
-//                編集モード/新しいカード
-                    mode.observe(viewLifecycleOwner){
-                        requireActivity().apply {
-                            imvMode.setImageDrawable(when(it){
-                                Mode.New -> getDrawable(R.drawable.icon_edit)
-                                Mode.Edit -> getDrawable(R.drawable.icon_eye_opened)
-                                else -> return@observe
-                            })
-                        }
-                    }
-//                    add to click listener
-
-
-
-
-                }
-//            Color Pallet attribute
-               createCardColPaletBinding.apply {
-                   val palletBinding = this
-
-
-//                   Color Pallet attribute 2. change  each color
-                   var previousColor: ColorStatus?
-                   previousColor = null
-                   val mainActivity = LibraryFragmentBase()
-                   cardColor.observe(viewLifecycleOwner){
-                       mainActivity.apply {
-//                           if(previousColor == null) makeAllColPaletUnselected(palletBinding)
-//                           else changeColPalletCol(previousColor!!,false,palletBinding)
-//                           changeColPalletCol(it,true,palletBinding)
-//                           previousColor = it
-                       }
-                   }
-
-                   //                   addToClickListener
-
-
-               }
-//                移動ボタン
-                val gray = ContextCompat.getColor(requireActivity(), R.color.light_gray)
-                layNavigateButtons.apply {
-                    btnPrevious.apply {
-                        previousCardExists.observe(viewLifecycleOwner){
-                            when(it){
-                                true ->  alpha = 1f
-                                false -> alpha = 0.5f
-                            }
-                        }
-                    }
-                    btnNext.apply {
-                        nextCardExists.observe(viewLifecycleOwner){
-                            when(it){
-                                true ->  alpha = 1f
-                                false -> alpha = 0.5f
-                            }
-                        }
-                    }
-
-//                    add to click listener
-
-
-
-                }
-
-
-
-
-
-
+        val sisterCardObserver = Observer<List<Card>?> {
+            createCardViewModel.apply {
+                setSisterCards(it)
+                binding.createCardTopBarBinding.txvPosition.text =
+                    "${returnParentCard()?.libOrder?:0}/${it.size}"
+//                setAlphaByClickable(
+//                    getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.NEXT)!=null,
+//                    binding.btnNext)
+//                setAlphaByClickable(
+//                    getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.PREVIOUS)!=null,
+//                    binding.btnPrevious)
             }
         }
+        val parentFlashCardCoverObserver = Observer<File?> {
+            createCardViewModel.setParentFlashCardCover(it)
+            binding.createCardTopBarBinding.apply {
+                imvMode.setImageDrawable(
+                    if(it!=null){
+                        GetCustomDrawables(requireActivity()).getFlashCardIconByCol(it.colorStatus)
+                    } else  GetCustomDrawables(requireActivity()).getDrawable(R.drawable.icon_inbox)
+
+                )
+                txvEditingFileTitle.text = it?.title ?:"InBox"
+            }
+        }
+        val colorPalletVisibilityObserver = Observer<Boolean> {
+            Animation().animateColPallet(binding.createCardColPaletBinding.root,booleanToVisibility(it))
+        }
+        val cardColorObserver = Observer<CreateCardViewModel.ColorPalletStatus> {
+            ColorPalletViewSetUp().apply {
+                changeColPalletCol(requireActivity(),it.colNow,true,binding.createCardColPaletBinding)
+                changeColPalletCol(requireActivity(),it.before,false,binding.createCardColPaletBinding)
+            }
+        }
+        val cardId = args.cardId
+        val parentFlashCardId:Int? = args.parentFlashCardCoverId?.single()
+        if(cardId!=null){
+            createCardViewModel. getParentCard(cardId.single()).observe(viewLifecycleOwner,parentCardFromDBObserver)
+            createCardViewModel.getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner,sisterCardObserver)
+        }
+        createCardViewModel.getParentFlashCardCover(parentFlashCardId).observe(viewLifecycleOwner,parentFlashCardCoverObserver)
+        createCardViewModel.colPalletVisibility.observe(viewLifecycleOwner,colorPalletVisibilityObserver)
+        createCardViewModel.cardColor.observe(viewLifecycleOwner,cardColorObserver)
+
 
 
         return binding.root
@@ -191,49 +147,27 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
     override fun onClick(v: View?) {
         binding.apply {
             when(v){
-                createCardTopBarBinding.imvSaveAndBack  -> {
-                    createCardViewModel.onClickBack()
+                createCardTopBarBinding.imvSaveAndBack  ->{
+                    mainNavCon.popBackStack()
                     cardNavCon.popBackStack()
+                    cardNavCon.popBackStack()
+                    cardNavCon.popBackStack()
+
                 }
-                //  移動操作
-                btnInsertPrevious                       -> createCardViewModel. onClickBtnInsertPrevious()
-                btnInsertNext                           -> createCardViewModel. onClickBtnInsertNext()
-                btnNext                                 ->  createCardViewModel. onClickBtnNext(cardNavCon)
-                btnPrevious                             -> createCardViewModel. onClickBtnPrevious(cardNavCon)
-                createCardColPaletBinding.imvIconPalet  -> {
-                    Animation().animateColPallet(createCardColPaletBinding.linLayColPallet,
-                        if(v.tag == View.VISIBLE) View.GONE else View.VISIBLE)
-                }
-                createCardColPaletBinding.imvColBlue    ->    createCardViewModel.onClickEachColor(ColorStatus.BLUE)
-                createCardColPaletBinding.imvColRed     ->     createCardViewModel.onClickEachColor(ColorStatus.RED)
-                createCardColPaletBinding.imvColGray    ->    createCardViewModel.onClickEachColor(ColorStatus.GRAY)
-                createCardColPaletBinding.imvColYellow  ->createCardViewModel. onClickEachColor(ColorStatus.YELLOW)
+                btnInsertPrevious                       -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.PREVIOUS)
+                btnInsertNext                           -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.NEXT)
+                btnNext                                 -> createCardViewModel.onClickBtnNavigate(cardNavCon,CreateCardViewModel.NeighbourCardSide.NEXT)
+                btnPrevious                             -> createCardViewModel.onClickBtnNavigate(cardNavCon,CreateCardViewModel.NeighbourCardSide.PREVIOUS)
+                createCardColPaletBinding.imvIconPalet  -> createCardViewModel.changeColPalletVisibility()
+                createCardColPaletBinding.imvColBlue    ->    createCardViewModel.setCardColor(ColorStatus.BLUE)
+                createCardColPaletBinding.imvColRed     ->     createCardViewModel.setCardColor(ColorStatus.RED)
+                createCardColPaletBinding.imvColGray    ->    createCardViewModel.setCardColor(ColorStatus.GRAY)
+                createCardColPaletBinding.imvColYellow  ->createCardViewModel. setCardColor(ColorStatus.YELLOW)
 
             }
         }
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        createCardViewModel.onEndFrag()
-    }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
-            true // default to enabled
-        ) {
-            override fun handleOnBackPressed() {
-
-                createCardViewModel.onClickBack()
-                cardNavCon.popBackStack()
-
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,  // LifecycleOwner
-            callback
-        )
-    }
 }

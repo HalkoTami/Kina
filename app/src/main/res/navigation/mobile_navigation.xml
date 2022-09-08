@@ -54,6 +54,7 @@
         android:id="@+id/to_anki"
         app:destination="@+id/fragmentAnki"
         app:popUpTo="@id/mobile_navigation"
+        app:popUpToInclusive="true"
         />
 
     <action
@@ -64,6 +65,7 @@
         android:id="@+id/to_library"
         app:destination="@+id/fragmentLibrary"
         app:popUpTo="@id/mobile_navigation"
+        app:popUpToInclusive="true"
         />
 
 

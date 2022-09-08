@@ -12,19 +12,19 @@ import com.example.tangochoupdated.db.enumclass.FileStatus
 
 class
 GetCustomDrawables(val context: Context){
-    fun appCon(id:Int):Drawable{
+    fun getDrawable(id:Int):Drawable{
         return AppCompatResources.getDrawable(context,id)!!
     }
     fun getFileIconByFile(file: File):Drawable{
         return when(file.fileStatus){
             FileStatus.FOLDER -> getFolderIconByCol(file.colorStatus)
             FileStatus.TANGO_CHO_COVER -> getFlashCardIconByCol(file.colorStatus)
-            else -> appCon(R.drawable.icon_eye_opened)
+            else -> getDrawable(R.drawable.icon_eye_opened)
         }
     }
 
     fun getFolderIconByCol(colorStatus: ColorStatus,): Drawable {
-        val drawable = appCon(R.drawable.icon_file_with_color) as LayerDrawable
+        val drawable = getDrawable(R.drawable.icon_file_with_color) as LayerDrawable
         val col = ContextCompat.getColor(context,
             when(colorStatus) {
                 ColorStatus.GRAY -> R.color.gray
@@ -39,7 +39,7 @@ GetCustomDrawables(val context: Context){
 
     }
     fun getFlashCardIconByCol(colorStatus: ColorStatus, ): Drawable {
-        val drawable = appCon(R.drawable.icon_flashcard_with_col) as LayerDrawable
+        val drawable = getDrawable(R.drawable.icon_flashcard_with_col) as LayerDrawable
         val col = ContextCompat.getColor(context,
             when(colorStatus) {
                 ColorStatus.GRAY -> R.color.gray

@@ -12,6 +12,7 @@ import com.example.tangochoupdated.db.enumclass.LibRVState
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
 import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 
 class LibraryRVCardCL(val view: View,
@@ -37,7 +38,8 @@ class LibraryRVCardCL(val view: View,
                         lVM.onClickSelectableItem(item,btnSelect.isSelected.not())
                         btnSelect.isSelected = btnSelect.isSelected.not()
                     }else{
-//                        createCardViewModel.onClickEditCard(item)
+                        navController.navigate(CreateCardFragmentBaseDirections.openCreateCard())
+                        createCardViewModel.setParentCard(item)
                     }
 
                 }
