@@ -85,11 +85,6 @@ class CreateCardFragmentBase  : Fragment() {
                     }
                 }
             }
-            parentCard.observe(viewLifecycleOwner){
-                if(calledFirst.not()&&it==null){
-                    mainNavCon.popBackStack()
-                }
-            }
 
 
         }
@@ -116,8 +111,6 @@ class CreateCardFragmentBase  : Fragment() {
                     mainNavCon.popBackStack()
                     makeToast(requireActivity(),"called")
                 }
-
-
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(

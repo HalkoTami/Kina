@@ -167,7 +167,7 @@ interface LibraryDao {
     fun upDateFileChildCardsAmount(fileId: Int,amount: Int)
 
     @Query("UPDATE tbl_card SET  libOrder = libOrder + 1 WHERE " +
-            "belongingFlashCardCoverId is :fileId and libOrder > :insertingPosition")
+            "belongingFlashCardCoverId is :fileId and libOrder >= :insertingPosition")
     fun upDateCardsPositionBeforeInsert(fileId: Int?,insertingPosition: Int)
 
 

@@ -80,28 +80,31 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
 
 
-        var start:Boolean = true
+        var start:Boolean = ankiBaseViewModel.returnActiveFragment()==AnkiFragments.AnkiBox
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         flipBaseViewModel.apply {
             setParentPosition(0)
-
-                getAllCardsFromDB.observe(viewLifecycleOwner){
-                    if(boxViewModel.returnAnkiBoxItems().isNullOrEmpty()){
-                        setAnkiFlipItems(it)
-                    }
-                    if(start){
-                        navCon.navigate(getStart(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer()))
-                        start = false
-                    } else return@observe
-                }
-
             setFront(
                 !settingVM.returnReverseCardSide()
             )
-            if(boxViewModel.returnAnkiBoxItems().isNullOrEmpty()){
+            val cardIds = boxViewModel.returnAnkiBoxCardIds()
+            if(cardIds.isEmpty()){
                 getAllCardsFromDB.observe(viewLifecycleOwner){
                     setAnkiFlipItems(it)
                 }
+            } else{
+                boxViewModel.getCardsFromDBByMultipleCardIds(cardIds).observe(viewLifecycleOwner){
+                    val sorted = it.sortedBy { it.libOrder }
+                    setAnkiFlipItems(sorted)
+                }
+            }
+            ankiFlipItems.observe(viewLifecycleOwner){
+                if(start){
+                    val sorted = it.sortedBy { it.libOrder }
+                    Toast.makeText(requireActivity(),"navigated",Toast.LENGTH_SHORT).show()
+                    navCon.navigate(getStart(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer(),sorted))
+                    start = false
+                } else return@observe
             }
 
             settingVM.typeAnswer.observe(viewLifecycleOwner){
@@ -109,6 +112,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                     binding.btnFlipPrevious.visibility = View.INVISIBLE
                 }
             }
+
 
 
 
@@ -130,9 +134,14 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                 }
             }
             parentCard.observe(viewLifecycleOwner){
+                if(returnFlipItems().contains(it)){
+                    createCardViewModel.setStartingPosition(returnFlipItems().indexOf(it))
+                    binding.topBinding.txvCardPosition.text ="${returnFlipItems().indexOf(it)}/${returnFlipItems().size}"
+                }
+
                 binding.btnRemembered.isSelected =  it.remembered ?:false
                 binding.btnSetFlag.isSelected = it.flag
-                binding.topBinding.txvCardPosition.text = "id:${it.id} position:${returnParentPosition()+1}/ size:${returnFlipItems().size}"
+
             }
             val textview = binding.txvCountDown
 
@@ -154,7 +163,8 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
             }
             flipProgress.observe(viewLifecycleOwner){
-                viewSetUp.observeProgress(it)
+
+                    viewSetUp.observeProgress(it)
             }
 
                 settingVM.autoFlip.observe(viewLifecycleOwner){

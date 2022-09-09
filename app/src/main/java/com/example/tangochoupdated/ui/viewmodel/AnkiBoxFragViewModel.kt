@@ -189,6 +189,10 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         setAnkiBoxCardIds(a)
 
     }
+    fun returnAnkiBoxCardIds():List<Int>{
+        return _ankiBoxCardIds.value ?: mutableListOf()
+
+    }
     fun setAnkiBoxCardIds (list:List<Int>){
         val a = mutableListOf<Int>()
         a.addAll(list)

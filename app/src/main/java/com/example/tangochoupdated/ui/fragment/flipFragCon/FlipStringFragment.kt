@@ -54,10 +54,9 @@ class FlipStringFragment  : Fragment() {
                 }
 
                 if(cardId!=null){
-                    getCardFromDB(args.cardId!!.single()).observe(viewLifecycleOwner){
+                    getCardFromDB(cardId.single()).observe(viewLifecycleOwner){
                         setParentCard(it)
                         val data = it.stringData
-                        Toast.makeText(requireActivity(),"${it.timesFlipped}",Toast.LENGTH_SHORT).show()
                         when(front) {
                             true ->{
                                 txvTitle.text =  "表 めくった回数 " + it.timesFlipped.toString()

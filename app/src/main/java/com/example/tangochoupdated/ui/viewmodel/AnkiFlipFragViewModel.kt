@@ -130,16 +130,16 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     val flipProgress : LiveData<Progress> = _flipProgress
 
 
-    fun getStart(reverseMode: Boolean,typeAnswer: Boolean):NavDirections{
+    fun getStart(reverseMode: Boolean,typeAnswer: Boolean,list: List<Card>):NavDirections{
          return when (typeAnswer) {
             true -> {
                 FlipStringTypeAnswerFragmentDirections.toTypeAnswerString(
                     reverseMode.not(),
-                    returnFlipItems()[0].id
+                    list[1].id
                 )
             }
             false -> {
-                val cardId =returnFlipItems()[0].id
+                val cardId =list[1].id
                 val action =
                     FlipStringFragmentDirections.toFlipString(
                     )

@@ -145,8 +145,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val orderNow= returnSisterCards().indexOf(returnParentCard())
         saveEmptyCard(
             when(side){
-                NeighbourCardSide.NEXT -> orderNow
-                NeighbourCardSide.PREVIOUS -> orderNow -1
+                NeighbourCardSide.NEXT -> orderNow + 1
+                NeighbourCardSide.PREVIOUS -> orderNow 
                                 },returnParentCard()?.belongingFlashCardCoverId)
     }
 
