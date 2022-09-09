@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.LibItemTopBarMenuBinding
 import com.example.tangochoupdated.databinding.LibraryFragTopBarMultiselectModeBinding
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.toastToDo
+import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
@@ -59,7 +59,7 @@ class LibFragTopBarMultiModeCL(val context: Context,
 
                 }
                 menuBinding.linLaySetFlagToSelectedItems -> if(notSelected)toastPleaseSelectItems()
-                else toastToDo(context)
+                else makeToast(context,"")
 
 
 

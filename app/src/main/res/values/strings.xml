@@ -31,6 +31,9 @@
     <string name="cd_tango_cho_amount">containing flashcards</string>
     <string name="cd_card_amount">containing cards</string>
     <string name="cd_btn_add_card">add new card</string>
+    <string name="nav_label_main_tab_anki">暗記タブ</string>
+    <string name="nav_label_main_tab_library">ライブラリタブ</string>
+    <string name="nav_label_main_create_card">カード作成</string>
 
 
 </resources>

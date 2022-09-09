@@ -11,10 +11,7 @@ import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.*
 import com.example.tangochoupdated.ui.listener.FlipBaseFragCL
-import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
+import com.example.tangochoupdated.ui.viewmodel.*
 
 class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
                             private val flipViewModel:AnkiFlipFragViewModel,
@@ -53,11 +50,14 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
         flipBaseBinding.progressBarBinding.progressbarRemembered.progress = ((progress.now/progress.all.toDouble())*100 ).toInt()
 
     }
-    fun setUpCL(createFileViewModel: CreateFileViewModel){
+    fun setUpCL(createFileViewModel: CreateFileViewModel,
+                mainNavController: NavController,
+                createCardViewModel: CreateCardViewModel,){
         flipBaseBinding.apply {
             topBinding.apply {
                 arrayOf(
 
+                    imvEditCard,
                     imvBack,
                     imvAnkiSetting,
                     imvAnkiSetting,
@@ -67,7 +67,16 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
                     btnFlipPrevious,
                     btnAddCard,
                     btnStopCount,).onEach {
-                        it.setOnClickListener(FlipBaseFragCL(flipBaseBinding,flipViewModel,ankiBaseViewModel, flipBaseFragmentActivity,flipNavCon, settingViewModel,createFileViewModel))
+                        it.setOnClickListener(FlipBaseFragCL(
+                            flipBaseBinding,
+                            flipViewModel,
+                            ankiBaseViewModel,
+                            flipBaseFragmentActivity,
+                            flipNavCon,
+                            settingViewModel,
+                            createFileViewModel,
+                            createCardViewModel,
+                            mainNavController))
                 }
             }
 

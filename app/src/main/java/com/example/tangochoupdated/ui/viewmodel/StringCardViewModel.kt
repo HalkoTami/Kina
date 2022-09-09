@@ -22,9 +22,9 @@ class StringCardViewModel:ViewModel() {
     }
 
 
-    private val _focusedOn = MutableLiveData<StringFragFocusedOn>()
-    val focusedOn :LiveData<StringFragFocusedOn> = _focusedOn
-    fun setFocusedOn(stringFragFocusedOn: StringFragFocusedOn){
+    private val _focusedOn = MutableLiveData<StringFragFocusedOn?>()
+    val focusedOn :LiveData<StringFragFocusedOn?> = _focusedOn
+    fun setFocusedOn(stringFragFocusedOn: StringFragFocusedOn?){
         _focusedOn.value = stringFragFocusedOn
     }
 

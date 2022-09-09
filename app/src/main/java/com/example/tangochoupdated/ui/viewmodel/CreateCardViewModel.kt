@@ -40,20 +40,21 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun setParentFlashCardCover(file: File?){
         _parentFlashCardCover.value = file
     }
+    val parentFlashCardCover:LiveData<File?> = _parentFlashCardCover
     fun returnParentFlashCardCover():File?{
         return _parentFlashCardCover.value
     }
 
 //    parent card
-    fun getParentCard(cardId: Int?):LiveData<Card> = repository.getCardByCardId(cardId).asLiveData()
-    private val _parentCard = MutableLiveData<Card>()
-    fun setParentCard(card: Card){
+    fun getParentCard(cardId: Int):LiveData<Card> = repository.getCardByCardId(cardId).asLiveData()
+    private val _parentCard = MutableLiveData<Card?>()
+    fun setParentCard(card: Card?){
         _parentCard.value = card
     }
     fun returnParentCard():Card?{
         return _parentCard.value
     }
-    val parentCard :LiveData<Card> = _parentCard
+    val parentCard :LiveData<Card?> = _parentCard
 
     fun getSisterCards(fileId: Int?):LiveData<List<Card>> = repository.getCardDataByFileId(fileId).asLiveData()
     private val _sisterCards = MutableLiveData<List<Card>>()

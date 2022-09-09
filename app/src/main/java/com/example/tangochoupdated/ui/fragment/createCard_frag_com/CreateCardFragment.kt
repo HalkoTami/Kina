@@ -75,11 +75,9 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                     ).onEach { it.setOnClickListener(this@CreateCardFragment) }
             }
         }
-////
+
         setLateInitVars()
         addClickListeners()
-//        cardNavCon.popBackStack()
-
         val frag = childFragmentManager.findFragmentById(binding.fragConEachCardType.id) as NavHostFragment
         cardTypeNavCon = frag.navController
         val parentCardFromDBObserver = Observer<Card>{ card->
@@ -93,6 +91,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 setAlphaByClickable(
                     getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.PREVIOUS)!=null,
                     binding.btnPrevious)
+                stringCardViewModel.setParentCard(card)
             }
 
         }
@@ -101,7 +100,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 val sort = it.sortedBy { it.libOrder }
                 setSisterCards(sort)
                 binding.createCardTopBarBinding.txvPosition.text =
-                    "${returnParentCard()?.id} ${returnParentCard()?.libOrder?:0}/${it.size}"
+                    "${returnParentCard()?.belongingFlashCardCoverId} ${returnParentCard()?.libOrder?:0}/${it.size}"
             }
         }
         val parentFlashCardCoverObserver = Observer<File?> {
@@ -130,8 +129,9 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         if(cardId!=null){
             createCardViewModel. getParentCard(cardId.single()).observe(viewLifecycleOwner,parentCardFromDBObserver)
             createCardViewModel.getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner,sisterCardObserver)
+            createCardViewModel.getParentFlashCardCover(parentFlashCardId).observe(viewLifecycleOwner,parentFlashCardCoverObserver)
         }
-        createCardViewModel.getParentFlashCardCover(parentFlashCardId).observe(viewLifecycleOwner,parentFlashCardCoverObserver)
+
         createCardViewModel.colPalletVisibility.observe(viewLifecycleOwner,colorPalletVisibilityObserver)
         createCardViewModel.cardColor.observe(viewLifecycleOwner,cardColorObserver)
 
@@ -140,12 +140,17 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
     override fun onClick(v: View?) {
         binding.apply {
             when(v){
                 createCardTopBarBinding.imvSaveAndBack  ->{
                     mainNavCon.popBackStack()
-
                 }
                 btnInsertPrevious                       -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.PREVIOUS)
                 btnInsertNext                           -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.NEXT)

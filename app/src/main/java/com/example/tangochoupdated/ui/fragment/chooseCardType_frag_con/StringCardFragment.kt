@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -43,9 +44,6 @@ class StringCardFragment : Fragment() {
         _binding = CreateCardFragStringFragBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-
-        Toast.makeText(requireActivity(),"string called",Toast.LENGTH_SHORT).show()
-
         createCardViewModel.setCardStatus(CardStatus.STRING)
         binding.apply {
             binding.edtFrontTitle.visibility = View.VISIBLE
@@ -55,14 +53,18 @@ class StringCardFragment : Fragment() {
             edtBackTitle.hint = "裏のタイトル"
             edtBackContent.hint = "裏"
 
+            fun setTextAndSelection(editText: EditText,string: String){
+                editText.text = SpannableStringBuilder(string)
+                editText.setSelection(string.length)
+            }
             stringCardViewModel.apply {
 //                表示
                 parentCard.observe(viewLifecycleOwner){
                     val stringData = it?.stringData
-                    edtFrontTitle.text = SpannableStringBuilder(stringData?.frontTitle ?: "表")
-                    edtFrontContent.text = SpannableStringBuilder(stringData?.frontText ?: "")
-                    edtBackTitle.text = SpannableStringBuilder(stringData?.backTitle ?: "裏")
-                    edtBackContent.text = SpannableStringBuilder(stringData?.backText ?: "")
+                    setTextAndSelection(edtFrontContent,stringData?.frontText ?: "")
+                    setTextAndSelection(edtBackContent,stringData?.backText ?: "")
+                    setTextAndSelection(edtFrontTitle,stringData?.frontTitle ?: "表")
+                    setTextAndSelection(edtBackTitle,stringData?.backTitle ?: "裏")
                 }
 
 
@@ -93,17 +95,17 @@ class StringCardFragment : Fragment() {
         return root
     }
 
-    fun showSoftKeyboard(view: View) {
-        view.requestFocus()
+    fun showSoftKeyboard(view: EditText) {
         if (view.requestFocus()) {
             val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
-        requireActivity().findViewById<ConstraintLayout>(R.id.main_top_constrainLayout).requestFocus()
+        stringCardViewModel.setFocusedOn(null)
         val frontTitle = binding.edtFrontTitle.text.toString()
         val frontText =  binding.edtFrontContent.text.toString()
         val backText =   binding.edtBackContent.text.toString()

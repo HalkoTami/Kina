@@ -39,6 +39,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
     private val baseViewModel: BaseViewModel by activityViewModels()
     private val typeAndCheckViewModel: AnkiFlipTypeAndCheckViewModel by activityViewModels()
     private val createFileViewModel: CreateFileViewModel by activityViewModels()
+    private val  createCardViewModel: CreateCardViewModel by activityViewModels()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -64,7 +65,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
         val navCon = frag.navController
         val viewSetUp = AnkiFlipFragViewSetUp(binding,flipBaseViewModel,requireActivity(),ankiBaseViewModel,settingVM,navCon)
 
-        viewSetUp.setUpCL(createFileViewModel)
+        viewSetUp.setUpCL(createFileViewModel,baseViewModel.returnMainActivityNavCon() ?:return, createCardViewModel)
 
         viewSetUp.setUpViewStart()
         baseViewModel.setBnvVisibility(false)

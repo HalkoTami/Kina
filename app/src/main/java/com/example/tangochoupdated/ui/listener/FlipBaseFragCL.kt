@@ -11,10 +11,8 @@ import androidx.navigation.findNavController
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.db.enumclass.AnimationAttributes
-import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
-import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
+import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
+import com.example.tangochoupdated.ui.viewmodel.*
 
 
 class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
@@ -23,7 +21,9 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                      val ankiFlipFrag:FragmentActivity,
                      val flipNavCon:NavController,
                      val settingPopUpViewModel: AnkiSettingPopUpViewModel,
-                     val createFileViewModel: CreateFileViewModel): View.OnClickListener {
+                     val createFileViewModel: CreateFileViewModel,
+                     val createCardViewModel: CreateCardViewModel,
+                     val mainNavController: NavController): View.OnClickListener {
 
     override fun onClick(v: View?) {
         binding.apply {
@@ -57,6 +57,11 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                     btnStopCount -> {
                         v.isSelected = !v.isSelected
                         if(v.isSelected)flipViewModel.setCountDownAnim(AnimationAttributes.Pause) else flipViewModel.setCountDownAnim(AnimationAttributes.Resume)
+                    }
+                    imvEditCard -> {
+                        val libOrder = flipViewModel.returnParentCard()?.libOrder ?:return
+                        createCardViewModel.setStartingPosition(libOrder)
+                        mainNavController.navigate(CreateCardFragmentBaseDirections.openCreateCard())
                     }
                 }
             }

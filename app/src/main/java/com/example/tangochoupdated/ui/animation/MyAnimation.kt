@@ -7,9 +7,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
-fun toastToDo(context:Context){
+fun makeToast(context:Context,string: String){
 
-    Toast.makeText(context,"toDo", Toast.LENGTH_SHORT).show()
+    Toast.makeText(context,"$string", Toast.LENGTH_SHORT).show()
 }
 
 
