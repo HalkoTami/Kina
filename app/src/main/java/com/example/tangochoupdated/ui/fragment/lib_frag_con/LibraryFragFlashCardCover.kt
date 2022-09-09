@@ -19,6 +19,7 @@ import com.example.tangochoupdated.databinding.LibraryChildFragWithMulModeBaseBi
 import com.example.tangochoupdated.databinding.LibraryFragLayFlashCardCoverRvEmptyBinding
 import com.example.tangochoupdated.databinding.LibraryFragTopBarFileBinding
 import com.example.tangochoupdated.db.enumclass.ColorStatus
+import com.example.tangochoupdated.db.enumclass.LibraryFragment
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
@@ -73,6 +74,7 @@ class LibraryFragFlashCardCover  : Fragment(){
         topBarBinding.imvFileType.setImageDrawable(AppCompatResources.getDrawable(requireActivity(),R.drawable.icon_flashcard))
 
         libraryViewModel.apply {
+            setLibraryFragment(LibraryFragment.FlashCardCover)
             clearFinalList()
             parentFileFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
                 setParentFileFromDB(it)
@@ -92,8 +94,11 @@ class LibraryFragFlashCardCover  : Fragment(){
             val emptyView = LibraryFragLayFlashCardCoverRvEmptyBinding.inflate(inflater,container,false).root
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
                 setParentRVItems(it ?: mutableListOf())
-                adapter.submitList(it)
-                createCardViewModel.setSisterCards(it)
+                val sorted = it?.sortedBy { it.libOrder }
+                adapter.submitList(sorted)
+                if(it!=null){
+                    createCardViewModel.setSisterCards(it)
+                }
                 if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)
                 } else {

@@ -24,9 +24,9 @@ abstract class MyDao{
 
 
         @Query("SELECT * FROM tbl_card a " +
-                " INNER JOIN ( SELECT  MAX(id) id FROM tbl_card  ) b ON a.id = b.id"
+                " INNER JOIN ( SELECT  MAX(id) id FROM tbl_card  ) b ON a.id = b.id where a.belongingFlashCardCoverId is :flashCardCoverId"
         )
-        abstract fun getLastInsertedCard():Flow<Card>
+        abstract fun getLastInsertedCard(flashCardCoverId:Int?):Flow<Card>
 
     }
     @Dao

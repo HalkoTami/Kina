@@ -25,7 +25,14 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         _openEditCard.value = boolean
     }
     fun returnOpenEditCard ():Boolean{
-        return _openEditCard.value ?:false
+        return _openEditCard.value ?:true
+    }
+    private val _startingPosition = MutableLiveData<Int?>()
+    fun setStartingPosition(int: Int?){
+        _startingPosition.value = int
+    }
+    fun returnStartingPosition():Int?{
+        return _startingPosition.value
     }
 
     fun getParentFlashCardCover(fileId:Int?):LiveData<File?> = repository.getFileByFileId(fileId).asLiveData()
@@ -33,7 +40,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun setParentFlashCardCover(file: File?){
         _parentFlashCardCover.value = file
     }
-    private fun returnParentFlashCardCover():File?{
+    fun returnParentFlashCardCover():File?{
         return _parentFlashCardCover.value
     }
 
@@ -48,15 +55,16 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
     val parentCard :LiveData<Card> = _parentCard
 
-    fun getSisterCards(fileId: Int?):LiveData<List<Card>?> = repository.getCardDataByFileId(fileId).asLiveData()
-    private val _sisterCards = MutableLiveData<List<Card>?>()
-    fun setSisterCards(list:List<Card>?){
+    fun getSisterCards(fileId: Int?):LiveData<List<Card>> = repository.getCardDataByFileId(fileId).asLiveData()
+    private val _sisterCards = MutableLiveData<List<Card>>()
+    fun setSisterCards(list:List<Card>){
         _sisterCards.value = list
     }
+    val sisterCards: LiveData<List<Card>> = _sisterCards
     fun returnSisterCards():List<Card>{
         return _sisterCards.value ?: mutableListOf()
     }
-    val lastInsertedCard :LiveData<Card> = repository.lastInsertedCard.asLiveData()
+    fun lastInsertedCard(flashCardCoverId:Int?) :LiveData<Card> = repository.lastInsertedCard(flashCardCoverId).asLiveData()
 
     private val _cardStatus = MutableLiveData<CardStatus>()
     val cardStatus :LiveData<CardStatus> = _cardStatus
@@ -122,15 +130,22 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             repository.update(any)
         }
     }
+    fun updateCardPosition(card: Card,adapterPosition:Int){
+        if(card.libOrder!=adapterPosition){
+            card.libOrder = adapterPosition
+            update(card)
+        }
+    }
+
 //    navigation
 
     fun onClickBtnInsert(side:NeighbourCardSide){
         setOpenEditCard(true)
-        val orderNow= returnParentCard()?.libOrder ?:0
+        val orderNow= returnSisterCards().indexOf(returnParentCard())
         saveEmptyCard(
             when(side){
-                NeighbourCardSide.NEXT -> orderNow + 1
-                NeighbourCardSide.PREVIOUS -> orderNow
+                NeighbourCardSide.NEXT -> orderNow
+                NeighbourCardSide.PREVIOUS -> orderNow -1
                                 },returnParentCard()?.belongingFlashCardCoverId)
     }
 
@@ -143,10 +158,12 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
 
     fun getNeighbourCardId(side:NeighbourCardSide):Int?{
-        val neighbourCard = returnSisterCards().find { it.libOrder == when(side){
-            NeighbourCardSide.PREVIOUS -> (returnParentCard()?.libOrder ?: -2) - 1
-            NeighbourCardSide.NEXT -> (returnParentCard()?.libOrder ?: -2) + 1
-        } }
+        val nowPosition = returnSisterCards().indexOf(returnParentCard())
+        val newPosition = when(side){
+            NeighbourCardSide.PREVIOUS -> nowPosition - 1
+            NeighbourCardSide.NEXT -> nowPosition + 1}
+        val neighbourCard =  if(newPosition > returnSisterCards().size-1||newPosition<0) null
+        else returnSisterCards()[newPosition]
         return neighbourCard?.id
 
     }
@@ -169,10 +186,9 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         saveEmptyCard(item.libOrder + 1,item.belongingFlashCardCoverId,)
     }
     fun onClickAddNewCardBottomBar(mainNavCon:NavController){
-        setOpenEditCard(true)
         saveEmptyCard(returnSisterCards().size+1,returnParentFlashCardCover()?.fileId)
+        setOpenEditCard(true)
         mainNavCon.navigate(CreateCardFragmentBaseDirections.openCreateCard())
-
     }
 
     fun onClickEditCard(item: Card,navController: NavController){
@@ -182,6 +198,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val action = CreateCardFragmentDirections.flipCreateCard()
         action.cardId= b
         action.parentFlashCardCoverId = a
+        navController.popBackStack()
         navController.navigate(action)
 
     }

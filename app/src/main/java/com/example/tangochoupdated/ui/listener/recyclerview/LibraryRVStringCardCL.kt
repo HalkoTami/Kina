@@ -18,15 +18,12 @@ class LibraryRVStringCardCL(val item: Card,
 ): View.OnClickListener{
 
     override fun onClick(v: View?) {
+        createCardViewModel.setStartingPosition(item.libOrder)
         when(v){
-            binding.root -> {
-                createCardViewModel.setParentCard(item)
-                mainNavCon.navigate(CreateCardFragmentBaseDirections.openCreateCard())
+            binding.btnEdtBack-> { stringCardViewModel.setFocusedOn(StringFragFocusedOn.BackContent)
             }
-            binding.btnEdtBack-> stringCardViewModel.setFocusedOn(StringFragFocusedOn.BackContent)
             binding.btnEdtFront-> stringCardViewModel.setFocusedOn(StringFragFocusedOn.FrontContent)
         }
-//        createCardViewModel.onClickEditCard(item)
         mainNavCon.navigate(CreateCardFragmentBaseDirections.openCreateCard())
     }
 }

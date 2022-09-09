@@ -183,7 +183,6 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
     ) {
         binding.apply {
             arrayOf(
-                root,
                 btnEdtBack,
                 btnEdtFront,
             ).onEach {

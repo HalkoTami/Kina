@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
+import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
 import com.example.tangochoupdated.ui.viewmodel.*
 
@@ -53,6 +54,9 @@ class LibFragPlaneRVListAdapter(
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
 
+            if(item is Card){
+                createCardViewModel.updateCardPosition(item,adapterPosition)
+            }
 
             LibrarySetUpItems(libraryViewModel,deletePopUpViewModel,navController).setUpRVBasePlane(
                 parent = parent,

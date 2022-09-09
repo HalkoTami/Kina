@@ -32,6 +32,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun setLibraryFragment(fragment: LibraryFragment){
         _parentFragment.value = fragment
     }
+    fun returnActiveFragment():LibraryFragment{
+        return _parentFragment.value ?:LibraryFragment.Home
+    }
 //    －－－－初期設定－－－－
 
 

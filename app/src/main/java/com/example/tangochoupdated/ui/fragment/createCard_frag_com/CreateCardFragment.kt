@@ -78,34 +78,30 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 ////
         setLateInitVars()
         addClickListeners()
-        cardNavCon.popBackStack()
+//        cardNavCon.popBackStack()
 
         val frag = childFragmentManager.findFragmentById(binding.fragConEachCardType.id) as NavHostFragment
         cardTypeNavCon = frag.navController
         val parentCardFromDBObserver = Observer<Card>{ card->
             createCardViewModel.apply {
+                setParentCard(card)
                 binding.createCardTopBarBinding.txvPosition.text =
                     "${card.id} ${card.libOrder}/${returnSisterCards().size}"
-//                setAlphaByClickable(
-//                    getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.NEXT)!=null,
-//                    binding.btnNext)
-//                setAlphaByClickable(
-//                    getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.PREVIOUS)!=null,
-//                    binding.btnPrevious)
+                setAlphaByClickable(
+                    getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.NEXT)!=null,
+                    binding.btnNext)
+                setAlphaByClickable(
+                    getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.PREVIOUS)!=null,
+                    binding.btnPrevious)
             }
 
         }
         val sisterCardObserver = Observer<List<Card>?> {
             createCardViewModel.apply {
-                setSisterCards(it)
+                val sort = it.sortedBy { it.libOrder }
+                setSisterCards(sort)
                 binding.createCardTopBarBinding.txvPosition.text =
-                    "${returnParentCard()?.libOrder?:0}/${it.size}"
-//                setAlphaByClickable(
-//                    getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.NEXT)!=null,
-//                    binding.btnNext)
-//                setAlphaByClickable(
-//                    getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.PREVIOUS)!=null,
-//                    binding.btnPrevious)
+                    "${returnParentCard()?.id} ${returnParentCard()?.libOrder?:0}/${it.size}"
             }
         }
         val parentFlashCardCoverObserver = Observer<File?> {
@@ -149,9 +145,6 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             when(v){
                 createCardTopBarBinding.imvSaveAndBack  ->{
                     mainNavCon.popBackStack()
-                    cardNavCon.popBackStack()
-                    cardNavCon.popBackStack()
-                    cardNavCon.popBackStack()
 
                 }
                 btnInsertPrevious                       -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.PREVIOUS)

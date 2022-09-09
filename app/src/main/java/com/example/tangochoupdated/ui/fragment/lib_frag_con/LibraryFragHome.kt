@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.LibRVState
+import com.example.tangochoupdated.db.enumclass.LibraryFragment
 import com.example.tangochoupdated.db.enumclass.Toast
 import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
@@ -201,6 +202,7 @@ class LibraryFragHome : Fragment(){
         createFileViewModel.setParentFile(null)
         createFileViewModel.makeAllBottomMenuClickable()
         libraryViewModel.apply {
+            setLibraryFragment(LibraryFragment.Home)
             rvCover.observe(viewLifecycleOwner){
                 binding.rvCover.visibility = if(it.visible) View.VISIBLE else View.GONE
             }
@@ -231,11 +233,11 @@ class LibraryFragHome : Fragment(){
 
             }
             childCardsFromDB(null).observe(viewLifecycleOwner){
-                createCardViewModel.setSisterCards(it)
                 topBarBinding.txvInBoxCardAmount.apply {
                     text = it?.size.toString()
                     visibility = if(it?.size == 0) View.GONE else View.VISIBLE
                 }
+                createCardViewModel.setSisterCards(it?:return@observe)
             }
             selectedItems.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"

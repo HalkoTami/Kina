@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.databinding.CreateCardFragMainBinding
+import com.example.tangochoupdated.db.enumclass.AnkiFragments
+import com.example.tangochoupdated.db.enumclass.LibraryFragment
 import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.ui.viewmodel.*
 
@@ -22,6 +25,7 @@ class CreateCardFragmentBase  : Fragment() {
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
     private val createCardViewModel:CreateCardViewModel by activityViewModels()
     private val stringCardViewModel : StringCardViewModel by activityViewModels()
+    private val libraryViewModel: LibraryViewModel by activityViewModels()
 
 
     // This property is only valid between onCreateView and
@@ -40,20 +44,49 @@ class CreateCardFragmentBase  : Fragment() {
         val a = childFragmentManager.findFragmentById(binding.createCardFragCon.id) as NavHostFragment
         val cardNavCon = a.navController
         baseViewModel.setChildFragmentStatus(MainFragment.EditCard)
+
         createCardViewModel.apply {
-//            lastInsertedCard.observe(viewLifecycleOwner) {
-//                if (returnOpenEditCard()) {
-//                    setParentCard(it)
-//                    onClickEditCard(it, cardNavCon)
-//                }
-//            }
-            createCardViewModel.parentCard.observe(viewLifecycleOwner){
-                if(createCardViewModel. returnOpenEditCard()){
-                    createCardViewModel.setOpenEditCard(false)
-                    createCardViewModel.onClickEditCard(it, cardNavCon)
+            val parentFlashCardCoverId =  when(baseViewModel.returnFragmentStatus()?.before){
+                MainFragment.Anki -> when(ankiFragViewModel.returnActiveFragment()) {
+                    AnkiFragments.AnkiBox -> null
+                    AnkiFragments.Flip -> flipBaseViewModel.returnParentCard()?.belongingFlashCardCoverId
                 }
+                MainFragment.Library -> when(libraryViewModel.returnActiveFragment()){
+                    LibraryFragment.FlashCardCover,LibraryFragment.Folder -> libraryViewModel.returnParentFile()?.fileId
+                    else -> null
+                }
+                else -> null
+            }
+            lastInsertedCard(parentFlashCardCoverId).observe(viewLifecycleOwner) {
+                if (returnOpenEditCard()&&it!=null) {
+                    setOpenEditCard(false)
+                    onClickEditCard(it, cardNavCon)
+                }
+            }
+            var calledFirst:Boolean = true
+
+
+            createCardViewModel.getSisterCards(parentFlashCardCoverId).observe(viewLifecycleOwner){
+                if(calledFirst){
+                    calledFirst = false
+                    if(it.isEmpty()){
+                        saveEmptyCard(1,parentFlashCardCoverId)
+                    } else {
+                        if(returnStartingPosition()!=null){
+                            val sorted = it.sortedBy { it.libOrder }
+                            onClickEditCard(sorted[returnStartingPosition()!!],cardNavCon)
+                            Toast.makeText(requireActivity(),"position ${ returnStartingPosition()}",Toast.LENGTH_SHORT).show()
+                            setStartingPosition(null)
+                        }
+
+                    }
+                }
+            }
+            parentCard.observe(viewLifecycleOwner){
                 stringCardViewModel.setParentCard(it)
             }
+
+
 
         }
 

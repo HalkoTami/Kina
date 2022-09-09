@@ -34,8 +34,11 @@ class BaseViewModel():ViewModel(){
             _childFragmentsStatus.value = newStatus
         }
     }
-    private fun returnActiveFragment():MainFragment?{
+    fun returnActiveFragment():MainFragment?{
         return _childFragmentsStatus.value?.now
+    }
+    fun returnFragmentStatus():MainActivityChildFragmentStatus?{
+        return _childFragmentsStatus.value
     }
     fun changeFragment(to:MainFragment){
         val navCOn = returnMainActivityNavCon()

@@ -116,7 +116,6 @@ class StringCardFragment : Fragment() {
         )
         createCardViewModel.upDateCard(newStringData,stringCardViewModel.returnParentCard() ?:return)
 
-        Toast.makeText(requireActivity(),"string save called",Toast.LENGTH_SHORT).show()
         _binding = null
     }
 }

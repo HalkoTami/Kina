@@ -3,6 +3,7 @@ package com.example.tangochoupdated.ui.fragment.lib_frag_con
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.ColorStatus
+import com.example.tangochoupdated.db.enumclass.LibraryFragment
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
@@ -69,6 +71,7 @@ class LibraryFragFolder :  Fragment(){
 
         libraryViewModel.apply {
             clearFinalList()
+            setLibraryFragment(LibraryFragment.Folder)
             parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileFromDB(it)
                 createFileViewModel.setParentFile(it)
@@ -93,7 +96,7 @@ class LibraryFragFolder :  Fragment(){
 
             parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
-                createFileViewModel.filterBottomMenuByAncestors(it,returnParentFile()!!)
+                createFileViewModel.filterBottomMenuByAncestors(it,it[0])
             }
             parentFileAncestors.observe(viewLifecycleOwner){
                     binding.ancestorsBinding.apply {

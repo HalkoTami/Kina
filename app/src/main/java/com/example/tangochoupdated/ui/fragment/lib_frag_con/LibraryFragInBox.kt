@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
+import com.example.tangochoupdated.db.enumclass.LibraryFragment
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
@@ -67,11 +68,13 @@ class LibraryFragInBox  : Fragment(){
         libraryViewModel.apply {
             setModeInBox(true)
 
+            setLibraryFragment(LibraryFragment.InBox)
             createCardViewModel.setParentFlashCardCover(null)
             val emptyView = LibraryFragLayInboxRvEmptyBinding.inflate(inflater,container,false).root
             childCardsFromDB(null).observe(viewLifecycleOwner) {
                 setParentRVItems(it ?: mutableListOf())
-                adapter.submitList(it)
+                val sorted = it?.sortedBy { it.libOrder }
+                adapter.submitList(sorted)
                 if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)
                 } else {

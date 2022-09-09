@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.db.enumclass.LibraryFragment
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
 import com.example.tangochoupdated.ui.listadapter.LibFragChooseFileRVListAdapter
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
@@ -70,6 +71,7 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
 
         }
         libraryViewModel.apply {
+            setLibraryFragment(LibraryFragment.ChooseFileMoveTo)
             val flashcard = returnParentFile()?.fileStatus == FileStatus.TANGO_CHO_COVER ||
                     returnModeInBox()==true
             if(args.fileId != null){

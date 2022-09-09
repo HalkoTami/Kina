@@ -163,22 +163,22 @@ class EditCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
         upDateMultipleCards(updateSisters)
     }
 
-    val lastInsertedCard :LiveData<Card> = repository.lastInsertedCard.asLiveData()
-    private val _lastInsertedCard = MutableLiveData<Card>()
-    fun setLastInsertedCard(card: Card,navController: NavController){
-        val before = _lastInsertedCard.value
-        if((before?.id != card?.id) ) {
-            _lastInsertedCard.value = card
-
-            val a = if(_lastInsertedCard.value?.belongingFlashCardCoverId!=null)intArrayOf(_lastInsertedCard.value?.belongingFlashCardCoverId!!) else null
-            val b = intArrayOf(card!!.id)
-            val fromSameFrag = _fromSameFrag.value!!
-            val action = CreateCardFragmentBaseDirections.openCreateCard()
-            navController.navigate(action)
-//            setMode(Mode.Edit)
-        }
-
-    }
+//    val lastInsertedCard :LiveData<Card> = repository.lastInsertedCard.asLiveData()
+//    private val _lastInsertedCard = MutableLiveData<Card>()
+//    fun setLastInsertedCard(card: Card,navController: NavController){
+//        val before = _lastInsertedCard.value
+//        if((before?.id != card?.id) ) {
+//            _lastInsertedCard.value = card
+//
+//            val a = if(_lastInsertedCard.value?.belongingFlashCardCoverId!=null)intArrayOf(_lastInsertedCard.value?.belongingFlashCardCoverId!!) else null
+//            val b = intArrayOf(card!!.id)
+//            val fromSameFrag = _fromSameFrag.value!!
+//            val action = CreateCardFragmentBaseDirections.openCreateCard()
+//            navController.navigate(action)
+////            setMode(Mode.Edit)
+//        }
+//
+//    }
 
 
     private val _hasParentFlashCardCover = MutableLiveData<Boolean>()
