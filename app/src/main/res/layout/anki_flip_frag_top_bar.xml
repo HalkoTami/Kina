@@ -37,6 +37,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_setting"/>
+    <ImageView
+        android:layout_marginStart="10dp"
+        android:id="@+id/btn_flip_item_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_menu"/>
 
 
 

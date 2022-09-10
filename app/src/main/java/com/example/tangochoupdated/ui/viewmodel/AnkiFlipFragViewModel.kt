@@ -135,11 +135,11 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
             true -> {
                 FlipStringTypeAnswerFragmentDirections.toTypeAnswerString(
                     reverseMode.not(),
-                    list[1].id
+                    list[0].id
                 )
             }
             false -> {
-                val cardId =list[1].id
+                val cardId =list[0].id
                 val action =
                     FlipStringFragmentDirections.toFlipString(
                     )

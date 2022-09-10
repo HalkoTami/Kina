@@ -36,7 +36,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center_vertical"
         app:layout_constraintBottom_toTopOf="@id/frameLay_graphs">
-        <include layout="@layout/library_frag_rv_item_card_string"/>
+        <include
+            android:id="@+id/string_content_binding"
+            layout="@layout/library_frag_rv_item_card_string"/>
     </FrameLayout>
 
 

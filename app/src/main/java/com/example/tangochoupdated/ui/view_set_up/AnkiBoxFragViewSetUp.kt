@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ListAdapter
 import androidx.compose.ui.geometry.Rect
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.dataclass.StringData
 import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.listadapter.AnkiBoxListAdapter
@@ -32,6 +34,15 @@ class AnkiBoxFragViewSetUp() {
 //    val context: Context,
 //    val bindingAnkiBoxFrag:AnkiHomeFragBaseBinding,
 //    val ankiBaseViewModel:AnkiFragBaseViewModel
+
+    fun setUpRVStringCardContent(stringBinding: LibraryFragRvItemCardStringBinding,stringData: StringData?){
+        stringBinding.apply {
+            stringBinding.txvFrontTitle.text = stringData?.frontTitle.toString()
+            stringBinding.txvFrontText.text = stringData?.frontText.toString()
+            stringBinding.txvBackTitle.text = stringData?.backTitle.toString()
+            stringBinding.txvBackText.text = stringData?.backText.toString()
+        }
+    }
 fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                               context: Context,
                               ankiBoxVM: AnkiBoxFragViewModel, tab: AnkiBoxFragments,
@@ -42,6 +53,7 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
     recyclerView.isNestedScrollingEnabled = false
     return adapter
 }
+
 
     fun ankiBoxFragAddCL(ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel,
                          binding:AnkiHomeFragBaseBinding,

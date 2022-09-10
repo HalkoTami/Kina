@@ -64,8 +64,8 @@ class AnkiFragFlipBaseFragment  : Fragment() {
         val frag = childFragmentManager.findFragmentById(binding.fragConViewFlip.id) as NavHostFragment
         val navCon = frag.navController
         val viewSetUp = AnkiFlipFragViewSetUp(binding,flipBaseViewModel,requireActivity(),ankiBaseViewModel,settingVM,navCon)
-
-        viewSetUp.setUpCL(createFileViewModel,baseViewModel.returnMainActivityNavCon() ?:return, createCardViewModel)
+        val ankiNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.anki_frag_container_view).findNavController()
+        viewSetUp.setUpCL(createFileViewModel,baseViewModel.returnMainActivityNavCon() ?:return, ankiNavCon,createCardViewModel)
 
         viewSetUp.setUpViewStart()
         baseViewModel.setBnvVisibility(false)
@@ -80,7 +80,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
 
 
-        var start:Boolean = ankiBaseViewModel.returnActiveFragment()==AnkiFragments.AnkiBox
+        var start:Boolean = true
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         flipBaseViewModel.apply {
             setParentPosition(0)

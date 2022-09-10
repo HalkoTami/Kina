@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.db.enumclass.AnimationAttributes
+import com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiBoxContentRVFragmentDirections
 import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
 import com.example.tangochoupdated.ui.viewmodel.*
 
@@ -23,12 +24,14 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                      val settingPopUpViewModel: AnkiSettingPopUpViewModel,
                      val createFileViewModel: CreateFileViewModel,
                      val createCardViewModel: CreateCardViewModel,
-                     val mainNavController: NavController): View.OnClickListener {
+                     val mainNavController: NavController,
+                     val ankiNavCon:NavController): View.OnClickListener {
 
     override fun onClick(v: View?) {
         binding.apply {
             topBinding.apply {
                 when(v){
+                    btnFlipItemList -> ankiNavCon.navigate(AnkiBoxContentRVFragmentDirections.toFlipItemRvFrag())
                     imvBack -> ankiFlipFrag.onBackPressed()
                     imvAnkiSetting -> ankiBaseViewModel.setSettingVisible(true)
                     imvAnkiSetting -> TODO()

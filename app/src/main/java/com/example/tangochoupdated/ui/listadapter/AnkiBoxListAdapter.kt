@@ -53,6 +53,13 @@ class AnkiBoxListAdapter(
                 }
                 is Card -> {
                     val binding = AnkiHomeFragRvItemCardBinding.inflate(LayoutInflater.from(context))
+                    binding.apply {
+                       AnkiBoxFragViewSetUp().setUpRVStringCardContent(binding.stringContentBinding,item.stringData)
+                        binding.stringContentBinding.apply {
+                            txvFrontTitle.text = "order " + item.libOrder
+                            txvBackTitle.text = "id " + item.id
+                        }
+                    }
                     binding.root
                 }
                 else -> return

@@ -52,11 +52,13 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
     }
     fun setUpCL(createFileViewModel: CreateFileViewModel,
                 mainNavController: NavController,
+                ankiNavController: NavController,
                 createCardViewModel: CreateCardViewModel,){
         flipBaseBinding.apply {
             topBinding.apply {
                 arrayOf(
 
+                    btnFlipItemList,
                     imvEditCard,
                     imvBack,
                     imvAnkiSetting,
@@ -76,7 +78,8 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
                             settingViewModel,
                             createFileViewModel,
                             createCardViewModel,
-                            mainNavController))
+                            mainNavController,
+                            ankiNavController))
                 }
             }
 

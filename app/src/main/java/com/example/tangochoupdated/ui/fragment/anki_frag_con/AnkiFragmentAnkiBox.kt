@@ -98,19 +98,19 @@ class AnkiFragmentAnkiBox  : Fragment() {
 
             ankiBoxCardIds.observe(viewLifecycleOwner){
                 getCardsFromDBByMultipleCardIds(it).observe(viewLifecycleOwner){
-                    setAnkiBoxItems(it)
-                    flipViewModel.setAnkiFlipItems(it)
+                    val ordered = it.sortedBy { it.libOrder }
+                    setAnkiBoxItems(ordered)
 
                 }
             }
-            modeCardsNotSelected.observe(viewLifecycleOwner){
-                if(it){
-                    flipViewModel.getAllCardsFromDB.observe(viewLifecycleOwner){
-                        flipViewModel.setAnkiFlipItems(it)
-                    }
-
-                }
-            }
+//            modeCardsNotSelected.observe(viewLifecycleOwner){
+//                if(it){
+//                    flipViewModel.getAllCardsFromDB.observe(viewLifecycleOwner){
+//                        flipViewModel.setAnkiFlipItems(it)
+//                    }
+//
+//                }
+//            }
 
 
             viewSetUp.apply {

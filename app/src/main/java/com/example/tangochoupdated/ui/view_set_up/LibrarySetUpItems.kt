@@ -45,6 +45,7 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
             })
         }
     }
+
     fun setUpRVStringCardBinding(
         stringBinding: LibraryFragRvItemCardStringBinding,
         stringData: StringData?,

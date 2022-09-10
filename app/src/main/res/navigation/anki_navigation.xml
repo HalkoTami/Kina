@@ -12,8 +12,14 @@
         android:name="com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiFragFlipBaseFragment"
         tools:layout="@layout/anki_flip_frag_base"
         android:id="@+id/anki_flip_base_frag"/>
+    <fragment
+        android:name="com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiBoxContentRVFragment"
+        tools:layout="@layout/full_rv"
+        android:id="@+id/flip_item_rv_frag"/>
     <action android:id="@+id/to_flip_frag"
         app:destination="@+id/anki_flip_base_frag"/>
+    <action android:id="@+id/to_flip_item_rv_frag"
+        app:destination="@+id/flip_item_rv_frag"/>
 
 
 </navigation>
