@@ -63,11 +63,20 @@ class AnkiFragFlipBaseFragment  : Fragment() {
 
         val frag = childFragmentManager.findFragmentById(binding.fragConViewFlip.id) as NavHostFragment
         val navCon = frag.navController
-        val viewSetUp = AnkiFlipFragViewSetUp(binding,flipBaseViewModel,requireActivity(),ankiBaseViewModel,settingVM,navCon)
+        val viewSetUp = AnkiFlipFragViewSetUp(binding,flipBaseViewModel,requireActivity())
         val ankiNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.anki_frag_container_view).findNavController()
-        viewSetUp.setUpCL(createFileViewModel,baseViewModel.returnMainActivityNavCon() ?:return, ankiNavCon,createCardViewModel)
+        viewSetUp.setUpCL(
+            createFileViewModel,
+            baseViewModel.returnMainActivityNavCon() ?:return,
+            ankiNavCon,
+            createCardViewModel,
+            settingVM,
+            ankiBaseViewModel,
+            navCon,)
 
-        viewSetUp.setUpViewStart()
+        viewSetUp.setUpViewStart(
+            binding
+        )
         baseViewModel.setBnvVisibility(false)
         typeAndCheckViewModel.keyBoardVisible.observe(viewLifecycleOwner){ visible ->
             val views = arrayOf(binding.linLayFlipBottom,binding.btnRemembered,binding.btnSetFlag)
@@ -151,7 +160,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                 when(it){
                     AnimationAttributes.StartAnim ->    {
                         parentCountAnimation?.cancel()
-                        parentCountAnimation = viewSetUp.getCountDownAnim(settingVM.returnAutoFlip().seconds,binding.txvCountDown,binding.btnStopCount, navCon)
+                        parentCountAnimation = viewSetUp.getCountDownAnim(settingVM.returnAutoFlip().seconds,binding.txvCountDown,binding.btnStopCount, navCon,settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer())
                         parentCountAnimation?.start()
                     }
                     AnimationAttributes.EndAnim ->      parentCountAnimation?.end()

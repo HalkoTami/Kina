@@ -54,8 +54,8 @@ class AnkiSettingPopUpViewModel : ViewModel() {
 //
 //        setAnkiFilter(before)
 //    }
-    fun returnAnkiFilter():AnkiFilter?{
-        return _ankiFilter.value
+    fun returnAnkiFilter():AnkiFilter{
+        return _ankiFilter.value ?:AnkiFilter()
     }
 
     private val _autoFlip = MutableLiveData<AutoFlip>()

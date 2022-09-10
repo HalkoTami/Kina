@@ -10,24 +10,21 @@ import com.example.tangochoupdated.ui.listener.popUp.AnkiFragAnkiSettingPopUpCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 
-class AnkiBaseFragViewSetUp(val baseViewModel: AnkiFragBaseViewModel,
-                            val bindingBase:AnkiFragBaseBinding,
-                            val context: Context,
-                            val ankiSettingVM:AnkiSettingPopUpViewModel,
-                            val ankiNavCon:NavController) {
-    val white = ContextCompat.getColor(context,R.color.white)
-    val green = ContextCompat.getColor(context,R.color.most_dark_green)
+class AnkiBaseFragViewSetUp() {
 
-    fun addCL(){
-        ankiSettingPopUpAddCL()
+    fun ankiBackGroundCoverAddCL(bindingBase: AnkiFragBaseBinding,
+                                 baseViewModel:AnkiFragBaseViewModel){
         bindingBase.viewAnkiFragConCover.setOnClickListener {
             baseViewModel.setSettingVisible(false)
         }
     }
 
-    fun ankiSettingPopUpAddCL(){
-        bindingBase.bindingSetting.apply {
-            val binding = bindingBase.bindingSetting
+    fun ankiSettingPopUpAddCL(binding:AnkiHomeFragPopupAnkiSettingBaseBinding,
+                              ankiSettingVM: AnkiSettingPopUpViewModel,
+                              ankiFragBaseViewModel: AnkiFragBaseViewModel,
+                              context: Context,
+                              ankiNavCon: NavController){
+        binding.apply {
             bindingSettingContent.apply {
                 arrayOf(
                     lineLayParentOrder,
@@ -51,14 +48,21 @@ class AnkiBaseFragViewSetUp(val baseViewModel: AnkiFragBaseViewModel,
                     imvCloseSetting,
                     btnStartAnki,
                     ).onEach {
-                        it.setOnClickListener(AnkiFragAnkiSettingPopUpCL(binding,ankiSettingVM,baseViewModel,context,ankiNavCon))
+                        it.setOnClickListener(AnkiFragAnkiSettingPopUpCL(
+                            binding,
+                            ankiSettingVM,
+                            ankiFragBaseViewModel,
+                            context,
+                            ankiNavCon))
                 }
             }
         }
 
 
     }
-    fun setUpSettingContent(ankiFilter:AnkiFilter){
+    fun setUpSettingContent(ankiFilter:AnkiFilter,bindingBase: AnkiFragBaseBinding,context: Context){
+        val white = ContextCompat.getColor(context,R.color.white)
+        val green = ContextCompat.getColor(context,R.color.most_dark_green)
         bindingBase.bindingSetting.bindingSettingContent.apply {
             linLayFilterTypedAnswer.apply {
                 alpha = if(!ankiFilter.answerTypedFilterActive) 0.5f else 1f

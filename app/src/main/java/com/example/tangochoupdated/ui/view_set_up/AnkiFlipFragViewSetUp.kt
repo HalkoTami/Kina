@@ -16,14 +16,14 @@ import com.example.tangochoupdated.ui.viewmodel.*
 class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
                             private val flipViewModel:AnkiFlipFragViewModel,
                             private val flipBaseFragmentActivity: FragmentActivity,
-                            private val ankiBaseViewModel:AnkiFragBaseViewModel,
-                            private val settingViewModel: AnkiSettingPopUpViewModel,
-                            private val flipNavCon:NavController) {
-    fun setUpViewStart(){
-        flipBaseBinding.progressBarBinding.frameLayProgressbarRemembered.removeView(flipBaseBinding.progressBarBinding.imvRememberedEndIcon)
+                            ) {
+    fun setUpViewStart(flipBaseBinding: AnkiFlipFragBaseBinding){
+        flipBaseBinding.progressBarBinding.frameLayProgressbarRemembered.
+        removeView(flipBaseBinding.progressBarBinding.imvRememberedEndIcon)
 //        setUpCL()
     }
-    fun getCountDownAnim(sec:Int, txv: TextView, btnStop: ImageView, navController: NavController): ValueAnimator {
+    fun getCountDownAnim(sec:Int, txv: TextView, btnStop: ImageView, flipNavCon: NavController,
+                         reverseCardSides:Boolean,typeAnswer:Boolean): ValueAnimator {
         val animation = ValueAnimator.ofInt(sec)
         animation.apply {
             duration = (sec * 1000).toLong()
@@ -40,7 +40,8 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
                 txv.text = a.toString()
             }
             doOnEnd {
-                flipNavCon.navigate(flipViewModel.flipNext(settingViewModel.returnReverseCardSide(),settingViewModel.returnTypeAnswer()) ?:return@doOnEnd)
+                flipNavCon.navigate(flipViewModel.flipNext(
+                    reverseCardSides,typeAnswer) ?:return@doOnEnd)
             }
 
         }
@@ -53,7 +54,10 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
     fun setUpCL(createFileViewModel: CreateFileViewModel,
                 mainNavController: NavController,
                 ankiNavController: NavController,
-                createCardViewModel: CreateCardViewModel,){
+                createCardViewModel: CreateCardViewModel,
+                settingViewModel:AnkiSettingPopUpViewModel,
+                ankiBaseViewModel:AnkiFragBaseViewModel,
+                flipNavCon: NavController){
         flipBaseBinding.apply {
             topBinding.apply {
                 arrayOf(

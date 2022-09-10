@@ -39,30 +39,29 @@ class AnkiFragmentBase  : Fragment() {
 
         baseViewModel.setChildFragmentStatus(MainFragment.Anki)
 
-        val viewSetUp = AnkiBaseFragViewSetUp(ankiFragViewModel, binding,requireActivity(),ankiSettingVM,myNavCon)
-        viewSetUp.addCL()
+        val viewSetUp = AnkiBaseFragViewSetUp()
+        viewSetUp.ankiSettingPopUpAddCL(
+            binding.bindingSetting,
+            ankiSettingVM,
+            ankiFragViewModel,
+            requireActivity(),
+            myNavCon
+            )
+        viewSetUp.ankiBackGroundCoverAddCL(binding,ankiFragViewModel)
         ankiSettingVM.start()
         ankiFragViewModel.apply {
             setAnkiBoxNavCon(myNavCon)
-//            tabChangeAction.observe(viewLifecycleOwner){
-//                myNavCon.navigate(it)
-//            }
             settingVisible.observe(viewLifecycleOwner){ settingVisible ->
                 if(settingVisible){
-                    viewSetUp.setUpSettingContent(ankiSettingVM.returnAnkiFilter()!!)
+                    viewSetUp.setUpSettingContent(
+                        ankiSettingVM.returnAnkiFilter(),
+                        binding,
+                        requireActivity(),)
                 }
                 arrayOf(binding.frameLayAnkiSetting,binding.viewAnkiFragConCover).onEach {
                    it.visibility = if(settingVisible) View.VISIBLE else View.GONE
                 }
             }
-//            ankiSettingVM.typeAnswer.observe(viewLifecycleOwner){
-//                if(it){
-//                    if(flipBaseViewModel.checkFront())
-//                        flipBaseViewModel.setFlipAction(FlipAction.TypeAnswerString)
-//                    else if (flipBaseViewModel.checkBack())
-//                        flipBaseViewModel.setFlipAction(FlipAction.CheckAnswerString)
-//                }
-//            }
 
 
         }
