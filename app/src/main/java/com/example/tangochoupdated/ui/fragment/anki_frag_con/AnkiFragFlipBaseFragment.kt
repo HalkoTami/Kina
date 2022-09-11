@@ -77,6 +77,7 @@ class AnkiFragFlipBaseFragment  : Fragment() {
         viewSetUp.setUpViewStart(
             binding
         )
+        ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         baseViewModel.setBnvVisibility(false)
         typeAndCheckViewModel.keyBoardVisible.observe(viewLifecycleOwner){ visible ->
             val views = arrayOf(binding.linLayFlipBottom,binding.btnRemembered,binding.btnSetFlag)
@@ -102,10 +103,13 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                     setAnkiFlipItems(it)
                 }
             } else{
-                boxViewModel.getCardsFromDBByMultipleCardIds(cardIds).observe(viewLifecycleOwner){
-                    val sorted = it.sortedBy { it.libOrder }
-                    setAnkiFlipItems(sorted)
+                boxViewModel. getDescendantsCardIds(boxViewModel.returnAnkiBoxFileIds()).observe(viewLifecycleOwner){
+                    boxViewModel.getCardsFromDBByMultipleCardIds(it).observe(viewLifecycleOwner){
+                        val sorted = it.sortedBy { it.libOrder }
+                        setAnkiFlipItems(sorted)
+                    }
                 }
+
             }
             ankiFlipItems.observe(viewLifecycleOwner){
                 if(start){

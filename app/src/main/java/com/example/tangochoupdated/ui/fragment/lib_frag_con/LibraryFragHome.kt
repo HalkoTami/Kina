@@ -125,15 +125,18 @@ class LibraryFragHome : Fragment(){
             selectedItems.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
             }
-            fun pxToDp(px: Int, context: Context): Float {
-                val metrics = context.resources.displayMetrics
-                return px / metrics.density
-            }
 
-            binding.mainFrameLayout.viewTreeObserver.addOnGlobalLayoutListener {
-                binding.rvCover.layoutParams.height = binding.mainFrameLayout.height+10
-                topBarBinding.txvHome.text = binding.mainFrameLayout.height.toString()
-            }
+            binding.mainFrameLayout.viewTreeObserver.addOnGlobalLayoutListener (
+                object:ViewTreeObserver.OnGlobalLayoutListener{
+                    override fun onGlobalLayout() {
+                        binding.rvCover.layoutParams.height = binding.mainFrameLayout.height+10
+                        binding.mainFrameLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                }
+            )
+
+
+
 
 
 
@@ -145,41 +148,41 @@ class LibraryFragHome : Fragment(){
                 mainNavCon,
                 requireActivity()
             )
-//            val searchRv = binding.searchRvBinding.recyclerView
-//            searchRv.adapter = searchAdapter
-//            searchRv.layoutManager = LinearLayoutManager(requireActivity())
-//            searchRv.isNestedScrollingEnabled = false
-//            binding.bindingSearch.edtLibrarySearch.addTextChangedListener {
-//                if(it.toString()!=""){
-//                    binding.mainFrameLayout.visibility = View.GONE
-//                    binding.frameLaySearchRv.visibility = View.VISIBLE
-//                    searchViewModel.setSearchText(it.toString())
-//                    searchViewModel.getFilesByWords(it.toString()).observe(viewLifecycleOwner){
-//                        searchViewModel.setMatchedFiles(it)
-//                        val a = mutableListOf<Any>()
-//                        a.addAll(searchViewModel.returnMatchedCards())
-//                        a.addAll(it)
-//                        searchViewModel.setMatchedItems(a)
-//
-//                    }
-//                    searchViewModel.getCardsByWords(it.toString()).observe(viewLifecycleOwner){
-//                        searchViewModel.setMatchedCards(it)
-//                        val a = mutableListOf<Any>()
-//                        a.addAll(searchViewModel.returnMatchedFiles())
-//                        a.addAll(it)
-//                        searchViewModel.setMatchedItems(a)
-//
-//                    }
-//                    searchViewModel.matchedItems.observe(viewLifecycleOwner){
-//                        makeToast(requireActivity(),it.size.toString())
-//                        searchAdapter.submitList(it)
-//                    }
-//
-//                } else {
-//                    binding.mainFrameLayout.visibility= View.VISIBLE
-//                    binding.frameLaySearchRv.visibility = View.GONE
-//                }
-//            }
+            val searchRv = binding.searchRvBinding.recyclerView
+            searchRv.adapter = searchAdapter
+            searchRv.layoutManager = LinearLayoutManager(requireActivity())
+            searchRv.isNestedScrollingEnabled = false
+            binding.bindingSearch.edtLibrarySearch.addTextChangedListener {
+                if(it.toString()!=""){
+                    binding.mainFrameLayout.visibility = View.GONE
+                    binding.frameLaySearchRv.visibility = View.VISIBLE
+                    searchViewModel.setSearchText(it.toString())
+                    searchViewModel.getFilesByWords(it.toString()).observe(viewLifecycleOwner){
+                        searchViewModel.setMatchedFiles(it)
+                        val a = mutableListOf<Any>()
+                        a.addAll(searchViewModel.returnMatchedCards())
+                        a.addAll(it)
+                        searchViewModel.setMatchedItems(a)
+
+                    }
+                    searchViewModel.getCardsByWords(it.toString()).observe(viewLifecycleOwner){
+                        searchViewModel.setMatchedCards(it)
+                        val a = mutableListOf<Any>()
+                        a.addAll(searchViewModel.returnMatchedFiles())
+                        a.addAll(it)
+                        searchViewModel.setMatchedItems(a)
+
+                    }
+                    searchViewModel.matchedItems.observe(viewLifecycleOwner){
+                        makeToast(requireActivity(),it.size.toString())
+                        searchAdapter.submitList(it)
+                    }
+
+                } else {
+                    binding.mainFrameLayout.visibility= View.VISIBLE
+                    binding.frameLaySearchRv.visibility = View.GONE
+                }
+            }
 
         }
 

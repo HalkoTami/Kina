@@ -180,6 +180,9 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun setAnkiBoxFileIds (list:MutableList<Int>){
         _ankiBoxFileIds.value = list
     }
+    fun returnAnkiBoxFileIds ():MutableList<Int>{
+        return _ankiBoxFileIds.value ?: mutableListOf()
+    }
     val ankiBoxFileIds:LiveData<MutableList<Int>> = _ankiBoxFileIds
     private val _ankiBoxCardIds = MutableLiveData<MutableList<Int>>()
     fun addToAnkiBoxCardIds(list: List<Int>){
