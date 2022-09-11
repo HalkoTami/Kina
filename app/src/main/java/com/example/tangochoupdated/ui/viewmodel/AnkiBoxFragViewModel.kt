@@ -109,8 +109,8 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         a.addAll(list)
         _ankiBoxItems.value = a
     }
-    fun returnAnkiBoxItems():List<Card>?{
-        return  _ankiBoxItems.value
+    fun returnAnkiBoxItems():List<Card>{
+        return  _ankiBoxItems.value ?: mutableListOf()
     }
     val ankiBoxItems :LiveData<MutableList<Card>> = _ankiBoxItems
 

@@ -38,11 +38,6 @@
         app:layout_constraintStart_toEndOf="@+id/btn_select"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btn_add_new_card">
-        <include
-            layout="@layout/library_frag_rv_item_card_string"/>
-        <include
-            layout="@layout/library_frag_rv_item_file"/>
-
 
 
 

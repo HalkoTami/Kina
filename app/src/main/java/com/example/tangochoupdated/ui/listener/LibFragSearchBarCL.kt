@@ -16,7 +16,7 @@ class LibFragSearchBarCL(val context:Context, val searchIcon: ImageView,
         when(v){
             searchIcon -> {
                 searchIcon.visibility = View.GONE
-                searchBindingFrame.layoutParams.height = context.resources.getDimensionPixelSize(R.dimen.searchbar_height)
+                searchBindingFrame.visibility = View.VISIBLE
             }
 
 

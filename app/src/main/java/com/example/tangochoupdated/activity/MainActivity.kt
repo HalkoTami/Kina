@@ -19,7 +19,7 @@ import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
-import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
+
 import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
 import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL

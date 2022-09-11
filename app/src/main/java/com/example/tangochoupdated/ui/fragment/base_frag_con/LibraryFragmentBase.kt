@@ -26,7 +26,6 @@ import com.example.tangochoupdated.db.enumclass.MainFragment
 import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.observer.CommonOb
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
-import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
@@ -53,6 +52,7 @@ class LibraryFragmentBase : Fragment(){
 
         val a = childFragmentManager.findFragmentById(binding.libFragConView.id) as NavHostFragment
         libNavCon = a.navController
+        libraryViewModel.setLibraryNavCon(libNavCon)
 
         baseViewModel.apply {
             setChildFragmentStatus(MainFragment.Library)

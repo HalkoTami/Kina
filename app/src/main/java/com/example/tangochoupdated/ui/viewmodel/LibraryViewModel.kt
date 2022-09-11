@@ -1,5 +1,7 @@
 package com.example.tangochoupdated.ui.viewmodel
 
+import android.view.MotionEvent
+import android.widget.FrameLayout
 import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.*
 import androidx.navigation.NavController
@@ -37,6 +39,13 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 //    －－－－初期設定－－－－
 
+    private val _libraryNavCon = MutableLiveData<NavController>()
+    fun setLibraryNavCon(navController: NavController){
+        _libraryNavCon.value = navController
+    }
+    fun returnLibraryNavCon(): NavController?{
+        return _libraryNavCon.value
+    }
 
 //    Fragment作成時に毎回呼び出す
     fun onStart(){
@@ -216,14 +225,14 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
             removeFromSelectedItem(item)
         }
     }
-    fun openNextFile(item: File,navController: NavController){
+    fun openNextFile(item: File){
         val action =
         when(item.fileStatus){
             FileStatus.FOLDER->     LibraryFragFolderDirections.openFolder(intArrayOf(item.fileId))
             FileStatus.TANGO_CHO_COVER -> LibraryFragFlashCardCoverDirections.openFlashCardCover(intArrayOf(item.fileId))
             else -> return
         }
-        navController.navigate(action)
+        returnLibraryNavCon()?.navigate(action)
     }
 
 
@@ -237,7 +246,6 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         return _modeInBox.value
     }
     class RvCover(
-        var height:Float,
         var visible:Boolean
     )
     private val _rvCover = MutableLiveData<RvCover>()

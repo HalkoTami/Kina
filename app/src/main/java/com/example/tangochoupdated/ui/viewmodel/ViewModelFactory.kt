@@ -4,8 +4,6 @@ import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.tangochoupdated.db.MyRoomRepository
-import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringCheckAnswerFragment
-import com.example.tangochoupdated.ui.view_set_up.SearchViewModel
 
 class ViewModelFactory(private val repository: MyRoomRepository  ) : ViewModelProvider.NewInstanceFactory() {
 

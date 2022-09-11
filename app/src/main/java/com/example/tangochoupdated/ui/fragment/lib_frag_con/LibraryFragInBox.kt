@@ -55,7 +55,7 @@ class LibraryFragInBox  : Fragment(){
             libNavController = libNavCon,)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.isNestedScrollingEnabled = false
+        recyclerView.isNestedScrollingEnabled = true
 
 
         val topBarBinding = LibraryFragTopBarInboxBinding.inflate(inflater,container,false)

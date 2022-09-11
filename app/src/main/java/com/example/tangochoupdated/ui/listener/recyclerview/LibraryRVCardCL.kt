@@ -73,7 +73,7 @@ class LibraryRVCardCL(val view: View,
 //            }
 //
 //        }
-        lVM.setRVCover(LibraryViewModel.RvCover(0f,true))
+//        lVM.setRVCover(LibraryViewModel.RvCover(visible = true))
     }
     override fun onLongClick(motionEvent: MotionEvent?) {
         super.onLongClick(motionEvent)

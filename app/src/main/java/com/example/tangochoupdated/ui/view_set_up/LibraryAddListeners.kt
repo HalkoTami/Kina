@@ -52,7 +52,7 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
     }
     fun fragChildMultiBaseAddCL(binding: LibraryChildFragWithMulModeBaseBinding,context: Context,navCon: NavController){
         multiTopBarAddCL(binding.topBarMultiselectBinding,binding.multiSelectMenuBinding,binding.frameLayMultiModeMenu,context,navCon)
-        searchAddCL(binding.imvSearchLoupe,binding.laySearchView,binding.bindingSearch,context)
+        searchAddCL(binding.imvSearchLoupe,binding.frameLaySearchBar,binding.bindingSearch,context)
 
     }
     fun homeTopBarAddCL(binding: LibraryFragTopBarHomeBinding, context: Context, navCon: NavController){

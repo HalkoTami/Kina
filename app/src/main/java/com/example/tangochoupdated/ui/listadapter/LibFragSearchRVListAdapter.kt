@@ -59,8 +59,7 @@ class LibFragSearchRVListAdapter(
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
 
-            fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-            binding.contentBindingFrame.addView(fileBinding.root)
+
             LibrarySetUpItems(libraryViewModel,deletePopUpViewModel, navController ).setUpRVSearchBase(
                 rvItemBaseBinding = binding,
                 stringCardViewModel = stringCardViewModel,

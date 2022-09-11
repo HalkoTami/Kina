@@ -215,9 +215,12 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
         when(item){
             is File ->{
                 val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
+                rvItemBaseBinding.contentBindingFrame.addView(fileBinding.root)
                 checkMatchTxv.addAll(setUpRVBaseFile(rvItemBaseBinding,fileBinding, item, context))
             }
             is Card -> {
+                val cardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
+                rvItemBaseBinding.contentBindingFrame.addView(cardBinding.root)
                 checkMatchTxv.addAll(setUpRVBaseCard(
                     rvItemBaseBinding,
                     item,

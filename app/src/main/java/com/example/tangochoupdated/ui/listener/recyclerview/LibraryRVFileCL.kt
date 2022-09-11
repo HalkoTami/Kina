@@ -40,7 +40,7 @@ class LibraryRVFileCL(val view: View,
                         lVM.onClickSelectableItem(item,btnSelect.isSelected.not())
                         btnSelect.isSelected = btnSelect.isSelected.not()
                     }else{
-                        lVM.openNextFile(item,navController)
+                        lVM.openNextFile(item)
                     }
 
                 }
@@ -82,7 +82,6 @@ class LibraryRVFileCL(val view: View,
 //            }
 //
 //        }
-        lVM.setRVCover(LibraryViewModel.RvCover(0f,true))
     }
     override fun onLongClick(motionEvent: MotionEvent?) {
         super.onLongClick(motionEvent)
