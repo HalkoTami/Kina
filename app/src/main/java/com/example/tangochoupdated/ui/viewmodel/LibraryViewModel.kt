@@ -1,7 +1,5 @@
 package com.example.tangochoupdated.ui.viewmodel
 
-import android.view.MotionEvent
-import android.widget.FrameLayout
 import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.*
 import androidx.navigation.NavController
@@ -12,11 +10,10 @@ import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 //import com.example.tangochoupdated.room.dataclass.FileWithChild
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.db.enumclass.LibRVState
-import com.example.tangochoupdated.db.enumclass.LibraryFragment
+import com.example.tangochoupdated.ui.viewmodel.customClasses.LibRVState
+import com.example.tangochoupdated.ui.viewmodel.customClasses.LibraryFragment
 import com.example.tangochoupdated.db.rvclasses.LibRVViewType
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
-import com.example.tangochoupdated.ui.view_set_up.ConfirmMode
 import com.example.tangochoupdated.ui.view_set_up.LibraryTopBarMode
 import com.example.tangochoupdated.ui.view_set_up.ParentFileAncestors
 import com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragChooseFileMoveToDirections
@@ -34,8 +31,8 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     fun setLibraryFragment(fragment: LibraryFragment){
         _parentFragment.value = fragment
     }
-    fun returnActiveFragment():LibraryFragment{
-        return _parentFragment.value ?:LibraryFragment.Home
+    fun returnActiveFragment(): LibraryFragment {
+        return _parentFragment.value ?: LibraryFragment.Home
     }
 //    －－－－初期設定－－－－
 
@@ -88,7 +85,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
 
 //    ファイルの中のファイル（子供）
-    fun childFilesFromDB(int: Int?):LiveData<List<File>> = this.repository.mygetFileDataByParentFileId(int).asLiveData()
+    fun childFilesFromDB(int: Int?):LiveData<List<File>> = this.repository.getFileDataByParentFileId(int).asLiveData()
 
 //    ファイルの中のカード
     fun childCardsFromDB(int: Int?):LiveData<List<Card>?> =  this.repository.getCardDataByFileId(int).asLiveData()
@@ -289,12 +286,12 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     val recyclerViewMode:LiveData<LibRVState> = _recyclerViewMode
     private fun changeRVMode(){
         setRecyclerViewMode(
-            if(_multipleSelectMode.value == true)LibRVState.Selectable
-        else if(_chooseFileMoveToMode.value == true)LibRVState.SelectFileMoveTo
+            if(_multipleSelectMode.value == true) LibRVState.Selectable
+        else if(_chooseFileMoveToMode.value == true) LibRVState.SelectFileMoveTo
         else LibRVState.Plane
         )
     }
-    fun returnRVMode():LibRVState?{
+    fun returnRVMode(): LibRVState?{
         return _recyclerViewMode.value
     }
 
@@ -318,9 +315,9 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     }
 
 //    ClickEvents
-    fun onClickInBox(navController: NavController){
+    fun onClickInBox(){
         val a = LibraryFragHomeDirections.openInbox()
-        navController.navigate(a)
+        returnLibraryNavCon()?.navigate(a)
 
     }
 
@@ -374,9 +371,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
     private val _changeAllRVSelectedStatus = MutableLiveData<Boolean>()
     fun changeAllRVSelectedStatus (selected:Boolean){
         _changeAllRVSelectedStatus.value = selected
-
-
+        if(selected) setSelectedItems(returnParentRVItems().toMutableList())
+        else setSelectedItems(mutableListOf())
     }
+
     val changeAllRVSelectedStatus:LiveData<Boolean> = _changeAllRVSelectedStatus
 
     private val _leftSwipedItemExists = MutableLiveData<Boolean>()
@@ -475,10 +473,10 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
 //        a.parentItemId =if(_parentFile.value == null) null else intArrayOf(_parentFile.value!!.fileId)
 //        setAction(a)
 //    }
-    fun openChooseFileMoveTo(file:File?,navController: NavController){
+    fun openChooseFileMoveTo(file:File?){
         setChooseFileMoveToMode(true)
         val a  = LibraryFragChooseFileMoveToDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))
-        navController.navigate(a)
+       returnLibraryNavCon()?.navigate(a)
     }
 
 

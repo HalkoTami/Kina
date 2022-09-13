@@ -1,13 +1,18 @@
 package com.example.tangochoupdated.ui.view_set_up
 
 import android.content.Context
+import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.compose.ui.unit.Constraints
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.listener.*
 import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmDeleteCL
 import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmMoveToFileCL
@@ -15,32 +20,21 @@ import com.example.tangochoupdated.ui.listener.recyclerview.*
 import com.example.tangochoupdated.ui.listener.topbar.*
 import com.example.tangochoupdated.ui.viewmodel.*
 
-class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: DeletePopUpViewModel,val libNavCon: NavController){
+class LibraryAddListeners(){
 //    top Bars
 
-    fun confirmDeletePopUpAddCL(onlyP: LibraryFragPopupConfirmDeleteBinding,deleteAllC:LibraryFragPopupConfirmDeleteAllChildrenBinding){
-        arrayOf(
-            onlyP.btnCloseConfirmDeleteOnlyParentPopup,
-            onlyP.btnCommitDeleteOnlyParent,
-            onlyP.btnCancel,
-            deleteAllC.btnCloseConfirmDeleteOnlyParentPopup,
-            deleteAllC.btnDeleteAllChildren,
-            deleteAllC.deleteOnlyFile,
-            deleteAllC.btnCancel
-        )   .onEach {
-            it.setOnClickListener(LibFragPopUpConfirmDeleteCL(onlyP,deleteAllC,libVM, deletePopUpViewModel ))
-        }
-    }
-    fun confirmMoveToFilePopUpAddCL(popUp: LibraryFragPopupConfirmMoveToFileBinding,chooseFileMoveToViewModel: ChooseFileMoveToViewModel){
-        arrayOf(
-            popUp.btnCancelMove,
-            popUp.btnCommitMove,
-            popUp.btnCloseConfirmMove
-        )   .onEach {
-            it.setOnClickListener(LibFragPopUpConfirmMoveToFileCL(popUp, chooseFileMoveToViewModel,libNavCon))
-        }
-    }
-    fun multiTopBarAddCL(binding: LibraryFragTopBarMultiselectModeBinding,menuBarBinding: LibItemTopBarMenuBinding,menuFrame:FrameLayout, context: Context, navCon: NavController){
+
+    fun fragChildMultiBaseAddCL(binding: LibraryChildFragWithMulModeBaseBinding,
+                                context: Context,
+                                libraryViewModel: LibraryViewModel,
+                                createCardViewModel: CreateCardViewModel,
+                                deletePopUpViewModel: DeletePopUpViewModel,
+                                searchViewModel:SearchViewModel, ){
+        fun multiTopBarAddCL(binding: LibraryFragTopBarMultiselectModeBinding,
+                             menuBarBinding: LibItemTopBarMenuBinding,
+                             menuFrame:FrameLayout,
+                             libVM: LibraryViewModel,
+                             deletePopUpViewModel: DeletePopUpViewModel, ){
         arrayOf(
             binding.imvCloseMultiMode,
             binding.imvSelectAll,
@@ -48,132 +42,59 @@ class LibraryAddListeners(val libVM: LibraryViewModel,val deletePopUpViewModel: 
             menuBarBinding.linLayMoveSelectedItems,
             menuBarBinding.linLayDeleteSelectedItems,
             menuBarBinding.linLaySetFlagToSelectedItems,
-        ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL(context, binding,menuBarBinding ,menuFrame,libVM, navCon,deletePopUpViewModel)) }
+        ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL( binding,menuBarBinding ,menuFrame,libVM,deletePopUpViewModel)) }
     }
-    fun fragChildMultiBaseAddCL(binding: LibraryChildFragWithMulModeBaseBinding,context: Context,navCon: NavController){
-        multiTopBarAddCL(binding.topBarMultiselectBinding,binding.multiSelectMenuBinding,binding.frameLayMultiModeMenu,context,navCon)
-        searchAddCL(binding.imvSearchLoupe,binding.frameLaySearchBar,binding.bindingSearch,context)
+        fun searchAddCL(){
+            arrayOf(binding.imvSearchLoupe,binding.bindingSearch.txvCancel).onEach {
+                it.setOnClickListener(LibFragSearchBarCL(
+                    context,binding.imvSearchLoupe,binding.frameLaySearchBar,binding.bindingSearch,libraryViewModel
+                ))
+            }
+        }
+
+        multiTopBarAddCL(binding.topBarMultiselectBinding,binding.multiSelectMenuBinding,binding.frameLayMultiModeMenu,libraryViewModel,deletePopUpViewModel)
+        searchAddCL()
+        binding.rvCover.
+        setOnTouchListener(LibraryRVTouchListener(context,binding.vocabCardRV,libraryViewModel,binding.frameLayTest,createCardViewModel))
+        binding.mainFrameLayout.viewTreeObserver.addOnGlobalLayoutListener (
+            object: ViewTreeObserver.OnGlobalLayoutListener{
+                override fun onGlobalLayout() {
+                    binding.rvCover.layoutParams.height = binding.mainFrameLayout.height+10
+                    binding.mainFrameLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            }
+        )
+        binding.bindingSearch.edtLibrarySearch.addTextChangedListener {
+            if(it.toString()!=""){
+                binding.mainFrameLayout.visibility = View.GONE
+                binding.frameLaySearchRv.visibility = View.VISIBLE
+                searchViewModel.setSearchText(it.toString())
+
+
+            } else {
+                binding.mainFrameLayout.visibility= View.VISIBLE
+                binding.frameLaySearchRv.visibility = View.GONE
+            }
+        }
 
     }
-    fun homeTopBarAddCL(binding: LibraryFragTopBarHomeBinding, context: Context, navCon: NavController){
-        arrayOf(
-            binding.frameLayInBox,
-            binding.imvBookMark,
-        ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(context, binding, libVM, navCon)) }
-    }
 
 
-    fun inBoxTopBarAddCL(binding: LibraryFragTopBarInboxBinding, context: Context, navCon: NavController){
-        arrayOf(
-            binding.imvMoveToFlashCard,
-            binding.imvCloseInbox,
-        ).onEach { it.setOnClickListener( LibFragTopBarInBoxCL(context, binding,libVM,navCon)) }
-    }
-    fun fileTopBarAddCL(binding: LibraryFragTopBarFileBinding,ancestors:LibraryFragTopBarAncestorsBinding, context: Context, navCon: NavController){
+    fun fileTopBarAddCL(binding: LibraryFragTopBarFileBinding,ancestors:LibraryFragTopBarAncestorsBinding,libVM: LibraryViewModel){
         arrayOf(
             binding.imvGoBack,
             ancestors.lineLayGGFile,
             ancestors.lineLayGPFile,
 
-            ).onEach { it.setOnClickListener( LibFragTopBarFileCL(context, binding,ancestors,libVM, navCon)) }
+            ).onEach { it.setOnClickListener( LibFragTopBarFileCL(binding,ancestors,libVM, )) }
     }
-    fun fragChooseFileMoveToTopBarAddCL(binding: LibraryFragTopBarChooseFileMoveToBinding, context: Context, navCon: NavController){
-        arrayOf(
-            binding.imvCloseChooseFileMoveTo,
-        ).onEach { it.setOnClickListener( LibFragTopBarChooseFileMoveToCL(context, binding,libVM, navCon)) }
-    }
-    fun searchAddCL(imv:ImageView,
-                    frameLay:FrameLayout,
-                    searchBarBinding: ItemSearchBarBinding,
-                    context: Context){
-        arrayOf(imv).onEach {
-            it.setOnClickListener(LibFragSearchBarCL(
-                context,imv,frameLay, searchBarBinding,libVM
-            ))
-        }
-    }
+
+
 
 //    recycler Views
 
-    fun searchRVAddCL(binding: LibraryFragRvItemBaseBinding,
-                      item: Any,
-                      createCardViewModel: CreateCardViewModel,
-                      libVM: LibraryViewModel,
-                      mainNavController: NavController
-    ){ binding.apply {
-        arrayOf(
-            libRvBaseContainer,
 
-        ).onEach { it.setOnClickListener(
-            LibraryRVSearchCL(item =  item,
-                createCardViewModel = createCardViewModel,
-                lVM = libVM,
-                rvBinding = binding,
-            navController = libNavCon, mainNavCon = mainNavController))
-        }
-    }
-    }
-    fun fileRVAddCL(binding: LibraryFragRvItemBaseBinding,
-                    context: Context,
-                    item: File,
-                    createFileVM: CreateFileViewModel,
-    ){ binding.apply {
-            arrayOf(
-                libRvBaseContainer,
-                btnDelete,
-                btnSelect,
-                btnAddNewCard,
-                btnEditWhole
-            ).onEach { it.setOnTouchListener(
-                LibraryRVFileCL(it,context,item,libNavCon,
-                    createFileVM,
-                    libVM,binding,deletePopUpViewModel)
-            )
-            }
-        }
-    }
-    fun chooseFileMoveToRVAddCL(binding: LibraryFragRvItemBaseBinding,
-                    item: File,
-                    chooseFileMoveToViewModel: ChooseFileMoveToViewModel
-    ){ binding.apply {
-        arrayOf(
-            libRvBaseContainer,
-            btnDelete,
-            btnSelect,
-            btnAddNewCard,
-            btnEditWhole
-        ).onEach { it.setOnClickListener(
-            LibraryRVChooseFileMoveToCL(
-                item,
-                libNavCon,
-                libVM,
-                binding,
-                chooseFileMoveToViewModel
-            ))
-        }
-    }
-    }
 
-    fun cardRVAddCL(binding: LibraryFragRvItemBaseBinding,
-                    context: Context,
-                    item: Card,
-                    createCardViewModel: CreateCardViewModel,
-                    mainNavController: NavController
-    ){
-        binding.apply {
-            arrayOf(
-                libRvBaseContainer,
-                btnDelete,
-                btnSelect,
-                btnAddNewCard,
-                btnEditWhole,
-
-            ).onEach { it.setOnTouchListener(
-                LibraryRVCardCL(it,context,item,mainNavController, createCardViewModel,libVM,binding,deletePopUpViewModel)
-            )
-            }
-        }
-    }
 
     fun cardRVStringAddCL(binding: LibraryFragRvItemCardStringBinding,
                           item: Card,

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
-import com.example.tangochoupdated.db.enumclass.AnkiFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
 
 class AnkiFragBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _activeFragment = MutableLiveData<AnkiFragments>()

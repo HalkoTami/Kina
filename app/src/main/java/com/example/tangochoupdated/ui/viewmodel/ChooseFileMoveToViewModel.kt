@@ -90,9 +90,9 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
             repository.update(any)
         }
     }
-    private fun updateAncestorsAndChild(beforeChange:Any){
+    private fun updateAncestorsAndChild(beforeChange:Card){
         viewModelScope.launch {
-            repository.upDateParentFile(beforeChange,returnFileMoveTo()?.fileId)
+            repository.upDateAncestorsAndChild(beforeChange,returnFileMoveTo()?.fileId)
         }
     }
 }

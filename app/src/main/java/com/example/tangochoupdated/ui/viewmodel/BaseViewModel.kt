@@ -2,8 +2,7 @@ package com.example.tangochoupdated.ui.viewmodel
 
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import com.example.tangochoupdated.db.MyRoomRepository
-import com.example.tangochoupdated.db.enumclass.MainFragment
+import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBaseDirections
 import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBaseDirections
@@ -14,8 +13,8 @@ import kotlinx.coroutines.*
 class BaseViewModel():ViewModel(){
 
     class MainActivityChildFragmentStatus(
-        var now:MainFragment,
-        var before:MainFragment?
+        var now: MainFragment,
+        var before: MainFragment?
     )
     private val _mainActivityNavCon = MutableLiveData<NavController>()
     fun setMainActivityNavCon(navController: NavController){
@@ -34,13 +33,13 @@ class BaseViewModel():ViewModel(){
             _childFragmentsStatus.value = newStatus
         }
     }
-    fun returnActiveFragment():MainFragment?{
+    fun returnActiveFragment(): MainFragment?{
         return _childFragmentsStatus.value?.now
     }
     fun returnFragmentStatus():MainActivityChildFragmentStatus?{
         return _childFragmentsStatus.value
     }
-    fun changeFragment(to:MainFragment){
+    fun changeFragment(to: MainFragment){
         val navCOn = returnMainActivityNavCon()
         if(returnActiveFragment() == to||
                 navCOn==null) return

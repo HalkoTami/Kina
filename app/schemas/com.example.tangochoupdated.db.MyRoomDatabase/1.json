@@ -1,0 +1,518 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "2570bebd17b766c30fabd6137599b933",
+    "entities": [
+      {
+        "tableName": "tbl_card",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `belongingFlashCardCoverId` INTEGER, `cardStatus` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `remembered` INTEGER NOT NULL, `flag` INTEGER NOT NULL, `libOrder` INTEGER NOT NULL, `colorStatus` INTEGER NOT NULL, `timesFlipped` INTEGER NOT NULL, `frontTitle` TEXT, `backTitle` TEXT, `frontText` TEXT, `backText` TEXT, `markerTextPreview` TEXT, `answerChoiceId` INTEGER, `answerPreview` TEXT, `question` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "belongingFlashCardCoverId",
+            "columnName": "belongingFlashCardCoverId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cardStatus",
+            "columnName": "cardStatus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deleted",
+            "columnName": "deleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remembered",
+            "columnName": "remembered",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flag",
+            "columnName": "flag",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "libOrder",
+            "columnName": "libOrder",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "colorStatus",
+            "columnName": "colorStatus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timesFlipped",
+            "columnName": "timesFlipped",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stringData.frontTitle",
+            "columnName": "frontTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stringData.backTitle",
+            "columnName": "backTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stringData.frontText",
+            "columnName": "frontText",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stringData.backText",
+            "columnName": "backText",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "markerData.markerTextPreview",
+            "columnName": "markerTextPreview",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quizData.answerChoiceId",
+            "columnName": "answerChoiceId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quizData.answerPreview",
+            "columnName": "answerPreview",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quizData.question",
+            "columnName": "question",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "tbl_user",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "tbl_file",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fileId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT DEFAULT 'title', `deleted` INTEGER, `colorStatus` INTEGER NOT NULL, `fileStatus` INTEGER NOT NULL, `parentFileId` INTEGER, `library_order` INTEGER NOT NULL, `hasParent` INTEGER NOT NULL, `libOrder` INTEGER, `rememberedCardAmount` INTEGER NOT NULL, `childFoldersAmount` INTEGER NOT NULL, `childFlashCardCoversAmount` INTEGER NOT NULL, `childCardsAmount` INTEGER NOT NULL, `descendantsFoldersAmount` INTEGER NOT NULL, `descendantsFlashCardsCoversAmount` INTEGER NOT NULL, `descendantsCardsAmount` INTEGER NOT NULL, `flippedNeverAmount` INTEGER NOT NULL, `flippedOnceAmount` INTEGER NOT NULL, `flippedTwiceAmount` INTEGER NOT NULL, `flippedThreeTimesAmount` INTEGER NOT NULL, `flippedFourTimesAmount` INTEGER NOT NULL, `flippedFiveTimesAmount` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "fileId",
+            "columnName": "fileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "'title'"
+          },
+          {
+            "fieldPath": "deleted",
+            "columnName": "deleted",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "colorStatus",
+            "columnName": "colorStatus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileStatus",
+            "columnName": "fileStatus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentFileId",
+            "columnName": "parentFileId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hasChild",
+            "columnName": "library_order",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasParent",
+            "columnName": "hasParent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "libOrder",
+            "columnName": "libOrder",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rememberedCardAmount",
+            "columnName": "rememberedCardAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "childData.childFoldersAmount",
+            "columnName": "childFoldersAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "childData.childFlashCardCoversAmount",
+            "columnName": "childFlashCardCoversAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "childData.childCardsAmount",
+            "columnName": "childCardsAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descendantsData.descendantsFoldersAmount",
+            "columnName": "descendantsFoldersAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descendantsData.descendantsFlashCardsCoversAmount",
+            "columnName": "descendantsFlashCardsCoversAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descendantsData.descendantsCardsAmount",
+            "columnName": "descendantsCardsAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedNeverAmount",
+            "columnName": "flippedNeverAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedOnceAmount",
+            "columnName": "flippedOnceAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedTwiceAmount",
+            "columnName": "flippedTwiceAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedThreeTimesAmount",
+            "columnName": "flippedThreeTimesAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedFourTimesAmount",
+            "columnName": "flippedFourTimesAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flippedData.flippedFiveTimesAmount",
+            "columnName": "flippedFiveTimesAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "fileId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "tbl_marker_data",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `cardId` INTEGER NOT NULL, `text` TEXT, `marked` INTEGER NOT NULL, `markerColor` INTEGER NOT NULL, `remembered` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`cardId`) REFERENCES `tbl_card`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardId",
+            "columnName": "cardId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "marked",
+            "columnName": "marked",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "markerColor",
+            "columnName": "markerColor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remembered",
+            "columnName": "remembered",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_tbl_marker_data_id",
+            "unique": true,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_tbl_marker_data_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_tbl_marker_data_cardId",
+            "unique": true,
+            "columnNames": [
+              "cardId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_tbl_marker_data_cardId` ON `${TABLE_NAME}` (`cardId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tbl_card",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "cardId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "tbl_choice",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `belongingCardId` INTEGER, `text` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "belongingCardId",
+            "columnName": "belongingCardId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "tbl_activity_data",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cardId` INTEGER, `fileId` INTEGER, `activityStatus` INTEGER NOT NULL, `dateTime` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardId",
+            "columnName": "cardId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fileId",
+            "columnName": "fileId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "activityStatus",
+            "columnName": "activityStatus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateTime",
+            "columnName": "dateTime",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "tbl_card_file_x_ref",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cardFileXRefCardId` INTEGER NOT NULL, `cardFileXRefFileId` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardFileXRefCardId",
+            "columnName": "cardFileXRefCardId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardFileXRefFileId",
+            "columnName": "cardFileXRefFileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "file_xref",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parentFileId` INTEGER, `childFileId` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentFileId",
+            "columnName": "parentFileId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "childFileId",
+            "columnName": "childFileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2570bebd17b766c30fabd6137599b933')"
+    ]
+  }
+}

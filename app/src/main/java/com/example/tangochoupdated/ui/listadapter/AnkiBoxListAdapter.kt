@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 
@@ -22,7 +22,7 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 class AnkiBoxListAdapter(
     private val context: Context,
     private val ankiBoxFragViewModel: AnkiBoxFragViewModel,
-    private  val tab:AnkiBoxFragments,
+    private  val tab: AnkiBoxFragments,
     private val lifecycleOwner: LifecycleOwner) :
     ListAdapter<Any, AnkiBoxListAdapter.AnkiBoxItemViewHolder>(SearchDiffCallback) {
 

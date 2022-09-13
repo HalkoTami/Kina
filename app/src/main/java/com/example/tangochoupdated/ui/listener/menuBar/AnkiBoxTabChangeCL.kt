@@ -1,10 +1,8 @@
 package com.example.tangochoupdated.ui.listener.menuBar
 
 import android.view.View
-import android.widget.TextView
-import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
-import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 
 class AnkiBoxTabChangeCL(private val ankiBoxFrag:AnkiHomeFragBaseBinding,

@@ -2,21 +2,17 @@ package com.example.tangochoupdated.ui.listener.popUp
 
 import android.content.Context
 import android.view.View
-import android.widget.EditText
 import android.widget.TextView
-import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiHomeFragPopupAnkiSettingBaseBinding
-import com.example.tangochoupdated.db.enumclass.AnkiFilter
-import com.example.tangochoupdated.db.enumclass.AnkiFragments
-import com.example.tangochoupdated.db.enumclass.AnkiOrder
-import com.example.tangochoupdated.db.enumclass.AutoFlip
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFilter
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiOrder
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AutoFlip
 import com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiFragFlipBaseFragmentDirections
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
-import org.w3c.dom.Text
 
 class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBinding,
                                  val settingVM: AnkiSettingPopUpViewModel,
@@ -89,7 +85,7 @@ class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBi
 
                             }
                             else -> {
-                                val filterChange = returnAnkiFilter() ?:AnkiFilter()
+                                val filterChange = returnAnkiFilter() ?: AnkiFilter()
                                 filterChange.apply {
                                     when(v){
                                         txvFilterTypedAnswerCorrect                 ->

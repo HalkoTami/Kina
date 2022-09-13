@@ -2,10 +2,9 @@ package com.example.tangochoupdated.ui.listener.recyclerview
 
 import android.view.View
 import androidx.navigation.NavController
-import com.example.tangochoupdated.databinding.CreateCardFragBaseBinding
 import com.example.tangochoupdated.databinding.LibraryFragRvItemCardStringBinding
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.db.enumclass.StringFragFocusedOn
+import com.example.tangochoupdated.ui.viewmodel.customClasses.StringFragFocusedOn
 import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
@@ -18,12 +17,11 @@ class LibraryRVStringCardCL(val item: Card,
 ): View.OnClickListener{
 
     override fun onClick(v: View?) {
-        createCardViewModel.setStartingPosition(item.libOrder)
         when(v){
             binding.btnEdtBack-> { stringCardViewModel.setFocusedOn(StringFragFocusedOn.BackContent)
             }
             binding.btnEdtFront-> stringCardViewModel.setFocusedOn(StringFragFocusedOn.FrontContent)
         }
-        mainNavCon.navigate(CreateCardFragmentBaseDirections.openCreateCard())
+        createCardViewModel.onClickEditCardFromRV(item)
     }
 }

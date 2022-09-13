@@ -1,38 +1,97 @@
 package com.example.tangochoupdated.ui.view_set_up
 
 import android.content.Context
-import android.graphics.Rect
-import android.os.Build
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
-import android.view.TouchDelegate
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
-import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
-import com.example.tangochoupdated.databinding.LibraryFragRvItemCardStringBinding
-import com.example.tangochoupdated.databinding.LibraryFragRvItemFileBinding
+import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.StringData
 import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.db.enumclass.LibRVState
-import com.example.tangochoupdated.ui.listener.recyclerview.LibraryRVChooseFileMoveToCL
+import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
+import com.example.tangochoupdated.ui.listadapter.LibFragSearchRVListAdapter
+import com.example.tangochoupdated.ui.viewmodel.customClasses.LibRVState
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
-class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: DeletePopUpViewModel,navController: NavController){
-    private val addL = LibraryAddListeners(libVM,deletePopUpViewModel, libNavCon = navController )
+class LibrarySetUpItems(){
 
+    fun setUpLibFragWithMultiModeBase(binding: LibraryChildFragWithMulModeBaseBinding,
+                                      topBarView:View,
+                                      searchRVListAdapter: LibFragSearchRVListAdapter,
+                                      planeRVListAdapter: LibFragPlaneRVListAdapter,
+                                      context: Context){
+        fun setUpPlaneLibRV(){
+            val mainRV = binding.vocabCardRV
+            mainRV.adapter = planeRVListAdapter
+            mainRV.layoutManager = LinearLayoutManager(context)
+            mainRV.isNestedScrollingEnabled = true
+        }
+        fun setUpSearchRV(){
+            val searchRV =  binding.searchRvBinding.recyclerView
+            searchRV.adapter = searchRVListAdapter
+            searchRV.layoutManager = LinearLayoutManager(context)
+            searchRV.isNestedScrollingEnabled = true
+        }
+        binding.frameLayTopBar.addView(topBarView)
+        setUpSearchRV()
+        setUpPlaneLibRV()
+    }
+
+
+    fun changeLibRVSelectBtnVisibility(rv: RecyclerView, visible: Boolean){
+        rv.children.iterator().forEach { view ->
+            view.findViewById<ImageView>(R.id.btn_select).apply {
+                visibility =if(visible) View.VISIBLE else View.GONE
+            }
+        }
+    }
+    fun changeLibRVAllSelectedState(rv: RecyclerView, selected:Boolean){
+        rv.children.iterator().forEach { view ->
+            view.findViewById<ImageView>(R.id.btn_select).apply {
+                isSelected = selected
+            }
+        }
+    }
+    fun changeStringBtnVisibility(rv: RecyclerView, visible:Boolean){
+        rv.children.iterator().forEach { view ->
+            arrayOf(
+                view.findViewById<ImageView>(R.id.btn_edt_front),
+                view.findViewById<ImageView>(R.id.btn_edt_back),
+                view.findViewById(R.id.btn_add_new_card))
+                .onEach {
+                    it.visibility = if(visible)View.VISIBLE else View.GONE
+                }
+        }
+    }
+
+    fun makeLibRVUnSwiped(rv: RecyclerView){
+        rv.children.iterator().forEach { view ->
+            val parent = view.findViewById<ConstraintLayout>(R.id.lib_rv_base_container)
+            if(parent.tag == LibRVState.LeftSwiped){
+                Animation().animateLibRVLeftSwipeLay(
+                    view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false)
+            }
+            view.findViewById<ImageView>(R.id.btn_select).visibility = View.GONE
+            parent.tag = LibRVState.Plane
+        }
+    }
     fun setUpRVFileBinding(fileBinding: LibraryFragRvItemFileBinding,
                            file: File,
                            context:Context){
@@ -45,14 +104,15 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
             })
         }
     }
+    fun returnFileBindingTextViews(fileBinding: LibraryFragRvItemFileBinding, ):Array<TextView>{
+        return  arrayOf(
+            fileBinding.txvFileTitle
+        )
+    }
 
     fun setUpRVStringCardBinding(
         stringBinding: LibraryFragRvItemCardStringBinding,
-        stringData: StringData?,
-        item: Card,
-        createCardViewModel: CreateCardViewModel,
-        stringCardViewModel: StringCardViewModel,
-        mainNavController: NavController
+        stringData: StringData?
     ){
         stringBinding.apply {
             stringBinding.txvFrontTitle.text = stringData?.frontTitle.toString()
@@ -60,193 +120,25 @@ class LibrarySetUpItems(val libVM: LibraryViewModel,deletePopUpViewModel: Delete
             stringBinding.txvBackTitle.text = stringData?.backTitle.toString()
             stringBinding.txvBackText.text = stringData?.backText.toString()
         }
-        addL.cardRVStringAddCL(
-            binding = stringBinding,
-            item = item,
-            createCardViewModel = createCardViewModel,
-            stringCardViewModel = stringCardViewModel,
-            mainNavController = mainNavController
-        )
 
     }
-    fun setUpRVBaseFile(
-        rvItemBaseBinding: LibraryFragRvItemBaseBinding,
-        binding:LibraryFragRvItemFileBinding,
-        item: File,
-        context: Context,
+    fun returnStringCardTextViews(
+        stringBinding: LibraryFragRvItemCardStringBinding,
     ):Array<TextView>{
-        val binding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-        setUpRVFileBinding(binding,item,context)
-        rvItemBaseBinding. contentBindingFrame.apply{
-            layoutParams.height = 200
-            requestLayout()
-            addView(binding.root)
-        }
-        return arrayOf(binding.txvFileTitle)
 
-
-    }
-    fun setUpRVBaseSelectFileMoveTo(
-        rvItemBaseBinding: LibraryFragRvItemBaseBinding,
-        item: File,
-        context: Context,
-        createFileViewModel: CreateFileViewModel,
-        chooseFileMoveToViewModel: ChooseFileMoveToViewModel
-    ){
-        val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-        addL.chooseFileMoveToRVAddCL(
-
-            rvItemBaseBinding,
-            item,
-            chooseFileMoveToViewModel
+        return arrayOf(
+            stringBinding. txvFrontText,
+            stringBinding. txvFrontTitle,
+            stringBinding. txvBackTitle,
+            stringBinding. txvBackText
         )
-        setUpRVBaseFile(rvItemBaseBinding,fileBinding, item, context)
-
-        rvItemBaseBinding.btnSelect.apply {
-            setImageDrawable(AppCompatResources.getDrawable(context,
-                when(item.fileStatus){
-                    FileStatus.FOLDER -> R.drawable.icon_move_to_folder
-                    FileStatus.TANGO_CHO_COVER -> R.drawable.icon_move_to_flashcard_cover
-                    else -> return
-                }))
-            visibility = View.VISIBLE
-        }
-
-    }
-    fun setUpRVBasePlane(
-        parent:View,
-        rvItemBaseBinding: LibraryFragRvItemBaseBinding,
-        item: Any,
-        context: Context,
-        createCardViewModel: CreateCardViewModel,
-        createFileViewModel: CreateFileViewModel,
-        stringCardViewModel: StringCardViewModel,
-        mainNavController: NavController,
-    ){
-        when(item){
-            is File -> {
-                val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-                setUpRVBaseFile(rvItemBaseBinding,fileBinding, item, context)
-//                val r = Rect()
-//                rvItemBaseBinding.root.getHitRect(r)
-//                r.top -= 500
-//                r.bottom += 500
-//                val a = parent as RecyclerView
-//                a.children.iterator().forEach {it.setOnClickListener(null)  }
-//                parent.touchDelegate = TouchDelegate(
-//                    r,
-//                    rvItemBaseBinding.root
-//                )
-
-
-                addL.fileRVAddCL(
-                    rvItemBaseBinding,
-                    context,
-                    item,
-                    createFileViewModel,
-                )
-                rvItemBaseBinding.btnAddNewCard.visibility = View.GONE
-            }
-            is Card -> {
-                setUpRVBaseCard(rvItemBaseBinding, item, context, createCardViewModel,  stringCardViewModel,mainNavController)
-                addL.cardRVAddCL( rvItemBaseBinding,
-                    context,
-                    item,
-                    createCardViewModel,mainNavController)
-                rvItemBaseBinding.btnAddNewCard.visibility = View.VISIBLE
-            }
-        }
-        rvItemBaseBinding.apply {
-            btnSelect.apply {
-                setImageDrawable(
-                    AppCompatResources.getDrawable(context, R.drawable.select_rv_item))
-            }
-
-            root.tag = LibRVState.Plane
-            linLaySwipeShow.visibility = View.GONE
-            if(libVM.returnMultiSelectMode()== true) btnSelect.visibility = View.VISIBLE
-        }
-
-
-    }
-
-    fun setUpRVBaseCard(
-        rvItemBaseBinding: LibraryFragRvItemBaseBinding,
-        item: Card,
-        context: Context,
-        createCardViewModel: CreateCardViewModel,
-        stringCardViewModel: StringCardViewModel,
-        mainNavController: NavController,
-    ):ArrayList<TextView>{
-        val checkMatchTxv = arrayListOf<TextView>()
-        val cardContent = when(item.cardStatus){
-            CardStatus.STRING -> {
-                val binding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
-                binding.apply{
-                    checkMatchTxv.addAll(arrayOf(txvBackTitle,txvFrontTitle,txvBackText,txvBackText))
-                }
-                setUpRVStringCardBinding(binding,item.stringData,item,createCardViewModel,stringCardViewModel,mainNavController)
-                binding.txvFrontTitle.text = "order "+ item.libOrder.toString()
-                binding.txvBackTitle.text ="id " + item.id.toString()
-                binding.root
-            }
-            CardStatus.CHOICE -> TODO()
-            CardStatus.MARKER -> TODO()
-        }
-        rvItemBaseBinding.contentBindingFrame.addView(cardContent)
-
-
-        return checkMatchTxv
 
     }
 
 
 
-    fun setUpRVSearchBase(rvItemBaseBinding: LibraryFragRvItemBaseBinding,
-                          item:Any,
-                          context: Context,
-                          createCardViewModel: CreateCardViewModel,
-                          stringCardViewModel: StringCardViewModel,
-                          searchViewModel: SearchViewModel,
-                          lifecycleOwner: LifecycleOwner,
-                          mainNavController: NavController){
 
-        val checkMatchTxv = mutableListOf<TextView>()
-        when(item){
-            is File ->{
-                val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-                rvItemBaseBinding.contentBindingFrame.addView(fileBinding.root)
-                checkMatchTxv.addAll(setUpRVBaseFile(rvItemBaseBinding,fileBinding, item, context))
-            }
-            is Card -> {
-                val cardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
-                rvItemBaseBinding.contentBindingFrame.addView(cardBinding.root)
-                checkMatchTxv.addAll(setUpRVBaseCard(
-                    rvItemBaseBinding,
-                    item,
-                    context,
-                    createCardViewModel,
-                    stringCardViewModel,
-                mainNavController = mainNavController))
-            }
-            else -> return
-        }
-        addL.searchRVAddCL(
-            rvItemBaseBinding,
-            item,
-            createCardViewModel,
-            libVM,mainNavController)
-        rvItemBaseBinding.btnAddNewCard.visibility = View.GONE
-        rvItemBaseBinding.linLaySwipeShow.visibility = View.GONE
-        searchViewModel.searchingText.observe(lifecycleOwner){ search ->
-            checkMatchTxv.onEach { txv->
-                setColor(txv,txv.text.toString(),search,ContextCompat.getColor(context,R.color.red))
-
-            }
-        }
-    }
-
-    private fun setColor(view: TextView, fulltext: String, subtext: String, color: Int) {
+    fun setColorByMatchedSearch(view: TextView, fulltext: String, subtext: String, color: Int) {
         view.setText(fulltext, TextView.BufferType.SPANNABLE)
         val str = view.text as Spannable
         val i = fulltext.indexOf(subtext)

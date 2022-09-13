@@ -4,18 +4,20 @@ import android.view.View
 import android.widget.Toast
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.LibraryFragTopBarHomeBinding
+import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
-class LibFragTopBarHomeCL(val context:Context, val binding: LibraryFragTopBarHomeBinding, val libVM: LibraryViewModel,
-                          val navCon:NavController): View.OnClickListener{
+class LibFragTopBarHomeCL(private val binding: LibraryFragTopBarHomeBinding,
+                          private val libVM: LibraryViewModel,
+                          ): View.OnClickListener{
     val home = binding
 
 
     override fun onClick(v: View?) {
         binding.apply {
             when(v){
-                home.frameLayInBox-> libVM.onClickInBox(navCon)
-                home.imvBookMark -> Toast.makeText(context,"todo",Toast.LENGTH_SHORT).show()
+                home.frameLayInBox-> libVM.onClickInBox()
+                home.imvBookMark -> makeToast(v.context,"todo")
             }
         }
     }

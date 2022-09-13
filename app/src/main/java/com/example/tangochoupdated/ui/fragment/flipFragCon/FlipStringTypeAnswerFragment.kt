@@ -2,20 +2,14 @@ package com.example.tangochoupdated.ui.fragment.flipFragCon
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
-import android.text.SpannableStringBuilder
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
-import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragTypeAnswerStringFragBinding
-import com.example.tangochoupdated.db.enumclass.FlipFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.FlipFragments
 import com.example.tangochoupdated.ui.listener.KeyboardListener
 import com.example.tangochoupdated.ui.view_set_up.AnkiTypeAnswerFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel

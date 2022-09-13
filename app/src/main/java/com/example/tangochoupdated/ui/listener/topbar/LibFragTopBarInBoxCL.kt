@@ -5,8 +5,7 @@ import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.LibraryFragTopBarInboxBinding
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
-class LibFragTopBarInBoxCL(val context:Context, val binding: LibraryFragTopBarInboxBinding, val libVM: LibraryViewModel,
-                           val navCon:NavController): View.OnClickListener{
+class LibFragTopBarInBoxCL( val binding: LibraryFragTopBarInboxBinding, val libVM: LibraryViewModel, ): View.OnClickListener{
     val inBox = binding
 
 
@@ -18,7 +17,7 @@ class LibFragTopBarInBoxCL(val context:Context, val binding: LibraryFragTopBarIn
                     libVM.onClickMoveInBoxCardToFlashCard()
                 }
                 inBox.imvCloseInbox -> {
-                    navCon.popBackStack()
+                    libVM.returnLibraryNavCon()?.popBackStack()
                 }
 
 

@@ -6,16 +6,15 @@ import com.example.tangochoupdated.databinding.LibraryFragTopBarAncestorsBinding
 import com.example.tangochoupdated.databinding.LibraryFragTopBarFileBinding
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
-class LibFragTopBarFileCL(val context:Context,
-                          val binding: LibraryFragTopBarFileBinding,
+class LibFragTopBarFileCL(val binding: LibraryFragTopBarFileBinding,
                           val ancestorsBinding: LibraryFragTopBarAncestorsBinding,
-                          val libVM: LibraryViewModel,
-                          val navCon:NavController): View.OnClickListener{
+                          val libVM: LibraryViewModel, ): View.OnClickListener{
 
     val file = binding
 
 
     override fun onClick(v: View?) {
+        val navCon = libVM.returnLibraryNavCon() ?:return
         binding.apply {
             when(v){
 

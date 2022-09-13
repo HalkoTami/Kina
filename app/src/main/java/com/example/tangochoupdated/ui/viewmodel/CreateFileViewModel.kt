@@ -1,7 +1,6 @@
 package com.example.tangochoupdated.ui.viewmodel
 
 import android.text.Editable
-import android.view.View
 import androidx.lifecycle.*
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.db.MyRoomRepository
@@ -11,7 +10,7 @@ import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.FileXRef
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.db.enumclass.Mode
+import com.example.tangochoupdated.ui.viewmodel.customClasses.Mode
 import kotlinx.coroutines.launch
 
 class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {

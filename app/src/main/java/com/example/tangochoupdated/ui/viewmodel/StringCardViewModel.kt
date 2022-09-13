@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.StringData
-import com.example.tangochoupdated.db.enumclass.StringFragFocusedOn
+import com.example.tangochoupdated.ui.viewmodel.customClasses.StringFragFocusedOn
 
 class StringCardViewModel:ViewModel() {
     private val _parentCard = MutableLiveData<Card?>()

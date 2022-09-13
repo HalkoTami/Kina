@@ -3,12 +3,11 @@ package com.example.tangochoupdated.ui.listener.recyclerview
 import android.content.Context
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.view.children
 import androidx.navigation.NavController
 import com.example.tangochoupdated.MyTouchListener
 import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.db.enumclass.LibRVState
+import com.example.tangochoupdated.ui.viewmodel.customClasses.LibRVState
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 import com.example.tangochoupdated.ui.animation.Animation
@@ -47,6 +46,9 @@ class LibraryRVCardCL(val view: View,
                 btnDelete       -> deletePopUpViewModel.apply{
                     setDeletingItem(mutableListOf(item))
                     setConfirmDeleteVisible(true)
+                }
+                btnAddNewCard -> {
+                    createCardViewModel.onClickAddNewCardRV(item)
                 }
             }
         }

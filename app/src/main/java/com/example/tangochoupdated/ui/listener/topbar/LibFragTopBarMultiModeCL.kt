@@ -12,18 +12,15 @@ import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
-class LibFragTopBarMultiModeCL(val context: Context,
+class LibFragTopBarMultiModeCL(
                                val binding: LibraryFragTopBarMultiselectModeBinding,
                                val menuBinding: LibItemTopBarMenuBinding,
                                val menuFrame:FrameLayout,
                                val libVM: LibraryViewModel,
-                               val navCon: NavController, val deletePopUpViewModel:DeletePopUpViewModel
+                               val deletePopUpViewModel:DeletePopUpViewModel
 ): View.OnClickListener{
     val multi = binding
-    fun toastPleaseSelectItems(){
-        Toast.makeText(context,"アイテムを選択してください", Toast.LENGTH_SHORT).show()
-    }
-    fun changeMenuVisibility(){
+    private fun changeMenuVisibility(){
         menuFrame.apply{
             visibility =  if(this.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
@@ -43,23 +40,19 @@ class LibFragTopBarMultiModeCL(val context: Context,
                 multi.imvChangeMenuVisibility -> changeMenuVisibility()
 
                 menuBinding.linLayMoveSelectedItems -> {
-                    if(notSelected)toastPleaseSelectItems()
+                    if(notSelected)deletePopUpViewModel.makeToastVisible()
                         else {
-                            libVM.openChooseFileMoveTo(null,navCon)
+                            libVM.openChooseFileMoveTo(null)
                     }
                 }
-                menuBinding.linLayDeleteSelectedItems -> if(notSelected)toastPleaseSelectItems()
+                menuBinding.linLayDeleteSelectedItems -> if(notSelected) makeToast(v.context,"todo")
                 else {
                     deletePopUpViewModel.setDeletingItem(libVM.returnSelectedItems())
-                    var card:Boolean = false
-                    deletePopUpViewModel.returnDeletingItems().onEach { card = it is Card }
-                    if(card){
-                        deletePopUpViewModel.deleteCard()
-                    } else deletePopUpViewModel.setConfirmDeleteVisible(true)
+                    deletePopUpViewModel.setConfirmDeleteVisible(true)
 
                 }
-                menuBinding.linLaySetFlagToSelectedItems -> if(notSelected)toastPleaseSelectItems()
-                else makeToast(context,"")
+                menuBinding.linLaySetFlagToSelectedItems -> if(notSelected) makeToast(v.context,"todo")
+                 else TODO()
 
 
 

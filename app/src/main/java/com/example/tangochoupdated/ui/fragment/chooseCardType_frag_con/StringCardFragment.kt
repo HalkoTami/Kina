@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,7 +15,7 @@ import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.CreateCardFragStringFragBinding
 import com.example.tangochoupdated.db.dataclass.StringData
 import com.example.tangochoupdated.db.enumclass.CardStatus
-import com.example.tangochoupdated.db.enumclass.StringFragFocusedOn
+import com.example.tangochoupdated.ui.viewmodel.customClasses.StringFragFocusedOn
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
 

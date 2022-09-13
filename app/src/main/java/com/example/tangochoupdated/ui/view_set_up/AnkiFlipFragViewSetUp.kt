@@ -9,9 +9,11 @@ import androidx.core.animation.doOnStart
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.*
-import com.example.tangochoupdated.db.enumclass.*
 import com.example.tangochoupdated.ui.listener.FlipBaseFragCL
 import com.example.tangochoupdated.ui.viewmodel.*
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnimationAttributes
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AutoFlip
+import com.example.tangochoupdated.ui.viewmodel.customClasses.Progress
 
 class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
                             private val flipViewModel:AnkiFlipFragViewModel,
@@ -90,7 +92,7 @@ class AnkiFlipFragViewSetUp(private val flipBaseBinding:AnkiFlipFragBaseBinding,
         }
     }
 
-    fun observeAutoFlip(autoFlip: AutoFlip,parentCountAnimation:ValueAnimator?){
+    fun observeAutoFlip(autoFlip: AutoFlip, parentCountAnimation:ValueAnimator?){
         if(autoFlip.active){
             flipViewModel.setCountDownAnim(AnimationAttributes.StartAnim)
         } else {

@@ -14,9 +14,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragLookStringFragBinding
-import com.example.tangochoupdated.db.enumclass.Count
-import com.example.tangochoupdated.db.enumclass.CountFlip
-import com.example.tangochoupdated.db.enumclass.FlipFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.Count
+import com.example.tangochoupdated.ui.viewmodel.customClasses.CountFlip
+import com.example.tangochoupdated.ui.viewmodel.customClasses.FlipFragments
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 
@@ -105,7 +105,7 @@ class FlipStringFragment  : Fragment() {
 
             val a = returnCountFlip()
             if(a!=null){
-                if(returnFlipFragment()==FlipFragments.LookStringBack){
+                if(returnFlipFragment()== FlipFragments.LookStringBack){
                     a.count = Count.End
                     setCountFlip(a)
                 }

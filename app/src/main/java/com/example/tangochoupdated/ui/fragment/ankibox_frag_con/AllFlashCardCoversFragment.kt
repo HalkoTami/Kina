@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.example.tangochoupdated.databinding.FullRvBinding
-import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 
@@ -35,7 +35,8 @@ class AllFlashCardCoversFragment  : Fragment() {
         val fileId = args.fileId?.single()
         val viewSetUp = AnkiBoxFragViewSetUp()
         val adapter = viewSetUp
-            .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),ankiBoxViewModel,AnkiBoxFragments.AllFlashCardCovers,viewLifecycleOwner)
+            .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),ankiBoxViewModel,
+                AnkiBoxFragments.AllFlashCardCovers,viewLifecycleOwner)
 
         ankiBoxViewModel.apply {
             setCurrentChildFragment(AnkiBoxFragments.AllFlashCardCovers)

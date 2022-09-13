@@ -1,12 +1,11 @@
 package com.example.tangochoupdated.ui.viewmodel
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.tangochoupdated.db.enumclass.AnkiFilter
-import com.example.tangochoupdated.db.enumclass.AnkiOrder
-import com.example.tangochoupdated.db.enumclass.AutoFlip
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFilter
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiOrder
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AutoFlip
 
 class AnkiSettingPopUpViewModel : ViewModel() {
 
@@ -20,7 +19,7 @@ class AnkiSettingPopUpViewModel : ViewModel() {
 
     }
     private val _ankiOrder = MutableLiveData<AnkiOrder>()
-    fun setAnkiOrder(ankiOrder:AnkiOrder){
+    fun setAnkiOrder(ankiOrder: AnkiOrder){
         _ankiOrder.value = ankiOrder
     }
     val ankiOrder:LiveData<AnkiOrder> = _ankiOrder
@@ -54,8 +53,8 @@ class AnkiSettingPopUpViewModel : ViewModel() {
 //
 //        setAnkiFilter(before)
 //    }
-    fun returnAnkiFilter():AnkiFilter{
-        return _ankiFilter.value ?:AnkiFilter()
+    fun returnAnkiFilter(): AnkiFilter {
+        return _ankiFilter.value ?: AnkiFilter()
     }
 
     private val _autoFlip = MutableLiveData<AutoFlip>()
@@ -63,8 +62,8 @@ class AnkiSettingPopUpViewModel : ViewModel() {
         _autoFlip.value = autoFlip
     }
     val autoFlip:LiveData<AutoFlip> = _autoFlip
-    fun returnAutoFlip():AutoFlip{
-        return _autoFlip.value ?:AutoFlip()
+    fun returnAutoFlip(): AutoFlip {
+        return _autoFlip.value ?: AutoFlip()
     }
 
 

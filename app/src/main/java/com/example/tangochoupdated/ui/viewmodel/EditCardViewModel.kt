@@ -11,8 +11,7 @@ import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
-import com.example.tangochoupdated.db.enumclass.Mode
-import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
+import com.example.tangochoupdated.ui.viewmodel.customClasses.Mode
 import com.example.tangochoupdated.ui.fragment.createCard_frag_com.CreateCardFragmentDirections
 import kotlinx.coroutines.launch
 

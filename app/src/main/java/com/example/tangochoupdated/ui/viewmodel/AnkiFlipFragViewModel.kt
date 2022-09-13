@@ -4,10 +4,13 @@ import androidx.lifecycle.*
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.db.enumclass.*
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringCheckAnswerFragmentDirections
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragmentDirections
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnimationAttributes
+import com.example.tangochoupdated.ui.viewmodel.customClasses.CountFlip
+import com.example.tangochoupdated.ui.viewmodel.customClasses.FlipFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.Progress
 import kotlinx.coroutines.launch
 
 class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
@@ -27,7 +30,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         _countFlip.value = countFlip
 
     }
-    fun returnCountFlip():CountFlip?{
+    fun returnCountFlip(): CountFlip?{
         return _countFlip.value
     }
     val countFlip:LiveData<CountFlip> = _countFlip
@@ -36,8 +39,8 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun setFlipFragment (flipAction: FlipFragments){
         _flipFragment.value = flipAction
     }
-    fun returnFlipFragment():FlipFragments{
-        return _flipFragment.value ?:FlipFragments.LookStringFront
+    fun returnFlipFragment(): FlipFragments {
+        return _flipFragment.value ?: FlipFragments.LookStringFront
     }
     val flipFragment :LiveData<FlipFragments> = _flipFragment
 

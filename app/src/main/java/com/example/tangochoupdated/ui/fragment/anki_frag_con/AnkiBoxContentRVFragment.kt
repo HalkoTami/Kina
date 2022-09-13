@@ -1,37 +1,23 @@
 package com.example.tangochoupdated.ui.fragment.anki_frag_con
 
-import android.animation.ValueAnimator
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
-import com.example.tangochoupdated.activity.MainActivity
-import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
 import com.example.tangochoupdated.databinding.FragAnkiContentRvBinding
-import com.example.tangochoupdated.databinding.FullRvBinding
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.db.enumclass.*
-import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
-import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragment
-import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragmentDirections
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
-import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
-import java.time.Duration
-import java.time.LocalDateTime
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
 
 
 class AnkiBoxContentRVFragment  : Fragment() {
@@ -81,7 +67,8 @@ class AnkiBoxContentRVFragment  : Fragment() {
         binding.imvFlipOrAnkiBox.setImageDrawable(ContextCompat.getDrawable(requireActivity(),topBarDraw))
 
         val adapter =
-            viewSetUp.setUpAnkiBoxRVListAdapter(binding.rvBinding.recyclerView,requireActivity(),boxViewModel,AnkiBoxFragments.Library,viewLifecycleOwner)
+            viewSetUp.setUpAnkiBoxRVListAdapter(binding.rvBinding.recyclerView,requireActivity(),boxViewModel,
+                AnkiBoxFragments.Library,viewLifecycleOwner)
         adapter.submitList(list)
 
         return root

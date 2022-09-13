@@ -15,9 +15,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.CreateCardFragMainBinding
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.AnkiFragments
-import com.example.tangochoupdated.db.enumclass.LibraryFragment
-import com.example.tangochoupdated.db.enumclass.MainFragment
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.LibraryFragment
+import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.viewmodel.*
 
@@ -61,7 +61,7 @@ class CreateCardFragmentBase  : Fragment() {
                     AnkiFragments.Flip -> flipBaseViewModel.returnParentCard()?.belongingFlashCardCoverId
                 }
                 MainFragment.Library -> when(libraryViewModel.returnActiveFragment()){
-                    LibraryFragment.FlashCardCover,LibraryFragment.Folder -> libraryViewModel.returnParentFile()?.fileId
+                    LibraryFragment.FlashCardCover, LibraryFragment.Folder -> libraryViewModel.returnParentFile()?.fileId
                     else -> null
                 }
                 else -> null

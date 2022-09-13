@@ -2,12 +2,16 @@ package com.example.tangochoupdated.ui.listadapter
 
 import android.content.Context
 import android.view.*
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.ui.listener.recyclerview.LibraryRVChooseFileMoveToCL
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
@@ -22,12 +26,9 @@ import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
 
 class LibFragChooseFileRVListAdapter(
-    private val createFileViewModel: CreateFileViewModel,
-    private val libraryViewModel: LibraryViewModel,
     private val context: Context,
-    private val deletePopUpViewModel: DeletePopUpViewModel,
-    private val navController: NavController,
-    private val chooseFileMoveToViewModel: ChooseFileMoveToViewModel) :
+    private val chooseFileMoveToViewModel: ChooseFileMoveToViewModel,
+    private val libraryViewModel: LibraryViewModel) :
     ListAdapter<File, LibFragChooseFileRVListAdapter.LibFragChooseFileViewHolder>(FileDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibFragChooseFileViewHolder {
@@ -36,28 +37,49 @@ class LibFragChooseFileRVListAdapter(
     }
 
     override fun onBindViewHolder(holder: LibFragChooseFileViewHolder, position: Int) {
-        holder.bind(getItem(position),libraryViewModel,createFileViewModel,deletePopUpViewModel,navController,chooseFileMoveToViewModel)
+        holder.bind(getItem(position),chooseFileMoveToViewModel,libraryViewModel)
     }
 
     class LibFragChooseFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
         RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: File,
-                 libraryViewModel: LibraryViewModel,
-                 createFileViewModel: CreateFileViewModel,
-                 deletePopUpViewModel: DeletePopUpViewModel,
-                 navController: NavController,
-                 chooseFileMoveToViewModel: ChooseFileMoveToViewModel
+                 chooseFileMoveToViewModel: ChooseFileMoveToViewModel,
+                 libraryViewModel: LibraryViewModel
         ){
+            fun addCL(){ binding.apply {
+                arrayOf(
+                    libRvBaseContainer,
+                    btnSelect,
+                ).onEach { it.setOnClickListener(
+                    LibraryRVChooseFileMoveToCL(
+                        item,
+                        libraryViewModel,
+                        binding,
+                        chooseFileMoveToViewModel
+                    )
+                )
+                }
+            }
+            }
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
-           LibrarySetUpItems(libraryViewModel,deletePopUpViewModel,navController).setUpRVBaseSelectFileMoveTo(
-               rvItemBaseBinding = binding,
-               item = item,
-               context = context,
-               createFileViewModel = createFileViewModel,
-               chooseFileMoveToViewModel
-           )
+            val addListeners = LibraryAddListeners()
+            val viewSetUp = LibrarySetUpItems()
+            val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
+            viewSetUp.setUpRVFileBinding(fileBinding,item,context)
+            binding.contentBindingFrame.addView(fileBinding.root)
+            binding.btnSelect.apply {
+                setImageDrawable(
+                    AppCompatResources.getDrawable(context,
+                    when(item.fileStatus){
+                        FileStatus.FOLDER -> R.drawable.icon_move_to_folder
+                        FileStatus.TANGO_CHO_COVER -> R.drawable.icon_move_to_flashcard_cover
+                        else -> return
+                    }))
+                visibility = View.VISIBLE
+            }
+            addCL()
 
         }
 

@@ -12,29 +12,29 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.ItemColorPaletBinding
 import com.example.tangochoupdated.databinding.LibraryFragBinding
+import com.example.tangochoupdated.databinding.LibraryFragPopupConfirmDeleteAllChildrenBinding
+import com.example.tangochoupdated.databinding.LibraryFragPopupConfirmDeleteBinding
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.db.enumclass.LibRVState
-import com.example.tangochoupdated.db.enumclass.MainFragment
+import com.example.tangochoupdated.ui.viewmodel.customClasses.LibRVState
+import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmDeleteCL
 import com.example.tangochoupdated.ui.observer.CommonOb
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
-class LibraryFragmentBase : Fragment(){
+class LibraryFragmentBase : Fragment(),View.OnClickListener{
 
     private lateinit var libNavCon:NavController
-    private lateinit var recyclerView:RecyclerView
-    private val createFileViewModel: CreateFileViewModel by activityViewModels()
-    private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
     private val baseViewModel: BaseViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
@@ -48,106 +48,88 @@ class LibraryFragmentBase : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = LibraryFragBinding.inflate(inflater, container, false)
-
-        val a = childFragmentManager.findFragmentById(binding.libFragConView.id) as NavHostFragment
-        libNavCon = a.navController
-        libraryViewModel.setLibraryNavCon(libNavCon)
-
-        baseViewModel.apply {
-            setChildFragmentStatus(MainFragment.Library)
+        fun setLateInitVars(){
+            _binding = LibraryFragBinding.inflate(inflater, container, false)
+            val a = childFragmentManager.findFragmentById(binding.libFragConView.id) as NavHostFragment
+            libNavCon = a.navController
         }
+        fun addClickListeners(){
+            fun confirmDeletePopUpAddCL(){
+                val onlyP = binding.confirmDeletePopUpBinding
+                val deleteAllC = binding.confirmDeleteChildrenPopUpBinding
+                arrayOf(
+                    onlyP.btnCloseConfirmDeleteOnlyParentPopup,
+                    onlyP.btnCommitDeleteOnlyParent,
+                    onlyP.btnCancel,
+                    deleteAllC.btnCloseConfirmDeleteOnlyParentPopup,
+                    deleteAllC.btnDeleteAllChildren,
+                    deleteAllC.deleteOnlyFile,
+                    deleteAllC.btnCancel
+                )   .onEach {
+                    it.setOnClickListener(this)
+                }
+            }
+            confirmDeletePopUpAddCL()
 
-
-        chooseFileMoveToViewModel.apply {
-            showToast.observe(viewLifecycleOwner){
-                CommonOb().observeToast(requireActivity(),returnToastText(),it)
+        }
+        val fileMovedToastObserver = Observer<Boolean>{
+            CommonOb().observeToast(requireActivity(),chooseFileMoveToViewModel.returnToastText(),it)
+        }
+        val deletedToastObserver = Observer<Boolean>{
+            CommonOb().observeToast(requireActivity(),deletePopUpViewModel.returnToastText(),it)
+        }
+        val confirmDeleteViewObserver = Observer<DeletePopUpViewModel.ConfirmDeleteView>{
+            binding.confirmDeletePopUpBinding.apply {
+                binding.background.visibility = if(it.visible) View.VISIBLE else View.GONE
+                binding.frameLayConfirmDelete.visibility = if(it.visible) View.VISIBLE else View.GONE
+                txvConfirmDeleteOnlyParent.text = it.confirmText
             }
         }
-
-//        binding.editFileBinding.apply {
-//            createFileViewModel.apply {
-//                editFilePopUpVisible.observe(viewLifecycleOwner){
-//                    binding.frameLayEditFile.visibility = if(it)View.VISIBLE else View.GONE
-//                    binding.background.visibility = if(it)View.VISIBLE else View.GONE
-//                }
-//                filePopUpUIData.observe(viewLifecycleOwner){
-//                    LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,requireActivity())
-//                }
-//
-//
-//            }
-//        }
-//                UIへデータ反映
-//        bindingCreateFile.apply {
-//            var start = true
-//            lastInsetedFileId.observe(this@MainActivity){
-//                if(start){
-//                    start = false
-//                    return@observe
-//                } else createFileViewModel.setLastInsertedFileId(it)
-//            }
-//        }
-
-        libraryViewModel.apply {
-
+        val confirmDeleteWithChildrenViewObserver = Observer<DeletePopUpViewModel.ConfirmDeleteWithChildrenView>{
+            binding.confirmDeleteChildrenPopUpBinding.apply {
+                binding.background.visibility = if(it.visible) View.VISIBLE else View.GONE
+                binding.frameLayConfirmDeleteWithChildren.visibility =  if(it.visible) View.VISIBLE else View.GONE
+                txvContainingFolder.text = "${it.containingFolder}個"
+                txvContainingFlashcard.text = "${it.containingFlashCardCover}個"
+                txvContainingCard.text = "${it.containingCards}枚"
+            }
+        }
+        val deletingItemObserver = Observer<List<Any>> { list->
             deletePopUpViewModel.apply {
-                showToast.observe(viewLifecycleOwner){
-                    CommonOb().observeToast(requireActivity(),returnToastText(),it)
-                }
-                confirmDeleteView.observe(viewLifecycleOwner){
-                    binding.confirmDeletePopUpBinding.apply {
-                        binding.background.visibility = if(it.visible) View.VISIBLE else View.GONE
-                        binding.frameLayConfirmDelete.visibility = if(it.visible) View.VISIBLE else View.GONE
-                        txvConfirmDeleteOnlyParent.text = it.confirmText
+                if (list.isEmpty().not()) {
+                    setDeleteText(list)
+                    setDeleteWithChildrenText(list)
+                    val fileIds = mutableListOf<Int>()
+                    list.onEach { when(it ){
+                        is File -> fileIds.add(it.fileId)
+                    } }
+                    getAllDescendantsByFileId(fileIds).observe(viewLifecycleOwner) {
+                        setDeletingItemChildrenFiles(it)
+                        setContainingFilesAmount(it)
                     }
-                }
-                confirmDeleteWithChildrenView.observe(viewLifecycleOwner){
-                    binding.confirmDeleteChildrenPopUpBinding.apply {
-                        binding.background.visibility = if(it.visible) View.VISIBLE else View.GONE
-                        binding.frameLayConfirmDeleteWithChildren.visibility =  if(it.visible) View.VISIBLE else View.GONE
-                        txvContainingFolder.text = "${it.containingFolder}個"
-                        txvContainingFlashcard.text = "${it.containingFlashCardCover}個"
-                        txvContainingCard.text = "${it.containingCards}枚"
+                    getCardsByMultipleFileId(fileIds).observe(viewLifecycleOwner){
+                        setDeletingItemChildrenCards(it)
+                        setContainingCardsAmount(it)
                     }
-
-                }
-                deletingItem.observe(viewLifecycleOwner){ list ->
-                    if (list.isEmpty().not()) {
-                        setDeleteText(list)
-                        setDeleteWithChildrenText(list)
-                        val fileIds = mutableListOf<Int>()
-                        list.onEach { when(it ){
-                            is File -> fileIds.add(it.fileId)
-                        } }
-                        getAllDescendantsByFileId(fileIds).observe(viewLifecycleOwner) {
-                            setDeletingItemChildrenFiles(it)
-                            setContainingFilesAmount(it)
-                        }
-                        getCardsByMultipleFileId(fileIds).observe(viewLifecycleOwner){
-                            setDeletingItemChildrenCards(it)
-                            setContainingCardsAmount(it)
-                        }
-                    }
-
-
                 }
             }
-//            binding.editFileBinding.apply {
-//                colPaletBinding.apply {
-//                    arrayOf(
-//                        imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,root,binding.background
-//                    ).onEach {
-//                        it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,binding.frameLayEditFile,binding.background,createFileViewModel)) }
-//                }
-//            }
 
         }
 
+        setLateInitVars()
+        addClickListeners()
 
-        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel,libNavCon)
-        addListeners.confirmDeletePopUpAddCL(binding.confirmDeletePopUpBinding,binding.confirmDeleteChildrenPopUpBinding)
-        return binding.root
+        libraryViewModel.setLibraryNavCon(libNavCon)
+        baseViewModel.setChildFragmentStatus(MainFragment.Library)
+
+        chooseFileMoveToViewModel.showToast.observe(viewLifecycleOwner,fileMovedToastObserver)
+        deletePopUpViewModel.showToast.observe(viewLifecycleOwner,deletedToastObserver)
+        deletePopUpViewModel.confirmDeleteView.observe(viewLifecycleOwner,confirmDeleteViewObserver)
+        deletePopUpViewModel.confirmDeleteWithChildrenView.observe(viewLifecycleOwner,confirmDeleteWithChildrenViewObserver)
+        deletePopUpViewModel.deletingItem.observe(viewLifecycleOwner,deletingItemObserver)
+
+
+         return binding.root
     }
 
 
@@ -170,94 +152,25 @@ class LibraryFragmentBase : Fragment(){
             callback
         )
     }
-    fun changeColPalletCol(colorStatus: ColorStatus?, selected:Boolean?, colorPaletBinding: ItemColorPaletBinding){
-        val imageView:ImageView
-        val col:Int
-        colorPaletBinding.apply {
-            when(colorStatus) {
-                ColorStatus.GRAY -> {
-                    col = ContextCompat.getColor(requireActivity(), R.color.gray)
-                    imageView = this.imvColGray
+    override fun onClick(v: View?) {
+        val onlyP = binding.confirmDeletePopUpBinding
+        val deleteAllC = binding.confirmDeleteChildrenPopUpBinding
+        when(v){
+            onlyP.btnCloseConfirmDeleteOnlyParentPopup -> deletePopUpViewModel.setConfirmDeleteVisible(false)
+            onlyP.btnCommitDeleteOnlyParent -> {
+                deletePopUpViewModel.apply {
+                    if(checkDeletingItemsHasChildren()) {
+                        setConfirmDeleteVisible(false)
+                        setConfirmDeleteWithChildrenVisible(true)
+                    } else deleteOnlyFile()
                 }
-                ColorStatus.BLUE -> {
-                    col = ContextCompat.getColor(requireActivity(), R.color.blue)
-                    imageView = this.imvColBlue
-                }
-                ColorStatus.YELLOW -> {
-                    col = ContextCompat.getColor(requireActivity(), R.color.yellow)
-                    imageView = this.imvColYellow
-                }
-                ColorStatus.RED -> {
-                    col = ContextCompat.getColor(requireActivity(), R.color.red)
-                    imageView = this.imvColRed
-                }
-                else -> return
-            }
-        }
-        val a = imageView.drawable as GradientDrawable
-        a.mutate()
 
-        when(selected){
-            true -> {
-                a.setStroke(5, ContextCompat.getColor(requireActivity(), R.color.black))
-                a.setColor(col)
-                imageView.alpha = 1f
-//                imageView.background = a
-                imageView.elevation = 10f
             }
-            false -> {
-                a.setStroke(5, ContextCompat.getColor(requireActivity(), R.color.ofwhite))
-                a.setColor(col)
-                imageView.alpha = 0.4f
-//                imageView.elevation = 0f
-            }
-            else -> return
-        }
-        imageView.setImageDrawable(a)
-
-    }
-
-    fun makeAllColPaletUnselected(colorPaletBinding: ItemColorPaletBinding){
-        changeColPalletCol(ColorStatus.RED,false,colorPaletBinding)
-        changeColPalletCol(ColorStatus.YELLOW,false,colorPaletBinding)
-        changeColPalletCol(ColorStatus.BLUE,false,colorPaletBinding)
-        changeColPalletCol(ColorStatus.GRAY,false,colorPaletBinding)
-    }
-    fun changeLibRVSelectBtnVisibility(rv:RecyclerView,visible: Boolean){
-        rv.children.iterator().forEach { view ->
-            view.findViewById<ImageView>(R.id.btn_select).apply {
-                visibility =if(visible) View.VISIBLE else View.GONE
-            }
-        }
-    }
-    fun changeLibRVAllSelectedState(rv:RecyclerView,selected:Boolean){
-        rv.children.iterator().forEach { view ->
-            view.findViewById<ImageView>(R.id.btn_select).apply {
-                isSelected = selected
-            }
-        }
-    }
-    fun changeStringBtnVisibility(rv:RecyclerView,visible:Boolean){
-        rv.children.iterator().forEach { view ->
-            arrayOf(
-                view.findViewById<ImageView>(R.id.btn_edt_front),
-                view.findViewById<ImageView>(R.id.btn_edt_back),
-                view.findViewById(R.id.btn_add_new_card))
-                .onEach {
-                    it.visibility = if(visible)View.VISIBLE else View.GONE
-                }
-        }
-    }
-
-    fun makeLibRVUnSwiped(rv:RecyclerView){
-        rv.children.iterator().forEach { view ->
-            val parent = view.findViewById<ConstraintLayout>(R.id.lib_rv_base_container)
-            if(parent.tag == LibRVState.LeftSwiped){
-                Animation().animateLibRVLeftSwipeLay(
-                    view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false)
-            }
-            view.findViewById<ImageView>(R.id.btn_select).visibility = View.GONE
-            parent.tag = LibRVState.Plane
+            onlyP.btnCancel -> deletePopUpViewModel.setConfirmDeleteVisible(false,)
+            deleteAllC.btnCloseConfirmDeleteOnlyParentPopup -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
+            deleteAllC.btnDeleteAllChildren -> deletePopUpViewModel.deleteFileWithChildren()
+            deleteAllC.deleteOnlyFile -> deletePopUpViewModel.deleteOnlyFile()
+            deleteAllC.btnCancel -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
         }
     }
 

@@ -15,7 +15,7 @@ import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragCheckAnswerStringFragBinding
 import com.example.tangochoupdated.db.dataclass.ActivityData
 import com.example.tangochoupdated.db.enumclass.ActivityStatus
-import com.example.tangochoupdated.db.enumclass.FlipFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.FlipFragments
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFlipTypeAndCheckViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel

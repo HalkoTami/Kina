@@ -1,14 +1,5 @@
-package com.example.tangochoupdated.db.enumclass
+package com.example.tangochoupdated.ui.viewmodel.customClasses
 
-enum class Tab{
-    TabLibrary,TabAnki,CreateFile,CreateCard
-}
-enum class TabStatus{
-    Focused, UnFocused
-}
-enum class ActionStatus{
-    Able, UnAble
-}
 
 
 enum class StringFragFocusedOn{
@@ -22,6 +13,6 @@ enum class AnkiBoxFragments{
     AllFlashCardCovers, Library, Favourites
 }
 class AnkiBoxTabData(
-    var currentTab:AnkiBoxFragments,
-    var before:AnkiBoxFragments?
+    var currentTab: AnkiBoxFragments,
+    var before: AnkiBoxFragments?
 )

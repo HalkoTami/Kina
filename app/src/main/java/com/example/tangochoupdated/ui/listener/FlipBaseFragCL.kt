@@ -1,16 +1,10 @@
 package com.example.tangochoupdated.ui.listener
 
-import android.content.Context
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
-import com.example.tangochoupdated.db.enumclass.AnimationAttributes
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnimationAttributes
 import com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiBoxContentRVFragmentDirections
 import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
 import com.example.tangochoupdated.ui.viewmodel.*
@@ -59,7 +53,8 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                     }
                     btnStopCount -> {
                         v.isSelected = !v.isSelected
-                        if(v.isSelected)flipViewModel.setCountDownAnim(AnimationAttributes.Pause) else flipViewModel.setCountDownAnim(AnimationAttributes.Resume)
+                        if(v.isSelected)flipViewModel.setCountDownAnim(AnimationAttributes.Pause) else flipViewModel.setCountDownAnim(
+                            AnimationAttributes.Resume)
                     }
                     imvEditCard -> {
                         val libOrder = flipViewModel.returnParentCard()?.libOrder ?:return

@@ -2,13 +2,8 @@ package com.example.tangochoupdated.ui.view_set_up
 
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ListAdapter
-import androidx.compose.ui.geometry.Rect
 import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -16,8 +11,7 @@ import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.StringData
-import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
-import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
 import com.example.tangochoupdated.ui.listadapter.AnkiBoxListAdapter
 import com.example.tangochoupdated.ui.listener.AnkiBoxFragBaseCL
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
@@ -26,7 +20,6 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
-import kotlin.math.floor
 
 
 class AnkiBoxFragViewSetUp() {

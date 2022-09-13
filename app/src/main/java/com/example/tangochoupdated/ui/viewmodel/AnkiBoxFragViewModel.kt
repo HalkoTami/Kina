@@ -5,10 +5,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.db.dataclass.CardAndTagXRef
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
-import com.example.tangochoupdated.db.enumclass.AnkiBoxTabData
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxTabData
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.AllFlashCardCoversFragmentDirections
@@ -29,7 +28,7 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     val allFlashCardCoverFromDB: LiveData<List<File>> = repository.allFlashCardCover.asLiveData()
     val allFavouriteAnkiBoxFromDB: LiveData<List<File>> = repository.allFavouriteAnkiBox.asLiveData()
     val lastInsertedFileId:LiveData<Int> = repository.lastInsertedFile.asLiveData()
-    fun getLibraryFilesFromDB(parentFileId:Int?) :LiveData<List<File>> = repository.mygetFileDataByParentFileId(parentFileId).asLiveData()
+    fun getLibraryFilesFromDB(parentFileId:Int?) :LiveData<List<File>> = repository.getFileDataByParentFileId(parentFileId).asLiveData()
     private val _libraryFilesAsAnkiBox = MutableLiveData<List<File>>()
     fun setLibraryFilesAsAnkiBox(list: List<File>){
         _libraryFilesAsAnkiBox.value = list
@@ -41,6 +40,7 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun setLibraryCardsAsAnkiBox(list: List<Card>){
         _libraryCardsAsAnkiBox.value = list
     }
+    fun getDescendantsCards(fileIds:List<Int>) :LiveData<List<Card>> = repository.getDescendantsCardsByMultipleFileId(fileIds).asLiveData()
     fun getCardsFromDBByMultipleCardIds(cardIds:List<Int>) :LiveData<List<Card>> = repository.getCardsByMultipleCardId(cardIds).asLiveData()
     private fun insertFile(file: File){
         viewModelScope.launch {
@@ -121,12 +121,12 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         val data = AnkiBoxTabData(fragment,before?.currentTab)
         _currentChildFragment.value = data
     }
-    fun returnCurrentChildFragment ():AnkiBoxFragments?{
+    fun returnCurrentChildFragment (): AnkiBoxFragments?{
         return _currentChildFragment.value?.currentTab
     }
     val currentChildFragment :LiveData<AnkiBoxTabData> = _currentChildFragment
 
-    fun changeTab(tab:AnkiBoxFragments){
+    fun changeTab(tab: AnkiBoxFragments){
         if(returnCurrentChildFragment()==tab) return else {
             val action:NavDirections =
                 when(tab){

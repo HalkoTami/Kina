@@ -6,7 +6,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
@@ -15,13 +14,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.application.RoomApplication
 import com.example.tangochoupdated.databinding.MainActivityBinding
-import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.MainFragment
+import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 
 import com.example.tangochoupdated.ui.animation.Animation
-import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
 import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
 import com.example.tangochoupdated.ui.observer.LibraryOb
 import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
@@ -92,7 +89,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
             }
         }
-        fun changeTabView(previous:MainFragment?,now: MainFragment){
+        fun changeTabView(previous: MainFragment?, now: MainFragment){
             binding.bnvBinding.apply {
                 fun getImv(mainFragment: MainFragment):ImageView?{
                     return when(mainFragment){
@@ -193,6 +190,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         libraryViewModel. onCreate()
         libraryViewModel.parentFile.observe(this@MainActivity,libraryParentFileObserver)
         libraryViewModel.parentRVItems.observe(this@MainActivity,libraryParentRVItemsObserver)
+        createCardViewModel.setMainActivityNavCon(mainNavCon)
  }
 
     override fun onClick(v: View?) {
@@ -201,12 +199,14 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             bindingAddMenu.apply {
                 bnvBinding.apply {
                 when(v){
-                    bnvImvTabLibrary,bnvTxvTabLibrary -> mainActivityViewModel.changeFragment(MainFragment.Library)
-                    bnvImvTabAnki,bnvTxvTabAnki       -> mainActivityViewModel.changeFragment(MainFragment.Anki)
+                    bnvImvTabLibrary,bnvTxvTabLibrary -> mainActivityViewModel.changeFragment(
+                        MainFragment.Library)
+                    bnvImvTabAnki,bnvTxvTabAnki       -> mainActivityViewModel.changeFragment(
+                        MainFragment.Anki)
                     bnvImvAdd                         -> createFileViewModel.setBottomMenuVisible(true)
                     fragConViewCover                  -> createFileViewModel.makeBothPopUpGone()
                     imvnewCard                        -> {
-                        createCardViewModel.onClickAddNewCardBottomBar(mainNavCon)
+                        createCardViewModel.onClickAddNewCardBottomBar()
                     }
                     imvnewTangocho                    -> createFileViewModel.onCLickCreateFlashCardCover()
                     imvnewfolder                      -> createFileViewModel.onClickCreateFolder()

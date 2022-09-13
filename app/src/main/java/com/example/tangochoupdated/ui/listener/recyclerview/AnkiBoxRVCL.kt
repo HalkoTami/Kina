@@ -1,17 +1,13 @@
 package com.example.tangochoupdated.ui.listener.recyclerview
 
 import android.view.View
-import androidx.lifecycle.LifecycleOwner
 import com.example.tangochoupdated.databinding.AnkiHomeFragRvItemFileBinding
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
-import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.AllFlashCardCoversFragmentDirections
-import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.LibraryItemsFragmentDirections
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 
 class AnkiBoxFileRVCL(val item: File,
-                      private val tab:AnkiBoxFragments,
+                      private val tab: AnkiBoxFragments,
                       private val binding:AnkiHomeFragRvItemFileBinding,
                       val ankiBoxVM:AnkiBoxFragViewModel,
 ): View.OnClickListener{

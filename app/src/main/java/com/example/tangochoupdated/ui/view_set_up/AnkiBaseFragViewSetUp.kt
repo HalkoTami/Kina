@@ -5,7 +5,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.*
-import com.example.tangochoupdated.db.enumclass.AnkiFilter
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFilter
 import com.example.tangochoupdated.ui.listener.popUp.AnkiFragAnkiSettingPopUpCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
@@ -60,7 +60,7 @@ class AnkiBaseFragViewSetUp() {
 
 
     }
-    fun setUpSettingContent(ankiFilter:AnkiFilter,bindingBase: AnkiFragBaseBinding,context: Context){
+    fun setUpSettingContent(ankiFilter: AnkiFilter, bindingBase: AnkiFragBaseBinding, context: Context){
         val white = ContextCompat.getColor(context,R.color.white)
         val green = ContextCompat.getColor(context,R.color.most_dark_green)
         bindingBase.bindingSetting.bindingSettingContent.apply {

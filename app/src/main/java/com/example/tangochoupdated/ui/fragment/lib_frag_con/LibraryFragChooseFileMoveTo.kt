@@ -1,12 +1,12 @@
 package com.example.tangochoupdated.ui.fragment.lib_frag_con
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -15,16 +15,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.db.enumclass.LibraryFragment
-import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpFragment
+import com.example.tangochoupdated.ui.viewmodel.customClasses.LibraryFragment
 import com.example.tangochoupdated.ui.listadapter.LibFragChooseFileRVListAdapter
+import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
+import com.example.tangochoupdated.ui.listadapter.LibFragSearchRVListAdapter
+import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmMoveToFileCL
+import com.example.tangochoupdated.ui.listener.topbar.LibFragTopBarChooseFileMoveToCL
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
+import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
 class LibraryFragChooseFileMoveTo  : Fragment(){
     private val args: LibraryFragChooseFileMoveToArgs by navArgs()
 
+    private lateinit var adapter:LibFragChooseFileRVListAdapter
+    private lateinit var topBarBinding:LibraryFragTopBarChooseFileMoveToBinding
     private lateinit var libNavCon:NavController
     private lateinit var myNavCon:NavController
     private lateinit var recyclerView:RecyclerView
@@ -44,20 +50,47 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
         savedInstanceState: Bundle?
     ): View {
 
-//        myNavCon =  requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
-        libNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.lib_frag_con_view).findNavController()
-        _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
-        recyclerView = binding.vocabCardRV
-        val adapter = LibFragChooseFileRVListAdapter(createFileViewModel,libraryViewModel,requireActivity(),
-            deletePopUpViewModel,libNavCon,chooseFileMoveToViewModel)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.isNestedScrollingEnabled = false
-        val topBarBinding = LibraryFragTopBarChooseFileMoveToBinding.inflate(inflater,container,false)
-        val addListeners = LibraryAddListeners(libraryViewModel,deletePopUpViewModel,libNavCon)
-        addListeners.fragChooseFileMoveToTopBarAddCL(topBarBinding,requireActivity(),libNavCon)
-        binding.frameLayTopBar.addView(topBarBinding.root)
-        addListeners.confirmMoveToFilePopUpAddCL(binding.confirmMoveToBinding,chooseFileMoveToViewModel)
+        fun setUpLateInitVars(){
+            topBarBinding =  LibraryFragTopBarChooseFileMoveToBinding.inflate(inflater,container,false)
+            libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
+            _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
+            recyclerView = binding.vocabCardRV
+            adapter =   LibFragChooseFileRVListAdapter(requireActivity(),chooseFileMoveToViewModel,libraryViewModel)
+        }
+
+        fun setUpView(){
+            val mainRV = binding.vocabCardRV
+            mainRV.adapter = adapter
+            mainRV.layoutManager = LinearLayoutManager(requireActivity())
+            mainRV.isNestedScrollingEnabled = true
+
+            binding.frameLayTopBar.addView(topBarBinding.root)
+        }
+
+        fun addCL(){
+            fun topBarAddCL(){
+                arrayOf(
+                    topBarBinding.imvCloseChooseFileMoveTo,
+                ).onEach { it.setOnClickListener( LibFragTopBarChooseFileMoveToCL(topBarBinding,libraryViewModel,)) }
+            }
+            fun confirmMoveToFilePopUpAddCL(){
+                val popUp = binding.confirmMoveToBinding
+                arrayOf(
+                    popUp.btnCancelMove,
+                    popUp.btnCommitMove,
+                    popUp.btnCloseConfirmMove
+                )   .onEach {
+                    it.setOnClickListener(LibFragPopUpConfirmMoveToFileCL(popUp, chooseFileMoveToViewModel,libNavCon))
+                }
+            }
+            topBarAddCL()
+            confirmMoveToFilePopUpAddCL()
+        }
+        setUpLateInitVars()
+        setUpView()
+        addCL()
+
+
         chooseFileMoveToViewModel.apply {
             popUpVisible.observe(viewLifecycleOwner){
                 binding.frameLayConfirmMove.visibility = if(it) View.VISIBLE else View.GONE

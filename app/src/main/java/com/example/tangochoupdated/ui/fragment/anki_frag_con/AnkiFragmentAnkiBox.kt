@@ -12,8 +12,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
-import com.example.tangochoupdated.db.enumclass.AnkiBoxFragments
-import com.example.tangochoupdated.db.enumclass.AnkiFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
 
@@ -55,11 +55,11 @@ class AnkiFragmentAnkiBox  : Fragment() {
 //                it.setOnClickListener(AnkiBoxTabChangeCL(binding,ankiBoxViewModel,ankiBoxNavCon))
 //            }
 //        }
-        fun changeSelectedTab(select:AnkiBoxFragments, before:AnkiBoxFragments?){
+        fun changeSelectedTab(select: AnkiBoxFragments, before: AnkiBoxFragments?){
 
             if(before == select) return
             else {
-                fun getTextView(tab:AnkiBoxFragments): TextView {
+                fun getTextView(tab: AnkiBoxFragments): TextView {
                     return when(tab){
                         AnkiBoxFragments.AllFlashCardCovers-> binding.tabAllFlashCardCoverToAnkiBox
                         AnkiBoxFragments.Library -> binding.tabLibraryToAnkiBox

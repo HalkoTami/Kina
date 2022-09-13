@@ -3,26 +3,27 @@ package com.example.tangochoupdated.ui.listener.recyclerview
 import android.content.Context
 import android.view.MotionEvent
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.ScrollView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.MyTouchListener
 import com.example.tangochoupdated.R
+import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.LibRVState
+import com.example.tangochoupdated.ui.viewmodel.customClasses.LibRVState
 import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
-import kotlinx.coroutines.yield
 
 class LibraryRVTouchListener(val context: Context,
                              val recyclerView: RecyclerView,
                              val libraryViewModel: LibraryViewModel,
-                             private val scrollView: NestedScrollView
+                             private val scrollView: NestedScrollView,
+                             private val createCardViewModel: CreateCardViewModel,
 ): MyTouchListener(context){
     override fun onSingleTap(motionEvent: MotionEvent?) {
         super.onSingleTap(motionEvent)
@@ -30,7 +31,7 @@ class LibraryRVTouchListener(val context: Context,
         val conLay = view?.findViewById<ConstraintLayout>(R.id.lib_rv_base_container) ?:return
         val btnSelect = view.findViewById<ImageView>(R.id.btn_select)
         val position = recyclerView.getChildAdapterPosition(view)
-        val item = libraryViewModel.returnParentRVItems()[position] as File
+        val item = libraryViewModel.returnParentRVItems()[position]
         conLay.apply {
             when(view){
                 conLay       ->  {
@@ -41,7 +42,11 @@ class LibraryRVTouchListener(val context: Context,
                         libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
                         btnSelect.isSelected = btnSelect.isSelected.not()
                     }else{
-                        libraryViewModel.openNextFile(item)
+                        when(item){
+                            is File -> libraryViewModel.openNextFile(item)
+                            is Card -> createCardViewModel.onClickEditCardFromRV(item)
+                        }
+
                     }
 
                 }

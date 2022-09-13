@@ -9,9 +9,7 @@ import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.ui.viewmodel.ChooseFileMoveToViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
-class LibraryRVChooseFileMoveToCL(
-                                  val item: File,
-                                  val navController: NavController,
+class LibraryRVChooseFileMoveToCL(val item: File,
                                   private val lVM: LibraryViewModel,
                                   private val rvBinding: LibraryFragRvItemBaseBinding,
                                   private val chooseFileMoveToViewModel: ChooseFileMoveToViewModel,
@@ -19,7 +17,7 @@ class LibraryRVChooseFileMoveToCL(
     override fun onClick(p0: View?) {
         rvBinding.apply {
             when(p0){
-                libRvBaseContainer       ->  lVM.openChooseFileMoveTo(item,navController)
+                libRvBaseContainer       ->  lVM.openChooseFileMoveTo(item)
                 btnSelect ->  chooseFileMoveToViewModel.onClickRvBtnMove(item)
             }
         }

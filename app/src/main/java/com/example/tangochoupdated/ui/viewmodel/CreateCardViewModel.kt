@@ -2,16 +2,12 @@ package com.example.tangochoupdated.ui.viewmodel
 
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.StringData
 import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.db.rvclasses.LibraryRV
-import com.example.tangochoupdated.db.enumclass.Mode
 import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
 import com.example.tangochoupdated.ui.fragment.createCard_frag_com.CreateCardFragmentDirections
 import kotlinx.coroutines.launch
@@ -20,6 +16,13 @@ import kotlinx.coroutines.launch
 class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
 
 
+    private val _mainActivityNavCon = MutableLiveData<NavController>()
+    fun setMainActivityNavCon(navController: NavController){
+        _mainActivityNavCon.value = navController
+    }
+    fun returnMainActivityNavCon(): NavController?{
+        return _mainActivityNavCon.value
+    }
     private val _openEditCard = MutableLiveData<Boolean>()
     fun setOpenEditCard (boolean: Boolean){
         _openEditCard.value = boolean
@@ -39,6 +42,11 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private val _parentFlashCardCover = MutableLiveData<File?>()
     fun setParentFlashCardCover(file: File?){
         _parentFlashCardCover.value = file
+    }
+    fun onClickEditCardFromRV(card: Card,){
+        setStartingPosition(card.libOrder)
+        returnMainActivityNavCon()?.navigate(CreateCardFragmentBaseDirections.openCreateCard())
+
     }
     val parentFlashCardCover:LiveData<File?> = _parentFlashCardCover
     fun returnParentFlashCardCover():File?{
@@ -186,10 +194,15 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         setOpenEditCard(true)
         saveEmptyCard(item.libOrder + 1,item.belongingFlashCardCoverId,)
     }
-    fun onClickAddNewCardBottomBar(mainNavCon:NavController){
+    fun onClickAddNewCardBottomBar(){
         saveEmptyCard(returnSisterCards().size+1,returnParentFlashCardCover()?.fileId)
         setOpenEditCard(true)
-        mainNavCon.navigate(CreateCardFragmentBaseDirections.openCreateCard())
+        returnMainActivityNavCon()?.navigate(CreateCardFragmentBaseDirections.openCreateCard())
+    }
+    fun onClickAddNewCardRV(itemBefore:Card){
+        saveEmptyCard(itemBefore.libOrder +1,returnParentFlashCardCover()?.fileId)
+        setOpenEditCard(true)
+        returnMainActivityNavCon()?.navigate(CreateCardFragmentBaseDirections.openCreateCard())
     }
 
     fun onClickEditCard(item: Card,navController: NavController){

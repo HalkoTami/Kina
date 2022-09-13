@@ -5,8 +5,7 @@ import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.LibraryFragTopBarChooseFileMoveToBinding
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
-class LibFragTopBarChooseFileMoveToCL(val context:Context, val binding: LibraryFragTopBarChooseFileMoveToBinding, val libVM: LibraryViewModel,
-                                      val navCon:NavController): View.OnClickListener{
+class LibFragTopBarChooseFileMoveToCL(val binding: LibraryFragTopBarChooseFileMoveToBinding, val libVM: LibraryViewModel,): View.OnClickListener{
 
     val moveTo = binding
 
@@ -14,7 +13,7 @@ class LibFragTopBarChooseFileMoveToCL(val context:Context, val binding: LibraryF
         binding.apply {
             when(v){
 
-                moveTo.imvCloseChooseFileMoveTo -> navCon.popBackStack()
+                moveTo.imvCloseChooseFileMoveTo -> libVM.returnLibraryNavCon()?.popBackStack()
 
 
             }

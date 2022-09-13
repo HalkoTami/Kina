@@ -2,14 +2,18 @@ package com.example.tangochoupdated.ui.listadapter
 
 import android.content.Context
 import android.view.*
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.ui.listener.recyclerview.LibraryRVSearchCL
 import com.example.tangochoupdated.ui.view_set_up.*
 import com.example.tangochoupdated.ui.viewmodel.*
 
@@ -40,7 +44,7 @@ class LibFragSearchRVListAdapter(
 
     override fun onBindViewHolder(holder: LibFragSearchRVViewHolder, position: Int) {
         holder.bind(getItem(position),libraryViewModel,stringCardViewModel,createCardViewModel,
-            searchViewModel,lifecycleOwner,deletePopUpViewModel,navController,mainNavController)
+            searchViewModel,lifecycleOwner,mainNavController)
     }
 
     class LibFragSearchRVViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
@@ -52,26 +56,50 @@ class LibFragSearchRVListAdapter(
                  createCardViewModel: CreateCardViewModel,
                  searchViewModel: SearchViewModel,
                  lifecycleOwner: LifecycleOwner,
-                 deletePopUpViewModel: DeletePopUpViewModel,
-                 mainNavController: NavController,
-
-                 navController: NavController){
+                 mainNavController: NavController){
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
+            val viewSetUp = LibrarySetUpItems()
+            val addL = LibraryAddListeners()
+            val checkMatchTxv = mutableListOf<TextView>()
+            val contentView= when(item){
+                is File -> {
+                    val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
+                    checkMatchTxv.addAll(viewSetUp.returnFileBindingTextViews(fileBinding))
+                    viewSetUp.setUpRVFileBinding(fileBinding, item, context)
+                    binding.btnAddNewCard.visibility = View.GONE
+                    fileBinding.root
+                }
+                is Card -> {
+                    val stringCardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
+                    checkMatchTxv.addAll(viewSetUp.returnStringCardTextViews(stringCardBinding))
+                    viewSetUp.setUpRVStringCardBinding(stringCardBinding, item.stringData, )
+                    addL.cardRVStringAddCL(stringCardBinding,item,createCardViewModel,stringCardViewModel,mainNavController)
+                    binding.btnAddNewCard.visibility = View.VISIBLE
+                    stringCardBinding.root
+                }
+                else -> return
+            }
+            fun addL(){
+                arrayOf(
+                    binding.libRvBaseContainer,
 
-
-            LibrarySetUpItems(libraryViewModel,deletePopUpViewModel, navController ).setUpRVSearchBase(
-                rvItemBaseBinding = binding,
-                stringCardViewModel = stringCardViewModel,
-                createCardViewModel = createCardViewModel,
-                context = context,
-                item = item,
-                searchViewModel = searchViewModel,
-                lifecycleOwner = lifecycleOwner,
-                mainNavController = mainNavController
-            )
-
-
+                    ).onEach { it.setOnClickListener(
+                    LibraryRVSearchCL(item =  item,
+                        createCardViewModel = createCardViewModel,
+                        lVM = libraryViewModel,
+                        rvBinding = binding,
+                        navController = libraryViewModel.returnLibraryNavCon() ?:return, mainNavCon = mainNavController)
+                )
+                }
+            }
+            addL()
+            binding.contentBindingFrame.addView(contentView)
+            searchViewModel.searchingText.observe(lifecycleOwner){ search ->
+                checkMatchTxv.onEach { txv->
+                    viewSetUp.setColorByMatchedSearch(txv,txv.text.toString(),search, ContextCompat.getColor(context, R.color.red))
+                }
+            }
 
         }
 

@@ -1,4 +1,4 @@
-package com.example.tangochoupdated.db.enumclass
+package com.example.tangochoupdated.ui.viewmodel.customClasses
 
 import com.example.tangochoupdated.db.dataclass.Card
 
@@ -21,8 +21,8 @@ class AutoFlip(
     var seconds:Int = 20
 )
 class FragmentTree(
-    var startFragment:MainFragment = MainFragment.Library,
-    var libraryFragment:LibraryFragment = LibraryFragment.Home,
+    var startFragment: MainFragment = MainFragment.Library,
+    var libraryFragment: LibraryFragment = LibraryFragment.Home,
     var ankiFragment: AnkiFragments = AnkiFragments.AnkiBox,
     var flipFragment: FlipFragment = FlipFragment.StringLook
 )
@@ -48,7 +48,7 @@ enum class AnimationAttributes{
     StartAnim,EndAnim,Pause,Resume,Cancel
 }
 class CountFlip(
-    var count:Count? = null,
+    var count: Count? = null,
     var countIfLongerThan:Int = 10,
     var flipSaved:Boolean = false,
     var countingCard:Card

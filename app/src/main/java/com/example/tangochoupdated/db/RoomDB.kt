@@ -1,10 +1,11 @@
-package com.example.tangochoupdated
+package com.example.tangochoupdated.db
 
 import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.tangochoupdated.db.MyDao
+import com.example.tangochoupdated.db.dao.*
 import com.example.tangochoupdated.db.dataclass.*
+import com.example.tangochoupdated.db.dataclass.ChoiceDao
 import com.example.tangochoupdated.db.enumclass.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -29,16 +30,14 @@ public abstract class MyRoomDatabase : RoomDatabase() {
 
 
 
-    abstract fun cardDao(): MyDao.CardDao
-    abstract fun activityDataDao(): MyDao.ActivityDataDao
-    abstract fun choiceDao(): MyDao.ChoiceDao
-    abstract fun fileDao(): MyDao.FileDao
-    abstract fun markerDataDao(): MyDao.MarkerDataDao
-    abstract fun userDao(): MyDao.UserDao
-    abstract fun clearTable(): MyDao.ClearTable
-    abstract fun libraryDao(): MyDao.LibraryDao
-    abstract fun cardAndTagXRefDao(): MyDao.CardAndTagXRefDao
-    abstract fun fileXRefDao(): MyDao.FileXRefDao
+    abstract fun cardDao(): CardDao
+    abstract fun activityDataDao(): ActivityDataDao
+    abstract fun choiceDao(): ChoiceDao
+    abstract fun fileDao(): FileDao
+    abstract fun markerDataDao(): MarkerDataDao
+    abstract fun userDao(): UserDao
+    abstract fun cardAndTagXRefDao(): CardAndTagXRefDao
+    abstract fun fileXRefDao(): FileXRefDao
 
     private class WordDatabaseCallback(
         private val scope: CoroutineScope
@@ -49,16 +48,6 @@ public abstract class MyRoomDatabase : RoomDatabase() {
             INSTANCE?.let { database ->
                 scope.launch {
                     var fileDao = database.fileDao()
-                    var clearTable = database.clearTable()
-
-                    // Delete all content here.
-                    clearTable.clearTblCard()
-                    clearTable.clearTblActivity()
-                    clearTable.clearTblChoice()
-                    clearTable.clearTblUser()
-                    clearTable.clearTblFile()
-                    clearTable.clearTblMarkerData()
-                    clearTable.clearTblFileXRef()
 
 
                     // Add sample words.

@@ -7,24 +7,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
-import com.example.tangochoupdated.activity.MainActivity
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
-import com.example.tangochoupdated.db.enumclass.*
-import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
-import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragment
-import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragmentDirections
 import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnimationAttributes
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.Count
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -103,11 +99,10 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                     setAnkiFlipItems(it)
                 }
             } else{
-                boxViewModel. getDescendantsCardIds(boxViewModel.returnAnkiBoxFileIds()).observe(viewLifecycleOwner){
-                    boxViewModel.getCardsFromDBByMultipleCardIds(it).observe(viewLifecycleOwner){
-                        val sorted = it.sortedBy { it.libOrder }
-                        setAnkiFlipItems(sorted)
-                    }
+                boxViewModel.getDescendantsCards(boxViewModel.returnAnkiBoxFileIds()) .observe(viewLifecycleOwner){
+                    val sorted = it.sortedBy { it.libOrder }
+                    setAnkiFlipItems(sorted)
+                    binding.topBinding.txvCardPosition.text ="${sorted.indexOf(returnParentCard())}/${sorted.size}"
                 }
 
             }
