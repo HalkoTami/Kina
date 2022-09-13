@@ -3,6 +3,7 @@ package com.example.tangochoupdated.ui.fragment.lib_frag_con
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -81,7 +82,9 @@ class LibraryFragInBox  : Fragment(){
                 libraryViewModel,
                 createCardViewModel,
                 deletePopUpViewModel,
-                searchViewModel)
+                searchViewModel,
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                )
         }
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()

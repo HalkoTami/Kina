@@ -115,10 +115,10 @@ class LibrarySetUpItems(){
         stringData: StringData?
     ){
         stringBinding.apply {
-            stringBinding.txvFrontTitle.text = stringData?.frontTitle.toString()
-            stringBinding.txvFrontText.text = stringData?.frontText.toString()
-            stringBinding.txvBackTitle.text = stringData?.backTitle.toString()
-            stringBinding.txvBackText.text = stringData?.backText.toString()
+            stringBinding.txvFrontTitle.text = stringData?.frontTitle ?:"表"
+            stringBinding.txvFrontText.text = stringData?.frontText ?:""
+            stringBinding.txvBackTitle.text = stringData?.backTitle ?:"裏"
+            stringBinding.txvBackText.text = stringData?.backText ?:""
         }
 
     }

@@ -102,6 +102,7 @@
             android:layout_weight="0.3"/>
 
         <EditText
+            android:padding="3dp"
             android:layout_gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -112,6 +113,8 @@
             android:layout_width="wrap_content"
             android:minWidth="250dp"
             android:minHeight="40dp"
+            android:maxLines="1"
+            android:inputType="text"
             android:layout_height="wrap_content"
             android:textSize="17sp"
             android:gravity="center_vertical"

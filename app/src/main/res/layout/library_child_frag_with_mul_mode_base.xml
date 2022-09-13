@@ -90,6 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
             <FrameLayout
+                android:id="@+id/frameLay_scroll_view_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <androidx.recyclerview.widget.RecyclerView
@@ -105,7 +106,7 @@
                     android:alpha="0.3"
                     android:id="@+id/rv_cover"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp">
+                    android:layout_height="match_parent">
 
                 </FrameLayout>
 

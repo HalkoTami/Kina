@@ -1,8 +1,11 @@
 package com.example.tangochoupdated.ui.view_set_up
 
 import android.content.Context
+import android.graphics.Rect
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.compose.ui.unit.Constraints
@@ -29,7 +32,8 @@ class LibraryAddListeners(){
                                 libraryViewModel: LibraryViewModel,
                                 createCardViewModel: CreateCardViewModel,
                                 deletePopUpViewModel: DeletePopUpViewModel,
-                                searchViewModel:SearchViewModel, ){
+                                searchViewModel:SearchViewModel,
+                                inputMethodManager: InputMethodManager){
         fun multiTopBarAddCL(binding: LibraryFragTopBarMultiselectModeBinding,
                              menuBarBinding: LibItemTopBarMenuBinding,
                              menuFrame:FrameLayout,
@@ -43,27 +47,45 @@ class LibraryAddListeners(){
             menuBarBinding.linLayDeleteSelectedItems,
             menuBarBinding.linLaySetFlagToSelectedItems,
         ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL( binding,menuBarBinding ,menuFrame,libVM,deletePopUpViewModel)) }
-    }
+        }
         fun searchAddCL(){
             arrayOf(binding.imvSearchLoupe,binding.bindingSearch.txvCancel).onEach {
                 it.setOnClickListener(LibFragSearchBarCL(
-                    context,binding.imvSearchLoupe,binding.frameLaySearchBar,binding.bindingSearch,searchViewModel
+                    context,binding.imvSearchLoupe,binding.frameLaySearchBar,binding.bindingSearch,searchViewModel,inputMethodManager
                 ))
             }
         }
 
         multiTopBarAddCL(binding.topBarMultiselectBinding,binding.multiSelectMenuBinding,binding.frameLayMultiModeMenu,libraryViewModel,deletePopUpViewModel)
         searchAddCL()
+        var rvHeight = 0
         binding.rvCover.
         setOnTouchListener(LibraryRVTouchListener(context,binding.vocabCardRV,libraryViewModel,binding.frameLayTest,createCardViewModel))
         binding.mainFrameLayout.viewTreeObserver.addOnGlobalLayoutListener (
             object: ViewTreeObserver.OnGlobalLayoutListener{
                 override fun onGlobalLayout() {
-                    binding.rvCover.layoutParams.height = binding.mainFrameLayout.height+10
+                    val rvCoverRec = Rect()
+                    val mainFrameRec = Rect()
+                    binding.rvCover.getGlobalVisibleRect(rvCoverRec)
+                    binding.mainFrameLayout.getGlobalVisibleRect(mainFrameRec)
+                    val rvCoverHeight = rvCoverRec.height()
+                    if(rvCoverHeight<mainFrameRec.height())
+                        binding.rvCover.layoutParams.height = mainFrameRec.height() + 10
                     binding.mainFrameLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             }
         )
+//        binding.rvCover.viewTreeObserver.addOnGlobalLayoutListener(
+//            object: ViewTreeObserver.OnGlobalLayoutListener{
+//                override fun onGlobalLayout() {
+//                    val r = Rect()
+//                    binding.rvCover.getWindowVisibleDisplayFrame(r)
+//                    makeToast(context,(r.bottom-r.top).toString())
+//
+//                    binding.rvCover.viewTreeObserver.removeOnGlobalLayoutListener(this)
+//                }
+//            }
+//        )
         binding.bindingSearch.edtLibrarySearch.addTextChangedListener {
             if(it.toString()!=""){
                 binding.mainFrameLayout.visibility = View.GONE

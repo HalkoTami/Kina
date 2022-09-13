@@ -4,6 +4,7 @@ package com.example.tangochoupdated.ui.fragment.lib_frag_con
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -84,7 +85,9 @@ class LibraryFragHome : Fragment(){
                 libraryViewModel,
                 createCardViewModel,
                 deletePopUpViewModel,
-                searchViewModel)
+                searchViewModel,
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            )
         }
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()
@@ -103,7 +106,6 @@ class LibraryFragHome : Fragment(){
         searchViewModel.matchedItems.observe(viewLifecycleOwner){
             searchAdapter.submitList(it)
         }
-
         fun observeSwipe(){
             libraryViewModel.apply {
                 rvCover.observe(viewLifecycleOwner){
@@ -147,6 +149,7 @@ class LibraryFragHome : Fragment(){
             val emptyView = LibraryFragLayHomeRvEmptyBinding.inflate(inflater,container,false).root
             childFilesFromDB(null).observe(viewLifecycleOwner){
                 adapter.submitList(it)
+                adapter.notifyDataSetChanged()
                 setParentRVItems(it)
                 if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)

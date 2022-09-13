@@ -3,6 +3,7 @@ package com.example.tangochoupdated.ui.fragment.lib_frag_con
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.content.res.AppCompatResources
@@ -83,7 +84,9 @@ class LibraryFragFlashCardCover  : Fragment(){
                 libraryViewModel,
                 createCardViewModel,
                 deletePopUpViewModel,
-                searchViewModel)
+                searchViewModel,
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            )
         }
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()
