@@ -192,6 +192,13 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         setAnkiBoxCardIds(a)
 
     }
+    fun removeFromAnkiBoxCardIds(cardId: Int){
+        val a = mutableListOf<Int>()
+        a.addAll(_ankiBoxCardIds.value ?: mutableListOf())
+        a.remove(cardId)
+        setAnkiBoxCardIds(a)
+
+    }
     fun returnAnkiBoxCardIds():List<Int>{
         return _ankiBoxCardIds.value ?: mutableListOf()
 

@@ -138,8 +138,8 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
                 )
             )
             topBarBinding.txvChooseFileMoveTo.text =
-                    if(flashcard) "${returnSelectedItems().size} 個のアイテムを単語帳に移動" else
-                        "${returnSelectedItems().size}個のアイテムをフォルダに移動"
+                    if(flashcard) "${chooseFileMoveToViewModel.returnMovingItems().size} 個のアイテムを単語帳に移動" else
+                        "${chooseFileMoveToViewModel.returnMovingItems().size}個のアイテムをフォルダに移動"
 
             chooseFileMoveToMode.observe(viewLifecycleOwner){
                 if(it == false){

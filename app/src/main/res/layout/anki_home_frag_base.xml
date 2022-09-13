@@ -47,7 +47,6 @@
                 android:layout_height="100dp"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintBottom_toTopOf="@id/imv_anki_box"
 
@@ -58,14 +57,17 @@
             </FrameLayout>
             <ImageView
                 android:id="@+id/btn_add_to_favourite_anki_box"
-                android:padding="10dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/icon_heart"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="2dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/selector_anki_box_favourite"
+                app:layout_constraintTop_toBottomOf="@id/FrameLay_ring"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imv_anki_box"
                 app:layout_constraintStart_toStartOf="parent"/>
             <ImageView
                 android:id="@+id/imv_anki_box"
+                app:layout_constraintTop_toBottomOf="@id/FrameLay_ring"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/FrameLay_ring"
                 android:layout_width="40dp"

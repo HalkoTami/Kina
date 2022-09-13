@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.view_set_up
 
 import android.content.Context
+import android.graphics.Rect
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
@@ -23,6 +24,7 @@ import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.StringData
 import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.listadapter.LibFragSearchRVListAdapter

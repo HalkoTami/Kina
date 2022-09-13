@@ -27,7 +27,10 @@ class AnkiBoxFragBaseCL( val ankiSettingPopUpViewModel: AnkiSettingPopUpViewMode
 
                 }
                 btnAddToFavouriteAnkiBox -> {
-                    createFileViewModel.onClickCreateFile(FileStatus.ANKI_BOX_FAVOURITE)
+                    if(btnAddToFavouriteAnkiBox.isSelected.not()&&ankiBoxViewModel.returnAnkiBoxItems().isEmpty().not()){
+                            createFileViewModel.onClickCreateFile(FileStatus.ANKI_BOX_FAVOURITE)
+                    } else return
+
                 }
             }
         }

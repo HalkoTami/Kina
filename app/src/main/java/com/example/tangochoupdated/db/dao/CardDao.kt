@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class CardDao(): BaseDao<Card> {
 
     @Query(
-        "Select a.* from tbl_card a " +
+        "Select distinct a.* from tbl_card a " +
                 "left outer join tbl_card_file_x_ref b on a.id = b.cardFileXRefCardId where" +
                 " (not a.deleted and belongingFlashCardCoverId in ( " +
                 "with generation AS (" +
@@ -36,17 +36,23 @@ abstract class CardDao(): BaseDao<Card> {
     )
     abstract   fun getDescendantsCardsIdsByMultipleFileId(fileIdList: List<Int>):Flow<List<Int>>
 
-    @Query(
-        "Select * from tbl_card where not deleted and belongingFlashCardCoverId in ( " +
-                "with generation AS (" +
-                " select * from tbl_file where fileId in(:fileIdList)  " +
-                "UNION ALL" +
-                " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
-                "SELECT fileId FROM generation b where not b.fileId in (:fileIdList))")
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("Select a.* from tbl_card a " +
+            "left outer join tbl_card_file_x_ref x on " +
+            "a.id = x.cardFileXRefCardId"+
+            " WHERE a.belongingFlashCardCoverId in ( WITH  generation AS (" +
+            " select * from tbl_file where fileId in(:fileIdList) " +
+            "Union ALL" +
+            " SELECT d.* from tbl_file d " +
+            "Inner JOIN generation g ON g.fileId = d.parentFileId ) " +
+            "SELECT fileId FROM generation b  ) " +
+            "or x.cardFileXRefFileId in (:fileIdList)"
+
+    )
     abstract fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("Select a.* from tbl_card a " +
+    @Query("Select distinct a.* from tbl_card a " +
             "left outer join tbl_card_file_x_ref x on " +
             "a.id = x.cardFileXRefCardId"+
             " WHERE a.belongingFlashCardCoverId in ( WITH  generation AS (" +

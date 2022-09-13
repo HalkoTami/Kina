@@ -11,6 +11,7 @@ import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.StringData
+import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
 import com.example.tangochoupdated.ui.listadapter.AnkiBoxListAdapter
 import com.example.tangochoupdated.ui.listener.AnkiBoxFragBaseCL
@@ -28,13 +29,24 @@ class AnkiBoxFragViewSetUp() {
 //    val bindingAnkiBoxFrag:AnkiHomeFragBaseBinding,
 //    val ankiBaseViewModel:AnkiFragBaseViewModel
 
-    fun setUpRVStringCardContent(stringBinding: LibraryFragRvItemCardStringBinding,stringData: StringData?){
-        stringBinding.apply {
-            stringBinding.txvFrontTitle.text = stringData?.frontTitle.toString()
-            stringBinding.txvFrontText.text = stringData?.frontText.toString()
-            stringBinding.txvBackTitle.text = stringData?.backTitle.toString()
-            stringBinding.txvBackText.text = stringData?.backText.toString()
+
+    fun setUpRVCard(cardBinding: AnkiHomeFragRvItemCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxFragViewModel){
+        fun setUpRVStringCardContent(){
+            val stringBinding = cardBinding.stringContentBinding
+            val stringData = card.stringData
+            stringBinding.apply {
+                stringBinding.txvFrontTitle.text = stringData?.frontTitle.toString()
+                stringBinding.txvFrontText.text = stringData?.frontText.toString()
+                stringBinding.txvBackTitle.text = stringData?.backTitle.toString()
+                stringBinding.txvBackText.text = stringData?.backText.toString()
+            }
         }
+        setUpRVStringCardContent()
+        ankiBoxVM.ankiBoxItems.observe(lifecycleOwner){
+            cardBinding.checkboxAnkiRv.isSelected = it.contains(card)
+        }
+        TODO()
+
     }
 fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                               context: Context,

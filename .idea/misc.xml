@@ -26,6 +26,7 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/custome_progress_bar_rectangle.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/gray_stroke_rectangle.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.1975" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_add.xml" value="0.34" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_ankibox_put_in.xml" value="0.1" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_ankibox_put_out.xml" value="0.1365" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_correct.xml" value="0.357" />
@@ -34,12 +35,16 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_flag_clickable.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_flashcard.xml" value="0.3565" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_flashcard_flat.xml" value="0.3565" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_heart.xml" value="0.34" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_heart_selectable.xml" value="0.34" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_heart_selected.xml" value="0.34" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_missed.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/icon_polygon.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/percentage_container.xml" value="0.1935" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/progress_percentage.xml" value="0.1935" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/rectangle.xml" value="0.1935" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_anki_box.xml" value="0.3245" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_anki_box_favourite.xml" value="0.34" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_btn_edit_card.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_flag.xml" value="0.332" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/drawable/selector_stop_count.xml" value="0.332" />
@@ -55,7 +60,7 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_flip_frag_top_bar.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_flip_frag_type_answer_string_frag.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_frag_base.xml" value="0.3625" />
-        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_base.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_base.xml" value="0.33" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_data_graph_large.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_data_graph_small.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_popup_anki_box_favourite.xml" value="0.3625" />

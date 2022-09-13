@@ -12,6 +12,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
+import com.example.tangochoupdated.db.dataclass.Card
+import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
@@ -96,15 +98,14 @@ class AnkiFragmentAnkiBox  : Fragment() {
                 getDescendantsCardIds(it).observe(viewLifecycleOwner){
                     setAnkiBoxCardIds(it)
                 }
-            }
 
+            }
             ankiBoxCardIds.observe(viewLifecycleOwner){
                 getCardsFromDBByMultipleCardIds(it).observe(viewLifecycleOwner){
-                    val ordered = it.sortedBy { it.libOrder }
-                    setAnkiBoxItems(ordered)
-
+                    setAnkiBoxItems(it)
                 }
             }
+
 //            modeCardsNotSelected.observe(viewLifecycleOwner){
 //                if(it){
 //                    flipViewModel.getAllCardsFromDB.observe(viewLifecycleOwner){
@@ -113,10 +114,18 @@ class AnkiFragmentAnkiBox  : Fragment() {
 //
 //                }
 //            }
+            val a = mutableListOf<List<Card>>()
+            allFavouriteAnkiBoxFromDB.observe(viewLifecycleOwner){
+                it.onEach { file ->
+                    getAnkiBoxRVCards(file.fileId).observe(viewLifecycleOwner){
+                        a.add(it)
+                    }
+                }
 
-
+            }
             viewSetUp.apply {
-                ankiBoxItems.observe(viewLifecycleOwner) {
+                ankiBoxItems.observe(viewLifecycleOwner) { it ->
+                    binding.btnAddToFavouriteAnkiBox.isSelected = a.contains(it)
                     setUpAnkiBoxRing(it,binding.ringBinding)
                     setUpFlipProgressBar(it,binding.flipGraphBinding)
                     setUpPercentageIcons(binding.flipGraphBinding,binding.percentageIconBinding)

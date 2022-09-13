@@ -43,6 +43,8 @@ class AnkiBoxListAdapter(
         RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: Any, ){
+
+            binding.root.removeAllViews()
             val content =
             when(item){
                 is File -> {
@@ -54,12 +56,9 @@ class AnkiBoxListAdapter(
                 is Card -> {
                     val binding = AnkiHomeFragRvItemCardBinding.inflate(LayoutInflater.from(context))
                     binding.apply {
-                       AnkiBoxFragViewSetUp().setUpRVStringCardContent(binding.stringContentBinding,item.stringData)
-                        binding.stringContentBinding.apply {
-                            txvFrontTitle.text = "order " + item.libOrder
-                            txvBackTitle.text = "id " + item.id
-                        }
+                       AnkiBoxFragViewSetUp().setUpRVCard(binding,item,lifecycleOwner,ankiBoxFragViewModel)
                     }
+
                     binding.root
                 }
                 else -> return
