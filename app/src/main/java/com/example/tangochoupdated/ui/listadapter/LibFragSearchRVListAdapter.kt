@@ -97,7 +97,7 @@ class LibFragSearchRVListAdapter(
             binding.contentBindingFrame.addView(contentView)
             searchViewModel.searchingText.observe(lifecycleOwner){ search ->
                 checkMatchTxv.onEach { txv->
-                    viewSetUp.setColorByMatchedSearch(txv,txv.text.toString(),search, ContextCompat.getColor(context, R.color.red))
+                    viewSetUp.setColorByMatchedSearch(txv,txv.text.toString(),search?:"", ContextCompat.getColor(context, R.color.red))
                 }
             }
 

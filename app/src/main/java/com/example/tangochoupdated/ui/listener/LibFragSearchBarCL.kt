@@ -1,27 +1,40 @@
 package com.example.tangochoupdated.ui.listener
 import android.content.Context
+import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.ItemSearchBarBinding
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
+import com.example.tangochoupdated.ui.viewmodel.SearchViewModel
 
 class LibFragSearchBarCL(val context:Context, val searchIcon: ImageView,
                          val searchBindingFrame:FrameLayout,
-                         val searchBinding:ItemSearchBarBinding, val libVM: LibraryViewModel, ): View.OnClickListener{
+                         val searchBinding:ItemSearchBarBinding,
+                         private val searchViewModel: SearchViewModel, ): View.OnClickListener{
 
 
     override fun onClick(v: View?) {
-        when(v){
-            searchIcon -> {
-                searchIcon.visibility = View.GONE
-                searchBindingFrame.visibility = View.VISIBLE
+        searchBinding.apply {
+            when(v){
+                searchIcon -> {
+                    searchIcon.visibility = View.GONE
+                    searchBindingFrame.visibility = View.VISIBLE
+                }
+                txvCancel -> {
+                    searchBinding.edtLibrarySearch.text= SpannableStringBuilder("")
+                    searchViewModel.setSearchText("")
+                    searchIcon.visibility = View.VISIBLE
+                    searchBindingFrame.visibility = View.GONE
+                }
+
+
+
+
             }
-
-
-
         }
+
     }
 
 }

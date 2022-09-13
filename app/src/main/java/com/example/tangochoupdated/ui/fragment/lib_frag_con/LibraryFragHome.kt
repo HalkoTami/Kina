@@ -93,7 +93,7 @@ class LibraryFragHome : Fragment(){
         setUpLateInitVars()
         setUpView()
         addCL()
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+
 
 
 
@@ -102,24 +102,6 @@ class LibraryFragHome : Fragment(){
         createFileViewModel.makeAllBottomMenuClickable()
         searchViewModel.matchedItems.observe(viewLifecycleOwner){
             searchAdapter.submitList(it)
-        }
-        searchViewModel.searchingText.observe(viewLifecycleOwner){
-            searchViewModel.getFilesByWords(it).observe(viewLifecycleOwner){
-                searchViewModel.setMatchedFiles(it)
-                val a = mutableListOf<Any>()
-                a.addAll(searchViewModel.returnMatchedCards())
-                a.addAll(it)
-                searchViewModel.setMatchedItems(a)
-
-            }
-            searchViewModel.getCardsByWords(it).observe(viewLifecycleOwner){
-                searchViewModel.setMatchedCards(it)
-                val a = mutableListOf<Any>()
-                a.addAll(searchViewModel.returnMatchedFiles())
-                a.addAll(it)
-                searchViewModel.setMatchedItems(a)
-
-            }
         }
 
         fun observeSwipe(){

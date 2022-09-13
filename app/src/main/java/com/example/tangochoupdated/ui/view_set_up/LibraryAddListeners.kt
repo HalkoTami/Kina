@@ -47,7 +47,7 @@ class LibraryAddListeners(){
         fun searchAddCL(){
             arrayOf(binding.imvSearchLoupe,binding.bindingSearch.txvCancel).onEach {
                 it.setOnClickListener(LibFragSearchBarCL(
-                    context,binding.imvSearchLoupe,binding.frameLaySearchBar,binding.bindingSearch,libraryViewModel
+                    context,binding.imvSearchLoupe,binding.frameLaySearchBar,binding.bindingSearch,searchViewModel
                 ))
             }
         }
@@ -72,6 +72,7 @@ class LibraryAddListeners(){
 
 
             } else {
+                searchViewModel.setSearchText("")
                 binding.mainFrameLayout.visibility= View.VISIBLE
                 binding.frameLaySearchRv.visibility = View.GONE
             }

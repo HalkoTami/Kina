@@ -132,8 +132,9 @@ class LibraryFragInBox  : Fragment(){
             createCardViewModel.setParentFlashCardCover(null)
             val emptyView = LibraryFragLayInboxRvEmptyBinding.inflate(inflater,container,false).root
             childCardsFromDB(null).observe(viewLifecycleOwner) {
-                setParentRVItems(it ?: mutableListOf())
+
                 val sorted = it?.sortedBy { it.libOrder }
+                setParentRVItems(sorted?: mutableListOf())
                 adapter.submitList(sorted)
                 if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)

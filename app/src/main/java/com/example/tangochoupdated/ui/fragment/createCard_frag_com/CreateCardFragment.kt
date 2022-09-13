@@ -84,7 +84,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             createCardViewModel.apply {
                 setParentCard(card)
                 binding.createCardTopBarBinding.txvPosition.text =
-                    "${card.id} ${card.libOrder}/${returnSisterCards().size}"
+                    "${card.libOrder}/${returnSisterCards().size}"
                 setAlphaByClickable(
                     getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.NEXT)!=null,
                     binding.btnNext)
@@ -99,8 +99,11 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             createCardViewModel.apply {
                 val sort = it.sortedBy { it.libOrder }
                 setSisterCards(sort)
-                binding.createCardTopBarBinding.txvPosition.text =
-                    "${returnParentCard()?.belongingFlashCardCoverId} ${returnParentCard()?.libOrder?:0}/${it.size}"
+                if(returnParentCard()!=null){
+                    binding.createCardTopBarBinding.txvPosition.text =
+                        "${returnParentCard()?.libOrder?:0}/${it.size}"
+                }
+
             }
         }
         val parentFlashCardCoverObserver = Observer<File?> {

@@ -35,6 +35,7 @@ import com.example.tangochoupdated.ui.viewmodel.*
 class LibraryFragmentBase : Fragment(),View.OnClickListener{
 
     private lateinit var libNavCon:NavController
+    private val searchViewModel:SearchViewModel by activityViewModels()
     private val libraryViewModel: LibraryViewModel by activityViewModels()
     private val baseViewModel: BaseViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
@@ -115,11 +116,38 @@ class LibraryFragmentBase : Fragment(),View.OnClickListener{
             }
 
         }
+        searchViewModel.searchingText.observe(viewLifecycleOwner){
+            if(it == "")  {
+                requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            }
+            else{
+                requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+                searchViewModel.getFilesByWords(it).observe(viewLifecycleOwner){
+                    searchViewModel.setMatchedFiles(it)
+                    val a = mutableListOf<Any>()
+                    a.addAll(searchViewModel.returnMatchedCards())
+                    a.addAll(it)
+                    searchViewModel.setMatchedItems(a)
+
+                }
+                searchViewModel.getCardsByWords(it).observe(viewLifecycleOwner){
+                    searchViewModel.setMatchedCards(it)
+                    val a = mutableListOf<Any>()
+                    a.addAll(searchViewModel.returnMatchedFiles())
+                    a.addAll(it)
+                    searchViewModel.setMatchedItems(a)
+
+                }
+            }
+
+
+        }
 
         setLateInitVars()
         addClickListeners()
 
         libraryViewModel.setLibraryNavCon(libNavCon)
+        libraryViewModel.setRVCover(LibraryViewModel.RvCover(true))
         baseViewModel.setChildFragmentStatus(MainFragment.Library)
 
         chooseFileMoveToViewModel.showToast.observe(viewLifecycleOwner,fileMovedToastObserver)
