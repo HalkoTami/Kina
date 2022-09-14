@@ -107,9 +107,9 @@ class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBi
                                                     opposite =  txvFilterCardNotRemembered)) remembered = true
                                         txvFilterCardNotRemembered                  ->
                                             if(onCLickEnumTxv(
-                                                    checkAbility =checkboxFilterTypedAnswer,
+                                                    checkAbility =checkboxFilterCardRememberStatus,
                                                     txv= v,
-                                                    opposite =txvFilterTypedAnswerCorrect, ))
+                                                    opposite =txvFilterCardRemembered, ))
                                                 remembered = false
                                         txvFilterWithFlag                           ->
                                             if(onCLickEnumTxv(checkAbility =checkboxFilterFlag,

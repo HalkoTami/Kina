@@ -4,7 +4,10 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
+import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.ui.viewmodel.customClasses.LibraryFragment
 import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
@@ -156,17 +160,20 @@ class LibraryFragFolder :  Fragment(){
                 setParentFileAncestorsFromDB(it)
                 createFileViewModel.filterBottomMenuByAncestors(it,it[0])
             }
+            fun setUpEachAncestor(linLay:LinearLayoutCompat,txv:TextView, imv:ImageView, file: File?){
+                val getDraw =  GetCustomDrawables(requireActivity())
+                if(file==null)linLay.visibility = View.GONE
+                else {
+                    linLay.visibility = View.VISIBLE
+                    txv.text = file.title
+                    imv.setImageDrawable(getDraw.getFileIconByFile(file))
+                }
+            }
             parentFileAncestors.observe(viewLifecycleOwner){
                     binding.ancestorsBinding.apply {
-                        txvGGrandParentFileTitle.text = it.gGrandPFile?.title
-                        txvGrandParentFileTitle.text = it.gParentFile?.title
-                        txvParentFileTitle.text = it.ParentFile?.title
-                        lineLayGGFile.visibility =
-                        if(it.gGrandPFile != null) View.VISIBLE else View.GONE
-                        lineLayGPFile.visibility =
-                        if(it.gParentFile != null) View.VISIBLE else View.GONE
-                        lineLayParentFile.visibility =
-                        if(it.ParentFile != null) View.VISIBLE else View.GONE
+                        setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,it.gGrandPFile)
+                        setUpEachAncestor(lineLayGPFile,txvGrandParentFileTitle,imvGrandParentFile,it.gParentFile)
+                        setUpEachAncestor(lineLayParentFile,txvParentFileTitle,imvParentFile,it.ParentFile)
                     }
                 }
             val commonViewSetUp = LibrarySetUpItems()

@@ -58,7 +58,7 @@ class FlipBaseFragCL(val binding:AnkiFlipFragBaseBinding,
                     }
                     imvEditCard -> {
                         val libOrder = flipViewModel.returnParentCard()?.libOrder ?:return
-                        createCardViewModel.setStartingPosition(libOrder)
+                        createCardViewModel.setParentPosition(libOrder)
                         mainNavController.navigate(CreateCardFragmentBaseDirections.openCreateCard())
                     }
                 }

@@ -22,6 +22,7 @@
 
     </FrameLayout>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -137,6 +138,29 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+        android:visibility="gone"
+        android:background="@drawable/gray_stroke_rectangle"
+        android:backgroundTint="@color/darkRed"
+        android:elevation="10dp"
+        android:id="@+id/frameLay_popup_confirm_add_to_flipItem"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.8"
+        android:layout_height="300dp"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+        <include
+            android:id="@+id/confirm_add_to_flip_item_binding"
+            layout="@layout/create_card_frag_popup_cofirm_add_to_flip_item"/>
+
+
+
+    </FrameLayout>
 
 
 

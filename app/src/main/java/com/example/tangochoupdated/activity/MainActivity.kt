@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.activity
 
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -15,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.application.RoomApplication
 import com.example.tangochoupdated.databinding.MainActivityBinding
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 
@@ -192,6 +194,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         libraryViewModel.parentRVItems.observe(this@MainActivity,libraryParentRVItemsObserver)
         createCardViewModel.setMainActivityNavCon(mainNavCon)
  }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return super.onTouchEvent(event)
+
+    }
 
     override fun onClick(v: View?) {
 

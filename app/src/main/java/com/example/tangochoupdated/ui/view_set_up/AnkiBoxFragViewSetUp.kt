@@ -8,15 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.tangochoupdated.databinding.*
+import com.example.tangochoupdated.db.dataclass.ActivityData
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.StringData
+import com.example.tangochoupdated.db.enumclass.ActivityStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
 import com.example.tangochoupdated.ui.listadapter.AnkiBoxListAdapter
 import com.example.tangochoupdated.ui.listener.AnkiBoxFragBaseCL
 import com.example.tangochoupdated.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.example.tangochoupdated.ui.listener.recyclerview.AnkiBoxFileRVCL
+import com.example.tangochoupdated.ui.listener.recyclerview.AnkiBoxRVStringCardCL
 import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
@@ -30,22 +33,42 @@ class AnkiBoxFragViewSetUp() {
 //    val ankiBaseViewModel:AnkiFragBaseViewModel
 
 
+
+    fun setUpOrder(stringBinding: LibraryFragRvItemCardStringBinding,card:Card){
+        stringBinding.txvFrontTitle.text = "order ${card.libOrder}"
+        stringBinding.txvBackTitle.text = "id ${card.id}"
+    }
     fun setUpRVCard(cardBinding: AnkiHomeFragRvItemCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxFragViewModel){
-        fun setUpRVStringCardContent(){
-            val stringBinding = cardBinding.stringContentBinding
-            val stringData = card.stringData
-            stringBinding.apply {
-                stringBinding.txvFrontTitle.text = stringData?.frontTitle.toString()
-                stringBinding.txvFrontText.text = stringData?.frontText.toString()
-                stringBinding.txvBackTitle.text = stringData?.backTitle.toString()
-                stringBinding.txvBackText.text = stringData?.backText.toString()
-            }
+        LibrarySetUpItems().setUpRVStringCardBinding(cardBinding.stringContentBinding,card.stringData)
+        setUpOrder(cardBinding.stringContentBinding,card)
+        cardBinding.stringContentBinding.apply {
+            arrayOf(btnEdtFront,btnEdtBack).onEach { it.visibility= View.GONE }
         }
-        setUpRVStringCardContent()
+        fun setOnCL(){
+            arrayOf(cardBinding.checkboxAnkiRv,
+                cardBinding.btnAnkiRvCardSetFlag).onEach { it.setOnClickListener(AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
+        }
+        fun getStringByRemembered(remembered:Boolean):String{
+            return if(remembered)"暗記済み" else "未暗記"
+        }
+        fun getStringByLastLooked(lastLooked:ActivityData?):String{
+            return "めくった最終日　" + (lastLooked?.dateTime ?: "記録なし")
+        }
+        setOnCL()
         ankiBoxVM.ankiBoxItems.observe(lifecycleOwner){
             cardBinding.checkboxAnkiRv.isSelected = it.contains(card)
         }
-        TODO()
+        ankiBoxVM.getCardActivityFromDB(card.id).observe(lifecycleOwner){
+            val lastLooked =it.findLast { it.activityStatus == ActivityStatus.CARD_LOOKED }
+            cardBinding.txvAnkiRvLastFlipped.text = getStringByLastLooked(lastLooked)
+        }
+        cardBinding.apply {
+            btnAnkiRvCardSetFlag.isSelected = card.flag
+            imvAnkiRvCardRemembered.isSelected = card.remembered
+            txvAnkiRvRememberedStatus.text = getStringByRemembered(card.remembered)
+        }
+
+
 
     }
 fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
@@ -153,7 +176,8 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         val rememberedCardsSize = list.filter { it.remembered == true }.size
         binding.apply {
             ringProgressBar.progress = rememberedPercentage.times(100).toInt()
-            moveViewInCircle(rememberedPercentage,imvRememberedEndIcon,ringProgressBar.layoutParams.width)
+            imvRememberedEndIcon.visibility = if(rememberedPercentage!=0.0)  View.VISIBLE else View.INVISIBLE
+                moveViewInCircle(rememberedPercentage,imvRememberedEndIcon,ringProgressBar.layoutParams.width)
             txvInsideRing.text = "$rememberedCardsSize/${list.size}"
         }
 

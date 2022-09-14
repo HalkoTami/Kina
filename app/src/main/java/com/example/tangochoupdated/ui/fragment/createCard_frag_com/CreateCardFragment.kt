@@ -23,15 +23,18 @@ import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
 import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
-import com.example.tangochoupdated.ui.viewmodel.StringCardViewModel
-import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
+import com.example.tangochoupdated.ui.viewmodel.*
+import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
 
 
 class CreateCardFragment: Fragment(),View.OnClickListener {
 
     private var _binding: CreateCardFragBaseBinding? = null
     private val binding get() = _binding!!
-
+    private val ankiBoxViewModel: AnkiBoxFragViewModel by activityViewModels()
+    private val flipViewModel: AnkiFlipFragViewModel by activityViewModels()
+    private val ankiBaseViewModel: AnkiFragBaseViewModel by activityViewModels()
+    private val baseViewModel: BaseViewModel by activityViewModels()
     private val args : CreateCardFragmentArgs by navArgs()
     private val  createCardViewModel: CreateCardViewModel by activityViewModels()
     private val stringCardViewModel : StringCardViewModel by activityViewModels()
@@ -71,7 +74,11 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                     btnInsertPrevious,
                     btnPrevious,
                     btnNext,
-                    btnInsertNext
+                    btnInsertNext,
+                    confirmAddToFlipItemBinding.btnCloseConfirm,
+                    confirmAddToFlipItemBinding.btnCommitAdd,
+                    confirmAddToFlipItemBinding.btnNotAdd,
+                    frameLayPopupConfirmAddToFlipItem
                     ).onEach { it.setOnClickListener(this@CreateCardFragment) }
             }
         }
@@ -84,7 +91,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             createCardViewModel.apply {
                 setParentCard(card)
                 binding.createCardTopBarBinding.txvPosition.text =
-                    "${card.libOrder}/${returnSisterCards().size}"
+                    "${returnParentCard()?.id} ${card.libOrder}/${returnSisterCards().size}"
                 setAlphaByClickable(
                     getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.NEXT)!=null,
                     binding.btnNext)
@@ -101,7 +108,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 setSisterCards(sort)
                 if(returnParentCard()!=null){
                     binding.createCardTopBarBinding.txvPosition.text =
-                        "${returnParentCard()?.libOrder?:0}/${it.size}"
+                        "${returnParentCard()?.id} ${returnParentCard()?.libOrder}/${it.size}"
                 }
 
             }
@@ -127,14 +134,27 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 changeColPalletCol(requireActivity(),it.before,false,binding.createCardColPaletBinding)
             }
         }
+        val confirmPopUpVisibilityObserver = Observer<Boolean>{
+            binding.frameLayPopupConfirmAddToFlipItem.visibility = booleanToVisibility(it)
+        }
         val cardId = args.cardId
         val parentFlashCardId:Int? = args.parentFlashCardCoverId?.single()
         if(cardId!=null){
             createCardViewModel. getParentCard(cardId.single()).observe(viewLifecycleOwner,parentCardFromDBObserver)
-            createCardViewModel.getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner,sisterCardObserver)
-            createCardViewModel.getParentFlashCardCover(parentFlashCardId).observe(viewLifecycleOwner,parentFlashCardCoverObserver)
-        }
 
+
+        }
+        var lastCardOld: Card? = null
+        createCardViewModel.lastInsertedCard(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner) {
+            if(lastCardOld!=null&&lastCardOld!=it&&lastCardOld!!.id<it.id){
+                makeToast(requireActivity(),"${it.id} ${it.libOrder}")
+                createCardViewModel.onClickEditCard(it,cardNavCon)
+            }
+            lastCardOld = it
+        }
+        createCardViewModel.getParentFlashCardCover(parentFlashCardId).observe(viewLifecycleOwner,parentFlashCardCoverObserver)
+        createCardViewModel.getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner,sisterCardObserver)
+        createCardViewModel.confirmFlipItemPopUpVisible.observe(viewLifecycleOwner,confirmPopUpVisibilityObserver)
         createCardViewModel.colPalletVisibility.observe(viewLifecycleOwner,colorPalletVisibilityObserver)
         createCardViewModel.cardColor.observe(viewLifecycleOwner,cardColorObserver)
 
@@ -152,11 +172,23 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
     override fun onClick(v: View?) {
         binding.apply {
             when(v){
+                confirmAddToFlipItemBinding.btnCloseConfirm,confirmAddToFlipItemBinding.btnNotAdd -> createCardViewModel.setConfirmFlipItemPopUpVisible(false)
+                confirmAddToFlipItemBinding.btnCommitAdd -> {
+                    ankiBoxViewModel.addToAnkiBoxCardIds(listOf(args.cardId?.single() ?:return))
+                    makeToast(requireActivity(),"${createCardViewModel.returnParentCard()?.id}")
+                    createCardViewModel.setConfirmFlipItemPopUpVisible(false)
+                }
                 createCardTopBarBinding.imvSaveAndBack  ->{
                     mainNavCon.popBackStack()
                 }
-                btnInsertPrevious                       -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.PREVIOUS)
-                btnInsertNext                           -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.NEXT)
+
+                btnInsertNext,btnInsertPrevious         -> {
+                    when(v){
+                        btnInsertPrevious                    -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.PREVIOUS)
+                        btnInsertNext                           -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.NEXT)
+                    }
+                    createCardViewModel.checkMakePopUpVisible(baseViewModel.returnFragmentStatus() ?:return,ankiBaseViewModel.returnActiveFragment())
+                }
                 btnNext                                 -> createCardViewModel.onClickBtnNavigate(cardNavCon,CreateCardViewModel.NeighbourCardSide.NEXT)
                 btnPrevious                             -> createCardViewModel.onClickBtnNavigate(cardNavCon,CreateCardViewModel.NeighbourCardSide.PREVIOUS)
                 createCardColPaletBinding.imvIconPalet  -> createCardViewModel.changeColPalletVisibility()

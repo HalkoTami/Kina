@@ -37,7 +37,7 @@ class LibraryRVCardCL(val view: View,
                         lVM.onClickSelectableItem(item,btnSelect.isSelected.not())
                         btnSelect.isSelected = btnSelect.isSelected.not()
                     }else{
-                        createCardViewModel.setStartingPosition(item.libOrder)
+//                        createCardViewModel.setStartingPosition(item.libOrder)
                         navController.navigate(CreateCardFragmentBaseDirections.openCreateCard())
                     }
 

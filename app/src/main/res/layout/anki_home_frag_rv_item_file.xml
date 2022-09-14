@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:padding="10dp"
     android:background="@drawable/gray_stroke_rectangle">
     <ImageView
@@ -59,7 +59,8 @@
 
 
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
 
                 android:maxLength="18"
                 android:maxLines="2"
@@ -72,31 +73,29 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/linLay_children_data"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:gravity="center_vertical"
-                app:layout_constraintStart_toStartOf="@id/lineLay_file_data"
-
-                app:layout_constraintTop_toBottomOf="@id/lineLay_file_data"
-                app:layout_constraintBottom_toTopOf="@id/frameLay_graphs">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="15dp"
+                    android:minHeight="10dp"
                     android:src="@drawable/icon_file"
                     android:paddingTop="3dp"
                     android:paddingBottom="3dp"/>
                 <TextView
                     android:id="@+id/txv_anki_box_folder_amount"
                     android:layout_marginStart="5dp"
-                    android:textSize="13sp"
+                    android:textSize="11sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3個"/>
                 <ImageView
                     android:layout_marginStart="10dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="15dp"
                     android:src="@drawable/icon_flashcard"/>
                 <TextView
+                    android:textSize="11sp"
                     android:id="@+id/txv_anki_box_flashCard_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -104,9 +103,10 @@
                 <ImageView
                     android:padding="2dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="15dp"
                     android:src="@drawable/icon_card"/>
                 <TextView
+                    android:textSize="11sp"
                     android:id="@+id/txv_anki_box_Card_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -136,29 +136,32 @@
 <!--        app:barrierDirection="end"/>-->
 
     <LinearLayout
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lineLay_file_data"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/lineLay_graphs"
         android:orientation="vertical">
         <FrameLayout
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="2">
             <include
                 android:id="@+id/remembered_progress_bar_binding"
                 layout="@layout/progress_bar_remembered_rectangle"/>
         </FrameLayout>
         <FrameLayout
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:layout_height="0dp"
+            android:layout_weight="3">
             <include
                 android:id="@+id/flipped_progress_bar_binding"
                 layout="@layout/progress_bar_flipped"/>

@@ -93,7 +93,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setDeleteText(deletingItems:List<Any>){
         val a = returnConfirmDeleteView()
         val single = deletingItems.size == 1
-        val singleItem = returnDeletingItems().single()
+        val singleItem = if(single)returnDeletingItems().single() else null
         a.confirmText = if(single && singleItem is File) "${singleItem.title}を削除しますか？"
         else "選択中のアイテムを削除しますか？"
         setConfirmDeleteView(a)
@@ -102,7 +102,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setDeleteWithChildrenText(deletingItems:List<Any>){
         val a = returnConfirmDeleteWithChildrenView()
         val single = deletingItems.size == 1
-        val singleItem = returnDeletingItems().single()
+        val singleItem = if(single)returnDeletingItems().single() else null
         a.confirmText = if(single && singleItem is File) "${singleItem.title}の中身をすべて削除しますか？"
         else "中身をすべて削除しますか？"
         setConfirmDeleteWithChildrenView(a)

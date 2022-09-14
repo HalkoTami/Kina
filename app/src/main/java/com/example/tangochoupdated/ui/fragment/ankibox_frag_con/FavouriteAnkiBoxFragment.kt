@@ -36,10 +36,14 @@ class FavouriteAnkiBoxFragment  : Fragment() {
             .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),ankiBoxViewModel,
                 AnkiBoxFragments.Favourites,viewLifecycleOwner)
 
+        fun makeEmptyVisibleByListSize(list: List<Any>){
+            binding.frameLayFullRvEmpty.visibility = if(list.isEmpty()) View.VISIBLE else View.GONE
+        }
         ankiBoxViewModel.apply {
             setCurrentChildFragment(AnkiBoxFragments.Favourites)
             allFavouriteAnkiBoxFromDB.observe(viewLifecycleOwner){
                 adapter.submitList(it)
+                makeEmptyVisibleByListSize(it)
                 Toast.makeText(requireActivity(),it.size.toString(),Toast.LENGTH_SHORT).show()
             }
         }

@@ -44,7 +44,7 @@ class AnkiBoxListAdapter(
 
         fun bind(item: Any, ){
 
-            binding.root.removeAllViews()
+            binding.frameLayAnkiBoxRvContent.removeAllViews()
             val content =
             when(item){
                 is File -> {
@@ -63,7 +63,7 @@ class AnkiBoxListAdapter(
                 }
                 else -> return
             }
-            binding.root.addView(content)
+            binding.frameLayAnkiBoxRvContent.addView(content)
 
 
 

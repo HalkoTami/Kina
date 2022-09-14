@@ -60,6 +60,7 @@ class AnkiBaseFragViewSetUp() {
 
 
     }
+
     fun setUpSettingContent(ankiFilter: AnkiFilter, bindingBase: AnkiFragBaseBinding, context: Context){
         val white = ContextCompat.getColor(context,R.color.white)
         val green = ContextCompat.getColor(context,R.color.most_dark_green)

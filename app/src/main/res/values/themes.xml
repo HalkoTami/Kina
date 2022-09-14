@@ -105,6 +105,19 @@
         <item name="android:textColor">@color/text_color_gray</item>
 
     </style>
+    <style name="StringCardContentTxv" >
+        <item name="android:maxLines">3</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="autoSizeMinTextSize">7sp</item>
+        <item name="autoSizeMaxTextSize">14sp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/text_color_gray</item>
+
+    </style>
 
     <style name="EnumTextviewStyle" parent="Widget.AppCompat.TextView">
         <item name="android:gravity">center</item>

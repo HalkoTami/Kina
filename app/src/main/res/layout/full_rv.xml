@@ -18,6 +18,14 @@
         />
 
 </androidx.core.widget.NestedScrollView>
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/frameLay_full_rv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include android:id="@+id/rv_empty_binding"
+            layout="@layout/library_frag_lay_folder_rv_empty"/>
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

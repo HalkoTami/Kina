@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2570bebd17b766c30fabd6137599b933",
+    "identityHash": "fed90eea758b6a29f5ffe5227865b852",
     "entities": [
       {
         "tableName": "tbl_card",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `belongingFlashCardCoverId` INTEGER, `cardStatus` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `remembered` INTEGER NOT NULL, `flag` INTEGER NOT NULL, `libOrder` INTEGER NOT NULL, `colorStatus` INTEGER NOT NULL, `timesFlipped` INTEGER NOT NULL, `frontTitle` TEXT, `backTitle` TEXT, `frontText` TEXT, `backText` TEXT, `markerTextPreview` TEXT, `answerChoiceId` INTEGER, `answerPreview` TEXT, `question` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `belongingFlashCardCoverId` INTEGER, `cardStatus` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `remembered` INTEGER NOT NULL, `flag` INTEGER NOT NULL, `libOrder` INTEGER NOT NULL, `colorStatus` INTEGER NOT NULL, `timesFlipped` INTEGER NOT NULL, `lastTypedAnswerCorrect` INTEGER, `frontTitle` TEXT, `backTitle` TEXT, `frontText` TEXT, `backText` TEXT, `markerTextPreview` TEXT, `answerChoiceId` INTEGER, `answerPreview` TEXT, `question` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -61,6 +61,12 @@
             "columnName": "timesFlipped",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "lastTypedAnswerCorrect",
+            "columnName": "lastTypedAnswerCorrect",
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "stringData.frontTitle",
@@ -512,7 +518,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2570bebd17b766c30fabd6137599b933')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fed90eea758b6a29f5ffe5227865b852')"
     ]
   }
 }

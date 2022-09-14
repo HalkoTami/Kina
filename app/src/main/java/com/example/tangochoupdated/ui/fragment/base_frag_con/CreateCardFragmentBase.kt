@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.CreateCardFragMainBinding
+import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
 import com.example.tangochoupdated.ui.viewmodel.customClasses.LibraryFragment
@@ -66,23 +67,15 @@ class CreateCardFragmentBase  : Fragment() {
                 }
                 else -> null
             }
-            lastInsertedCard(parentFlashCardCoverId).observe(viewLifecycleOwner) {
-                if (returnOpenEditCard()&&it!=null) {
-                    setOpenEditCard(false)
-                    onClickEditCard(it, cardNavCon)
-                }
-            }
+            var lastCardOld: Card? = null
             var calledFirst:Boolean = true
-            var flashCard:File? = null
+
+
 
             createCardViewModel.getSisterCards(parentFlashCardCoverId).observe(viewLifecycleOwner){
                 if(calledFirst){
-                    if(returnStartingPosition()!=null){
-                        val position = returnStartingPosition()!!
-                        setStartingPosition(null)
-                        val sorted = it.sortedBy { it.libOrder }
-                        onClickEditCard(sorted[position],cardNavCon)
-                    }
+                    onClickEditCard(it.find { it.libOrder == returnParentPosition()  } ?:return@observe,cardNavCon)
+                    calledFirst = false
                 }
             }
 

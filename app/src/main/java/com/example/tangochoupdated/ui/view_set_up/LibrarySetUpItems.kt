@@ -6,6 +6,7 @@ import android.text.Spannable
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
@@ -74,9 +75,9 @@ class LibrarySetUpItems(){
     fun changeStringBtnVisibility(rv: RecyclerView, visible:Boolean){
         rv.children.iterator().forEach { view ->
             arrayOf(
-                view.findViewById<ImageView>(R.id.btn_edt_front),
-                view.findViewById<ImageView>(R.id.btn_edt_back),
-                view.findViewById(R.id.btn_add_new_card))
+                view.findViewById<FrameLayout>(R.id.btn_edt_front),
+                view.findViewById(R.id.btn_edt_back),
+                view.findViewById<ImageView>(R.id.btn_add_new_card))
                 .onEach {
                     it.visibility = if(visible)View.VISIBLE else View.GONE
                 }

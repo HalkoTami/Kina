@@ -59,20 +59,17 @@ class AnkiFragmentAnkiBox  : Fragment() {
 //        }
         fun changeSelectedTab(select: AnkiBoxFragments, before: AnkiBoxFragments?){
 
-            if(before == select) return
-            else {
-                fun getTextView(tab: AnkiBoxFragments): TextView {
-                    return when(tab){
-                        AnkiBoxFragments.AllFlashCardCovers-> binding.tabAllFlashCardCoverToAnkiBox
-                        AnkiBoxFragments.Library -> binding.tabLibraryToAnkiBox
-                        AnkiBoxFragments.Favourites -> binding.tabFavouritesToAnkiBox
-                    }
+            fun getTextView(tab: AnkiBoxFragments): TextView {
+            return when(tab){
+                    AnkiBoxFragments.AllFlashCardCovers-> binding.tabAllFlashCardCoverToAnkiBox
+                    AnkiBoxFragments.Library -> binding.tabLibraryToAnkiBox
+                    AnkiBoxFragments.Favourites -> binding.tabFavouritesToAnkiBox
                 }
-                getTextView(select).isSelected = true
-                binding.linLayTabChange.tag = select
-                if(before!=null)
-                getTextView(before).isSelected = false
             }
+            getTextView(select).isSelected = true
+            binding.linLayTabChange.tag = select
+            if(before!=null)
+                getTextView(before).isSelected = false
 
         }
         createFileViewModel.apply {

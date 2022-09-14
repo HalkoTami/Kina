@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_height="wrap_content"
-    android:maxHeight="120dp"
-    android:minHeight="80dp"
+    android:layout_height="match_parent"
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -12,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/gray_stroke_corner_10">
 
-<!--TODO 文字数制限　行制限-->
+    <!--TODO 文字数制限　行制限-->
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/guide_vertical_start"
@@ -30,7 +26,10 @@
         />
 
     <TextView
+        android:autoSizeTextType="uniform"
         android:id="@+id/txv_front_title"
+        android:autoSizeMaxTextSize="13sp"
+        android:autoSizeMinTextSize="6sp"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_margin="5dp"
@@ -38,7 +37,6 @@
         android:minWidth="30dp"
 
         android:maxWidth="100dp"
-        android:text=""
         app:layout_constraintBottom_toTopOf="@+id/line_horizontal"
         app:layout_constraintEnd_toStartOf="@id/line_vertical"
 
@@ -46,22 +44,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        style="@style/StringCardContentTxv"
         android:id="@+id/txv_front_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:gravity="center_vertical"
-        android:maxLines="3"
-        android:text=""
 
         app:layout_constraintBottom_toTopOf="@id/line_horizontal"
-
         app:layout_constraintEnd_toStartOf="@id/btn_edt_front"
         app:layout_constraintStart_toEndOf="@id/line_vertical"
-
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:autoSizeTextType="uniform"
+        android:autoSizeMaxTextSize="13sp"
+        android:autoSizeMinTextSize="6sp"
         android:id="@+id/txv_back_title"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -76,12 +70,8 @@
         app:layout_constraintTop_toBottomOf="@+id/line_horizontal" />
 
     <TextView
+        style="@style/StringCardContentTxv"
         android:id="@+id/txv_back_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:gravity="center_vertical"
-        android:maxLines="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btn_edt_back"
         app:layout_constraintStart_toEndOf="@+id/line_vertical"
@@ -111,27 +101,46 @@
 
         tools:ignore="contentDescription" />
 
-    <ImageView
+    <FrameLayout
         android:contentDescription="@string/edt_front"
 
         android:id="@+id/btn_edt_front"
-        app:layout_constraintBottom_toTopOf="@id/line_horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/line_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/txv_front_text"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:src="@drawable/icon_edit"
-        android:layout_margin="5dp"/>
-    <ImageView
+        android:layout_height="0dp"
+        android:layout_marginEnd="5dp">
+        <ImageView
+            android:layout_gravity="bottom"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:minHeight="10dp"
+            android:minWidth="10dp"
+            android:src="@drawable/icon_edit"/>
+    </FrameLayout>
+    <FrameLayout
         android:contentDescription="@string/edt_back"
         android:id="@+id/btn_edt_back"
+        app:layout_constraintTop_toBottomOf="@id/line_horizontal"
+        app:layout_constraintVertical_bias="1"
         app:layout_constraintStart_toEndOf="@id/txv_back_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:src="@drawable/icon_edit"
-        android:layout_margin="5dp"/>
+        android:layout_height="0dp"
+        android:minWidth="10dp"
+        android:minHeight="10dp"
+        android:layout_marginEnd="5dp">
+        <ImageView
+            android:layout_gravity="bottom"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:minHeight="3dp"
+            android:minWidth="3dp"
+            android:src="@drawable/icon_edit"/>
+    </FrameLayout>
 
 
 
@@ -140,5 +149,3 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-

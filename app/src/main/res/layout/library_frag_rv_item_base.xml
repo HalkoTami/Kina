@@ -33,7 +33,7 @@
     <FrameLayout
         android:id="@+id/content_binding_frame"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         app:layout_constraintEnd_toStartOf="@+id/linLay_swipe_show"
         app:layout_constraintStart_toEndOf="@+id/btn_select"
         app:layout_constraintTop_toTopOf="parent"

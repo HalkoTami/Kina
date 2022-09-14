@@ -16,6 +16,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
+import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnimationAttributes
@@ -93,24 +94,23 @@ class AnkiFragFlipBaseFragment  : Fragment() {
             setFront(
                 !settingVM.returnReverseCardSide()
             )
-            val cardIds = boxViewModel.returnAnkiBoxCardIds()
-            if(cardIds.isEmpty()){
-                getAllCardsFromDB.observe(viewLifecycleOwner){
-                    setAnkiFlipItems(it)
+            val cardIds = boxViewModel.returnAnkiBoxCardIds().distinct()
+            makeToast(requireActivity(),cardIds.size.toString())
+            getAllCardsFromDB.observe(viewLifecycleOwner){
+                if(cardIds.isEmpty())
+                    makeToast(requireActivity(),"called")
+                setAnkiFlipItems(it,settingVM.returnAnkiFilter())
+            }
+            boxViewModel.getCardsFromDBByMultipleCardIds(cardIds) .observe(viewLifecycleOwner){
+                if(cardIds.isEmpty().not()){
+                    setAnkiFlipItems(it,settingVM.returnAnkiFilter())
                 }
-            } else{
-                boxViewModel.getDescendantsCards(boxViewModel.returnAnkiBoxFileIds()) .observe(viewLifecycleOwner){
-                    val sorted = it.sortedBy { it.libOrder }
-                    setAnkiFlipItems(sorted)
-                    binding.topBinding.txvCardPosition.text ="${sorted.indexOf(returnParentCard())}/${sorted.size}"
-                }
-
             }
             ankiFlipItems.observe(viewLifecycleOwner){
+                if(it.isEmpty()) makeToast(requireActivity(),"カードがありません")
+                navCon.popBackStack()
                 if(start){
-                    val sorted = it.sortedBy { it.libOrder }
-                    Toast.makeText(requireActivity(),"navigated",Toast.LENGTH_SHORT).show()
-                    navCon.navigate(getStart(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer(),sorted))
+                    navCon.navigate(getStart(settingVM.returnReverseCardSide(),settingVM.returnTypeAnswer(),it))
                     start = false
                 } else return@observe
             }
@@ -142,8 +142,8 @@ class AnkiFragFlipBaseFragment  : Fragment() {
                 }
             }
             parentCard.observe(viewLifecycleOwner){
+                flipBaseViewModel.updateLooked(it)
                 if(returnFlipItems().contains(it)){
-                    createCardViewModel.setStartingPosition(returnFlipItems().indexOf(it))
                     binding.topBinding.txvCardPosition.text ="${returnFlipItems().indexOf(it)}/${returnFlipItems().size}"
                 }
 

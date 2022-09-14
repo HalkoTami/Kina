@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
+import com.example.tangochoupdated.db.dataclass.ActivityData
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
@@ -46,6 +47,14 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
         viewModelScope.launch {
             repository.insert(file)
         }
+    }
+    fun updateCardFlagStatus(card:Card){
+        val new = card
+        new.flag = new.flag.not()
+        viewModelScope.launch {
+            repository.update(new)
+        }
+
     }
 
     fun insertEmptyFavourite(){
@@ -102,6 +111,7 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     val getAnkiBoxNavCon :LiveData<Boolean> = _getAnkiBoxNavCon
 
+    fun getCardActivityFromDB(cardId: Int) :LiveData<List<ActivityData>> = repository.getCardActivity(cardId).asLiveData()
     fun getDescendantsCardIds(fileIdList:List<Int>) :LiveData<List<Int>> = repository.getDescendantsCardsIsByMultipleFileId(fileIdList).asLiveData()
     private val _ankiBoxItems = MutableLiveData<MutableList<Card>>()
     fun setAnkiBoxItems(list: List<Card>){

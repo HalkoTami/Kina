@@ -65,11 +65,12 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_data_graph_small.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_popup_anki_box_favourite.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_popup_anki_setting_scroll_view_content.xml" value="0.3625" />
-        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_rv_item.xml" value="0.3625" />
-        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_rv_item_card.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_rv_item.xml" value="0.5" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_rv_item_card.xml" value="0.33" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/anki_home_frag_rv_item_file.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_base.xml" value="0.25679347826086957" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_main.xml" value="0.25679347826086957" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_popup_cofirm_add_to_flip_item.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_string_frag.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/create_card_frag_top_bar.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/frag_anki_content_rv.xml" value="0.2223731884057971" />
@@ -85,11 +86,12 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_lay_folder_rv_empty.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_lay_home_rv_empty.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_lay_rv_empty.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_open_folder_base.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_popup_confirm_delete.xml" value="0.165" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_popup_confirm_delete_all_children.xml" value="0.375" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_popup_confirm_move_to_file.xml" value="0.25" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_rv_item_base.xml" value="0.3625" />
-        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_rv_item_card_string.xml" value="0.2261650277896537" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_rv_item_card_string.xml" value="0.5" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_rv_item_file.xml" value="0.25" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_select_file_move_to_base.xml" value="0.3625" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/library_frag_top_bar_ancestors.xml" value="0.33" />
@@ -103,7 +105,8 @@
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/main_activity_popup_edit_file.xml" value="0.25" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/percentage_icons.xml" value="0.2794253938832252" />
         <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/progress_bar_flipped.xml" value="0.18541666666666667" />
-        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/progress_bar_remembered_rectangle.xml" value="0.3625" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/progress_bar_remembered_rectangle.xml" value="0.5" />
+        <entry key="..\:/Users/halko/StudioProjects/tangochoNew/app/src/main/res/layout/progress_bar_remembered_ring.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable-v23/card_amount.xml" value="0.2215" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable-v23/nav_btn.xml" value="0.334" />
         <entry key="..\:/Users/halko_h6g0288/AndroidStudioProjects/tangochoupdated/app/src/main/res/drawable-v23/tab_bottom_rectangle.xml" value="0.2815" />

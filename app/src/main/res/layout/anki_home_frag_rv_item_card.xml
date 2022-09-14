@@ -3,35 +3,51 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="120dp"
-    android:layout_margin="10dp"
+    android:layout_height="match_parent"
     android:padding="5dp"
     >
-    <ImageView
-        android:id="@+id/checkbox_anki_rv"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
 
-        android:src="@drawable/icon_checkbox_checkable"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-    <ImageView
-        android:layout_marginTop="10dp"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linLay_anki_box_string_rv_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/icon_flag"
-        app:layout_constraintTop_toBottomOf="@id/checkbox_anki_rv"/>
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:layout_weight="1"
+            android:id="@+id/checkbox_anki_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="10dp"
+
+            android:src="@drawable/selector_anki_box"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="5dp"/>
+        <ImageView
+            android:id="@+id/btn_anki_rv_card_set_flag"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="10dp"
+            android:layout_gravity="top"
+            android:src="@drawable/selector_flag"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <FrameLayout
         android:layout_width="0dp"
         android:layout_marginStart="10dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/lineLay_file_data"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toEndOf="@id/checkbox_anki_rv"
+        app:layout_constraintStart_toEndOf="@id/linLay_anki_box_string_rv_buttons"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center_vertical"
@@ -52,9 +68,10 @@
 <!--        app:barrierDirection="end"/>-->
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_marginTop="5dp"
         android:id="@+id/frameLay_graphs"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/lineLay_file_data"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lineLay_file_data"
@@ -63,15 +80,20 @@
         >
 
         <ImageView
+            android:id="@+id/imv_anki_rv_card_remembered"
             android:layout_marginEnd="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_checkbox"/>
+            android:layout_height="15dp"
+            android:src="@drawable/selector_remembered"/>
         <TextView
+            android:id="@+id/txv_anki_rv_remembered_status"
+            android:textSize="11sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="暗記済み"/>
         <TextView
+            android:id="@+id/txv_anki_rv_last_flipped"
+            android:textSize="11sp"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="end"

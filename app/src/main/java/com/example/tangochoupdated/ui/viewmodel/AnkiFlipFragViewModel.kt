@@ -3,15 +3,19 @@ package com.example.tangochoupdated.ui.viewmodel
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
 import com.example.tangochoupdated.db.MyRoomRepository
+import com.example.tangochoupdated.db.dataclass.ActivityData
 import com.example.tangochoupdated.db.dataclass.Card
+import com.example.tangochoupdated.db.enumclass.ActivityStatus
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringCheckAnswerFragmentDirections
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragmentDirections
-import com.example.tangochoupdated.ui.viewmodel.customClasses.AnimationAttributes
-import com.example.tangochoupdated.ui.viewmodel.customClasses.CountFlip
-import com.example.tangochoupdated.ui.viewmodel.customClasses.FlipFragments
-import com.example.tangochoupdated.ui.viewmodel.customClasses.Progress
+import com.example.tangochoupdated.ui.viewmodel.customClasses.*
 import kotlinx.coroutines.launch
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ofPattern
+import java.util.*
 
 class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 
@@ -269,10 +273,14 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
     val _ankiFlipItems = MutableLiveData<MutableList<Card>>()
-    fun setAnkiFlipItems(list: List<Card>){
+    fun setAnkiFlipItems(list: List<Card>,ankiFilter: AnkiFilter){
         val a = mutableListOf<Card>()
         a.addAll(list)
-        _ankiFlipItems.value = a
+        a.sortBy { it.libOrder }
+        val flag = if(ankiFilter.flagFilterActive) a.filter { it.flag == ankiFilter.flag }else a
+        val remembered = if(ankiFilter.rememberedFilterActive) flag.filter { it.remembered == ankiFilter.remembered } else flag
+        val answerTyped =  if(ankiFilter.answerTypedFilterActive) remembered.filter { it.lastTypedAnswerCorrect == it.lastTypedAnswerCorrect } else remembered
+        _ankiFlipItems.value = answerTyped.toMutableList()
     }
     fun returnFlipItems():MutableList<Card>{
         return  _ankiFlipItems.value ?: mutableListOf()
@@ -296,6 +304,13 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun updateFlipped(card:Card){
         viewModelScope.launch {
             repository.updateCardFlippedTime(card)
+        }
+    }
+    fun updateLooked(card:Card){
+        val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPAN)
+        val a = ActivityData(0,card.id,null,ActivityStatus.CARD_LOOKED,formatter.format(Date()).toString())
+        viewModelScope.launch {
+            repository.insert(a)
         }
     }
 

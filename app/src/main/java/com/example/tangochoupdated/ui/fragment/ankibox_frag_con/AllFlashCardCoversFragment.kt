@@ -38,19 +38,22 @@ class AllFlashCardCoversFragment  : Fragment() {
             .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),ankiBoxViewModel,
                 AnkiBoxFragments.AllFlashCardCovers,viewLifecycleOwner)
 
+        fun makeEmptyVisibleByListSize(list: List<Any>){
+            binding.frameLayFullRvEmpty.visibility = if(list.isEmpty()) View.VISIBLE else View.GONE
+        }
         ankiBoxViewModel.apply {
             setCurrentChildFragment(AnkiBoxFragments.AllFlashCardCovers)
             when(fileId){
                 null -> {
-
                     allFlashCardCoverFromDB.observe(viewLifecycleOwner){
                         adapter.submitList(it)
-                        binding.recyclerView
+                        makeEmptyVisibleByListSize(it)
                     }
                 }
                 else -> {
                     getCardsFromDB(fileId).observe(viewLifecycleOwner){
                         adapter.submitList(it)
+                        makeEmptyVisibleByListSize(it)
 
                     }
                 }

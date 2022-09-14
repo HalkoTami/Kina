@@ -30,7 +30,8 @@ data class Card(
     @ColumnInfo
     var libOrder: Int = 0,
     var colorStatus: ColorStatus = ColorStatus.GRAY,
-    var timesFlipped:Int = 0
+    var timesFlipped:Int = 0,
+    var lastTypedAnswerCorrect:Boolean? = null
     )
 
 

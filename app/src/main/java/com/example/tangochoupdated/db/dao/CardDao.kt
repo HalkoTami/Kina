@@ -106,7 +106,7 @@ abstract class CardDao(): BaseDao<Card> {
 
 
     @Query("SELECT * FROM tbl_card a " +
-            " INNER JOIN ( SELECT  MAX(id) id FROM tbl_card  ) b ON a.id = b.id where a.belongingFlashCardCoverId is :flashCardCoverId"
+            " INNER JOIN ( SELECT  MAX(id) id FROM tbl_card c where c.belongingFlashCardCoverId is :flashCardCoverId ) b ON a.id = b.id "
     )
     abstract fun getLastInsertedCard(flashCardCoverId:Int?):Flow<Card>
     @Query("DELETE FROM tbl_card")

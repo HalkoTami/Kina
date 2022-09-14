@@ -12,6 +12,7 @@ import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.ui.listener.recyclerview.LibraryRVCL
+import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
 import com.example.tangochoupdated.ui.viewmodel.*
@@ -72,7 +73,7 @@ class LibFragPlaneRVListAdapter(
 //            親レイアウトのclick listener
 
             if(item is Card){
-                createCardViewModel.updateCardPosition(item,adapterPosition)
+//                createCardViewModel.updateCardPosition(item,adapterPosition)
             }
             val viewSetUp = LibrarySetUpItems()
             val addL = LibraryAddListeners()
@@ -87,6 +88,7 @@ class LibFragPlaneRVListAdapter(
                 is Card -> {
                     val stringCardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
                     viewSetUp.setUpRVStringCardBinding(stringCardBinding, item.stringData, )
+                    AnkiBoxFragViewSetUp().setUpOrder(stringCardBinding,item)
                     addL.cardRVStringAddCL(stringCardBinding,item,createCardViewModel,stringCardViewModel,mainNavController)
                     binding.btnAddNewCard.visibility = View.VISIBLE
                     stringCardBinding.root

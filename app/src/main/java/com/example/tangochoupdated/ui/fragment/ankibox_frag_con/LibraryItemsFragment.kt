@@ -36,12 +36,18 @@ class LibraryItemsFragment  : Fragment() {
                 AnkiBoxFragments.AllFlashCardCovers,viewLifecycleOwner)
         val fileId = args.fileId?.single()
         viewModel.setCurrentChildFragment(AnkiBoxFragments.Library)
+        fun makeEmptyVisibleByListSize(list: List<Any>){
+            binding.frameLayFullRvEmpty.visibility = if(list.isEmpty()) View.VISIBLE else View.GONE
+        }
         when(args.flashCard){
             false ->viewModel.getLibraryFilesFromDB(fileId).observe(viewLifecycleOwner){
-                adapter.submitList(it)
+                val filtered = it.filter { it.descendantsData.descendantsCardsAmount !=0 }
+                adapter.submitList(filtered)
+                makeEmptyVisibleByListSize(filtered)
             }
             true -> viewModel.getCardsFromDB(fileId).observe(viewLifecycleOwner){
                 adapter.submitList(it)
+                makeEmptyVisibleByListSize(it)
             }
         }
 
