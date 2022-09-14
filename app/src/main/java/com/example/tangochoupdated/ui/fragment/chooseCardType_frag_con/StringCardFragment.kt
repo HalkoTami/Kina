@@ -3,12 +3,14 @@ package com.example.tangochoupdated.ui.fragment.chooseCardType_frag_con
 import android.content.Context
 import android.os.*
 import android.text.SpannableStringBuilder
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.tangochoupdated.R
@@ -82,6 +84,7 @@ class StringCardFragment : Fragment() {
 
 
 
+
         }
 
 
@@ -101,7 +104,6 @@ class StringCardFragment : Fragment() {
         }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         stringCardViewModel.setFocusedOn(null)
@@ -115,7 +117,7 @@ class StringCardFragment : Fragment() {
             backText =   backText,
             backTitle =  if(backTitle=="裏") null else backTitle
         )
-        createCardViewModel.upDateCard(newStringData,stringCardViewModel.returnParentCard() ?:return)
+        createCardViewModel.upDateCard(newStringData,stringCardViewModel.returnParentCard() ?:createCardViewModel.returnParentCard() ?:return)
 
         _binding = null
     }

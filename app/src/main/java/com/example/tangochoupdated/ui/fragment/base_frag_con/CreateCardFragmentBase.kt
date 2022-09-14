@@ -71,6 +71,10 @@ class CreateCardFragmentBase  : Fragment() {
             var calledFirst:Boolean = true
 
 
+            parentCard.observe(viewLifecycleOwner){
+                makeToast(requireActivity(),"setParent STring Card")
+                stringCardViewModel.setParentCard(it)
+            }
 
             createCardViewModel.getSisterCards(parentFlashCardCoverId).observe(viewLifecycleOwner){
                 if(calledFirst){

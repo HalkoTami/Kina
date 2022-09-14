@@ -55,6 +55,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun getParentCard(cardId: Int):LiveData<Card> = repository.getCardByCardId(cardId).asLiveData()
     private val _parentCard = MutableLiveData<Card?>()
     fun setParentCard(card: Card?){
+        val before = _parentCard.value
+        if(card==before )return else
         _parentCard.value = card
     }
     fun returnParentCard():Card?{
@@ -85,6 +87,11 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     val cardStatus :LiveData<CardStatus> = _cardStatus
     fun setCardStatus(cardStatus: CardStatus){
         _cardStatus.value = cardStatus
+    }
+    private val _saveCard = MutableLiveData<Boolean>()
+    val saveCard :LiveData<Boolean> = _saveCard
+    fun setSaveCard(boolean: Boolean){
+        _saveCard.value = boolean
     }
     private val _confirmFlipItemPopUpVisible = MutableLiveData<Boolean>()
     val confirmFlipItemPopUpVisible :LiveData<Boolean> = _confirmFlipItemPopUpVisible
@@ -226,7 +233,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
     fun onClickEditCard(item: Card,navController: NavController){
-        setParentCard(item)
+        setSaveCard(true)
+        setSaveCard(false)
         setOpenEditCard(false)
         val a =if(item.belongingFlashCardCoverId== null) null else intArrayOf(item.belongingFlashCardCoverId!!)
         val b = intArrayOf(item.id)

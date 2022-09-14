@@ -33,7 +33,9 @@ class StringCardViewModel:ViewModel() {
 
     fun setStringData(stringData: StringData){
         _stringData.value = stringData
-
+    }
+    fun returnStringData():StringData{
+        return _stringData.value ?:StringData(null,null,null,null)
     }
 
 

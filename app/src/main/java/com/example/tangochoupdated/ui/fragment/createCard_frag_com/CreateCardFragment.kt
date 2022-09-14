@@ -98,7 +98,6 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 setAlphaByClickable(
                     getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.PREVIOUS)!=null,
                     binding.btnPrevious)
-                stringCardViewModel.setParentCard(card)
             }
 
         }
@@ -109,6 +108,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 if(returnParentCard()!=null){
                     binding.createCardTopBarBinding.txvPosition.text =
                         "${returnParentCard()?.id} ${returnParentCard()?.libOrder}/${it.size}"
+
                 }
 
             }
@@ -147,7 +147,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         var lastCardOld: Card? = null
         createCardViewModel.lastInsertedCard(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner) {
             if(lastCardOld!=null&&lastCardOld!=it&&lastCardOld!!.id<it.id){
-                makeToast(requireActivity(),"${it.id} ${it.libOrder}")
+                makeToast(requireActivity(),"navigated")
                 createCardViewModel.onClickEditCard(it,cardNavCon)
             }
             lastCardOld = it
@@ -165,6 +165,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         _binding = null
     }
 
