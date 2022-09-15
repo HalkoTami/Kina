@@ -1,9 +1,6 @@
 package com.example.tangochoupdated.ui.listener.recyclerview
 
-import android.content.Context
 import android.view.View
-import androidx.navigation.NavController
-import com.example.tangochoupdated.MyTouchListener
 import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.ui.viewmodel.ChooseFileMoveToViewModel

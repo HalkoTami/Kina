@@ -3,15 +3,13 @@ package com.example.tangochoupdated.ui.customViews
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
-import android.widget.ImageView
-import com.example.tangochoupdated.MyTouchListener
+import com.example.tangochoupdated.ui.listener.MyTouchListener
 
 class ImvChangeAlphaOnDown(context: Context, attrs: AttributeSet) : androidx.appcompat.widget.AppCompatImageView(context,attrs){
 
     override fun setOnClickListener(l: OnClickListener?) {
         super.setOnClickListener(l)
-        this.setOnTouchListener(object :MyTouchListener(this.context){
+        this.setOnTouchListener(object : MyTouchListener(this.context){
             override fun onDown() {
                 super.onDown()
                 this@ImvChangeAlphaOnDown.alpha = 1f

@@ -1,15 +1,9 @@
 package com.example.tangochoupdated.ui.listener.recyclerview
 
-import android.content.Context
-import android.view.MotionEvent
 import android.view.View
-import androidx.navigation.NavController
-import com.example.tangochoupdated.MyTouchListener
 import com.example.tangochoupdated.databinding.LibraryFragRvItemBaseBinding
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.ui.viewmodel.customClasses.LibRVState
-import com.example.tangochoupdated.ui.animation.Animation
 import com.example.tangochoupdated.ui.viewmodel.CreateCardViewModel
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel

@@ -1,8 +1,15 @@
 package com.example.tangochoupdated.ui.view_set_up
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +31,8 @@ import com.example.tangochoupdated.ui.viewmodel.AnkiBoxFragViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiFragBaseViewModel
 import com.example.tangochoupdated.ui.viewmodel.AnkiSettingPopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
+import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 
 class AnkiBoxFragViewSetUp() {
@@ -118,12 +127,24 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
             val mList = list.toMutableList()
             binding.txvAnkiBoxCardAmount.text = mList.size.toString()
             setUpFlipProgressBar(mList,binding.flippedProgressBarBinding)
+            val remPer = list.filter { it.remembered }.size.toDouble()/list.size
             binding.rememberedProgressBarBinding.apply {
-                val remPer = list.filter { it.remembered }.size.toDouble()/list.size
-                progressbarRemembered.progress = getPercentage(remPer)
-                val translation = progressbarRemembered.width*remPer.toFloat()-imvRememberedEndIcon.width/2
-                imvRememberedEndIcon.translationX = if(translation<0) 0f else translation
+//                progressbarRemembered.progress = getPercentage(remPer)
+//                val translation = progressbarRemembered.width*remPer.toFloat()-imvRememberedEndIcon.width/2
+//                imvRememberedEndIcon.translationX = if(translation<0) 0f else translation
+
+                val progressBefore = progressbarRemembered.progress
+                val a = ValueAnimator.ofFloat(progressBefore.toFloat(),getPercentage(remPer).toFloat())
+                a.addUpdateListener {
+                    val value = it.animatedValue as Float
+                    progressbarRemembered.progress = value.toInt()
+                    val translation = progressbarRemembered.width*value/100-imvRememberedEndIcon.width/2
+                    imvRememberedEndIcon.translationX = if(translation<0) 0f else translation
+                }
+                a.duration = abs(progressBefore-getPercentage(remPer)).times(30).toLong()
+                a.start()
             }
+
         }
         binding.apply {
             ankiBoxVM.ankiBoxFileIds.observe(lifecycleOwner){
@@ -175,11 +196,33 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         val rememberedPercentage = getRememberedPercentage(list)
         val rememberedCardsSize = list.filter { it.remembered == true }.size
         binding.apply {
-            ringProgressBar.progress = rememberedPercentage.times(100).toInt()
-            imvRememberedEndIcon.visibility = if(rememberedPercentage!=0.0)  View.VISIBLE else View.INVISIBLE
-                moveViewInCircle(rememberedPercentage,imvRememberedEndIcon,ringProgressBar.layoutParams.width)
+            binding.imvRememberedEndIcon.visibility = View.VISIBLE
             txvInsideRing.text = "$rememberedCardsSize/${list.size}"
+
         }
+        val progressRingWidth = binding.ringProgressBar.layoutParams.width
+        val progressBefore = binding.ringProgressBar.progress
+        val beforePercentage = binding.ringProgressBar.progress.toFloat()/100
+        val newProgress = rememberedPercentage.times(100).toInt()
+        if(progressBefore==newProgress) {
+            binding.ringProgressBar.progress = newProgress
+            moveViewInCircle(rememberedPercentage,binding.imvRememberedEndIcon,progressRingWidth)
+            return
+        }
+        fun getAnimation(percentageBefore:Float,newPercentage:Float):ValueAnimator{
+            val percentageAnim = ValueAnimator.ofFloat(percentageBefore,newPercentage)
+            percentageAnim.doOnEnd {
+                binding.imvRememberedEndIcon.visibility = if(rememberedPercentage!=0.0)  View.VISIBLE else View.INVISIBLE
+            }
+            percentageAnim.addUpdateListener {
+                val value = it.animatedValue as Float
+                binding.ringProgressBar.progress = value.times(100).toInt()
+                moveViewInCircle(value.toDouble(),binding.imvRememberedEndIcon,progressRingWidth)
+            }
+            percentageAnim.duration=abs(newProgress-progressBefore).times(30).toLong()
+            return percentageAnim
+        }
+        getAnimation(beforePercentage,rememberedPercentage.toFloat()).start()
 
     }
     fun getPercentage(per:Double):Int{
@@ -196,20 +239,47 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         val progress2 = flippedBinding.progressBarFlipped2.progress
         val progress3 = flippedBinding.progressBarFlipped3.progress
         val progress4above = flippedBinding.progressBarFlippedAbove4.progress
+        fun getAnim(progress:Int,frameLay:FrameLayout,txv:TextView):ValueAnimator{
+            val a = ValueAnimator.ofFloat(0f,progress.toFloat())
+            val fullWidth = percentageBinding.root.width
+            a.addUpdateListener {
+                val value = it.animatedValue as Float
+                val updateWidth = getWidth(value.toInt())
+                frameLay.translationX = if(updateWidth + frameLay.width > fullWidth) fullWidth.toFloat() else updateWidth
+                txv.text = value.toInt().toString()
+            }
+            a.doOnStart {
+                frameLay.visibility = if(getWidth(progress) == 0f )  View.INVISIBLE else View.VISIBLE
+            }
+            a.duration = progress.times(30).toLong()
+            return a
+        }
         percentageBinding.apply {
-            oncePercentage.translationX       =        getWidth(progress1)
-            twicePercentage.translationX      =        getWidth(progress2)
-            threePercentage.translationX      =        getWidth(progress3)
-            fourAbovePercentage.translationX  =        getWidth(progress4above)
-            txvOncePercentage.text = progress1.toString()
-            txvTwicePercentage.text = progress2.toString()
-            txvThreePercentage.text = progress3.toString()
-            txvFourAbovePercentage.text = progress4above.toString()
-            arrayOf(oncePercentage,twicePercentage,threePercentage,fourAbovePercentage).onEach {
-                it.visibility = if(it.translationX == 0f )  View.INVISIBLE else View.VISIBLE
-                if(it.translationX + it.width > this.root.width) it.translationX = this.root.width.toFloat()
+            AnimatorSet().apply {
+                playTogether(
+                    getAnim(progress1,oncePercentage, txvOncePercentage),
+                    getAnim(progress2,twicePercentage,txvTwicePercentage),
+                    getAnim(progress3,threePercentage,txvThreePercentage),
+                    getAnim(progress4above,fourAbovePercentage,txvFourAbovePercentage))
+                start()
             }
         }
+
+//        percentageBinding.apply {
+//            oncePercentage.translationX       =        getWidth(progress1)
+//            twicePercentage.translationX      =        getWidth(progress2)
+//            threePercentage.translationX      =        getWidth(progress3)
+//            fourAbovePercentage.translationX  =        getWidth(progress4above)
+//            txvOncePercentage.text = progress1.toString()
+//            txvTwicePercentage.text = progress2.toString()
+//            txvThreePercentage.text = progress3.toString()
+//            txvFourAbovePercentage.text = progress4above.toString()
+//            arrayOf(oncePercentage,twicePercentage,threePercentage,fourAbovePercentage).onEach {
+//                it.visibility = if(it.translationX == 0f )  View.INVISIBLE else View.VISIBLE
+//                if(it.translationX + it.width > this.root.width) it.translationX = this.root.width.toFloat()
+//            }
+//        }
+
 
 
     }

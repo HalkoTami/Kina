@@ -48,8 +48,6 @@ class FlipStringCheckAnswerFragment  : Fragment() {
             settingVM.apply {
                 onChildFragmentsStart(FlipFragments.CheckAnswerString,returnReverseCardSide(),returnAutoFlip().active)
             }
-
-
             getCardFromDB(args.cardId).observe(viewLifecycleOwner){
                 setParentCard(it)
                 binding.txvTitle.text = if(args.answerIsBack)it.stringData?.backTitle ?:"裏" else it.stringData?.frontTitle ?:"表"

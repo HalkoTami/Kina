@@ -1,4 +1,4 @@
-package com.example.tangochoupdated
+package com.example.tangochoupdated.ui.listener
 
 import android.content.Context
 import android.view.*
@@ -12,19 +12,19 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
 
 
 
-    private inner class MyGestureListener : GestureDetector.OnGestureListener {
-        override fun onShowPress(e: MotionEvent?) {
+     inner class MyGestureListener : GestureDetector.OnGestureListener {
 
-        }
 
-        override fun onSingleTapUp(e: MotionEvent?): Boolean {
+         override fun onShowPress(e: MotionEvent) {
+         }
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
             onSingleTap(e)
             return false
         }
 
         override fun onScroll(
-            e1: MotionEvent?,
-            e2: MotionEvent?,
+            e1: MotionEvent,
+            e2: MotionEvent,
             distanceX: Float,
             distanceY: Float
         ): Boolean {
@@ -37,15 +37,15 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
             return false
         }
 
-        override fun onLongPress(e: MotionEvent?) {
+        override fun onLongPress(e: MotionEvent) {
             onLongClick(e)
         }
+
 
         private val swipeThreshold = 100
         private val swipeVelocityThreshold = 100
 
         override fun onDown(e: MotionEvent): Boolean {
-            onDown()
             return true
         }
 
@@ -87,7 +87,7 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
             onMove(event)
         }
 
-        gestureDetector.onTouchEvent(event)
+        gestureDetector.onTouchEvent(event!!)
         return true
     }
     open fun onScrollLeftActionUp(){
