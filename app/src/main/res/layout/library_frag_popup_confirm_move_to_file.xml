@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gray_stroke_rectangle"
-    android:backgroundTint="@color/ofwhite"
+    android:backgroundTint="@color/of_white"
     app:layout_constraintTop_toTopOf="@id/main_frameLayout"
     app:layout_constraintStart_toStartOf="@id/main_frameLayout"
     app:layout_constraintBottom_toBottomOf="@id/main_frameLayout"

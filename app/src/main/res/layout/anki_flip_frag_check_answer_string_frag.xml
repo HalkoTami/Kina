@@ -7,7 +7,6 @@
     android:id="@+id/top_con_lay"
     android:padding="10dp">
 
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -16,11 +15,12 @@
         android:id="@+id/linLay_answer_result"
         android:padding="5dp">
         <ImageView
-            android:id="@+id/imv_tosaka"
+            android:id="@+id/imv_character_typed_answer_reaction"
             android:layout_width="0dp"
             android:layout_weight="0.7"
             android:layout_height="match_parent"
-            android:src="@drawable/tosaka_falling"/>
+            android:src="@drawable/character1_falling"
+            tools:ignore="ContentDescription" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -38,20 +38,18 @@
                 android:textSize="11sp"
                 android:maxLines="2"
                 android:gravity="center"
-                android:textColor="@color/darkgray"
-                android:text="残念、\n不正解..."
+                android:textColor="@color/dark_gray"
                 android:background="@drawable/gray_stroke_rectangle"/>
-            <ImageView
+            <View
                 android:translationX="3dp"
                 android:translationY="7dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-
                 app:layout_constraintEnd_toStartOf="@id/txv_speak_bubble_content"
                 android:id="@+id/imv_speak_bubble_polygon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/speak_bubble_polygon"
+                android:background="@drawable/speak_bubble_polygon"
                 android:rotation="180" />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,30 +61,31 @@
             android:background="@drawable/gray_stroke_rectangle">
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/linLay_in_row"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:gravity="center_vertical"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toTopOf="@id/linLay_result_data"
                 app:layout_constraintHeight_percent="0.3"
+                app:layout_constraintWidth_percent="0.8"
 
 
                 app:layout_constraintTop_toTopOf="parent">
                 <ImageView
-
+                    android:layout_margin="5dp"
                     android:id="@+id/imv_result_in_row"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/icon_remembered_selected"/>
-                <TextView
-                    android:id="@+id/txv_result_in_row"
-                    android:layout_width="wrap_content"
-                    android:textColor="@color/darkgray"
-                    android:gravity="center"
-                    android:autoSizeTextType="uniform"
                     android:layout_height="match_parent"
-                    android:text="不正解２連続中"/>
+                    android:src="@drawable/icon_remembered_selected"
+                    tools:ignore="ContentDescription" />
+                <TextView
+                    style="@style/TxvUniformSmallStyle"
+                    android:id="@+id/txv_result_in_row"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/dark_gray"
+                    android:gravity="center"
+                    android:layout_height="match_parent" />
             </androidx.appcompat.widget.LinearLayoutCompat>
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/linLay_result_data"
@@ -103,24 +102,23 @@
                     android:id="@+id/progressbar_answer_correct"
                     android:layout_width="0dp"
                     android:layout_weight="8"
-                    android:layout_height="10dp"
+                    android:layout_height="15dp"
                     android:max="100"
                     android:indeterminateOnly="false"
                     android:progress="60"
                     android:background="@drawable/rectangle_progressbar"
                     android:backgroundTint="@color/light_gray"
                     android:progressTint="@color/yellow"
-                    android:progressDrawable="@drawable/custome_progress_bar_rectangle"
+                    android:progressDrawable="@drawable/custom_progress_bar_rectangle"
                     />
                 <TextView
+                    style="@style/TxvUniformSmallStyle"
                     android:id="@+id/txv_progress_answer_correct"
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_height="wrap_content"
-                    android:text="22/30"/>
+                    android:layout_height="match_parent" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -134,7 +132,6 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/lineLay_correct_answer"
-
         app:layout_constraintTop_toBottomOf="@id/linLay_answer_result"
         app:layout_constraintBottom_toTopOf="@id/linLay_your_answer"
         android:background="@drawable/gray_stroke_rectangle"
@@ -142,30 +139,14 @@
         android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:text="A.　１９８０年"
-        android:textSize="25sp"
-        android:maxLines="50"
         android:orientation="vertical"
         android:padding="10dp">
         <TextView
-            android:autoSizeTextType="uniform"
-            android:textStyle="bold"
-            android:textColor="@color/darkgray"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:id="@+id/txv_title"
-            android:text="タイトル"/>
+            style="@style/CardTitleTxvCheckAnswerStyle"
+            android:id="@+id/txv_title" />
         <TextView
-            android:id="@+id/txv_correct_answer"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="0dp"
-            android:layout_weight="9"
-            android:textSize="20sp"
-            android:maxLines="5"
-            android:text="A. 1dee年"/>
+            style="@style/CardContentTxvCheckAnswerStyle"
+            android:id="@+id/txv_correct_answer" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -176,17 +157,10 @@
         android:id="@+id/linLay_your_answer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:text="あなたの回答"
         android:orientation="vertical"
         android:padding="10dp">
         <TextView
-            android:textStyle="bold"
-            android:textColor="@color/darkgray"
-        android:autoSizeTextType="uniform"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="あなたの回答"/>
+            style="@style/CardTitleTxvCheckAnswerStyle" />
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -197,18 +171,12 @@
                 android:id="@+id/imv_result_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/icon_missed"
                 android:layout_gravity="top"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                tools:ignore="ContentDescription" />
             <TextView
                 android:id="@+id/txv_your_answer"
-
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="match_parent"
-                android:textSize="20sp"
-                android:maxLines="5"
-                android:text="A. 19c年"
+                style="@style/CardContentTxvCheckAnswerStyle"
                 />
 
         </FrameLayout>

@@ -148,7 +148,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHeight_percent="0.4"
         app:layout_constraintWidth_percent="0.7"
-        android:background="@color/lightgreen">
+        android:background="@color/light_green">
         <include
             android:id="@+id/confirm_move_to_binding"
             layout="@layout/library_frag_popup_confirm_move_to_file"/>

@@ -64,7 +64,7 @@ class FlipStringCheckAnswerFragment  : Fragment() {
         }
         fun getCharacter(answerRight:Boolean):Drawable{
             return AppCompatResources.getDrawable(requireActivity(),
-                if(answerRight) R.drawable.tosaka_light_ball else R.drawable.tosaka_falling)!!
+                if(answerRight) R.drawable.tosaka_light_ball else R.drawable.character1_falling)!!
         }
         fun getResultIcon(answerRight:Boolean):Drawable{
             return AppCompatResources.getDrawable(requireActivity(),
@@ -75,7 +75,7 @@ class FlipStringCheckAnswerFragment  : Fragment() {
         }
         fun setResultContent(answerCorrect:Boolean){
             binding.imvResultInRow.setImageDrawable(getResultIcon(answerCorrect))
-            binding.imvTosaka.setImageDrawable(getCharacter(answerCorrect))
+            binding.imvCharacterTypedAnswerReaction.setImageDrawable(getCharacter(answerCorrect))
             binding.txvSpeakBubbleContent.text = getSpeakBubbleContent(answerCorrect)
             binding.imvResultIcon.setImageDrawable(getResultIcon(answerCorrect))
         }

@@ -2,11 +2,11 @@
     <!-- Base application theme. -->
     <style name="Theme.Tangochoupdated" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/lightgreen</item>
-        <item name="colorPrimaryVariant">@color/darkgreen</item>
+        <item name="colorPrimary">@color/light_green</item>
+        <item name="colorPrimaryVariant">@color/dark_green</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/darkgray</item>
+        <item name="colorSecondary">@color/dark_gray</item>
         <item name="colorSecondaryVariant">@color/gray</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
@@ -41,6 +41,18 @@
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">20dp</item>
         <item name="android:background">@color/white</item>
+        <item name="android:visibility">invisible</item>
+    </style>
+    <style name="ImageViewPercentageIcon">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:src">@drawable/percentage_container</item>
+    </style>
+    <style name="SettingLineLayStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="PopUpButton" parent="TextAppearance.AppCompat.Widget.Button">
@@ -52,7 +64,7 @@
         <item name="android:layout_margin">3dp</item>
         <item name="android:padding">2dp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="backgroundColor">@color/lightgreen</item>
+        <item name="backgroundColor">@color/light_green</item>
         <item name="android:minHeight">50dp</item>
 <!--        <item name="android:minWidth">0dp</item>-->
         <item name="android:maxWidth">0dp</item>
@@ -90,7 +102,7 @@
     </style>
     <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.PrimarySurface">
        <item name="itemIconSize">40dp</item>
-        <item name="itemTextColor">@color/darkgray</item>
+        <item name="itemTextColor">@color/dark_gray</item>
 
     </style>
     <style name="TextAppearance.AppCompat." parent="Widget.AppCompat.TextView">
@@ -105,6 +117,64 @@
         <item name="android:textColor">@color/text_color_gray</item>
 
     </style>
+    <style name="CardTitleTxvStyle" parent="CardTitleTxvCheckAnswerStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:minWidth">100dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/gray_stroke_rectangle</item>
+    </style>
+    <style name="CardTitleTxvCheckAnswerStyle" parent="TxvUniformPreLargeStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:layout_weight">0.8</item>
+    </style>
+    <style name="CardContentTxvCheckAnswerStyle" parent="TxvUniformPreLargeStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">9</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">12</item>
+    </style>
+    <style name="CardContentTxvStyle" >
+        <item name="android:layout_height">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">50</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/gray_stroke_rectangle</item>
+
+    </style>
+    <style name="TxvTabTitleStyle" parent="TxvUniformMiddleStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:gravity">center</item>
+        <item name="background">@drawable/selector_tab_rectangle</item>
+    </style>
+
+    <style name="TextViewUniformStyle">
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:textColor">@color/most_dark_gray</item>
+    </style>
+    <style name="TxvUniformSmallStyle" parent="TextViewUniformStyle">
+        <item name="autoSizeMaxTextSize">12sp</item>
+        <item name="autoSizeMinTextSize">7sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="TxvUniformMiddleStyle" parent="TextViewUniformStyle">
+        <item name="autoSizeMaxTextSize">15sp</item>
+        <item name="autoSizeMinTextSize">7sp</item>
+    </style>
+    <style name="TxvUniformPreLargeStyle" parent="TextViewUniformStyle">
+        <item name="autoSizeMaxTextSize">22sp</item>
+        <item name="autoSizeMinTextSize">3sp</item>
+    </style>
+
     <style name="StringCardContentTxv" >
         <item name="android:maxLines">3</item>
         <item name="autoSizeTextType">uniform</item>
@@ -119,10 +189,34 @@
 
     </style>
 
-    <style name="EnumTextviewStyle" parent="Widget.AppCompat.TextView">
-        <item name="android:gravity">center</item>
+    <style name="EnumTextviewStyle" parent="TxvUniformSmallStyle">
+        <item name="android:maxLines">2</item>
         <item name="android:padding">3dp</item>
-
-
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="TopBarFrameLayStyle" >
+        <item name="android:layout_height">@dimen/topBar_height</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:elevation">10dp</item>
+    </style>
+    <style name="TopBarLinLayStyle" >
+        <item name="android:layout_height">@dimen/topBar_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">10dp</item>
+    </style>
+    <style name="TopBarButtonStyle" >
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">5dp</item>
+    </style>
+    <style name="TopBarTxvSizeNormalStyle"  >
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">15sp</item>
+        <item name="autoSizeMaxTextSize">7sp</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 </resources>

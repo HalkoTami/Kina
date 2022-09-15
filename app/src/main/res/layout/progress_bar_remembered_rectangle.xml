@@ -18,8 +18,8 @@
             android:progress="0"
             android:background="@drawable/rectangle_progressbar"
             android:backgroundTint="@color/light_gray"
-            android:progressTint="@color/lightgreen"
-            android:progressDrawable="@drawable/custome_progress_bar_rectangle"
+            android:progressTint="@color/light_green"
+            android:progressDrawable="@drawable/custom_progress_bar_rectangle"
             />
 
         <ImageView

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@drawable/gray_stroke_rectangle"
-    android:backgroundTint="@color/ofwhite"
+    android:backgroundTint="@color/of_white"
     android:orientation="vertical"
     android:padding="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"

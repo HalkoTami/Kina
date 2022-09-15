@@ -22,7 +22,7 @@
                 android:type="sweep"
                 android:useLevel="true">
 
-                <solid android:color="@color/lightgreen"/>
+                <solid android:color="@color/light_green"/>
                 <corners android:radius="8dp"/>
             </shape>
         </rotate>

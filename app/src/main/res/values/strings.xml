@@ -34,6 +34,41 @@
     <string name="nav_label_main_tab_anki">暗記タブ</string>
     <string name="nav_label_main_tab_library">ライブラリタブ</string>
     <string name="nav_label_main_create_card">カード作成</string>
+    <string name="cd_btn_back">戻る</string>
+    <string name="cd_flip_mode">暗記中</string>
+    <string name="cd_setting">設定</string>
+    <string name="cd_show_flip_list">暗記中のアイテム一覧</string>
+    <string name="cd_flip_previous">後ろにめくる</string>
+    <string name="cd_flip_next">前へめくる</string>
+    <string name="cd_check_typed_answer">回答をチェックする</string>
+    <string name="anki_box_top_bar_title">暗記するカードを選ぶ</string>
+    <string name="cd_add_to_favourite_anki_box">お気に入りに追加</string>
+    <string name="flipped_graph_title">めくった回数</string>
+    <string name="anki_box_tab_title_flashCards">すべての単語帳</string>
+    <string name="anki_box_tab_title_library">ライブラリ</string>
+    <string name="anki_box_tab_title_favourites">お気に入り</string>
+    <string name="anki_setting_popUp_title">暗記の設定</string>
+    <string name="cd_close_anki_setting_popUp">設定画面を閉じる</string>
+    <string name="anki_setting_popUp_btn_start_anki_text">暗記を開始</string>
+    <string name="anki_setting_txv_order">順番指定</string>
+    <string name="anki_setting_order_library">ライブラリ</string>
+    <string name="anki_setting_order_random">ランダム</string>
+    <string name="anki_setting_order_most_missed">回答ミスが多い順</string>
+    <string name="anki_setting_txv_filter">フィルタ</string>
+    <string name="anki_setting_checkBox_missed_filter">回答入力によるフィルタを有効にする</string>
+    <string name="anki_setting_checkBox_missed_remembered">暗記済みかによるフィルタを有効にする</string>
+    <string name="anki_setting_checkBox_flag">フラグによるフィルタを有効にする</string>
+    <string name="anki_setting_filter_answer_missed">回答入力を\nミスしたカード</string>
+    <string name="anki_setting_filter_answer_correct">回答入力を\n正解したカード</string>
+    <string name="anki_setting_filter_not_remembered">未暗記のカード</string>
+    <string name="anki_setting_filter_remembered">暗記済のカード</string>
+    <string name="anki_setting_filter_with_flag">フラグ付き</string>
+    <string name="anki_setting_filter_without_flag">フラグなし</string>
+    <string name="cd_checkBox">チェックボックス</string>
+    <string name="anki_setting_auto_flip">カードを自動でめくる</string>
+    <string name="anki_setting_auto_flip_seconds">秒</string>
+    <string name="anki_setting_type_answer">答えを入力する</string>
+    <string name="anki_setting_reverse_sides">裏表を逆にする</string>
 
 
 </resources>

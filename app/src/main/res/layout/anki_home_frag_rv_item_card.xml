@@ -89,16 +89,14 @@
             android:id="@+id/txv_anki_rv_remembered_status"
             android:textSize="11sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="暗記済み"/>
+        android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/txv_anki_rv_last_flipped"
             android:textSize="11sp"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="end"
-            android:layout_height="wrap_content"
-            android:text="最新暗記日　2022/02/03"/>
+            android:layout_height="wrap_content" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

@@ -30,7 +30,7 @@
 
 
     <View
-        android:background="@color/lightgreen"
+        android:background="@color/light_green"
         android:alpha="0.5"
         android:visibility="gone"
         android:layout_width="match_parent"

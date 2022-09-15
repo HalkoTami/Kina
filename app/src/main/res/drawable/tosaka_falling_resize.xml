@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/tosaka_falling"
+    <item android:drawable="@drawable/character1_falling"
         >
         <shape>
 
         </shape>
-        <scale android:drawable="@drawable/tosaka_falling"
+        <scale android:drawable="@drawable/character1_falling"
             android:scaleWidth="20"
             android:scaleHeight="20"/>
     </item>

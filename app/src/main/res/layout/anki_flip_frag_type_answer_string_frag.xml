@@ -10,62 +10,43 @@
     android:focusable="true"
     >
 
-
-
     <TextView
+        style="@style/CardTitleTxvStyle"
         android:id="@+id/txv_flip_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="年代"
-        android:textSize="20sp"
-        android:padding="10dp"
-        android:background="@drawable/gray_stroke_rectangle"/>
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrv_question"
-        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        style="@style/CardContentTxvStyle"
         android:layout_marginTop="10dp"
-        android:foregroundGravity="center"
+        android:id="@+id/txv_content"
+        android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
         app:layout_constraintVertical_weight="3"
         app:layout_constraintTop_toBottomOf="@id/txv_flip_title"
         android:background="@drawable/gray_stroke_rectangle"
         app:layout_constraintBottom_toTopOf="@id/edt_type_answer">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/txv_content"
-                android:layout_gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:gravity="center"
-                android:maxLines="50" />
-        </FrameLayout>
 
 
-    </androidx.core.widget.NestedScrollView>
+    </TextView>
 
     <EditText
+        android:inputType="textMultiLine"
         android:layout_marginTop="20dp"
         android:id="@+id/edt_type_answer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintVertical_weight="5"
-        app:layout_constraintTop_toBottomOf="@id/scrv_question"
+        app:layout_constraintTop_toBottomOf="@id/txv_content"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/gray_stroke_rectangle"
         android:gravity="center"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        />
+        android:importantForAutofill="no"
+        tools:ignore="LabelFor" />
 
     <ImageView
+        android:contentDescription="@string/cd_check_typed_answer"
         android:rotation="180"
         android:id="@+id/btn_check_answer"
         android:layout_width="wrap_content"

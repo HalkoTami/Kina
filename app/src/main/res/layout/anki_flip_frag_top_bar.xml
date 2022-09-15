@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/TopBarLinLayStyle"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="@dimen/topBar_height"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:padding="10dp"
+
 
     android:gravity="center_vertical">
     <ImageView
+        android:contentDescription="@string/cd_btn_back"
         android:id="@+id/imv_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_back"/>
+        style="@style/TopBarButtonStyle"
+        android:src="@drawable/icon_back"
+        app:tint="@color/most_dark_gray"/>
 
     <ImageView
+        android:contentDescription="@string/cd_flip_mode"
         android:layout_width="40dp"
         android:padding="5dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:src="@drawable/icon_tab_anki"
-        android:layout_marginEnd="20dp"
-        />
+        android:layout_marginEnd="20dp" />
 
     <TextView
+        style="@style/TopBarTxvSizeNormalStyle"
         android:id="@+id/txv_card_position"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:text="表　22/30"
         android:gravity="center_vertical"
-        android:layout_weight="1"
-
-        android:textSize="17sp" >
+        android:layout_weight="22"
+        >
     </TextView>
 
     <ImageView
+        android:contentDescription="@string/cd_setting"
+        style="@style/TopBarButtonStyle"
         android:id="@+id/imv_anki_setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:src="@drawable/icon_setting"/>
     <ImageView
+        android:contentDescription="@string/cd_show_flip_list"
+        style="@style/TopBarButtonStyle"
         android:layout_marginStart="10dp"
         android:id="@+id/btn_flip_item_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_menu"/>
+        app:tint="@color/most_dark_gray"
+        android:src="@drawable/icon_list"/>
 
 
 

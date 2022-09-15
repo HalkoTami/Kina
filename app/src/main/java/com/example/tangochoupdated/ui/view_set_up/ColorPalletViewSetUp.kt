@@ -3,7 +3,6 @@ package com.example.tangochoupdated.ui.view_set_up
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.widget.ImageView
-import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.ItemColorPaletBinding
@@ -48,7 +47,7 @@ class ColorPalletViewSetUp {
                 imageView.elevation = 10f
             }
             false -> {
-                a.setStroke(5, ContextCompat.getColor(context, R.color.ofwhite))
+                a.setStroke(5, ContextCompat.getColor(context, R.color.of_white))
                 a.setColor(color)
                 imageView.alpha = 0.4f
 //                imageView.elevation = 0f

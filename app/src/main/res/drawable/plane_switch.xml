@@ -30,7 +30,7 @@
 
     <item
         android:state_selected="true">
-        <shape android:tint="@color/darkgreen"
+        <shape android:tint="@color/dark_green"
             android:shape="rectangle">
             <corners android:radius="10dp"/>
         </shape>
