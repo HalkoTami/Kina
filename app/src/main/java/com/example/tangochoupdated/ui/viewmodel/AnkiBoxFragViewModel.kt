@@ -14,6 +14,7 @@ import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.AllFlashCardCoversFragmentDirections
 import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.FavouriteAnkiBoxFragmentDirections
 import com.example.tangochoupdated.ui.fragment.ankibox_frag_con.LibraryItemsFragmentDirections
+import com.example.tangochoupdated.ui.viewmodel.customClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
@@ -95,21 +96,26 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     fun returnAnkiBoxNavCon():NavController?{
         val navCon = _ankiBoxNavCon.value
-         if(navCon==null) {
-             getAnkiBoxNavConIfNull()
-         }
+        if(navCon==null) makeToastFromVM("ankiBox navCon not Set")
         return _ankiBoxNavCon.value
     }
+    fun navigateWithoutBackstack(direction:NavDirections){
+        val navCon = returnAnkiBoxNavCon()
+        navCon?.popBackStack()
+        navCon?.navigate(direction)
+    }
+    fun navigateWithBackstack(direction:NavDirections){
+        val navCon = returnAnkiBoxNavCon()
+        navCon?.navigate(direction)
+    }
 
-    private val _getAnkiBoxNavCon = MutableLiveData<Boolean>()
-    private fun setGetAnkiBoxNavCon(boolean: Boolean){
-        _getAnkiBoxNavCon.value = boolean
+    private val _toast = MutableLiveData<MakeToastFromVM>()
+    private fun makeToastFromVM(string: String){
+        _toast.value = MakeToastFromVM(string,true)
+        _toast.value = MakeToastFromVM("",false)
     }
-    private fun getAnkiBoxNavConIfNull(){
-        setGetAnkiBoxNavCon(true)
-        setGetAnkiBoxNavCon(false)
-    }
-    val getAnkiBoxNavCon :LiveData<Boolean> = _getAnkiBoxNavCon
+
+    val toast :LiveData<MakeToastFromVM> = _toast
 
     fun getCardActivityFromDB(cardId: Int) :LiveData<List<ActivityData>> = repository.getCardActivity(cardId).asLiveData()
     fun getDescendantsCardIds(fileIdList:List<Int>) :LiveData<List<Int>> = repository.getDescendantsCardsIsByMultipleFileId(fileIdList).asLiveData()
@@ -144,7 +150,7 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
                     AnkiBoxFragments.Favourites -> FavouriteAnkiBoxFragmentDirections.toAnkiBoxFavouriteFrag()
                     AnkiBoxFragments.Library -> LibraryItemsFragmentDirections.toLibraryItemsFrag()
                 }
-            returnAnkiBoxNavCon()?.navigate(action)
+            navigateWithoutBackstack(action)
         }
 
     }
@@ -167,7 +173,7 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
             }
             null -> return
         }
-        returnAnkiBoxNavCon()?.navigate(action)
+        navigateWithBackstack(action)
     }
 
     val text: LiveData<String> = _text

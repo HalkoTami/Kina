@@ -6,10 +6,11 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.ItemColorPaletBinding
+import com.example.tangochoupdated.databinding.ItemColorPalletBinding
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 
 class ColorPalletViewSetUp {
-    fun changeColPalletCol(context: Context, colorStatus: ColorStatus?, selected:Boolean?, colorPaletBinding: ItemColorPaletBinding){
+    fun changeColPalletCol(context: Context, colorStatus: ColorStatus?, selected:Boolean?, colorPaletBinding: ItemColorPalletBinding){
         val imageView: ImageView
         val colId:Int
         val color:Int

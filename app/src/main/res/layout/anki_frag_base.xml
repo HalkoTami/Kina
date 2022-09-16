@@ -16,7 +16,7 @@
 
     <FrameLayout
         android:id="@+id/frameLay_anki_setting"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="0dp"
         android:layout_height="500dp"
         app:layout_constraintWidth_percent="0.9"

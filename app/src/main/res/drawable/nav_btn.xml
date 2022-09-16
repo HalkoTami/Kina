@@ -6,19 +6,20 @@
     <layer-list>
       <item >
         <shape android:shape="rectangle">
+          <corners android:radius="100dp"/>
           <solid android:color="@color/light_green"/>
-          <corners android:radius="50dp"/>
         </shape>
       </item>
-      <item android:left="16dp"
-          android:right="16dp"
-          android:bottom="26dp"
-          android:top="26dp"
+      <item
+          android:top="15dp"
+          android:left="10dp"
+          android:right="10dp"
+          android:bottom="15dp"
           android:drawable="@drawable/icon_back"
-          />
+          >
+      </item>
 
 
     </layer-list>
   </item>
 </selector>
-

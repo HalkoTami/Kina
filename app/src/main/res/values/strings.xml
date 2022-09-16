@@ -69,6 +69,15 @@
     <string name="anki_setting_auto_flip_seconds">秒</string>
     <string name="anki_setting_type_answer">答えを入力する</string>
     <string name="anki_setting_reverse_sides">裏表を逆にする</string>
+    <string name="cd_anki_box_rv_checkBox">暗記アイテムに追加、または削除</string>
+    <string name="cd_anki_box_rv_flag">フラグを立てる、またはおろす</string>
+    <string name="cd_btn_save_and_back">保存して閉じる</string>
+    <string name="cd_create_card_move_next">カードを次へめくる</string>
+    <string name="cd_create_card_insert_next">カードを次に挿入する</string>
+    <string name="cd_create_card_move_previous">カードを後ろへめくる</string>
+    <string name="cd_create_card_insert_previous">カードを後ろへ挿入する</string>
+    <string name="create_string_card_edt_front_title_hint">表のタイトル</string>
+    <string name="create_string_card_edt_back_title_hint">裏のタイトル</string>
 
 
 </resources>

@@ -13,6 +13,7 @@
 
     <TextView
         style="@style/TopBarTxvSizeNormalStyle"
+        android:layout_width="match_parent"
         android:id="@+id/txv_title"
         android:text="@string/anki_box_top_bar_title">
     </TextView>

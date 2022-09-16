@@ -16,7 +16,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.databinding.AnkiFlipFragBaseBinding
-import com.example.tangochoupdated.makeToast
+import com.example.tangochoupdated.ui.animation.makeToast
 import com.example.tangochoupdated.ui.view_set_up.AnkiFlipFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnimationAttributes

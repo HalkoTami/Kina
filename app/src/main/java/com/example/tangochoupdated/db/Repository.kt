@@ -5,8 +5,6 @@ import com.example.tangochoupdated.db.dao.*
 import com.example.tangochoupdated.db.dataclass.*
 import com.example.tangochoupdated.db.dataclass.ChoiceDao
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import io.reactivex.Completable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO

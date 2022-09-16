@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
+    android:layout_height="@dimen/anki_box_rv_item_height"
     android:padding="5dp"
     >
 
@@ -17,6 +18,7 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
         <ImageView
+            android:contentDescription="@string/cd_anki_box_rv_checkBox"
             android:layout_weight="1"
             android:id="@+id/checkbox_anki_rv"
             android:layout_width="wrap_content"
@@ -32,6 +34,7 @@
             android:layout_height="wrap_content"
             android:minHeight="5dp"/>
         <ImageView
+            android:contentDescription="@string/cd_anki_box_rv_flag"
             android:id="@+id/btn_anki_rv_card_set_flag"
             android:layout_weight="1"
             android:layout_width="wrap_content"
@@ -59,14 +62,6 @@
 
 
 
-
-<!--    <androidx.constraintlayout.widget.Barrier-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/barrier_imv_open"-->
-<!--        app:constraint_referenced_ids="linLay_children_data,lineLay_file_data"-->
-<!--        app:barrierDirection="end"/>-->
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_marginTop="5dp"
         android:id="@+id/frameLay_graphs"
@@ -84,7 +79,8 @@
             android:layout_marginEnd="10dp"
             android:layout_width="wrap_content"
             android:layout_height="15dp"
-            android:src="@drawable/selector_remembered"/>
+            android:src="@drawable/selector_remembered"
+            tools:ignore="ContentDescription" />
         <TextView
             android:id="@+id/txv_anki_rv_remembered_status"
             android:textSize="11sp"

@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:padding="10dp"
-
-    android:gravity="center_vertical">
+    style="@style/TopBarLinLayStyle">
 
     <ImageView
+        android:contentDescription="@string/cd_btn_save_and_back"
         android:layout_width="15dp"
         android:layout_height="match_parent"
         android:src="@drawable/icon_polygon"
         android:rotation="180"/>
     <ImageView
+        android:contentDescription="@string/cd_btn_save_and_back"
         android:id="@+id/imv_save_and_back"
         android:layout_width="30dp"
         android:padding="5dp"
@@ -27,26 +25,25 @@
         android:id="@+id/imv_mode"
         android:layout_width="35dp"
         android:layout_height="wrap_content"
-
-        android:src="@drawable/icon_flashcard" />
+        android:src="@drawable/icon_flashcard"
+        tools:ignore="ContentDescription" />
     <TextView
+        style="@style/TopBarTxvSizeNormalStyle"
         android:id="@+id/txv_editing_file_title"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:text="kokougoichi"
         android:gravity="center_vertical"
         android:layout_weight="1"
 
         android:textSize="20sp" >
     </TextView>
     <TextView
+        style="@style/TopBarTxvSizeSmallStyle"
         android:layout_marginStart="5dp"
         android:id="@+id/txv_position"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-
-        android:text="23/56"/>
+        android:layout_height="match_parent"
+        android:gravity="bottom" />
 
 
 

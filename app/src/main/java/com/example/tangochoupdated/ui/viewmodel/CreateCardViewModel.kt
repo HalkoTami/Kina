@@ -8,13 +8,10 @@ import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.dataclass.StringData
 import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
 import com.example.tangochoupdated.ui.fragment.createCard_frag_com.CreateCardFragmentDirections
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
 import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 

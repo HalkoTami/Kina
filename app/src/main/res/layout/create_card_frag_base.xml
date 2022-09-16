@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -32,15 +31,14 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <FrameLayout
-            android:id="@+id/col_balet_frame"
+            android:id="@+id/col_pallet_frame"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
             <include
-                android:id="@+id/create_card_col_palet_binding"
-                layout="@layout/item_color_palet" />
+                android:id="@+id/create_card_col_pallet_binding"
+                layout="@layout/item_color_pallet" />
         </FrameLayout>
 
         <ScrollView
@@ -49,14 +47,14 @@
 
             android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/col_balet_frame"
+            app:layout_constraintTop_toBottomOf="@id/col_pallet_frame"
            >
 
             <androidx.fragment.app.FragmentContainerView
                     app:defaultNavHost="true"
                     android:id="@+id/frag_con_each_card_type"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:paddingBottom="70dp"
                     android:name="androidx.navigation.fragment.NavHostFragment"
                     app:navGraph="@navigation/choose_card_type_nav"
@@ -78,14 +76,14 @@
         >
 
         <ImageView
-
+            android:contentDescription="@string/cd_create_card_move_next"
             android:id="@+id/btn_next"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:alpha="0.5"
             android:backgroundTint="@color/light_green"
-            android:rotation="35"
             android:src="@drawable/nav_btn"
+            android:rotationY="180"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_insert_next"
             app:layout_constraintStart_toEndOf="@id/btn_previous">
@@ -95,6 +93,7 @@
 
 
         <ImageView
+            android:contentDescription="@string/cd_create_card_insert_next"
             android:id="@+id/btn_insert_next"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -107,6 +106,7 @@
 
 
         <ImageView
+            android:contentDescription="@string/cd_create_card_move_previous"
             android:id="@+id/btn_previous"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -117,8 +117,7 @@
 
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/light_gray"
-            android:rotation="35"
-            android:rotationY="180"
+
             android:src="@drawable/nav_btn"
             >
 
@@ -126,6 +125,7 @@
 
 
         <ImageView
+            android:contentDescription="@string/cd_create_card_insert_previous"
             android:id="@+id/btn_insert_previous"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -156,7 +156,7 @@
         >
         <include
             android:id="@+id/confirm_add_to_flip_item_binding"
-            layout="@layout/create_card_frag_popup_cofirm_add_to_flip_item"/>
+            layout="@layout/create_card_frag_popup_confirm_add_to_flip_item"/>
 
 
 

@@ -5,6 +5,7 @@
     <dimen name="animation_my">100f</dimen>
     <dimen name="searchbar_height">40dp</dimen>
     <dimen name="topBar_height">70dp</dimen>
+    <dimen name="anki_box_rv_item_height">110dp</dimen>
     <item name="popUpButton_height_percentage" format="float" type="integer">0.25</item>
     <item name="popUpText_width_percentage" format="float" type="integer">0.8</item>
 </resources>

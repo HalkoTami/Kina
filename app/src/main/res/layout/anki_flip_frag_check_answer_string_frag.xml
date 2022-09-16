@@ -25,7 +25,6 @@
             android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:lines="2"
         android:gravity="center"
            >
 
@@ -97,7 +96,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/linLay_in_row">
                 <ProgressBar
-
                     android:layout_gravity="center_vertical"
                     android:id="@+id/progressbar_answer_correct"
                     android:layout_width="0dp"

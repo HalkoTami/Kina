@@ -82,6 +82,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="elevation">3dp</item>
         <item name="android:src">@drawable/circle</item>
+        <item name="android:tag">@string/tag_color_pallet_circle</item>
     </style>
 
     <style name="popUpTextViewSmall" parent="Widget.AppCompat.TextView">
@@ -154,7 +155,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">35dp</item>
         <item name="android:gravity">center</item>
-        <item name="background">@drawable/selector_tab_rectangle</item>
+        <item name="android:background">@drawable/selector_tab_rectangle</item>
     </style>
 
     <style name="TextViewUniformStyle">
@@ -210,13 +211,22 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:padding">5dp</item>
     </style>
+    <style name="TopBarTxvSizeSmallStyle"  >
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">11sp</item>
+        <item name="autoSizeMaxTextSize">12sp</item>
+    </style>
     <style name="TopBarTxvSizeNormalStyle"  >
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="autoSizeTextType">uniform</item>
-        <item name="autoSizeMinTextSize">15sp</item>
+        <item name="autoSizeMinTextSize">18sp</item>
         <item name="autoSizeMaxTextSize">16sp</item>
         <item name="android:padding">3dp</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+
+    <string name="tag_color_pallet_circle">colorPalletCircle</string>
 </resources>

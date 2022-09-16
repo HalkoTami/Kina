@@ -1,25 +1,14 @@
 package com.example.tangochoupdated.ui.view_set_up
 
 import android.content.Context
-import android.graphics.Point
-import android.graphics.Rect
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
-import android.widget.ImageView
-import androidx.compose.ui.unit.Constraints
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.listener.*
-import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmDeleteCL
-import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmMoveToFileCL
 import com.example.tangochoupdated.ui.listener.recyclerview.*
 import com.example.tangochoupdated.ui.listener.topbar.*
 import com.example.tangochoupdated.ui.viewmodel.*

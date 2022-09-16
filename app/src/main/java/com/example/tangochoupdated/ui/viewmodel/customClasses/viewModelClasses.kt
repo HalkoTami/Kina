@@ -62,7 +62,7 @@ class Progress(
     var now:Int,
     var all:Int
 )
-class Toast(
+class MakeToastFromVM(
     var text:String,
     var show:Boolean
 )

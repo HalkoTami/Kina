@@ -13,11 +13,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.databinding.AnkiHomeFragBaseBinding
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.makeToast
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiBoxFragments
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
 import com.example.tangochoupdated.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
+import com.example.tangochoupdated.ui.animation.makeToast
 
 
 class AnkiFragmentAnkiBox  : Fragment() {
@@ -68,7 +68,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
             }
             getTextView(select).isSelected = true
             binding.linLayTabChange.tag = select
-            if(before!=null)
+            if(before!=null&&before!=select)
                 getTextView(before).isSelected = false
 
         }
@@ -84,8 +84,8 @@ class AnkiFragmentAnkiBox  : Fragment() {
 //                if(returnAddCardsToFavourite()) addCardsToFavourite(it) else return@observe
 //            }
             setAnkiBoxNavCon(ankiBoxNavCon)
-            getAnkiBoxNavCon.observe(viewLifecycleOwner){
-                if(it) setAnkiBoxNavCon(ankiBoxNavCon)
+            toast.observe(viewLifecycleOwner){
+                if(it.show) makeToast(requireActivity(),it.text) else return@observe
             }
             currentChildFragment.observe(viewLifecycleOwner){
                 changeSelectedTab(it.currentTab,it.before)

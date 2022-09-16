@@ -4,7 +4,7 @@
     <FrameLayout
 
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="@dimen/anki_box_rv_item_height"
         android:id="@+id/frame_lay_anki_box_rv_content">
 
     </FrameLayout>

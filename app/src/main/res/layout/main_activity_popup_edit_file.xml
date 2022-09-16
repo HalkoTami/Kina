@@ -139,7 +139,7 @@
             app:layout_constraintBottom_toBottomOf="parent">
             <include
                 android:id="@+id/col_palet_binding"
-                layout="@layout/item_color_palet"/>
+                layout="@layout/item_color_pallet"/>
 
 
         </FrameLayout>

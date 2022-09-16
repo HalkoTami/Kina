@@ -1,12 +1,9 @@
 package com.example.tangochoupdated.ui.fragment.createCard_frag_com
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -21,10 +18,10 @@ import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.animation.makeToast
 import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
 import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
 import com.example.tangochoupdated.ui.viewmodel.*
-import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
 
 
 class CreateCardFragment: Fragment(),View.OnClickListener {
