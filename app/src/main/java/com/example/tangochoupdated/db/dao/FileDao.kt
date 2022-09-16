@@ -13,7 +13,7 @@ abstract class FileDao: BaseDao<File> {
     )
     abstract fun getLastInsertedFileId():Flow<Int>
 
-    @Query("select * from tbl_file where not deleted AND NOT hasParent ")
+    @Query("select * from tbl_file where not deleted AND parentFileId is null ")
     abstract fun getFileWithoutParent(): Flow<List<File>>
 
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
@@ -66,14 +66,15 @@ abstract class FileDao: BaseDao<File> {
             "and flippedThreeTimesAmount = (select  Count( id  ) from tbl_card where timesFlipped = 3 and belongingFlashCardCoverId = :fileId )" +
             "and flippedFourTimesAmount = (select  Count( id  ) from tbl_card where timesFlipped >= 4 and belongingFlashCardCoverId = :fileId )" +
             " WHERE fileId in ( WITH  generation AS (" +
-            " select c.* from tbl_file c Inner Join tbl_card_file_x_ref b " +
-            " on b.cardFileXRefCardId = :upDatedCardId and b.cardFileXRefFileId = c.fileId " +
+            " select c.* from tbl_file c Inner Join tbl_x_ref b " +
+            " on b.id2 = c.fileId " +
+            "where (b.id1TokenTable = :cardTableInt and b.id1 = :upDatedCardId and b.id2TokenTable = :fileTableInt)" +
             " or c.fileId = :fileId " +
             "UNION ALL" +
             " SELECT a.* from tbl_file a " +
             " Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
             "SELECT fileId FROM generation b  )")
-    abstract suspend fun upDateAncestorsFlipCount(upDatedCardId:Int,fileId: Int?)
+    abstract suspend fun upDateAncestorsFlipCount(upDatedCardId:Int,fileId: Int?,cardTableInt:Int,fileTableInt:Int)
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("WITH  generation AS (" +

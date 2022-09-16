@@ -3,7 +3,6 @@ package com.example.tangochoupdated.ui.listadapter
 import android.content.Context
 import android.view.*
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,10 +12,8 @@ import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.listener.recyclerview.LibraryRVChooseFileMoveToCL
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
-import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
 import com.example.tangochoupdated.ui.viewmodel.ChooseFileMoveToViewModel
-import com.example.tangochoupdated.ui.viewmodel.DeletePopUpViewModel
 import com.example.tangochoupdated.ui.viewmodel.LibraryViewModel
 
 
@@ -74,7 +71,7 @@ class LibFragChooseFileRVListAdapter(
                     AppCompatResources.getDrawable(context,
                     when(item.fileStatus){
                         FileStatus.FOLDER -> R.drawable.icon_move_to_folder
-                        FileStatus.TANGO_CHO_COVER -> R.drawable.icon_move_to_flashcard_cover
+                        FileStatus.FLASHCARD_COVER -> R.drawable.icon_move_to_flashcard_cover
                         else -> return
                     }))
                 visibility = View.VISIBLE

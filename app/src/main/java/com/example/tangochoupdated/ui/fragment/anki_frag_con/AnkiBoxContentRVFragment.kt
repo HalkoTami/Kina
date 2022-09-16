@@ -1,6 +1,7 @@
 package com.example.tangochoupdated.ui.fragment.anki_frag_con
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,12 +26,7 @@ class AnkiBoxContentRVFragment  : Fragment() {
     private var _binding: FragAnkiContentRvBinding? = null
     private val boxViewModel: AnkiBoxFragViewModel by activityViewModels()
     private val ankiBaseViewModel: AnkiFragBaseViewModel by activityViewModels()
-    private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
     private val flipBaseViewModel: AnkiFlipFragViewModel by activityViewModels()
-    private val baseViewModel: BaseViewModel by activityViewModels()
-    private val typeAndCheckViewModel: AnkiFlipTypeAndCheckViewModel by activityViewModels()
-    private val createFileViewModel: CreateFileViewModel by activityViewModels()
-    private val  createCardViewModel: CreateCardViewModel by activityViewModels()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -43,33 +39,45 @@ class AnkiBoxContentRVFragment  : Fragment() {
 
         _binding =  FragAnkiContentRvBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        val fragmentBefore = ankiBaseViewModel.returnActiveFragment()
         val viewSetUp = AnkiBoxFragViewSetUp()
-        val topBarText:String
-        val amountText:String
-        val topBarDraw:Int
-        val list :List<Card>
-        when(ankiBaseViewModel.returnActiveFragment()){
-            AnkiFragments.AnkiBox -> {
-                topBarText = "暗記ボックスアイテム"
-                topBarDraw = R.drawable.icon_inbox
-                list = boxViewModel.returnAnkiBoxItems()
-            }
-            AnkiFragments.Flip ->{
-                topBarText = "暗記中のアイテム"
-                topBarDraw = R.drawable.icon_card
-                list = flipBaseViewModel.returnFlipItems()
-
+        fun getTopBarTitle(fragmentBefore:AnkiFragments):String{
+            return when(fragmentBefore){
+                AnkiFragments.AnkiBox -> "暗記ボックスアイテム"
+                AnkiFragments.Flip -> "暗記中のアイテム"
             }
         }
-        amountText = "${list.size}枚"
-        binding.txvTopBarTitle.text = topBarText
-        binding.txvTopBarCardAmount.text = amountText
-        binding.imvFlipOrAnkiBox.setImageDrawable(ContextCompat.getDrawable(requireActivity(),topBarDraw))
+        fun getTopBarDrawable(fragmentBefore:AnkiFragments):Drawable{
+            val id =   when(fragmentBefore){
+                AnkiFragments.AnkiBox -> R.drawable.icon_inbox
+                AnkiFragments.Flip -> R.drawable.icon_card
+            }
+            return ContextCompat.getDrawable(requireActivity(),id)!!
+        }
+        fun getParentTokenList(fragmentBefore:AnkiFragments):List<Card>{
+            return when(fragmentBefore){
+                AnkiFragments.AnkiBox -> boxViewModel.returnAnkiBoxItems()
+                AnkiFragments.Flip -> flipBaseViewModel.returnFlipItems()
+            }
+        }
+        fun setUpTopBar(){
+            val amountText = "${getParentTokenList(fragmentBefore).size}枚"
+            binding.txvTopBarTitle.text = getTopBarTitle(fragmentBefore)
+            binding.txvTopBarCardAmount.text = amountText
+            binding.imvFlipOrAnkiBox.setImageDrawable(getTopBarDrawable(fragmentBefore))
+        }
+        fun setUpRV(){
+            val adapter =
+                viewSetUp.setUpAnkiBoxRVListAdapter(
+                    binding.rvBinding.recyclerView,
+                    requireActivity(),
+                    boxViewModel,
+                    AnkiBoxFragments.Library,viewLifecycleOwner)
+            adapter.submitList(getParentTokenList(fragmentBefore))
+        }
+        setUpTopBar()
+        setUpRV()
 
-        val adapter =
-            viewSetUp.setUpAnkiBoxRVListAdapter(binding.rvBinding.recyclerView,requireActivity(),boxViewModel,
-                AnkiBoxFragments.Library,viewLifecycleOwner)
-        adapter.submitList(list)
 
         return root
     }

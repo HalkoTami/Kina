@@ -126,7 +126,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
                     selected = false
                 )
             }
-            FileStatus.TANGO_CHO_COVER -> {
+            FileStatus.FLASHCARD_COVER -> {
                 return LibraryRV(
                     type = LibRVViewType.FlashCardCover,
                     position = file.libOrder!!,
@@ -226,7 +226,7 @@ class LibraryViewModel(private val repository: MyRoomRepository) : ViewModel() {
         val action =
         when(item.fileStatus){
             FileStatus.FOLDER->     LibraryFragFolderDirections.openFolder(intArrayOf(item.fileId))
-            FileStatus.TANGO_CHO_COVER -> LibraryFragFlashCardCoverDirections.openFlashCardCover(intArrayOf(item.fileId))
+            FileStatus.FLASHCARD_COVER -> LibraryFragFlashCardCoverDirections.openFlashCardCover(intArrayOf(item.fileId))
             else -> return
         }
         returnLibraryNavCon()?.navigate(action)

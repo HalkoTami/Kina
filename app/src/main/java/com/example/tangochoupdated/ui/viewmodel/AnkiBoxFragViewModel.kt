@@ -58,19 +58,6 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     }
 
-    fun insertEmptyFavourite(){
-       insertFile(File(fileId = 0,
-           title = "okini",
-           fileStatus = FileStatus.ANKI_BOX_FAVOURITE ,
-           colorStatus = ColorStatus.GRAY,
-           deleted = false,
-           hasParent = false,
-           libOrder = 0,
-           parentFileId = null
-       ))
-        setAddCardsToFavourite(true)
-
-    }
 
 
     private val _addCardsToFavourite = MutableLiveData<Boolean>()
@@ -168,7 +155,7 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
             AnkiBoxFragments.Library -> {
                 val a = LibraryItemsFragmentDirections.toLibraryItemsFrag()
                 a.fileId = intArrayOf(item.fileId)
-                a.flashCard = item.fileStatus == FileStatus.TANGO_CHO_COVER
+                a.flashCard = item.fileStatus == FileStatus.FLASHCARD_COVER
                 a
             }
             null -> return

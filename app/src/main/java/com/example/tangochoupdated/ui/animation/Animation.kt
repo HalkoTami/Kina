@@ -14,19 +14,19 @@ import androidx.core.view.children
 import kotlin.math.absoluteValue
 
 class Animation {
-    fun animateFrameBottomMenu(frameBottomMenu: FrameLayout, visibility:Int){
+    fun animateFrameBottomMenu(frameBottomMenu: FrameLayout, visible:Boolean){
         val btmMenuAnimator = AnimatorSet().apply{
             val a = ObjectAnimator.ofFloat(frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
             val b = ObjectAnimator.ofFloat(frameBottomMenu, View.ALPHA,0f,1f)
             playTogether(a,b)
             duration = 200
         }
-        when (visibility){
-            View.VISIBLE -> {
+        when (visible){
+            true -> {
                 btmMenuAnimator.start()
                 frameBottomMenu.visibility = View.VISIBLE
             }
-            View.GONE ->{
+            false ->{
                 btmMenuAnimator.doOnEnd {
                     frameBottomMenu.visibility = View.GONE
                 }
@@ -36,17 +36,17 @@ class Animation {
             }
         }
     }
-    fun animatePopUpAddFile(popUpAddFile: FrameLayout, visibility: Int){
+    fun animatePopUpAddFile(popUpAddFile: FrameLayout, visible: Boolean){
         val appearAnimator = AnimatorSet().apply {
             duration= 200
             play(ObjectAnimator.ofFloat(popUpAddFile, View.ALPHA, 0f,1f ))
         }
-        when (visibility){
-            View.VISIBLE -> {
+        when (visible){
+            true -> {
                 appearAnimator.start()
                 popUpAddFile.visibility = View.VISIBLE
             }
-            View.GONE ->{
+            false ->{
                 appearAnimator.doOnEnd {
                     popUpAddFile.visibility = View.GONE
                 }

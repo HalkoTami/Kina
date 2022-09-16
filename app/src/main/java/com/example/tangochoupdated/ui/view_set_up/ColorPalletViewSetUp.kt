@@ -5,16 +5,15 @@ import android.graphics.drawable.GradientDrawable
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.example.tangochoupdated.R
-import com.example.tangochoupdated.databinding.ItemColorPaletBinding
 import com.example.tangochoupdated.databinding.ItemColorPalletBinding
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 
 class ColorPalletViewSetUp {
-    fun changeColPalletCol(context: Context, colorStatus: ColorStatus?, selected:Boolean?, colorPaletBinding: ItemColorPalletBinding){
+    fun changeColPalletCol(context: Context, colorStatus: ColorStatus?, selected:Boolean?, colorPalletBinding: ItemColorPalletBinding){
         val imageView: ImageView
         val colId:Int
         val color:Int
-        colorPaletBinding.apply {
+        colorPalletBinding.apply {
             when(colorStatus) {
                 ColorStatus.GRAY -> {
                     colId = R.color.gray
@@ -58,10 +57,10 @@ class ColorPalletViewSetUp {
         imageView.setImageDrawable(a)
 
     }
-    fun makeAllColPalletUnselected(context: Context, colorPaletBinding: ItemColorPaletBinding){
-        changeColPalletCol(context, ColorStatus.RED,false,colorPaletBinding)
-        changeColPalletCol(context, ColorStatus.YELLOW,false,colorPaletBinding)
-        changeColPalletCol(context, ColorStatus.BLUE,false,colorPaletBinding)
-        changeColPalletCol(context, ColorStatus.GRAY,false,colorPaletBinding)
+    fun makeAllColPalletUnselected(context: Context, colorPalletBinding: ItemColorPalletBinding){
+        changeColPalletCol(context, ColorStatus.RED,false,colorPalletBinding)
+        changeColPalletCol(context, ColorStatus.YELLOW,false,colorPalletBinding)
+        changeColPalletCol(context, ColorStatus.BLUE,false,colorPalletBinding)
+        changeColPalletCol(context, ColorStatus.GRAY,false,colorPalletBinding)
     }
 }

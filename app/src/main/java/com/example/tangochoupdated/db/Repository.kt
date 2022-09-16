@@ -3,8 +3,9 @@ package com.example.tangochoupdated.db
 import androidx.annotation.WorkerThread
 import com.example.tangochoupdated.db.dao.*
 import com.example.tangochoupdated.db.dataclass.*
-import com.example.tangochoupdated.db.dataclass.ChoiceDao
+import com.example.tangochoupdated.db.enumclass.XRefType
 import com.example.tangochoupdated.db.enumclass.FileStatus
+import com.example.tangochoupdated.db.typeConverters.XRefTypeConverter
 import kotlinx.coroutines.flow.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
@@ -16,22 +17,28 @@ class MyRoomRepository(
     private val fileDao            : FileDao,
     private val markerDataDao      : MarkerDataDao,
     private val userDao            : UserDao,
-    private val cardAndTagXRefDao  : CardAndTagXRefDao,
-    private val fileXRefDao        : FileXRefDao,) {
+    private val xRefDao            : XRefDao, ) {
 
-
+    private val XRefTypeConverter = XRefTypeConverter()
+    private val XRefTypeCardAsInt = XRefTypeConverter.fromDBTableType(XRefType.CARD)
+    private val XRefTypeFileAsInt = XRefTypeConverter.fromDBTableType(XRefType.ANKI_BOX_FAVOURITE)
 //cards
 
     fun getCardDataByFileId(parentFileId: Int?):Flow<List<Card>>  = cardDao.getCardsDataByFileId(parentFileId)
-    fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>> = cardDao.getAllDescendantsCardsByMultipleFileId(fileIdList)
-    fun getDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>> = cardDao.getDescendantsCardsByMultipleFileId(fileIdList)
+    fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>> =
+        cardDao.getAllDescendantsCardsByMultipleFileId(fileIdList,XRefTypeCardAsInt,XRefTypeFileAsInt)
+    fun getDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>> =
+        cardDao.getDescendantsCardsByMultipleFileId(fileIdList,XRefTypeCardAsInt,XRefTypeFileAsInt)
     fun getCardsByMultipleCardId(cardIds:List<Int>):Flow<List<Card>> = cardDao.getCardByMultipleCardIds(cardIds)
     fun getCardByCardId(cardId:Int?):Flow<Card> = cardDao.getCardByCardId(cardId)
     fun lastInsertedCard(flashCardId: Int?):Flow<Card> = cardDao.getLastInsertedCard(flashCardId)
     fun searchCardsByWords(search:String):Flow<List<Card>> = cardDao.searchCardsByWords(search)
-    fun getAnkiBoxRVCards(fileId:Int):Flow<List<Card>> = cardDao.getAnkiBoxRVCards(fileId)
-    fun getDescendantsCardsIsByMultipleFileId(fileIdList: List<Int>):Flow<List<Int>> = cardDao.getDescendantsCardsIdsByMultipleFileId(fileIdList)
-    fun getAnkiBoxFavouriteRVCards(fileId:Int):Flow<List<Card>> = cardDao.getAnkiBoxFavouriteRVCards(fileId)
+    fun getAnkiBoxRVCards(fileId:Int):Flow<List<Card>> =
+        cardDao.getAnkiBoxRVCards(fileId,XRefTypeCardAsInt,XRefTypeFileAsInt)
+    fun getDescendantsCardsIsByMultipleFileId(fileIdList: List<Int>):Flow<List<Int>> =
+        cardDao.getDescendantsCardsIdsByMultipleFileId(fileIdList,XRefTypeCardAsInt,XRefTypeFileAsInt)
+    fun getAnkiBoxFavouriteRVCards(fileId:Int):Flow<List<Card>> =
+        cardDao.getAnkiBoxFavouriteRVCards(fileId,XRefTypeCardAsInt,XRefTypeFileAsInt)
     val allCards:Flow<List<Card>> = cardDao.getAllCards()
 //    files
     fun getFileByFileId(fileId:Int?):Flow<File> = fileDao.getFileByFileId(fileId)
@@ -71,7 +78,7 @@ class MyRoomRepository(
                     fileDao.upDateAncestorsFolderAmount(parentFileId,1)
                     fileDao.upDateFileChildFoldersAmount(parentFileId,1)
                 }
-                FileStatus.TANGO_CHO_COVER ->{
+                FileStatus.FLASHCARD_COVER ->{
                     fileDao.upDateAncestorsFlashCardCoverAmount(parentFileId,1)
                     fileDao.upDateFileChildFlashCardCoversAmount(parentFileId,1)
                 }
@@ -85,24 +92,39 @@ class MyRoomRepository(
     suspend fun insert(item: Any){
 
         when (item) {
-            is CardAndTagXRef -> cardAndTagXRefDao.insert(item)
+            is XRef -> xRefDao.insert(item)
             is Card -> insertCard(item)
             is File -> insertFile(item)
             is User -> userDao.insert(item)
             is MarkerData -> markerDataDao.insert(item)
             is Choice -> choiceDao.insert(item)
             is ActivityData -> activityDataDao.insert(item)
-            is FileXRef -> fileXRefDao.insert(item)
             else -> throw  IllegalArgumentException("no such table")
 
         }
 
     }
+    fun createCardAndAnkiBoxFavouriteXRef(cardId: Int,favouriteFileId:Int):XRef{
+        return XRef(xRefId = 0,
+            id1 = cardId,
+            id1TokenTable = XRefType.CARD,
+            id2 = favouriteFileId,
+            id2TokenTable = XRefType.ANKI_BOX_FAVOURITE)
+    }
 
 
+    suspend fun saveCardsToFavouriteAnkiBox(list: List<Card>,lastInsertedFileId:Int,newFile:File){
+        insert(newFile)
+        val newFileId = lastInsertedFileId + 1
+        val xRefList = mutableListOf<XRef>()
+        list.onEach {
+            xRefList.add(createCardAndAnkiBoxFavouriteXRef(it.id,newFileId)
+            ) }
+        insertMultiple(xRefList)
+    }
     suspend fun insertMultiple(item: List<*>) {
 
-        cardAndTagXRefDao.insertList(item.filterIsInstance<CardAndTagXRef>())
+        xRefDao.insertList(item.filterIsInstance<XRef>())
         cardDao.insertList(item.filterIsInstance<Card>())
         fileDao.insertList(item.filterIsInstance<File>())
         activityDataDao.insertList(item.filterIsInstance<ActivityData>())
@@ -126,12 +148,12 @@ class MyRoomRepository(
     }
     suspend fun updateCardFlippedTime(card:Card){
         cardDao.upDateCardFlippedTimes(card.id)
-        fileDao.upDateAncestorsFlipCount(card.id,card.belongingFlashCardCoverId)
+        fileDao.upDateAncestorsFlipCount(card.id,card.belongingFlashCardCoverId,XRefTypeCardAsInt,XRefTypeFileAsInt)
     }
 
     suspend fun update(item: Any) {
         when (item) {
-            is CardAndTagXRef -> cardAndTagXRefDao.update(item)
+            is XRef -> xRefDao.update(item)
             is Card -> cardDao.update(item)
             is File -> fileDao.update(item)
             is User -> userDao.update(item)
@@ -144,7 +166,7 @@ class MyRoomRepository(
     }
 
     suspend fun updateMultiple(item: List<Any>) {
-        cardAndTagXRefDao.updateMultiple(item.filterIsInstance<CardAndTagXRef>())
+        xRefDao.updateMultiple(item.filterIsInstance<XRef>())
         cardDao.updateMultiple(item.filterIsInstance<Card>())
         fileDao.updateMultiple(item.filterIsInstance<File>())
         activityDataDao.updateMultiple(item.filterIsInstance<ActivityData>())
@@ -155,7 +177,7 @@ class MyRoomRepository(
 
     suspend fun delete(item: Any) {
         when (item) {
-            is CardAndTagXRef -> cardAndTagXRefDao.delete(item)
+            is XRef -> xRefDao.delete(item)
             is Card -> cardDao.delete(item)
             is File -> fileDao.delete(item)
             is User -> userDao.delete(item)
@@ -167,7 +189,7 @@ class MyRoomRepository(
     }
 
     suspend fun deleteMultiple(item: List<Any>) {
-        cardAndTagXRefDao.deleteMultiple(item.filterIsInstance<CardAndTagXRef>())
+        xRefDao.deleteMultiple(item.filterIsInstance<XRef>())
         cardDao.deleteMultiple(item.filterIsInstance<Card>())
         fileDao.deleteMultiple(item.filterIsInstance<File>())
         activityDataDao.deleteMultiple(item.filterIsInstance<ActivityData>())

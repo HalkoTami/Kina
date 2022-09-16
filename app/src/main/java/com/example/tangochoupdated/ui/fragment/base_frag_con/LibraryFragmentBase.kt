@@ -1,34 +1,18 @@
 package com.example.tangochoupdated.ui.fragment.base_frag_con
 
 import android.content.Context
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.RecyclerView
-import com.example.tangochoupdated.*
-import com.example.tangochoupdated.databinding.ItemColorPaletBinding
 import com.example.tangochoupdated.databinding.LibraryFragBinding
-import com.example.tangochoupdated.databinding.LibraryFragPopupConfirmDeleteAllChildrenBinding
-import com.example.tangochoupdated.databinding.LibraryFragPopupConfirmDeleteBinding
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.ui.viewmodel.customClasses.LibRVState
 import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
-import com.example.tangochoupdated.ui.animation.Animation
-import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmDeleteCL
 import com.example.tangochoupdated.ui.observer.CommonOb
-import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
@@ -90,9 +74,9 @@ class LibraryFragmentBase : Fragment(),View.OnClickListener{
             binding.confirmDeleteChildrenPopUpBinding.apply {
                 binding.background.visibility = if(it.visible) View.VISIBLE else View.GONE
                 binding.frameLayConfirmDeleteWithChildren.visibility =  if(it.visible) View.VISIBLE else View.GONE
-                txvContainingFolder.text = "${it.containingFolder}個"
-                txvContainingFlashcard.text = "${it.containingFlashCardCover}個"
-                txvContainingCard.text = "${it.containingCards}枚"
+                txvContainingFolder.text = it.containingFolder.toString()
+                txvContainingFlashcard.text = it.containingFlashCardCover.toString()
+                txvContainingCard.text = it.containingCards.toString()
             }
         }
         val deletingItemObserver = Observer<List<Any>> { list->
@@ -116,13 +100,13 @@ class LibraryFragmentBase : Fragment(),View.OnClickListener{
             }
 
         }
-        searchViewModel.searchingText.observe(viewLifecycleOwner){
-            if(it == "")  {
+        searchViewModel.searchingText.observe(viewLifecycleOwner){ searchText ->
+            if(searchText == "")  {
                 requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             }
             else{
                 requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-                searchViewModel.getFilesByWords(it).observe(viewLifecycleOwner){
+                searchViewModel.getFilesByWords(searchText).observe(viewLifecycleOwner){
                     searchViewModel.setMatchedFiles(it)
                     val a = mutableListOf<Any>()
                     a.addAll(searchViewModel.returnMatchedCards())
@@ -130,7 +114,7 @@ class LibraryFragmentBase : Fragment(),View.OnClickListener{
                     searchViewModel.setMatchedItems(a)
 
                 }
-                searchViewModel.getCardsByWords(it).observe(viewLifecycleOwner){
+                searchViewModel.getCardsByWords(searchText).observe(viewLifecycleOwner){
                     searchViewModel.setMatchedCards(it)
                     val a = mutableListOf<Any>()
                     a.addAll(searchViewModel.returnMatchedFiles())
@@ -194,7 +178,7 @@ class LibraryFragmentBase : Fragment(),View.OnClickListener{
                 }
 
             }
-            onlyP.btnCancel -> deletePopUpViewModel.setConfirmDeleteVisible(false,)
+            onlyP.btnCancel -> deletePopUpViewModel.setConfirmDeleteVisible(false)
             deleteAllC.btnCloseConfirmDeleteOnlyParentPopup -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
             deleteAllC.btnDeleteAllChildren -> deletePopUpViewModel.deleteFileWithChildren()
             deleteAllC.deleteOnlyFile -> deletePopUpViewModel.deleteOnlyFile()

@@ -17,7 +17,6 @@ class RoomApplication : Application() {
         database.fileDao(),
         database.markerDataDao(),
         database.userDao(),
-        database.cardAndTagXRefDao(),
-        database.fileXRefDao()
+        database.xRefDao(),
     ) }
 }

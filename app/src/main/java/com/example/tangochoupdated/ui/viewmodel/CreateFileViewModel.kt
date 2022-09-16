@@ -5,9 +5,7 @@ import androidx.lifecycle.*
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.Card
-import com.example.tangochoupdated.db.dataclass.CardAndTagXRef
 import com.example.tangochoupdated.db.dataclass.File
-import com.example.tangochoupdated.db.dataclass.FileXRef
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.viewmodel.customClasses.Mode
@@ -186,9 +184,9 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private fun filterBottomMenuByFile(file:File){
         setBottomMenuClickable(
             BottomMenuClickable(
-            createFile = file.fileStatus != FileStatus.TANGO_CHO_COVER,
-            createFlashCardCover = file.fileStatus != FileStatus.TANGO_CHO_COVER,
-            createCard = file.fileStatus == FileStatus.TANGO_CHO_COVER
+            createFile = file.fileStatus != FileStatus.FLASHCARD_COVER,
+            createFlashCardCover = file.fileStatus != FileStatus.FLASHCARD_COVER,
+            createCard = file.fileStatus == FileStatus.FLASHCARD_COVER
         )
 
         )
@@ -221,14 +219,14 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-    private fun insertXref(list:List<CardAndTagXRef>){
+    private fun insertXref(list:List<Card>,){
         viewModelScope.launch {
-            repository.insertMultiple(list)
+            repository.saveCardsToFavouriteAnkiBox(list,)
         }
     }
 
 
-    fun addCardsToFavourite(fileId:Int,list:List<Card>){
+    fun addCardsToFavourite( list:List<Card>){
         val xRef = mutableListOf<CardAndTagXRef>()
         list.onEach { xRef.add(CardAndTagXRef(0,it.id,fileId)) }
         insertXref(xRef)
@@ -254,8 +252,8 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 //        }
     }
     fun onCLickCreateFlashCardCover(){
-        makeNewFilePopUp(_parentFile.value,FileStatus.TANGO_CHO_COVER)
-        makeEmptyFileToCreate(FileStatus.TANGO_CHO_COVER)
+        makeNewFilePopUp(_parentFile.value,FileStatus.FLASHCARD_COVER)
+        makeEmptyFileToCreate(FileStatus.FLASHCARD_COVER)
         setMode(Mode.New)
         setEditFilePopUpVisible(true)
 //        if(_bottomMenuClickable.value!!.createFlashCardCover){
@@ -301,7 +299,7 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 setEdtHint("フォルダのタイトル")
 
             }
-            FileStatus.TANGO_CHO_COVER ->{
+            FileStatus.FLASHCARD_COVER ->{
                 setDrawFileType(R.drawable.icon_library_plane)
                 setTxvHint("新しい単語帳を作る")
                 setEdtHint("単語帳のタイトル")

@@ -82,7 +82,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setContainingFilesAmount(list:List<File>){
         val a = returnConfirmDeleteWithChildrenView()
         a.containingFolder = list.filter { it.fileStatus == FileStatus.FOLDER }.size
-        a.containingFlashCardCover = list.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }.size
+        a.containingFlashCardCover = list.filter { it.fileStatus == FileStatus.FLASHCARD_COVER }.size
         setConfirmDeleteWithChildrenView(a)
     }
     fun setContainingCardsAmount(list:List<Card>){

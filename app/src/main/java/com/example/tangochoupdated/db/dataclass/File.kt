@@ -2,24 +2,21 @@ package com.example.tangochoupdated.db.dataclass
 
 import androidx.room.*
 import com.example.tangochoupdated.db.enumclass.ColorStatus
-import com.example.tangochoupdated.db.enumclass.ColorStatusConverter
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.db.enumclass.FileStatusConverter
+import com.example.tangochoupdated.db.typeConverters.ColorStatusConverter
+import com.example.tangochoupdated.db.typeConverters.FileStatusConverter
 
 @Entity(tableName = "tbl_file",
 )
 @TypeConverters(ColorStatusConverter::class,FileStatusConverter::class)
 data class File(
     @PrimaryKey(autoGenerate = true)
-    var fileId:Int,
-    @ColumnInfo(defaultValue = "title") var  title: String? = null,
+    val fileId:Int,
+    @ColumnInfo var  title: String? = null,
     @ColumnInfo var deleted: Boolean? = false,
     @ColumnInfo var colorStatus: ColorStatus = ColorStatus.GRAY,
     @ColumnInfo var fileStatus: FileStatus,
-    @ColumnInfo var parentFileId: Int?,
-    @ColumnInfo(name= "library_order")
-    var hasChild:Boolean = false,
-    var hasParent:Boolean = false,
+    @ColumnInfo var parentFileId: Int? = null,
     var libOrder: Int? = 0,
     @Embedded
     var childData: ChildData = ChildData(),
@@ -56,13 +53,6 @@ data class DescendantsData(
     )
 
 
-@Entity(
-    tableName = "file_xref",
-)
-data class FileXRef(
-    @PrimaryKey(autoGenerate = true) val id:Int,
-    val parentFileId: Int?,
-    val childFileId: Int,
-)
+
 
 

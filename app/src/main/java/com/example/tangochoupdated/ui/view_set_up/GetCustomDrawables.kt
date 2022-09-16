@@ -18,7 +18,7 @@ GetCustomDrawables(val context: Context){
     fun getFileIconByFile(file: File):Drawable{
         return when(file.fileStatus){
             FileStatus.FOLDER -> getFolderIconByCol(file.colorStatus)
-            FileStatus.TANGO_CHO_COVER -> getFlashCardIconByCol(file.colorStatus)
+            FileStatus.FLASHCARD_COVER -> getFlashCardIconByCol(file.colorStatus)
             else -> getDrawable(R.drawable.icon_eye_opened)
         }
     }

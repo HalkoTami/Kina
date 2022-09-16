@@ -117,9 +117,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             }
 
         }
-        fun booleanToVisibility(visibility: Boolean):Int{
-            return if(visibility) VISIBLE else GONE
-        }
         fun changeViewVisibility(view:View,visibility: Boolean){
             view.visibility = if(visibility) VISIBLE else GONE
         }
@@ -141,17 +138,17 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             changeTabView(it.before,it.now)
         }
         val bnvVisibilityObserver            = Observer<Boolean>{
-            binding.frameBnv.visibility = if(it == true) VISIBLE else GONE
+            changeViewVisibility(binding.frameBnv,it)
         }
         val popUpEditFileVisibilityObserver  = Observer<Boolean>{
-            binding.frameLayEditFile.visibility = if(it)VISIBLE else GONE
-            binding.fragConViewCover.visibility =  if(it||createFileViewModel.returnBottomMenuVisible())VISIBLE else GONE
+            Animation().animatePopUpAddFile(binding.frameLayEditFile,it)
+            changeViewVisibility(binding.fragConViewCover,it)
         }
         val popUpEditFileUIDataObserver        = Observer<CreateFileViewModel.PopUpUI>{
             LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,this@MainActivity)
         }
         val bottomMenuVisibilityObserver       = Observer<Boolean>{
-            Animation().animatePopUpAddFile(binding.frameBottomMenu,booleanToVisibility(it))
+            Animation().animateFrameBottomMenu(binding.frameBottomMenu,it)
             changeViewVisibility(binding.fragConViewCover,it)
         }
         val bottomMenuClickableStatusObserver = Observer<CreateFileViewModel.BottomMenuClickable>{

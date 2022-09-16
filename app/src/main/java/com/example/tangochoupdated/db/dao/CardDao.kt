@@ -5,19 +5,21 @@ import com.example.tangochoupdated.db.dataclass.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-abstract class CardDao(): BaseDao<Card> {
+abstract class CardDao: BaseDao<Card> {
 
     @Query(
         "Select distinct a.* from tbl_card a " +
-                "left outer join tbl_card_file_x_ref b on a.id = b.cardFileXRefCardId where" +
+                "left outer join tbl_x_ref b on a.id = b.id1 where" +
                 " (not a.deleted and belongingFlashCardCoverId in ( " +
                 "with generation AS (" +
                 " select * from tbl_file where fileId in(:fileIdList)  " +
                 "UNION ALL" +
                 " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
-                "SELECT fileId FROM generation b )) or b.cardFileXRefFileId  in(:fileIdList) "
+                "SELECT fileId FROM generation b )) or " +
+                "(b.id1TokenTable = :cardTableInt and " +
+                "b.id2TokenTable = :fileTableInt and  b.id2  in(:fileIdList))  "
     )
-    abstract fun getDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
+    abstract fun getDescendantsCardsByMultipleFileId(fileIdList: List<Int>,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
 
     @Query("UPDATE tbl_card SET  libOrder = libOrder + 1 WHERE " +
             "belongingFlashCardCoverId is :fileId and libOrder >= :insertingPosition")
@@ -26,53 +28,58 @@ abstract class CardDao(): BaseDao<Card> {
 
     @Query(
         "Select a.id from tbl_card a " +
-                "left outer join tbl_card_file_x_ref b on a.id = b.cardFileXRefCardId where" +
+                "left outer join tbl_x_ref b on a.id = b.id1 where" +
                 " (not a.deleted and belongingFlashCardCoverId in ( " +
                 "with generation AS (" +
                 " select * from tbl_file where fileId in(:fileIdList)  " +
                 "UNION ALL" +
                 " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
-                "SELECT fileId FROM generation b )) or b.cardFileXRefFileId  in(:fileIdList) "
+                "SELECT fileId FROM generation b )) or " +
+                "(b.id1TokenTable = :cardTableInt and " +
+                "b.id2TokenTable = :fileTableInt and  b.id2  in(:fileIdList))  "
     )
-    abstract   fun getDescendantsCardsIdsByMultipleFileId(fileIdList: List<Int>):Flow<List<Int>>
+    abstract   fun getDescendantsCardsIdsByMultipleFileId(fileIdList: List<Int>,cardTableInt:Int,fileTableInt:Int):Flow<List<Int>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("Select a.* from tbl_card a " +
-            "left outer join tbl_card_file_x_ref x on " +
-            "a.id = x.cardFileXRefCardId"+
+            "left outer join tbl_x_ref b on " +
+            "a.id = b.id1"+
             " WHERE a.belongingFlashCardCoverId in ( WITH  generation AS (" +
             " select * from tbl_file where fileId in(:fileIdList) " +
             "Union ALL" +
             " SELECT d.* from tbl_file d " +
             "Inner JOIN generation g ON g.fileId = d.parentFileId ) " +
-            "SELECT fileId FROM generation b  ) " +
-            "or x.cardFileXRefFileId in (:fileIdList)"
+            "SELECT fileId FROM generation b  ) or " +
+            "(b.id1TokenTable = :cardTableInt and " +
+            "b.id2TokenTable = :fileTableInt and  b.id2  in(:fileIdList))  "
 
     )
-    abstract fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
+    abstract fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("Select distinct a.* from tbl_card a " +
-            "left outer join tbl_card_file_x_ref x on " +
-            "a.id = x.cardFileXRefCardId"+
+            "left outer join tbl_x_ref b on " +
+            "a.id = b.id1"+
             " WHERE a.belongingFlashCardCoverId in ( WITH  generation AS (" +
             " select * from tbl_file where fileId = :fileId " +
             "Union ALL" +
             " SELECT d.* from tbl_file d " +
             "Inner JOIN generation g ON g.fileId = d.parentFileId ) " +
             "SELECT fileId FROM generation b  ) " +
-            "or x.cardFileXRefFileId = :fileId"
+            "or (b.id1TokenTable = :cardTableInt and b.id2 = :fileId and b.id1TokenTable = :fileTableInt )"
 
     )
-    abstract fun getAnkiBoxRVCards(fileId:Int):Flow<List<Card>>
+    abstract fun getAnkiBoxRVCards(fileId:Int,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("select * from tbl_card a " +
-            "inner join tbl_card_file_x_ref b " +
-            "on a.id = b.cardFileXRefCardId " +
-            "where b.cardFileXRefFileId = :fileId"
+            "inner join tbl_x_ref b " +
+            "on a.id = b.id1 " +
+            "where b.id1TokenTable = :cardTableInt " +
+            "and b.id2 = :fileId " +
+            "and b.id2TokenTable = :fileTableInt"
     )
-    abstract fun getAnkiBoxFavouriteRVCards(fileId:Int):Flow<List<Card>>
+    abstract fun getAnkiBoxFavouriteRVCards(fileId:Int,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
 
     @Query("UPDATE tbl_card SET timesFlipped = timesFlipped +1   WHERE id = :cardId")
     abstract suspend fun upDateCardFlippedTimes(cardId: Int)

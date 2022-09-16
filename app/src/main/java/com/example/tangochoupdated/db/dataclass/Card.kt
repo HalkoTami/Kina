@@ -2,8 +2,8 @@ package com.example.tangochoupdated.db.dataclass
 
 import androidx.room.*
 import com.example.tangochoupdated.db.enumclass.CardStatus
-import com.example.tangochoupdated.db.enumclass.CardStatusConverter
 import com.example.tangochoupdated.db.enumclass.ColorStatus
+import com.example.tangochoupdated.db.typeConverters.CardStatusConverter
 
 
 @Entity(tableName = "tbl_card",
@@ -16,13 +16,13 @@ data class Card(
     var belongingFlashCardCoverId:Int? = null,
 
     @Embedded
-    var stringData: StringData?,
+    var stringData: StringData? = null,
     @Embedded
-    val markerData: MarkerPreviewData?,
+    val markerData: MarkerPreviewData? = null,
     @Embedded
-    val quizData: QuizData?,
+    val quizData: QuizData? = null,
     @ColumnInfo
-    var cardStatus: CardStatus,
+    var cardStatus: CardStatus = CardStatus.STRING,
     @ColumnInfo
     var deleted:Boolean = false,
     var remembered: Boolean = false,
@@ -39,10 +39,10 @@ data class Card(
 
 
 data class StringData(
-    var frontTitle:String?,
-    var backTitle: String?,
-    var frontText:String?,
-    var backText:String?,
+    var frontTitle:String? = null,
+    var backTitle: String? = null,
+    var frontText:String? = null,
+    var backText:String? =null,
 
     )
 
@@ -59,14 +59,6 @@ data class MarkerPreviewData(
 )
 
 
-@Entity(tableName = "tbl_card_file_x_ref"
-)
-data class CardAndTagXRef(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    var cardFileXRefCardId: Int,
-    var cardFileXRefFileId: Int,
-)
 
 
 //class CardAndTags (

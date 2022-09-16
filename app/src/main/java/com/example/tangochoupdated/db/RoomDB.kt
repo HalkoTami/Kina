@@ -5,8 +5,8 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.tangochoupdated.db.dao.*
 import com.example.tangochoupdated.db.dataclass.*
-import com.example.tangochoupdated.db.dataclass.ChoiceDao
 import com.example.tangochoupdated.db.enumclass.*
+import com.example.tangochoupdated.db.typeConverters.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -17,16 +17,16 @@ import kotlinx.coroutines.launch
     MarkerData::class,
     Choice::class,
     ActivityData::class,
-    CardAndTagXRef::class,
-    FileXRef::class],
+    XRef::class],
     version = 1, exportSchema = true)
 @TypeConverters(
     ActivityStatusConverter::class,
     CardStatusConverter::class,
     ColorStatusConverter::class,
     FileStatusConverter::class,
+    XRefTypeConverter::class
 )
-public abstract class MyRoomDatabase : RoomDatabase() {
+ abstract class MyRoomDatabase : RoomDatabase() {
 
 
 
@@ -36,8 +36,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
     abstract fun fileDao(): FileDao
     abstract fun markerDataDao(): MarkerDataDao
     abstract fun userDao(): UserDao
-    abstract fun cardAndTagXRefDao(): CardAndTagXRefDao
-    abstract fun fileXRefDao(): FileXRefDao
+    abstract fun xRefDao(): XRefDao
 
     private class WordDatabaseCallback(
         private val scope: CoroutineScope
@@ -47,26 +46,53 @@ public abstract class MyRoomDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    var fileDao = database.fileDao()
-
-
-                    // Add sample words.
-                    var file = File(
+                    val fileDao = database.fileDao()
+                    val cardDao = database.cardDao()
+                    val firstFile = File(
                         fileId = 0,
-                        title = "タイトルなし",
+                        title = "フォルダ1",
+                        deleted = false,
+                        colorStatus=  ColorStatus.GRAY,
+                        fileStatus = FileStatus.FOLDER,
+                        libOrder = 0,
+                        parentFileId = null)
+                    val firstChildFile = File(
+                        fileId = 0,
+                        title = "子フォルダ",
                         deleted = false,
                         colorStatus=  ColorStatus.RED,
                         fileStatus = FileStatus.FOLDER,
-                        hasChild = false,
-                        hasParent = false,
                         libOrder = 0,
-                        childData = ChildData(),
-                        parentFileId = null)
-                    fileDao.insert(file)
-
-
-
-
+                        parentFileId = 1
+                    )
+                    val firstChildFlashCard = File(
+                        fileId = 0,
+                        title = "単語帳2",
+                        deleted = false,
+                        colorStatus=  ColorStatus.BLUE,
+                        fileStatus = FileStatus.FLASHCARD_COVER,
+                        libOrder = 1,
+                        parentFileId = 1
+                    )
+                    val firstCard = Card(
+                        id = 0,
+                        belongingFlashCardCoverId = 1,
+                        stringData = StringData(null,null,"こんにちは","hello!"),
+                        markerData = null,
+                        cardStatus = CardStatus.STRING,
+                    )
+                    val firstFlashCardWithoutParent = File(
+                        fileId = 0,
+                        fileStatus = FileStatus.FLASHCARD_COVER,
+                        title = "単語帳1",
+                    )
+                    fileDao.apply {
+                        insert(firstFile)
+                        insert(firstChildFile)
+                        insert(firstFlashCardWithoutParent)
+                        insert(firstChildFlashCard)
+                    }
+                    cardDao.insert(firstCard)
                 }
             }
         }

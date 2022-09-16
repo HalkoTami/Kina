@@ -1,11 +1,9 @@
 package com.example.tangochoupdated.ui.fragment.lib_frag_con
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -17,12 +15,8 @@ import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.viewmodel.customClasses.LibraryFragment
 import com.example.tangochoupdated.ui.listadapter.LibFragChooseFileRVListAdapter
-import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
-import com.example.tangochoupdated.ui.listadapter.LibFragSearchRVListAdapter
 import com.example.tangochoupdated.ui.listener.popUp.LibFragPopUpConfirmMoveToFileCL
 import com.example.tangochoupdated.ui.listener.topbar.LibFragTopBarChooseFileMoveToCL
-import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
-import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
 import com.example.tangochoupdated.ui.viewmodel.*
 
 
@@ -105,7 +99,7 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
         }
         libraryViewModel.apply {
             setLibraryFragment(LibraryFragment.ChooseFileMoveTo)
-            val flashcard = returnParentFile()?.fileStatus == FileStatus.TANGO_CHO_COVER ||
+            val flashcard = returnParentFile()?.fileStatus == FileStatus.FLASHCARD_COVER ||
                     returnModeInBox()==true
             if(args.fileId != null){
                 parentFileFromDB(args.fileId?.single()).observe(viewLifecycleOwner){
@@ -116,7 +110,7 @@ class LibraryFragChooseFileMoveTo  : Fragment(){
             childFilesFromDB(args.fileId?.single()).observe(viewLifecycleOwner) {
                 setParentRVItems(it)
                 val list = if(flashcard){
-                    it.filter { it.fileStatus == FileStatus.TANGO_CHO_COVER }
+                    it.filter { it.fileStatus == FileStatus.FLASHCARD_COVER }
                 } else it.filter { it.fileStatus == FileStatus.FOLDER && returnSelectedItems().contains(it).not()}
                 adapter.submitList(list)
                 if(list.isNullOrEmpty()){

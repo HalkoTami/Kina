@@ -7,7 +7,4 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "tbl_user")
 data class User(
  @PrimaryKey(autoGenerate = true) val uid: Long,
-
-
-
  )

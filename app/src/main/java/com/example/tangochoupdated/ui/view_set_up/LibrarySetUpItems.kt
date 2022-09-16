@@ -92,7 +92,7 @@ class LibrarySetUpItems(){
             txvFileTitle.text = file.title.toString()
             imvFileType.setImageDrawable(when(file.fileStatus){
                 FileStatus.FOLDER -> GetCustomDrawables(context).getFolderIconByCol(file.colorStatus )
-                FileStatus.TANGO_CHO_COVER -> GetCustomDrawables(context).getFlashCardIconByCol(file.colorStatus )
+                FileStatus.FLASHCARD_COVER -> GetCustomDrawables(context).getFlashCardIconByCol(file.colorStatus )
                 else -> return
             })
         }

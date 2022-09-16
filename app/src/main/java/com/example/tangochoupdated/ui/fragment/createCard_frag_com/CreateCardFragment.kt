@@ -63,11 +63,11 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             binding.apply {
                 arrayOf(
                     createCardTopBarBinding.imvSaveAndBack,
-                    createCardColPaletBinding.imvIconPalet,
-                    createCardColPaletBinding.imvColYellow,
-                    createCardColPaletBinding.imvColRed,
-                    createCardColPaletBinding.imvColGray,
-                    createCardColPaletBinding.imvColBlue,
+                    createCardColPalletBinding.imvIconPalet,
+                    createCardColPalletBinding.imvColYellow,
+                    createCardColPalletBinding.imvColRed,
+                    createCardColPalletBinding.imvColGray,
+                    createCardColPalletBinding.imvColBlue,
                     btnInsertPrevious,
                     btnPrevious,
                     btnNext,
@@ -123,12 +123,12 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
             }
         }
         val colorPalletVisibilityObserver = Observer<Boolean> {
-            Animation().animateColPallet(binding.createCardColPaletBinding.root,booleanToVisibility(it))
+            Animation().animateColPallet(binding.createCardColPalletBinding.root,booleanToVisibility(it))
         }
         val cardColorObserver = Observer<CreateCardViewModel.ColorPalletStatus> {
             ColorPalletViewSetUp().apply {
-                changeColPalletCol(requireActivity(),it.colNow,true,binding.createCardColPaletBinding)
-                changeColPalletCol(requireActivity(),it.before,false,binding.createCardColPaletBinding)
+                changeColPalletCol(requireActivity(),it.colNow,true,binding.createCardColPalletBinding)
+                changeColPalletCol(requireActivity(),it.before,false,binding.createCardColPalletBinding)
             }
         }
         val confirmPopUpVisibilityObserver = Observer<Boolean>{
@@ -189,11 +189,11 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 }
                 btnNext                                 -> createCardViewModel.onClickBtnNavigate(cardNavCon,CreateCardViewModel.NeighbourCardSide.NEXT)
                 btnPrevious                             -> createCardViewModel.onClickBtnNavigate(cardNavCon,CreateCardViewModel.NeighbourCardSide.PREVIOUS)
-                createCardColPaletBinding.imvIconPalet  -> createCardViewModel.changeColPalletVisibility()
-                createCardColPaletBinding.imvColBlue    ->    createCardViewModel.setCardColor(ColorStatus.BLUE)
-                createCardColPaletBinding.imvColRed     ->     createCardViewModel.setCardColor(ColorStatus.RED)
-                createCardColPaletBinding.imvColGray    ->    createCardViewModel.setCardColor(ColorStatus.GRAY)
-                createCardColPaletBinding.imvColYellow  ->createCardViewModel. setCardColor(ColorStatus.YELLOW)
+                createCardColPalletBinding.imvIconPalet  -> createCardViewModel.changeColPalletVisibility()
+                createCardColPalletBinding.imvColBlue    ->    createCardViewModel.setCardColor(ColorStatus.BLUE)
+                createCardColPalletBinding.imvColRed     ->     createCardViewModel.setCardColor(ColorStatus.RED)
+                createCardColPalletBinding.imvColGray    ->    createCardViewModel.setCardColor(ColorStatus.GRAY)
+                createCardColPalletBinding.imvColYellow  ->createCardViewModel. setCardColor(ColorStatus.YELLOW)
 
             }
         }

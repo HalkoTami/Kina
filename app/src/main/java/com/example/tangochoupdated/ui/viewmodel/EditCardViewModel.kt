@@ -78,7 +78,7 @@ class EditCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
     fun setParentFlashCardCover(file: File?){
         _parentFlashCardCover.value = file
         setParentFlashCardCoverId(file?.fileId)
-        if(file?.fileStatus == FileStatus.TANGO_CHO_COVER){
+        if(file?.fileStatus == FileStatus.FLASHCARD_COVER){
             setHasParentFlashCarCover(true)
         } else setHasParentFlashCarCover(false)
 

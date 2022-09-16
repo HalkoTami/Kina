@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:top="110dp"
+        android:bottom="90dp"
+        android:left="100dp"
+        android:right="100dp"
+
+        android:drawable="@drawable/tosaka_standin"/>
+</layer-list>
