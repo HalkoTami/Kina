@@ -11,6 +11,7 @@ import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
 import com.example.tangochoupdated.ui.fragment.createCard_frag_com.CreateCardFragmentDirections
 import com.example.tangochoupdated.ui.viewmodel.customClasses.AnkiFragments
+import com.example.tangochoupdated.ui.viewmodel.customClasses.ColorPalletStatus
 import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import kotlinx.coroutines.launch
 
@@ -97,10 +98,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
 //    card color attributes
-    class ColorPalletStatus(
-    var colNow:ColorStatus,
-    var before:ColorStatus?
-    )
+
     private val _cardColor = MutableLiveData<ColorPalletStatus>()
     val cardColor: LiveData<ColorPalletStatus> = _cardColor
     fun setCardColor(colorStatus: ColorStatus){

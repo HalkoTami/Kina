@@ -71,7 +71,6 @@ class CreateCardFragmentBase  : Fragment() {
 
 
             parentCard.observe(viewLifecycleOwner){
-                makeToast(requireActivity(),"setParent STring Card")
                 stringCardViewModel.setParentCard(it)
             }
 
@@ -105,7 +104,6 @@ class CreateCardFragmentBase  : Fragment() {
 
                 while( mainNavCon.backQueue[mainNavCon.backQueue.size-1].destination.label.toString()==getString(R.string.nav_label_main_create_card)){
                     mainNavCon.popBackStack()
-                    makeToast(requireActivity(),"called")
                 }
             }
         }

@@ -84,10 +84,9 @@
     </FrameLayout>
 
     <View
+        style="@style/BackGroundViewStyle"
         android:id="@+id/frag_con_view_cover"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/red"
-        android:alpha="0.5" />
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

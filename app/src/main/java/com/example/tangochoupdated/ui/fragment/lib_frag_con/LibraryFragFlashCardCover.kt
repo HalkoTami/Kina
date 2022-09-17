@@ -141,8 +141,6 @@ class LibraryFragFlashCardCover  : Fragment(){
                     GetCustomDrawables(requireContext()).getFlashCardIconByCol(it?.colorStatus ?:ColorStatus.GRAY,)
                 )
                 createCardViewModel.setParentFlashCardCover(it)
-                Toast.makeText(requireActivity(),"${it.childData.childCardsAmount}",Toast.LENGTH_SHORT).show()
-                Toast.makeText(requireActivity(),"${it.descendantsData.descendantsCardsAmount}",Toast.LENGTH_SHORT).show()
 
             }
             parentFileAncestorsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
@@ -150,8 +148,10 @@ class LibraryFragFlashCardCover  : Fragment(){
                 createFileViewModel.filterBottomMenuByAncestors(it,returnParentFile() ?:return@observe)
             }
             val emptyView = LibraryFragLayFlashCardCoverRvEmptyBinding.inflate(inflater,container,false).root
+            topBarBinding.txvFileTitle.text = args.flashCardCoverId.single().toString()
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
-                val sorted = it?.sortedBy { it.libOrder }
+                it?.sortedBy { it.libOrder }
+                val sorted = it
                 setParentRVItems(sorted ?: mutableListOf())
                 adapter.submitList(sorted)
                 if(it!=null){

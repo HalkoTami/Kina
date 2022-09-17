@@ -6,6 +6,7 @@ import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.ActivityData
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.ActivityStatus
+import com.example.tangochoupdated.db.enumclass.DBTable
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringCheckAnswerFragmentDirections
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringFragmentDirections
 import com.example.tangochoupdated.ui.fragment.flipFragCon.FlipStringTypeAnswerFragmentDirections
@@ -308,7 +309,7 @@ class AnkiFlipFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     fun updateLooked(card:Card){
         val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPAN)
-        val a = ActivityData(0,card.id,null,ActivityStatus.CARD_LOOKED,formatter.format(Date()).toString())
+        val a = ActivityData(0,card.id,DBTable.TABLE_CARD,ActivityStatus.CARD_LOOKED,formatter.format(Date()).toString())
         viewModelScope.launch {
             repository.insert(a)
         }

@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.tangochoupdated.application.RoomApplication
 import com.example.tangochoupdated.databinding.MainActivityBinding
 import com.example.tangochoupdated.db.dataclass.File
+import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 
@@ -24,6 +25,7 @@ import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
 import com.example.tangochoupdated.ui.observer.LibraryOb
 import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
+import com.example.tangochoupdated.ui.viewmodel.customClasses.ColorPalletStatus
 
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
@@ -142,14 +144,22 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         val popUpEditFileVisibilityObserver  = Observer<Boolean>{
             Animation().animatePopUpAddFile(binding.frameLayEditFile,it)
-            changeViewVisibility(binding.fragConViewCover,it)
+            changeViewVisibility(binding.fragConViewCover,it||createFileViewModel.returnBottomMenuVisible())
         }
         val popUpEditFileUIDataObserver        = Observer<CreateFileViewModel.PopUpUI>{
             LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,this@MainActivity)
         }
+        val editFileColPalletObserver = Observer<ColorPalletStatus> {
+            val context = this@MainActivity
+            val colBinding = binding.editFileBinding.colPaletBinding
+            ColorPalletViewSetUp().apply {
+                changeColPalletCol(context,it.colNow,true,colBinding)
+                changeColPalletCol(context,it.before,false,colBinding)
+            }
+        }
         val bottomMenuVisibilityObserver       = Observer<Boolean>{
             Animation().animateFrameBottomMenu(binding.frameBottomMenu,it)
-            changeViewVisibility(binding.fragConViewCover,it)
+            changeViewVisibility(binding.fragConViewCover,it||createFileViewModel.returnEditFilePopUpVisible())
         }
         val bottomMenuClickableStatusObserver = Observer<CreateFileViewModel.BottomMenuClickable>{
             binding.bindingAddMenu.apply {
@@ -166,7 +176,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         val libraryParentFileObserver           = Observer<File>{
             createCardViewModel.setParentFlashCardCover(it)
-            createFileViewModel.setParentFile(it)
+            createFileViewModel.setParentTokenFileParent(it)
             createFileViewModel.parentFileParent(it?.parentFileId).observe(this@MainActivity,editFileParentFileObserver)
         }
         val libraryParentRVItemsObserver        = Observer<List<Any>>{
@@ -183,6 +193,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             filePopUpUIData     .observe(this@MainActivity,popUpEditFileUIDataObserver)
             bottomMenuVisible   .observe(this@MainActivity,bottomMenuVisibilityObserver)
             bottomMenuClickable .observe(this@MainActivity,bottomMenuClickableStatusObserver)
+            colorPalletStatus   .observe(this@MainActivity,editFileColPalletObserver)
         }
 //        ー－－－LibraryViewModelの読み取りー－－－
         libraryViewModel. onCreate()
@@ -211,8 +222,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     imvnewCard                        -> {
                         createCardViewModel.onClickAddNewCardBottomBar()
                     }
-                    imvnewTangocho                    -> createFileViewModel.onCLickCreateFlashCardCover()
-                    imvnewfolder                      -> createFileViewModel.onClickCreateFolder()
+                    imvnewTangocho                    -> createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
+                    imvnewfolder                      -> createFileViewModel.onClickCreateFile(FileStatus.FOLDER)
                 }
             }
             }

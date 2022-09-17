@@ -1,7 +1,6 @@
 package com.example.tangochoupdated.ui.listener.popUp
 
 import android.view.View
-import android.widget.FrameLayout
 import com.example.tangochoupdated.databinding.MainActivityPopupEditFileBinding
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
@@ -23,16 +22,16 @@ class EditFilePopUpCL(val bindingEditFile:MainActivityPopupEditFileBinding,
                             return
                         } else {
                             createFileViewModel.setEditFilePopUpVisible(false)
-                            createFileViewModel.onClickFinish(edtCreatefile.text!!.toString())
+                            createFileViewModel.onClickFinish(edtCreatefile.text!!.toString(),)
                         }
                     }
                 }
                 colPaletBinding.apply {
                     when(v){
-                        imvColYellow -> onClickColorPalet(ColorStatus.YELLOW)
-                        imvColGray -> onClickColorPalet(ColorStatus.GRAY)
-                        imvColBlue -> onClickColorPalet(ColorStatus.BLUE)
-                        imvColRed -> onClickColorPalet(ColorStatus.RED)
+                        imvColYellow -> onClickColorPallet(ColorStatus.YELLOW)
+                        imvColGray -> onClickColorPallet(ColorStatus.GRAY)
+                        imvColBlue -> onClickColorPallet(ColorStatus.BLUE)
+                        imvColRed -> onClickColorPallet(ColorStatus.RED)
                         imvIconPalet -> arrayOf(imvColYellow,
                             imvColGray,
                             imvColBlue,

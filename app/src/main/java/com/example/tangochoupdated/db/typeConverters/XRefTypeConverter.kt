@@ -6,8 +6,8 @@ import com.example.tangochoupdated.db.enumclass.XRefType
 
 class XRefTypeConverter {
     @TypeConverter
-    fun toDBTableType(value: Int): XRefType = enumValues<XRefType>()[value]
+    fun toXRefType(value: Int): XRefType = enumValues<XRefType>()[value]
 
     @TypeConverter
-    fun fromDBTableType(value: XRefType): Int = value.ordinal
+    fun fromXRefType(value: XRefType): Int = value.ordinal
 }

@@ -22,6 +22,7 @@ import com.example.tangochoupdated.ui.animation.makeToast
 import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
 import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
 import com.example.tangochoupdated.ui.viewmodel.*
+import com.example.tangochoupdated.ui.viewmodel.customClasses.ColorPalletStatus
 
 
 class CreateCardFragment: Fragment(),View.OnClickListener {
@@ -125,7 +126,7 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         val colorPalletVisibilityObserver = Observer<Boolean> {
             Animation().animateColPallet(binding.createCardColPalletBinding.root,booleanToVisibility(it))
         }
-        val cardColorObserver = Observer<CreateCardViewModel.ColorPalletStatus> {
+        val cardColorObserver = Observer<ColorPalletStatus> {
             ColorPalletViewSetUp().apply {
                 changeColPalletCol(requireActivity(),it.colNow,true,binding.createCardColPalletBinding)
                 changeColPalletCol(requireActivity(),it.before,false,binding.createCardColPalletBinding)
@@ -144,7 +145,6 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
         var lastCardOld: Card? = null
         createCardViewModel.lastInsertedCard(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner) {
             if(lastCardOld!=null&&lastCardOld!=it&&lastCardOld!!.id<it.id){
-                makeToast(requireActivity(),"navigated")
                 createCardViewModel.onClickEditCard(it,cardNavCon)
             }
             lastCardOld = it
@@ -173,7 +173,6 @@ class CreateCardFragment: Fragment(),View.OnClickListener {
                 confirmAddToFlipItemBinding.btnCloseConfirm,confirmAddToFlipItemBinding.btnNotAdd -> createCardViewModel.setConfirmFlipItemPopUpVisible(false)
                 confirmAddToFlipItemBinding.btnCommitAdd -> {
                     ankiBoxViewModel.addToAnkiBoxCardIds(listOf(args.cardId?.single() ?:return))
-                    makeToast(requireActivity(),"${createCardViewModel.returnParentCard()?.id}")
                     createCardViewModel.setConfirmFlipItemPopUpVisible(false)
                 }
                 createCardTopBarBinding.imvSaveAndBack  ->{

@@ -14,17 +14,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.ui.viewmodel.customClasses.LibraryFragment
-import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.listadapter.LibFragSearchRVListAdapter
-import com.example.tangochoupdated.ui.listener.topbar.LibFragTopBarInBoxCL
 import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
@@ -136,7 +133,7 @@ class LibraryFragFolder :  Fragment(){
             setLibraryFragment(LibraryFragment.Folder)
             parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileFromDB(it)
-                createFileViewModel.setParentFile(it)
+                createFileViewModel.setParentTokenFileParent(it)
                 topBarBinding.apply {
                     txvFileTitle.text = it?.title ?:"タイトルなし"
                     imvFileType.setImageDrawable(

@@ -6,21 +6,17 @@ import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
 import com.example.tangochoupdated.ui.viewmodel.customClasses.LibraryFragment
-import com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.listadapter.LibFragSearchRVListAdapter
-import com.example.tangochoupdated.ui.listener.recyclerview.LibraryRVTouchListener
 import com.example.tangochoupdated.ui.listener.topbar.LibFragTopBarHomeCL
 import com.example.tangochoupdated.ui.view_set_up.LibraryAddListeners
 import com.example.tangochoupdated.ui.view_set_up.LibrarySetUpItems
@@ -101,7 +97,7 @@ class LibraryFragHome : Fragment(){
 
 
         createCardViewModel.setParentFlashCardCover(null)
-        createFileViewModel.setParentFile(null)
+        createFileViewModel.setParentTokenFileParent(null)
         createFileViewModel.makeAllBottomMenuClickable()
         searchViewModel.matchedItems.observe(viewLifecycleOwner){
             searchAdapter.submitList(it)

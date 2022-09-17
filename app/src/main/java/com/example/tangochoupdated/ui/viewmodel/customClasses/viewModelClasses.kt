@@ -1,13 +1,18 @@
 package com.example.tangochoupdated.ui.viewmodel.customClasses
 
 import com.example.tangochoupdated.db.dataclass.Card
+import com.example.tangochoupdated.db.enumclass.ColorStatus
 
-enum class Mode{
+enum class EditingMode{
     New, Edit
 }
 enum class AnkiOrder{
     Library, Random,MostMissed
 }
+class ColorPalletStatus(
+    var colNow: ColorStatus,
+    var before: ColorStatus?
+)
 class AnkiFilter(var correctAnswerTyped:Boolean = false,
                  var answerTypedFilterActive:Boolean = false,
                  var remembered:Boolean = false,

@@ -5,6 +5,7 @@ import com.example.tangochoupdated.db.MyRoomRepository
 import com.example.tangochoupdated.db.dataclass.ActivityData
 import com.example.tangochoupdated.db.dataclass.Card
 import com.example.tangochoupdated.db.enumclass.ActivityStatus
+import com.example.tangochoupdated.db.enumclass.DBTable
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,7 +56,11 @@ class AnkiFlipTypeAndCheckViewModel(val repository: MyRoomRepository) : ViewMode
         viewModelScope.launch {
             val a =SimpleDateFormat("dd/M/yyyy hh:mm:ss",Locale.JAPAN)
             val datetime = a.format(Date())
-            repository.insert(ActivityData(0, activityTokenId = card.id, activityStatus = activityStatus, dateTime = datetime ))
+            repository.insert(ActivityData(0,
+                activityTokenId = card.id,
+                activityStatus = activityStatus,
+                dateTime = datetime,
+                idTokenTable = DBTable.TABLE_CARD))
         }
     }
 

@@ -6,6 +6,5 @@ enum class XRefType {
     TAG,
     ANKI_BOX_FAVOURITE,
     CHOICE
-
 }
 

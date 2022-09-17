@@ -11,7 +11,7 @@ import com.example.tangochoupdated.db.enumclass.CardStatus
 import com.example.tangochoupdated.db.enumclass.ColorStatus
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.rvclasses.LibraryRV
-import com.example.tangochoupdated.ui.viewmodel.customClasses.Mode
+import com.example.tangochoupdated.ui.viewmodel.customClasses.EditingMode
 import com.example.tangochoupdated.ui.fragment.createCard_frag_com.CreateCardFragmentDirections
 import kotlinx.coroutines.launch
 
@@ -185,20 +185,20 @@ class EditCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
         _hasParentFlashCardCover.value = boolean
     }
 
-    private val _mode = MutableLiveData<Mode>()
-    private fun setMode(mode: Mode){
+    private val _mode = MutableLiveData<EditingMode>()
+    private fun setMode(mode: EditingMode){
         val before = _mode.value
         if(before == mode) return else{
             _mode.value = mode
             when (mode){
-                Mode.New -> setCardColor(ColorStatus.GRAY)
+                EditingMode.New -> setCardColor(ColorStatus.GRAY)
 
                 else -> return
             }
         }
 
     }
-    val mode:LiveData<Mode> = _mode
+    val mode:LiveData<EditingMode> = _mode
 
 //    position
     private val _position = MutableLiveData<Int>()
@@ -465,7 +465,7 @@ class EditCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
 
     private fun createNewCardNextToPosition(position: Int,previous:Boolean,parentFlashCardCoverId:Int?,fromSameFrag: Boolean){
         setFromSameFrag(fromSameFrag)
-        setMode(Mode.New)
+        setMode(EditingMode.New)
         val myPosition:Int = if(previous) position  else position
         setPosition(myPosition)
         setParentFlashCardCoverId(parentFlashCardCoverId)
@@ -517,7 +517,7 @@ class EditCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
         action.parentFlashCardCoverId = a
         navController.navigate(action)
 //        setAction(CreateCardNav( )
-        setMode(Mode.Edit)
+        setMode(EditingMode.Edit)
 
 
 

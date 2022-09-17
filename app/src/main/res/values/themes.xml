@@ -222,10 +222,29 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="autoSizeTextType">uniform</item>
-        <item name="autoSizeMinTextSize">18sp</item>
-        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeMinTextSize">14sp</item>
+        <item name="autoSizeMaxTextSize">15sp</item>
         <item name="android:padding">3dp</item>
         <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="topBarAncestorsIconIMVStyle">
+        <item name="android:minWidth">20dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+    <style name="topBarAncestorsTxvStyle" >
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:text">sample</item>
+    </style>
+    <style name="BackGroundViewStyle">
+        <item name="android:background">@color/darkRed</item>
+        <item name="android:alpha">0.3</item>
     </style>
 
     <string name="tag_color_pallet_circle">colorPalletCircle</string>

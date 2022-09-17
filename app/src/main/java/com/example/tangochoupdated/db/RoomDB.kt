@@ -24,7 +24,8 @@ import kotlinx.coroutines.launch
     CardStatusConverter::class,
     ColorStatusConverter::class,
     FileStatusConverter::class,
-    XRefTypeConverter::class
+    XRefTypeConverter::class,
+    DBTableConverter::class
 )
  abstract class MyRoomDatabase : RoomDatabase() {
 
@@ -65,6 +66,11 @@ import kotlinx.coroutines.launch
                         libOrder = 0,
                         parentFileId = 1
                     )
+                    val firstFlashCardWithoutParent = File(
+                    fileId = 0,
+                    fileStatus = FileStatus.FLASHCARD_COVER,
+                    title = "単語帳1",
+                    )
                     val firstChildFlashCard = File(
                         fileId = 0,
                         title = "単語帳2",
@@ -76,16 +82,12 @@ import kotlinx.coroutines.launch
                     )
                     val firstCard = Card(
                         id = 0,
-                        belongingFlashCardCoverId = 1,
+                        belongingFlashCardCoverId = 4,
                         stringData = StringData(null,null,"こんにちは","hello!"),
                         markerData = null,
                         cardStatus = CardStatus.STRING,
                     )
-                    val firstFlashCardWithoutParent = File(
-                        fileId = 0,
-                        fileStatus = FileStatus.FLASHCARD_COVER,
-                        title = "単語帳1",
-                    )
+
                     fileDao.apply {
                         insert(firstFile)
                         insert(firstChildFile)

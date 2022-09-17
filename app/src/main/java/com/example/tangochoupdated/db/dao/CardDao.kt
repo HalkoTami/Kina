@@ -56,6 +56,7 @@ abstract class CardDao: BaseDao<Card> {
     )
     abstract fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
 
+
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("Select distinct a.* from tbl_card a " +
             "left outer join tbl_x_ref b on " +
@@ -66,10 +67,9 @@ abstract class CardDao: BaseDao<Card> {
             " SELECT d.* from tbl_file d " +
             "Inner JOIN generation g ON g.fileId = d.parentFileId ) " +
             "SELECT fileId FROM generation b  ) " +
-            "or (b.id1TokenTable = :cardTableInt and b.id2 = :fileId and b.id1TokenTable = :fileTableInt )"
-
+            "or ( b.id2 = :fileId and b.id1TokenTable = :xRefTypeCardAsInt and b.id2TokenTable = :xRefTypeAnkiBoxFavouriteAsInt )"
     )
-    abstract fun getAnkiBoxRVCards(fileId:Int,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
+    abstract fun getAnkiBoxRVCards(fileId:Int,xRefTypeCardAsInt:Int,xRefTypeAnkiBoxFavouriteAsInt:Int):Flow<List<Card>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("select * from tbl_card a " +

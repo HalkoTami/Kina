@@ -1,12 +1,17 @@
 package com.example.tangochoupdated.db
 
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.viewModelScope
 import com.example.tangochoupdated.db.dao.*
 import com.example.tangochoupdated.db.dataclass.*
+import com.example.tangochoupdated.db.enumclass.ActivityStatus
 import com.example.tangochoupdated.db.enumclass.XRefType
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.typeConverters.XRefTypeConverter
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
@@ -20,8 +25,8 @@ class MyRoomRepository(
     private val xRefDao            : XRefDao, ) {
 
     private val XRefTypeConverter = XRefTypeConverter()
-    private val XRefTypeCardAsInt = XRefTypeConverter.fromDBTableType(XRefType.CARD)
-    private val XRefTypeFileAsInt = XRefTypeConverter.fromDBTableType(XRefType.ANKI_BOX_FAVOURITE)
+    private val XRefTypeCardAsInt = XRefTypeConverter.fromXRefType(XRefType.CARD)
+    private val XRefTypeFileAsInt = XRefTypeConverter.fromXRefType(XRefType.ANKI_BOX_FAVOURITE)
 //cards
 
     fun getCardDataByFileId(parentFileId: Int?):Flow<List<Card>>  = cardDao.getCardsDataByFileId(parentFileId)
@@ -104,14 +109,13 @@ class MyRoomRepository(
         }
 
     }
-    fun createCardAndAnkiBoxFavouriteXRef(cardId: Int,favouriteFileId:Int):XRef{
+    private fun createCardAndAnkiBoxFavouriteXRef(cardId: Int,favouriteFileId:Int):XRef{
         return XRef(xRefId = 0,
             id1 = cardId,
             id1TokenTable = XRefType.CARD,
             id2 = favouriteFileId,
             id2TokenTable = XRefType.ANKI_BOX_FAVOURITE)
     }
-
 
     suspend fun saveCardsToFavouriteAnkiBox(list: List<Card>,lastInsertedFileId:Int,newFile:File){
         insert(newFile)

@@ -98,7 +98,6 @@ class AnkiFragFlipBaseFragment  : Fragment() {
             makeToast(requireActivity(),cardIds.size.toString())
             getAllCardsFromDB.observe(viewLifecycleOwner){
                 if(cardIds.isEmpty())
-                    makeToast(requireActivity(),"called")
                 setAnkiFlipItems(it,settingVM.returnAnkiFilter())
             }
             boxViewModel.getCardsFromDBByMultipleCardIds(cardIds) .observe(viewLifecycleOwner){

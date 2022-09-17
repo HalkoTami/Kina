@@ -45,10 +45,9 @@
         android:visibility="gone"
         android:id="@+id/frameLay_ancestors"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_ancestors_height"
         app:layout_constraintTop_toBottomOf="@id/frameLay_top_bar"
-        app:layout_constraintHeight_percent="0.025"
         app:layout_constraintWidth_percent="0.6">
         <include android:id="@+id/ancestors_binding"
             layout="@layout/library_frag_top_bar_ancestors"/>
@@ -167,7 +166,7 @@
         android:layout_margin="5dp"
         android:src="@drawable/icon_loupe"
         app:layout_constraintStart_toStartOf="@id/main_frameLayout"
-        app:layout_constraintTop_toBottomOf="@id/frameLay_top_bar"
+        app:layout_constraintTop_toBottomOf="@id/frameLay_ancestors"
         />
 
 

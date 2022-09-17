@@ -106,7 +106,9 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun getCardActivityFromDB(cardId: Int) :LiveData<List<ActivityData>> = repository.getCardActivity(cardId).asLiveData()
     fun getDescendantsCardIds(fileIdList:List<Int>) :LiveData<List<Int>> = repository.getDescendantsCardsIsByMultipleFileId(fileIdList).asLiveData()
-    private val _ankiBoxItems = MutableLiveData<MutableList<Card>>()
+    private val _ankiBoxItems = MutableLiveData<MutableList<Card>>().apply {
+        this.value = mutableListOf()
+    }
     fun setAnkiBoxItems(list: List<Card>){
         val a = mutableListOf<Card>()
         a.addAll(list)

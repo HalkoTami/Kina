@@ -3,72 +3,58 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_part"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/top_bar_ancestors_height"
     android:gravity="center_vertical">
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
-        android:layout_marginEnd="10dp"
         android:layout_weight="1"
+        android:layout_marginEnd="10dp"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
+        android:gravity="start|center_vertical"
         android:id="@+id/lineLay_g_g_file"
         >
 
         <ImageView
             android:id="@+id/imv_g_grand_parent_file"
-            android:layout_width="wrap_content"
-            android:minHeight="10dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:layout_height="wrap_content"
+            style="@style/topBarAncestorsIconIMVStyle"
             android:src="@drawable/icon_file" />
         <TextView
             android:id="@+id/txv_g_grand_parent_file_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="11sp"
-
-            android:text="ファイル名"/>
+            style="@style/topBarAncestorsTxvStyle"
+            android:maxWidth="70dp"
+            />
 
         <ImageView
             android:id="@+id/imv_gg_to_gp"
-            android:layout_width="wrap_content"
-            android:layout_margin="2dp"
-            android:layout_height="wrap_content"
+            style="@style/topBarAncestorsIconIMVStyle"
+            android:layout_width="15dp"
             android:src="@drawable/icon_polygon" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/lineLay_g_p_file"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
         android:layout_weight="1"
+        android:layout_height="match_parent"
         android:layout_marginEnd="10dp"
         android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/imv_grand_parent_file"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:layout_weight="1"
+            style="@style/topBarAncestorsIconIMVStyle"
             android:src="@drawable/icon_file" />
 
         <TextView
+            android:maxWidth="70dp"
             android:id="@+id/txv_grand_parent_file_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:text="ファイル名"
-            android:textSize="11sp" />
+            style="@style/topBarAncestorsTxvStyle"
+            />
 
         <ImageView
             android:id="@+id/imv_gp_to_p"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-
+            style="@style/topBarAncestorsIconIMVStyle"
+            android:layout_width="15dp"
             android:src="@drawable/icon_polygon" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -76,29 +62,23 @@
         android:id="@+id/lineLay_parent_file"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/imv_parent_file"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/topBarAncestorsIconIMVStyle"
             android:src="@drawable/icon_flashcard_flat" />
 
         <TextView
+            android:maxWidth="200dp"
             android:id="@+id/txv_parent_file_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:text="ファイル名"
-            android:textSize="11sp" />
+            style="@style/topBarAncestorsTxvStyle"
+            />
 
         <ImageView
             android:id="@+id/imv_p_to_none"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
+            android:layout_width="15dp"
+            style="@style/topBarAncestorsIconIMVStyle"
             android:src="@drawable/icon_polygon" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

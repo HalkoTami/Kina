@@ -206,6 +206,7 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         val newProgress = rememberedPercentage.times(100).toInt()
         if(progressBefore==newProgress) {
             binding.ringProgressBar.progress = newProgress
+            binding.imvRememberedEndIcon.visibility = if(newProgress!=0)  View.VISIBLE else View.INVISIBLE
             moveViewInCircle(rememberedPercentage,binding.imvRememberedEndIcon,progressRingWidth)
             return
         }

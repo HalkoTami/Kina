@@ -73,9 +73,9 @@ class AnkiFragmentAnkiBox  : Fragment() {
 
         }
         createFileViewModel.apply {
-            lastInseterdFileId.observe(viewLifecycleOwner){
-                if(returnAddCardsToFavourite())
-                    addCardsToFavourite(it,ankiBoxViewModel.returnAnkiBoxItems()?.toList() ?:return@observe)
+            lastInsertedFileId.observe(viewLifecycleOwner){
+                setLastInsertedFileId(it)
+                makeToast(requireActivity(),it.toString())
             }
         }
 
@@ -123,6 +123,7 @@ class AnkiFragmentAnkiBox  : Fragment() {
             viewSetUp.apply {
                 ankiBoxItems.observe(viewLifecycleOwner) { it ->
                     binding.btnAddToFavouriteAnkiBox.isSelected = a.contains(it)
+                    createFileViewModel.setAnkiBoxCards(it)
                     setUpAnkiBoxRing(it,binding.ringBinding)
                     setUpFlipProgressBar(it,binding.flipGraphBinding)
                     setUpPercentageIcons(binding.flipGraphBinding,binding.percentageIconBinding)
