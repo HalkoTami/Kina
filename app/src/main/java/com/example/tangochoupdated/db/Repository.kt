@@ -1,17 +1,12 @@
 package com.example.tangochoupdated.db
 
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.viewModelScope
 import com.example.tangochoupdated.db.dao.*
 import com.example.tangochoupdated.db.dataclass.*
-import com.example.tangochoupdated.db.enumclass.ActivityStatus
 import com.example.tangochoupdated.db.enumclass.XRefType
 import com.example.tangochoupdated.db.enumclass.FileStatus
 import com.example.tangochoupdated.db.typeConverters.XRefTypeConverter
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
@@ -24,26 +19,26 @@ class MyRoomRepository(
     private val userDao            : UserDao,
     private val xRefDao            : XRefDao, ) {
 
-    private val XRefTypeConverter = XRefTypeConverter()
-    private val XRefTypeCardAsInt = XRefTypeConverter.fromXRefType(XRefType.CARD)
-    private val XRefTypeFileAsInt = XRefTypeConverter.fromXRefType(XRefType.ANKI_BOX_FAVOURITE)
+    private val xRefTypeConverter = XRefTypeConverter()
+    private val xRefTypeCardAsInt = xRefTypeConverter.fromXRefType(XRefType.CARD)
+    private val xRefTypeFileAsInt = xRefTypeConverter.fromXRefType(XRefType.ANKI_BOX_FAVOURITE)
 //cards
 
     fun getCardDataByFileId(parentFileId: Int?):Flow<List<Card>>  = cardDao.getCardsDataByFileId(parentFileId)
     fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>> =
-        cardDao.getAllDescendantsCardsByMultipleFileId(fileIdList,XRefTypeCardAsInt,XRefTypeFileAsInt)
+        cardDao.getAllDescendantsCardsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
     fun getDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>> =
-        cardDao.getDescendantsCardsByMultipleFileId(fileIdList,XRefTypeCardAsInt,XRefTypeFileAsInt)
+        cardDao.getDescendantsCardsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
     fun getCardsByMultipleCardId(cardIds:List<Int>):Flow<List<Card>> = cardDao.getCardByMultipleCardIds(cardIds)
     fun getCardByCardId(cardId:Int?):Flow<Card> = cardDao.getCardByCardId(cardId)
     fun lastInsertedCard(flashCardId: Int?):Flow<Card> = cardDao.getLastInsertedCard(flashCardId)
     fun searchCardsByWords(search:String):Flow<List<Card>> = cardDao.searchCardsByWords(search)
     fun getAnkiBoxRVCards(fileId:Int):Flow<List<Card>> =
-        cardDao.getAnkiBoxRVCards(fileId,XRefTypeCardAsInt,XRefTypeFileAsInt)
+        cardDao.getAnkiBoxRVCards(fileId,xRefTypeCardAsInt,xRefTypeFileAsInt)
     fun getDescendantsCardsIsByMultipleFileId(fileIdList: List<Int>):Flow<List<Int>> =
-        cardDao.getDescendantsCardsIdsByMultipleFileId(fileIdList,XRefTypeCardAsInt,XRefTypeFileAsInt)
+        cardDao.getDescendantsCardsIdsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
     fun getAnkiBoxFavouriteRVCards(fileId:Int):Flow<List<Card>> =
-        cardDao.getAnkiBoxFavouriteRVCards(fileId,XRefTypeCardAsInt,XRefTypeFileAsInt)
+        cardDao.getAnkiBoxFavouriteRVCards(fileId,xRefTypeCardAsInt,xRefTypeFileAsInt)
     val allCards:Flow<List<Card>> = cardDao.getAllCards()
 //    files
     fun getFileByFileId(fileId:Int?):Flow<File> = fileDao.getFileByFileId(fileId)
@@ -152,7 +147,7 @@ class MyRoomRepository(
     }
     suspend fun updateCardFlippedTime(card:Card){
         cardDao.upDateCardFlippedTimes(card.id)
-        fileDao.upDateAncestorsFlipCount(card.id,card.belongingFlashCardCoverId,XRefTypeCardAsInt,XRefTypeFileAsInt)
+        fileDao.upDateAncestorsFlipCount(card.id,card.belongingFlashCardCoverId,xRefTypeCardAsInt,xRefTypeFileAsInt)
     }
 
     suspend fun update(item: Any) {

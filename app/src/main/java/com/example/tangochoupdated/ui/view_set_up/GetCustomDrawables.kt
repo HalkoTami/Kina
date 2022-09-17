@@ -2,8 +2,11 @@ package com.example.tangochoupdated.ui.view_set_up
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.VectorDrawable
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.db.dataclass.File
@@ -19,37 +22,35 @@ GetCustomDrawables(val context: Context){
         return when(file.fileStatus){
             FileStatus.FOLDER -> getFolderIconByCol(file.colorStatus)
             FileStatus.FLASHCARD_COVER -> getFlashCardIconByCol(file.colorStatus)
+            FileStatus.ANKI_BOX_FAVOURITE -> getAnkiBoxFavouriteIconByCol(file.colorStatus)
             else -> getDrawable(R.drawable.icon_eye_opened)
         }
+    }
+    private fun getColorFromColStatus(colorStatus: ColorStatus): Int {
+        val colResId = when(colorStatus) {
+            ColorStatus.GRAY -> R.color.gray
+            ColorStatus.BLUE -> R.color.blue
+            ColorStatus.YELLOW -> R.color.yellow
+            ColorStatus.RED -> R.color.red
+        }
+        return ContextCompat.getColor(context,colResId)
     }
 
     fun getFolderIconByCol(colorStatus: ColorStatus,): Drawable {
         val drawable = getDrawable(R.drawable.icon_file_with_color) as LayerDrawable
-        val col = ContextCompat.getColor(context,
-            when(colorStatus) {
-                ColorStatus.GRAY -> R.color.gray
-                ColorStatus.BLUE -> R.color.blue
-                ColorStatus.YELLOW -> R.color.yellow
-                ColorStatus.RED -> R.color.red
-                else -> R.color.gray
-            }
-        )
-        drawable.findDrawableByLayerId(R.id.file_paint).setTint(col)
+        drawable.findDrawableByLayerId(R.id.file_paint).setTint(getColorFromColStatus(colorStatus))
         return  drawable
 
     }
     fun getFlashCardIconByCol(colorStatus: ColorStatus, ): Drawable {
         val drawable = getDrawable(R.drawable.icon_flashcard_with_col) as LayerDrawable
-        val col = ContextCompat.getColor(context,
-            when(colorStatus) {
-                ColorStatus.GRAY -> R.color.gray
-                ColorStatus.BLUE -> R.color.blue
-                ColorStatus.YELLOW -> R.color.yellow
-                ColorStatus.RED -> R.color.red
-                else -> R.color.gray
-            }
-        )
-        drawable.findDrawableByLayerId(R.id.icon_flashcard_paint).setTint(col)
+        drawable.findDrawableByLayerId(R.id.icon_flashcard_paint).setTint(getColorFromColStatus(colorStatus))
+        return  drawable
+
+    }
+    fun getAnkiBoxFavouriteIconByCol(colorStatus: ColorStatus,): Drawable {
+        val drawable = getDrawable(R.drawable.icon_heart) as VectorDrawable
+        drawable.setTint(getColorFromColStatus(colorStatus))
         return  drawable
 
     }
