@@ -1,9 +1,37 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="94dp"
-    android:height="42dp"
-    android:viewportWidth="94"
-    android:viewportHeight="42">
-  <path
-      android:pathData="M12.08,2.163L13,2.555L13,2.555L12.08,2.163ZM13.92,2.163L13,2.555L13,2.555L13.92,2.163ZM8.741,10.01V11.01H9.403L9.662,10.402L8.741,10.01ZM17.258,10.01L16.338,10.402L16.597,11.01H17.258V10.01ZM13,2.555L13,2.555L14.84,1.772C14.15,0.149 11.85,0.149 11.16,1.772L13,2.555ZM9.662,10.402L13,2.555L11.16,1.772L7.821,9.619L9.662,10.402ZM3,11.01H8.741V9.01H3V11.01ZM2,12.01C2,11.458 2.448,11.01 3,11.01V9.01C1.343,9.01 0,10.353 0,12.01H2ZM2,38.141V12.01H0V38.141H2ZM3,39.141C2.448,39.141 2,38.693 2,38.141H0C0,39.798 1.343,41.141 3,41.141V39.141ZM91,39.141H3V41.141H91V39.141ZM92,38.141C92,38.693 91.552,39.141 91,39.141V41.141C92.657,41.141 94,39.798 94,38.141H92ZM92,12.01V38.141H94V12.01H92ZM91,11.01C91.552,11.01 92,11.458 92,12.01H94C94,10.353 92.657,9.01 91,9.01V11.01ZM17.258,11.01H91V9.01H17.258V11.01ZM13,2.555L16.338,10.402L18.179,9.619L14.84,1.772L13,2.555Z"
-      android:fillColor="#959595"/>
-</vector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/layer_speak_bubble_content_rec">
+    <shape android:shape="rectangle">
+      <corners android:radius="10dp"/>
+      <solid android:color="@color/black"/>
+      <stroke android:width="5dp"
+          android:color="@color/white"/>
+      <size android:height="100dp"
+        android:width="100dp"/>
+    </shape>
+  </item>
+  <item android:top="94dp" android:id="@+id/layer_speak_bubble_polygon_floor">
+    <shape android:shape="line">
+      <stroke android:color="@color/black"
+          android:width="5dp"/>
+    </shape>
+  </item>
+  <item android:id="@+id/layer_speak_bubble_polygon_line_1">
+    <rotate android:fromDegrees="45">
+      <shape android:shape="line">
+        <stroke android:width="5dp"
+            android:color="@color/white"/>
+      </shape>
+    </rotate>
+
+  </item>
+  <item android:id="@+id/layer_speak_bubble_polygon_line_2">
+    <rotate android:fromDegrees="-45">
+      <shape android:shape="line">
+        <stroke android:width="5dp"
+            android:color="@color/white"/>
+      </shape>
+    </rotate>
+
+  </item>
+
+</layer-list>

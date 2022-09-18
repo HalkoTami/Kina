@@ -46,6 +46,7 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
         private val swipeVelocityThreshold = 100
 
         override fun onDown(e: MotionEvent): Boolean {
+            onDown()
             return true
         }
 
@@ -78,15 +79,6 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
 
     var down:Boolean = false
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        v!!.performClick()
-        when(event?.action){
-            MotionEvent.ACTION_DOWN -> down = true
-            MotionEvent.ACTION_UP -> down = false
-        }
-        if(down){
-            onMove(event)
-        }
-
         gestureDetector.onTouchEvent(event!!)
         return true
     }

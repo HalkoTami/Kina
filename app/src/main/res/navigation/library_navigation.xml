@@ -9,7 +9,7 @@
         android:id="@+id/fragLibraryHome"
         android:name="com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragHome"
         android:label="library"
-        tools:layout="@layout/library_frag_home_base" >
+        tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
 
     </fragment>
@@ -17,7 +17,7 @@
         android:id="@+id/fragLibraryFolder"
         android:name="com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragFolder"
         android:label="library"
-        tools:layout="@layout/library_frag_open_folder_base" >
+        tools:layout="@layout/library_child_frag_with_mul_mode_base" >
         <argument
             android:name="folderId"
             app:argType="integer[]"
@@ -28,7 +28,7 @@
         android:id="@+id/fragLibraryFlashCardCover"
         android:name="com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragFlashCardCover"
         android:label="library"
-        tools:layout="@layout/library_frag_open_flash_card_cover_base" >
+        tools:layout="@layout/library_child_frag_with_mul_mode_base" >
         <argument
             android:name="flashCardCoverId"
             app:argType="integer[]"
@@ -40,7 +40,7 @@
         android:id="@+id/fragLibraryInBox"
         android:name="com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragInBox"
         android:label="library"
-        tools:layout="@layout/library_frag_inbox_base" >
+        tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
 
     </fragment>
@@ -49,7 +49,7 @@
         android:id="@+id/fragLibrarySelectFileMoveTo"
         android:name="com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragChooseFileMoveTo"
         android:label="library"
-        tools:layout="@layout/library_frag_select_file_move_to_base" >
+        tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
 
         <argument

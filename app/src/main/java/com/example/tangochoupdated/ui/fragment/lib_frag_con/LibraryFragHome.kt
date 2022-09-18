@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.*
 import com.example.tangochoupdated.databinding.*
+import com.example.tangochoupdated.ui.animation.makeToast
 import com.example.tangochoupdated.ui.viewmodel.customClasses.LibraryFragment
 import com.example.tangochoupdated.ui.listadapter.LibFragPlaneRVListAdapter
 import com.example.tangochoupdated.ui.listadapter.LibFragSearchRVListAdapter
@@ -47,6 +48,7 @@ class LibraryFragHome : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         fun setUpLateInitVars(){
             topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
@@ -92,7 +94,6 @@ class LibraryFragHome : Fragment(){
         setUpLateInitVars()
         setUpView()
         addCL()
-
 
 
 

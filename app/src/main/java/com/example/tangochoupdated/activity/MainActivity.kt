@@ -1,19 +1,30 @@
 package com.example.tangochoupdated.activity
 
+import android.app.ActionBar
+import android.content.Context
+import android.graphics.Color
+import android.graphics.Point
+import android.graphics.Rect
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.tangochoupdated.R
 import com.example.tangochoupdated.application.RoomApplication
+import com.example.tangochoupdated.databinding.CallOnInstallBinding
 import com.example.tangochoupdated.databinding.MainActivityBinding
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.FileStatus
@@ -21,11 +32,15 @@ import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 
 import com.example.tangochoupdated.ui.animation.Animation
+import com.example.tangochoupdated.ui.animation.makeToast
+import com.example.tangochoupdated.ui.customViews.HolePosition
 import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
 import com.example.tangochoupdated.ui.observer.LibraryOb
 import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
+import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
 import com.example.tangochoupdated.ui.viewmodel.*
 import com.example.tangochoupdated.ui.viewmodel.customClasses.ColorPalletStatus
+import java.lang.reflect.Array
 
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
@@ -44,6 +59,81 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //        applicationContext.deleteDatabase("my_database")
 //        ー－－－mainActivityのviewー－－－
 
+        fun doOnInstall(){
+            val sharedPref = this.getSharedPreferences(
+                "firstTimeGuide", Context.MODE_PRIVATE) ?: return
+            val editor = sharedPref.edit()
+            if (!sharedPref.getBoolean("firstTimeGuide", false)) {
+                val onCallBinding = CallOnInstallBinding.inflate(layoutInflater)
+
+
+                fun doSome(order:Int){
+                    fun setText(string: String){
+                        onCallBinding.txvExplain.text = string
+                    }
+                    fun goNextOnClickAnyWhere(){
+                        onCallBinding.root.setOnClickListener {
+                            doSome(order+1)
+                        }
+                    }
+                    fun setFocusOn(view: View){
+                        fun getWindowHeight(): Int {
+                            val a = Rect()
+                            binding.root.getWindowVisibleDisplayFrame(a)
+                            val windowTop =  binding.root.top
+                            val displayTop = a.top
+                            return displayTop - windowTop
+                        }
+                        view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
+                            override fun onGlobalLayout() {
+                                onCallBinding.apply {
+
+//                                    imvFocusRectangle.layoutParams.width = view.width
+//                                    imvFocusRectangle.layoutParams.height = view.height
+                                    val a = IntArray(2)
+                                    view.getLocationInWindow(a)
+
+                                    imvFocusRectangle.holePosition =HolePosition(a[0].toFloat()+view.width/2,a[1].toFloat() +view.height/2 -getWindowHeight() ,100f)
+//                                    imvFocusRectangle.y = a[1].toFloat() - getWindowHeight()
+//                                    imvFocusRectangle.scaleX = 1.3f
+//                                    imvFocusRectangle.scaleY = 1.3f
+//                                    imvFocusRectangle.requestLayout()
+                                }
+                                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                            }
+                        })
+
+                    }
+                    when(order){
+                        1 -> {
+                            setText("やあ、僕はとさかくん")
+                            binding.frameLayCallOnInstall.addView(onCallBinding.root)
+                            goNextOnClickAnyWhere()
+                        }
+                        2 -> {
+                            setText("これから、KiNaの使い方を説明するね")
+                            goNextOnClickAnyWhere()
+                        }
+                        3 -> {
+                            setText("KiNaでは、フォルダと単語帳が作れるよ\n" +
+                                    "ボタンをタッチして、単語帳を作ってみよう")
+                            setFocusOn(binding.bnvBinding.bnvImvAdd)
+                            onCallBinding.imvFocusRectangle.setOnClickListener {
+                                createFileViewModel.setBottomMenuVisible(true)
+                            }
+                        }
+                        else -> {
+                            editor.putBoolean("firstTimeGuide", true)
+                            editor.apply()
+                        }
+
+                    }
+
+                }
+                doSome(1)
+
+            }
+        }
         fun setMainActivityLateInitVars(){
 
             binding = MainActivityBinding.inflate(layoutInflater)
@@ -122,19 +212,23 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         fun changeViewVisibility(view:View,visibility: Boolean){
             view.visibility = if(visibility) VISIBLE else GONE
         }
+        fun createAllViewModels(){
+            ViewModelProvider(this,factory)[SearchViewModel::class.java]
+            ViewModelProvider(this,factory)[StringCardViewModel::class.java]
+            ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
+            ViewModelProvider(this,factory)[AnkiFragBaseViewModel::class.java]
+            ViewModelProvider(this,factory)[AnkiBoxFragViewModel::class.java]
+            ViewModelProvider(this,factory)[AnkiFlipFragViewModel::class.java]
+            ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
+            ViewModelProvider(this,factory)[AnkiFlipTypeAndCheckViewModel::class.java]
+            ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
+        }
         setMainActivityLateInitVars()
-        ViewModelProvider(this,factory)[SearchViewModel::class.java]
-        ViewModelProvider(this,factory)[StringCardViewModel::class.java]
-        ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
-        ViewModelProvider(this,factory)[AnkiFragBaseViewModel::class.java]
-        ViewModelProvider(this,factory)[AnkiBoxFragViewModel::class.java]
-        ViewModelProvider(this,factory)[AnkiFlipFragViewModel::class.java]
-        ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
-        ViewModelProvider(this,factory)[AnkiFlipTypeAndCheckViewModel::class.java]
-        ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
+        createAllViewModels()
         setUpMainActivityLayout()
         addMainActivityClickListeners()
         setContentView(binding.root)
+        doOnInstall()
 
         val childFragmentStatusObserver      = Observer<BaseViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
@@ -201,6 +295,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         libraryViewModel.parentRVItems.observe(this@MainActivity,libraryParentRVItemsObserver)
         createCardViewModel.setMainActivityNavCon(mainNavCon)
  }
+
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         return super.onTouchEvent(event)

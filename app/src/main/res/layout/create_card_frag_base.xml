@@ -4,22 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
-        android:id="@+id/lay_create_card_top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal"
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <include
-            android:id="@+id/create_card_top_bar_binding"
-            layout="@layout/create_card_frag_top_bar"/>
-
-
-
-    </FrameLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="10dp"
-        app:layout_constraintTop_toBottomOf="@id/lay_create_card_top_bar"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <FrameLayout
@@ -63,79 +48,6 @@
 
 
         </ScrollView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/lay_navigate_buttons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        >
-
-        <ImageView
-            android:contentDescription="@string/cd_create_card_move_next"
-            android:id="@+id/btn_next"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:alpha="0.5"
-            android:backgroundTint="@color/light_green"
-            android:src="@drawable/nav_btn"
-            android:rotationY="180"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_insert_next"
-            app:layout_constraintStart_toEndOf="@id/btn_previous">
-
-        </ImageView>
-
-
-
-        <ImageView
-            android:contentDescription="@string/cd_create_card_insert_next"
-            android:id="@+id/btn_insert_next"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/icon_add"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btn_next"
-            android:layout_marginStart="10dp"
-            />
-
-
-        <ImageView
-            android:contentDescription="@string/cd_create_card_move_previous"
-            android:id="@+id/btn_previous"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btn_insert_previous"
-            app:layout_constraintEnd_toStartOf="@id/btn_next"
-
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/light_gray"
-
-            android:src="@drawable/nav_btn"
-            >
-
-        </ImageView>
-
-
-        <ImageView
-            android:contentDescription="@string/cd_create_card_insert_previous"
-            android:id="@+id/btn_insert_previous"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/icon_add"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_previous"
-            android:layout_marginEnd="10dp"
-            />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <FrameLayout

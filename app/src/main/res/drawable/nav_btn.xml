@@ -1,25 +1,18 @@
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-
-  <item
-      android:state_selected="false">
-    <layer-list>
-      <item >
-        <shape android:shape="rectangle">
-          <corners android:radius="100dp"/>
-          <solid android:color="@color/light_green"/>
-        </shape>
-      </item>
-      <item
-          android:top="15dp"
-          android:left="10dp"
-          android:right="10dp"
-          android:bottom="15dp"
-          android:drawable="@drawable/icon_back"
-          >
-      </item>
-
-
-    </layer-list>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/layer_nav_btn_background">
+    <shape android:shape="rectangle">
+      <corners android:radius="100dp"/>
+      <solid android:color="@color/light_green"/>
+    </shape>
   </item>
-</selector>
+  <item
+      android:top="15dp"
+      android:left="10dp"
+      android:right="10dp"
+      android:bottom="15dp"
+      android:drawable="@drawable/icon_back"
+      >
+  </item>
+
+
+</layer-list>

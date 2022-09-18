@@ -11,6 +11,7 @@
 
 
     <FrameLayout
+        android:visibility="gone"
         android:background="@drawable/rectangle_green_stroke"
         android:elevation="20dp"
         android:id="@+id/frameLay_edit_file"
@@ -28,6 +29,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:visibility="gone"
         android:id="@+id/frame_bottomMenu"
         android:background="@drawable/gray_stroke_rectangle"
         android:elevation="10dp"
@@ -88,5 +90,11 @@
         android:id="@+id/frag_con_view_cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <FrameLayout
+        android:id="@+id/frameLay_call_on_install"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
