@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.Flow
 abstract class FileDao: BaseDao<File> {
     @Query("DELETE FROM tbl_file")
     abstract suspend fun clearTblFile()
-    @Query("SELECT a.fileId FROM tbl_file a " +
+    @Query("SELECT * FROM tbl_file a " +
             " INNER JOIN ( SELECT  MAX(fileId) fileId FROM tbl_file  ) b ON a.fileId = b.fileId"
     )
-    abstract fun getLastInsertedFileId():Flow<Int>
+    abstract fun getLastInsertedFileId():Flow<File>
 
     @Query("select * from tbl_file where not deleted AND parentFileId is null ")
     abstract fun getFileWithoutParent(): Flow<List<File>>

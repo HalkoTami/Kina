@@ -97,7 +97,6 @@ class FlipStringTypeAnswerFragment  : Fragment() {
         }
     }
     fun hideSoftKeyboard(activity: Activity) {
-
         val a = activity.window.currentFocus
         if (a!=null) {
             val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

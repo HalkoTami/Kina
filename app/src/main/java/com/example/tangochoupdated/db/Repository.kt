@@ -42,7 +42,7 @@ class MyRoomRepository(
     val allCards:Flow<List<Card>> = cardDao.getAllCards()
 //    files
     fun getFileByFileId(fileId:Int?):Flow<File> = fileDao.getFileByFileId(fileId)
-    val lastInsertedFile:Flow<Int> = fileDao.getLastInsertedFileId()
+    val lastInsertedFile:Flow<File> = fileDao.getLastInsertedFileId()
     fun getFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = fileDao.myGetFileByParentFileId(parentFileId)
     fun getAllAncestorsByFileId(fileId: Int?):Flow<List<File>> = fileDao.getAllAncestorsByChildFileId(fileId)
     fun getAllDescendantsFilesByMultipleFileId(fileIdList: List<Int>):Flow<List<File>> = fileDao.getAllDescendantsFilesByMultipleFileId(fileIdList)

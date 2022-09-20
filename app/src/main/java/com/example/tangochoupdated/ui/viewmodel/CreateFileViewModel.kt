@@ -249,16 +249,19 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-    val lastInsertedFileId:LiveData<Int> = repository.lastInsertedFile.asLiveData()
-    private val _lastInsertedFileId = MutableLiveData<Int>()
-    fun setLastInsertedFileId(int: Int?){
-        val before = _lastInsertedFileId.value
-        if(before == int|| int==null)
+    val lastInsertedFile:LiveData<File> = repository.lastInsertedFile.asLiveData()
+    private val _lastInsertedFile = MutableLiveData<File>()
+    fun setLastInsertedFile(file: File?){
+        val before = _lastInsertedFile.value
+        if(before == file|| file==null)
             return
-        else _lastInsertedFileId.value = int!!
+        else _lastInsertedFile.value = file!!
     }
     private fun returnLastInsertedFileId():Int?{
-       return _lastInsertedFileId.value
+       return _lastInsertedFile.value?.fileId
+    }
+     fun returnLastInsertedFile():File?{
+        return _lastInsertedFile.value
     }
 
     private val _fileToCreate = MutableLiveData<File>()

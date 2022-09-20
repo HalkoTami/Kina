@@ -17,6 +17,6 @@ class AnkiBoxTabData(
     var before: AnkiBoxFragments?
 )
 enum class MyOrientation{
-    TOP,BOTTOM,LEFT,RIGHT
+    TOP,BOTTOM,LEFT,RIGHT,MIDDLE
 }
 

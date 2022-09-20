@@ -29,7 +29,7 @@ class AnkiBoxFragViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     val allFlashCardCoverFromDB: LiveData<List<File>> = repository.allFlashCardCover.asLiveData()
     val allFavouriteAnkiBoxFromDB: LiveData<List<File>> = repository.allFavouriteAnkiBox.asLiveData()
-    val lastInsertedFileId:LiveData<Int> = repository.lastInsertedFile.asLiveData()
+
     fun getLibraryFilesFromDB(parentFileId:Int?) :LiveData<List<File>> = repository.getFileDataByParentFileId(parentFileId).asLiveData()
     private val _libraryFilesAsAnkiBox = MutableLiveData<List<File>>()
     fun setLibraryFilesAsAnkiBox(list: List<File>){

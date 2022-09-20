@@ -73,8 +73,8 @@ class AnkiFragmentAnkiBox  : Fragment() {
 
         }
         createFileViewModel.apply {
-            lastInsertedFileId.observe(viewLifecycleOwner){
-                setLastInsertedFileId(it)
+            lastInsertedFile.observe(viewLifecycleOwner){
+                setLastInsertedFile(it)
                 makeToast(requireActivity(),it.toString())
             }
         }
