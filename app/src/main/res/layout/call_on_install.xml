@@ -7,7 +7,7 @@
     <com.example.tangochoupdated.ui.customViews.HoleView
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/imv_focus_rectangle"
+        android:id="@+id/view_with_hole"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
@@ -33,16 +33,20 @@
         android:textColor="@color/white"
         android:textSize="15sp"
         android:padding="13dp"
+        android:maxLines="5"
         app:layout_constraintBottom_toTopOf="@id/imv_character"
         android:background="@drawable/rectangle_green_stroke"
         android:backgroundTint="#000000"/>
-    <ImageView
+
+    <View
+        android:id="@+id/view_focused_area"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/icon_back"
-        app:layout_constraintBottom_toTopOf="@id/imv_focus_rectangle"
-        app:layout_constraintStart_toStartOf="@id/imv_focus_rectangle"
-        app:layout_constraintEnd_toEndOf="@id/imv_focus_rectangle"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/orange"
+        android:alpha="0.3"
+        />
 
 
 

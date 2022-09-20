@@ -13,7 +13,7 @@
     <FrameLayout
         android:visibility="gone"
         android:background="@drawable/rectangle_green_stroke"
-        android:elevation="20dp"
+        android:elevation="21dp"
         android:id="@+id/frameLay_edit_file"
         android:layout_width="300dp"
         android:layout_height="250dp"
@@ -29,14 +29,13 @@
     </FrameLayout>
 
     <FrameLayout
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/frame_bottomMenu"
         android:background="@drawable/gray_stroke_rectangle"
         android:elevation="10dp"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginBottom="20dp"
-
         app:layout_constraintBottom_toTopOf="@id/frame_bnv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -84,13 +83,22 @@
             android:id="@+id/bnv_binding"
             layout="@layout/main_activity_bottom_navigation_bar" />
     </FrameLayout>
-
+    <ImageView
+        android:visibility="gone"
+        android:elevation="25dp"
+        android:id="@+id/imv_focus_arrow"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/icon_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
     <View
         style="@style/BackGroundViewStyle"
         android:id="@+id/frag_con_view_cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <FrameLayout
+        android:elevation="20dp"
         android:id="@+id/frameLay_call_on_install"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

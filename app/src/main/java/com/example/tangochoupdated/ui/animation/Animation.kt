@@ -29,6 +29,7 @@ class Animation {
             false ->{
                 btmMenuAnimator.doOnEnd {
                     frameBottomMenu.visibility = View.GONE
+                    frameBottomMenu.translationY = 0f
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     btmMenuAnimator.reverse()

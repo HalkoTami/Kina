@@ -1,13 +1,7 @@
 package com.example.tangochoupdated.activity
 
-import android.app.ActionBar
 import android.content.Context
-import android.graphics.Color
-import android.graphics.Point
 import android.graphics.Rect
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
 import android.view.*
 import android.view.View.GONE
@@ -16,13 +10,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.example.tangochoupdated.R
 import com.example.tangochoupdated.application.RoomApplication
 import com.example.tangochoupdated.databinding.CallOnInstallBinding
 import com.example.tangochoupdated.databinding.MainActivityBinding
@@ -32,15 +24,14 @@ import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 
 import com.example.tangochoupdated.ui.animation.Animation
-import com.example.tangochoupdated.ui.animation.makeToast
 import com.example.tangochoupdated.ui.customViews.HolePosition
 import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
 import com.example.tangochoupdated.ui.observer.LibraryOb
 import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
-import com.example.tangochoupdated.ui.view_set_up.GetCustomDrawables
 import com.example.tangochoupdated.ui.viewmodel.*
 import com.example.tangochoupdated.ui.viewmodel.customClasses.ColorPalletStatus
-import java.lang.reflect.Array
+import com.example.tangochoupdated.ui.viewmodel.customClasses.MyOrientation
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
@@ -68,6 +59,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
                 fun doSome(order:Int){
+                    var globalView :View? = null
+                    var globalListener:ViewTreeObserver.OnGlobalLayoutListener? = null
+                    fun removeGlobalListener(){
+                        globalView?.viewTreeObserver?.removeOnGlobalLayoutListener(globalListener)
+                    }
                     fun setText(string: String){
                         onCallBinding.txvExplain.text = string
                     }
@@ -76,30 +72,91 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                             doSome(order+1)
                         }
                     }
-                    fun setFocusOn(view: View){
-                        fun getWindowHeight(): Int {
+                    fun goNextOnClickOnFocus(){
+                        onCallBinding.root.setOnClickListener(null)
+                        onCallBinding.viewFocusedArea.setOnClickListener {
+                            removeGlobalListener()
+                            doSome(order+1)
+                        }
+                    }
+
+                    fun setFocusOn(view: View,arrowPosition:MyOrientation){
+                        var viewCenterPosX = 0f
+                        var viewCenterPosY = 0f
+                        var viewLeftTopPosX = 0f
+                        var viewLeftTopPosY = 0f
+                        val arrow = onCallBinding.imvFocusArrow
+                        fun getWindowDisplayDiff(): Int {
                             val a = Rect()
                             binding.root.getWindowVisibleDisplayFrame(a)
                             val windowTop =  binding.root.top
                             val displayTop = a.top
                             return displayTop - windowTop
                         }
-                        view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
-                            override fun onGlobalLayout() {
-                                onCallBinding.apply {
+                        fun setArrowDirection(direction:MyOrientation){
+                            arrow.rotation =
+                                when(direction){
+                                    MyOrientation.BOTTOM-> -450f
+                                    MyOrientation.LEFT -> 0f
+                                    MyOrientation.RIGHT -> 900f
+                                    MyOrientation.TOP -> 450f
+                                }
+                        }
+                        fun setArrow(margin:Float){
 
-//                                    imvFocusRectangle.layoutParams.width = view.width
-//                                    imvFocusRectangle.layoutParams.height = view.height
+                            fun setEachArrow(x:Float,y:Float,direction:MyOrientation){
+                                setArrowDirection(direction)
+                                arrow.x = x
+                                arrow.y = y
+                            }
+                            when(arrowPosition){
+                                MyOrientation.BOTTOM->
+                                    setEachArrow(
+                                    viewCenterPosX-arrow.width/2,
+                                    viewLeftTopPosY + view.height - getWindowDisplayDiff() +margin,
+                                    MyOrientation.TOP)
+                                MyOrientation.LEFT ->
+                                    setEachArrow(
+                                    viewLeftTopPosX-arrow.width -margin,
+                                    viewCenterPosY - arrow.height/2   ,
+                                    MyOrientation.RIGHT)
+                                MyOrientation.RIGHT ->
+                                    setEachArrow(
+                                        viewLeftTopPosX + view.width + margin,
+                                        viewCenterPosY - arrow.height/2   ,
+                                        MyOrientation.LEFT
+                                    )
+                                MyOrientation.TOP ->
+                                    setEachArrow(
+                                    viewCenterPosX-arrow.width/2,
+                                    viewLeftTopPosY - arrow.height -getWindowDisplayDiff() -margin,
+                                    MyOrientation.BOTTOM)
+                            }
+                        }
+
+                        view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
+
+                            override fun onGlobalLayout() {
+                                globalView = view
+                                globalListener = this
+                                onCallBinding.apply {
                                     val a = IntArray(2)
                                     view.getLocationInWindow(a)
-
-                                    imvFocusRectangle.holePosition =HolePosition(a[0].toFloat()+view.width/2,a[1].toFloat() +view.height/2 -getWindowHeight() ,100f)
-//                                    imvFocusRectangle.y = a[1].toFloat() - getWindowHeight()
-//                                    imvFocusRectangle.scaleX = 1.3f
-//                                    imvFocusRectangle.scaleY = 1.3f
-//                                    imvFocusRectangle.requestLayout()
+                                    viewCenterPosX = a[0].toFloat()+view.width/2
+                                    viewCenterPosY = a[1].toFloat() +view.height/2 -getWindowDisplayDiff()
+                                    viewLeftTopPosX = a[0].toFloat()
+                                    viewLeftTopPosY = a[1].toFloat()
+                                    viewWithHole.holePosition =HolePosition(viewCenterPosX,viewCenterPosY ,100f)
+                                    viewFocusedArea.apply {
+                                        layoutParams.width = view.width
+                                        layoutParams.height = view.height
+                                        x = a[0].toFloat()
+                                        y = a[1].toFloat() - getWindowDisplayDiff()
+                                        requestLayout()
+                                    }
+                                    setArrow(50f)
                                 }
-                                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
                             }
                         })
 
@@ -117,10 +174,20 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         3 -> {
                             setText("KiNaでは、フォルダと単語帳が作れるよ\n" +
                                     "ボタンをタッチして、単語帳を作ってみよう")
-                            setFocusOn(binding.bnvBinding.bnvImvAdd)
-                            onCallBinding.imvFocusRectangle.setOnClickListener {
-                                createFileViewModel.setBottomMenuVisible(true)
-                            }
+                            setFocusOn(binding.bnvBinding.bnvImvAdd,MyOrientation.TOP)
+                            goNextOnClickOnFocus()
+                        }
+                        4 -> {
+                            setFocusOn(binding.bindingAddMenu.imvnewCard,MyOrientation.RIGHT)
+                            createFileViewModel.setBottomMenuVisible(true)
+                            goNextOnClickOnFocus()
+                        }
+                        5 -> {
+                            createFileViewModel.setEditFilePopUpVisible(true)
+                            setFocusOn(binding.editFileBinding.btnFinish,MyOrientation.BOTTOM)
+
+                        }
+                        6 ->{ createFileViewModel.onClickFinish(binding.editFileBinding.edtCreatefile.text.toString())
                         }
                         else -> {
                             editor.putBoolean("firstTimeGuide", true)

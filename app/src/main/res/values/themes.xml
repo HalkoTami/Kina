@@ -243,7 +243,7 @@
         <item name="android:text">sample</item>
     </style>
     <style name="BackGroundViewStyle">
-        <item name="android:background">@color/darkRed</item>
+<!--        <item name="android:background">@color/darkRed</item>-->
         <item name="android:alpha">0.3</item>
     </style>
 
