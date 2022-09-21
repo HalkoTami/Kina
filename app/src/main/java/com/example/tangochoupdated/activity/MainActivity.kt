@@ -1,12 +1,10 @@
 package com.example.tangochoupdated.activity
 
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -15,16 +13,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
-import androidx.core.view.marginRight
-import androidx.core.view.setPadding
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.tangochoupdated.R
 import com.example.tangochoupdated.application.RoomApplication
 import com.example.tangochoupdated.databinding.CallOnInstallBinding
 import com.example.tangochoupdated.databinding.MainActivityBinding
@@ -34,7 +31,6 @@ import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 
 import com.example.tangochoupdated.ui.animation.Animation
-import com.example.tangochoupdated.ui.animation.makeToast
 import com.example.tangochoupdated.ui.customViews.HolePosition
 import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
 import com.example.tangochoupdated.ui.observer.LibraryOb
@@ -42,9 +38,6 @@ import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
 import com.example.tangochoupdated.ui.viewmodel.customClasses.ColorPalletStatus
 import com.example.tangochoupdated.ui.viewmodel.customClasses.MyOrientation
-import java.lang.Math.abs
-import kotlin.concurrent.thread
-import kotlin.math.roundToInt
 
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
@@ -72,6 +65,34 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             val editor = sharedPref.edit()
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
                 val onCallBinding = CallOnInstallBinding.inflate(layoutInflater)
+                fun getExplainTxv(orientation: MyOrientation):TextView{
+                    val textView = when(orientation){
+                        MyOrientation.BOTTOM-> onCallBinding.txvExplainBottom
+                        MyOrientation.LEFT -> onCallBinding.txvExplainLeft
+                        MyOrientation.RIGHT -> onCallBinding.txvExplainRight
+                        MyOrientation.TOP -> onCallBinding.txvExplainTop
+                        else -> onCallBinding.txvExplainTop
+                    }
+                    return textView
+                }
+                fun getCharacterImv(drawableId:Int?):ImageView{
+                    val imv = onCallBinding.imvCharacter
+                    if(drawableId!=null){
+                        val draw = ContextCompat.getDrawable(this, drawableId)
+                        imv.setImageDrawable(draw)
+                    }
+                    return imv
+                }
+                val arrow = binding.imvFocusArrow
+                val focusTouchView = onCallBinding.viewFocusedArea
+                fun setScale(v: View, x:Float,y:Float){
+                    v.scaleX = x
+                    v.scaleY = y
+                }
+                fun setAlpha(v: View,alpha:Float){
+                    v.alpha = alpha
+                }
+                val holeView = onCallBinding.viewWithHole
 
 
                 fun doSome(order:Int){
@@ -91,37 +112,55 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                             }
                         }
                     }
-                    fun setText(string: String,orientation: MyOrientation):ValueAnimator{
+                    fun appearAlphaAnimation(views :Array<View>,visible:Boolean):ValueAnimator{
+                        val appear = ValueAnimator.ofFloat(0f,1f)
+                        val disappear = ValueAnimator.ofFloat(1f,0f)
+                        arrayOf(appear,disappear).onEach {
+                            it.addUpdateListener { animator ->
+                                views.onEach { setAlpha(it, animator.animatedValue as Float) }
+                            }
+                            it.duration = 300
+                        }
+                        appear.doOnStart { views.onEach { changeViewVisibility(it,true) } }
+                        disappear.doOnEnd { views.onEach { changeViewVisibility(it,false) } }
+                        return if(visible) appear else disappear
+                    }
+                    fun explainTextAnimation(string: String, orientation: MyOrientation):AnimatorSet{
 
                         makeTxvGone()
-                        val textView = when(orientation){
-                            MyOrientation.BOTTOM-> onCallBinding.txvExplainBottom
-                            MyOrientation.LEFT -> onCallBinding.txvExplainLeft
-                            MyOrientation.RIGHT -> onCallBinding.txvExplainRight
-                            MyOrientation.TOP -> onCallBinding.txvExplainTop
-                            else -> return ValueAnimator()
-                        }
+                        val textView = getExplainTxv(orientation)
                         textView.visibility = VISIBLE
                         textView.text = string
+                        val finalDuration:Long = 500
                         val anim2 = ValueAnimator.ofFloat(1.1f,1f)
                         anim2.addUpdateListener {
                             val progressPer = it.animatedValue as Float
-                            textView.scaleX = progressPer
-                            textView.scaleY = progressPer
+                            setScale(textView,progressPer,progressPer)
                         }
-                        val anim = ValueAnimator.ofFloat(0.5f,1.1f)
-                        anim.duration = 500
+                        val anim = ValueAnimator.ofFloat(0f,1.1f)
                         anim.addUpdateListener {
                             val progressPer = it.animatedValue as Float
-
-                            textView.scaleX = progressPer
-                            textView.scaleY = progressPer
+                            if(progressPer<0.9)
+                                setScale(textView,0.9f,0.9f)
+                            else
+                                setScale(textView,progressPer,progressPer)
                             textView.alpha = progressPer
                         }
-                        anim.doOnEnd { anim2.start() }
-                        anim.duration = 250
+                        val animAlpha = ValueAnimator.ofFloat(0.5f,1f)
+                        anim.addUpdateListener {
+                            setAlpha(textView,it.animatedValue as Float)
+                        }
+                        val scaleAnim = AnimatorSet().apply {
+                            playSequentially(anim,anim2)
+                            anim.duration = finalDuration*0.7.toLong()
+                            anim.duration = finalDuration*0.3.toLong()
+                        }
+                        val finalAnim = AnimatorSet().apply {
+                            playTogether(animAlpha,scaleAnim)
+                            scaleAnim.duration = finalDuration
+                        }
 
-                        return anim
+                        return finalAnim
                     }
                     fun goNextOnClickAnyWhere(){
                         onCallBinding.root.setOnClickListener {
@@ -251,27 +290,25 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         })
 
                     }
+                    fun saishonoyaruyatu(){
+                        binding.frameLayCallOnInstall.addView(onCallBinding.root)
+                        explainTextAnimation("やあ、僕はとさかくん",MyOrientation.TOP)
+                        goNextOnClickAnyWhere()
+                    }
                     when(order){
-                        1 -> {
-                            binding.frameLayCallOnInstall.addView(onCallBinding.root)
-                            setText("やあ、僕はとさかくん",MyOrientation.TOP)
-                            goNextOnClickAnyWhere()
-                        }
+                        1 -> saishonoyaruyatu()
                         2 -> {
-                            setText("これから、KiNaの使い方を説明するね",MyOrientation.TOP).start()
-                            goNextOnClickAnyWhere()
-                        }
+                            explainTextAnimation("これから、KiNaの使い方を説明するね",MyOrientation.TOP).start()
+                            goNextOnClickAnyWhere() }
                         3 -> {
-                            setText("KiNaでは、フォルダと単語帳が作れるよ\n" +
+                            explainTextAnimation("KiNaでは、フォルダと単語帳が作れるよ\n" +
                                     "ボタンをタッチして、単語帳を作ってみよう",MyOrientation.TOP).start()
                             setFocusOn(binding.bnvBinding.bnvImvAdd,MyOrientation.TOP)
-                            goNextOnClickOnFocus()
-                        }
+                            goNextOnClickOnFocus() }
                         4 -> {
                             setFocusOn(binding.bindingAddMenu.imvnewCard,MyOrientation.RIGHT)
                             createFileViewModel.setBottomMenuVisible(true)
-                            goNextOnClickOnFocus()
-                        }
+                            goNextOnClickOnFocus() }
                         5 -> {
                             changeViewVisibility(onCallBinding.imvCharacter,false)
                             makeTxvGone()
@@ -282,8 +319,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                                 val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                                 imm.hideSoftInputFromWindow(binding.editFileBinding.edtCreatefile.windowToken, 0 )
                                 doSome(6)
-                            }
-                        }
+                            } }
                         6 ->{
                             createFileViewModel.onClickFinish(binding.editFileBinding.edtCreatefile.text.toString())
                             onCallBinding.viewWithHole.visibility = GONE
@@ -293,32 +329,70 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                             a.setHorizontalBias(onCallBinding.imvCharacter.id,0f)
                             a.applyTo(onCallBinding.root)
                             changeViewVisibility(onCallBinding.imvCharacter,true)
-                            setText("おめでとう！単語帳が追加されたよ",MyOrientation.RIGHT).start()
-                            goNextOnClickAnyWhere()
-                        }
+                            explainTextAnimation("おめでとう！単語帳が追加されたよ",MyOrientation.RIGHT).start()
+                            goNextOnClickAnyWhere() }
                         7 ->{
-                            setText("中身を見てみよう！",MyOrientation.RIGHT).start()
-                            goNextOnClickAnyWhere()
-                        }
+                            explainTextAnimation("中身を見てみよう！",MyOrientation.RIGHT).start()
+                            goNextOnClickAnyWhere() }
                         8 ->{
                             makeTxvGone()
                             libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
-                            goNextOnClickAnyWhere()
-                        }
+                            goNextOnClickAnyWhere() }
                         9->{
-                            setText("まだカードがないね\n早速作ってみよう",MyOrientation.RIGHT).start()
-                            goNextOnClickAnyWhere()
-
-                        }
+                            explainTextAnimation("まだカードがないね\n早速作ってみよう",MyOrientation.RIGHT).start()
+                            goNextOnClickAnyWhere() }
                         10 ->{
                             makeTxvGone()
                             changeViewVisibility(onCallBinding.imvCharacter,false)
                             changeViewVisibility(onCallBinding.viewWithHole,true)
                             setFocusOn(binding.bnvBinding.bnvImvAdd,MyOrientation.TOP)
-                            goNextOnClickOnFocus()
-                        }
+                            goNextOnClickOnFocus() }
                         11 ->{
                             setFocusOn(binding.bindingAddMenu.imvnewCard,MyOrientation.TOP)
+                            createFileViewModel.setBottomMenuVisible(true)
+                            goNextOnClickOnFocus()
+                        }
+                        12 -> {createCardViewModel.onClickAddNewCardBottomBar()
+                            appearAlphaAnimation(arrayOf(holeView,focusTouchView,arrow),false)
+                            goNextOnClickAnyWhere()
+                        }
+                        13 -> {
+                            appearAlphaAnimation(arrayOf(getCharacterImv(null)),true)
+                            explainTextAnimation("上半分は、カードの表",MyOrientation.RIGHT).start()
+                            goNextOnClickAnyWhere()
+                        }
+                        14 -> {
+                            explainTextAnimation("下半分は、カードの裏になっているよ",MyOrientation.RIGHT).start()
+                            goNextOnClickAnyWhere()
+                        }
+                        15 -> {
+                            explainTextAnimation("下半分は、カードの裏になっているよ",MyOrientation.LEFT).start()
+                            goNextOnClickAnyWhere()
+                        }
+                        16 -> {
+                            explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！\n好みのようにカスタマイズしてね",MyOrientation.RIGHT).start()
+                            goNextOnClickAnyWhere()
+                        }
+                        17 -> {
+                            explainTextAnimation("カードをめくるには、下のナビゲーションボタンを使うよ",MyOrientation.RIGHT).start()
+                            setFocusOn(this.findViewById(R.id.lay_navigate_buttons),MyOrientation.TOP)
+                            goNextOnClickAnyWhere()
+                        }
+                        18 -> {
+                            explainTextAnimation("新しいカードを前に挿入するのはここ",MyOrientation.RIGHT).start()
+                            appearAlphaAnimation(arrayOf(holeView),true)
+                            setFocusOn(this.findViewById(R.id.btn_insert_next),MyOrientation.TOP)
+                            goNextOnClickAnyWhere()
+                        }
+                        19->{
+                            explainTextAnimation("後ろに挿入するのはここ！",MyOrientation.RIGHT).start()
+                            setFocusOn(this.findViewById(R.id.btn_insert_previous),MyOrientation.TOP)
+                            goNextOnClickAnyWhere()
+                        }
+                        20->{
+                            explainTextAnimation("矢印ボタンでカードを前後にめくってね！",MyOrientation.RIGHT).start()
+                            appearAlphaAnimation(arrayOf(holeView),false)
+                            goNextOnClickAnyWhere()
                         }
                         else -> {
                             editor.putBoolean("firstTimeGuide", true)
