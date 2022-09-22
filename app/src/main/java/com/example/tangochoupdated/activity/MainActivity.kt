@@ -9,25 +9,28 @@ import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.recyclerview.widget.RecyclerView
 import com.example.tangochoupdated.R
 import com.example.tangochoupdated.application.RoomApplication
 import com.example.tangochoupdated.databinding.CallOnInstallBinding
 import com.example.tangochoupdated.databinding.MainActivityBinding
 import com.example.tangochoupdated.db.dataclass.File
 import com.example.tangochoupdated.db.enumclass.FileStatus
-import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 
 import com.example.tangochoupdated.ui.animation.Animation
@@ -39,9 +42,8 @@ import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
 import com.example.tangochoupdated.ui.observer.LibraryOb
 import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
-import com.example.tangochoupdated.ui.viewmodel.customClasses.ColorPalletStatus
-import com.example.tangochoupdated.ui.viewmodel.customClasses.MyOrientation
-import com.example.tangochoupdated.ui.viewmodel.customClasses.MySize
+import com.example.tangochoupdated.ui.viewmodel.customClasses.*
+import java.lang.Math.abs
 import java.lang.Math.pow
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -74,169 +76,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             val holeView = onInstallBinding.viewWithHole
             val globalLayoutSet = mutableMapOf<View,ViewTreeObserver.OnGlobalLayoutListener>()
             val textView = onInstallBinding.txvExplain
-            fun getCharacterImv(drawableId:Int?):ImageView{
-                val imv = onInstallBinding.imvCharacter
-                if(drawableId!=null){
-                    val draw = ContextCompat.getDrawable(this, drawableId)
-                    imv.setImageDrawable(draw)
-                }
-                return imv
-            }
-            fun setScale(v: View, x:Float,y:Float){
-                v.scaleX = x
-                v.scaleY = y
-            }
-            fun setAlpha(v: View,alpha:Float){
-                v.alpha = alpha
-            }
-            fun removeGlobalListener(){
-                globalLayoutSet.onEach {
-                    it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
-                }
-            }
-            fun makeTxvGone(){
-                changeViewVisibility(textView,false)
-            }
-            fun makeArrowGone(){
-                changeViewVisibility(arrow,false)
-            }
-            fun setCharacterPosition(){
-
-            }
-            fun makeTouchAreaGone(){
-                changeViewVisibility(touchArea,false)
-            }
-            fun appearAlphaAnimation(views :Array<View>,visible:Boolean):ValueAnimator{
-            val appear = ValueAnimator.ofFloat(0f,1f)
-            val disappear = ValueAnimator.ofFloat(1f,0f)
-            arrayOf(appear,disappear).onEach {
-            it.addUpdateListener { animator ->
-            views.onEach { setAlpha(it, animator.animatedValue as Float) }
-            }
-            it.duration = 300
-            }
-            appear.doOnStart { views.onEach { changeViewVisibility(it,true) } }
-            disappear.doOnEnd { views.onEach { changeViewVisibility(it,false) } }
-            return if(visible) appear else disappear
-            }
-            fun explainTextAnimation(string: String, orientation: MyOrientation):AnimatorSet{
-                textView.text = string
-                textView.visibility = VISIBLE
-                val finalDuration:Long = 100
-                val anim2 = ValueAnimator.ofFloat(1.1f,1f)
-                anim2.addUpdateListener {
-                val progressPer = it.animatedValue as Float
-                setScale(textView,progressPer,progressPer)
-                }
-                val anim = ValueAnimator.ofFloat(0.7f,1.1f)
-                anim.addUpdateListener {
-                val progressPer = it.animatedValue as Float
-                setScale(textView,progressPer,progressPer)
-                }
-                val animAlpha = ValueAnimator.ofFloat(0f,1f)
-                anim.addUpdateListener {
-                setAlpha(textView,it.animatedValue as Float)
-                }
-                val scaleAnim = AnimatorSet().apply {
-                playSequentially(anim,anim2)
-                anim2.duration = finalDuration*0.3.toLong()
-                anim.duration = finalDuration*0.7.toLong()
-                }
-                val finalAnim = AnimatorSet().apply {
-                playTogether(animAlpha,scaleAnim)
-                scaleAnim.duration = finalDuration
-                }
-
-                return finalAnim
-            }
             fun getWindowDisplayDiff(): Int {
                 val a = Rect()
                 binding.root.getWindowVisibleDisplayFrame(a)
                 val windowTop =  binding.root.top
                 val displayTop = a.top
                 return displayTop - windowTop
-            }
-            fun getHeightAndWidth(view: View):MySize{
-                var a = MySize(0,0)
-                view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
-                    override fun onGlobalLayout() {
-                        a = MySize(view.width,view.height)
-                        view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    }
-                })
-                return  a
-            }
-            fun getDifferenceBetween(view1:View,side1:MyOrientation,view2:View,side2:MyOrientation):Int{
-                val pos1 = IntArray(2)
-                view1.getLocationInWindow(pos1)
-                val pos2 = IntArray(2)
-                view2.getLocationInWindow(pos2)
-                var v1width = getHeightAndWidth(view1).width
-                var v2width = getHeightAndWidth(view2).width
-                var v1height = getHeightAndWidth(view1).height
-                var v2height = getHeightAndWidth(view2).height
-                val a = when(side1){
-                    MyOrientation.BOTTOM ->  pos1[1]+v1height
-                    MyOrientation.LEFT   ->  pos1[0]
-                    MyOrientation.RIGHT  ->  pos1[0] +v1width
-                    MyOrientation.TOP    ->  pos1[1]
-                    MyOrientation.MIDDLE ->  null
-                }
-                val b = when(side1){
-                    MyOrientation.BOTTOM ->  pos2[1]+v2height
-                    MyOrientation.LEFT   ->  pos2[0]
-                    MyOrientation.RIGHT  ->  pos2[0]+v2width
-                    MyOrientation.TOP    ->  pos2[1]
-                    MyOrientation.MIDDLE ->  null
-                }
-                if(a!=null&&b!=null) return a-b
-                else{
-                    val v1CenterX = pos1[0]+v1width/2
-                    val v1CenterY = pos1[1]+v1height/2 -getWindowDisplayDiff()
-                    val v2CenterX = pos2[0]+v2width/2
-                    val v2CenterY = pos2[1]+v2height/2 -getWindowDisplayDiff()
-                    if(a==null&&b!=null){
-                        return when(side2){
-                            MyOrientation.BOTTOM, MyOrientation.TOP ->  v1CenterY-b
-                            MyOrientation.LEFT,MyOrientation.RIGHT  ->  v1CenterX-b
-                            else -> 0
-                        }
-                    } else
-                    if(a!=null){
-                        return when(side2){
-                            MyOrientation.BOTTOM, MyOrientation.TOP -> a- v2CenterY
-                            MyOrientation.LEFT,MyOrientation.RIGHT  -> a- v2CenterX
-                            else -> 0
-                        }
-                    } else {
-                        val bottom = v1CenterX-v2CenterX.toDouble()
-                        val height = v1CenterY-v2CenterY.toDouble()
-                        return sqrt(bottom.pow(2.0)+height.pow(2.0)).toInt()
-                    }
-
-                }
-            }
-            fun goNextOnClickAnyWhere(){
-                onInstallBinding.root.setOnClickListener {
-                    installGuide(order+1,onInstallBinding)
-                }
-            }
-            fun goNextOnClickTouchArea(){
-                onInstallBinding.root.setOnClickListener(null)
-                touchArea.setOnClickListener {
-                    installGuide(order+1,onInstallBinding)
-                }
-            }
-            fun setArrowDirection(direction:MyOrientation){
-            arrow.rotation =
-            when(direction){
-            MyOrientation.BOTTOM-> -450f
-            MyOrientation.LEFT -> 0f
-            MyOrientation.RIGHT -> 900f
-            MyOrientation.TOP -> 450f
-            else -> return
-            }
-
             }
             fun setPosition(mainView:View,subView: View,position:MyOrientation,margin:Int,matchSize:Boolean){
                 fun setXAndY(x:Float,y:Float){
@@ -284,6 +129,171 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         }
                     }
                 })
+
+            }
+            fun getCharacterImv(drawableId:Int?):ImageView{
+                val imv = onInstallBinding.imvCharacter
+                if(drawableId!=null){
+                    val draw = ContextCompat.getDrawable(this, drawableId)
+                    imv.setImageDrawable(draw)
+                }
+                return imv
+            }
+            fun setScale(v: View, x:Float,y:Float){
+                v.scaleX = x
+                v.scaleY = y
+            }
+            fun setAlpha(v: View,alpha:Float){
+                v.alpha = alpha
+            }
+            fun removeGlobalListener(){
+                globalLayoutSet.onEach {
+                    it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
+                }
+            }
+            fun makeTxvGone(){
+                changeViewVisibility(textView,false)
+            }
+            fun makeArrowGone(){
+                changeViewVisibility(arrow,false)
+            }
+            fun setCharacterPosition(){
+
+            }
+            fun makeTouchAreaGone(){
+                changeViewVisibility(touchArea,false)
+            }
+            fun appearAlphaAnimation(views :Array<View>,visible:Boolean):ValueAnimator{
+            val appear = ValueAnimator.ofFloat(0f,1f)
+            val disappear = ValueAnimator.ofFloat(1f,0f)
+            arrayOf(appear,disappear).onEach {
+            it.addUpdateListener { animator ->
+            views.onEach { setAlpha(it, animator.animatedValue as Float) }
+            }
+            it.duration = 300
+            }
+            appear.doOnStart { views.onEach { changeViewVisibility(it,true) } }
+            disappear.doOnEnd { views.onEach { changeViewVisibility(it,false) } }
+            return if(visible) appear else disappear
+            }
+            fun explainTextAnimation(string: String, orientation: MyOrientation):AnimatorSet{
+                setPosition(character,textView,orientation,10,false)
+                textView.text = string
+                textView.visibility = VISIBLE
+                val finalDuration:Long = 100
+                val anim2 = ValueAnimator.ofFloat(1.1f,1f)
+                anim2.addUpdateListener {
+                val progressPer = it.animatedValue as Float
+                setScale(textView,progressPer,progressPer)
+                }
+                val anim = ValueAnimator.ofFloat(0.7f,1.1f)
+                anim.addUpdateListener {
+                val progressPer = it.animatedValue as Float
+                setScale(textView,progressPer,progressPer)
+                }
+                val animAlpha = ValueAnimator.ofFloat(0f,1f)
+                anim.addUpdateListener {
+                setAlpha(textView,it.animatedValue as Float)
+                }
+                val scaleAnim = AnimatorSet().apply {
+                playSequentially(anim,anim2)
+                anim2.duration = finalDuration*0.3.toLong()
+                anim.duration = finalDuration*0.7.toLong()
+                }
+                val finalAnim = AnimatorSet().apply {
+                playTogether(animAlpha,scaleAnim)
+                scaleAnim.duration = finalDuration
+                }
+
+                return finalAnim
+            }
+            fun getHeightAndWidth(view: View):MySize{
+                var width = 0
+                var height = 0
+                var called = false
+                view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
+                    override fun onGlobalLayout() {
+                        width = view.width
+                        height = view.height
+                        called = true
+                        view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                    }
+                })
+                return  MySize(width,height)
+            }
+            fun getDifferenceBetween(view1:View,side1:MyOrientation,view2:View,side2:MyOrientation):Int{
+                val pos1 = IntArray(2)
+                view1.getLocationInWindow(pos1)
+                val pos2 = IntArray(2)
+                view2.getLocationInWindow(pos2)
+                val v1width = getHeightAndWidth(view1).width
+                val v2width = getHeightAndWidth(view2).width
+                val v1height = getHeightAndWidth(view1).height
+                val v2height = getHeightAndWidth(view2).height
+                val a:Float? = when(side1){
+                    MyOrientation.BOTTOM ->  pos1[1].toFloat()+v1height
+                    MyOrientation.LEFT   ->  pos1[0].toFloat()
+                    MyOrientation.RIGHT  ->  pos1[0].toFloat()+v1width
+                    MyOrientation.TOP    ->  pos1[1].toFloat()
+                    MyOrientation.MIDDLE ->  null
+                }
+                val b:Float? = when(side2){
+                    MyOrientation.BOTTOM ->  pos2[1].toFloat()+v2height
+                    MyOrientation.LEFT   ->  pos2[0].toFloat()
+                    MyOrientation.RIGHT  ->  pos2[0].toFloat() +v2width
+                    MyOrientation.TOP    ->  pos2[1].toFloat()
+                    MyOrientation.MIDDLE ->  null
+                }
+
+
+                if(a!=null&&b!=null) return abs(a-b).toInt()
+                else{
+                    val v1CenterX = pos1[0]+v1width/2
+                    val v1CenterY = pos1[1]+v1height/2 -getWindowDisplayDiff()
+                    val v2CenterX = pos2[0]+v2width/2
+                    val v2CenterY = pos2[1]+v2height/2 -getWindowDisplayDiff()
+                    if(a==null&&b!=null){
+                        return when(side2){
+                            MyOrientation.BOTTOM, MyOrientation.TOP ->  v1CenterY-b.toInt()
+                            MyOrientation.LEFT,MyOrientation.RIGHT  ->  v1CenterX-b.toInt()
+                            else -> 0
+                        }
+                    } else
+                    if(a!=null){
+                        return when(side2){
+                            MyOrientation.BOTTOM, MyOrientation.TOP -> a.toInt()-v2CenterY
+                            MyOrientation.LEFT,MyOrientation.RIGHT  -> a.toInt()- v2CenterX
+                            else -> 0
+                        }
+                    } else {
+                        val bottom = v1CenterX-v2CenterX.toDouble()
+                        val height = v1CenterY-v2CenterY.toDouble()
+                        return sqrt(bottom.pow(2.0)+height.pow(2.0)).toInt()
+                    }
+
+                }
+            }
+            fun goNextOnClickAnyWhere(){
+                onInstallBinding.root.setOnClickListener {
+                    installGuide(order+1,onInstallBinding)
+                }
+            }
+            fun goNextOnClickTouchArea(){
+                onInstallBinding.root.setOnClickListener(null)
+                touchArea.setOnClickListener {
+                    installGuide(order+1,onInstallBinding)
+                }
+            }
+            fun setArrowDirection(direction:MyOrientation){
+            arrow.rotation =
+            when(direction){
+            MyOrientation.BOTTOM-> -450f
+            MyOrientation.LEFT -> 0f
+            MyOrientation.RIGHT -> 900f
+            MyOrientation.TOP -> 450f
+            else -> return
+            }
 
             }
             fun setArrow(arrowPosition:MyOrientation,view:View){
@@ -337,6 +347,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
             fun greeting1(){
                 binding.frameLayCallOnInstall.addView(onInstallBinding.root)
+                setPosition(character,textView,MyOrientation.TOP,10,false)
                 explainTextAnimation("やあ、僕はとさかくん",MyOrientation.TOP)
                 goNextOnClickAnyWhere()
             }
@@ -379,6 +390,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 goNextOnClickTouchArea()
 
             }
+            fun pxToDp(px: Int, ): Float {
+                val metrics = this.resources.displayMetrics
+                return px * metrics.density
+            }
             fun createFlashCard5(){
                 val title = binding.editFileBinding.edtCreatefile.text.toString()
                 if(title == "") {
@@ -388,22 +403,30 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 makeTouchAreaGone()
                 makeArrowGone()
 
+                createFileViewModel.makeFilePos0()
                 createFileViewModel.onClickFinish(title)
                 val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.editFileBinding.edtCreatefile.windowToken, 0 )
-                changeViewVisibility(holeView,false)
                 setPosition(binding.bnvBinding.bnvImvTabLibrary,character,MyOrientation.TOP,20,false)
                 setPosition(character,textView,MyOrientation.RIGHT,0,false)
-                changeViewVisibility(onInstallBinding.imvCharacter,true)
+                textView.layoutParams.width = abs(onInstallBinding.barrier1.x+10-this.resources.displayMetrics.widthPixels).toInt()
+                textView.requestLayout()
+                changeViewVisibility(holeView,false)
                 explainTextAnimation("おめでとう！単語帳が追加されたよ",MyOrientation.RIGHT).start()
+                appearAlphaAnimation(arrayOf(character),true).start()
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard1(){
+                val a = this.findViewById<RecyclerView>(R.id.vocabCardRV)
+                setHole(a[0],HoleShape.RECTANGLE)
+                setTouchArea(a[0])
                 explainTextAnimation("中身を見てみよう！",MyOrientation.RIGHT).start()
-                goNextOnClickAnyWhere()
+                goNextOnClickTouchArea()
             }
             fun checkInsideNewFlashCard2(){
                 makeTxvGone()
+                makeTouchAreaGone()
+                changeViewVisibility(holeView,false)
                 libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
                 goNextOnClickAnyWhere()
             }
@@ -415,57 +438,69 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 makeTxvGone()
                 changeViewVisibility(onInstallBinding.imvCharacter,false)
                 changeViewVisibility(onInstallBinding.viewWithHole,true)
+                setTouchArea(binding.bnvBinding.bnvImvAdd)
                 setHole(binding.bnvBinding.bnvImvAdd,HoleShape.CIRCLE)
                 goNextOnClickTouchArea()
             }
             fun makeNewCard2(){
                 setHole(binding.bindingAddMenu.imvnewCard,HoleShape.CIRCLE)
+                setTouchArea(binding.bindingAddMenu.imvnewCard)
                 createFileViewModel.setBottomMenuVisible(true)
                 goNextOnClickTouchArea()
             }
             fun makeNewCard3(){
+                createFileViewModel.setBottomMenuVisible(false)
+                changeViewVisibility(holeView,false)
+                makeTouchAreaGone()
                 createCardViewModel.onClickAddNewCardBottomBar()
-                appearAlphaAnimation(arrayOf(touchArea,arrow),false)
+                appearAlphaAnimation(arrayOf(touchArea,arrow,holeView),false)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag1(){
-                appearAlphaAnimation(arrayOf(getCharacterImv(null)),true)
+                val a = this.findViewById<EditText>(R.id.edt_front_title)
+                setPosition(a,character,MyOrientation.RIGHT,10,false)
+                explainTextAnimation("上半分は、カードの表",MyOrientation.LEFT).start()
+                setPosition(this.findViewById(R.id.edt_front_content),textView,MyOrientation.BOTTOM,10,false)
+                appearAlphaAnimation(arrayOf(character),true).start()
                 setHole(this.findViewById(R.id.edt_front_content),HoleShape.RECTANGLE)
-                explainTextAnimation("上半分は、カードの表",MyOrientation.RIGHT).start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag2(){
                 setHole(this.findViewById(R.id.edt_back_content),HoleShape.RECTANGLE)
-                explainTextAnimation("下半分は、カードの裏になっているよ",MyOrientation.RIGHT).start()
+                explainTextAnimation("下半分は、カードの裏になっているよ",MyOrientation.BOTTOM).start()
+                setPosition(this.findViewById(R.id.edt_front_content),textView,MyOrientation.MIDDLE,0,false)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag3(){
-                setHole(this.findViewById(R.id.edt_back_title),HoleShape.RECTANGLE)
+                setHole(this.findViewById(R.id.edt_front_title),HoleShape.RECTANGLE)
                 explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！",MyOrientation.LEFT).start()
+                setPosition(this.findViewById(R.id.edt_front_content),textView,MyOrientation.MIDDLE,0,false)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag4(){
-                setHole(this.findViewById(R.id.edt_front_title),HoleShape.RECTANGLE)
-                explainTextAnimation("好みのようにカスタマイズしてね",MyOrientation.RIGHT).start()
+                setHole(this.findViewById(R.id.edt_back_title),HoleShape.RECTANGLE)
+                explainTextAnimation("好みのようにカスタマイズしてね",MyOrientation.LEFT).start()
+                setPosition(this.findViewById(R.id.edt_front_content),textView,MyOrientation.MIDDLE,0,false)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation1(){
-                explainTextAnimation("カードをめくるには、下のナビゲーションボタンを使うよ",MyOrientation.RIGHT).start()
+                setPosition(this.findViewById(R.id.edt_back_content),character,MyOrientation.TOP,10,false)
+                explainTextAnimation("カードをめくるには、下のナビゲーションボタンを使うよ",MyOrientation.BOTTOM).start()
                 setHole(this.findViewById(R.id.lay_navigate_buttons),HoleShape.RECTANGLE)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation2(){
-                explainTextAnimation("新しいカードを前に挿入するのはここ",MyOrientation.RIGHT).start()
+                explainTextAnimation("新しいカードを前に挿入するのはここ",MyOrientation.TOP).start()
                 setArrow(MyOrientation.TOP,this.findViewById(R.id.btn_insert_next))
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation3(){
-                explainTextAnimation("後ろに挿入するのはここ！",MyOrientation.RIGHT).start()
+                explainTextAnimation("後ろに挿入するのはここ！",MyOrientation.TOP).start()
                 setArrow(MyOrientation.TOP,this.findViewById(R.id.btn_insert_previous))
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation4(){
-                explainTextAnimation("矢印ボタンでカードを前後にめくってね！",MyOrientation.RIGHT).start()
+                explainTextAnimation("矢印ボタンでカードを前後にめくってね！",MyOrientation.TOP).start()
                 setArrow(MyOrientation.TOP,this.findViewById(R.id.btn_next))
                 goNextOnClickAnyWhere()
             }

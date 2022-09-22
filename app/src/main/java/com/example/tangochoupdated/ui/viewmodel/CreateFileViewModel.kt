@@ -290,10 +290,14 @@ class CreateFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         return _fileToEdit.value
     }
 
+    fun makeFilePos0(){
+        val a = returnFileToCreate()?:return
+        a.libOrder = -1
+        setFileToCreate(a)
+    }
 
     fun onClickFinish(title:String){
         val color = returnColPalletStatus()?.colNow ?:ColorStatus.GRAY
-
         when(_mode.value ){
             EditingMode.New -> {
                 val newFile = returnFileToCreate() ?:return

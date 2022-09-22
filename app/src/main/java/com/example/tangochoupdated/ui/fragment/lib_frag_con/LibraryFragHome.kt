@@ -145,9 +145,9 @@ class LibraryFragHome : Fragment(){
 
             val emptyView = LibraryFragLayHomeRvEmptyBinding.inflate(inflater,container,false).root
             childFilesFromDB(null).observe(viewLifecycleOwner){
-                adapter.submitList(it)
-                adapter.notifyDataSetChanged()
-                setParentRVItems(it)
+                val sorted = it.sortedBy { it.libOrder }
+                adapter.submitList(sorted)
+                setParentRVItems(sorted)
                 if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)
                 } else {
