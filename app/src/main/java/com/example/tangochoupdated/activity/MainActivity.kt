@@ -41,6 +41,10 @@ import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
 import com.example.tangochoupdated.ui.viewmodel.*
 import com.example.tangochoupdated.ui.viewmodel.customClasses.ColorPalletStatus
 import com.example.tangochoupdated.ui.viewmodel.customClasses.MyOrientation
+import com.example.tangochoupdated.ui.viewmodel.customClasses.MySize
+import java.lang.Math.pow
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
@@ -66,19 +70,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
             val arrow = binding.imvFocusArrow
             val touchArea = onInstallBinding.viewTouchArea
+            val character = onInstallBinding.imvCharacter
             val holeView = onInstallBinding.viewWithHole
             val globalLayoutSet = mutableMapOf<View,ViewTreeObserver.OnGlobalLayoutListener>()
-
-            fun getExplainTxv(orientation: MyOrientation):TextView{
-                val textView = when(orientation){
-                    MyOrientation.BOTTOM-> onInstallBinding.txvExplainBottom
-                    MyOrientation.LEFT -> onInstallBinding.txvExplainLeft
-                    MyOrientation.RIGHT -> onInstallBinding.txvExplainRight
-                    MyOrientation.TOP -> onInstallBinding.txvExplainTop
-                    else -> onInstallBinding.txvExplainTop
-                }
-                return textView
-            }
+            val textView = onInstallBinding.txvExplain
             fun getCharacterImv(drawableId:Int?):ImageView{
                 val imv = onInstallBinding.imvCharacter
                 if(drawableId!=null){
@@ -100,18 +95,13 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 }
             }
             fun makeTxvGone(){
-            onInstallBinding.apply {
-            arrayOf(txvExplainBottom,
-            txvExplainLeft,
-            txvExplainRight,
-            txvExplainTop).onEach {
-            if(it.visibility!= GONE)
-            it.visibility = GONE
-            }
-            }
+                changeViewVisibility(textView,false)
             }
             fun makeArrowGone(){
                 changeViewVisibility(arrow,false)
+            }
+            fun setCharacterPosition(){
+
             }
             fun makeTouchAreaGone(){
                 changeViewVisibility(touchArea,false)
@@ -130,10 +120,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             return if(visible) appear else disappear
             }
             fun explainTextAnimation(string: String, orientation: MyOrientation):AnimatorSet{
-                makeTxvGone()
-                val textView = getExplainTxv(orientation)
-                textView.visibility = VISIBLE
                 textView.text = string
+                textView.visibility = VISIBLE
                 val finalDuration:Long = 100
                 val anim2 = ValueAnimator.ofFloat(1.1f,1f)
                 anim2.addUpdateListener {
@@ -151,8 +139,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 }
                 val scaleAnim = AnimatorSet().apply {
                 playSequentially(anim,anim2)
-                anim.duration = finalDuration*0.3.toLong()
-                anim.duration = finalDuration*0.3.toLong()
+                anim2.duration = finalDuration*0.3.toLong()
+                anim.duration = finalDuration*0.7.toLong()
                 }
                 val finalAnim = AnimatorSet().apply {
                 playTogether(animAlpha,scaleAnim)
@@ -161,25 +149,84 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
                 return finalAnim
             }
+            fun getWindowDisplayDiff(): Int {
+                val a = Rect()
+                binding.root.getWindowVisibleDisplayFrame(a)
+                val windowTop =  binding.root.top
+                val displayTop = a.top
+                return displayTop - windowTop
+            }
+            fun getHeightAndWidth(view: View):MySize{
+                var a = MySize(0,0)
+                view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
+                    override fun onGlobalLayout() {
+                        a = MySize(view.width,view.height)
+                        view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                })
+                return  a
+            }
+            fun getDifferenceBetween(view1:View,side1:MyOrientation,view2:View,side2:MyOrientation):Int{
+                val pos1 = IntArray(2)
+                view1.getLocationInWindow(pos1)
+                val pos2 = IntArray(2)
+                view2.getLocationInWindow(pos2)
+                var v1width = getHeightAndWidth(view1).width
+                var v2width = getHeightAndWidth(view2).width
+                var v1height = getHeightAndWidth(view1).height
+                var v2height = getHeightAndWidth(view2).height
+                val a = when(side1){
+                    MyOrientation.BOTTOM ->  pos1[1]+v1height
+                    MyOrientation.LEFT   ->  pos1[0]
+                    MyOrientation.RIGHT  ->  pos1[0] +v1width
+                    MyOrientation.TOP    ->  pos1[1]
+                    MyOrientation.MIDDLE ->  null
+                }
+                val b = when(side1){
+                    MyOrientation.BOTTOM ->  pos2[1]+v2height
+                    MyOrientation.LEFT   ->  pos2[0]
+                    MyOrientation.RIGHT  ->  pos2[0]+v2width
+                    MyOrientation.TOP    ->  pos2[1]
+                    MyOrientation.MIDDLE ->  null
+                }
+                if(a!=null&&b!=null) return a-b
+                else{
+                    val v1CenterX = pos1[0]+v1width/2
+                    val v1CenterY = pos1[1]+v1height/2 -getWindowDisplayDiff()
+                    val v2CenterX = pos2[0]+v2width/2
+                    val v2CenterY = pos2[1]+v2height/2 -getWindowDisplayDiff()
+                    if(a==null&&b!=null){
+                        return when(side2){
+                            MyOrientation.BOTTOM, MyOrientation.TOP ->  v1CenterY-b
+                            MyOrientation.LEFT,MyOrientation.RIGHT  ->  v1CenterX-b
+                            else -> 0
+                        }
+                    } else
+                    if(a!=null){
+                        return when(side2){
+                            MyOrientation.BOTTOM, MyOrientation.TOP -> a- v2CenterY
+                            MyOrientation.LEFT,MyOrientation.RIGHT  -> a- v2CenterX
+                            else -> 0
+                        }
+                    } else {
+                        val bottom = v1CenterX-v2CenterX.toDouble()
+                        val height = v1CenterY-v2CenterY.toDouble()
+                        return sqrt(bottom.pow(2.0)+height.pow(2.0)).toInt()
+                    }
+
+                }
+            }
             fun goNextOnClickAnyWhere(){
                 onInstallBinding.root.setOnClickListener {
                     installGuide(order+1,onInstallBinding)
                 }
             }
-            fun goNextOnClickOnFocus(){
+            fun goNextOnClickTouchArea(){
                 onInstallBinding.root.setOnClickListener(null)
                 touchArea.setOnClickListener {
-                    removeGlobalListener()
                     installGuide(order+1,onInstallBinding)
                 }
             }
-            fun getWindowDisplayDiff(): Int {
-    val a = Rect()
-    binding.root.getWindowVisibleDisplayFrame(a)
-    val windowTop =  binding.root.top
-    val displayTop = a.top
-    return displayTop - windowTop
-    }
             fun setArrowDirection(direction:MyOrientation){
             arrow.rotation =
             when(direction){
@@ -258,6 +305,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 setPosition(view,touchArea,MyOrientation.MIDDLE,0,true)
             }
             fun setHole(view: View, shape:HoleShape){
+                removeGlobalListener()
                 fun setHole(){
                 val a = IntArray(2)
                 view.getLocationInWindow(a)
@@ -269,16 +317,16 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 val a = IntArray(2)
                 view.getLocationInWindow(a)
                 val left = a[0].toFloat()
-                val top = a[1].toFloat() - view.height
+                val top = a[1].toFloat() -getWindowDisplayDiff()
                 onInstallBinding.viewWithHole.recHolePosition =
                 RecPosition(left-margin,top-margin,left+view.width+margin,top+view.height+margin)
                 }
-                holeView.circleHolePosition = CirclePosition(0f,0f,0f)
-                holeView.recHolePosition = RecPosition(0f,0f,0f,0f)
                 changeViewVisibility(holeView,true)
                 view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
                     override fun onGlobalLayout() {
                         globalLayoutSet[view] = this
+                        holeView.circleHolePosition = CirclePosition(0f,0f,0f)
+                        holeView.recHolePosition = RecPosition(0f,0f,0f,0f)
                         when(shape){
                         HoleShape.CIRCLE -> setHole()
                         HoleShape.RECTANGLE -> setRec(50f)
@@ -302,7 +350,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 val focus = binding.bnvBinding.bnvImvAdd
                 setHole(focus,HoleShape.CIRCLE)
                 setTouchArea(focus)
-                goNextOnClickOnFocus()
+                goNextOnClickTouchArea()
             }
             fun createFlashCard2(){
                 val focus = binding.bindingAddMenu.imvnewTangocho
@@ -310,7 +358,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 setTouchArea(focus)
                 binding
                 createFileViewModel.setBottomMenuVisible(true)
-                goNextOnClickOnFocus()
+                goNextOnClickTouchArea()
             }
             fun createFlashCard3(){
                 changeViewVisibility(onInstallBinding.imvCharacter,false)
@@ -318,30 +366,34 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
                 setHole(binding.frameLayEditFile,HoleShape.RECTANGLE)
                 setTouchArea(binding.editFileBinding.edtCreatefile)
-                goNextOnClickOnFocus()
+                goNextOnClickTouchArea()
             }
+
             fun createFlashCard4(){
-                binding.frameLayEditFile.requestFocus()
+                val edt =binding.editFileBinding.edtCreatefile
+                edt.requestFocus()
+                val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(edt, 0)
                 setArrow(MyOrientation.BOTTOM,binding.editFileBinding.btnFinish)
                 setTouchArea(binding.editFileBinding.btnFinish)
-                goNextOnClickOnFocus()
+                goNextOnClickTouchArea()
+
             }
             fun createFlashCard5(){
                 val title = binding.editFileBinding.edtCreatefile.text.toString()
-                if(title!=""){
-                    createFileViewModel.onClickFinish(title)
-                    val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(binding.editFileBinding.edtCreatefile.windowToken, 0 )
-                } else {
-                    makeToast(this,"タイトルが必要です")
+                if(title == "") {
+                    makeToast(this,"titleneeded")
                     return
                 }
+                makeTouchAreaGone()
+                makeArrowGone()
+
+                createFileViewModel.onClickFinish(title)
+                val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.editFileBinding.edtCreatefile.windowToken, 0 )
                 changeViewVisibility(holeView,false)
-                val a = ConstraintSet()
-                a.clone(onInstallBinding.root)
-                a.setVerticalBias(onInstallBinding.imvCharacter.id,0.8f)
-                a.setHorizontalBias(onInstallBinding.imvCharacter.id,0f)
-                a.applyTo(onInstallBinding.root)
+                setPosition(binding.bnvBinding.bnvImvTabLibrary,character,MyOrientation.TOP,20,false)
+                setPosition(character,textView,MyOrientation.RIGHT,0,false)
                 changeViewVisibility(onInstallBinding.imvCharacter,true)
                 explainTextAnimation("おめでとう！単語帳が追加されたよ",MyOrientation.RIGHT).start()
                 goNextOnClickAnyWhere()
@@ -364,12 +416,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 changeViewVisibility(onInstallBinding.imvCharacter,false)
                 changeViewVisibility(onInstallBinding.viewWithHole,true)
                 setHole(binding.bnvBinding.bnvImvAdd,HoleShape.CIRCLE)
-                goNextOnClickOnFocus()
+                goNextOnClickTouchArea()
             }
             fun makeNewCard2(){
                 setHole(binding.bindingAddMenu.imvnewCard,HoleShape.CIRCLE)
                 createFileViewModel.setBottomMenuVisible(true)
-                goNextOnClickOnFocus()
+                goNextOnClickTouchArea()
             }
             fun makeNewCard3(){
                 createCardViewModel.onClickAddNewCardBottomBar()
@@ -445,7 +497,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 20  ->  explainCreateCardNavigation3()
                 21  ->  explainCreateCardNavigation4()
                 22  ->  explainCreateCardNavigation5()
-                else -> {val sharedPref = this.getSharedPreferences(
+                else -> {
+                    removeGlobalListener()
+                    val sharedPref = this.getSharedPreferences(
                     "firstTimeGuide", Context.MODE_PRIVATE) ?: return
                     val editor = sharedPref.edit()
                     editor.putBoolean("firstTimeGuide", true)

@@ -19,4 +19,8 @@ class AnkiBoxTabData(
 enum class MyOrientation{
     TOP,BOTTOM,LEFT,RIGHT,MIDDLE
 }
+class MySize(
+    val width:Int,
+    val height:Int
+)
 
