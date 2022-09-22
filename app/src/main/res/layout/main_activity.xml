@@ -13,7 +13,7 @@
     <FrameLayout
         android:visibility="gone"
         android:background="@drawable/rectangle_green_stroke"
-        android:elevation="21dp"
+        android:elevation="20dp"
         android:id="@+id/frameLay_edit_file"
         android:layout_width="300dp"
         android:layout_height="250dp"

@@ -54,7 +54,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private val _parentCard = MutableLiveData<Card?>()
     fun setParentCard(card: Card?){
         val before = _parentCard.value
-        if(card==before )return else
+        if(card==before ) return else
         _parentCard.value = card
     }
     fun returnParentCard():Card?{

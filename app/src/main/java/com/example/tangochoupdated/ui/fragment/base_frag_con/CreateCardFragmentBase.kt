@@ -107,15 +107,12 @@ class CreateCardFragmentBase  : Fragment(),View.OnClickListener {
                 txvEditingFileTitle.text = it?.title ?:"InBox"
             }
         }
-        val parentFlashCardCoverId =  when(baseViewModel.returnFragmentStatus()?.before){
+        val parentFlashCardCoverId =  when(baseViewModel.returnFragmentStatus()?.now){
             MainFragment.Anki -> when(ankiFragViewModel.returnActiveFragment()) {
                 AnkiFragments.AnkiBox -> null
                 AnkiFragments.Flip -> flipBaseViewModel.returnParentCard()?.belongingFlashCardCoverId
             }
-            MainFragment.Library -> when(libraryViewModel.returnActiveFragment()){
-                LibraryFragment.FlashCardCover, LibraryFragment.Folder -> libraryViewModel.returnParentFile()?.fileId
-                else -> null
-            }
+            MainFragment.Library -> libraryViewModel.returnParentFile()?.fileId
             else -> null
         }
 

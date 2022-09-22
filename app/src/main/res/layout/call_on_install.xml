@@ -79,7 +79,7 @@
 
 
     <View
-        android:id="@+id/view_focused_area"
+        android:id="@+id/view_touch_area"
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:layout_constraintTop_toTopOf="parent"
