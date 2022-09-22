@@ -31,7 +31,10 @@ import com.example.tangochoupdated.ui.viewmodel.customClasses.MainFragment
 import com.example.tangochoupdated.ui.viewmodel.CreateFileViewModel
 
 import com.example.tangochoupdated.ui.animation.Animation
-import com.example.tangochoupdated.ui.customViews.HolePosition
+import com.example.tangochoupdated.ui.animation.makeToast
+import com.example.tangochoupdated.ui.customViews.CirclePosition
+import com.example.tangochoupdated.ui.customViews.HoleShape
+import com.example.tangochoupdated.ui.customViews.RecPosition
 import com.example.tangochoupdated.ui.listener.popUp.EditFilePopUpCL
 import com.example.tangochoupdated.ui.observer.LibraryOb
 import com.example.tangochoupdated.ui.view_set_up.ColorPalletViewSetUp
@@ -200,7 +203,29 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         animation1.doOnStart { onCallBinding.imvCharacter.visibility = VISIBLE }
                         return animation1
                     }
+                    fun setArrowDirection(direction:MyOrientation){
+                        arrow.rotation =
+                            when(direction){
+                                MyOrientation.BOTTOM-> -450f
+                                MyOrientation.LEFT -> 0f
+                                MyOrientation.RIGHT -> 900f
+                                MyOrientation.TOP -> 450f
+                                else -> return
+                            }
 
+                    }
+                    fun setArrow(arrowPosition:MyOrientation){
+                        when(arrowPosition){
+                            MyOrientation.BOTTOM-> setArrowDirection(MyOrientation.TOP)
+                            MyOrientation.LEFT -> setArrowDirection(MyOrientation.RIGHT)
+                            MyOrientation.RIGHT -> setArrowDirection(MyOrientation.LEFT)
+                            MyOrientation.TOP -> setArrowDirection(MyOrientation.BOTTOM)
+                            else ->  {
+                            arrow.visibility = GONE
+                            return
+                        }
+                        }
+                    }
                     fun setPosition(mainView:View,subView: View,position:MyOrientation,margin:Int){
                         val a = IntArray(2)
                         mainView.getLocationInWindow(a)
@@ -239,35 +264,25 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         }
                     }
 
-                    fun setFocusOn(view: View,arrowPosition:MyOrientation){
+                    fun setFocusOn(view: View,arrowPosition:MyOrientation,shape:HoleShape){
                         val arrow = binding.imvFocusArrow
                         arrow.visibility = VISIBLE
 
-                        fun setArrowDirection(direction:MyOrientation){
-                            arrow.rotation =
-                                when(direction){
-                                    MyOrientation.BOTTOM-> -450f
-                                    MyOrientation.LEFT -> 0f
-                                    MyOrientation.RIGHT -> 900f
-                                    MyOrientation.TOP -> 450f
-                                    else -> return
-                                }
-                        }
-                        fun setArrow(arrowPosition:MyOrientation){
-                            when(arrowPosition){
-                                MyOrientation.BOTTOM-> setArrowDirection(MyOrientation.TOP)
-                                MyOrientation.LEFT -> setArrowDirection(MyOrientation.RIGHT)
-                                MyOrientation.RIGHT -> setArrowDirection(MyOrientation.LEFT)
-                                MyOrientation.TOP -> setArrowDirection(MyOrientation.BOTTOM)
-                                else -> return
-                            }
-                        }
+
                         fun setHole(){
                             val a = IntArray(2)
                             view.getLocationInWindow(a)
                             val viewCenterPosX = a[0].toFloat()+view.width/2
                             val viewCenterPosY = a[1].toFloat() +view.height/2 -getWindowDisplayDiff()
-                            onCallBinding.viewWithHole.holePosition =HolePosition(viewCenterPosX,viewCenterPosY ,100f)
+                            onCallBinding.viewWithHole.circleHolePosition =CirclePosition(viewCenterPosX,viewCenterPosY ,100f)
+                        }
+                        fun setRec(margin:Float){
+                            val a = IntArray(2)
+                            view.getLocationInWindow(a)
+                            val left = a[0].toFloat()
+                            val top = a[1].toFloat() - view.height
+                            onCallBinding.viewWithHole.recHolePosition =
+                                RecPosition(left-margin,top-margin,left+view.width+margin,top+view.height+margin)
                         }
 
                         view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
@@ -275,7 +290,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                             override fun onGlobalLayout() {
                                 globalView = view
                                 globalListener = this
-                                setHole()
+                                when(shape){
+                                    HoleShape.CIRCLE -> setHole()
+                                    HoleShape.RECTANGLE -> setRec(50f)
+                                }
                                 onCallBinding.viewFocusedArea.apply {
                                     layoutParams.width = view.width
                                     layoutParams.height = view.height
@@ -303,17 +321,17 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         3 -> {
                             explainTextAnimation("KiNaでは、フォルダと単語帳が作れるよ\n" +
                                     "ボタンをタッチして、単語帳を作ってみよう",MyOrientation.TOP).start()
-                            setFocusOn(binding.bnvBinding.bnvImvAdd,MyOrientation.TOP)
+                            setFocusOn(binding.bnvBinding.bnvImvAdd,MyOrientation.TOP,HoleShape.CIRCLE)
                             goNextOnClickOnFocus() }
                         4 -> {
-                            setFocusOn(binding.bindingAddMenu.imvnewCard,MyOrientation.RIGHT)
+                            setFocusOn(binding.bindingAddMenu.imvnewCard,MyOrientation.RIGHT,HoleShape.CIRCLE)
                             createFileViewModel.setBottomMenuVisible(true)
                             goNextOnClickOnFocus() }
                         5 -> {
                             changeViewVisibility(onCallBinding.imvCharacter,false)
                             makeTxvGone()
                             createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
-                            setFocusOn(binding.editFileBinding.btnFinish,MyOrientation.BOTTOM)
+                            setFocusOn(binding.editFileBinding.btnFinish,MyOrientation.BOTTOM,HoleShape.CIRCLE)
                             binding.editFileBinding.root.setOnClickListener(null)
                             binding.editFileBinding.btnFinish.setOnClickListener{
                                 val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -345,10 +363,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                             makeTxvGone()
                             changeViewVisibility(onCallBinding.imvCharacter,false)
                             changeViewVisibility(onCallBinding.viewWithHole,true)
-                            setFocusOn(binding.bnvBinding.bnvImvAdd,MyOrientation.TOP)
+                            setFocusOn(binding.bnvBinding.bnvImvAdd,MyOrientation.TOP,HoleShape.CIRCLE)
                             goNextOnClickOnFocus() }
                         11 ->{
-                            setFocusOn(binding.bindingAddMenu.imvnewCard,MyOrientation.TOP)
+                            setFocusOn(binding.bindingAddMenu.imvnewCard,MyOrientation.TOP,HoleShape.CIRCLE)
                             createFileViewModel.setBottomMenuVisible(true)
                             goNextOnClickOnFocus()
                         }
@@ -375,18 +393,18 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         }
                         17 -> {
                             explainTextAnimation("カードをめくるには、下のナビゲーションボタンを使うよ",MyOrientation.RIGHT).start()
-                            setFocusOn(this.findViewById(R.id.lay_navigate_buttons),MyOrientation.TOP)
+                            setFocusOn(this.findViewById(R.id.lay_navigate_buttons),MyOrientation.TOP,HoleShape.RECTANGLE)
                             goNextOnClickAnyWhere()
                         }
                         18 -> {
                             explainTextAnimation("新しいカードを前に挿入するのはここ",MyOrientation.RIGHT).start()
                             appearAlphaAnimation(arrayOf(holeView),true)
-                            setFocusOn(this.findViewById(R.id.btn_insert_next),MyOrientation.TOP)
+                            setFocusOn(this.findViewById(R.id.btn_insert_next),MyOrientation.TOP,HoleShape.CIRCLE)
                             goNextOnClickAnyWhere()
                         }
                         19->{
                             explainTextAnimation("後ろに挿入するのはここ！",MyOrientation.RIGHT).start()
-                            setFocusOn(this.findViewById(R.id.btn_insert_previous),MyOrientation.TOP)
+                            setFocusOn(this.findViewById(R.id.btn_insert_previous),MyOrientation.TOP,HoleShape.CIRCLE)
                             goNextOnClickAnyWhere()
                         }
                         20->{
