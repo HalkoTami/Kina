@@ -4,14 +4,13 @@ import android.view.View
 import androidx.navigation.NavController
 import com.korokoro.kina.databinding.LibraryFragRvItemCardStringBinding
 import com.korokoro.kina.db.dataclass.Card
-import com.korokoro.kina.ui.viewmodel.customClasses.StringFragFocusedOn
+import com.korokoro.kina.ui.customClasses.StringFragFocusedOn
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.CardTypeStringViewModel
 
 class LibraryRVStringCardCL(val item: Card,
                             private val stringCardViewModel: CardTypeStringViewModel,
                             private val createCardViewModel: CreateCardViewModel,
-                            private val mainNavCon:NavController,
                             private val binding: LibraryFragRvItemCardStringBinding,
 ): View.OnClickListener{
 

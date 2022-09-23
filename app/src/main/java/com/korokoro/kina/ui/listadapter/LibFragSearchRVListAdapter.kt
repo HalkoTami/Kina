@@ -24,14 +24,11 @@ import com.korokoro.kina.ui.viewmodel.*
 
 
 class LibFragSearchRVListAdapter(
-    private val createFileViewModel: EditFileViewModel,
-    private val navController: NavController,
     private val libraryViewModel: LibraryBaseViewModel,
     private val stringCardViewModel: CardTypeStringViewModel,
     private val createCardViewModel: CreateCardViewModel,
     private val searchViewModel: SearchViewModel,
     private val lifecycleOwner: LifecycleOwner,
-    private val deletePopUpViewModel: DeletePopUpViewModel,
     private val mainNavController: NavController,
     private val context: Context,
 ) :
@@ -49,7 +46,6 @@ class LibFragSearchRVListAdapter(
 
     class LibFragSearchRVViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
         RecyclerView.ViewHolder(binding.root){
-        lateinit var fileBinding:LibraryFragRvItemFileBinding
         fun bind(item: Any,
                  libraryViewModel: LibraryBaseViewModel,
                  stringCardViewModel: CardTypeStringViewModel,
@@ -83,13 +79,11 @@ class LibFragSearchRVListAdapter(
             fun addL(){
                 arrayOf(
                     binding.libRvBaseContainer,
-
                     ).onEach { it.setOnClickListener(
                     LibraryRVSearchCL(item =  item,
-                        createCardViewModel = createCardViewModel,
                         lVM = libraryViewModel,
                         rvBinding = binding,
-                        navController = libraryViewModel.returnLibraryNavCon() ?:return, mainNavCon = mainNavController)
+                    )
                 )
                 }
             }

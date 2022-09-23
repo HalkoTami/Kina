@@ -4,21 +4,19 @@ import android.content.Context
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavController
 import com.korokoro.kina.R
 import com.korokoro.kina.databinding.AnkiHomeFragPopupAnkiSettingBaseBinding
-import com.korokoro.kina.ui.viewmodel.customClasses.AnkiFilter
-import com.korokoro.kina.ui.viewmodel.customClasses.AnkiOrder
-import com.korokoro.kina.ui.viewmodel.customClasses.AutoFlip
-import com.korokoro.kina.ui.fragment.anki_frag_con.AnkiFragFlipBaseFragmentDirections
+import com.korokoro.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFragDirections
+import com.korokoro.kina.ui.customClasses.AnkiFilter
+import com.korokoro.kina.ui.customClasses.AnkiOrder
+import com.korokoro.kina.ui.customClasses.AutoFlip
 import com.korokoro.kina.ui.viewmodel.AnkiBaseViewModel
 import com.korokoro.kina.ui.viewmodel.AnkiSettingPopUpViewModel
 
-class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBinding,
-                                 val settingVM: AnkiSettingPopUpViewModel,
-                                 val baseViewModel:AnkiBaseViewModel,
-                                 val context: Context,
-                                 val navCon:NavController): View.OnClickListener{
+class AnkiFragAnkiSettingPopUpCL(private val binding: AnkiHomeFragPopupAnkiSettingBaseBinding,
+                                 private val settingVM: AnkiSettingPopUpViewModel,
+                                 private val baseViewModel:AnkiBaseViewModel,
+                                 private val context: Context, ): View.OnClickListener{
 
     override fun onClick(v: View?) {
         fun changeSelectedStateAndVisibility(stateView:View,visibilityChangeView:View){
@@ -77,11 +75,7 @@ class AnkiFragAnkiSettingPopUpCL(val binding: AnkiHomeFragPopupAnkiSettingBaseBi
                             imvCloseSetting                             ->  baseViewModel.setSettingVisible(false)
                             btnStartAnki                                -> {
                                 baseViewModel.setSettingVisible(false)
-//                                when(baseViewModel.returnActiveFragment()){
-//                                    AnkiFragments.AnkiBox -> navCon.navigate(AnkiFragFlipBaseFragmentDirections.toFlipFrag())
-//                                    AnkiFragments.Flip -> return
-//                                }
-                                baseViewModel.returnAnkiBoxNavCon()?.navigate(AnkiFragFlipBaseFragmentDirections.toFlipFrag())
+                                baseViewModel.returnAnkiBaseNavCon()?.navigate(AnkiFlipBaseFragDirections.toFlipFrag())
 
                             }
                             else -> {

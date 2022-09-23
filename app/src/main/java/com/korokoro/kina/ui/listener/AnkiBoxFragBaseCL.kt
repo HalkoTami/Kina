@@ -21,10 +21,8 @@ class AnkiBoxFragBaseCL(val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel
                 btnStartAnki -> {
                     ankiBaseViewModel.setSettingVisible(true)
                     ankiBoxViewModel.apply {
-                        if(returnAnkiBoxItems().isNullOrEmpty()) ankiBoxViewModel.setModeCardsNotSelected(true)
+                        if(returnAnkiBoxItems().isEmpty()) ankiBoxViewModel.setModeCardsNotSelected(true)
                     }
-
-
                 }
                 btnAddToFavouriteAnkiBox -> {
                     if(btnAddToFavouriteAnkiBox.isSelected.not()&&ankiBoxViewModel.returnAnkiBoxItems().isEmpty().not()){

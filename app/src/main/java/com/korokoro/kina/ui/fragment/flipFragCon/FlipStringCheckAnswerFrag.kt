@@ -10,12 +10,14 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.korokoro.kina.R
 import com.korokoro.kina.databinding.AnkiFlipFragCheckAnswerStringFragBinding
 import com.korokoro.kina.db.dataclass.ActivityData
+import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.enumclass.ActivityStatus
-import com.korokoro.kina.ui.viewmodel.customClasses.FlipFragments
+import com.korokoro.kina.ui.customClasses.FlipFragments
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.korokoro.kina.ui.viewmodel.FlipTypeAndCheckViewModel
 import com.korokoro.kina.ui.viewmodel.AnkiSettingPopUpViewModel
@@ -24,10 +26,10 @@ import com.korokoro.kina.ui.viewmodel.AnkiSettingPopUpViewModel
 class FlipStringCheckAnswerFrag  : Fragment() {
 
     private var _binding: AnkiFlipFragCheckAnswerStringFragBinding? = null
-    private val args: FlipStringCheckAnswerFragmentArgs by navArgs()
-    private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
-    private val typeAndCheckViewModel: FlipTypeAndCheckViewModel by activityViewModels()
-    private val flipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
+    private val args: FlipStringCheckAnswerFragArgs by navArgs()
+    private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
+    private val flipTypeAndCheckViewModel: FlipTypeAndCheckViewModel by activityViewModels()
+    private val ankiFlipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -38,28 +40,6 @@ class FlipStringCheckAnswerFrag  : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        _binding =  AnkiFlipFragCheckAnswerStringFragBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-
-        flipBaseViewModel.apply {
-            Toast.makeText(requireActivity(),"${binding.lineLayCorrectAnswer.layoutParams.height}",Toast.LENGTH_SHORT).show()
-            settingVM.apply {
-                onChildFragmentsStart(FlipFragments.CheckAnswerString,returnReverseCardSide(),returnAutoFlip().active)
-            }
-            getCardFromDB(args.cardId).observe(viewLifecycleOwner){
-                setParentCard(it)
-                binding.txvTitle.text = if(args.answerIsBack)it.stringData?.backTitle ?:"裏" else it.stringData?.frontTitle ?:"表"
-                binding.txvCorrectAnswer.text = if(args.answerIsBack)it.stringData?.backText else it.stringData?.frontText
-
-
-            }
-            typeAndCheckViewModel.typedAnswers.observe(viewLifecycleOwner){
-                binding.txvYourAnswer.text = it[args.cardId]
-            }
-
-        }
         fun getCharacter(answerRight:Boolean):Drawable{
             return AppCompatResources.getDrawable(requireActivity(),
                 if(answerRight) R.drawable.tosaka_light_ball else R.drawable.character1_falling)!!
@@ -110,7 +90,17 @@ class FlipStringCheckAnswerFrag  : Fragment() {
         fun getAnswerCorrectTimes(answerIsBack:Boolean,results:List<ActivityData>):Int{
             return results.filter { it.activityStatus == if(answerIsBack)ActivityStatus.RIGHT_BACK_CONTENT_TYPED else ActivityStatus.RIGHT_FRONT_CONTENT_TYPED }.size
         }
-        typeAndCheckViewModel.getActivityData(args.cardId).observe(viewLifecycleOwner){
+        _binding =  AnkiFlipFragCheckAnswerStringFragBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+        val cardFromDBObserver = Observer<Card>{
+            ankiFlipBaseViewModel.setParentCard(it)
+            binding.txvTitle.text = if(args.answerIsBack)it.stringData?.backTitle ?:"裏" else it.stringData?.frontTitle ?:"表"
+            binding.txvCorrectAnswer.text = if(args.answerIsBack)it.stringData?.backText else it.stringData?.frontText
+        }
+        val typedAnswersObserver = Observer<MutableMap<Int,String>> {
+            binding.txvYourAnswer.text = it[args.cardId]
+        }
+        val activityDataObserver = Observer<List<ActivityData>> {
             setResultContentNoData(it.isNullOrEmpty())
             if(it.isNullOrEmpty().not()){
                 val results = it.filter { arrayOf(
@@ -126,10 +116,14 @@ class FlipStringCheckAnswerFrag  : Fragment() {
                     (correct/challenged.toDouble()*100).toInt()
                 binding.txvProgressAnswerCorrect.text = "正答率:${(correct/challenged.toDouble()*100).toInt()}%"
             }
-
-
         }
-
+        ankiFlipBaseViewModel.getCardFromDB(args.cardId).observe(viewLifecycleOwner,cardFromDBObserver)
+        ankiFlipBaseViewModel.onChildFragmentsStart(
+            FlipFragments.CheckAnswerString,
+            ankiSettingPopUpViewModel.returnReverseCardSide(),
+            ankiSettingPopUpViewModel.returnAutoFlip().active)
+        flipTypeAndCheckViewModel.typedAnswers.observe(viewLifecycleOwner,typedAnswersObserver)
+        flipTypeAndCheckViewModel.getActivityData(args.cardId).observe(viewLifecycleOwner,activityDataObserver)
 
 
 

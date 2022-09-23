@@ -5,9 +5,9 @@ import androidx.navigation.NavController
 import com.korokoro.kina.databinding.LibraryFragPopupConfirmMoveToFileBinding
 import com.korokoro.kina.ui.viewmodel.ChooseFileMoveToViewModel
 
-class LibFragPopUpConfirmMoveToFileCL(val binding: LibraryFragPopupConfirmMoveToFileBinding,
-                                      val chooseFileMoveToViewModel: ChooseFileMoveToViewModel,
-                                      val libNavCon:NavController): View.OnClickListener{
+class LibFragPopUpConfirmMoveToFileCL(private val binding: LibraryFragPopupConfirmMoveToFileBinding,
+                                      private val chooseFileMoveToViewModel: ChooseFileMoveToViewModel,
+                                      private val libNavCon:NavController): View.OnClickListener{
     override fun onClick(v: View?) {
         binding.apply {
             when(v){

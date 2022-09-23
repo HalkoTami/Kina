@@ -24,7 +24,7 @@ import com.korokoro.kina.ui.customViews.RecPosition
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.EditFileViewModel
 import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
-import com.korokoro.kina.ui.viewmodel.customClasses.MyOrientation
+import com.korokoro.kina.ui.customClasses.MyOrientation
 import kotlin.math.abs
 
 class InstallGuide(val activity:AppCompatActivity){
@@ -294,7 +294,7 @@ class InstallGuide(val activity:AppCompatActivity){
                 createFileViewModel.makeFilePos0()
                 createFileViewModel.onClickFinish(title)
                 hideKeyBoard(edtCreatingFileTitle,activity)
-                setPosition(imvTabLibrary, character,MyOrientation.TOP,20,false)
+                setPosition(imvTabLibrary, character, MyOrientation.TOP,20,false)
                 setPosition(character,textView, MyOrientation.RIGHT,0,false)
                 textView.layoutParams.width = abs(barrier.x + 10 - activity.resources.displayMetrics.widthPixels)
                     .toInt()
@@ -397,7 +397,7 @@ class InstallGuide(val activity:AppCompatActivity){
                 goNextOnClickAnyWhere()
             }
             fun goodBye1(){
-                setPosition(onInstallBinding.root,character,MyOrientation.MIDDLE,0,false)
+                setPosition(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
                 explainTextAnimation("これでガイドは終わりだよ", MyOrientation.TOP).start()
                 appearAlphaAnimation(arrayOf(character),false).start()
                 goNextOnClickAnyWhere()

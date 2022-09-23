@@ -1,14 +1,9 @@
-package com.korokoro.kina.ui.viewmodel.customClasses
+package com.korokoro.kina.ui.customClasses
 
 import com.korokoro.kina.db.dataclass.Card
+import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus
 
-enum class EditingMode{
-    New, Edit
-}
-enum class AnkiOrder{
-    Library, Random,MostMissed
-}
 class ColorPalletStatus(
     var colNow: ColorStatus,
     var before: ColorStatus?
@@ -25,33 +20,9 @@ class AutoFlip(
     var active:Boolean = false,
     var seconds:Int = 20
 )
-class FragmentTree(
-    var startFragment: MainFragment = MainFragment.Library,
-    var libraryFragment: LibraryFragment = LibraryFragment.Home,
-    var ankiFragment: AnkiFragments = AnkiFragments.AnkiBox,
-    var flipFragment: FlipFragment = FlipFragment.StringLook
-)
-enum class MainFragment{
-    Library,EditCard,Anki
-}
-enum class LibraryFragment{
-    ChooseFileMoveTo,FlashCardCover,Folder,Home,InBox
-}
-enum class AnkiFragments{
-    AnkiBox,Flip
-}
-enum class FlipFragment{
-    StringLook,StringType
-}
-enum class FlipFragments{
-    LookStringFront,LookStringBack,TypeAnswerString,CheckAnswerString
-}
-enum class Count{
-    Start,End
-}
-enum class AnimationAttributes{
-    StartAnim,EndAnim,Pause,Resume,Cancel
-}
+
+
+
 class CountFlip(
     var count: Count? = null,
     var countIfLongerThan:Int = 10,
@@ -70,4 +41,22 @@ class Progress(
 class MakeToastFromVM(
     var text:String,
     var show:Boolean
+)
+class AnkiBoxTabData(
+    var currentTab: AnkiBoxFragments,
+    var before: AnkiBoxFragments?
+)
+class MySize(
+    val width:Int,
+    val height:Int
+)
+class MyPosition(
+    val start:Int,
+    val top:Int,
+
+    )
+class ParentFileAncestors(
+    val gGrandPFile: File?,
+    val gParentFile: File?,
+    val ParentFile: File?,
 )

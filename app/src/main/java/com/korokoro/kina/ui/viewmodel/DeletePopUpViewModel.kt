@@ -5,53 +5,42 @@ import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
+import com.korokoro.kina.ui.customClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel() {
-    private val _toastText= MutableLiveData<String>()
-    val toastText :LiveData<String> = _toastText
-    fun setToastText(string: String){
-        _toastText.value = string
-    }
-    fun returnToastText():String{
-        return  _toastText.value ?:""
-    }
-    private val _showToast= MutableLiveData<Boolean>()
-    val showToast :LiveData<Boolean> = _showToast
-    fun setShowToast(boolean: Boolean){
-        _showToast.value = boolean
+    private val _toast = MutableLiveData<MakeToastFromVM>()
+    private fun makeToastFromVM(string: String){
+        _toast.value = MakeToastFromVM(string,true)
+        _toast.value = MakeToastFromVM("",false)
     }
 
-    fun makeToastVisible(){
-        setShowToast(true)
-        setShowToast(false)
-    }
+    val toast :LiveData<MakeToastFromVM> = _toast
+
     private fun deleteSingleFile(file: File, deleteChildren:Boolean){
         viewModelScope.launch {
             if(!deleteChildren){
                 repository.upDateChildFilesOfDeletedFile(file.fileId,file.parentFileId)
                 repository.delete(file)
-                setToastText("${file.title}を削除しました")
-                makeToastVisible()
             } else {
                 repository.deleteFileAndAllDescendants(file.fileId)
-                setToastText("${file.title}と中身を削除しました")
-                makeToastVisible()
             }
         }
 
     }
     private fun deleteMultipleFiles(file: List<File>, deleteChildren:Boolean){
         file.onEach { deleteSingleFile(it,deleteChildren) }
-        setToastText("選択中のアイテムを削除しました")
-        makeToastVisible()
+        if(file.size == 1) {
+            val single = file.single()
+            if(deleteChildren) makeToastFromVM("${single.title}と中身を削除しました")
+            else  makeToastFromVM("${single.title}を削除しました")
+        } else makeToastFromVM("選択中のアイテムを削除しました")
     }
-    private fun deleteCards(cards: List<Card>, ){
+    private fun deleteCards(cards: List<Card> ){
         viewModelScope.launch {
             repository.deleteMultiple(cards)
         }
-        setToastText("${cards.size}枚のカードを削除しました")
-        makeToastVisible()
+        makeToastFromVM("${cards.size}枚のカードを削除しました")
     }
     fun getAllDescendantsByFileId(fileIdList: List<Int>): LiveData<List<File>> = repository.getAllDescendantsFilesByMultipleFileId(fileIdList).asLiveData()
     fun getCardsByMultipleFileId(fileIdList: List<Int>): LiveData<List<Card>> = repository.getAllDescendantsCardsByMultipleFileId(fileIdList).asLiveData()
@@ -59,7 +48,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setDeletingItem(list:MutableList<Any>){
         _deletingItems.value = list
     }
-    fun returnDeletingItems():List<Any>{
+    private fun returnDeletingItems():List<Any>{
         return _deletingItems.value ?: mutableListOf()
     }
     val deletingItem:LiveData<MutableList<Any>> = _deletingItems
@@ -108,10 +97,6 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         setConfirmDeleteWithChildrenView(a)
     }
 
-
-
-    val deletingItemChildrenCards:LiveData<List<Card>?> = _deletingItemChildrenCards
-
     fun checkDeletingItemsHasChildren():Boolean{
         return returnDeletingItemChildrenCards().isEmpty().not()||returnDeletingItemChildrenFiles().isEmpty().not()
     }
@@ -119,7 +104,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         if(returnDeletingItems().size == 1){
             deleteSingleFile(returnDeletingItems().single() as File,false)
         } else {
-            deleteMultipleFiles(returnDeletingItems() as List<File>, false)
+            deleteMultipleFiles(returnDeletingItems().filterIsInstance<File>() , false)
         }
 //        returnDeletingItems().onEach {
 //            deleteSingleFile(it as File,false)
@@ -133,9 +118,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         deleteCards(cards)
     }
     fun deleteFileWithChildren(){
-        returnDeletingItems().onEach {
-            deleteSingleFile(it as File,true)
-        }
+        deleteMultipleFiles(returnDeletingItems().filterIsInstance<File>(),true)
         setConfirmDeleteWithChildrenVisible(false)
     }
 
@@ -171,7 +154,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
     }
     val confirmDeleteWithChildrenView:LiveData<ConfirmDeleteWithChildrenView> = _confirmDeleteWithChildrenView
 
-    fun setConfirmDeleteVisible(visible: Boolean,){
+    fun setConfirmDeleteVisible(visible: Boolean){
         val a = returnConfirmDeleteView()
         if(a.visible!=visible){
             a.visible = visible
@@ -179,7 +162,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         }
 
     }
-    fun setConfirmDeleteWithChildrenVisible(visible: Boolean,){
+    fun setConfirmDeleteWithChildrenVisible(visible: Boolean){
         val a = returnConfirmDeleteWithChildrenView()
         if(a.visible!=visible){
             a.visible = visible

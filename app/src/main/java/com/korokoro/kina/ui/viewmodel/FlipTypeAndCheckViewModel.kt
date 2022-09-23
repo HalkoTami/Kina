@@ -34,15 +34,15 @@ class FlipTypeAndCheckViewModel(val repository: MyRoomRepository) : ViewModel() 
     val typedAnswers :LiveData<MutableMap<Int,String>> = _typedAnswers
     fun addAnswer(cardId:Int ,answer:String){
         val a = returnTypedAnswers()
-        a.put(cardId,answer)
+        a[cardId] = answer
         setTypedAnswers(a)
     }
-    fun getAnswer(cardId: Int):String{
+    private fun getAnswer(cardId: Int):String{
         val b = returnTypedAnswers()
         return b[cardId] ?:""
     }
 
-    fun checkAnswer(card:Card,userAnswer:String,answerIsBack:Boolean){
+    fun checkAnswer(card:Card,answerIsBack:Boolean){
         val activityStatus=
         if(!answerIsBack){
             if(card.stringData?.frontText==getAnswer(card.id))

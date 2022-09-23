@@ -20,11 +20,12 @@ import com.korokoro.kina.databinding.MainActivityBinding
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
+import com.korokoro.kina.ui.customClasses.ColorPalletStatus
+import com.korokoro.kina.ui.customClasses.MainFragment
 import com.korokoro.kina.ui.listener.popUp.EditFilePopUpCL
 import com.korokoro.kina.ui.observer.LibraryOb
 import com.korokoro.kina.ui.view_set_up.ColorPalletViewSetUp
 import com.korokoro.kina.ui.viewmodel.*
-import com.korokoro.kina.ui.viewmodel.customClasses.*
 
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {

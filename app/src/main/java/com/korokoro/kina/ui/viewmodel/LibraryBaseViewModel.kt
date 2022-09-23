@@ -1,28 +1,21 @@
 package com.korokoro.kina.ui.viewmodel
 
-import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import androidx.navigation.NavDirections
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
 
 import com.korokoro.kina.db.dataclass.File
-//import com.example.tangochoupdated.room.dataclass.FileWithChild
 import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.ui.viewmodel.customClasses.LibRVState
-import com.korokoro.kina.ui.viewmodel.customClasses.LibraryFragment
-import com.korokoro.kina.db.rvclasses.LibRVViewType
-import com.korokoro.kina.db.rvclasses.LibraryRV
-import com.korokoro.kina.ui.view_set_up.LibraryTopBarMode
-import com.korokoro.kina.ui.view_set_up.ParentFileAncestors
-import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFragChooseFileMoveToDirections
-import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFragFlashCardCoverDirections
-import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFragFolderDirections
-import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFragHomeDirections
+import com.korokoro.kina.ui.customClasses.LibRVState
+import com.korokoro.kina.ui.customClasses.LibraryFragment
+import com.korokoro.kina.ui.customClasses.LibraryTopBarMode
+import com.korokoro.kina.ui.customClasses.ParentFileAncestors
+import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFragDirections
+import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFragDirections
+import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFolderFragDirections
+import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-
 class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
     /**
      *
@@ -30,9 +23,6 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private val _parentFragment= MutableLiveData<LibraryFragment>()
     fun setLibraryFragment(fragment: LibraryFragment){
         _parentFragment.value = fragment
-    }
-    fun returnActiveFragment(): LibraryFragment {
-        return _parentFragment.value ?: LibraryFragment.Home
     }
 //    －－－－初期設定－－－－
 
@@ -45,8 +35,6 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
 
 //    Fragment作成時に毎回呼び出す
-    fun onStart(){
-    }
     fun onCreate(){
         clearSelectedItems()
     }
@@ -111,66 +99,6 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun clearFinalList(){
         setParentRVItems(mutableListOf())
     }
-//    LibraryRVへの変換
-    private fun convertFileToLibraryRV(file: File):LibraryRV{
-        when (file.fileStatus) {
-            FileStatus.FOLDER -> {
-                return LibraryRV(
-                    type = LibRVViewType.Folder,
-                    position = file.libOrder!!,
-                    file = file,
-                    card = null,
-                    tag = null,
-                    id = file.fileId,
-                    selectable = false,
-                    selected = false
-                )
-            }
-            FileStatus.FLASHCARD_COVER -> {
-                return LibraryRV(
-                    type = LibRVViewType.FlashCardCover,
-                    position = file.libOrder!!,
-                    file = file,
-                    card = null,
-                    tag = null,
-                    id = file.fileId
-
-                )
-            }
-            else -> illegalDecoyCallException("unknown class")
-        }
-    }
-//    private fun convertCardToLibraryRV(card: CardAndTags): LibraryRV {
-//        when (card.card.cardStatus) {
-//            CardStatus.STRING -> return LibraryRV(
-//                type = LibRVViewType.StringCard,
-//                position = card.card.libOrder,
-//                file = null,
-//                card = card.card,
-//                tag = card.tags,
-//                id = card.card.id
-//            )
-//            CardStatus.CHOICE -> return LibraryRV(
-//                type = LibRVViewType.ChoiceCard,
-//                position = card.card.libOrder,
-//                file = null,
-//                card = card.card,
-//                tag = card.tags,
-//                id = card.card.id
-//            )
-//
-//            CardStatus.MARKER -> return LibraryRV(
-//                type = LibRVViewType.MarkerCard,
-//                position = card.card.libOrder,
-//                file = null,
-//                card = card.card,
-//                tag = card.tags,
-//                id = card.card.id
-//            )
-//
-//            else -> illegalDecoyCallException("unknown class")
-//        }
-//    }
 //    selected Items
     private val _selectedItems = MutableLiveData<MutableList<Any>>()
     private fun setSelectedItems(list:MutableList<Any>){
@@ -183,27 +111,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         return _selectedItems.value ?: mutableListOf()
     }
     val selectedItems:LiveData<MutableList<Any>> = _selectedItems
-//
-//    private val _selectedFiles = MutableLiveData<MutableList<File>>()
-//    private fun setSelectedFiles(list:MutableList<File>){
-//        _selectedFiles.value = list
-//    }
-//    private val _selectedCards = MutableLiveData<MutableList<Card>>()
-//    private fun setSelectedCards(list:MutableList<Card>){
-//        _selectedCards.value = list
-//    }
-//    fun returnSelectedCards():MutableList<Card>?{
-//         return _selectedCards.value
-//    }
-//    fun returnSelectedFiles():MutableList<File>?{
-//        return _selectedFiles.value
-//    }
-//    val selectedCards:LiveData<MutableList<Card>> = _selectedCards
-//    val selectedFiles:LiveData<MutableList<File>> = _selectedFiles
-//    fun clearSelectedItems(){
-//        setSelectedCards(mutableListOf())
-//        setSelectedFiles(mutableListOf())
-//    }
+
     private fun addToSelectedItem(item: Any){
         val list = returnSelectedItems()
         list.add( item)
@@ -225,8 +133,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun openNextFile(item: File){
         val action =
         when(item.fileStatus){
-            FileStatus.FOLDER->     LibraryFragFolderDirections.openFolder(intArrayOf(item.fileId))
-            FileStatus.FLASHCARD_COVER -> LibraryFragFlashCardCoverDirections.openFlashCardCover(intArrayOf(item.fileId))
+            FileStatus.FOLDER->     LibraryFolderFragDirections.openFolder(intArrayOf(item.fileId))
+            FileStatus.FLASHCARD_COVER -> LibraryFlashCardCoverFragDirections.openFlashCardCover(intArrayOf(item.fileId))
             else -> return
         }
         returnLibraryNavCon()?.navigate(action)
@@ -252,14 +160,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         _rvCover.value = rvCover
     }
 
-    val modeInBox:LiveData<Boolean> = _modeInBox
-
     private val _chooseFileMoveToMode = MutableLiveData<Boolean>()
-    private fun setChooseFileMoveToMode (boolean: Boolean){
-        _chooseFileMoveToMode.value = boolean
-        changeTopBarMode()
-        changeRVMode()
-    }
     val chooseFileMoveToMode:LiveData<Boolean> =_chooseFileMoveToMode
 
     private val _multipleSelectMode =  MutableLiveData<Boolean>()
@@ -283,16 +184,12 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private fun setRecyclerViewMode(libRVState: LibRVState){
         _recyclerViewMode.value = libRVState
     }
-    val recyclerViewMode:LiveData<LibRVState> = _recyclerViewMode
     private fun changeRVMode(){
         setRecyclerViewMode(
             if(_multipleSelectMode.value == true) LibRVState.Selectable
         else if(_chooseFileMoveToMode.value == true) LibRVState.SelectFileMoveTo
         else LibRVState.Plane
         )
-    }
-    fun returnRVMode(): LibRVState?{
-        return _recyclerViewMode.value
     }
 
 
@@ -304,7 +201,6 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private fun setTopBarMode (topBarMode: LibraryTopBarMode){
         _topBarMode.value = topBarMode
     }
-    val topBarMode :LiveData<LibraryTopBarMode> = _topBarMode
     private fun changeTopBarMode(){
         setTopBarMode(if(_multipleSelectMode.value == true) LibraryTopBarMode.Multiselect
         else if (_chooseFileMoveToMode.value == true) LibraryTopBarMode.ChooseFileMoveTo
@@ -316,47 +212,18 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
 //    ClickEvents
     fun onClickInBox(){
-        val a = LibraryFragHomeDirections.openInbox()
+        val a = LibraryHomeFragDirections.openInbox()
         returnLibraryNavCon()?.navigate(a)
 
     }
 
 
-//    －－－－－－－－
-
-//    空の際の表示
-    private val _fileEmptyText =  MutableLiveData<String>()
-    private fun setFileEmptyText(string: String){
-        _fileEmptyText.apply {
-            value = string
-        }
-    }
-    val fileEmptyText:LiveData<String> = _fileEmptyText
-
-//    －－－－Confirm PopUp－－－－
-
-
-
-
-//    －－－－－－－－
-
-//    －－－－－－－－
-//    －－－－navigation－－－－
-
-    private val _action = MutableLiveData<NavDirections>()
-    val action: LiveData<NavDirections> = _action
-    private fun setAction(navDirections: NavDirections){
-        _action.value = navDirections
-    }
     fun checkViewReset():Boolean{
         if(_multipleSelectMode.value == true){
             setMultipleSelectMode(false)
             return true
         }
         return false
-//        if(_confirmPopUp.value?.visible == true){
-//            setConfirmPopUpVisible(false, ConfirmMode.DeleteItem)
-//        }
     }
 
 
@@ -388,120 +255,17 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
 
 
-//    －－－－－－－－
-
-
-//    －－－－DB操作－－－－
-
-//    －－－－削除－－－－
-//    clickEvents
-
-//    fun onClickDeleteSelectedItems(){
-//        val a = mutableListOf<Any>()
-//        if(_selectedCards.value!=null) a.addAll(_selectedCards.value!!)
-//        if(_selectedFiles.value!=null) a.addAll(_selectedFiles.value!!)
-//        setDeletingItem(a)
-//        setConfirmPopUpVisible(true, ConfirmMode.DeleteItem)
-//    }
-
-//    fun onClickBtnCommitConfirm(mode: ConfirmMode){
-//        when(mode){
-//            ConfirmMode.DeleteItem ->{
-//
-//                if(_deletingItemChildrenFiles.value!!.isNotEmpty()){
-//                    setConfirmPopUpVisible(true, ConfirmMode.DeleteWithChildren)
-//                } else{
-//                    if(_parentFile.value?.fileStatus != FileStatus.TANGO_CHO_COVER)
-//                    deleteSingleFile(_deletingItems.value!![0] as File,false)
-//                    setConfirmPopUpVisible(false,mode)
-//                }
-//            }
-//            ConfirmMode.DeleteWithChildren -> {
-//                if(_parentFile.value?.fileStatus != FileStatus.TANGO_CHO_COVER)
-//                deleteSingleFile(_deletingItems.value!![0] as File,true)
-//                setConfirmPopUpVisible(false, ConfirmMode.DeleteItem)
-//            }
-//        }
-//    }
-//    fun onClickBtnDenial(mode: ConfirmMode){
-//        when(mode){
-//            ConfirmMode.DeleteItem -> {
-//                setConfirmPopUpVisible(false,mode)
-//                setDeletingItem(arrayListOf())
-//            }
-//            ConfirmMode.DeleteWithChildren ->{
-//                deleteSingleFile(_deletingItems.value!![0] as File,false)
-//                setConfirmPopUpVisible(false, ConfirmMode.DeleteItem)
-//            }
-//        }
-//
-//    }
-
-
-
-    private fun updateCards(cards:List<Card>){
-        viewModelScope.launch {
-            repository.updateMultiple(cards)
-        }
-    }
-    private fun updateFiles(files:List<File>){
-        viewModelScope.launch {
-            repository.updateMultiple(files)
-        }
-    }
-    private fun update(any:Any){
-        viewModelScope.launch {
-            repository.update(any)
-        }
-    }
-    fun upDateCardPosition(position:Int,card:Card){
-        val update = card
-        update.libOrder = position
-        update(card)
-    }
-
-
 
 //    －－－－－－－－
 //    －－－－ファイル移動－－－－
     fun onClickMoveInBoxCardToFlashCard(){
         setMultipleSelectMode(true)
     }
-//    fun chooseFlashCardMoveTo(){
-//        setChooseFileMoveToMode(true)
-//        val a  = LibraryFragmentDirections.openFile()
-//        a.parentItemId =if(_parentFile.value == null) null else intArrayOf(_parentFile.value!!.fileId)
-//        setAction(a)
-//    }
     fun openChooseFileMoveTo(file:File?){
-        setChooseFileMoveToMode(true)
-        val a  = LibraryFragChooseFileMoveToDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))
+        val a  = LibraryChooseFileMoveToFragDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))
        returnLibraryNavCon()?.navigate(a)
     }
 
-
-    fun moveSelectedItemToFile(item:File){
-
-        val change = returnSelectedItems()
-
-        change.onEach {
-            when(it ){
-                is Card -> {
-                    it.belongingFlashCardCoverId = item.fileId
-                    it.libOrder = item.childData.childCardsAmount + 1
-
-                }
-                is File -> {
-                    it.parentFileId = item.fileId
-
-                }
-            }
-            update(it)
-        }
-
-    clearSelectedItems()
-    //        setChooseFileMoveToMode(false)
-    }
 
 //    －－－－－－－－
 

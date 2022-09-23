@@ -13,7 +13,7 @@ import com.korokoro.kina.ui.listener.MyTouchListener
 import com.korokoro.kina.R
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.ui.viewmodel.customClasses.LibRVState
+import com.korokoro.kina.ui.customClasses.LibRVState
 import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel

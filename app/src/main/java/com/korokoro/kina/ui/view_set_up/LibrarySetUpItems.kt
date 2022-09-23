@@ -20,10 +20,12 @@ import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
-import com.korokoro.kina.ui.viewmodel.customClasses.LibRVState
+import com.korokoro.kina.ui.customClasses.LibRVState
 
 
-class LibrarySetUpItems(){
+class LibrarySetUpItems{
+
+
 
     fun setUpLibFragWithMultiModeBase(binding: LibraryChildFragWithMulModeBaseBinding,
                                       topBarView:View,
@@ -136,7 +138,7 @@ class LibrarySetUpItems(){
         val str = view.text as Spannable
         val i = fulltext.indexOf(subtext)
         if(i<0) return else
-        str.setSpan(
+         str.setSpan(
             ForegroundColorSpan(color),
             i,
             i + subtext.length,

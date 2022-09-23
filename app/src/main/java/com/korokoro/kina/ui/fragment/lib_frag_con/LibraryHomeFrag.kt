@@ -14,7 +14,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
 import com.korokoro.kina.databinding.*
-import com.korokoro.kina.ui.viewmodel.customClasses.LibraryFragment
+import com.korokoro.kina.ui.customClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.korokoro.kina.ui.listener.topbar.LibFragTopBarHomeCL
@@ -32,10 +32,10 @@ class LibraryHomeFrag : Fragment(){
     private lateinit var adapter:LibFragPlaneRVListAdapter
     private lateinit var searchAdapter:LibFragSearchRVListAdapter
     private val searchViewModel:SearchViewModel by activityViewModels()
-    private val createFileViewModel: EditFileViewModel by activityViewModels()
-    private val stringCardViewModel: CardTypeStringViewModel by activityViewModels()
+    private val editFileViewModel: EditFileViewModel by activityViewModels()
+    private val cardTypeStringViewModel: CardTypeStringViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
-    private val libraryViewModel: LibraryBaseViewModel by activityViewModels()
+    private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
 
     private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
@@ -56,30 +56,33 @@ class LibraryHomeFrag : Fragment(){
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
                 context  = requireActivity(),
-                stringCardViewModel  = stringCardViewModel,
+                stringCardViewModel  = cardTypeStringViewModel,
                 createCardViewModel  = createCardViewModel,
                 mainNavController = mainNavCon,
                 deletePopUpViewModel = deletePopUpViewModel,
-                createFileViewModel = createFileViewModel,
-                libraryViewModel = libraryViewModel)
+                createFileViewModel = editFileViewModel,
+                libraryViewModel = libraryBaseViewModel)
             searchAdapter = LibFragSearchRVListAdapter(
-                createFileViewModel,libNavCon,
-                libraryViewModel,stringCardViewModel,createCardViewModel,searchViewModel,viewLifecycleOwner,deletePopUpViewModel,
-                mainNavCon,
-                requireActivity()
+                libraryViewModel = libraryBaseViewModel,
+                stringCardViewModel = cardTypeStringViewModel,
+                createCardViewModel = createCardViewModel,
+                searchViewModel = searchViewModel,
+                lifecycleOwner = viewLifecycleOwner,
+                mainNavController = mainNavCon,
+                context = requireActivity(),
             )
         }
         fun homeTopBarAddCL(){
             arrayOf(
                 topBarBinding.frameLayInBox,
                 topBarBinding.imvBookMark,
-            ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(topBarBinding, libraryViewModel)) }
+            ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(topBarBinding, libraryBaseViewModel)) }
         }
         fun addCL(){
             homeTopBarAddCL()
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
-                libraryViewModel,
+                libraryBaseViewModel,
                 createCardViewModel,
                 deletePopUpViewModel,
                 searchViewModel,
@@ -97,13 +100,13 @@ class LibraryHomeFrag : Fragment(){
 
 
         createCardViewModel.setParentFlashCardCover(null)
-        createFileViewModel.setParentTokenFileParent(null)
-        createFileViewModel.makeAllBottomMenuClickable()
+        editFileViewModel.setParentTokenFileParent(null)
+        editFileViewModel.makeAllBottomMenuClickable()
         searchViewModel.matchedItems.observe(viewLifecycleOwner){
             searchAdapter.submitList(it)
         }
         fun observeSwipe(){
-            libraryViewModel.apply {
+            libraryBaseViewModel.apply {
                 rvCover.observe(viewLifecycleOwner){
                     binding.rvCover.visibility = if(it.visible) View.VISIBLE else View.GONE
                 }
@@ -116,7 +119,7 @@ class LibraryHomeFrag : Fragment(){
             }
         }
         fun observeMultiMode(){
-            libraryViewModel.apply {
+            libraryBaseViewModel.apply {
                 multipleSelectMode.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
                     topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
@@ -134,10 +137,10 @@ class LibraryHomeFrag : Fragment(){
         }
         observeSwipe()
         observeMultiMode()
-        libraryViewModel.apply {
+        libraryBaseViewModel.apply {
             setLibraryFragment(LibraryFragment.Home)
 
-            libraryViewModel.clearFinalList()
+            libraryBaseViewModel.clearFinalList()
 
             val commonViewSetUp = LibrarySetUpItems()
 
@@ -188,7 +191,7 @@ class LibraryHomeFrag : Fragment(){
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-                if(!libraryViewModel.checkViewReset())
+                if(!libraryBaseViewModel.checkViewReset())
                     libNavCon.popBackStack()
             }
         }

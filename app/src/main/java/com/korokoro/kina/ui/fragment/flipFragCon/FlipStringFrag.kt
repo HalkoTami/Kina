@@ -10,13 +10,15 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.korokoro.kina.R
 import com.korokoro.kina.databinding.AnkiFlipFragLookStringFragBinding
-import com.korokoro.kina.ui.viewmodel.customClasses.Count
-import com.korokoro.kina.ui.viewmodel.customClasses.CountFlip
-import com.korokoro.kina.ui.viewmodel.customClasses.FlipFragments
+import com.korokoro.kina.db.dataclass.Card
+import com.korokoro.kina.ui.customClasses.Count
+import com.korokoro.kina.ui.customClasses.CountFlip
+import com.korokoro.kina.ui.customClasses.FlipFragments
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.korokoro.kina.ui.viewmodel.AnkiSettingPopUpViewModel
 
@@ -25,8 +27,8 @@ class FlipStringFrag  : Fragment() {
 
     private var _binding: AnkiFlipFragLookStringFragBinding? = null
     private val flipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
-    private val args: FlipStringFragmentArgs by navArgs()
-    private val settingVM: AnkiSettingPopUpViewModel by activityViewModels()
+    private val args: FlipStringFragArgs by navArgs()
+    private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -42,41 +44,33 @@ class FlipStringFrag  : Fragment() {
         val root: View = binding.root
         val cardId = args.cardId
         val front = args.front
-
-
-        binding.apply {
-            flipBaseViewModel.apply {
-                settingVM.apply {
-                    onChildFragmentsStart(when(front){
-                        true -> FlipFragments.LookStringFront
-                        false -> FlipFragments.LookStringBack
-                    },returnReverseCardSide(),returnAutoFlip().active)
-                }
-
-                if(cardId!=null){
-                    getCardFromDB(cardId.single()).observe(viewLifecycleOwner){
-                        setParentCard(it)
-                        val data = it.stringData
-                        when(front) {
-                            true ->{
-                                txvTitle.text =  "表 めくった回数 " + it.timesFlipped.toString()
-//                                data?.frontTitle ?:"表"
-                                txvContent.text = data?.frontText
-                                setCountFlip(CountFlip(count = Count.Start, countingCard = it))
-                            }
-                            false  -> {
-                                txvTitle.text ="裏  めくった回数 " +it.timesFlipped.toString()
-//                                data?.backTitle ?:"裏"
-                                txvContent.text = data?.backText
-                            }
-                        }
-
+        val cardFromDBObserver = Observer<Card>{
+            flipBaseViewModel.setParentCard(it)
+            val data = it.stringData
+            binding.apply {
+                when(front) {
+                    true ->{
+                        txvTitle.text = data?.frontTitle ?:"表"
+                        txvContent.text = data?.frontText
+                    }
+                    false  -> {
+                        txvTitle.text =data?.backTitle ?:"裏"
+                        txvContent.text = data?.backText
                     }
                 }
-
             }
 
         }
+
+        flipBaseViewModel.onChildFragmentsStart(
+            when(front){
+                true -> FlipFragments.LookStringFront
+                false -> FlipFragments.LookStringBack
+            },
+            ankiSettingPopUpViewModel.returnReverseCardSide(),
+            ankiSettingPopUpViewModel.returnAutoFlip().active
+        )
+        flipBaseViewModel.getCardFromDB(cardId?.single() ?:return binding.root).observe(viewLifecycleOwner,cardFromDBObserver)
 
 
 

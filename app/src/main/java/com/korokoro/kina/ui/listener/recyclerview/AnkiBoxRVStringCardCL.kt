@@ -4,10 +4,10 @@ import android.view.View
 import com.korokoro.kina.databinding.AnkiHomeFragRvItemCardBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.ui.viewmodel.AnkiBoxViewModel
-
-class AnkiBoxRVStringCardCL(val card: Card,
+class AnkiBoxRVStringCardCL(private val card: Card,
                             private val binding:AnkiHomeFragRvItemCardBinding,
-                            val ankiBoxVM:AnkiBoxViewModel,
+                            private val ankiBoxVM:AnkiBoxViewModel,
+
 ): View.OnClickListener{
 
     private fun reverseSelectedStatus(view: View){

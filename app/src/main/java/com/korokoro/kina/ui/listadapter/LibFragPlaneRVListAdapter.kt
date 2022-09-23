@@ -15,7 +15,7 @@ import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.korokoro.kina.ui.view_set_up.LibraryAddListeners
 import com.korokoro.kina.ui.view_set_up.LibrarySetUpItems
 import com.korokoro.kina.ui.viewmodel.*
-import com.korokoro.kina.ui.viewmodel.customClasses.LibRVState
+import com.korokoro.kina.ui.customClasses.LibRVState
 
 
 /**

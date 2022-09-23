@@ -19,7 +19,7 @@ import com.korokoro.kina.*
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus
-import com.korokoro.kina.ui.viewmodel.customClasses.LibraryFragment
+import com.korokoro.kina.ui.customClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.korokoro.kina.ui.view_set_up.GetCustomDrawables
@@ -29,7 +29,7 @@ import com.korokoro.kina.ui.viewmodel.*
 
 
 class LibraryFolderFrag :  Fragment(){
-    private val args: LibraryFragFolderArgs by navArgs()
+    private val args: LibraryFolderFragArgs by navArgs()
 
     private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView
@@ -38,10 +38,10 @@ class LibraryFolderFrag :  Fragment(){
     private lateinit var adapter:LibFragPlaneRVListAdapter
     private lateinit var searchAdapter: LibFragSearchRVListAdapter
     private val searchViewModel:SearchViewModel by activityViewModels()
-    private val stringCardViewModel: CardTypeStringViewModel by activityViewModels()
-    private val createFileViewModel: EditFileViewModel by activityViewModels()
+    private val cardTypeStringViewModel: CardTypeStringViewModel by activityViewModels()
+    private val editFileViewModel: EditFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
-    private val libraryViewModel: LibraryBaseViewModel by activityViewModels()
+    private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
 
     private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
@@ -61,25 +61,28 @@ class LibraryFolderFrag :  Fragment(){
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
                 context  = requireActivity(),
-                stringCardViewModel  = stringCardViewModel,
+                stringCardViewModel  = cardTypeStringViewModel,
                 createCardViewModel  = createCardViewModel,
                 mainNavController = mainNavCon,
                 deletePopUpViewModel = deletePopUpViewModel,
-                createFileViewModel = createFileViewModel,
-                libraryViewModel = libraryViewModel)
+                createFileViewModel = editFileViewModel,
+                libraryViewModel = libraryBaseViewModel)
             searchAdapter = LibFragSearchRVListAdapter(
-                createFileViewModel,libNavCon,
-                libraryViewModel,stringCardViewModel,createCardViewModel,searchViewModel,viewLifecycleOwner,deletePopUpViewModel,
-                mainNavCon,
-                requireActivity()
+                libraryViewModel = libraryBaseViewModel,
+                stringCardViewModel = cardTypeStringViewModel,
+                createCardViewModel = createCardViewModel,
+                searchViewModel = searchViewModel,
+                lifecycleOwner = viewLifecycleOwner,
+                mainNavController = mainNavCon,
+                context = requireActivity(),
             )
         }
         fun addCL(){
             val addCL = LibraryAddListeners()
-            addCL.fileTopBarAddCL(topBarBinding,binding.ancestorsBinding,libraryViewModel)
+            addCL.fileTopBarAddCL(topBarBinding,binding.ancestorsBinding,libraryBaseViewModel)
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
-                libraryViewModel,
+                libraryBaseViewModel,
                 createCardViewModel,
                 deletePopUpViewModel,
                 searchViewModel,
@@ -92,7 +95,7 @@ class LibraryFolderFrag :  Fragment(){
             binding.frameLayAncestors.visibility = View.VISIBLE
         }
         fun observeSwipe(){
-            libraryViewModel.apply {
+            libraryBaseViewModel.apply {
                 rvCover.observe(viewLifecycleOwner){
                     binding.rvCover.visibility = if(it.visible) View.VISIBLE else View.GONE
                 }
@@ -105,7 +108,7 @@ class LibraryFolderFrag :  Fragment(){
             }
         }
         fun observeMultiMode(){
-            libraryViewModel.apply {
+            libraryBaseViewModel.apply {
                 multipleSelectMode.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
                     topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
@@ -128,12 +131,12 @@ class LibraryFolderFrag :  Fragment(){
         observeMultiMode()
 
 
-        libraryViewModel.apply {
+        libraryBaseViewModel.apply {
             clearFinalList()
             setLibraryFragment(LibraryFragment.Folder)
             parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileFromDB(it)
-                createFileViewModel.setParentTokenFileParent(it)
+                editFileViewModel.setParentTokenFileParent(it)
                 topBarBinding.apply {
                     txvFileTitle.text = it?.title ?:"タイトルなし"
                     imvFileType.setImageDrawable(
@@ -155,7 +158,7 @@ class LibraryFolderFrag :  Fragment(){
 
             parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
-                createFileViewModel.filterBottomMenuByAncestors(it,it[0])
+                editFileViewModel.filterBottomMenuByAncestors(it,it[0])
             }
             fun setUpEachAncestor(linLay:LinearLayoutCompat,txv:TextView, imv:ImageView, file: File?){
                 val getDraw =  GetCustomDrawables(requireActivity())
@@ -200,7 +203,7 @@ class LibraryFolderFrag :  Fragment(){
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-                if(!libraryViewModel.checkViewReset())
+                if(!libraryBaseViewModel.checkViewReset())
                     libNavCon.popBackStack()
             }
         }

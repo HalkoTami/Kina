@@ -18,7 +18,7 @@ import com.korokoro.kina.db.dataclass.ActivityData
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ActivityStatus
-import com.korokoro.kina.ui.viewmodel.customClasses.AnkiBoxFragments
+import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
 import com.korokoro.kina.ui.listadapter.AnkiBoxListAdapter
 import com.korokoro.kina.ui.listener.AnkiBoxFragBaseCL
 import com.korokoro.kina.ui.listener.menuBar.AnkiBoxTabChangeCL
@@ -32,10 +32,6 @@ import kotlin.math.abs
 
 
 class AnkiBoxFragViewSetUp() {
-//    val ankiBoxVM:AnkiBoxFragViewModel,
-//    val context: Context,
-//    val bindingAnkiBoxFrag:AnkiHomeFragBaseBinding,
-//    val ankiBaseViewModel:AnkiFragBaseViewModel
 
 
 
@@ -64,7 +60,7 @@ class AnkiBoxFragViewSetUp() {
             cardBinding.checkboxAnkiRv.isSelected = it.contains(card)
         }
         ankiBoxVM.getCardActivityFromDB(card.id).observe(lifecycleOwner){
-            val lastLooked =it.findLast { it.activityStatus == ActivityStatus.CARD_LOOKED }
+            val lastLooked =it.findLast { it.activityStatus == ActivityStatus.CARD_OPENED }
             cardBinding.txvAnkiRvLastFlipped.text = getStringByLastLooked(lastLooked)
         }
         cardBinding.apply {
@@ -88,28 +84,6 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
 }
 
 
-    fun ankiBoxFragAddCL(ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel,
-                         binding:AnkiHomeFragBaseBinding,
-                         ankiBoxVM:AnkiBoxViewModel,
-                         ankiBaseViewModel:AnkiBaseViewModel,
-                         createFileViewModel: EditFileViewModel){
-        binding.apply {
-            arrayOf(tabFavouritesToAnkiBox,tabLibraryToAnkiBox,tabAllFlashCardCoverToAnkiBox).onEach {
-                it.setOnClickListener(AnkiBoxTabChangeCL(binding,ankiBoxVM,))
-            }
-            arrayOf(btnStartAnki,btnAddToFavouriteAnkiBox).onEach{
-                it.setOnClickListener(
-                    AnkiBoxFragBaseCL(
-                        ankiSettingPopUpViewModel,
-                        binding,
-                        ankiBaseViewModel,
-                        ankiBoxVM,createFileViewModel))
-            }
-
-        }
-
-
-    }
 
 
     fun setUpRVFileBinding(binding:AnkiHomeFragRvItemFileBinding,
@@ -125,9 +99,6 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
             setUpFlipProgressBar(mList,binding.flippedProgressBarBinding)
             val remPer = list.filter { it.remembered }.size.toDouble()/list.size
             binding.rememberedProgressBarBinding.apply {
-//                progressbarRemembered.progress = getPercentage(remPer)
-//                val translation = progressbarRemembered.width*remPer.toFloat()-imvRememberedEndIcon.width/2
-//                imvRememberedEndIcon.translationX = if(translation<0) 0f else translation
 
                 val progressBefore = progressbarRemembered.progress
                 val a = ValueAnimator.ofFloat(progressBefore.toFloat(),getPercentage(remPer).toFloat())
@@ -261,24 +232,6 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                 start()
             }
         }
-
-//        percentageBinding.apply {
-//            oncePercentage.translationX       =        getWidth(progress1)
-//            twicePercentage.translationX      =        getWidth(progress2)
-//            threePercentage.translationX      =        getWidth(progress3)
-//            fourAbovePercentage.translationX  =        getWidth(progress4above)
-//            txvOncePercentage.text = progress1.toString()
-//            txvTwicePercentage.text = progress2.toString()
-//            txvThreePercentage.text = progress3.toString()
-//            txvFourAbovePercentage.text = progress4above.toString()
-//            arrayOf(oncePercentage,twicePercentage,threePercentage,fourAbovePercentage).onEach {
-//                it.visibility = if(it.translationX == 0f )  View.INVISIBLE else View.VISIBLE
-//                if(it.translationX + it.width > this.root.width) it.translationX = this.root.width.toFloat()
-//            }
-//        }
-
-
-
     }
     fun checkCovered(view1:View,view2: View):Boolean{
         val location = IntArray(2)

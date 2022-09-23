@@ -1,34 +1,26 @@
 package com.korokoro.kina.ui.viewmodel
 
+import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
+import com.korokoro.kina.ui.customClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() {
-    private val _toastText= MutableLiveData<String>()
-    val toastText :LiveData<String> = _toastText
-    fun setToastText(string: String){
-        _toastText.value = string
-    }
-    fun returnToastText():String{
-        return  _toastText.value ?:""
+    private val _toast = MutableLiveData<MakeToastFromVM>()
+    private fun makeToastFromVM(string: String){
+        _toast.value = MakeToastFromVM(string,true)
+        _toast.value = MakeToastFromVM("",false)
     }
 
-    private val _showToast= MutableLiveData<Boolean>()
-    val showToast :LiveData<Boolean> = _showToast
-    fun setShowToast(boolean: Boolean){
-        _showToast.value = boolean
-    }
-    fun makeToastVisible(){
-        setShowToast(true)
-        setShowToast(false)
-    }
+    val toast :LiveData<MakeToastFromVM> = _toast
+
     private val _popUpText= MutableLiveData<String>()
     val popUpText :LiveData<String> = _popUpText
-    fun setPopUpText(string: String){
+    private fun setPopUpText(string: String){
         _popUpText.value = string
     }
 
@@ -44,18 +36,15 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     fun returnMovingItems():List<Any>{
         return _movingItems.value ?: mutableListOf()
     }
-    val movingItems:LiveData<List<Any>> = _movingItems
     private val _fileMoveTo = MutableLiveData<File>()
-    fun setFileMoveTo(file: File){
+    private fun setFileMoveTo(file: File){
         _fileMoveTo.value = file
     }
-    fun returnFileMoveTo():File?{
+    private fun returnFileMoveTo():File?{
         return _fileMoveTo.value
     }
-    val fileMoveTo:LiveData<File> = _fileMoveTo
 
     fun onClickRvBtnMove(item:File){
-        setToastText("${item.title}へ移動しました")
         setPopUpText("選択中のアイテムを${item.title}へ移動しますか？")
         setFileMoveTo(item)
         setPopUpVisible(true)
@@ -80,7 +69,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
             }
             update(it)
         }
-        makeToastVisible()
+        makeToastFromVM("${item.title}へ移動しました")
         setPopUpVisible(false)
         navController.popBackStack()
 

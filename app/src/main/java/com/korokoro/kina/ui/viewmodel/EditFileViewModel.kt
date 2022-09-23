@@ -6,9 +6,9 @@ import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.ui.viewmodel.customClasses.ColorPalletStatus
-import com.korokoro.kina.ui.viewmodel.customClasses.EditingMode
-import com.korokoro.kina.ui.viewmodel.customClasses.MakeToastFromVM
+import com.korokoro.kina.ui.customClasses.ColorPalletStatus
+import com.korokoro.kina.ui.customClasses.EditingMode
+import com.korokoro.kina.ui.customClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
@@ -55,7 +55,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private fun setMode(mode: EditingMode){
         _mode.value = mode
     }
-    private fun returnMode():EditingMode?{
+    private fun returnMode(): EditingMode?{
         return _mode.value
     }
 
@@ -237,7 +237,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private fun setColPalletStatus( colorPalletStatus: ColorPalletStatus){
         _colPalletStatus.value = colorPalletStatus
     }
-    private fun returnColPalletStatus():ColorPalletStatus?{
+    private fun returnColPalletStatus(): ColorPalletStatus?{
         return _colPalletStatus.value
     }
     fun onClickColorPallet(colorStatus: ColorStatus){

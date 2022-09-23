@@ -2,15 +2,15 @@ package com.korokoro.kina.ui.viewmodel
 
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import com.korokoro.kina.ui.viewmodel.customClasses.MainFragment
-import com.korokoro.kina.ui.fragment.base_frag_con.AnkiFragmentBaseDirections
-import com.korokoro.kina.ui.fragment.base_frag_con.CreateCardFragmentBaseDirections
-import com.korokoro.kina.ui.fragment.base_frag_con.LibraryFragmentBaseDirections
+import com.korokoro.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
+import com.korokoro.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
+import com.korokoro.kina.ui.fragment.base_frag_con.LibraryBaseFragDirections
+import com.korokoro.kina.ui.customClasses.MainFragment
 import kotlinx.coroutines.*
 
 
 
-class MainViewModel():ViewModel(){
+class MainViewModel:ViewModel(){
 
     class MainActivityChildFragmentStatus(
         var now: MainFragment,
@@ -33,7 +33,7 @@ class MainViewModel():ViewModel(){
             _childFragmentsStatus.value = newStatus
         }
     }
-    fun returnActiveFragment(): MainFragment?{
+    private fun returnActiveFragment(): MainFragment?{
         return _childFragmentsStatus.value?.now
     }
     fun returnFragmentStatus():MainActivityChildFragmentStatus?{
@@ -46,9 +46,9 @@ class MainViewModel():ViewModel(){
         else{
             val action =
             when(to){
-                MainFragment.Library -> LibraryFragmentBaseDirections.toLibrary()
-                MainFragment.EditCard -> CreateCardFragmentBaseDirections.openCreateCard()
-                MainFragment.Anki -> AnkiFragmentBaseDirections.toAnki()
+                MainFragment.Library -> LibraryBaseFragDirections.toLibrary()
+                MainFragment.EditCard -> EditCardBaseFragDirections.openCreateCard()
+                MainFragment.Anki -> AnkiBaseFragDirections.toAnki()
             }
             navCOn.navigate(action)
         }

@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.Toast
-import com.korokoro.kina.ui.viewmodel.customClasses.MyOrientation
 
 fun makeToast(context: Context, string: String){
     Toast.makeText(context,string, Toast.LENGTH_SHORT).show()
@@ -40,4 +40,11 @@ fun showKeyBoard(editText: EditText,context: Context){
 fun hideKeyBoard(editText: EditText,context: Context){
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(editText.windowToken, 0 )
+}
+fun changeViewIfRVEmpty(list: List<Any>?, frameLayout: FrameLayout, emptyView: View){
+    if(list.isNullOrEmpty()){
+        frameLayout.addView(emptyView)
+    } else {
+        frameLayout.removeView(emptyView)
+    }
 }

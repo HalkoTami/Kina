@@ -9,26 +9,28 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.AnkiHomeFragBaseBinding
 import com.korokoro.kina.db.dataclass.Card
-import com.korokoro.kina.ui.viewmodel.customClasses.AnkiBoxFragments
-import com.korokoro.kina.ui.viewmodel.customClasses.AnkiFragments
+import com.korokoro.kina.db.dataclass.File
+import com.korokoro.kina.db.enumclass.FileStatus
+import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
+import com.korokoro.kina.ui.customClasses.AnkiBoxTabData
+import com.korokoro.kina.ui.customClasses.AnkiFragments
+import com.korokoro.kina.ui.observer.CommonOb
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.korokoro.kina.ui.viewmodel.*
 
-class AnkiBoxFrag  : Fragment() {
+class AnkiBoxFrag  : Fragment(),View.OnClickListener {
 
     private var _binding: AnkiHomeFragBaseBinding? = null
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
-    private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
     private val ankiBaseViewModel:AnkiBaseViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
+
     lateinit var ankiBoxNavCon:NavController
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -37,21 +39,14 @@ class AnkiBoxFrag  : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding =  AnkiHomeFragBaseBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        val viewSetUp = AnkiBoxFragViewSetUp(
-            )
-
-
-        ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
-        val frag = childFragmentManager.findFragmentById(binding.fragConAnkiBoxTab.id) as NavHostFragment
-        ankiBoxNavCon = frag.navController
-
-        viewSetUp.ankiBoxFragAddCL(ankiSettingPopUpViewModel,binding,ankiBoxViewModel,ankiBaseViewModel,editFileViewModel)
+        fun setUpLateInitVars(){
+            _binding =  AnkiHomeFragBaseBinding.inflate(inflater, container, false)
+            val frag = childFragmentManager.findFragmentById(binding.fragConAnkiBoxTab.id) as NavHostFragment
+            ankiBoxNavCon = frag.navController
+        }
         fun changeSelectedTab(select: AnkiBoxFragments, before: AnkiBoxFragments?){
-
             fun getTextView(tab: AnkiBoxFragments): TextView {
-            return when(tab){
+                return when(tab){
                     AnkiBoxFragments.AllFlashCardCovers-> binding.tabAllFlashCardCoverToAnkiBox
                     AnkiBoxFragments.Library -> binding.tabLibraryToAnkiBox
                     AnkiBoxFragments.Favourites -> binding.tabFavouritesToAnkiBox
@@ -63,59 +58,72 @@ class AnkiBoxFrag  : Fragment() {
                 getTextView(before).isSelected = false
 
         }
-        editFileViewModel.apply {
-            lastInsertedFile.observe(viewLifecycleOwner){
-                setLastInsertedFile(it)
-                makeToast(requireActivity(),it.toString())
+        fun addCL(){
+            binding.apply {
+                arrayOf(tabFavouritesToAnkiBox,
+                    tabLibraryToAnkiBox,
+                    tabAllFlashCardCoverToAnkiBox,
+                    btnStartAnki,btnAddToFavouriteAnkiBox
+                    ).onEach {
+                    it.setOnClickListener(this@AnkiBoxFrag)
+                }
+
+            }
+
+
+        }
+        val root: View = binding.root
+        val viewSetUp = AnkiBoxFragViewSetUp()
+        val checkFavouriteExistsList = mutableListOf<List<Card>>()
+        val toastObserver = CommonOb().toastObserver(requireActivity())
+        val ankiBoxChildFragObserver = Observer<AnkiBoxTabData>{
+            changeSelectedTab(it.currentTab,it.before)
+        }
+        val descendantsCardIdsFromDBObserver = Observer<List<Int>> {
+            ankiBoxViewModel.setAnkiBoxCardIds(it)
+        }
+        val getCardsFromDBByMultipleCardIdsObserver = Observer<List<Card>> {
+            ankiBoxViewModel.setAnkiBoxItems(it)
+        }
+        val ankiBoxFileIdsObserver = Observer<MutableList<Int>>{
+            ankiBoxViewModel.getDescendantsCardIds(it).observe(viewLifecycleOwner,descendantsCardIdsFromDBObserver)
+        }
+        val ankiBoxCardIdsObserver = Observer<MutableList<Int>>{
+            ankiBoxViewModel.getCardsFromDBByMultipleCardIds(it).observe(viewLifecycleOwner,getCardsFromDBByMultipleCardIdsObserver)
+        }
+        val eachFavouritesCardsObserver = Observer<List<Card>>{
+            checkFavouriteExistsList.add(it)
+        }
+        val allFavouriteAnkiBoxFromDBObserver = Observer<List<File>>{
+            it.onEach { file ->
+                ankiBoxViewModel.getAnkiBoxRVCards(file.fileId).observe(viewLifecycleOwner,eachFavouritesCardsObserver)
             }
         }
-
-        ankiBoxViewModel.apply{
-            setAnkiBoxNavCon(ankiBoxNavCon)
-            toast.observe(viewLifecycleOwner){
-                if(it.show) makeToast(requireActivity(),it.text) else return@observe
-            }
-            currentChildFragment.observe(viewLifecycleOwner){
-                changeSelectedTab(it.currentTab,it.before)
-            }
-
-            ankiBoxFileIds.observe(viewLifecycleOwner){
-                getDescendantsCardIds(it).observe(viewLifecycleOwner){
-                    setAnkiBoxCardIds(it)
-                }
-
-            }
-            ankiBoxCardIds.observe(viewLifecycleOwner){
-                getCardsFromDBByMultipleCardIds(it).observe(viewLifecycleOwner){
-                    setAnkiBoxItems(it)
-                }
-            }
-            val a = mutableListOf<List<Card>>()
-            allFavouriteAnkiBoxFromDB.observe(viewLifecycleOwner){
-                it.onEach { file ->
-                    getAnkiBoxRVCards(file.fileId).observe(viewLifecycleOwner){
-                        a.add(it)
-                    }
-                }
-
-            }
-            viewSetUp.apply {
-                ankiBoxItems.observe(viewLifecycleOwner) { it ->
-                    binding.btnAddToFavouriteAnkiBox.isSelected = a.contains(it)
-                    editFileViewModel.setAnkiBoxCards(it)
-                    setUpAnkiBoxRing(it,binding.ringBinding)
-                    setUpFlipProgressBar(it,binding.flipGraphBinding)
-                    setUpPercentageIcons(binding.flipGraphBinding,binding.percentageIconBinding)
-                    binding.btnStartAnki.text = if(it.isEmpty()) "カードを選ばず暗記" else "暗記開始"
-
-                }
-            }
-
-
-
-
-            return root
+        val ankiBoxItemsObserver = Observer<MutableList<Card>>{
+            binding.btnAddToFavouriteAnkiBox.isSelected = checkFavouriteExistsList.contains(it)
+            editFileViewModel.setAnkiBoxCards(it)
+            viewSetUp.setUpAnkiBoxRing(it,binding.ringBinding)
+            viewSetUp.setUpFlipProgressBar(it,binding.flipGraphBinding)
+            viewSetUp.setUpPercentageIcons(binding.flipGraphBinding,binding.percentageIconBinding)
+            binding.btnStartAnki.text = if(it.isEmpty()) "カードを選ばず暗記" else "暗記開始"
         }
+
+
+
+
+        setUpLateInitVars()
+        addCL()
+
+        ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
+        ankiBoxViewModel.setAnkiBoxNavCon(ankiBoxNavCon)
+        ankiBoxViewModel.toast.observe(viewLifecycleOwner,toastObserver)
+        ankiBoxViewModel.currentChildFragment.observe(viewLifecycleOwner,ankiBoxChildFragObserver)
+        ankiBoxViewModel.ankiBoxFileIds.observe(viewLifecycleOwner,ankiBoxFileIdsObserver)
+        ankiBoxViewModel.ankiBoxCardIds.observe(viewLifecycleOwner,ankiBoxCardIdsObserver)
+        ankiBoxViewModel.allFavouriteAnkiBoxFromDB.observe(viewLifecycleOwner,allFavouriteAnkiBoxFromDBObserver)
+        ankiBoxViewModel.ankiBoxItems.observe(viewLifecycleOwner,ankiBoxItemsObserver)
+
+        return root
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -135,5 +143,31 @@ class AnkiBoxFrag  : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onClick(p0: View?) {
+        binding.apply {
+            when (p0) {
+                btnStartAnki -> {
+                    ankiBaseViewModel.setSettingVisible(true)
+                    ankiBoxViewModel.apply {
+                        if (returnAnkiBoxItems().isEmpty()) ankiBoxViewModel.setModeCardsNotSelected(
+                            true
+                        )
+                    }
+                }
+                btnAddToFavouriteAnkiBox -> {
+                    if (btnAddToFavouriteAnkiBox.isSelected.not() && ankiBoxViewModel.returnAnkiBoxItems()
+                            .isEmpty().not()
+                    ) {
+                        editFileViewModel.onClickCreateFile(FileStatus.ANKI_BOX_FAVOURITE)
+                    } else return
+
+                }
+                tabAllFlashCardCoverToAnkiBox -> ankiBoxViewModel.changeTab(AnkiBoxFragments.AllFlashCardCovers)
+                tabLibraryToAnkiBox -> ankiBoxViewModel.changeTab(AnkiBoxFragments.Library)
+                tabFavouritesToAnkiBox -> ankiBoxViewModel.changeTab(AnkiBoxFragments.Favourites)
+            }
+        }
     }
 }

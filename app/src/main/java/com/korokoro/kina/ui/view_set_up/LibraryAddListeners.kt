@@ -103,7 +103,6 @@ class LibraryAddListeners(){
                         createCardViewModel = createCardViewModel,
                         stringCardViewModel = stringCardViewModel,
                         binding = binding,
-                        mainNavCon = mainNavController
                     )
                 )
             }

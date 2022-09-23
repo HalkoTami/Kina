@@ -21,7 +21,7 @@ import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.ui.view_set_up.ColorPalletViewSetUp
 import com.korokoro.kina.ui.viewmodel.AnkiBoxViewModel
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
-import com.korokoro.kina.ui.viewmodel.customClasses.ColorPalletStatus
+import com.korokoro.kina.ui.customClasses.ColorPalletStatus
 
 
 class EditCardFrag: Fragment(),View.OnClickListener {
@@ -29,7 +29,7 @@ class EditCardFrag: Fragment(),View.OnClickListener {
     private var _binding: CreateCardFragBaseBinding? = null
     private val binding get() = _binding!!
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
-    private val args : CreateCardFragmentArgs by navArgs()
+    private val args : EditCardFragArgs by navArgs()
     private val  createCardViewModel: CreateCardViewModel by activityViewModels()
 
     lateinit var cardNavCon:NavController

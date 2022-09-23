@@ -17,8 +17,8 @@ import com.korokoro.kina.databinding.FragAnkiContentRvBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.korokoro.kina.ui.viewmodel.*
-import com.korokoro.kina.ui.viewmodel.customClasses.AnkiBoxFragments
-import com.korokoro.kina.ui.viewmodel.customClasses.AnkiFragments
+import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
+import com.korokoro.kina.ui.customClasses.AnkiFragments
 
 
 class AnkiBoxContentFrag  : Fragment() {
@@ -39,20 +39,20 @@ class AnkiBoxContentFrag  : Fragment() {
         val root: View = binding.root
         val fragmentBefore = ankiBaseViewModel.returnActiveFragment()
         val viewSetUp = AnkiBoxFragViewSetUp()
-        fun getTopBarTitle(fragmentBefore:AnkiFragments):String{
+        fun getTopBarTitle(fragmentBefore: AnkiFragments):String{
             return when(fragmentBefore){
                 AnkiFragments.AnkiBox -> "暗記ボックスアイテム"
                 AnkiFragments.Flip -> "暗記中のアイテム"
             }
         }
-        fun getTopBarDrawable(fragmentBefore:AnkiFragments):Drawable{
+        fun getTopBarDrawable(fragmentBefore: AnkiFragments):Drawable{
             val id =   when(fragmentBefore){
                 AnkiFragments.AnkiBox -> R.drawable.icon_inbox
                 AnkiFragments.Flip -> R.drawable.icon_card
             }
             return ContextCompat.getDrawable(requireActivity(),id)!!
         }
-        fun getParentTokenList(fragmentBefore:AnkiFragments):List<Card>{
+        fun getParentTokenList(fragmentBefore: AnkiFragments):List<Card>{
             return when(fragmentBefore){
                 AnkiFragments.AnkiBox -> ankiBoxViewModel.returnAnkiBoxItems()
                 AnkiFragments.Flip -> ankiFlipBaseViewModel.returnFlipItems()

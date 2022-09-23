@@ -17,8 +17,9 @@ import com.korokoro.kina.R
 import com.korokoro.kina.databinding.CreateCardFragMainBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.ui.viewmodel.customClasses.AnkiFragments
-import com.korokoro.kina.ui.viewmodel.customClasses.MainFragment
+import com.korokoro.kina.ui.customClasses.AnkiFragments
+import com.korokoro.kina.ui.customClasses.MainFragment
+import com.korokoro.kina.ui.customClasses.NeighbourCardSide
 import com.korokoro.kina.ui.view_set_up.GetCustomDrawables
 import com.korokoro.kina.ui.viewmodel.*
 
@@ -26,8 +27,7 @@ import com.korokoro.kina.ui.viewmodel.*
 class EditCardBaseFrag  : Fragment(),View.OnClickListener {
 
     private var _binding: CreateCardFragMainBinding? = null
-    private val baseViewModel: MainViewModel by activityViewModels()
-    private val ankiFragViewModel : AnkiBaseViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val ankiBaseViewModel: AnkiBaseViewModel by activityViewModels()
     private val flipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
     private val createCardViewModel:CreateCardViewModel by activityViewModels()
@@ -69,8 +69,8 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         var calledFirst = true
 
         val parentCardObserver = Observer<Card?>{ card->
-            val previousCard = createCardViewModel.getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.PREVIOUS)
-            val nextCard = createCardViewModel.getNeighbourCardId(CreateCardViewModel.NeighbourCardSide.NEXT)
+            val previousCard = createCardViewModel.getNeighbourCardId(NeighbourCardSide.PREVIOUS)
+            val nextCard = createCardViewModel.getNeighbourCardId(NeighbourCardSide.NEXT)
             val sisterCards = createCardViewModel.returnSisterCards()
             binding.apply {
                 binding.createCardTopBarBinding.txvPosition.text =
@@ -106,8 +106,8 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
                 txvEditingFileTitle.text = it?.title ?:"InBox"
             }
         }
-        val parentFlashCardCoverId =  when(baseViewModel.returnFragmentStatus()?.now){
-            MainFragment.Anki -> when(ankiFragViewModel.returnActiveFragment()) {
+        val parentFlashCardCoverId =  when(mainViewModel.returnFragmentStatus()?.now){
+            MainFragment.Anki -> when(ankiBaseViewModel.returnActiveFragment()) {
                 AnkiFragments.AnkiBox -> null
                 AnkiFragments.Flip -> flipBaseViewModel.returnParentCard()?.belongingFlashCardCoverId
             }
@@ -118,7 +118,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         setLateInitVars()
         addClickListeners()
 
-        baseViewModel.setChildFragmentStatus(MainFragment.EditCard)
+        mainViewModel.setChildFragmentStatus(MainFragment.EditCard)
         createCardViewModel.apply {
             parentCard.observe(viewLifecycleOwner,parentCardObserver)
             sisterCards.observe(viewLifecycleOwner,sisterCardObserver)
@@ -163,13 +163,13 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
 
                 btnInsertNext,btnInsertPrevious         -> {
                     when(p0){
-                        btnInsertPrevious                    -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.PREVIOUS)
-                        btnInsertNext                           -> createCardViewModel. onClickBtnInsert(CreateCardViewModel.NeighbourCardSide.NEXT)
+                        btnInsertPrevious                    -> createCardViewModel. onClickBtnInsert(NeighbourCardSide.PREVIOUS)
+                        btnInsertNext                           -> createCardViewModel. onClickBtnInsert(NeighbourCardSide.NEXT)
                     }
-                    createCardViewModel.checkMakePopUpVisible(baseViewModel.returnFragmentStatus() ?:return,ankiBaseViewModel.returnActiveFragment())
+                    createCardViewModel.checkMakePopUpVisible(mainViewModel.returnFragmentStatus() ?:return,ankiBaseViewModel.returnActiveFragment())
                 }
-                btnNext                                 -> createCardViewModel.onClickBtnNavigate(cardNavCon,CreateCardViewModel.NeighbourCardSide.NEXT)
-                btnPrevious                             -> createCardViewModel.onClickBtnNavigate(cardNavCon,CreateCardViewModel.NeighbourCardSide.PREVIOUS)
+                btnNext                                 -> createCardViewModel.onClickBtnNavigate(cardNavCon,NeighbourCardSide.NEXT)
+                btnPrevious                             -> createCardViewModel.onClickBtnNavigate(cardNavCon,NeighbourCardSide.PREVIOUS)
 
             }
         }

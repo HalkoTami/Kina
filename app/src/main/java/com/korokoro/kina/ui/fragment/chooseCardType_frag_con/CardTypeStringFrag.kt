@@ -15,7 +15,7 @@ import com.korokoro.kina.R
 import com.korokoro.kina.databinding.CreateCardFragStringFragBinding
 import com.korokoro.kina.db.dataclass.StringData
 import com.korokoro.kina.db.enumclass.CardStatus
-import com.korokoro.kina.ui.viewmodel.customClasses.StringFragFocusedOn
+import com.korokoro.kina.ui.customClasses.StringFragFocusedOn
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.CardTypeStringViewModel
 
@@ -23,18 +23,11 @@ class CardTypeStringFrag : Fragment() {
 
     private var _binding: CreateCardFragStringFragBinding? = null
     private val  createCardViewModel: CreateCardViewModel by activityViewModels()
-    private val stringCardViewModel : CardTypeStringViewModel by activityViewModels()
+    private val  stringCardViewModel : CardTypeStringViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-
-
-//   private val  stringViewModel: StringCardViewModel by activityViewModels()
-
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

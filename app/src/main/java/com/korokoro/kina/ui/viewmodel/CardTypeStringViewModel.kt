@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.StringData
-import com.korokoro.kina.ui.viewmodel.customClasses.StringFragFocusedOn
+import com.korokoro.kina.ui.customClasses.StringFragFocusedOn
 
 class CardTypeStringViewModel:ViewModel() {
     private val _parentCard = MutableLiveData<Card?>()
@@ -30,13 +30,6 @@ class CardTypeStringViewModel:ViewModel() {
 
     private val _stringData = MutableLiveData<StringData>()
     val stringData:LiveData<StringData> = _stringData
-
-    fun setStringData(stringData: StringData){
-        _stringData.value = stringData
-    }
-    fun returnStringData():StringData{
-        return _stringData.value ?:StringData(null,null,null,null)
-    }
 
 
 

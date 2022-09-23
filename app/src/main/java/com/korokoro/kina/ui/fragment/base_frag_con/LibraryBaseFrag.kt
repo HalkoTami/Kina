@@ -3,25 +3,28 @@ package com.korokoro.kina.ui.fragment.base_frag_con
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.LibraryFragBinding
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.ui.viewmodel.customClasses.MainFragment
+import com.korokoro.kina.ui.customClasses.MainFragment
 import com.korokoro.kina.ui.observer.CommonOb
 import com.korokoro.kina.ui.viewmodel.*
+import com.korokoro.kina.ui.customClasses.MakeToastFromVM
 
 
 class LibraryBaseFrag : Fragment(),View.OnClickListener{
 
     private lateinit var libNavCon:NavController
     private val searchViewModel:SearchViewModel by activityViewModels()
-    private val libraryViewModel: LibraryBaseViewModel by activityViewModels()
-    private val baseViewModel: MainViewModel by activityViewModels()
+    private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
     private val chooseFileMoveToViewModel:ChooseFileMoveToViewModel by activityViewModels()
     private var _binding: LibraryFragBinding? = null
@@ -57,12 +60,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
             confirmDeletePopUpAddCL()
 
         }
-        val fileMovedToastObserver = Observer<Boolean>{
-            CommonOb().observeToast(requireActivity(),chooseFileMoveToViewModel.returnToastText(),it)
-        }
-        val deletedToastObserver = Observer<Boolean>{
-            CommonOb().observeToast(requireActivity(),deletePopUpViewModel.returnToastText(),it)
-        }
+        val toastObserver = CommonOb().toastObserver(requireActivity())
         val confirmDeleteViewObserver = Observer<DeletePopUpViewModel.ConfirmDeleteView>{
             binding.confirmDeletePopUpBinding.apply {
                 binding.background.visibility = if(it.visible) View.VISIBLE else View.GONE
@@ -130,12 +128,12 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         setLateInitVars()
         addClickListeners()
 
-        libraryViewModel.setLibraryNavCon(libNavCon)
-        libraryViewModel.setRVCover(LibraryBaseViewModel.RvCover(true))
-        baseViewModel.setChildFragmentStatus(MainFragment.Library)
+        libraryBaseViewModel.setLibraryNavCon(libNavCon)
+        libraryBaseViewModel.setRVCover(LibraryBaseViewModel.RvCover(true))
+        mainViewModel.setChildFragmentStatus(MainFragment.Library)
 
-        chooseFileMoveToViewModel.showToast.observe(viewLifecycleOwner,fileMovedToastObserver)
-        deletePopUpViewModel.showToast.observe(viewLifecycleOwner,deletedToastObserver)
+        chooseFileMoveToViewModel.toast.observe(viewLifecycleOwner,toastObserver)
+        deletePopUpViewModel.toast.observe(viewLifecycleOwner,toastObserver)
         deletePopUpViewModel.confirmDeleteView.observe(viewLifecycleOwner,confirmDeleteViewObserver)
         deletePopUpViewModel.confirmDeleteWithChildrenView.observe(viewLifecycleOwner,confirmDeleteWithChildrenViewObserver)
         deletePopUpViewModel.deletingItem.observe(viewLifecycleOwner,deletingItemObserver)
@@ -155,7 +153,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-                if(!libraryViewModel.checkViewReset())
+                if(!libraryBaseViewModel.checkViewReset())
                 libNavCon.popBackStack()
             }
         }
