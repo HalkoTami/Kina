@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/fragment_createCard_Base"
         tools:layout="@layout/create_card_frag_base"
-        android:name="com.example.tangochoupdated.ui.fragment.createCard_frag_com.CreateCardFragment">
+        android:name="com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFrag">
         <argument
             android:name="parentFlashCardCoverId"
             app:argType="integer[]"

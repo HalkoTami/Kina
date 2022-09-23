@@ -159,7 +159,7 @@
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="imv_search_loupe,frameLay_search_bar"/>
-    <com.example.tangochoupdated.ui.customViews.ImvChangeAlphaOnDown
+    <com.korokoro.kina.ui.customViews.ImvChangeAlphaOnDown
         android:id="@+id/imv_search_loupe"
         android:layout_width="30dp"
         android:layout_height="30dp"

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragmentLibrary"
-        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.LibraryFragmentBase"
+        android:name="com.korokoro.kina.ui.fragment.base_frag_con.LibraryBaseFrag"
         android:label="@string/nav_label_main_tab_library"
         tools:layout="@layout/library_frag" >
 
@@ -39,14 +39,14 @@
     <fragment
         android:id="@+id/fragmentCreateCard"
         android:label="@string/nav_label_main_create_card"
-        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.CreateCardFragmentBase"
+        android:name="com.korokoro.kina.ui.fragment.base_frag_con.EditCardBaseFrag"
         tools:layout="@layout/create_card_frag_main">
 
     </fragment>
     <fragment
         android:id="@+id/fragmentAnki"
         android:label="@string/nav_label_main_tab_anki"
-        android:name="com.example.tangochoupdated.ui.fragment.base_frag_con.AnkiFragmentBase"
+        android:name="com.korokoro.kina.ui.fragment.base_frag_con.AnkiBaseFrag"
         tools:layout="@layout/anki_frag_base">
 
     </fragment>

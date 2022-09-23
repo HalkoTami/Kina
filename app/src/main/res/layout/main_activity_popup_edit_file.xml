@@ -82,8 +82,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_file"
-                app:layout_constraintBottom_toTopOf="@id/edt_createfile"
-                app:layout_constraintStart_toStartOf="@id/edt_createfile"
+                app:layout_constraintBottom_toTopOf="@id/edt_file_title"
+                app:layout_constraintStart_toStartOf="@id/edt_file_title"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat" />
             <TextView
                 style="@style/PopUpTextView"
@@ -106,7 +106,7 @@
             android:layout_gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/edt_createfile"
+            android:id="@+id/edt_file_title"
             android:background="@drawable/searchview"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

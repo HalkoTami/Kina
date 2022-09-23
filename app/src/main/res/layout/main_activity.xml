@@ -83,15 +83,6 @@
             android:id="@+id/bnv_binding"
             layout="@layout/main_activity_bottom_navigation_bar" />
     </FrameLayout>
-    <ImageView
-        android:visibility="gone"
-        android:elevation="25dp"
-        android:id="@+id/imv_focus_arrow"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/icon_back"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
     <View
         style="@style/BackGroundViewStyle"
         android:id="@+id/frag_con_view_cover"

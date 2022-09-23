@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "160941918717",
+    "project_id": "kina-b6054",
+    "storage_bucket": "kina-b6054.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160941918717:android:8dd783f9d8d69e8ebeb194",
+        "android_client_info": {
+          "package_name": "com.example.tangochoupdated"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "160941918717-91bsp2bmgot12c01e1imvenhl0esevvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXJDBtGuOIbcUyckPwnba1ntEy3aGaAgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "160941918717-91bsp2bmgot12c01e1imvenhl0esevvq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

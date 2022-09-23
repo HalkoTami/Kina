@@ -38,7 +38,7 @@
         android:layout_marginBottom="20dp"
         >
 
-        <com.example.tangochoupdated.ui.customViews.NavigateBtnCreateCard
+        <com.korokoro.kina.ui.customViews.NavigateBtnCreateCard
             android:contentDescription="@string/cd_create_card_move_next"
             android:id="@+id/btn_next"
             android:layout_width="50dp"
@@ -51,11 +51,11 @@
             app:layout_constraintEnd_toStartOf="@id/btn_insert_next"
             app:layout_constraintStart_toEndOf="@id/btn_previous">
 
-        </com.example.tangochoupdated.ui.customViews.NavigateBtnCreateCard>
+        </com.korokoro.kina.ui.customViews.NavigateBtnCreateCard>
 
 
 
-        <com.example.tangochoupdated.ui.customViews.ImvChangeAlphaOnDown
+        <com.korokoro.kina.ui.customViews.ImvChangeAlphaOnDown
             android:contentDescription="@string/cd_create_card_insert_next"
             android:id="@+id/btn_insert_next"
             android:layout_width="30dp"
@@ -68,7 +68,7 @@
             />
 
 
-        <com.example.tangochoupdated.ui.customViews.NavigateBtnCreateCard
+        <com.korokoro.kina.ui.customViews.NavigateBtnCreateCard
             android:contentDescription="@string/cd_create_card_move_previous"
             android:id="@+id/btn_previous"
             android:layout_width="50dp"
@@ -84,10 +84,10 @@
             android:src="@drawable/nav_btn"
             >
 
-        </com.example.tangochoupdated.ui.customViews.NavigateBtnCreateCard>
+        </com.korokoro.kina.ui.customViews.NavigateBtnCreateCard>
 
 
-        <com.example.tangochoupdated.ui.customViews.ImvChangeAlphaOnDown
+        <com.korokoro.kina.ui.customViews.ImvChangeAlphaOnDown
             android:contentDescription="@string/cd_create_card_insert_previous"
             android:id="@+id/btn_insert_previous"
             android:layout_width="30dp"

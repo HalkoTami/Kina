@@ -5,15 +5,15 @@
     android:id="@+id/anki_navigation"
     app:startDestination="@id/anki_box_frag">
     <fragment
-        android:name="com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiFragmentAnkiBox"
+        android:name="com.korokoro.kina.ui.fragment.anki_frag_con.AnkiBoxFrag"
         tools:layout="@layout/anki_home_frag_base"
         android:id="@+id/anki_box_frag"/>
     <fragment
-        android:name="com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiFragFlipBaseFragment"
+        android:name="com.korokoro.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFrag"
         tools:layout="@layout/anki_flip_frag_base"
         android:id="@+id/anki_flip_base_frag"/>
     <fragment
-        android:name="com.example.tangochoupdated.ui.fragment.anki_frag_con.AnkiBoxContentRVFragment"
+        android:name="com.korokoro.kina.ui.fragment.anki_frag_con.AnkiBoxContentFrag"
         tools:layout="@layout/full_rv"
         android:id="@+id/flip_item_rv_frag"/>
     <action android:id="@+id/to_flip_frag"

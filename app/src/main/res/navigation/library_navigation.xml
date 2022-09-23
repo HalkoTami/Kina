@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragLibraryHome"
-        android:name="com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragHome"
+        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryHomeFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragLibraryFolder"
-        android:name="com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragFolder"
+        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFolderFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
         <argument
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragLibraryFlashCardCover"
-        android:name="com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragFlashCardCover"
+        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
         <argument
@@ -38,7 +38,7 @@
 
     <fragment
         android:id="@+id/fragLibraryInBox"
-        android:name="com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragInBox"
+        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryInBoxFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/fragLibrarySelectFileMoveTo"
-        android:name="com.example.tangochoupdated.ui.fragment.lib_frag_con.LibraryFragChooseFileMoveTo"
+        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
