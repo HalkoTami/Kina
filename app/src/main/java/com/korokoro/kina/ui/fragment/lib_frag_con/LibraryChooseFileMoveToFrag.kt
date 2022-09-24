@@ -121,19 +121,18 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             libraryBaseViewModel.setParentFileFromDB(it ?:return@Observer)
         }
         val movableFoldersObserver = Observer<List<File>>{
-//            if(flashcard.not())
-//                libraryBaseViewModel.setParentRVItems(it)
-            adapter.submitList(it)
-            makeToast(requireActivity(),it.size.toString())
+            if(flashcard.not())
+                libraryBaseViewModel.setParentRVItems(it)
+
         }
         val movableFlashCardsObserver = Observer<List<File>>{
             if(flashcard)
                 libraryBaseViewModel.setParentRVItems(it)
         }
         val parentRVItemsObserver = Observer<List<Any>>{
-//            val list = it.filterIsInstance<File>()
-//            adapter.submitList(list)
-//            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
+            val list = it.filterIsInstance<File>()
+            adapter.submitList(list)
+            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
         }
         val parentFileAncestorsObserver = Observer<List<File>> {
             editFileViewModel.filterBottomMenuWhenInChooseFileMoveTo(
@@ -153,8 +152,8 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         chooseFileMoveToViewModel.setMovingItems(movingItems)
         chooseFileMoveToViewModel.popUpVisible.observe(viewLifecycleOwner,popUpVisibleObserver)
         chooseFileMoveToViewModel.popUpText.observe(viewLifecycleOwner,popUpTextObserver)
-//        if(movingCardIdsList.isEmpty().not())
-//            chooseFileMoveToViewModel.getFilesMovableFlashCards(movingCardIdsList).observe(viewLifecycleOwner,movableFlashCardsObserver)
+        if(movingCardIdsList.isEmpty().not())
+            chooseFileMoveToViewModel.getFilesMovableFlashCards(movingCardIdsList).observe(viewLifecycleOwner,movableFlashCardsObserver)
         if(movingFileIdsList.isEmpty().not())
             chooseFileMoveToViewModel.getFilesMovableFolders(movingFileIdsList,args.fileId?.single()).observe(viewLifecycleOwner,movableFoldersObserver)
 
