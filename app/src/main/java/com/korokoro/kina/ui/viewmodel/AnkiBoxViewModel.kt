@@ -25,10 +25,10 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _text = MutableLiveData<String>().apply {
         value = "This is Anki Fragment"
     }
-    val allFlashCardCoverFromDB: LiveData<List<File>> = repository.allFlashCardCover.asLiveData()
+    val allFlashCardCoverFromDB: LiveData<List<File>> = repository.allFlashCardCoverContainsCard.asLiveData()
     val allFavouriteAnkiBoxFromDB: LiveData<List<File>> = repository.allFavouriteAnkiBox.asLiveData()
 
-    fun getLibraryFilesFromDB(parentFileId:Int?) :LiveData<List<File>> = repository.getFileDataByParentFileId(parentFileId).asLiveData()
+    fun getLibraryFilesFromDB(parentFileId:Int?) :LiveData<List<File>> = repository.getLibraryItemsWithDescendantCards(parentFileId).asLiveData()
     fun getCardsFromDB(parentFileId:Int?) :LiveData<List<Card>> = repository.getCardDataByFileId(parentFileId).asLiveData()
     fun getCardsFromDBByMultipleCardIds(cardIds:List<Int>) :LiveData<List<Card>> = repository.getCardsByMultipleCardId(cardIds).asLiveData()
     fun updateCardFlagStatus(card:Card){

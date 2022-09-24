@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
@@ -47,7 +48,7 @@ class LibFragChooseFileRVListAdapter(
             fun addCL(){ binding.apply {
                 arrayOf(
                     libRvBaseContainer,
-                    btnSelect,
+                    rvBaseFrameLayLeft,
                 ).onEach { it.setOnClickListener(
                     LibraryRVChooseFileMoveToCL(
                         item,
@@ -59,23 +60,37 @@ class LibFragChooseFileRVListAdapter(
                 }
             }
             }
-            binding.contentBindingFrame.removeAllViews()
+            fun setUpViewFirst(){
+                binding.apply {
+                    contentBindingFrame.removeAllViews()
+                    arrayOf(btnDelete,btnEditWhole,btnAddNewCard).onEach {
+                        changeViewVisibility(it,false)
+                    }
+                }
+            }
+            fun setLeftContent(){
+                binding.apply {
+                    btnSelect.apply {
+                        setImageDrawable(
+                            AppCompatResources.getDrawable(context,
+                                when(item.fileStatus){
+                                    FileStatus.FOLDER -> R.drawable.icon_move_to_folder
+                                    FileStatus.FLASHCARD_COVER -> R.drawable.icon_move_to_flashcard_cover
+                                    else -> return
+                                }
+                            )
+                        )
+                    }
+                    arrayOf(btnSelect,txvMove).onEach { changeViewVisibility(it,true) }
+                }
+            }
+           setUpViewFirst()
 //            親レイアウトのclick listener
-            val addListeners = LibraryAddListeners()
             val viewSetUp = LibrarySetUpItems()
             val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
             viewSetUp.setUpRVFileBinding(fileBinding,item,context)
             binding.contentBindingFrame.addView(fileBinding.root)
-            binding.btnSelect.apply {
-                setImageDrawable(
-                    AppCompatResources.getDrawable(context,
-                    when(item.fileStatus){
-                        FileStatus.FOLDER -> R.drawable.icon_move_to_folder
-                        FileStatus.FLASHCARD_COVER -> R.drawable.icon_move_to_flashcard_cover
-                        else -> return
-                    }))
-                visibility = View.VISIBLE
-            }
+            setLeftContent()
             addCL()
 
         }

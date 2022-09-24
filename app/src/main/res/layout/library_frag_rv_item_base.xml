@@ -12,21 +12,46 @@
     android:id="@+id/lib_rv_base_container">
 
 
-    <ImageView
-        android:id="@+id/btn_select"
+    <FrameLayout
+        android:id="@+id/rv_base_frameLay_left"
         android:contentDescription="@string/btn_select"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/content_binding_frame"
         app:layout_constraintEnd_toStartOf="@+id/content_binding_frame"
 
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:src="@drawable/select_rv_item"
         android:layout_marginEnd="5dp"
-        android:visibility="gone"
+        android:visibility="visible"
 
-        />
+        >
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/btn_select"
+            android:contentDescription="@string/btn_select"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/content_binding_frame"
+            app:layout_constraintEnd_toStartOf="@+id/content_binding_frame"
+
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/select_rv_item"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/txv_move"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="移動する"
+            android:layout_gravity="bottom"
+            android:textStyle="bold"
+            android:textColor="@color/most_dark_gray"
+            android:textSize="11sp"
+            android:layout_marginHorizontal="5dp"/>
+    </FrameLayout>
 
 
 
@@ -35,7 +60,7 @@
         android:layout_width="0dp"
         android:layout_height="70dp"
         app:layout_constraintEnd_toStartOf="@+id/linLay_swipe_show"
-        app:layout_constraintStart_toEndOf="@+id/btn_select"
+        app:layout_constraintStart_toEndOf="@+id/rv_base_frameLay_left"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btn_add_new_card">
 

@@ -1,7 +1,7 @@
 package com.korokoro.kina.ui.listener.topbar
 import android.view.View
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.LibraryFragTopBarHomeBinding
-import com.korokoro.kina.ui.animation.makeToast
 import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
 
 class LibFragTopBarHomeCL(private val binding: LibraryFragTopBarHomeBinding,

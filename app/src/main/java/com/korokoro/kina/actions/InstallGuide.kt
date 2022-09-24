@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.get
@@ -18,13 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.ui.customViews.CirclePosition
-import com.korokoro.kina.ui.customViews.HoleShape
-import com.korokoro.kina.ui.customViews.RecPosition
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.EditFileViewModel
 import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
 import com.korokoro.kina.ui.customClasses.MyOrientation
+import com.korokoro.kina.ui.customViews.*
 import kotlin.math.abs
 
 class InstallGuide(val activity:AppCompatActivity){
@@ -35,7 +34,7 @@ class InstallGuide(val activity:AppCompatActivity){
     private val holeView = onInstallBinding.viewWithHole
     private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
     private val textView = onInstallBinding.txvExplain
-    private val heightDiff = getWindowDisplayHeightDiff(onInstallBinding.root)
+    private val heightDiff = getWindowDisplayHeightDiff(activity.resources)
 
     private fun setScale(v: View, x:Float, y:Float){
         v.scaleX = x
@@ -212,26 +211,28 @@ class InstallGuide(val activity:AppCompatActivity){
                     createCardViewModel:CreateCardViewModel,
                     createFileViewModel:EditFileViewModel,
                     libraryViewModel:LibraryBaseViewModel){
-        val frameLayCallOnInstall       =activity.findViewById<FrameLayout>(R.id.frameLay_call_on_install)
-        val bnvBtnAdd                   =activity.findViewById<ImageView>(R.id.bnv_imv_add)
-        val createMenuImvFlashCard      =activity.findViewById<ImageView>(R.id.imvnewTangocho)
-        val createMenuImvNewCard        =activity.findViewById<ImageView>(R.id.imvnewCard)
-        val frameLayEditFile            =activity.findViewById<ImageView>(R.id.frameLay_edit_file)
-        val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
-        val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
-        val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
-        val imvTabLibrary               =activity.findViewById<ImageView>(R.id.bnv_imv_tab_library)
-        val barrier                     =onInstallBinding.barrier1
-        val edtCardFrontTitle           =activity.findViewById<EditText>(R.id.edt_front_title)
-        val edtCardFrontContent         =activity.findViewById<EditText>(R.id.edt_front_content)
-        val edtCardBackTitle            =activity.findViewById<EditText>(R.id.edt_back_title)
-        val edtCardBackContent          =activity.findViewById<EditText>(R.id.edt_back_content)
-        val linLayCreateCardNavigation  =activity.findViewById<LinearLayout>(R.id.lay_navigate_buttons)
-        val createCardNavFlipNext       =activity.findViewById<ImageView>(R.id.btn_next)
-        val createCardNavFlipPrevious   =activity.findViewById<ImageView>(R.id.btn_previous)
-        val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
-        val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
         fun guideInOrder(order:Int){
+            val frameLayCallOnInstall       =activity.findViewById<FrameLayout>(R.id.frameLay_call_on_install)
+            val bnvBtnAdd                   =activity.findViewById<ImageView>(R.id.bnv_imv_add)
+            val createMenuImvFlashCard      =activity.findViewById<FrameLayout>(R.id.imvnewTangocho)
+            val createMenuImvNewCard        =activity.findViewById<FrameLayout>(R.id.imvnewCard)
+            val frameLayEditFile            =activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
+            val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
+            val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
+            val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+            val imvTabLibrary               =activity.findViewById<ImageView>(R.id.bnv_imv_tab_library)
+            val barrier                     =onInstallBinding.barrier1
+            val edtCardFrontTitle           =activity.findViewById<EditText>(R.id.edt_front_title)
+            val edtCardFrontContent         =activity.findViewById<EditText>(R.id.edt_front_content)
+            val edtCardBackTitle            =activity.findViewById<EditText>(R.id.edt_back_title)
+            val edtCardBackContent          =activity.findViewById<EditText>(R.id.edt_back_content)
+            val linLayCreateCardNavigation  =activity.findViewById<ConstraintLayout>(R.id.lay_navigate_buttons)
+            val createCardNavFlipNext       =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_next)
+            val createCardNavFlipPrevious   =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_previous)
+            val createCardInsertNext        =activity.findViewById<ImvChangeAlphaOnDown>(R.id.btn_insert_next)
+            val createCardInsertPrevious    =activity.findViewById<ImvChangeAlphaOnDown>(R.id.btn_insert_previous)
+
+
             fun goNextOnClickAnyWhere(){
                 onInstallBinding.root.setOnClickListener {
                     guideInOrder(order+1)
@@ -392,14 +393,13 @@ class InstallGuide(val activity:AppCompatActivity){
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation5(){
-                appearAlphaAnimation(arrayOf(character,textView),false)
                 setArrow(MyOrientation.TOP,createCardNavFlipPrevious)
                 goNextOnClickAnyWhere()
             }
             fun goodBye1(){
                 setPosition(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
                 explainTextAnimation("これでガイドは終わりだよ", MyOrientation.TOP).start()
-                appearAlphaAnimation(arrayOf(character),false).start()
+                appearAlphaAnimation(arrayOf(character),true).start()
                 goNextOnClickAnyWhere()
             }
             fun goodBye2(){

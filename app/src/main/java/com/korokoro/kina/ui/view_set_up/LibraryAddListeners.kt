@@ -58,8 +58,6 @@ class LibraryAddListeners(){
                 binding.mainFrameLayout.visibility = View.GONE
                 binding.frameLaySearchRv.visibility = View.VISIBLE
                 searchViewModel.setSearchText(it.toString())
-
-
             } else {
                 searchViewModel.setSearchText("")
                 binding.mainFrameLayout.visibility= View.VISIBLE

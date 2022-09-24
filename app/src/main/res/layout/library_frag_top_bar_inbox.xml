@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:padding="10dp"
-    android:gravity="center_vertical"
-    android:layout_gravity="center_vertical">
+    style="@style/TopBarLinLayStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <ImageView
@@ -18,16 +12,13 @@
         />
 
     <TextView
+        style="@style/TopBarTxvSizeNormalStyle"
         android:id="@+id/txv_inbox_status"
         android:layout_marginStart="10dp"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-
-        android:text="15個のアイテム"
         android:gravity="center_vertical"
-
-        android:textSize="20sp"
         />
     <ImageView
         android:id="@+id/imv_move_to_flash_card"
@@ -40,7 +31,7 @@
 
     <ImageView
         android:id="@+id/imv_close_inbox"
-        android:paddingStart="10dp"
+        android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_close"/>

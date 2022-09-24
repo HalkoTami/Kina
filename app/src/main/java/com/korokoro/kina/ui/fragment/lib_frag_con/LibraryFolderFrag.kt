@@ -11,17 +11,21 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
+import com.korokoro.kina.actions.changeViewIfRVEmpty
+import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.ui.customClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
+import com.korokoro.kina.ui.observer.LibraryOb
 import com.korokoro.kina.ui.view_set_up.GetCustomDrawables
 import com.korokoro.kina.ui.view_set_up.LibraryAddListeners
 import com.korokoro.kina.ui.view_set_up.LibrarySetUpItems
@@ -113,6 +117,7 @@ class LibraryFolderFrag :  Fragment(){
                     binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
                     topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                     LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
+                    if(it.not()) changeViewVisibility(binding.frameLayMultiModeMenu,false)
                 }
                 changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
@@ -125,11 +130,22 @@ class LibraryFolderFrag :  Fragment(){
 
         }
         setUpLateInitVars()
+        val emptyView = LibraryFragLayFolderRvEmptyBinding.inflate(inflater,container,false).root
+        val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
+        val fileRVItemsObserver = Observer<List<File>>{
+            val sorted = it.sortedBy { it.libOrder }
+            libraryBaseViewModel.setParentRVItems(sorted)
+            if( adapter.currentList.size == it.size) adapter.submitList(null)
+            adapter.submitList(it)
+            changeViewIfRVEmpty(it,binding.frameLayRvEmpty,emptyView)
+        }
+
         setUpView()
         addCL()
         observeSwipe()
         observeMultiMode()
 
+        searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
 
         libraryBaseViewModel.apply {
             clearFinalList()
@@ -144,17 +160,7 @@ class LibraryFolderFrag :  Fragment(){
                     )
                 }
             }
-            val emptyView = LibraryFragLayFolderRvEmptyBinding.inflate(inflater,container,false).root
-            childFilesFromDB(args.folderId.single()).observe(viewLifecycleOwner) {
-                setParentRVItems(it)
-                adapter.submitList(it)
-                if(it.isNullOrEmpty()){
-                    binding.frameLayRvEmpty.removeView(emptyView)
-                    binding.frameLayRvEmpty.addView(emptyView)
-                } else {
-                    binding.frameLayRvEmpty.removeAllViews()
-                }
-            }
+            childFilesFromDB(args.folderId.single()).observe(viewLifecycleOwner,fileRVItemsObserver)
 
             parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)

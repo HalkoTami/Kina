@@ -72,7 +72,6 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
 
 
         }
-        val root: View = binding.root
         val viewSetUp = AnkiBoxFragViewSetUp()
         val checkFavouriteExistsList = mutableListOf<List<Card>>()
         val toastObserver = CommonOb().toastObserver(requireActivity())
@@ -123,7 +122,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         ankiBoxViewModel.allFavouriteAnkiBoxFromDB.observe(viewLifecycleOwner,allFavouriteAnkiBoxFromDBObserver)
         ankiBoxViewModel.ankiBoxItems.observe(viewLifecycleOwner,ankiBoxItemsObserver)
 
-        return root
+        return binding.root
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)

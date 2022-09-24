@@ -13,6 +13,7 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.dataclass.StringData
@@ -64,15 +65,17 @@ class LibrarySetUpItems{
             }
         }
     }
-    fun changeStringBtnVisibility(rv: RecyclerView, visible:Boolean){
+    fun changeStringBtnVisibility(rv: RecyclerView, multiMode:Boolean){
         rv.children.iterator().forEach { view ->
             arrayOf(
                 view.findViewById<FrameLayout>(R.id.btn_edt_front),
                 view.findViewById(R.id.btn_edt_back),
-                view.findViewById<ImageView>(R.id.btn_add_new_card))
+                )
                 .onEach {
-                    it.visibility = if(visible)View.VISIBLE else View.GONE
+                    it.visibility = if(multiMode)View.VISIBLE else View.GONE
                 }
+            view.findViewById<ImageView>(R.id.btn_add_new_card).visibility =
+                if(multiMode) View.GONE else View.VISIBLE
         }
     }
 

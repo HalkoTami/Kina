@@ -19,9 +19,47 @@ abstract class FileDao: BaseDao<File> {
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
     abstract fun getFileByFileId(lookingFileId:Int?): Flow<File>
 
+    @Query("select * from tbl_file a where NOT deleted AND  " +
+            "a.fileStatus = :fileStatusFolderAsInt " +
+            "and a.fileId not in (  " +
+            "WITH  generation AS ( " +
+            "select * from tbl_file where fileId in (:movingFilesId)  " +
+            "UNION ALL " +
+            "SELECT a.* from tbl_file a Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
+            "SELECT fileId FROM generation b " +
+            " ) and a.fileId not in (:movingFilesId)" +
+            "and (" +
+            " a.fileId is :parentFileId or a.fileId in( " +
+            "select fileId from tbl_file c where c.parentFileId in ( " +
+            "select parentFileId from tbl_file d where d.fileId in (:movingFilesId) " +
+            ") ) ) ")
+    abstract fun getFoldersMovableTo(movingFilesId:List<Int>,parentFileId: Int?,fileStatusFolderAsInt:Int): Flow<List<File>>
+
+    @Query("select a.* from tbl_file a " +
+            "where NOT a.deleted AND  " +
+            "a.fileStatus = :fileStatusFlashCardAsInt and " +
+            "a.fileId not in (" +
+            "select fileId from tbl_file b inner join tbl_card c on c.belongingFlashCardCoverId = b.fileId " +
+            "where c.id in (:movingCardIds)" +
+            " )")
+    abstract fun getFlashCardsMovableTo(movingCardIds:List<Int>,fileStatusFlashCardAsInt:Int): Flow<List<File>>
+
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM tbl_file su WHERE su.parentFileId is :fileId and not su.fileStatus = 3")
     abstract fun myGetFileByParentFileId(fileId: Int?): Flow<List<File>>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM tbl_file su WHERE su.parentFileId is :fileId and not su.fileStatus = 3 " +
+            "and not ( " +
+            "Select count(a.id) from tbl_card a " +
+            "WHERE a.belongingFlashCardCoverId in (  " +
+            "WITH  generation AS (" +
+            "select * from tbl_file where fileId = su.fileId  " +
+            "UNION ALL " +
+            "SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId ) " +
+            "SELECT fileId FROM generation b  ) " +
+            ") = 0")
+    abstract fun getLibraryItemsWithDescendantCards(fileId: Int?): Flow<List<File>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("WITH  generation AS (" +
@@ -110,9 +148,10 @@ abstract class FileDao: BaseDao<File> {
             "title  " +
             "LIKE '%' || :search || '%' ")
     abstract  fun searchFilesByWords(search:String):Flow<List<File>>
-    @Query("select * from tbl_file where NOT deleted AND " +
-            "fileStatus = 0  ")
-    abstract  fun getAllFlashCardCover():Flow<List<File>>
+    @Query("select * from tbl_file b " +
+            "where  NOT deleted AND " +
+            "fileStatus = 0 and not (select count(id) from tbl_card a where a.belongingFlashCardCoverId = b.fileId ) = 0")
+    abstract  fun getAllFlashCardCoverContainsCard():Flow<List<File>>
     @Query("select * from tbl_file where  " +
             "fileStatus = 3  ")
     abstract  fun getAllFavouriteAnkiBox():Flow<List<File>>

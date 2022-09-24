@@ -1,6 +1,5 @@
 package com.korokoro.kina.ui.viewmodel
 
-import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.korokoro.kina.db.MyRoomRepository
@@ -10,6 +9,10 @@ import com.korokoro.kina.ui.customClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() {
+
+    fun getFilesMovableFolders(movingFileIds:List<Int>,parentFileId:Int?):LiveData<List<File>> = repository.getFoldersMovableTo(movingFileIds,parentFileId).asLiveData()
+    fun getFilesMovableFlashCards(movingCardsIds:List<Int>):LiveData<List<File>> = repository.getMovableFlashCards(movingCardsIds).asLiveData()
+
     private val _toast = MutableLiveData<MakeToastFromVM>()
     private fun makeToastFromVM(string: String){
         _toast.value = MakeToastFromVM(string,true)

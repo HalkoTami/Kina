@@ -209,6 +209,7 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
                             imvCloseSetting                             ->  ankiBaseViewModel.setSettingVisible(false)
                             btnStartAnki                                -> {
                                 ankiBaseViewModel.setSettingVisible(false)
+                                setAutoFlip(AutoFlip(checkboxAutoFlip.isSelected,edtAutoFlipSeconds.text.toString().toInt()))
                                 ankiBaseViewModel.returnAnkiBaseNavCon()?.navigate(AnkiFlipBaseFragDirections.toFlipFrag())
 
                             }

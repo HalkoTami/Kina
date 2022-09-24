@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
@@ -53,7 +54,15 @@ class LibFragSearchRVListAdapter(
                  searchViewModel: SearchViewModel,
                  lifecycleOwner: LifecycleOwner,
                  mainNavController: NavController){
-            binding.contentBindingFrame.removeAllViews()
+            fun setUpFirst(){
+                binding.apply {
+                    contentBindingFrame.removeAllViews()
+                    arrayOf(btnDelete,btnAddNewCard,btnEditWhole).onEach {
+                        changeViewVisibility(it,false)
+                    }
+                }
+            }
+
 //            親レイアウトのclick listener
             val viewSetUp = LibrarySetUpItems()
             val addL = LibraryAddListeners()
@@ -63,7 +72,6 @@ class LibFragSearchRVListAdapter(
                     val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
                     checkMatchTxv.addAll(viewSetUp.returnFileBindingTextViews(fileBinding))
                     viewSetUp.setUpRVFileBinding(fileBinding, item, context)
-                    binding.btnAddNewCard.visibility = View.GONE
                     fileBinding.root
                 }
                 is Card -> {
@@ -87,6 +95,7 @@ class LibFragSearchRVListAdapter(
                 )
                 }
             }
+            setUpFirst()
             addL()
             binding.contentBindingFrame.addView(contentView)
             searchViewModel.searchingText.observe(lifecycleOwner){ search ->

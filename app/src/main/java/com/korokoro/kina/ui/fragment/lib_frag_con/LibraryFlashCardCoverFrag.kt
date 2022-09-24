@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
+import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.korokoro.kina.databinding.LibraryFragLayFlashCardCoverRvEmptyBinding
 import com.korokoro.kina.databinding.LibraryFragTopBarFileBinding
@@ -22,6 +23,7 @@ import com.korokoro.kina.ui.customClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.korokoro.kina.ui.observer.CommonOb
+import com.korokoro.kina.ui.observer.LibraryOb
 import com.korokoro.kina.ui.view_set_up.GetCustomDrawables
 import com.korokoro.kina.ui.view_set_up.LibraryAddListeners
 import com.korokoro.kina.ui.view_set_up.LibrarySetUpItems
@@ -124,7 +126,8 @@ class LibraryFlashCardCoverFrag  : Fragment(){
         addCL()
         observeSwipe()
         observeMultiMode()
-
+        val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
+        searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
         topBarBinding.imvFileType.setImageDrawable(AppCompatResources.getDrawable(requireActivity(),R.drawable.icon_flashcard))
 
         libraryBaseViewModel.apply {
@@ -165,6 +168,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
                 topBarBinding.root.visibility = if(!it) View.VISIBLE else View.INVISIBLE
                 commonViewSetUp.changeLibRVSelectBtnVisibility(recyclerView,it)
                 commonViewSetUp.changeStringBtnVisibility(recyclerView,it)
+                if(it.not()) changeViewVisibility(binding.frameLayMultiModeMenu,false)
             }
             makeAllUnSwiped.observe(viewLifecycleOwner){
                 if(it) commonViewSetUp.makeLibRVUnSwiped(recyclerView)
@@ -211,6 +215,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
 
     override fun onDestroyView() {
         super.onDestroyView()
+        libraryBaseViewModel.clearSelectedItems()
         _binding = null
     }
 

@@ -8,6 +8,7 @@
     android:id="@+id/top_con_lay">
 
     <FrameLayout
+        style="@style/TopBarFrameLayStyle"
         android:id="@+id/frameLay_top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/topBar_height"
@@ -28,13 +29,12 @@
         app:layout_constraintTop_toBottomOf="@id/frameLay_top_bar"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/frameLay_multi_mode_menu"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        app:layout_constraintWidth_percent="0.4"
         app:layout_constraintHeight_percent="0.25"
 
         android:layout_gravity="center_vertical|end"
-        android:elevation="3dp"
+        android:elevation="10dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/gray_stroke_rectangle">
         <include
@@ -101,8 +101,6 @@
                     tools:listitem="@layout/library_frag_rv_item_base" />
                 <FrameLayout
                     android:nestedScrollingEnabled="true"
-                    android:background="@color/darkRed"
-                    android:alpha="0.3"
                     android:id="@+id/rv_cover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -165,7 +163,7 @@
         android:layout_height="30dp"
         android:layout_margin="5dp"
         android:src="@drawable/icon_loupe"
-        app:layout_constraintStart_toStartOf="@id/main_frameLayout"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frameLay_ancestors"
         />
 

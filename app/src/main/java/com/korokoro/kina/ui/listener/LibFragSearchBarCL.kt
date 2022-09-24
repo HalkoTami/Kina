@@ -21,15 +21,17 @@ class LibFragSearchBarCL(val context:Context, val searchIcon: ImageView,
                 searchIcon -> {
                     searchBinding.edtLibrarySearch.requestFocus()
                     inputMethodManager.showSoftInput(searchBinding.edtLibrarySearch, 0 )
-                    searchIcon.visibility = View.GONE
-                    searchBindingFrame.visibility = View.VISIBLE
+//                    searchIcon.visibility = View.GONE
+//                    searchBindingFrame.visibility = View.VISIBLE
+                    searchViewModel.setSearchModeActive(true)
                 }
                 txvCancel -> {
                     inputMethodManager.hideSoftInputFromWindow(searchBinding.edtLibrarySearch.windowToken, 0 )
-                    searchBinding.edtLibrarySearch.text= SpannableStringBuilder("")
-                    searchViewModel.setSearchText("")
-                    searchIcon.visibility = View.VISIBLE
-                    searchBindingFrame.visibility = View.GONE
+//                    searchBinding.edtLibrarySearch.text= SpannableStringBuilder("")
+//                    searchViewModel.setSearchText("")
+//                    searchIcon.visibility = View.VISIBLE
+//                    searchBindingFrame.visibility = View.GONE
+                    searchViewModel.setSearchModeActive(false)
                 }
 
 

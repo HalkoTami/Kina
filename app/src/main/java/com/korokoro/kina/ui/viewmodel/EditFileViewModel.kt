@@ -312,10 +312,15 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 else insertFile(newFile)
             }
             EditingMode.Edit -> {
-                val editingFile = returnFileToEdit() ?:return
-                editingFile.title = title
-                editingFile.colorStatus = color
-                upDateFile(editingFile)
+                val editingFile = returnFileToEdit()
+                if(editingFile==null){
+                    makeToastFromVM("file to edit なし")
+                    return
+                }else{
+                    editingFile.title = title
+                    editingFile.colorStatus = color
+                    upDateFile(editingFile)
+                }
             }
             else -> return
         }

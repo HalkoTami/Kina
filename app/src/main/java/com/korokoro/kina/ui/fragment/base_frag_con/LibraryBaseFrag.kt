@@ -121,9 +121,8 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
 
                 }
             }
-
-
         }
+
 
         setLateInitVars()
         addClickListeners()
@@ -131,6 +130,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         libraryBaseViewModel.setLibraryNavCon(libNavCon)
         libraryBaseViewModel.setRVCover(LibraryBaseViewModel.RvCover(true))
         mainViewModel.setChildFragmentStatus(MainFragment.Library)
+        mainViewModel.setBnvVisibility(true)
 
         chooseFileMoveToViewModel.toast.observe(viewLifecycleOwner,toastObserver)
         deletePopUpViewModel.toast.observe(viewLifecycleOwner,toastObserver)
@@ -154,7 +154,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         ) {
             override fun handleOnBackPressed() {
                 if(!libraryBaseViewModel.checkViewReset())
-                libNavCon.popBackStack()
+                    libNavCon.popBackStack()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(

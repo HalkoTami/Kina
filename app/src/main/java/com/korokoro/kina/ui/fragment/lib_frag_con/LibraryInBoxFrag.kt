@@ -12,11 +12,14 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
+import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.*
+import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.ui.customClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.korokoro.kina.ui.listener.topbar.LibFragTopBarInBoxCL
+import com.korokoro.kina.ui.observer.LibraryOb
 import com.korokoro.kina.ui.view_set_up.LibraryAddListeners
 import com.korokoro.kina.ui.view_set_up.LibrarySetUpItems
 import com.korokoro.kina.ui.viewmodel.*
@@ -89,6 +92,7 @@ class LibraryInBoxFrag  : Fragment(){
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()
             commonViewSetUp.setUpLibFragWithMultiModeBase(binding,topBarBinding.root,searchAdapter,adapter,requireActivity())
+
         }
         fun observeSwipe(){
             libraryBaseViewModel.apply {
@@ -109,6 +113,7 @@ class LibraryInBoxFrag  : Fragment(){
                     binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
                     topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                     LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
+                    if(it.not()) changeViewVisibility(binding.frameLayMultiModeMenu,false)
                 }
                 changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
@@ -120,13 +125,18 @@ class LibraryInBoxFrag  : Fragment(){
             }
 
         }
+        fun setTopBarText(list: List<Card>?){
+            topBarBinding.txvInboxStatus.text =
+                if(list.isNullOrEmpty().not()) "${list!!.size}個の単語帳に未追加のアイテム" else
+                    "InBox"
+        }
         setUpLateInitVars()
         setUpView()
         addCL()
         observeSwipe()
         observeMultiMode()
-
-
+        val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
+        searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
 
         editFileViewModel.filterBottomMenuOnlyCard()
         libraryBaseViewModel.apply {
@@ -144,6 +154,7 @@ class LibraryInBoxFrag  : Fragment(){
                 } else {
                     binding.frameLayRvEmpty.removeView(emptyView)
                 }
+                setTopBarText(it)
             }
             val commonViewSetUp = LibrarySetUpItems()
             multipleSelectMode.observe(viewLifecycleOwner){

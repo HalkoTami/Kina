@@ -44,9 +44,8 @@ class BoxLibraryItemsFrag  : Fragment() {
         }
         val getLibraryFilesFromDBObserver = Observer<List<File>>{
             if(!args.flashCard){
-                val filtered = it.filter { it.descendantsData.descendantsCardsAmount !=0 }
-                adapter.submitList(filtered)
-                makeEmptyVisibleByListSize(filtered)
+                adapter.submitList(it)
+                makeEmptyVisibleByListSize(it)
             }
         }
         val getCardsFromDBObserver = Observer<List<Card>>{

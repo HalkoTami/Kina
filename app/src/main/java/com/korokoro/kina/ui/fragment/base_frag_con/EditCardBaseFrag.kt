@@ -119,6 +119,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         addClickListeners()
 
         mainViewModel.setChildFragmentStatus(MainFragment.EditCard)
+        mainViewModel.setBnvVisibility(false)
         createCardViewModel.apply {
             parentCard.observe(viewLifecycleOwner,parentCardObserver)
             sisterCards.observe(viewLifecycleOwner,sisterCardObserver)

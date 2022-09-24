@@ -2,9 +2,9 @@ package com.korokoro.kina.ui.listener.topbar
 
 import android.view.View
 import android.widget.FrameLayout
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.LibItemTopBarMenuBinding
 import com.korokoro.kina.databinding.LibraryFragTopBarMultiselectModeBinding
-import com.korokoro.kina.ui.animation.makeToast
 import com.korokoro.kina.ui.viewmodel.DeletePopUpViewModel
 import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
 
@@ -36,10 +36,7 @@ class LibFragTopBarMultiModeCL(
                 multi.imvChangeMenuVisibility -> changeMenuVisibility()
 
                 menuBinding.linLayMoveSelectedItems -> {
-                    if(notSelected)deletePopUpViewModel.makeToastVisible()
-                        else {
-                            libVM.openChooseFileMoveTo(null)
-                    }
+                    libVM.openChooseFileMoveTo(null)
                 }
                 menuBinding.linLayDeleteSelectedItems -> if(notSelected) makeToast(v.context,"todo")
                 else {

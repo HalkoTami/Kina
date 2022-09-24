@@ -34,6 +34,15 @@ class SearchViewModel(private val repository: MyRoomRepository):ViewModel() {
     fun setSearchText(string: String){
         _searchingText.value = string
     }
+    fun returnSearchText():String{
+        return _searchingText.value ?:""
+    }
     val searchingText:LiveData<String> = _searchingText
+    private val _searchModeActive = MutableLiveData<Boolean>()
+    fun setSearchModeActive(boolean: Boolean){
+        _searchModeActive.value = boolean
+    }
+    val searchModeActive:LiveData<Boolean> = _searchModeActive
+
 
 }

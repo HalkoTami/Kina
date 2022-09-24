@@ -22,6 +22,7 @@ import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.ui.customClasses.ColorPalletStatus
 import com.korokoro.kina.ui.customClasses.MainFragment
+import com.korokoro.kina.ui.listener.KeyboardListener
 import com.korokoro.kina.ui.listener.popUp.EditFilePopUpCL
 import com.korokoro.kina.ui.observer.LibraryOb
 import com.korokoro.kina.ui.view_set_up.ColorPalletViewSetUp
@@ -73,6 +74,20 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 frameLayEditFile.visibility = GONE
                 frameBottomMenu.visibility = GONE
                 mainTopConstrainLayout.requestFocus()
+                mainTopConstrainLayout.viewTreeObserver.addOnGlobalLayoutListener(
+                    object :KeyboardListener(mainTopConstrainLayout){
+                        override fun onKeyBoardAppear() {
+                            super.onKeyBoardAppear()
+                            mainActivityViewModel.setBnvVisibility(false)
+                        }
+
+                        override fun onKeyBoardDisappear() {
+                            super.onKeyBoardDisappear()
+                            if(mainActivityViewModel.returnFragmentStatus()?.now == MainFragment.EditCard ) return
+                            else mainActivityViewModel.setBnvVisibility(true)
+                        }
+                    }
+                )
                 ColorPalletViewSetUp().makeAllColPalletUnselected(this@MainActivity,editFileBinding.colPaletBinding)
             }
         }
@@ -146,7 +161,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         setUpMainActivityLayout()
         addMainActivityClickListeners()
         setContentView(binding.root)
-        checkIfInstall()
+//        checkIfInstall()
 
         val childFragmentStatusObserver      = Observer<MainViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
@@ -163,6 +178,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         val popUpEditFileUIDataObserver        = Observer<EditFileViewModel.PopUpUI>{
             LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,this@MainActivity)
+            createFileViewModel.onClickColorPallet(it.colorStatus)
         }
         val editFileColPalletObserver = Observer<ColorPalletStatus> {
             val context = this@MainActivity

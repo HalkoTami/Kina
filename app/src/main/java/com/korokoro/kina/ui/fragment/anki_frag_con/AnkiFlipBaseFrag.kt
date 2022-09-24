@@ -135,11 +135,12 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             }
         }
         val flipItemsObserver = Observer<List<Card>> {
-            if(it.isEmpty()) makeToast(requireActivity(),"カードがありません")
-            flipNavCon.popBackStack()
-            if(start){
-                ankiFlipBaseViewModel.startFlip(ankiSettingPopUpViewModel.returnReverseCardSide(),ankiSettingPopUpViewModel.returnTypeAnswer(),it,0)
-                start = false
+            if(it.isEmpty().not()) {
+                flipNavCon.popBackStack()
+                if(start){
+                    ankiFlipBaseViewModel.startFlip(ankiSettingPopUpViewModel.returnReverseCardSide(),ankiSettingPopUpViewModel.returnTypeAnswer(),it,0)
+                    start = false
+                }
             } else return@Observer
         }
         val typeAnswerObserver = Observer<Boolean> {

@@ -5,6 +5,7 @@ import com.korokoro.kina.db.dao.*
 import com.korokoro.kina.db.dataclass.*
 import com.korokoro.kina.db.enumclass.XRefType
 import com.korokoro.kina.db.enumclass.FileStatus
+import com.korokoro.kina.db.typeConverters.FileStatusConverter
 import com.korokoro.kina.db.typeConverters.XRefTypeConverter
 import kotlinx.coroutines.flow.*
 
@@ -22,6 +23,10 @@ class MyRoomRepository(
     private val xRefTypeConverter = XRefTypeConverter()
     private val xRefTypeCardAsInt = xRefTypeConverter.fromXRefType(XRefType.CARD)
     private val xRefTypeFileAsInt = xRefTypeConverter.fromXRefType(XRefType.ANKI_BOX_FAVOURITE)
+
+    private val fileStatusConverter = FileStatusConverter()
+    private val statusFolderAsInt = fileStatusConverter.fromFileStatus(FileStatus.FOLDER)
+    private val statusFlashCardAsInt = fileStatusConverter.fromFileStatus(FileStatus.FLASHCARD_COVER)
 //cards
 
     fun getCardDataByFileId(parentFileId: Int?):Flow<List<Card>>  = cardDao.getCardsDataByFileId(parentFileId)
@@ -42,12 +47,16 @@ class MyRoomRepository(
     val allCards:Flow<List<Card>> = cardDao.getAllCards()
 //    files
     fun getFileByFileId(fileId:Int?):Flow<File> = fileDao.getFileByFileId(fileId)
+    fun getFoldersMovableTo(movingFilesId:List<Int>,parentFileId:Int?):Flow<List<File>> = fileDao.getFoldersMovableTo(parentFileId)
     val lastInsertedFile:Flow<File> = fileDao.getLastInsertedFileId()
     fun getFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = fileDao.myGetFileByParentFileId(parentFileId)
+    fun getLibraryItemsWithDescendantCards(parentFileId:Int?):Flow<List<File>> = fileDao.getLibraryItemsWithDescendantCards(parentFileId)
+
     fun getAllAncestorsByFileId(fileId: Int?):Flow<List<File>> = fileDao.getAllAncestorsByChildFileId(fileId)
     fun getAllDescendantsFilesByMultipleFileId(fileIdList: List<Int>):Flow<List<File>> = fileDao.getAllDescendantsFilesByMultipleFileId(fileIdList)
     fun searchFilesByWords(search:String):Flow<List<File>> = fileDao.searchFilesByWords(search)
-    val allFlashCardCover:Flow<List<File>> = fileDao.getAllFlashCardCover()
+    val allFlashCardCoverContainsCard:Flow<List<File>> = fileDao.getAllFlashCardCoverContainsCard()
+    fun getMovableFlashCards(movingCardsIds: List<Int>) = fileDao.getFlashCardsMovableTo(movingCardsIds,statusFlashCardAsInt)
     val allFavouriteAnkiBox:Flow<List<File>> = fileDao.getAllFavouriteAnkiBox()
 //    activity
     fun getCardActivity(cardId:Int):Flow<List<ActivityData>> = activityDataDao.getActivityDataByCard(cardId)

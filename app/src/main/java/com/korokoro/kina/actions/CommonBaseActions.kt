@@ -1,13 +1,15 @@
 package com.korokoro.kina.actions
 
 import android.content.Context
-import android.graphics.Rect
+import android.content.res.Resources
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
+
 
 fun makeToast(context: Context, string: String){
     Toast.makeText(context,string, Toast.LENGTH_SHORT).show()
@@ -16,16 +18,17 @@ fun setXAndY(view: View, x:Float, y:Float){
     view.x = x
     view.y = y
 }
-fun getWindowDisplayHeightDiff(windowFrame: View): Int {
-    val a = Rect()
-    windowFrame.getWindowVisibleDisplayFrame(a)
-    val windowTop =  windowFrame.top
-    val displayTop = a.top
-    return displayTop - windowTop
+fun getWindowDisplayHeightDiff(resources: Resources): Int {
+    var statusBarHeight = 0
+    val resourceId: Int = resources.getIdentifier("status_bar_height", "dimen", "android")
+    if (resourceId > 0) {
+        statusBarHeight = resources.getDimensionPixelSize(resourceId)
+    }
+    return statusBarHeight
 }
-fun doOnGlobalLayout(view: View,void: Void,remove:Boolean):ViewTreeObserver.OnGlobalLayoutListener{
+fun doOnGlobalLayout(view: View,unit: Unit,remove:Boolean):ViewTreeObserver.OnGlobalLayoutListener{
     val a = ViewTreeObserver.OnGlobalLayoutListener{
-        void
+        unit
     }
     view.viewTreeObserver.addOnGlobalLayoutListener(a)
     return a
@@ -41,8 +44,8 @@ fun hideKeyBoard(editText: EditText,context: Context){
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(editText.windowToken, 0 )
 }
-fun changeViewIfRVEmpty(list: List<Any>?, frameLayout: FrameLayout, emptyView: View){
-    if(list.isNullOrEmpty()){
+fun changeViewIfRVEmpty(list: List<Any>, frameLayout: FrameLayout, emptyView: View){
+    if(list.isEmpty()){
         frameLayout.addView(emptyView)
     } else {
         frameLayout.removeView(emptyView)

@@ -13,7 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
 import com.korokoro.kina.actions.changeViewIfRVEmpty
+import com.korokoro.kina.actions.changeViewVisibility
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.*
+import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.customClasses.LibraryFragment
@@ -53,12 +56,13 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             adapter =   LibFragChooseFileRVListAdapter(requireActivity(),chooseFileMoveToViewModel,libraryBaseViewModel)
         }
 
-        fun setUpView(flashcard:Boolean){
+        fun setUpView(flashcard:Boolean,movingItems:List<Any>){
             val mainRV = binding.vocabCardRV
             mainRV.adapter = adapter
             mainRV.layoutManager = LinearLayoutManager(requireActivity())
             mainRV.isNestedScrollingEnabled = true
 
+            changeViewVisibility(binding.imvSearchLoupe,false)
             binding.frameLayTopBar.addView(topBarBinding.root)
             topBarBinding.imvFileMoveToStatus.setImageDrawable(
                 AppCompatResources.getDrawable(requireActivity(),
@@ -66,8 +70,8 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
                 )
             )
             topBarBinding.txvChooseFileMoveTo.text =
-                if(flashcard) "${chooseFileMoveToViewModel.returnMovingItems().size} 個のアイテムを単語帳に移動" else
-                    "${chooseFileMoveToViewModel.returnMovingItems().size}個のアイテムをフォルダに移動"
+                if(flashcard) "${movingItems.size} 個のアイテムを単語帳に移動" else
+                    "${movingItems.size}個のアイテムをフォルダに移動"
         }
 
         fun addCL(){
@@ -89,6 +93,21 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             topBarAddCL()
             confirmMoveToFilePopUpAddCL()
         }
+        fun getMovingFileIdsList(movingItems:List<Any>):List<Int>{
+            val a = mutableListOf<Int>()
+            val filtered = movingItems.filterIsInstance<File>()
+            filtered.onEach { a.add(it.fileId) }
+            return a.toList()
+        }
+        fun getMovingCardIdsList(movingItems:List<Any>):List<Int>{
+            val a = mutableListOf<Int>()
+            val filtered = movingItems.filterIsInstance<Card>()
+            filtered.onEach { a.add(it.id) }
+            return a.toList()
+        }
+        val movingItems = libraryBaseViewModel.returnSelectedItems()
+        val movingFileIdsList = getMovingFileIdsList(movingItems)
+        val movingCardIdsList = getMovingCardIdsList(movingItems)
         val emptyView = LibraryFragLayFlashCardCoverRvEmptyBinding.inflate(inflater,container,false).root
         val flashcard = libraryBaseViewModel.returnParentFile()?.fileStatus == FileStatus.FLASHCARD_COVER ||
                 libraryBaseViewModel.returnModeInBox()==true
@@ -99,18 +118,22 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             binding.confirmMoveToBinding.txvConfirmMove.text = it
         }
         val parentFileFromDBObserver = Observer<File> {
-            libraryBaseViewModel.setParentFileFromDB(it)
+            libraryBaseViewModel.setParentFileFromDB(it ?:return@Observer)
         }
-        val childFilesFromDBObserver = Observer<List<File>>{
-            val filteredList = if(flashcard){
-                it.filter { it.fileStatus == FileStatus.FLASHCARD_COVER }
-            } else it.filter { it.fileStatus == FileStatus.FOLDER && libraryBaseViewModel.returnSelectedItems().contains(it).not()}
-            libraryBaseViewModel.setParentRVItems(filteredList)
+        val movableFoldersObserver = Observer<List<File>>{
+//            if(flashcard.not())
+//                libraryBaseViewModel.setParentRVItems(it)
+            adapter.submitList(it)
+            makeToast(requireActivity(),"called")
+        }
+        val movableFlashCardsObserver = Observer<List<File>>{
+            if(flashcard)
+                libraryBaseViewModel.setParentRVItems(it)
         }
         val parentRVItemsObserver = Observer<List<Any>>{
-            val list = it.filterIsInstance<File>()
-            adapter.submitList(list)
-            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
+//            val list = it.filterIsInstance<File>()
+//            adapter.submitList(list)
+//            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
         }
         val parentFileAncestorsObserver = Observer<List<File>> {
             editFileViewModel.filterBottomMenuWhenInChooseFileMoveTo(
@@ -124,16 +147,20 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             }
         }
         setUpLateInitVars()
-        setUpView(flashcard)
+        setUpView(flashcard,movingItems)
         addCL()
 
-        chooseFileMoveToViewModel.setMovingItems(libraryBaseViewModel.returnSelectedItems())
+        chooseFileMoveToViewModel.setMovingItems(movingItems)
         chooseFileMoveToViewModel.popUpVisible.observe(viewLifecycleOwner,popUpVisibleObserver)
         chooseFileMoveToViewModel.popUpText.observe(viewLifecycleOwner,popUpTextObserver)
+//        if(movingCardIdsList.isEmpty().not())
+//            chooseFileMoveToViewModel.getFilesMovableFlashCards(movingCardIdsList).observe(viewLifecycleOwner,movableFlashCardsObserver)
+//        if(movingFileIdsList.isEmpty().not())
+        chooseFileMoveToViewModel.getFilesMovableFolders(movingFileIdsList,args.fileId?.single()).observe(viewLifecycleOwner,movableFoldersObserver)
+
 
         libraryBaseViewModel.setLibraryFragment(LibraryFragment.ChooseFileMoveTo)
-        libraryBaseViewModel.parentFileFromDB(args.fileId?.single() ).observe(viewLifecycleOwner,parentFileFromDBObserver)
-        libraryBaseViewModel.childFilesFromDB(args.fileId?.single()).observe(viewLifecycleOwner,childFilesFromDBObserver)
+        libraryBaseViewModel.parentFileFromDB(args.fileId?.single()).observe(viewLifecycleOwner,parentFileFromDBObserver)
         libraryBaseViewModel.parentRVItems.observe(viewLifecycleOwner,parentRVItemsObserver)
         libraryBaseViewModel.parentFileAncestorsFromDB(args.fileId?.single()).observe(viewLifecycleOwner,parentFileAncestorsObserver)
         libraryBaseViewModel.chooseFileMoveToMode.observe(viewLifecycleOwner,chooseFileMoveToModeObserver)

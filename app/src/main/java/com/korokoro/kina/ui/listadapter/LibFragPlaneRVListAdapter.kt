@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
@@ -71,18 +72,17 @@ class LibFragPlaneRVListAdapter(
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
 
-            if(item is Card){
-//                createCardViewModel.updateCardPosition(item,adapterPosition)
-            }
             val viewSetUp = LibrarySetUpItems()
             val addL = LibraryAddListeners()
 
-            val contentView= when(item){
+            val contentView:View
+            when(item){
                 is File -> {
                     val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
                     viewSetUp.setUpRVFileBinding(fileBinding, item, context)
                     binding.btnAddNewCard.visibility = View.GONE
-                    fileBinding.root
+                    contentView = fileBinding.root
+
                 }
                 is Card -> {
                     val stringCardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
@@ -90,7 +90,7 @@ class LibFragPlaneRVListAdapter(
                     AnkiBoxFragViewSetUp().setUpOrder(stringCardBinding,item)
                     addL.cardRVStringAddCL(stringCardBinding,item,createCardViewModel,stringCardViewModel,mainNavController)
                     binding.btnAddNewCard.visibility = View.VISIBLE
-                    stringCardBinding.root
+                    contentView = stringCardBinding.root
                 }
                 else -> return
             }
@@ -106,6 +106,7 @@ class LibFragPlaneRVListAdapter(
             }
             libRVButtonsAddCL()
             binding.contentBindingFrame.addView(contentView)
+//            TODo
 
 
         }
