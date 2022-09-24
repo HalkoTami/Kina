@@ -19,21 +19,23 @@ abstract class FileDao: BaseDao<File> {
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
     abstract fun getFileByFileId(lookingFileId:Int?): Flow<File>
 
-    @Query("select * from tbl_file a where NOT deleted AND  " +
-            "a.fileStatus = :fileStatusFolderAsInt " +
+    @Query("select * from tbl_file a where NOT a.deleted AND  " +
+            "a.fileStatus = :fileStatusFolderAsInt  " +
             "and a.fileId not in (  " +
             "WITH  generation AS ( " +
-            "select * from tbl_file where fileId in (:movingFilesId)  " +
+            "select * from tbl_file b where b.fileId in (:movingFileIds)  " +
             "UNION ALL " +
-            "SELECT a.* from tbl_file a Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
-            "SELECT fileId FROM generation b " +
-            " ) and a.fileId not in (:movingFilesId)" +
-            "and (" +
-            " a.fileId is :parentFileId or a.fileId in( " +
+            "SELECT c.* from tbl_file c Inner JOIN generation g ON g.parentFileId = c.fileId ) " +
+            "SELECT fileId FROM generation d " +
+            " ) " +
+
+//            "and (" +
+            "and ((a.parentFileId is :parentFileId " +
+            "or a.fileId in ( " +
             "select fileId from tbl_file c where c.parentFileId in ( " +
-            "select parentFileId from tbl_file d where d.fileId in (:movingFilesId) " +
-            ") ) ) ")
-    abstract fun getFoldersMovableTo(movingFilesId:List<Int>,parentFileId: Int?,fileStatusFolderAsInt:Int): Flow<List<File>>
+            "select parentFileId from tbl_file d where d.fileId in (:movingFileIds) ) ) )" +
+            "and a.fileId not in (:movingFileIds) )")
+    abstract fun getFoldersMovableTo(movingFileIds: List<Int>, parentFileId: Int?, fileStatusFolderAsInt:Int): Flow<List<File>>
 
     @Query("select a.* from tbl_file a " +
             "where NOT a.deleted AND  " +

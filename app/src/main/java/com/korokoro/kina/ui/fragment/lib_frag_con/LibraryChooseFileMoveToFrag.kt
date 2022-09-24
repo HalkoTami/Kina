@@ -124,7 +124,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
 //            if(flashcard.not())
 //                libraryBaseViewModel.setParentRVItems(it)
             adapter.submitList(it)
-            makeToast(requireActivity(),"called")
+            makeToast(requireActivity(),it.size.toString())
         }
         val movableFlashCardsObserver = Observer<List<File>>{
             if(flashcard)
@@ -155,8 +155,8 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         chooseFileMoveToViewModel.popUpText.observe(viewLifecycleOwner,popUpTextObserver)
 //        if(movingCardIdsList.isEmpty().not())
 //            chooseFileMoveToViewModel.getFilesMovableFlashCards(movingCardIdsList).observe(viewLifecycleOwner,movableFlashCardsObserver)
-//        if(movingFileIdsList.isEmpty().not())
-        chooseFileMoveToViewModel.getFilesMovableFolders(movingFileIdsList,args.fileId?.single()).observe(viewLifecycleOwner,movableFoldersObserver)
+        if(movingFileIdsList.isEmpty().not())
+            chooseFileMoveToViewModel.getFilesMovableFolders(movingFileIdsList,args.fileId?.single()).observe(viewLifecycleOwner,movableFoldersObserver)
 
 
         libraryBaseViewModel.setLibraryFragment(LibraryFragment.ChooseFileMoveTo)
