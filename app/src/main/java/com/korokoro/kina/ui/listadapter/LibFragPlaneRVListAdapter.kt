@@ -25,7 +25,6 @@ import com.korokoro.kina.ui.customClasses.LibRVState
 
 
 class LibFragPlaneRVListAdapter(
-    private val context: Context,
     private val stringCardViewModel: CardTypeStringViewModel,
     private val createCardViewModel: CreateCardViewModel,
     private val createFileViewModel: EditFileViewModel,
@@ -37,7 +36,7 @@ class LibFragPlaneRVListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibFragFileViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return LibFragFileViewHolder(LibraryFragRvItemBaseBinding.inflate(layoutInflater, parent, false),context)
+        return LibFragFileViewHolder(LibraryFragRvItemBaseBinding.inflate(layoutInflater, parent, false),parent.context)
     }
 
     override fun onBindViewHolder(holder: LibFragFileViewHolder, position: Int) {
@@ -58,7 +57,8 @@ class LibFragPlaneRVListAdapter(
             fun libRVButtonsAddCL(
             ){ binding.apply {
                 arrayOf(
-                    libRvBaseContainer,
+                    root,
+                    contentBindingFrame,
                     btnDelete,
                     btnSelect,
                     btnAddNewCard,

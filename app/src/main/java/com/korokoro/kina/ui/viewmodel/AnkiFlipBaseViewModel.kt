@@ -23,7 +23,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
                               reverseMode: Boolean,
                               autoFlip: Boolean){
         setFlipFragment(flipFragments)
-        changeProgress(reverseMode)
         if(autoFlip){
             setCountDownAnim(AnimationAttributes.StartAnim)
         }
@@ -52,7 +51,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun returnFlipFragment(): FlipFragments {
         return _flipFragment.value ?: FlipFragments.LookStringFront
     }
-
+    val flipFragment:LiveData<FlipFragments> = _flipFragment
 
     private val _countDownAnim = MutableLiveData<AnimationAttributes>()
     fun setCountDownAnim(animationAttributes: AnimationAttributes){
@@ -75,11 +74,11 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _parentPosition = MutableLiveData<Int>()
     fun setParentPosition(position: Int){
         if(position<0||returnFlipItems().size-1<position) return else
-        _parentPosition.value = position
+            _parentPosition.value = position
     }
+    val parentPosition:LiveData<Int> = _parentPosition
 
-
-    private fun returnParentPosition():Int{
+    fun returnParentPosition():Int{
         return _parentPosition.value ?:0
     }
     private fun checkFront():Boolean{
@@ -113,14 +112,15 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
     private fun setProgress(progress: Progress){
         _flipProgress.value = progress
     }
-    private fun changeProgress(reverseMode: Boolean){
+    fun changeProgress(reverseMode: Boolean){
+        val position = returnParentPosition()
         val first = when(returnFlipFragment()){
             FlipFragments.LookStringBack     -> reverseMode
             FlipFragments.LookStringFront    -> reverseMode.not()
             FlipFragments.TypeAnswerString   -> true
             FlipFragments.CheckAnswerString  -> false
         }
-        val now = if(first) (returnParentPosition() +1) *2 -1 else (returnParentPosition()+1)*2
+        val now = if(first) (position +1 ) *2 -1 else (position +1)*2
         val all = returnFlipItems().size*2
         setProgress(Progress(now,all))
 
@@ -164,7 +164,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
                 when(typeAnswer){
                     true -> when(changeCard){
                         true -> {
-                            setParentPosition(newPosition)
                             FlipStringTypeAnswerFragDirections.toTypeAnswerString(
                                 reverseMode.not(),
                                 returnFlipItems()[newPosition].id)
@@ -178,7 +177,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
                         }
                     }
                     false -> {
-                        if(changeCard)setParentPosition(newPosition)
                         val cardId = if(changeCard) returnFlipItems()[newPosition].id else _parentCard.value!!.id
                         val action =
                             FlipStringFragDirections.toFlipString(
@@ -203,7 +201,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
                 when(typeAnswer){
                     true -> when(changeCard){
                         true -> {
-                            setParentPosition(newPosition)
                             FlipStringCheckAnswerFragDirections.toCheckAnswerString(
                                 reverseMode.not(),
                                 false,
@@ -217,7 +214,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
                         }
                     }
                     false -> {
-                        if (changeCard) setParentPosition(newPosition)
                         val cardId = if(changeCard) returnFlipItems()[newPosition].id else _parentCard.value!!.id
                         val action =
                             FlipStringFragDirections.toFlipString(

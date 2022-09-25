@@ -1,5 +1,6 @@
 package com.korokoro.kina.ui.listener.recyclerview
 
+
 import android.view.View
 import com.korokoro.kina.databinding.LibraryFragRvItemBaseBinding
 import com.korokoro.kina.db.dataclass.Card
@@ -20,7 +21,20 @@ class LibraryRVCL(val item: Any,
     override fun onClick(p0: View?) {
         rvBinding.apply {
             when(p0){
-                libRvBaseContainer -> if(libraryViewModel.returnLeftSwipedItemExists()==true) libraryViewModel.makeAllUnSwiped()
+                contentBindingFrame -> {
+                    if(libraryViewModel.returnLeftSwipedItemExists()==true) libraryViewModel.makeAllUnSwiped()
+                    else if(libraryViewModel.returnMultiSelectMode()==true){
+                        libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
+                        btnSelect.isSelected = btnSelect.isSelected.not()
+                    }else{
+                        when(item){
+                            is File -> libraryViewModel.openNextFile(item)
+                            is Card -> createCardViewModel.onClickEditCardFromRV(item)
+                        }
+
+                    }
+
+                }
                 btnDelete       -> {
                     deletePopUpViewModel.setDeletingItem(mutableListOf(item))
                     deletePopUpViewModel.setConfirmDeleteVisible(true)
@@ -28,20 +42,21 @@ class LibraryRVCL(val item: Any,
                 btnEditWhole    -> {
                     when(item ){
                         is File -> createFileViewModel.onClickEditFileInRV(item)
-                        is Card -> createCardViewModel.onClickEditCardFromRV(item,)
+                        is Card -> createCardViewModel.onClickEditCardFromRV(item)
                         else -> return
                     }
 
                 }
                 btnAddNewCard -> {
                     when(item){
-                        is Card -> createCardViewModel.onClickAddNewCardRV(item)
+                        is Card -> {
+                            createCardViewModel.onClickAddNewCardRV(item)
+                        }
                         else -> return
                     }
                 }
             }
         }
     }
-
 
 }

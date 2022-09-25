@@ -38,7 +38,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         _parentFlashCardCover.value = file
     }
     fun onClickEditCardFromRV(card: Card,){
-        setParentPosition(card.libOrder)
+        setStartingCardId(card.id)
         returnMainActivityNavCon()?.navigate(EditCardBaseFragDirections.openCreateCard())
 
     }
@@ -65,19 +65,27 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun setSisterCards(list:List<Card>){
         _sisterCards.value = list
     }
-    private val _parentPosition = MutableLiveData<Int>()
-    fun setParentPosition(int: Int){
-        _parentPosition.value = int
+    private val _startingCardId = MutableLiveData<Int>()
+    fun setStartingCardId(int: Int){
+        _startingCardId.value = int
     }
-    fun returnParentPosition():Int{
-        return _parentPosition.value ?:0
+    fun returnStartingCardId():Int{
+        return _startingCardId.value ?:0
     }
     val sisterCards: LiveData<List<Card>> = _sisterCards
     fun returnSisterCards():List<Card>{
         return _sisterCards.value ?: mutableListOf()
     }
-    fun lastInsertedCard(flashCardCoverId:Int?) :LiveData<Card> = repository.lastInsertedCard(flashCardCoverId).asLiveData()
-
+    val lastInsertedCardFromDB:LiveData<Card> = repository.lastInsertedCard.asLiveData()
+    private val _lastInsertedCard =  MutableLiveData<Card>()
+    val lastInsertedCard: LiveData<Card> = _lastInsertedCard
+    private fun returnLastInsertedCard():Card?{
+        return _lastInsertedCard.value
+    }
+    fun setLastInsertedCard(card: Card){
+        if(card==returnLastInsertedCard()) return else
+        _lastInsertedCard.value = card
+    }
     private val _cardStatus = MutableLiveData<CardStatus>()
     fun setCardStatus(cardStatus: CardStatus){
         _cardStatus.value = cardStatus
@@ -201,7 +209,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
     fun onClickAddNewCardBottomBar(){
         returnMainActivityNavCon()?.navigate(EditCardBaseFragDirections.openCreateCard())
-        setParentPosition(returnSisterCards().size)
+        setStartingCardId((returnLastInsertedCard()?.id ?:0) + 1)
         setOpenEditCard(true)
         saveEmptyCard(returnSisterCards().size ,returnParentFlashCardCover()?.fileId)
 

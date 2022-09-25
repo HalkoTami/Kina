@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.AnkiFragBaseBinding
 import com.korokoro.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFragDirections
 import com.korokoro.kina.ui.customClasses.MainFragment
@@ -47,7 +49,6 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
                 bindingSetting.apply {
                     bindingSettingContent.apply {
                         arrayOf(
-                            lineLayParentOrder,
                             txvFilterSetting,imvFilterOptionVisibility,
                             txvFilterTypedAnswerCorrect,
                             txvFilterTypedAnswerMissed,
@@ -62,9 +63,6 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
                             edtAutoFlipSeconds,
                             checkboxReverseSides,
                             checkboxTypeAnswer,
-                            txvOrderLibrary,
-                            txvOrderMostMissed,
-                            txvOrderRandom,
                             imvCloseSetting,
                             btnStartAnki,
                         ).onEach {
@@ -186,8 +184,12 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
                 bindingSettingContent.apply {
                     ankiSettingPopUpViewModel.apply {
                         when(v){
-                            txvFilterSetting,imvFilterOptionVisibility  -> changeSelectedStateAndVisibility(imvFilterOptionVisibility,conLayFilterSetting)
-                            lineLayParentOrder                          -> changeSelectedStateAndVisibility(imvOrderOptionVisibility,lineLayOrderMenu)
+                            txvFilterSetting,imvFilterOptionVisibility  ->{
+                                changeSelectedState(imvFilterOptionVisibility)
+                                conLayFilterSetting.children.iterator().forEach {
+                                    if(it!=lineLayTitle) changeViewVisibility(it,imvFilterOptionVisibility.isSelected)
+                                }
+                            }
                             checkboxAutoFlip                            -> {
                                 val change = returnAutoFlip()
                                 changeSelectedStateAndAlpha(v,lineLayAutoFlipDuration)
@@ -203,12 +205,11 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
                                 changeSelectedState(v)
                                 setTypeAnswer(v.isSelected)
                             }
-                            txvOrderLibrary                             -> setAnkiOrder(AnkiOrder.Library)
-                            txvOrderMostMissed                          -> setAnkiOrder(AnkiOrder.MostMissed)
-                            txvOrderRandom                              -> setAnkiOrder(AnkiOrder.Random)
                             imvCloseSetting                             ->  ankiBaseViewModel.setSettingVisible(false)
                             btnStartAnki                                -> {
                                 ankiBaseViewModel.setSettingVisible(false)
+                                val secondsText = edtAutoFlipSeconds.text.toString()
+                                if(secondsText!="") setAutoFlip(AutoFlip()) else
                                 setAutoFlip(AutoFlip(checkboxAutoFlip.isSelected,edtAutoFlipSeconds.text.toString().toInt()))
                                 ankiBaseViewModel.returnAnkiBaseNavCon()?.navigate(AnkiFlipBaseFragDirections.toFlipFrag())
 

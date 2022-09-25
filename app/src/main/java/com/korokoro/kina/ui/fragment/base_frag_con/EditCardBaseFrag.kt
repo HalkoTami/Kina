@@ -89,9 +89,9 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             }
         }
         val sisterCardFromDBObserver = Observer<List<Card>> {
-            val parentPosition = createCardViewModel.returnParentPosition()
+            val startingCardId = createCardViewModel.returnStartingCardId()
             if(calledFirst){
-                createCardViewModel.onClickEditCard(it.find { it.libOrder == parentPosition } ?:return@Observer,cardNavCon)
+                createCardViewModel.onClickEditCard(it.find { it.id == startingCardId } ?:return@Observer,cardNavCon)
                 calledFirst = false
             }
         }

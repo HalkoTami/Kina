@@ -13,108 +13,6 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         >
-        <androidx.appcompat.widget.LinearLayoutCompat
-            style="@style/SettingLineLayStyle"
-            android:layout_height="wrap_content"
-            >
-            <TextView
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="6dp"
-                android:layout_gravity="top"
-                style="@style/TxvUniformMiddleStyle"
-                android:id="@+id/txv_order_setting"
-                android:layout_width="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-
-                android:text="@string/anki_setting_txv_order"/>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/line_lay_parent_order"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/gray_stroke_rectangle"
-                    android:padding="8dp"
-                    android:gravity="center_vertical">
-                    <TextView
-                        style="@style/TxvUniformMiddleStyle"
-                        android:gravity="center"
-                        android:id="@+id/txv_parent_order_mode"
-                        android:layout_width="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="@string/anki_setting_order_library"/>
-                    <ImageView
-                        android:id="@+id/imv_order_option_visibility"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
-                        android:layout_weight="1"
-
-                        android:src="@drawable/selector_polygon"
-                        tools:ignore="ContentDescription" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_gravity="end"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/lineLay_order_menu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/gray_stroke_rectangle"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        style="@style/TxvUniformMiddleStyle"
-                        android:gravity="center_vertical"
-                        android:padding="10dp"
-                        android:id="@+id/txv_order_library"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="10dp"
-                        android:text="@string/anki_setting_order_library" />
-
-                    <TextView
-                        style="@style/TxvUniformMiddleStyle"
-                        android:gravity="center_vertical"
-                        android:id="@+id/txv_order_random"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
-
-                        android:text="@string/anki_setting_order_random" />
-
-                    <TextView
-                        style="@style/TxvUniformMiddleStyle"
-                        android:id="@+id/txv_order_most_missed"
-                        android:layout_width="wrap_content"
-                        android:padding="10dp"
-                        android:gravity="center_vertical"
-                        android:layout_height="wrap_content"
-                        android:text="@string/anki_setting_order_most_missed" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <FrameLayout
-            style="@style/SettingLineLayStyle"
-            android:layout_height="wrap_content">
-
-        </FrameLayout>
 
 
 
@@ -124,7 +22,7 @@
             style="@style/SettingLineLayStyle"
             android:id="@+id/conLay_filter_setting"
             android:visibility="visible"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
@@ -251,7 +149,7 @@
                 android:id="@+id/lineLay_filter_remember_status"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="10dp"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -343,70 +241,74 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <FrameLayout
             style="@style/SettingLineLayStyle"
-            android:layout_marginTop="10dp">
-            <ImageView
-                android:contentDescription="@string/cd_checkBox"
-                android:id="@+id/checkbox_auto_flip"
-                android:layout_marginEnd="10dp"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/selector_checkbox"/>
-
-            <TextView
-                style="@style/TxvUniformMiddleStyle"
-                android:gravity="center"
-                android:id="@+id/txv_auto_flip"
-                android:layout_width="wrap_content"
-                android:layout_weight="3"
-                android:layout_height="match_parent"
-                android:text="@string/anki_setting_auto_flip"/>
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:minWidth="20dp" />
+            android:layout_width="match_parent">
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:minWidth="80dp"
-                android:id="@+id/line_lay_auto_flip_duration"
+                android:layout_height="match_parent"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:layout_constraintStart_toEndOf="@id/checkbox_auto_flip"
-                app:layout_constraintTop_toBottomOf="@id/conLay_filter_setting"
-                android:background="@drawable/gray_stroke_rectangle"
-                android:padding="10dp"
-                android:gravity="center_vertical">
-                <EditText
-                    style="@style/TxvUniformMiddleStyle"
-                    android:inputType="time"
-                    android:id="@+id/edt_auto_flip_seconds"
-                    android:background="@android:color/transparent"
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/txv_order_setting"
+                android:gravity="center_vertical"
+                android:layout_gravity="center">
+                <ImageView
+                    android:contentDescription="@string/cd_checkBox"
+                    android:id="@+id/checkbox_auto_flip"
+                    android:layout_marginEnd="10dp"
+
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:importantForAutofill="no"
-                    tools:ignore="LabelFor" />
+                    android:src="@drawable/selector_checkbox"/>
+
                 <TextView
-                    style="@style/TxvUniformSmallStyle"
-
-                    android:text="@string/anki_setting_auto_flip_seconds"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    style="@style/TxvUniformMiddleStyle"
+                    android:gravity="center"
+                    android:id="@+id/txv_auto_flip"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="3"
                     android:layout_height="match_parent"
-                    app:layout_constraintStart_toEndOf="@id/txv_parent_order_mode"
+                    android:text="@string/anki_setting_auto_flip"/>
 
-                    app:layout_constraintTop_toTopOf="@id/txv_parent_order_mode"
-                    app:layout_constraintBottom_toBottomOf="@id/txv_parent_order_mode"/>
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:minWidth="20dp" />
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:minWidth="80dp"
+                    android:id="@+id/line_lay_auto_flip_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:layout_constraintStart_toEndOf="@id/checkbox_auto_flip"
+                    app:layout_constraintTop_toBottomOf="@id/conLay_filter_setting"
+                    android:background="@drawable/gray_stroke_rectangle"
+                    android:padding="10dp"
+                    android:gravity="center_vertical">
+                    <EditText
+                        android:maxLength="2"
+                        style="@style/TxvUniformMiddleStyle"
+                        android:inputType="time"
+                        android:id="@+id/edt_auto_flip_seconds"
+                        android:background="@android:color/transparent"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_height="wrap_content"
+                        android:importantForAutofill="no"
+                        tools:ignore="LabelFor"
+                        android:text="20"/>
+                    <TextView
+                        style="@style/TxvUniformSmallStyle"
 
+                        android:text="@string/anki_setting_auto_flip_seconds"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </FrameLayout>
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         style="@style/SettingLineLayStyle"

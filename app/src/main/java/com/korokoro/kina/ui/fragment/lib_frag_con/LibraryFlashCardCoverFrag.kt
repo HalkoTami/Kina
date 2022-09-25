@@ -22,6 +22,7 @@ import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.ui.customClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
+import com.korokoro.kina.ui.listener.recyclerview.LibraryRVItemClickListener
 import com.korokoro.kina.ui.observer.CommonOb
 import com.korokoro.kina.ui.observer.LibraryOb
 import com.korokoro.kina.ui.view_set_up.GetCustomDrawables
@@ -62,13 +63,13 @@ class LibraryFlashCardCoverFrag  : Fragment(){
             recyclerView = binding.vocabCardRV
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
-                context  = requireActivity(),
                 stringCardViewModel  = cardTypeStringViewModel,
                 createCardViewModel  = createCardViewModel,
                 mainNavController = mainNavCon,
                 deletePopUpViewModel = deletePopUpViewModel,
                 createFileViewModel = editFileViewModel,
-                libraryViewModel = libraryBaseViewModel)
+                libraryViewModel = libraryBaseViewModel,
+            )
             searchAdapter = LibFragSearchRVListAdapter(
                 libraryViewModel = libraryBaseViewModel,
                 stringCardViewModel = cardTypeStringViewModel,
@@ -90,6 +91,8 @@ class LibraryFlashCardCoverFrag  : Fragment(){
                 searchViewModel,
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             )
+            recyclerView.addOnItemTouchListener(
+                object : LibraryRVItemClickListener(requireActivity(),binding.frameLayTest,recyclerView,libraryBaseViewModel){})
         }
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()

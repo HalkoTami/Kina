@@ -157,5 +157,19 @@ abstract class FileDao: BaseDao<File> {
     @Query("select * from tbl_file where  " +
             "fileStatus = 3  ")
     abstract  fun getAllFavouriteAnkiBox():Flow<List<File>>
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("WITH  generation AS (" +
+            " select * from tbl_file where fileId = :fileId  " +
+            "UNION ALL" +
+            " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
+            "SELECT * FROM generation b Where not b.fileId = :fileId " +
+            "and b.fileStatus = :filterFileStatusAsInt " +
+            "and not (select count (id) from tbl_card c where c.belongingFlashCardCoverId in ( " +
+            " with generation AS (" +
+            "select * from tbl_file  where fileId = b.fileId " +
+            "UNION ALL " +
+            "SELECT e.* from tbl_file e Inner JOIN generation g ON e.parentFileId = g.fileId ) " +
+            "SELECT fileId FROM generation f ) ) = 0")
+    abstract fun getAnkiBoxRVDescendantsFiles(fileId:Int,filterFileStatusAsInt:Int):Flow<List<File>>
 }
 

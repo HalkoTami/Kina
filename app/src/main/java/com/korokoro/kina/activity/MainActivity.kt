@@ -17,6 +17,7 @@ import com.korokoro.kina.actions.InstallGuide
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.application.RoomApplication
 import com.korokoro.kina.databinding.MainActivityBinding
+import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
@@ -36,6 +37,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var createFileViewModel     : EditFileViewModel
     private lateinit var createCardViewModel     : CreateCardViewModel
     private lateinit var libraryViewModel        : LibraryBaseViewModel
+    private lateinit var ankiFlipBaseViewModel   : AnkiFlipBaseViewModel
+    private lateinit var ankiBaseViewModel        : AnkiBaseViewModel
     private lateinit var binding                  : MainActivityBinding
 
 
@@ -65,6 +68,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
             createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
             libraryViewModel      = ViewModelProvider(this,factory)[LibraryBaseViewModel::class.java]
+            ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
+            ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
             mainNavCon            =   navHostFragment.navController
 
 
@@ -76,15 +81,18 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 mainTopConstrainLayout.requestFocus()
                 mainTopConstrainLayout.viewTreeObserver.addOnGlobalLayoutListener(
                     object :KeyboardListener(mainTopConstrainLayout){
+                        var before = true
                         override fun onKeyBoardAppear() {
                             super.onKeyBoardAppear()
+                            before = mainActivityViewModel.returnBnvVisibility() ?:true
                             mainActivityViewModel.setBnvVisibility(false)
                         }
 
                         override fun onKeyBoardDisappear() {
                             super.onKeyBoardDisappear()
-                            if(mainActivityViewModel.returnFragmentStatus()?.now == MainFragment.EditCard ) return
-                            else mainActivityViewModel.setBnvVisibility(true)
+                            mainActivityViewModel.setBnvVisibility(
+                                before)
+
                         }
                     }
                 )
@@ -149,9 +157,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             ViewModelProvider(this,factory)[SearchViewModel::class.java]
             ViewModelProvider(this,factory)[CardTypeStringViewModel::class.java]
             ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
-            ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
             ViewModelProvider(this,factory)[AnkiBoxViewModel::class.java]
-            ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
             ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
             ViewModelProvider(this,factory)[FlipTypeAndCheckViewModel::class.java]
             ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
@@ -214,6 +220,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val libraryParentRVItemsObserver        = Observer<List<Any>>{
             createFileViewModel.setPosition(it.size+1)
         }
+
 //        ー－－－mainActivityのviewModel 読み取りー－－－
         mainActivityViewModel.setMainActivityNavCon(mainNavCon)
         mainActivityViewModel.childFragmentStatus   .observe(this@MainActivity,childFragmentStatusObserver)
@@ -232,14 +239,15 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         libraryViewModel. onCreate()
         libraryViewModel.parentFile.observe(this@MainActivity,libraryParentFileObserver)
         libraryViewModel.parentRVItems.observe(this@MainActivity,libraryParentRVItemsObserver)
+
         createCardViewModel.setMainActivityNavCon(mainNavCon)
+        createCardViewModel.lastInsertedCardFromDB.observe(this) {
+            createCardViewModel.setLastInsertedCard(it)
+        }
+
  }
 
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return super.onTouchEvent(event)
-
-    }
 
     override fun onClick(v: View?) {
 

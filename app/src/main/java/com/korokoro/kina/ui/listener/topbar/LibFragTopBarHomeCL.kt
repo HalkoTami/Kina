@@ -14,7 +14,6 @@ class LibFragTopBarHomeCL(private val binding: LibraryFragTopBarHomeBinding,
         binding.apply {
             when(v){
                 home.frameLayInBox-> libVM.onClickInBox()
-                home.imvBookMark -> makeToast(v.context,"todo")
             }
         }
     }

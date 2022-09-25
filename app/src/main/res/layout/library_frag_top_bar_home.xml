@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:padding="10dp"
-
-    android:gravity="center_vertical"
-    android:layout_gravity="center_vertical">
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/TopBarLinLayStyle">
 
 
     <ImageView
@@ -19,37 +13,25 @@
         />
 
     <TextView
+        style="@style/TopBarTxvSizeNormalStyle"
         android:id="@+id/txv_home"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_weight="5"
-        android:autoSizeMaxTextSize="20sp"
-        android:autoSizeMinTextSize="1sp"
-        android:autoSizeTextType="uniform"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:text="Home" />
-    <ImageView
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:id="@+id/imv_book_mark"
-        android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
-
-        android:src="@drawable/icon_book_mark"
+        android:text="Home"
+        android:layout_marginStart="10dp"
         />
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/frameLay_inBox"
         android:layout_gravity="center"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
 
         >
         <ImageView
+            android:paddingEnd="10dp"
             android:id="@+id/imv_inbox_icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

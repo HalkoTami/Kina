@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -92,26 +93,45 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                            context:Context,
                            lifecycleOwner: LifecycleOwner
 ){
-        val getDraw = GetCustomDrawables(context)
-        fun setUpRVFileData(list: List<Card>){
-            val mList = list.toMutableList()
-            binding.txvAnkiBoxCardAmount.text = mList.size.toString()
-            setUpFlipProgressBar(mList,binding.flippedProgressBarBinding)
+        fun getAnimation(list:List<Card>):ValueAnimator{
             val remPer = list.filter { it.remembered }.size.toDouble()/list.size
-            binding.rememberedProgressBarBinding.apply {
-
-                val progressBefore = progressbarRemembered.progress
-                val a = ValueAnimator.ofFloat(progressBefore.toFloat(),getPercentage(remPer).toFloat())
-                a.addUpdateListener {
-                    val value = it.animatedValue as Float
-                    progressbarRemembered.progress = value.toInt()
-                    val translation = progressbarRemembered.width*value/100-imvRememberedEndIcon.width/2
-                    imvRememberedEndIcon.translationX = if(translation<0) 0f else translation
-                }
-                a.duration = abs(progressBefore-getPercentage(remPer)).times(30).toLong()
-                a.start()
+            val rememberedProgressBar = binding.rememberedProgressBarBinding.progressbarRemembered
+            val progressBefore =rememberedProgressBar.progress
+            val imvEndIcon = binding.rememberedProgressBarBinding.imvRememberedEndIcon
+            val a = ValueAnimator.ofFloat(progressBefore.toFloat(),getPercentage(remPer).toFloat())
+            a.addUpdateListener {
+                val value = it.animatedValue as Float
+                rememberedProgressBar.progress = value.toInt()
+                val translation = rememberedProgressBar.width*value/100-imvEndIcon.width/2
+                imvEndIcon.translationX = if(translation<0) 0f else translation
             }
+            a.duration = abs(progressBefore-getPercentage(remPer)).times(30).toLong()
+            return a
+        }
+        val getDraw = GetCustomDrawables(context)
+        val descendantsCardsObserver = Observer<List<Card>>{ list->
+            binding.apply {
+                arrayOf(txvAnkiBoxCardAmount,imvContainingCardsIcon
+                ).onEach { it.visibility = if(list.isEmpty()) View.INVISIBLE else View.VISIBLE }
+                binding.txvAnkiBoxCardAmount.text = list.size.toString()
+            }
+            setUpFlipProgressBar(list.toMutableList(),binding.flippedProgressBarBinding)
+            getAnimation(list).start()
 
+        }
+        val descendantsFoldersObserver = Observer<List<File>>{ list->
+            binding.apply {
+                arrayOf(txvAnkiBoxFolderAmount,imvContainingFoldersIcon
+                ).onEach { it.visibility = if(list.isEmpty()) View.INVISIBLE else View.VISIBLE }
+                binding.txvAnkiBoxFolderAmount.text = list.size.toString()
+            }
+        }
+        val descendantsFlashCardsObserver = Observer<List<File>>{ list->
+            binding.apply {
+                arrayOf(txvAnkiBoxFlashCardAmount,imvContainingFlashcardsIcon
+                ).onEach { it.visibility = if(list.isEmpty()) View.INVISIBLE else View.VISIBLE }
+                binding.txvAnkiBoxFlashCardAmount.text = list.size.toString()
+            }
         }
         binding.apply {
             ankiBoxVM.ankiBoxFileIds.observe(lifecycleOwner){
@@ -129,11 +149,9 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                 ankiBoxVM = ankiBoxVM,
                 binding = binding,
                 tab = tab)) }
-            ankiBoxVM.getAnkiBoxRVCards(file.fileId).observe(lifecycleOwner){
-//
-                setUpRVFileData(it)
-
-            }
+            ankiBoxVM.getAnkiBoxRVCards(file.fileId)                .observe(lifecycleOwner,descendantsCardsObserver)
+            ankiBoxVM.getAnkiBoxRVDescendantsFolders(file.fileId)   .observe(lifecycleOwner,descendantsFoldersObserver)
+            ankiBoxVM.getAnkiBoxRVDescendantsFlashCards(file.fileId)   .observe(lifecycleOwner,descendantsFlashCardsObserver)
 
         }
 
@@ -146,7 +164,7 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
 
     }
     fun getFlippedPercentage(list: MutableList<Card>, timesFlipped:Int):Double{
-        return if(list.size!=0) (list.filter { it.timesFlipped == timesFlipped }.size.toDouble()/list.size)
+        return if(list.size!=0) (list.filter { it.timesFlipped >= timesFlipped }.size.toDouble()/list.size)
         else 0.0
 
     }
@@ -213,7 +231,7 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
             a.addUpdateListener {
                 val value = it.animatedValue as Float
                 val updateWidth = getWidth(value.toInt())
-                frameLay.translationX = if(updateWidth + frameLay.width > fullWidth) fullWidth.toFloat() else updateWidth
+                frameLay.translationX = if(updateWidth + frameLay.width > fullWidth) fullWidth.toFloat()-frameLay.width else updateWidth
                 txv.text = value.toInt().toString()
             }
             a.doOnStart {
@@ -247,6 +265,8 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                 ||(view1Left<=view2Left&& view1Right >= view2Right)
     }
     fun setUpFlipProgressBar(list: MutableList<Card>,binding: ProgressBarFlippedBinding){
+
+
         val per1 = getFlippedPercentage(list,1)
         val per2 = getFlippedPercentage(list,2)
         val per3 = getFlippedPercentage(list,3)
@@ -256,9 +276,13 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         binding. apply {
 
             progressBarFlipped1.progress =      getPercentage(per1)
+            txv1.text = 1.toString()
             progressBarFlipped2.progress =      getPercentage(per2)
+            txv2.text = 2.toString()
             progressBarFlipped3.progress =      getPercentage(per3)
+            txv3.text = 3.toString()
             progressBarFlippedAbove4.progress = getPercentage(per4)
+            txv4Above.text = 4.toString()
             arrayOf(txv1,txv2,txv3,txv4Above).onEach {
                 it.visibility = View.VISIBLE
             }

@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.korokoro.kina.R
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
@@ -48,18 +49,19 @@ class AnkiBoxListAdapter(
             val content =
             when(item){
                 is File -> {
-                    val binding = AnkiHomeFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-                    AnkiBoxFragViewSetUp().setUpRVFileBinding(binding, item,tab, ankiBoxVM = ankiBoxFragViewModel ,context,lifecycleOwner)
-
-                    binding.root
+                    val fileBinding = AnkiHomeFragRvItemFileBinding.inflate(LayoutInflater.from(context))
+                    AnkiBoxFragViewSetUp().setUpRVFileBinding(fileBinding, item,tab, ankiBoxVM = ankiBoxFragViewModel ,context,lifecycleOwner)
+                    binding.frameLayAnkiBoxRvContent.layoutParams.height = context.resources.getDimensionPixelSize(
+                        R.dimen.anki_box_rv_item_height)
+                    binding.frameLayAnkiBoxRvContent.requestLayout()
+                    fileBinding.root
                 }
                 is Card -> {
-                    val binding = AnkiHomeFragRvItemCardBinding.inflate(LayoutInflater.from(context))
-                    binding.apply {
-                       AnkiBoxFragViewSetUp().setUpRVCard(binding,item,lifecycleOwner,ankiBoxFragViewModel)
-                    }
-
-                    binding.root
+                    val cardBinding = AnkiHomeFragRvItemCardBinding.inflate(LayoutInflater.from(context))
+                    AnkiBoxFragViewSetUp().setUpRVCard(cardBinding,item,lifecycleOwner,ankiBoxFragViewModel)
+                    binding.frameLayAnkiBoxRvContent.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    binding.frameLayAnkiBoxRvContent.requestLayout()
+                    cardBinding.root
                 }
                 else -> return
             }

@@ -36,7 +36,8 @@ class MyRoomRepository(
         cardDao.getDescendantsCardsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
     fun getCardsByMultipleCardId(cardIds:List<Int>):Flow<List<Card>> = cardDao.getCardByMultipleCardIds(cardIds)
     fun getCardByCardId(cardId:Int?):Flow<Card> = cardDao.getCardByCardId(cardId)
-    fun lastInsertedCard(flashCardId: Int?):Flow<Card> = cardDao.getLastInsertedCard(flashCardId)
+    fun lastInsertedCardByFlashCard(flashCardId: Int?):Flow<Card> = cardDao.getLastInsertedCardByFlashCard(flashCardId)
+    val lastInsertedCard:Flow<Card> = cardDao.getLastInsertedCard()
     fun searchCardsByWords(search:String):Flow<List<Card>> = cardDao.searchCardsByWords(search)
     fun getAnkiBoxRVCards(fileId:Int):Flow<List<Card>> =
         cardDao.getAnkiBoxRVCards(fileId,xRefTypeCardAsInt,xRefTypeFileAsInt)
@@ -52,6 +53,8 @@ class MyRoomRepository(
     fun getFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = fileDao.myGetFileByParentFileId(parentFileId)
     fun getLibraryItemsWithDescendantCards(parentFileId:Int?):Flow<List<File>> = fileDao.getLibraryItemsWithDescendantCards(parentFileId)
 
+    fun getAnkiBoxRVDescendantsFolders(fileId:Int):Flow<List<File>> = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFolderAsInt)
+    fun getAnkiBoxRVDescendantsFlashCards(fileId:Int):Flow<List<File>> = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFlashCardAsInt)
     fun getAllAncestorsByFileId(fileId: Int?):Flow<List<File>> = fileDao.getAllAncestorsByChildFileId(fileId)
     fun getAllDescendantsFilesByMultipleFileId(fileIdList: List<Int>):Flow<List<File>> = fileDao.getAllDescendantsFilesByMultipleFileId(fileIdList)
     fun searchFilesByWords(search:String):Flow<List<File>> = fileDao.searchFilesByWords(search)
@@ -156,7 +159,6 @@ class MyRoomRepository(
     }
     suspend fun updateCardFlippedTime(card:Card){
         cardDao.upDateCardFlippedTimes(card.id)
-        fileDao.upDateAncestorsFlipCount(card.id,card.belongingFlashCardCoverId,xRefTypeCardAsInt,xRefTypeFileAsInt)
     }
 
     suspend fun update(item: Any) {

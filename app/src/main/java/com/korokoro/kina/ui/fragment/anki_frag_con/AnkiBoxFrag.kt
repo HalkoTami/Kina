@@ -18,6 +18,7 @@ import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
 import com.korokoro.kina.ui.customClasses.AnkiBoxTabData
+import com.korokoro.kina.ui.customClasses.AnkiFilter
 import com.korokoro.kina.ui.customClasses.AnkiFragments
 import com.korokoro.kina.ui.observer.CommonOb
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
@@ -29,7 +30,8 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
     private val ankiBaseViewModel:AnkiBaseViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
-
+    private val ankiFlipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
     lateinit var ankiBoxNavCon:NavController
     private val binding get() = _binding!!
 
@@ -115,12 +117,14 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
 
         ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
         ankiBoxViewModel.setAnkiBoxNavCon(ankiBoxNavCon)
+        ankiFlipBaseViewModel.setAnkiFlipItems(mutableListOf(),AnkiFilter())
         ankiBoxViewModel.toast.observe(viewLifecycleOwner,toastObserver)
         ankiBoxViewModel.currentChildFragment.observe(viewLifecycleOwner,ankiBoxChildFragObserver)
         ankiBoxViewModel.ankiBoxFileIds.observe(viewLifecycleOwner,ankiBoxFileIdsObserver)
         ankiBoxViewModel.ankiBoxCardIds.observe(viewLifecycleOwner,ankiBoxCardIdsObserver)
         ankiBoxViewModel.allFavouriteAnkiBoxFromDB.observe(viewLifecycleOwner,allFavouriteAnkiBoxFromDBObserver)
         ankiBoxViewModel.ankiBoxItems.observe(viewLifecycleOwner,ankiBoxItemsObserver)
+        mainViewModel.setBnvVisibility(true)
 
         return binding.root
     }

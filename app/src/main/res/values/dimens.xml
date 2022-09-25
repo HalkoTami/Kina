@@ -9,4 +9,6 @@
     <dimen name="top_bar_ancestors_height">20dp</dimen>
     <item name="popUpButton_height_percentage" format="float" type="integer">0.25</item>
     <item name="popUpText_width_percentage" format="float" type="integer">0.8</item>
+    <dimen name="string_card_min_height" >90dp</dimen>
+    <dimen name="lib_rv_file_height" >70dp</dimen>
 </resources>

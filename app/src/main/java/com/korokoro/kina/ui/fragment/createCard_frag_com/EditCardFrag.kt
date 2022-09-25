@@ -107,7 +107,7 @@ class EditCardFrag: Fragment(),View.OnClickListener {
 
         }
         var lastCardOld: Card? = null
-        createCardViewModel.lastInsertedCard(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner) {
+        createCardViewModel.lastInsertedCard.observe(viewLifecycleOwner) {
             if(lastCardOld!=null&&lastCardOld!=it&&lastCardOld!!.id<it.id){
                 createCardViewModel.onClickEditCard(it,cardNavCon)
             }
@@ -118,6 +118,7 @@ class EditCardFrag: Fragment(),View.OnClickListener {
         createCardViewModel.confirmFlipItemPopUpVisible.observe(viewLifecycleOwner,confirmPopUpVisibilityObserver)
         createCardViewModel.colPalletVisibility.observe(viewLifecycleOwner,colorPalletVisibilityObserver)
         createCardViewModel.cardColor.observe(viewLifecycleOwner,cardColorObserver)
+
 
 
 

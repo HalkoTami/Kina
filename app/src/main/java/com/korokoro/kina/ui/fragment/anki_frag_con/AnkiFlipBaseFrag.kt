@@ -120,25 +120,33 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             }
         }
         val parentCardObserver = Observer<Card> {
-            if(cardBefore==it||it==null) return@Observer else{
-                if(cardBefore!=null)
-                    ankiFlipBaseViewModel.updateLookedTime(cardBefore!!,false)
-                ankiFlipBaseViewModel.updateLookedTime(it,true)
-                ankiFlipBaseViewModel.updateFlipped(it)
-                val flipItems = ankiFlipBaseViewModel.returnFlipItems()
+            val flipItems = ankiFlipBaseViewModel.returnFlipItems()
+            if((cardBefore==it||it==null).not()) {
+                makeToast(requireActivity(),it.timesFlipped.toString())
+                if(it.id!=cardBefore?.id){
+                    if(cardBefore!=null)
+                        ankiFlipBaseViewModel.updateLookedTime(cardBefore!!,false)
+                    ankiFlipBaseViewModel.updateLookedTime(it,true)
+                    ankiFlipBaseViewModel.updateFlipped(it)
+                }
                 if(flipItems.contains(it)){
                     binding.topBinding.txvCardPosition.text ="${flipItems.indexOf(it)}/${flipItems.size}"
                 }
                 binding.btnRemembered.isSelected =  it.remembered
                 binding.btnSetFlag.isSelected = it.flag
                 cardBefore = it
+                createCardViewModel.setStartingCardId(it.id)
+                ankiFlipBaseViewModel.setParentPosition(flipItems.indexOf(it))
             }
+            ankiFlipBaseViewModel.changeProgress(ankiSettingPopUpViewModel.returnReverseCardSide())
+
         }
         val flipItemsObserver = Observer<List<Card>> {
             if(it.isEmpty().not()) {
                 flipNavCon.popBackStack()
                 if(start){
-                    ankiFlipBaseViewModel.startFlip(ankiSettingPopUpViewModel.returnReverseCardSide(),ankiSettingPopUpViewModel.returnTypeAnswer(),it,0)
+                    val startingPosition = if(mainViewModel.returnFragmentStatus()?.before == MainFragment.EditCard) ankiFlipBaseViewModel.returnParentPosition() else 0
+                    ankiFlipBaseViewModel.startFlip(ankiSettingPopUpViewModel.returnReverseCardSide(),ankiSettingPopUpViewModel.returnTypeAnswer(),it,startingPosition)
                     start = false
                 }
             } else return@Observer
@@ -178,7 +186,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
         editFileViewModel.filterBottomMenuOnlyCard()
 
         ankiFlipBaseViewModel.setFlipBaseNavCon(flipNavCon)
-        ankiFlipBaseViewModel.setParentPosition(0)
         ankiFlipBaseViewModel.setFront(!ankiSettingPopUpViewModel.returnReverseCardSide())
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
 
@@ -187,7 +194,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
         ankiFlipBaseViewModel.getAllCardsFromDB.observe(viewLifecycleOwner,allCardsFromDBObserver)
         ankiFlipBaseViewModel.parentCard.observe(viewLifecycleOwner,parentCardObserver)
         ankiFlipBaseViewModel.ankiFlipItems.observe(viewLifecycleOwner,flipItemsObserver)
-
         ankiBoxViewModel.getCardsFromDBByMultipleCardIds(cardIds).observe(viewLifecycleOwner,getCardsByMultipleCardIdsFromDBObserver)
         ankiSettingPopUpViewModel.typeAnswer.observe(viewLifecycleOwner,typeAnswerObserver)
         ankiSettingPopUpViewModel.autoFlip.observe(viewLifecycleOwner,autoFlipObserver)
@@ -246,7 +252,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mainViewModel.setBnvVisibility(true)
         ankiFlipBaseViewModel.setCountDownAnim(AnimationAttributes.Cancel)
         _binding = null
     }
@@ -297,8 +302,8 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                         )
                     }
                     imvEditCard -> {
-                        val libOrder = ankiFlipBaseViewModel.returnParentCard()?.libOrder ?: return
-                        createCardViewModel.setParentPosition(libOrder)
+                        val editingId = ankiFlipBaseViewModel.returnParentCard()?.id ?: return
+                        createCardViewModel.setStartingCardId(editingId)
                         mainViewModel.returnMainActivityNavCon()
                             ?.navigate(EditCardBaseFragDirections.openCreateCard())
                     }

@@ -50,8 +50,6 @@ class LibraryAddListeners(){
         searchAddCL()
 
 
-        binding.rvCover.
-        setOnTouchListener(LibraryRVTouchListener(context,binding.vocabCardRV,libraryViewModel,binding.frameLayTest,createCardViewModel))
 
         binding.bindingSearch.edtLibrarySearch.addTextChangedListener {
             if(it.toString()!=""){

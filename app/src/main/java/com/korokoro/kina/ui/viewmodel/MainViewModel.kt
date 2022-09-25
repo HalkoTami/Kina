@@ -56,11 +56,10 @@ class MainViewModel:ViewModel(){
     private val _bnvVisibility = MutableLiveData<Boolean>()
     val bnvVisibility:LiveData<Boolean> = _bnvVisibility
     fun setBnvVisibility(boolean: Boolean){
-        val previous = _bnvVisibility.value
-        if (boolean == previous) return else {
-            _bnvVisibility.value = boolean
-        }
-
+        _bnvVisibility.value = boolean
+    }
+    fun returnBnvVisibility():Boolean?{
+        return _bnvVisibility.value
     }
 
 

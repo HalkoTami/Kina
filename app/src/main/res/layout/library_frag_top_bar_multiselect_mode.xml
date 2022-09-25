@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:padding="10dp"
-
-    android:gravity="center_vertical"
-    android:layout_gravity="center_vertical">
+    style="@style/TopBarLinLayStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <ImageView
         android:id="@+id/imv_close_multi_mode"
         android:minHeight="40dp"
@@ -29,15 +21,10 @@
         />
 
     <TextView
+        style="@style/TopBarTxvSizeNormalStyle"
         android:id="@+id/txv_selecting_status"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-
-        android:text="10個選択中"
-        android:gravity="center_vertical"
-
-        android:textSize="20sp"/>
+        android:layout_weight="1" />
     <ImageView
 
         android:id="@+id/imv_change_menu_visibility"

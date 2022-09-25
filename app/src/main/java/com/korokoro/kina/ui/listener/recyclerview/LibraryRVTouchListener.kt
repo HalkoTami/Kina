@@ -3,6 +3,7 @@ package com.korokoro.kina.ui.listener.recyclerview
 import android.content.Context
 import android.view.MotionEvent
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -11,6 +12,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.ui.listener.MyTouchListener
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.ui.customClasses.LibRVState
@@ -27,7 +29,8 @@ class LibraryRVTouchListener(val context: Context,
     override fun onSingleTap(motionEvent: MotionEvent?) {
         super.onSingleTap(motionEvent)
         val view = recyclerView.findChildViewUnder(motionEvent!!.x,motionEvent.y)
-        val conLay = view?.findViewById<ConstraintLayout>(R.id.lib_rv_base_container) ?:return
+        view?.onTouchEvent(motionEvent)
+        val conLay = view?.findViewById<FrameLayout>(R.id.content_binding_frame) ?:return
         val btnSelect = view.findViewById<ImageView>(R.id.btn_select)
         val position = recyclerView.getChildAdapterPosition(view)
         val item = libraryViewModel.returnParentRVItems()[position]
@@ -57,6 +60,7 @@ class LibraryRVTouchListener(val context: Context,
     private var swipingDistance:Float = 1f
     override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
         super.onScrollLeft(distanceX, motionEvent)
+        makeToast(context,"called")
         scrollView.requestDisallowInterceptTouchEvent(true)
         startPosition = motionEvent
         swipingDistance = distanceX

@@ -223,7 +223,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="autoSizeTextType">uniform</item>
         <item name="autoSizeMinTextSize">14sp</item>
-        <item name="autoSizeMaxTextSize">15sp</item>
+        <item name="autoSizeMaxTextSize">17sp</item>
         <item name="android:padding">3dp</item>
         <item name="android:gravity">center_vertical</item>
     </style>
@@ -244,6 +244,7 @@
     </style>
     <style name="BackGroundViewStyle">
         <item name="android:alpha">0.3</item>
+        <item name="android:visibility">gone</item>
     </style>
     <style name="OnInstallTextView">
         <item name="android:visibility">gone</item>

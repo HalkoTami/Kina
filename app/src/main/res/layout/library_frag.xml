@@ -30,9 +30,7 @@
 
 
     <View
-        android:background="@color/light_green"
-        android:alpha="0.5"
-        android:visibility="gone"
+        style="@style/BackGroundViewStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/background"/>
