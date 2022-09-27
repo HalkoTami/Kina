@@ -101,14 +101,13 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         return returnDeletingItemChildrenCards().isEmpty().not()||returnDeletingItemChildrenFiles().isEmpty().not()
     }
     fun deleteOnlyFile(){
-        if(returnDeletingItems().size == 1){
-            deleteSingleFile(returnDeletingItems().single() as File,false)
+        if(returnDeletingItems().filterIsInstance<File>().size == 1){
+            deleteSingleFile(returnDeletingItems().filterIsInstance<File>().single(),false)
+
         } else {
             deleteMultipleFiles(returnDeletingItems().filterIsInstance<File>() , false)
+            deleteCards(returnDeletingItems().filterIsInstance<Card>())
         }
-//        returnDeletingItems().onEach {
-//            deleteSingleFile(it as File,false)
-//        }
         setConfirmDeleteVisible(false)
         setConfirmDeleteWithChildrenVisible(false)
     }

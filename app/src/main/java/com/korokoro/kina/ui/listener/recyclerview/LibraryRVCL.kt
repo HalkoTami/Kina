@@ -1,10 +1,14 @@
 package com.korokoro.kina.ui.listener.recyclerview
 
 
+import android.view.MotionEvent
 import android.view.View
+import android.widget.ImageView
+import com.korokoro.kina.R
 import com.korokoro.kina.databinding.LibraryFragRvItemBaseBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
+import com.korokoro.kina.ui.listener.MyTouchListener
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.EditFileViewModel
 import com.korokoro.kina.ui.viewmodel.DeletePopUpViewModel
@@ -16,11 +20,13 @@ class LibraryRVCL(val item: Any,
                   private val createFileViewModel: EditFileViewModel,
                   private val rvBinding: LibraryFragRvItemBaseBinding,
                   private val deletePopUpViewModel: DeletePopUpViewModel,
-                  private val createCardViewModel: CreateCardViewModel
-): View.OnClickListener{
-    override fun onClick(p0: View?) {
+                  private val createCardViewModel: CreateCardViewModel,
+                  val v:View,
+): MyTouchListener(v.context){
+    override fun onSingleTap(motionEvent: MotionEvent?) {
+        super.onSingleTap(motionEvent)
         rvBinding.apply {
-            when(p0){
+            when(v){
                 contentBindingFrame -> {
                     if(libraryViewModel.returnLeftSwipedItemExists()==true) libraryViewModel.makeAllUnSwiped()
                     else if(libraryViewModel.returnMultiSelectMode()==true){
@@ -57,6 +63,14 @@ class LibraryRVCL(val item: Any,
                 }
             }
         }
+
+    }
+
+    override fun onLongClick(motionEvent: MotionEvent?) {
+        super.onLongClick(motionEvent)
+        rvBinding.btnSelect.isSelected = true
+        libraryViewModel.setMultipleSelectMode(true)
+        libraryViewModel.onClickSelectableItem(item,true)
     }
 
 }

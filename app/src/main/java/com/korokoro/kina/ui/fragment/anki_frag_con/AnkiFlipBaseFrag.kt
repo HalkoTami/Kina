@@ -130,7 +130,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                     ankiFlipBaseViewModel.updateFlipped(it)
                 }
                 if(flipItems.contains(it)){
-                    binding.topBinding.txvCardPosition.text ="${flipItems.indexOf(it)}/${flipItems.size}"
+                    binding.topBinding.txvCardPosition.text ="${flipItems.indexOf(it)+1}/${flipItems.size}"
                 }
                 binding.btnRemembered.isSelected =  it.remembered
                 binding.btnSetFlag.isSelected = it.flag

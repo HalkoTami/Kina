@@ -56,11 +56,6 @@ class EditCardFrag: Fragment(),View.OnClickListener {
         fun addClickListeners(){
             binding.apply {
                 arrayOf(
-                    createCardColPalletBinding.imvIconPalet,
-                    createCardColPalletBinding.imvColYellow,
-                    createCardColPalletBinding.imvColRed,
-                    createCardColPalletBinding.imvColGray,
-                    createCardColPalletBinding.imvColBlue,
                     confirmAddToFlipItemBinding.btnCloseConfirm,
                     confirmAddToFlipItemBinding.btnCommitAdd,
                     confirmAddToFlipItemBinding.btnNotAdd,
@@ -87,15 +82,7 @@ class EditCardFrag: Fragment(),View.OnClickListener {
         val parentFlashCardCoverObserver = Observer<File?> {
             createCardViewModel.setParentFlashCardCover(it)
         }
-        val colorPalletVisibilityObserver = Observer<Boolean> {
-            Animation().animateColPallet(binding.createCardColPalletBinding.root,booleanToVisibility(it))
-        }
-        val cardColorObserver = Observer<ColorPalletStatus> {
-            ColorPalletViewSetUp().apply {
-                changeColPalletCol(requireActivity(),it.colNow,true,binding.createCardColPalletBinding)
-                changeColPalletCol(requireActivity(),it.before,false,binding.createCardColPalletBinding)
-            }
-        }
+
         val confirmPopUpVisibilityObserver = Observer<Boolean>{
             binding.frameLayPopupConfirmAddToFlipItem.visibility = booleanToVisibility(it)
         }
@@ -116,8 +103,7 @@ class EditCardFrag: Fragment(),View.OnClickListener {
         createCardViewModel.getParentFlashCardCover(parentFlashCardId).observe(viewLifecycleOwner,parentFlashCardCoverObserver)
         createCardViewModel.getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner,sisterCardObserver)
         createCardViewModel.confirmFlipItemPopUpVisible.observe(viewLifecycleOwner,confirmPopUpVisibilityObserver)
-        createCardViewModel.colPalletVisibility.observe(viewLifecycleOwner,colorPalletVisibilityObserver)
-        createCardViewModel.cardColor.observe(viewLifecycleOwner,cardColorObserver)
+
 
 
 
@@ -140,11 +126,6 @@ class EditCardFrag: Fragment(),View.OnClickListener {
                     ankiBoxViewModel.addToAnkiBoxCardIds(listOf(args.cardId?.single() ?:return))
                     createCardViewModel.setConfirmFlipItemPopUpVisible(false)
                 }
-                createCardColPalletBinding.imvIconPalet  -> createCardViewModel.changeColPalletVisibility()
-                createCardColPalletBinding.imvColBlue    ->    createCardViewModel.setCardColor(ColorStatus.BLUE)
-                createCardColPalletBinding.imvColRed     ->     createCardViewModel.setCardColor(ColorStatus.RED)
-                createCardColPalletBinding.imvColGray    ->    createCardViewModel.setCardColor(ColorStatus.GRAY)
-                createCardColPalletBinding.imvColYellow  ->createCardViewModel. setCardColor(ColorStatus.YELLOW)
 
             }
         }

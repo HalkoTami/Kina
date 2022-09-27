@@ -63,8 +63,8 @@ class LibFragPlaneRVListAdapter(
                     btnSelect,
                     btnAddNewCard,
                     btnEditWhole
-                ).onEach { it.setOnClickListener(
-                    LibraryRVCL(item,libraryViewModel, createFileViewModel,binding,deletePopUpViewModel,createCardViewModel)
+                ).onEach { it.setOnTouchListener(
+                    LibraryRVCL(item,libraryViewModel, createFileViewModel,binding,deletePopUpViewModel,createCardViewModel,it)
                 )
                 }
             }
@@ -87,7 +87,6 @@ class LibFragPlaneRVListAdapter(
                 is Card -> {
                     val stringCardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
                     viewSetUp.setUpRVStringCardBinding(stringCardBinding, item.stringData, )
-                    AnkiBoxFragViewSetUp().setUpOrder(stringCardBinding,item)
                     addL.cardRVStringAddCL(stringCardBinding,item,createCardViewModel,stringCardViewModel,mainNavController)
                     binding.btnAddNewCard.visibility = View.VISIBLE
                     contentView = stringCardBinding.root

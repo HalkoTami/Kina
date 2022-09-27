@@ -74,7 +74,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             val sisterCards = createCardViewModel.returnSisterCards()
             binding.apply {
                 binding.createCardTopBarBinding.txvPosition.text =
-                    "${card.id} ${card.libOrder}/${sisterCards.size}"
+                    "${card.libOrder+1}/${sisterCards.size}"
                 setAlphaByClickable(nextCard!=null, binding.btnNext)
                 setAlphaByClickable(previousCard!=null, binding.btnPrevious)
                 stringCardViewModel.setParentCard(card)
@@ -84,7 +84,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             val parentCard = createCardViewModel.returnParentCard()
             if(parentCard!=null){
                 binding.createCardTopBarBinding.txvPosition.text =
-                    "${parentCard.id} ${parentCard.libOrder}/${it.size}"
+                    "${parentCard.libOrder+1}/${it.size}"
 
             }
         }

@@ -15,16 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <FrameLayout
-            android:id="@+id/col_pallet_frame"
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <include
-                android:id="@+id/create_card_col_pallet_binding"
-                layout="@layout/item_color_pallet" />
-        </FrameLayout>
+
 
         <ScrollView
             android:layout_width="match_parent"
@@ -32,7 +23,7 @@
 
             android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/col_pallet_frame"
+            app:layout_constraintTop_toTopOf="parent"
            >
 
             <androidx.fragment.app.FragmentContainerView

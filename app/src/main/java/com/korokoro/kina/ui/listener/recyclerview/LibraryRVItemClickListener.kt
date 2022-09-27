@@ -29,8 +29,9 @@ open class LibraryRVItemClickListener(val context: Context,
             distanceX: Float,
             distanceY: Float
         ): Boolean {
-            onScrollLeft(abs(e2.x-e1.x),e1)
-            return ((e2.x-e1.x) < 0)
+            if((e2.x-e1.x) < -50)
+                onScrollLeft(abs(e2.x-e1.x),e1)
+            return ((e2.x-e1.x) < -50)
         }
         override fun onLongPress(e: MotionEvent) {}
         override fun onDown(e: MotionEvent): Boolean = false

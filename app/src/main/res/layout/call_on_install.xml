@@ -55,8 +55,6 @@
         android:layout_height="50dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/orange"
-        android:alpha="0.3"
         />
 
 
