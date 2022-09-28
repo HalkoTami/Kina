@@ -133,7 +133,7 @@ class LibraryFolderFrag :  Fragment(){
 
         }
         setUpLateInitVars()
-        val emptyView = LibraryFragLayFolderRvEmptyBinding.inflate(inflater,container,false).root
+        val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
         val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
         val fileRVItemsObserver = Observer<List<File>>{
             val sorted = it.sortedBy { it.libOrder }

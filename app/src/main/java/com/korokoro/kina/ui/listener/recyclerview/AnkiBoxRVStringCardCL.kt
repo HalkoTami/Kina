@@ -22,10 +22,6 @@ class AnkiBoxRVStringCardCL(private val card: Card,
                 reverseSelectedStatus(p0)
 
             }
-            binding.btnAnkiRvCardSetFlag -> {
-                p0.isSelected = card.flag.not()
-                ankiBoxVM.updateCardFlagStatus(card)
-            }
 
 
         }

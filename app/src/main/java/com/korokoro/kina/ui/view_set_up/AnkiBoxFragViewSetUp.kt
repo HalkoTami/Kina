@@ -47,8 +47,7 @@ class AnkiBoxFragViewSetUp() {
             arrayOf(btnEdtFront,btnEdtBack).onEach { it.visibility= View.GONE }
         }
         fun setOnCL(){
-            arrayOf(cardBinding.checkboxAnkiRv,
-                cardBinding.btnAnkiRvCardSetFlag).onEach { it.setOnClickListener(AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
+            arrayOf(cardBinding.checkboxAnkiRv,).onEach { it.setOnClickListener(AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
         }
         fun getStringByRemembered(remembered:Boolean):String{
             return if(remembered)"暗記済み" else "未暗記"
@@ -65,7 +64,6 @@ class AnkiBoxFragViewSetUp() {
             cardBinding.txvAnkiRvLastFlipped.text = getStringByLastLooked(lastLooked)
         }
         cardBinding.apply {
-            btnAnkiRvCardSetFlag.isSelected = card.flag
             imvAnkiRvCardRemembered.isSelected = card.remembered
             txvAnkiRvRememberedStatus.text = getStringByRemembered(card.remembered)
         }
@@ -115,7 +113,6 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                 ).onEach { it.visibility = if(list.isEmpty()) View.INVISIBLE else View.VISIBLE }
                 binding.txvAnkiBoxCardAmount.text = list.size.toString()
             }
-            setUpFlipProgressBar(list.toMutableList(),binding.flippedProgressBarBinding)
             getAnimation(list).start()
 
         }
@@ -215,42 +212,6 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         return per.times(100).toInt()
     }
 
-    fun setUpPercentageIcons(flippedBinding: ProgressBarFlippedBinding,
-                             percentageBinding:PercentageIconsBinding){
-
-        fun getWidth(percentage: Int):Float{
-            return (percentageBinding.root.width*percentage/100).toFloat()
-        }
-        val progress1 = flippedBinding.progressBarFlipped1.progress
-        val progress2 = flippedBinding.progressBarFlipped2.progress
-        val progress3 = flippedBinding.progressBarFlipped3.progress
-        val progress4above = flippedBinding.progressBarFlippedAbove4.progress
-        fun getAnim(progress:Int,frameLay:FrameLayout,txv:TextView):ValueAnimator{
-            val a = ValueAnimator.ofFloat(0f,progress.toFloat())
-            val fullWidth = percentageBinding.root.width
-            a.addUpdateListener {
-                val value = it.animatedValue as Float
-                val updateWidth = getWidth(value.toInt())
-                frameLay.translationX = if(updateWidth + frameLay.width > fullWidth) fullWidth.toFloat()-frameLay.width else updateWidth
-                txv.text = value.toInt().toString()
-            }
-            a.doOnStart {
-                frameLay.visibility = if(getWidth(progress) == 0f )  View.INVISIBLE else View.VISIBLE
-            }
-            a.duration = progress.times(30).toLong()
-            return a
-        }
-        percentageBinding.apply {
-            AnimatorSet().apply {
-                playTogether(
-                    getAnim(progress1,oncePercentage, txvOncePercentage),
-                    getAnim(progress2,twicePercentage,txvTwicePercentage),
-                    getAnim(progress3,threePercentage,txvThreePercentage),
-                    getAnim(progress4above,fourAbovePercentage,txvFourAbovePercentage))
-                start()
-            }
-        }
-    }
     fun checkCovered(view1:View,view2: View):Boolean{
         val location = IntArray(2)
         view1.getLocationOnScreen(location)
@@ -263,46 +224,5 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         return ((view1Right in view2Left..view2Right)
                 ||(view1Left in view2Left..view2Right))
                 ||(view1Left<=view2Left&& view1Right >= view2Right)
-    }
-    fun setUpFlipProgressBar(list: MutableList<Card>,binding: ProgressBarFlippedBinding){
-
-
-        val per1 = getFlippedPercentage(list,1)
-        val per2 = getFlippedPercentage(list,2)
-        val per3 = getFlippedPercentage(list,3)
-        val per4 = getFlippedPercentage(list,4)
-
-
-        binding. apply {
-
-            progressBarFlipped1.progress =      getPercentage(per1)
-            txv1.text = 1.toString()
-            progressBarFlipped2.progress =      getPercentage(per2)
-            txv2.text = 2.toString()
-            progressBarFlipped3.progress =      getPercentage(per3)
-            txv3.text = 3.toString()
-            progressBarFlippedAbove4.progress = getPercentage(per4)
-            txv4Above.text = 4.toString()
-            arrayOf(txv1,txv2,txv3,txv4Above).onEach {
-                it.visibility = View.VISIBLE
-            }
-            txv1.translationX =  root.width*per1.toFloat()
-            txv2.translationX = root.width*per2.toFloat()
-            txv3.translationX = root.width*per3.toFloat()
-            txv4Above.translationX = root.width*per4.toFloat()
-            arrayOf(txv1,txv2,txv3,txv4Above).onEach {
-                if(it.translationX == 0f) it.visibility = View.GONE
-            }
-            arrayOf(txv2,txv3,txv4Above).onEach {
-                if(checkCovered(txv1,it)) txv1.visibility = View.GONE
-            }
-            arrayOf(txv3,txv4Above).onEach {
-                if(checkCovered(txv2,it)) txv2.visibility = View.GONE
-            }
-            if(checkCovered(txv3,txv4Above)) txv3.visibility = View.GONE
-
-        }
-
-
     }
 }

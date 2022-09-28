@@ -146,7 +146,7 @@ class LibraryInBoxFrag  : Fragment(){
             setModeInBox(true)
             setLibraryFragment(LibraryFragment.InBox)
             createCardViewModel.setParentFlashCardCover(null)
-            val emptyView = LibraryFragLayInboxRvEmptyBinding.inflate(inflater,container,false).root
+            val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
             childCardsFromDB(null).observe(viewLifecycleOwner) {
 
                 val sorted = it?.sortedBy { it.libOrder }

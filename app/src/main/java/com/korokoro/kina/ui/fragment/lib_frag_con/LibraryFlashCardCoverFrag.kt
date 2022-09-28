@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.LibraryChildFragWithMulModeBaseBinding
-import com.korokoro.kina.databinding.LibraryFragLayFlashCardCoverRvEmptyBinding
 import com.korokoro.kina.databinding.LibraryFragTopBarFileBinding
+import com.korokoro.kina.databinding.RvEmptyBinding
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.ui.customClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
@@ -149,7 +149,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
                 setParentFileAncestorsFromDB(it)
                 editFileViewModel.filterBottomMenuByAncestors(it,returnParentFile() ?:return@observe)
             }
-            val emptyView = LibraryFragLayFlashCardCoverRvEmptyBinding.inflate(inflater,container,false).root
+            val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
             topBarBinding.txvFileTitle.text = args.flashCardCoverId.single().toString()
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
                 it?.sortedBy { it.libOrder }

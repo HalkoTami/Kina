@@ -449,4 +449,15 @@ class InstallGuide(val activity:AppCompatActivity){
         guideInOrder(startOrder)
 
     }
+    fun editGuide(startOrder:Int){
+        fun guideInOrder(order:Int){
+
+            fun greeting(){
+                appearAlphaAnimation(arrayOf(character))
+            }
+            when(order){
+                0 ->
+            }
+        }
+    }
 }

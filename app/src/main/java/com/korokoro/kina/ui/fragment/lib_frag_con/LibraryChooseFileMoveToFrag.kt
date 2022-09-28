@@ -108,7 +108,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         val movingItems = libraryBaseViewModel.returnSelectedItems()
         val movingFileIdsList = getMovingFileIdsList(movingItems)
         val movingCardIdsList = getMovingCardIdsList(movingItems)
-        val emptyView = LibraryFragLayFlashCardCoverRvEmptyBinding.inflate(inflater,container,false).root
+        val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
         val flashcard = libraryBaseViewModel.returnParentFile()?.fileStatus == FileStatus.FLASHCARD_COVER ||
                 libraryBaseViewModel.returnModeInBox()==true
         val popUpVisibleObserver = Observer<Boolean>{

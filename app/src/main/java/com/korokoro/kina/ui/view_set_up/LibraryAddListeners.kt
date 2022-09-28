@@ -35,7 +35,6 @@ class LibraryAddListeners(){
             binding.imvChangeMenuVisibility,
             menuBarBinding.linLayMoveSelectedItems,
             menuBarBinding.linLayDeleteSelectedItems,
-            menuBarBinding.linLaySetFlagToSelectedItems,
         ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL( binding,menuBarBinding ,menuFrame,libVM,deletePopUpViewModel)) }
         }
         fun searchAddCL(){

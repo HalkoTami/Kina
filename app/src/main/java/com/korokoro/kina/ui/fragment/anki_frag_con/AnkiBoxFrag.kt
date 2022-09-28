@@ -104,8 +104,6 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
             binding.btnAddToFavouriteAnkiBox.isSelected = checkFavouriteExistsList.contains(it)
             editFileViewModel.setAnkiBoxCards(it)
             viewSetUp.setUpAnkiBoxRing(it,binding.ringBinding)
-            viewSetUp.setUpFlipProgressBar(it,binding.flipGraphBinding)
-            viewSetUp.setUpPercentageIcons(binding.flipGraphBinding,binding.percentageIconBinding)
             binding.btnStartAnki.text = if(it.isEmpty()) "カードを選ばず暗記" else "暗記開始"
         }
 
