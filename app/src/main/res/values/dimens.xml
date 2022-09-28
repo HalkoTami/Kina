@@ -6,6 +6,7 @@
     <dimen name="searchbar_height">40dp</dimen>
     <dimen name="topBar_height">70dp</dimen>
     <dimen name="anki_box_rv_item_height">110dp</dimen>
+    <dimen name="bottom_bar_height">50dp</dimen>
     <dimen name="top_bar_ancestors_height">20dp</dimen>
     <item name="popUpButton_height_percentage" format="float" type="integer">0.25</item>
     <item name="popUpText_width_percentage" format="float" type="integer">0.8</item>

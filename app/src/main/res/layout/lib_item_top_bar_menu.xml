@@ -65,30 +65,5 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linLay_set_flag_to_selected_items"
-
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:id="@+id/imv_set_flag_to_selected_items"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_flag" />
-
-        <TextView
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="5"
-            android:layout_height="wrap_content"
-            android:text="フラグを立てる"
-            android:textSize="15sp" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
 
 </androidx.appcompat.widget.LinearLayoutCompat>

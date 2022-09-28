@@ -31,13 +31,14 @@
             android:id="@+id/btn_add_to_favourite_anki_box"
             android:layout_width="30dp"
             android:layout_height="30dp"
+
             android:src="@drawable/selector_anki_box_favourite"
             app:layout_constraintTop_toTopOf="@id/FrameLay_ring"
             app:layout_constraintStart_toStartOf="parent"/>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/conLay_ankiBox"
-            android:layout_width="wrap_content"
-            app:layout_constraintEnd_toStartOf="@id/top_graph"
+            android:layout_width="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_height="wrap_content">
 
@@ -68,42 +69,6 @@
                 tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <LinearLayout
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:id="@+id/top_graph"
-            android:layout_width="match_parent"
-
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            app:layout_constraintStart_toEndOf="@id/linLay_anki_Box"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:orientation="vertical">
-            <TextView
-                style="@style/TxvUniformMiddleStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/flipped_graph_title"
-                android:layout_margin="5dp"
-                app:layout_constraintTop_toTopOf="parent"/>
-            <FrameLayout
-                android:id="@+id/frameLay_flipped_graph"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <include android:id="@+id/flipGraphBinding"
-                    layout="@layout/progress_bar_flipped"/>
-            </FrameLayout>
-            <FrameLayout
-                android:id="@+id/frameLay_percentage_icons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <include
-                    android:id="@+id/percentageIconBinding"
-                    layout="@layout/percentage_icons"/>
-            </FrameLayout>
-        </LinearLayout>
 
 
 

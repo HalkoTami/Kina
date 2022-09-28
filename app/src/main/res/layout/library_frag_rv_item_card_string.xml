@@ -113,13 +113,6 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginEnd="5dp">
-        <ImageView
-            android:layout_gravity="bottom"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:minHeight="10dp"
-            android:minWidth="10dp"
-            android:src="@drawable/icon_edit"/>
     </FrameLayout>
     <FrameLayout
         android:contentDescription="@string/edt_back"
@@ -134,13 +127,7 @@
         android:minWidth="10dp"
         android:minHeight="10dp"
         android:layout_marginEnd="5dp">
-        <ImageView
-            android:layout_gravity="bottom"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:minHeight="3dp"
-            android:minWidth="3dp"
-            android:src="@drawable/icon_edit"/>
+
     </FrameLayout>
 
 

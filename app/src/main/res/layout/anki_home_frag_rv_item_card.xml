@@ -29,19 +29,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="5dp"/>
-        <ImageView
-            android:contentDescription="@string/cd_anki_box_rv_flag"
-            android:id="@+id/btn_anki_rv_card_set_flag"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="10dp"
-            android:layout_gravity="top"
-            android:src="@drawable/selector_flag"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
