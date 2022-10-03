@@ -55,7 +55,7 @@
 
 
 
-        <com.korokoro.kina.ui.customViews.ImvChangeAlphaOnDown
+        <ImageView
             android:contentDescription="@string/cd_create_card_insert_next"
             android:id="@+id/btn_insert_next"
             android:layout_width="30dp"
@@ -87,7 +87,7 @@
         </com.korokoro.kina.ui.customViews.NavigateBtnCreateCard>
 
 
-        <com.korokoro.kina.ui.customViews.ImvChangeAlphaOnDown
+        <ImageView
             android:contentDescription="@string/cd_create_card_insert_previous"
             android:id="@+id/btn_insert_previous"
             android:layout_width="30dp"

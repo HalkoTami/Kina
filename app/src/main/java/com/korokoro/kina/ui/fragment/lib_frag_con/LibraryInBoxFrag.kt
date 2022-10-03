@@ -85,7 +85,7 @@ class LibraryInBoxFrag  : Fragment(){
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
                 libraryBaseViewModel,
-                createCardViewModel,
+                null,
                 deletePopUpViewModel,
                 searchViewModel,
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

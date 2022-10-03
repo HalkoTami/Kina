@@ -8,6 +8,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.navigation.NavController
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
+import com.korokoro.kina.ui.customViews.ImvChangeAlphaOnDown
 import com.korokoro.kina.ui.listener.*
 import com.korokoro.kina.ui.listener.recyclerview.*
 import com.korokoro.kina.ui.listener.topbar.*
@@ -20,7 +21,7 @@ class LibraryAddListeners(){
     fun fragChildMultiBaseAddCL(binding: LibraryChildFragWithMulModeBaseBinding,
                                 context: Context,
                                 libraryViewModel: LibraryBaseViewModel,
-                                createCardViewModel: CreateCardViewModel,
+                                imvSearchLoup:ImvChangeAlphaOnDown?,
                                 deletePopUpViewModel: DeletePopUpViewModel,
                                 searchViewModel:SearchViewModel,
                                 inputMethodManager: InputMethodManager){
@@ -38,10 +39,12 @@ class LibraryAddListeners(){
             menuBarBinding.linLayDeleteSelectedItems,
         ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL( binding,menuBarBinding ,menuFrame,libVM,deletePopUpViewModel)) }
         }
+
         fun searchAddCL(){
-            arrayOf(binding.imvSearchLoupe,binding.bindingSearch.txvCancel).onEach {
+            if(imvSearchLoup!=null)
+            arrayOf(imvSearchLoup,binding.bindingSearch.txvCancel).onEach {
                 it.setOnClickListener(LibFragSearchBarCL(
-                    context,binding.imvSearchLoupe,binding.frameLaySearchBar,binding.bindingSearch,searchViewModel,inputMethodManager
+                    context,imvSearchLoup,binding.frameLaySearchBar,binding.bindingSearch,searchViewModel,inputMethodManager
                 ))
             }
         }

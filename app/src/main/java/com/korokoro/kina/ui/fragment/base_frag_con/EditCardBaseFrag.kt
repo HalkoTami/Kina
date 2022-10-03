@@ -33,6 +33,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
     private val createCardViewModel:CreateCardViewModel by activityViewModels()
     private val stringCardViewModel : CardTypeStringViewModel by activityViewModels()
     private val libraryViewModel: LibraryBaseViewModel by activityViewModels()
+    private val editFileViewModel: EditFileViewModel by activityViewModels()
 
     private lateinit var mainNavCon:NavController
     private lateinit var cardNavCon:NavController
@@ -120,6 +121,8 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
 
         mainViewModel.setChildFragmentStatus(MainFragment.EditCard)
         mainViewModel.setBnvVisibility(false)
+        editFileViewModel.setBottomMenuVisible(false)
+
         createCardViewModel.apply {
             parentCard.observe(viewLifecycleOwner,parentCardObserver)
             sisterCards.observe(viewLifecycleOwner,sisterCardObserver)

@@ -229,8 +229,8 @@ class InstallGuide(val activity:AppCompatActivity){
             val linLayCreateCardNavigation  =activity.findViewById<ConstraintLayout>(R.id.lay_navigate_buttons)
             val createCardNavFlipNext       =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_next)
             val createCardNavFlipPrevious   =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_previous)
-            val createCardInsertNext        =activity.findViewById<ImvChangeAlphaOnDown>(R.id.btn_insert_next)
-            val createCardInsertPrevious    =activity.findViewById<ImvChangeAlphaOnDown>(R.id.btn_insert_previous)
+            val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
+            val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
 
 
             fun goNextOnClickAnyWhere(){

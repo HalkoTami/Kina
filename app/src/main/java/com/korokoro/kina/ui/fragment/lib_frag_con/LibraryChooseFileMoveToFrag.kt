@@ -63,7 +63,6 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             mainRV.layoutManager = LinearLayoutManager(requireActivity())
             mainRV.isNestedScrollingEnabled = true
 
-            changeViewVisibility(binding.imvSearchLoupe,false)
             binding.frameLayTopBar.addView(topBarBinding.root)
             topBarBinding.imvFileMoveToStatus.setImageDrawable(
                 AppCompatResources.getDrawable(requireActivity(),

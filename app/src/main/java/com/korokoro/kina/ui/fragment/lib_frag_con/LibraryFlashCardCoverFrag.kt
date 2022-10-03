@@ -87,7 +87,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
                 libraryBaseViewModel,
-                createCardViewModel,
+                topBarBinding.imvSearchLoupe,
                 deletePopUpViewModel,
                 searchViewModel,
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -153,8 +153,8 @@ class LibraryFlashCardCoverFrag  : Fragment(){
             val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
             topBarBinding.txvFileTitle.text = args.flashCardCoverId.single().toString()
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
-                it?.sortedBy { it.libOrder }
-                val sorted = it
+
+                val sorted = it?.sortedBy { it.libOrder }
                 setParentRVItems(sorted ?: mutableListOf())
                 adapter.submitList(sorted)
                 if(it!=null){

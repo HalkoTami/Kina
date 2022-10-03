@@ -91,6 +91,7 @@ class LibFragSearchRVListAdapter(
                     LibraryRVSearchCL(item =  item,
                         lVM = libraryViewModel,
                         rvBinding = binding,
+                        createCardViewModel
                     )
                 )
                 }

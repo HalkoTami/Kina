@@ -34,11 +34,9 @@ class LibraryOb {
                            searchViewModel: SearchViewModel) = Observer<Boolean>{
         binding.apply {
             if(it) {
-                changeViewVisibility(imvSearchLoupe,false)
                 changeViewVisibility(frameLaySearchBar,true)
                 bindingSearch.edtLibrarySearch.text = SpannableStringBuilder(searchViewModel.returnSearchText())
             } else {
-                changeViewVisibility(imvSearchLoupe,true)
                 changeViewVisibility(frameLaySearchBar,false)
                 bindingSearch.edtLibrarySearch.text = SpannableStringBuilder("")
             }
