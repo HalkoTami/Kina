@@ -48,6 +48,7 @@ class LibraryFolderFrag :  Fragment(){
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
     private val binding get() = _binding!!
@@ -128,7 +129,8 @@ class LibraryFolderFrag :  Fragment(){
                 selectedItems.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
                 }
-                multiMenuVisibility.observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))
+                multiMenuVisibility.observe(viewLifecycleOwner,LibraryOb()
+                    .multiMenuVisibilityObserver(binding))
 
             }
 

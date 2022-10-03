@@ -68,6 +68,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
                 changeViewVisibility(binding.background,deletePopUpViewModel.checkBackgroundVisible())
                 binding.frameLayConfirmDelete.visibility = if(it.visible) View.VISIBLE else View.GONE
                 txvConfirmDeleteOnlyParent.text = it.confirmText
+                mainViewModel.setBnvCoverVisible(deletePopUpViewModel.checkBackgroundVisible())
             }
         }
         val confirmDeleteWithChildrenViewObserver = Observer<DeletePopUpViewModel.ConfirmDeleteWithChildrenView>{
@@ -77,6 +78,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
                 txvContainingFolder.text = it.containingFolder.toString()
                 txvContainingFlashcard.text = it.containingFlashCardCover.toString()
                 txvContainingCard.text = it.containingCards.toString()
+                mainViewModel.setBnvCoverVisible(deletePopUpViewModel.checkBackgroundVisible())
             }
         }
         val deletingItemObserver = Observer<List<Any>> { list->
@@ -155,8 +157,17 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-                if(!libraryBaseViewModel.checkViewReset())
-                    libNavCon.popBackStack()
+                if(deletePopUpViewModel.returnConfirmDeleteWithChildrenVisible())
+                    deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
+                else if(deletePopUpViewModel.returnConfirmDeleteVisible())
+                    deletePopUpViewModel.setConfirmDeleteVisible(false)
+                else if(libraryBaseViewModel.returnMultiSelectMode()){
+                    if(libraryBaseViewModel.returnMultiMenuVisibility())
+                        libraryBaseViewModel.setMultiMenuVisibility(false)
+                    else libraryBaseViewModel.setMultipleSelectMode(false)
+                }
+
+                else libNavCon.popBackStack()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(

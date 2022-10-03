@@ -167,15 +167,6 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setRVCover (rvCover: RvCover){
         _rvCover.value = rvCover
     }
-    private val _rvCanceled = MutableLiveData<Boolean>()
-    val rvCanceled:LiveData<Boolean> = _rvCanceled
-
-    fun setRVCanceled (boolean: Boolean){
-        _rvCanceled.value = boolean
-    }
-    fun returnRVCanceled ():Boolean{
-        return _rvCanceled.value ?:false
-    }
 
     private val _chooseFileMoveToMode = MutableLiveData<Boolean>()
     val chooseFileMoveToMode:LiveData<Boolean> =_chooseFileMoveToMode
@@ -193,8 +184,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         changeTopBarMode()
         changeRVMode()
     }
-    fun returnMultiSelectMode():Boolean?{
-        return _multipleSelectMode.value
+    fun returnMultiSelectMode():Boolean{
+        return _multipleSelectMode.value ?:false
     }
 
     private val _recyclerViewMode = MutableLiveData<LibRVState>()

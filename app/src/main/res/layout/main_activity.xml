@@ -84,6 +84,15 @@
         android:id="@+id/frag_con_view_cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <View
+        style="@style/BackGroundViewStyle"
+        android:id="@+id/bnv_cover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/frame_bnv"
+        app:layout_constraintEnd_toEndOf="@id/frame_bnv"
+        app:layout_constraintBottom_toBottomOf="@id/frame_bnv"
+        app:layout_constraintTop_toTopOf="@id/frame_bnv"/>
     <FrameLayout
         android:elevation="20dp"
         android:id="@+id/frameLay_call_on_install"

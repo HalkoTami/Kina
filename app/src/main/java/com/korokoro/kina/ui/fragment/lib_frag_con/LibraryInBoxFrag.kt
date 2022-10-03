@@ -39,6 +39,7 @@ class LibraryInBoxFrag  : Fragment(){
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val cardTypeStringViewModel: CardTypeStringViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
     private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
     private val binding get() = _binding!!
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
@@ -124,7 +125,8 @@ class LibraryInBoxFrag  : Fragment(){
                 selectedItems.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
                 }
-                multiMenuVisibility.observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))
+                multiMenuVisibility
+                    .observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))
 
             }
 

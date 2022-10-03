@@ -162,7 +162,12 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
             a.visible = visible
             setConfirmDeleteView(a)
         }
-
+    }
+    fun returnConfirmDeleteVisible():Boolean{
+        return returnConfirmDeleteView().visible
+    }
+    fun returnConfirmDeleteWithChildrenVisible():Boolean{
+        return returnConfirmDeleteWithChildrenView().visible
     }
     fun setConfirmDeleteWithChildrenVisible(visible: Boolean){
         val a = returnConfirmDeleteWithChildrenView()

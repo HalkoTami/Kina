@@ -10,6 +10,8 @@ import com.korokoro.kina.databinding.MainActivityPopupEditFileBinding
 import com.korokoro.kina.ui.view_set_up.ColorPalletViewSetUp
 import com.korokoro.kina.ui.view_set_up.GetCustomDrawables
 import com.korokoro.kina.ui.viewmodel.EditFileViewModel
+import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
+import com.korokoro.kina.ui.viewmodel.MainViewModel
 import com.korokoro.kina.ui.viewmodel.SearchViewModel
 
 class LibraryOb {
@@ -46,6 +48,7 @@ class LibraryOb {
         arrayOf(binding.frameLayMultiModeMenu,binding.libChildFragBackground).onEach {
             changeViewVisibility(it,visible)
         }
+
     }
 
 }

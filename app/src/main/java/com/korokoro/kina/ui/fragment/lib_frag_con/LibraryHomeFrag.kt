@@ -43,6 +43,7 @@ class LibraryHomeFrag : Fragment(){
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
     private val binding get() = _binding!!
@@ -128,7 +129,8 @@ class LibraryHomeFrag : Fragment(){
                 selectedItems.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
                 }
-                multiMenuVisibility.observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))
+                multiMenuVisibility
+                    .observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))
 
             }
 
@@ -190,21 +192,6 @@ class LibraryHomeFrag : Fragment(){
         return binding.root
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
-            true // default to enabled
-        ) {
-            override fun handleOnBackPressed() {
-                if(!libraryBaseViewModel.checkViewReset())
-                    libNavCon.popBackStack()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,  // LifecycleOwner
-            callback
-        )
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

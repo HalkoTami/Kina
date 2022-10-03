@@ -62,6 +62,12 @@ class MainViewModel:ViewModel(){
         return _bnvVisibility.value
     }
 
+    private val _bnvCoverVisible = MutableLiveData<Boolean>()
+    val bnvCoverVisible:LiveData<Boolean> = _bnvCoverVisible
+
+    fun setBnvCoverVisible (boolean: Boolean){
+        _bnvCoverVisible.value = boolean
+    }
 
     override fun onCleared() {
         super.onCleared()

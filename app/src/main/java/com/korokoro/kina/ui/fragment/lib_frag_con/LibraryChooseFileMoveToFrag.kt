@@ -37,6 +37,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
     private val editFileViewModel: EditFileViewModel by activityViewModels()
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val chooseFileMoveToViewModel:ChooseFileMoveToViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
     private val binding get() = _binding!!
@@ -113,6 +114,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
                 libraryBaseViewModel.returnModeInBox()==true
         val popUpVisibleObserver = Observer<Boolean>{
             changeViewVisibility(binding.libChildFragBackground,it)
+            mainViewModel.setBnvCoverVisible(it)
             binding.frameLayConfirmMove.visibility = if(it) View.VISIBLE else View.GONE
         }
         val popUpTextObserver = Observer<String> {

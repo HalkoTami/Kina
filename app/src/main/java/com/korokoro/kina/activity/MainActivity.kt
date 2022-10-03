@@ -40,8 +40,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var createCardViewModel     : CreateCardViewModel
     private lateinit var libraryViewModel        : LibraryBaseViewModel
     private lateinit var ankiFlipBaseViewModel   : AnkiFlipBaseViewModel
-    private lateinit var ankiBaseViewModel        : AnkiBaseViewModel
+    private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
+    private lateinit var deletePopUpViewModel    : DeletePopUpViewModel
+    private lateinit var chooseFileMoveTo        : ChooseFileMoveToViewModel
+
     private lateinit var binding                  : MainActivityBinding
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +76,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             libraryViewModel      = ViewModelProvider(this,factory)[LibraryBaseViewModel::class.java]
             ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
             ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
+            chooseFileMoveTo      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
+            deletePopUpViewModel  = ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
+
+
             mainNavCon            =   navHostFragment.navController
 
 
@@ -109,6 +117,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     bindingAddMenu.imvnewfolder,
                     bindingAddMenu.root,
                     fragConViewCover,
+                    bnvCover,
                     bnvBinding.bnvImvAdd,
                     bnvBinding.bnvTxvTabAnki,
                     bnvBinding.bnvTxvTabLibrary,
@@ -158,11 +167,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         fun createAllViewModels(){
             ViewModelProvider(this,factory)[SearchViewModel::class.java]
             ViewModelProvider(this,factory)[CardTypeStringViewModel::class.java]
-            ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
             ViewModelProvider(this,factory)[AnkiBoxViewModel::class.java]
             ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
             ViewModelProvider(this,factory)[FlipTypeAndCheckViewModel::class.java]
-            ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
         }
         setMainActivityLateInitVars()
         createAllViewModels()
@@ -179,6 +186,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         val bnvVisibilityObserver            = Observer<Boolean>{
             changeViewVisibility(binding.frameBnv,it)
+        }
+        val bnvCoverObserver            = Observer<Boolean>{
+            changeViewVisibility(binding.bnvCover,it)
         }
         val popUpEditFileVisibilityObserver  = Observer<Boolean>{
             Animation().animatePopUpAddFile(binding.frameLayEditFile,it)
@@ -236,6 +246,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         mainActivityViewModel.setMainActivityNavCon(mainNavCon)
         mainActivityViewModel.childFragmentStatus   .observe(this@MainActivity,childFragmentStatusObserver)
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
+        mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)
 //        ー－－－CreateFileViewModelの読み取りー－－－
         createFileViewModel.apply{
             onCreate()
@@ -257,7 +268,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
 
  }
-
 
 
     override fun onClick(v: View?) {
