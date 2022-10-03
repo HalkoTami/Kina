@@ -124,6 +124,7 @@ class LibraryInBoxFrag  : Fragment(){
                 selectedItems.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
                 }
+                multiMenuVisibility.observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))
 
             }
 

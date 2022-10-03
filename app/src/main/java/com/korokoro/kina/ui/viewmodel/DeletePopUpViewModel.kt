@@ -136,6 +136,9 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         )
 
 
+    fun checkBackgroundVisible():Boolean{
+        return returnConfirmDeleteView().visible||returnConfirmDeleteWithChildrenView().visible
+    }
     private val _confirmDeleteView =  MutableLiveData<ConfirmDeleteView>()
     private fun setConfirmDeleteView(confirmDeleteView: ConfirmDeleteView){
         _confirmDeleteView.value = confirmDeleteView

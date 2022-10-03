@@ -12,4 +12,8 @@
     <item name="popUpText_width_percentage" format="float" type="integer">0.8</item>
     <dimen name="string_card_min_height" >90dp</dimen>
     <dimen name="lib_rv_file_height" >70dp</dimen>
+    <dimen name="popUp_frameLay_width">300dp</dimen>
+    <dimen name="popUp_frameLay_height_large">250dp</dimen>
+    <dimen name="popUp_frameLay_height_middle">200dp</dimen>
+
 </resources>

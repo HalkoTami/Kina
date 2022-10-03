@@ -77,7 +77,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         fun addCL(){
             fun topBarAddCL(){
                 arrayOf(
-                    topBarBinding.imvCloseChooseFileMoveTo,
+                    topBarBinding.imvCloseChooseFileMoveTo
                 ).onEach { it.setOnClickListener( LibFragTopBarChooseFileMoveToCL(topBarBinding,libraryBaseViewModel,)) }
             }
             fun confirmMoveToFilePopUpAddCL(){
@@ -112,6 +112,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         val flashcard = libraryBaseViewModel.returnParentFile()?.fileStatus == FileStatus.FLASHCARD_COVER ||
                 libraryBaseViewModel.returnModeInBox()==true
         val popUpVisibleObserver = Observer<Boolean>{
+            changeViewVisibility(binding.libChildFragBackground,it)
             binding.frameLayConfirmMove.visibility = if(it) View.VISIBLE else View.GONE
         }
         val popUpTextObserver = Observer<String> {

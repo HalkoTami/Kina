@@ -24,6 +24,7 @@ class LibraryOb {
                 if(text.toString()!=data.edtTitleText) text= SpannableStringBuilder(data.edtTitleText)
                 if(hint!= data.edtTitleHint) hint = data.edtTitleHint
             }
+            btnFinish.text = data.finishBtnText
         }
 
     }
@@ -39,6 +40,11 @@ class LibraryOb {
                 changeViewVisibility(frameLaySearchBar,false)
                 bindingSearch.edtLibrarySearch.text = SpannableStringBuilder("")
             }
+        }
+    }
+    fun multiMenuVisibilityObserver(binding: LibraryChildFragWithMulModeBaseBinding) = Observer<Boolean>{ visible->
+        arrayOf(binding.frameLayMultiModeMenu,binding.libChildFragBackground).onEach {
+            changeViewVisibility(it,visible)
         }
     }
 

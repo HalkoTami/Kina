@@ -258,6 +258,14 @@
         <item name="backgroundTint">@color/black</item>
         <item name="android:gravity">center</item>
     </style>
+    <style name="PopUpFrameLayStyle">
+        <item name="android:visibility">gone</item>
+        <item name="android:background">@drawable/rectangle_green_stroke</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:elevation">20dp</item>
+        <item name="android:layout_width">300dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 
     <string name="tag_color_pallet_circle">colorPalletCircle</string>
 </resources>

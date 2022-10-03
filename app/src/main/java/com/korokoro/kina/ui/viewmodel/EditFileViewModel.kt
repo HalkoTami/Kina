@@ -149,6 +149,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 returnAnkiBoxCards().isNullOrEmpty()) return
         setMode(EditingMode.New)
         makeEmptyFileToCreate(fileStatus)
+        setTokenFile(returnFileToCreate()!!)
         makeFilePopUp(returnParentTokenFileParent(),
             returnFileToCreate()!!,returnMode()!!)
         setEditFilePopUpVisible(true)
@@ -156,6 +157,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun onClickEditFileInRV(editingFile:File){
         setMode(EditingMode.Edit)
         setFileToEdit(editingFile)
+        setTokenFile(returnFileToEdit()!!)
         makeFilePopUp(returnParentTokenFileParent(),returnFileToEdit()!!,returnMode()!!)
         setEditFilePopUpVisible(true)
     }
@@ -185,13 +187,23 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         var edtTitleText:String,
         var edtTitleHint:String,
         var colorStatus: ColorStatus,
-        val parentTokenFile:File
+        val parentTokenFile:File,
+        var finishBtnText:String
     )
     private val _filePopUpUIData = MutableLiveData<PopUpUI>()
     val filePopUpUIData:LiveData<PopUpUI> = _filePopUpUIData
     private fun setFilePopUpUIData(popUpUI: PopUpUI){
         _filePopUpUIData.value = popUpUI
     }
+    private val _tokenFile = MutableLiveData<File>()
+    val tokenFile:LiveData<File> = _tokenFile
+    private fun setTokenFile(file: File){
+        _tokenFile.value = file
+    }
+    fun returnTokenFile():File?{
+        return _tokenFile.value
+    }
+
     private fun makeFilePopUp(tokenFileParent: File?,tokenFile:File, mode: EditingMode){
         fun getLeftTopText():String{
             return if(tokenFileParent!=null) "${tokenFileParent.title} " else "Home"
@@ -219,6 +231,12 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 EditingMode.New ->  ""
             }
         }
+        fun getFinishBtnText():String{
+            return when(mode){
+                EditingMode.Edit -> "更新"
+                EditingMode.New -> "作成"
+            }
+        }
         val a = PopUpUI(
             txvLeftTopText = getLeftTopText(),
             txvHintText = getHintTxvText(),
@@ -226,7 +244,8 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             edtTitleText = getTitleEdtText(),
             colorStatus = tokenFile.colorStatus,
             fileStatus = tokenFile.fileStatus,
-            parentTokenFile = tokenFile
+            parentTokenFile = tokenFile,
+            finishBtnText = getFinishBtnText()
         )
         setFilePopUpUIData(a)
 

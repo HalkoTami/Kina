@@ -1,6 +1,7 @@
 package com.korokoro.kina.ui.listener.popUp
 
 import android.view.View
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.MainActivityPopupEditFileBinding
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.ui.viewmodel.EditFileViewModel
@@ -11,7 +12,9 @@ class EditFilePopUpCL(private val bindingEditFile:MainActivityPopupEditFileBindi
         createFileViewModel.apply {
             bindingEditFile. apply {
                 when(v){
-                    root -> return
+                    root -> {
+                        return
+                    }
                     btnClose -> {
                         createFileViewModel.setEditFilePopUpVisible(false)
 

@@ -16,11 +16,6 @@ class LibFragTopBarMultiModeCL(
     val deletePopUpViewModel:DeletePopUpViewModel
 ): View.OnClickListener{
     val multi = binding
-    private fun changeMenuVisibility(){
-        menuFrame.apply{
-            visibility =  if(this.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-        }
-    }
 
     override fun onClick(v: View?) {
 
@@ -33,7 +28,7 @@ class LibFragTopBarMultiModeCL(
                     libVM.changeAllRVSelectedStatus(v.isSelected.not())
                     v.isSelected = v.isSelected.not()
                 }
-                multi.imvChangeMenuVisibility -> changeMenuVisibility()
+                multi.imvChangeMenuVisibility -> libVM.setMultiMenuVisibility(libVM.returnMultiMenuVisibility().not())
 
                 menuBinding.linLayMoveSelectedItems -> {
                     libVM.openChooseFileMoveTo(null)

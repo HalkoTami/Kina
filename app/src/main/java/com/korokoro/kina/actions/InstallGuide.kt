@@ -453,10 +453,10 @@ class InstallGuide(val activity:AppCompatActivity){
         fun guideInOrder(order:Int){
 
             fun greeting(){
-                appearAlphaAnimation(arrayOf(character))
+                appearAlphaAnimation(arrayOf(character),true)
             }
             when(order){
-                0 ->
+                0 -> greeting()
             }
         }
     }

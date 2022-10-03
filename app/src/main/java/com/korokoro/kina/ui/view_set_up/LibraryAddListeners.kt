@@ -24,6 +24,7 @@ class LibraryAddListeners(){
                                 deletePopUpViewModel: DeletePopUpViewModel,
                                 searchViewModel:SearchViewModel,
                                 inputMethodManager: InputMethodManager){
+
         fun multiTopBarAddCL(binding: LibraryFragTopBarMultiselectModeBinding,
                              menuBarBinding: LibItemTopBarMenuBinding,
                              menuFrame:FrameLayout,
@@ -48,6 +49,9 @@ class LibraryAddListeners(){
         multiTopBarAddCL(binding.topBarMultiselectBinding,binding.multiSelectMenuBinding,binding.frameLayMultiModeMenu,libraryViewModel,deletePopUpViewModel)
         searchAddCL()
 
+        binding.libChildFragBackground.setOnClickListener {
+            libraryViewModel.setMultiMenuVisibility(false)
+        }
 
 
         binding.bindingSearch.edtLibrarySearch.addTextChangedListener {

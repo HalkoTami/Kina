@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.LibraryFragBinding
 import com.korokoro.kina.db.dataclass.File
@@ -52,7 +53,8 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
                     deleteAllC.btnCloseConfirmDeleteOnlyParentPopup,
                     deleteAllC.btnDeleteAllChildren,
                     deleteAllC.deleteOnlyFile,
-                    deleteAllC.btnCancel
+                    deleteAllC.btnCancel,
+                    binding.background
                 )   .onEach {
                     it.setOnClickListener(this)
                 }
@@ -63,14 +65,14 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         val toastObserver = CommonOb().toastObserver(requireActivity())
         val confirmDeleteViewObserver = Observer<DeletePopUpViewModel.ConfirmDeleteView>{
             binding.confirmDeletePopUpBinding.apply {
-                binding.background.visibility = if(it.visible) View.VISIBLE else View.GONE
+                changeViewVisibility(binding.background,deletePopUpViewModel.checkBackgroundVisible())
                 binding.frameLayConfirmDelete.visibility = if(it.visible) View.VISIBLE else View.GONE
                 txvConfirmDeleteOnlyParent.text = it.confirmText
             }
         }
         val confirmDeleteWithChildrenViewObserver = Observer<DeletePopUpViewModel.ConfirmDeleteWithChildrenView>{
             binding.confirmDeleteChildrenPopUpBinding.apply {
-                binding.background.visibility = if(it.visible) View.VISIBLE else View.GONE
+                changeViewVisibility(binding.background,deletePopUpViewModel.checkBackgroundVisible())
                 binding.frameLayConfirmDeleteWithChildren.visibility =  if(it.visible) View.VISIBLE else View.GONE
                 txvContainingFolder.text = it.containingFolder.toString()
                 txvContainingFlashcard.text = it.containingFlashCardCover.toString()

@@ -150,6 +150,14 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun returnModeInBox():Boolean?{
         return _modeInBox.value
     }
+    private val _multiMenuVisibility = MutableLiveData<Boolean>()
+    val multiMenuVisibility: LiveData<Boolean> = _multiMenuVisibility
+    fun setMultiMenuVisibility (boolean: Boolean){
+        _multiMenuVisibility.value = boolean
+    }
+    fun returnMultiMenuVisibility():Boolean{
+        return _multiMenuVisibility.value ?:false
+    }
     class RvCover(
         var visible:Boolean
     )

@@ -1,6 +1,7 @@
 package com.korokoro.kina.activity
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.*
 import android.view.View.GONE
@@ -27,6 +28,7 @@ import com.korokoro.kina.ui.listener.KeyboardListener
 import com.korokoro.kina.ui.listener.popUp.EditFilePopUpCL
 import com.korokoro.kina.ui.observer.LibraryOb
 import com.korokoro.kina.ui.view_set_up.ColorPalletViewSetUp
+import com.korokoro.kina.ui.view_set_up.GetCustomDrawables
 import com.korokoro.kina.ui.viewmodel.*
 
 
@@ -118,7 +120,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 editFileBinding.apply {
                     colPaletBinding.apply {
                         arrayOf(
-                            imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,root,
+                            imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,editFileBinding.root
                         ).onEach {
                             it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,createFileViewModel)) }
                     }
@@ -193,6 +195,15 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 changeColPalletCol(context,it.colNow,true,colBinding)
                 changeColPalletCol(context,it.before,false,colBinding)
             }
+            val get = GetCustomDrawables(this)
+            val draw:Drawable =
+            when(createFileViewModel.returnTokenFile()?.fileStatus){
+                FileStatus.FOLDER -> get.getFolderIconByCol(it.colNow)
+                FileStatus.FLASHCARD_COVER -> get.getFlashCardIconByCol(it.colNow)
+                else -> return@Observer
+            }
+            binding.editFileBinding.imvFileType.setImageDrawable(draw)
+
         }
         val bottomMenuVisibilityObserver       = Observer<Boolean>{
             Animation().animateFrameBottomMenu(binding.frameBottomMenu,it)
@@ -260,7 +271,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     bnvImvTabAnki,bnvTxvTabAnki       -> mainActivityViewModel.changeFragment(
                         MainFragment.Anki)
                     bnvImvAdd                         -> createFileViewModel.setBottomMenuVisible(true)
-                    fragConViewCover                  -> createFileViewModel.makeBothPopUpGone()
+                    fragConViewCover                  -> {
+                        createFileViewModel.makeBothPopUpGone()
+                    }
                     imvnewCard                        -> {
                         createCardViewModel.onClickAddNewCardBottomBar()
                     }
