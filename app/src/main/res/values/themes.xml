@@ -245,6 +245,7 @@
     <style name="BackGroundViewStyle">
         <item name="android:alpha">0.3</item>
         <item name="android:visibility">gone</item>
+<!--        <item name="android:background">@color/red</item>-->
     </style>
     <style name="OnInstallTextView">
         <item name="android:visibility">gone</item>

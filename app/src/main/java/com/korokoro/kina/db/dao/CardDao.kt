@@ -104,11 +104,15 @@ abstract class CardDao: BaseDao<Card> {
     abstract  fun getCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>>
 
     @Query("select * from tbl_card where NOT deleted AND " +
-            "frontTitle OR " +
-            "frontText OR " +
-            "backTitle OR " +
+            "frontText " +
+            "like  '%' || :search || '%' or  "+
+            "frontTitle " +
+            "LIKE '%' || :search || '%' OR " +
+            "backTitle " +
+            "LIKE '%' || :search || '%' OR " +
             "backText " +
-            "LIKE '%' || :search || '%' ")
+            "LIKE '%' || :search || '%' "
+    )
     abstract fun searchCardsByWords(search:String):Flow<List<Card>>
 
 

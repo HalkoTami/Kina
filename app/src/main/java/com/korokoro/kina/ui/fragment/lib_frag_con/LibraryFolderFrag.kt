@@ -104,12 +104,6 @@ class LibraryFolderFrag :  Fragment(){
         }
         fun observeSwipe(){
             libraryBaseViewModel.apply {
-                rvCover.observe(viewLifecycleOwner){
-                    binding.rvCover.visibility = if(it.visible) View.VISIBLE else View.GONE
-                }
-                leftSwipedItemExists.observe(viewLifecycleOwner){
-                    setRVCover(LibraryBaseViewModel.RvCover(it.not()))
-                }
                 makeAllUnSwiped.observe(viewLifecycleOwner){
                     if(it) LibrarySetUpItems().makeLibRVUnSwiped(recyclerView)
                 }
@@ -209,21 +203,6 @@ class LibraryFolderFrag :  Fragment(){
         return binding.root
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
-            true // default to enabled
-        ) {
-            override fun handleOnBackPressed() {
-                if(!libraryBaseViewModel.checkViewReset())
-                    libNavCon.popBackStack()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,  // LifecycleOwner
-            callback
-        )
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

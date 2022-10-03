@@ -17,12 +17,6 @@ class CommonOb {
         if(it.show) makeToast(context,it.text)
     }
 
-    fun rvCoverObserver(rvCover:View) = Observer<LibraryBaseViewModel.RvCover>{
-        changeViewVisibility(rvCover,it.visible)
-    }
-    fun leftSwipedItemExistsObserver(libraryBaseViewModel: LibraryBaseViewModel) = Observer<Boolean>{
-        libraryBaseViewModel.setRVCover(LibraryBaseViewModel.RvCover(it.not()))
-    }
     fun makeAllUnSwipedObserver(recyclerView:RecyclerView) = Observer<Boolean>{
         if(it) LibrarySetUpItems().makeLibRVUnSwiped(recyclerView)
     }

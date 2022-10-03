@@ -8,6 +8,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
@@ -16,6 +17,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.korokoro.kina.actions.InstallGuide
 import com.korokoro.kina.actions.changeViewVisibility
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.application.RoomApplication
 import com.korokoro.kina.databinding.MainActivityBinding
 import com.korokoro.kina.db.dataclass.Card
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
     private lateinit var deletePopUpViewModel    : DeletePopUpViewModel
     private lateinit var chooseFileMoveTo        : ChooseFileMoveToViewModel
+    private lateinit var searchViewModel         : SearchViewModel
 
     private lateinit var binding                  : MainActivityBinding
 
@@ -78,6 +81,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
             chooseFileMoveTo      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
             deletePopUpViewModel  = ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
+            searchViewModel       = ViewModelProvider(this,factory)[SearchViewModel::class.java]
+
 
 
             mainNavCon            =   navHostFragment.navController
@@ -165,7 +170,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
         }
         fun createAllViewModels(){
-            ViewModelProvider(this,factory)[SearchViewModel::class.java]
             ViewModelProvider(this,factory)[CardTypeStringViewModel::class.java]
             ViewModelProvider(this,factory)[AnkiBoxViewModel::class.java]
             ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
@@ -267,7 +271,30 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             createCardViewModel.setLastInsertedCard(it)
         }
 
- }
+    }
+
+    override fun onBackPressed() {
+
+        if(createFileViewModel.returnBottomMenuVisible())
+            createFileViewModel.setBottomMenuVisible(false)
+        else if(createFileViewModel.returnEditFilePopUpVisible())
+            createFileViewModel.setEditFilePopUpVisible(false)
+        else if(deletePopUpViewModel.returnConfirmDeleteWithChildrenVisible())
+            deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
+        else if(deletePopUpViewModel.returnConfirmDeleteVisible())
+            deletePopUpViewModel.setConfirmDeleteVisible(false)
+        else if(libraryViewModel.returnMultiSelectMode()){
+            if(libraryViewModel.returnMultiMenuVisibility())
+                libraryViewModel.setMultiMenuVisibility(false)
+            else libraryViewModel.setMultipleSelectMode(false)
+        }
+        else if(libraryViewModel.returnLeftSwipedItemExists())
+            libraryViewModel.makeAllUnSwiped()
+        else if (searchViewModel.returnSearchModeActive())
+            searchViewModel.setSearchModeActive(false)
+        else super.onBackPressed()
+
+    }
 
 
     override fun onClick(v: View?) {

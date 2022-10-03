@@ -99,13 +99,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:listitem="@layout/library_frag_rv_item_base" />
-                <FrameLayout
-                    android:nestedScrollingEnabled="true"
-                    android:id="@+id/rv_cover"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </FrameLayout>
 
             </FrameLayout>
 
@@ -168,7 +161,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         style="@style/BackGroundViewStyle"
-        android:visibility="visible"
         android:id="@+id/lib_child_frag_background"/>
 
 

@@ -117,6 +117,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
 
                 }
                 searchViewModel.getCardsByWords(searchText).observe(viewLifecycleOwner){
+                    makeToast(requireActivity(),it.size.toString())
                     searchViewModel.setMatchedCards(it)
                     val a = mutableListOf<Any>()
                     a.addAll(searchViewModel.returnMatchedFiles())
@@ -132,7 +133,6 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         addClickListeners()
 
         libraryBaseViewModel.setLibraryNavCon(libNavCon)
-        libraryBaseViewModel.setRVCover(LibraryBaseViewModel.RvCover(true))
         mainViewModel.setChildFragmentStatus(MainFragment.Library)
         mainViewModel.setBnvVisibility(true)
 
@@ -151,30 +151,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         super.onDestroyView()
         _binding = null
     }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
-            true // default to enabled
-        ) {
-            override fun handleOnBackPressed() {
-                if(deletePopUpViewModel.returnConfirmDeleteWithChildrenVisible())
-                    deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
-                else if(deletePopUpViewModel.returnConfirmDeleteVisible())
-                    deletePopUpViewModel.setConfirmDeleteVisible(false)
-                else if(libraryBaseViewModel.returnMultiSelectMode()){
-                    if(libraryBaseViewModel.returnMultiMenuVisibility())
-                        libraryBaseViewModel.setMultiMenuVisibility(false)
-                    else libraryBaseViewModel.setMultipleSelectMode(false)
-                }
 
-                else libNavCon.popBackStack()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,  // LifecycleOwner
-            callback
-        )
-    }
     override fun onClick(v: View?) {
         val onlyP = binding.confirmDeletePopUpBinding
         val deleteAllC = binding.confirmDeleteChildrenPopUpBinding

@@ -42,6 +42,9 @@ class SearchViewModel(private val repository: MyRoomRepository):ViewModel() {
     fun setSearchModeActive(boolean: Boolean){
         _searchModeActive.value = boolean
     }
+    fun returnSearchModeActive():Boolean{
+        return _searchModeActive.value ?:false
+    }
     val searchModeActive:LiveData<Boolean> = _searchModeActive
 
 

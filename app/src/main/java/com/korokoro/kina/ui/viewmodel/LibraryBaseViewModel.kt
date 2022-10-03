@@ -161,12 +161,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     class RvCover(
         var visible:Boolean
     )
-    private val _rvCover = MutableLiveData<RvCover>()
-    val rvCover:LiveData<RvCover> = _rvCover
 
-    fun setRVCover (rvCover: RvCover){
-        _rvCover.value = rvCover
-    }
 
     private val _chooseFileMoveToMode = MutableLiveData<Boolean>()
     val chooseFileMoveToMode:LiveData<Boolean> =_chooseFileMoveToMode
@@ -258,8 +253,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
     }
     val leftSwipedItemExists:LiveData<Boolean> = _leftSwipedItemExists
-    fun returnLeftSwipedItemExists ():Boolean?{
-        return  _leftSwipedItemExists.value
+    fun returnLeftSwipedItemExists ():Boolean{
+        return  _leftSwipedItemExists.value ?:false
     }
 
 

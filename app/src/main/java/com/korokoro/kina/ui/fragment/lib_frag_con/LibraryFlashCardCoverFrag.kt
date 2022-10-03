@@ -15,11 +15,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
 import com.korokoro.kina.actions.changeViewVisibility
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.korokoro.kina.databinding.LibraryFragTopBarFileBinding
 import com.korokoro.kina.databinding.RvEmptyBinding
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.ui.customClasses.LibraryFragment
+import com.korokoro.kina.ui.fragment.base_frag_con.LibraryBaseFrag
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.korokoro.kina.ui.listener.recyclerview.LibraryRVItemClickListener
@@ -101,8 +103,6 @@ class LibraryFlashCardCoverFrag  : Fragment(){
 
         fun observeSwipe(){
             libraryBaseViewModel.apply {
-                rvCover.observe(viewLifecycleOwner,CommonOb().rvCoverObserver(binding.rvCover))
-                leftSwipedItemExists.observe(viewLifecycleOwner,CommonOb().leftSwipedItemExistsObserver(this))
                 makeAllUnSwiped.observe(viewLifecycleOwner,CommonOb().makeAllUnSwipedObserver(recyclerView))
             }
         }
@@ -200,21 +200,9 @@ class LibraryFlashCardCoverFrag  : Fragment(){
         }
         return binding.root
     }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
-            true // default to enabled
-        ) {
-            override fun handleOnBackPressed() {
-                if(!libraryBaseViewModel.checkViewReset())
-                    libNavCon.popBackStack()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,  // LifecycleOwner
-            callback
-        )
-    }
+
+
+
 
 
     override fun onDestroyView() {
