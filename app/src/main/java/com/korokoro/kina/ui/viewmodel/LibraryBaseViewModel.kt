@@ -24,6 +24,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setLibraryFragment(fragment: LibraryFragment){
         _parentFragment.value = fragment
     }
+    val parentFragment:LiveData<LibraryFragment> = _parentFragment
+
 //    －－－－初期設定－－－－
 
     private val _libraryNavCon = MutableLiveData<NavController>()

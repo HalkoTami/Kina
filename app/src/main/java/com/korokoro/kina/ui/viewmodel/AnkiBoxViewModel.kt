@@ -23,7 +23,7 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun getAnkiBoxRVCards(fileId:Int): LiveData<List<Card>> = repository.getAnkiBoxRVCards(fileId).asLiveData()
     fun getAnkiBoxRVDescendantsFolders(fileId:Int): LiveData<List<File>> = repository.getAnkiBoxRVDescendantsFolders(fileId).asLiveData()
     fun getAnkiBoxRVDescendantsFlashCards(fileId:Int): LiveData<List<File>> = repository.getAnkiBoxRVDescendantsFlashCards(fileId).asLiveData()
-
+    fun ankiBoxFileAncestorsFromDB(int: Int?):LiveData<List<File>> = repository.getAllAncestorsByFileId(int).asLiveData()
     private val _text = MutableLiveData<String>().apply {
         value = "This is Anki Fragment"
     }

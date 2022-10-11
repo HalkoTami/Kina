@@ -1,10 +1,7 @@
 package com.korokoro.kina.ui.fragment.base_frag_con
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -14,10 +11,10 @@ import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.LibraryFragBinding
 import com.korokoro.kina.db.dataclass.File
+import com.korokoro.kina.ui.customClasses.LibraryFragment
 import com.korokoro.kina.ui.customClasses.MainFragment
 import com.korokoro.kina.ui.observer.CommonOb
 import com.korokoro.kina.ui.viewmodel.*
-import com.korokoro.kina.ui.customClasses.MakeToastFromVM
 
 
 class LibraryBaseFrag : Fragment(),View.OnClickListener{
@@ -102,6 +99,12 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
             }
 
         }
+        val libraryFragObserver = Observer<LibraryFragment>{
+            when(it){
+                LibraryFragment.ChooseFileMoveTo -> return@Observer
+                else -> libraryBaseViewModel.clearSelectedItems()
+            }
+        }
         searchViewModel.searchingText.observe(viewLifecycleOwner){ searchText ->
             if(searchText == "")  {
                 requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
@@ -136,6 +139,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         mainViewModel.setChildFragmentStatus(MainFragment.Library)
         mainViewModel.setBnvVisibility(true)
 
+        libraryBaseViewModel.parentFragment.observe(viewLifecycleOwner,libraryFragObserver)
         chooseFileMoveToViewModel.toast.observe(viewLifecycleOwner,toastObserver)
         deletePopUpViewModel.toast.observe(viewLifecycleOwner,toastObserver)
         deletePopUpViewModel.confirmDeleteView.observe(viewLifecycleOwner,confirmDeleteViewObserver)

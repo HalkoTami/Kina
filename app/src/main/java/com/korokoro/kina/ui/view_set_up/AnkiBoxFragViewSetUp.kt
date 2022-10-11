@@ -20,6 +20,7 @@ import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ActivityStatus
 import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
+import com.korokoro.kina.ui.customClasses.ParentFileAncestors
 import com.korokoro.kina.ui.listadapter.AnkiBoxListAdapter
 import com.korokoro.kina.ui.listener.AnkiBoxFragBaseCL
 import com.korokoro.kina.ui.listener.menuBar.AnkiBoxTabChangeCL
@@ -130,29 +131,49 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                 binding.txvAnkiBoxFlashCardAmount.text = list.size.toString()
             }
         }
-        binding.apply {
-            ankiBoxVM.ankiBoxFileIds.observe(lifecycleOwner){
-                checkboxAnkiRv.isSelected = (it.contains(file.fileId))
-            }
-            imvFileType.setImageDrawable(
-                getDraw.getFileIconByFile(file)
+        val ancestorsObserver = Observer<List<File>>{ ancestors ->
+            val a = ParentFileAncestors(
+                gGrandPFile  = if(ancestors.size>=3) ancestors[2] else null,
+                gParentFile = if(ancestors.size>=2) ancestors[1] else null,
+                ParentFile =  null
             )
-            txvFileTitle.text = file.title
+            binding.ancestorsBinding.apply {
+                CommonViewSetUp().apply {
+                    setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,a.gGrandPFile)
+                    setUpEachAncestor(lineLayGPFile,txvGrandParentFileTitle,imvGrandParentFile,a.gParentFile)
+                    setUpEachAncestor(lineLayParentFile,txvParentFileTitle,imvParentFile,a.ParentFile)
+                    binding.frameAnkiBoxRvAncestors.visibility =
+                        if(ancestors.size == 1) View.GONE
+                    else View.VISIBLE
+                }
 
-            txvAnkiBoxFlashCardAmount.text = file.descendantsData.descendantsFlashCardsCoversAmount.toString()
-            txvAnkiBoxFolderAmount.text = file.descendantsData.descendantsFoldersAmount.toString()
-            arrayOf(root,checkboxAnkiRv).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
-                file,
-                ankiBoxVM = ankiBoxVM,
-                binding = binding,
-                tab = tab)) }
-            ankiBoxVM.getAnkiBoxRVCards(file.fileId)                .observe(lifecycleOwner,descendantsCardsObserver)
-            ankiBoxVM.getAnkiBoxRVDescendantsFolders(file.fileId)   .observe(lifecycleOwner,descendantsFoldersObserver)
-            ankiBoxVM.getAnkiBoxRVDescendantsFlashCards(file.fileId)   .observe(lifecycleOwner,descendantsFlashCardsObserver)
-
+            }
         }
 
-    }
+            binding.apply {
+                ankiBoxVM.ankiBoxFileIds.observe(lifecycleOwner){
+                    checkboxAnkiRv.isSelected = (it.contains(file.fileId))
+                }
+                imvFileType.setImageDrawable(
+                    getDraw.getFileIconByFile(file)
+                )
+                txvFileTitle.text = file.title
+
+                txvAnkiBoxFlashCardAmount.text = file.descendantsData.descendantsFlashCardsCoversAmount.toString()
+                txvAnkiBoxFolderAmount.text = file.descendantsData.descendantsFoldersAmount.toString()
+                arrayOf(root,checkboxAnkiRv).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
+                    file,
+                    ankiBoxVM = ankiBoxVM,
+                    binding = binding,
+                    tab = tab)) }
+                ankiBoxVM.ankiBoxFileAncestorsFromDB(file.fileId)       .observe(lifecycleOwner,ancestorsObserver)
+                ankiBoxVM.getAnkiBoxRVCards(file.fileId)                .observe(lifecycleOwner,descendantsCardsObserver)
+                ankiBoxVM.getAnkiBoxRVDescendantsFolders(file.fileId)   .observe(lifecycleOwner,descendantsFoldersObserver)
+                ankiBoxVM.getAnkiBoxRVDescendantsFlashCards(file.fileId)   .observe(lifecycleOwner,descendantsFlashCardsObserver)
+
+            }
+        }
+
 
 
     fun getRememberedPercentage(list: MutableList<Card>):Double{
