@@ -61,7 +61,14 @@ class MainViewModel:ViewModel(){
     fun returnBnvVisibility():Boolean?{
         return _bnvVisibility.value
     }
-
+    private val _helpOptionVisibility = MutableLiveData<Boolean>()
+    val helpOptionVisibility:LiveData<Boolean> = _helpOptionVisibility
+    fun setHelpOptionVisibility(boolean: Boolean){
+        _helpOptionVisibility.value = boolean
+    }
+    fun returnHelpOptionVisibility():Boolean{
+        return _helpOptionVisibility.value ?:false
+    }
     private val _bnvCoverVisible = MutableLiveData<Boolean>()
     val bnvCoverVisible:LiveData<Boolean> = _bnvCoverVisible
 

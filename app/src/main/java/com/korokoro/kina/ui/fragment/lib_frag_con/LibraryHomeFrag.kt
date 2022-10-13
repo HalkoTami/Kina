@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
 import com.korokoro.kina.actions.changeViewIfRVEmpty
 import com.korokoro.kina.actions.changeViewVisibility
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.ui.customClasses.LibraryFragment
@@ -80,6 +81,9 @@ class LibraryHomeFrag : Fragment(){
             )
         }
         fun homeTopBarAddCL(){
+            topBarBinding.btnHelp.setOnClickListener {
+               mainViewModel.setHelpOptionVisibility(true)
+            }
             arrayOf(
                 topBarBinding.frameLayInBox,
             ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(topBarBinding, libraryBaseViewModel)) }

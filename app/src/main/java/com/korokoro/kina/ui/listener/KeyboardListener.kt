@@ -13,11 +13,10 @@ open class KeyboardListener(private val rootView:ConstraintLayout):ViewTreeObser
         val r = Rect()
         rootView.getWindowVisibleDisplayFrame(r)
         val heightDiff: Int = rootView.rootView.height - (r.bottom - r.top)
-        if (heightDiff>500) {
+        if (heightDiff>500&&keyboardVisible.not()) {
             onKeyBoardAppear()
             keyboardVisible = true
-        }
-        if(keyboardVisible&&(heightDiff-heightBefore<0)){
+        }else if(keyboardVisible&&(heightDiff-heightBefore<0)){
             keyboardVisible = false
             onKeyBoardDisappear()
         }

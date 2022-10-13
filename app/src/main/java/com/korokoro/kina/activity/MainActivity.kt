@@ -19,6 +19,7 @@ import com.korokoro.kina.actions.InstallGuide
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.application.RoomApplication
+import com.korokoro.kina.databinding.HelpOptionsBinding
 import com.korokoro.kina.databinding.MainActivityBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
@@ -185,10 +186,23 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val childFragmentStatusObserver      = Observer<MainViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
         }
+        val helpOptionsBinding = HelpOptionsBinding.inflate(layoutInflater)
+        val helpOptionVisibilityObserver      = Observer<Boolean>{
+            fun setUpMenuMode(){
+                when(mainActivityViewModel.returnFragmentStatus()?.now){
+                    MainFragment.Library -> changeViewVisibility(helpOptionsBinding.linLayHelpMenuLibrary,true)
+                    else -> changeViewVisibility(helpOptionsBinding.linLayHelpMenuAnki,true)
+                }
+            }
+            setUpMenuMode()
+            if(it) binding.frameLayCallOnInstall.addView(helpOptionsBinding.root)
+            else binding.frameLayCallOnInstall.removeAllViews()
+        }
         val lastInsertedFileObserver      = Observer<File>{
             createFileViewModel.setLastInsertedFile(it)
         }
         val bnvVisibilityObserver            = Observer<Boolean>{
+            makeToast(this,it.toString())
             changeViewVisibility(binding.frameBnv,it)
         }
         val bnvCoverObserver            = Observer<Boolean>{
@@ -251,6 +265,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         mainActivityViewModel.childFragmentStatus   .observe(this@MainActivity,childFragmentStatusObserver)
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
         mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)
+        mainActivityViewModel.helpOptionVisibility  .observe(this,helpOptionVisibilityObserver)
 //        ー－－－CreateFileViewModelの読み取りー－－－
         createFileViewModel.apply{
             onCreate()
@@ -294,6 +309,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             searchViewModel.setSearchModeActive(false)
         else if(ankiBaseViewModel.returnSettingVisible())
             ankiBaseViewModel.setSettingVisible(false)
+        else if (mainActivityViewModel.returnHelpOptionVisibility())
+            mainActivityViewModel.setHelpOptionVisibility(false)
         else super.onBackPressed()
 
     }
