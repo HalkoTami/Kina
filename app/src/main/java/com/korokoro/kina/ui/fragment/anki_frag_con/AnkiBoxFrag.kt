@@ -29,6 +29,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
     private var _binding: AnkiHomeFragBaseBinding? = null
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
     private val ankiBaseViewModel:AnkiBaseViewModel by activityViewModels()
+    private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
     private val ankiFlipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -65,7 +66,8 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
                 arrayOf(tabFavouritesToAnkiBox,
                     tabLibraryToAnkiBox,
                     tabAllFlashCardCoverToAnkiBox,
-                    btnStartAnki,btnAddToFavouriteAnkiBox
+                    btnStartAnki,btnAddToFavouriteAnkiBox,
+                    topBarBinding.btnSetting
                     ).onEach {
                     it.setOnClickListener(this@AnkiBoxFrag)
                 }
@@ -73,6 +75,15 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
             }
 
 
+        }
+        fun filterCards(filter: AnkiFilter,cards:List<Card>):List<Card>{
+            val a =  cards
+            if(filter.rememberedFilterActive){  a.filter { it.remembered == filter.remembered }
+            }
+            if(filter.answerTypedFilterActive){
+                a.filter { it.lastTypedAnswerCorrect == filter.correctAnswerTyped }
+            }
+            return a
         }
         val viewSetUp = AnkiBoxFragViewSetUp()
         val checkFavouriteExistsList = mutableListOf<List<Card>>()
@@ -84,7 +95,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
             ankiBoxViewModel.setAnkiBoxCardIds(it)
         }
         val getCardsFromDBByMultipleCardIdsObserver = Observer<List<Card>> {
-            ankiBoxViewModel.setAnkiBoxItems(it)
+            ankiBoxViewModel.setAnkiBoxItems(filterCards(ankiSettingPopUpViewModel.returnAnkiFilter(),it))
         }
         val ankiBoxFileIdsObserver = Observer<MutableList<Int>>{
             ankiBoxViewModel.getDescendantsCardIds(it).observe(viewLifecycleOwner,descendantsCardIdsFromDBObserver)
@@ -113,6 +124,8 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         setUpLateInitVars()
         addCL()
 
+        ankiFlipBaseViewModel.setParentPosition(0)
+        ankiFlipBaseViewModel.setParentCard(null)
         ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
         ankiBoxViewModel.setAnkiBoxNavCon(ankiBoxNavCon)
         ankiFlipBaseViewModel.setAnkiFlipItems(mutableListOf(),AnkiFilter())
@@ -165,6 +178,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
                     } else return
 
                 }
+                topBarBinding.btnSetting -> ankiBaseViewModel.setSettingVisible(true)
                 tabAllFlashCardCoverToAnkiBox -> ankiBoxViewModel.changeTab(AnkiBoxFragments.AllFlashCardCovers)
                 tabLibraryToAnkiBox -> ankiBoxViewModel.changeTab(AnkiBoxFragments.Library)
                 tabFavouritesToAnkiBox -> ankiBoxViewModel.changeTab(AnkiBoxFragments.Favourites)

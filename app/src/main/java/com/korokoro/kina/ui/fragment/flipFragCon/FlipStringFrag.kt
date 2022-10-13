@@ -77,21 +77,21 @@ class FlipStringFrag  : Fragment() {
 
         return root
     }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
-            true // default to enabled
-        ) {
-            override fun handleOnBackPressed() {
-                val navCon = requireActivity().findViewById<FragmentContainerView>(R.id.anki_frag_container_view).findNavController()
-                navCon.popBackStack()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,  // LifecycleOwner
-            callback
-        )
-    }
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
+//            true // default to enabled
+//        ) {
+//            override fun handleOnBackPressed() {
+//                val navCon = requireActivity().findViewById<FragmentContainerView>(R.id.anki_frag_container_view).findNavController()
+//                navCon.popBackStack()
+//            }
+//        }
+//        requireActivity().onBackPressedDispatcher.addCallback(
+//            this,  // LifecycleOwner
+//            callback
+//        )
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -103,7 +103,6 @@ class FlipStringFrag  : Fragment() {
                     a.count = Count.End
                     setCountFlip(a)
                 }
-                Toast.makeText(requireActivity(),"${a.count}",Toast.LENGTH_SHORT).show()
             }
 
         }

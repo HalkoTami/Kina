@@ -43,7 +43,6 @@ class AnkiBoxFragViewSetUp() {
     }
     fun setUpRVCard(cardBinding: AnkiHomeFragRvItemCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxViewModel){
         LibrarySetUpItems().setUpRVStringCardBinding(cardBinding.stringContentBinding,card.stringData)
-        setUpOrder(cardBinding.stringContentBinding,card)
         cardBinding.stringContentBinding.apply {
             arrayOf(btnEdtFront,btnEdtBack).onEach { it.visibility= View.GONE }
         }
@@ -74,7 +73,7 @@ class AnkiBoxFragViewSetUp() {
     }
 fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                               context: Context,
-                              ankiBoxVM: AnkiBoxViewModel, tab: AnkiBoxFragments,
+                              ankiBoxVM: AnkiBoxViewModel, tab: AnkiBoxFragments?,
                               lifecycleOwner: LifecycleOwner): AnkiBoxListAdapter {
     val adapter = AnkiBoxListAdapter(context,ankiBoxVM,tab,lifecycleOwner)
     recyclerView.adapter = adapter

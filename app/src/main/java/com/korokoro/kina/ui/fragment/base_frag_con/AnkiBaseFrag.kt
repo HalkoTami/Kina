@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
@@ -19,7 +20,6 @@ import com.korokoro.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFragDirections
 import com.korokoro.kina.ui.customClasses.MainFragment
 import com.korokoro.kina.ui.viewmodel.*
 import com.korokoro.kina.ui.customClasses.AnkiFilter
-import com.korokoro.kina.ui.customClasses.AnkiOrder
 import com.korokoro.kina.ui.customClasses.AutoFlip
 
 
@@ -49,14 +49,12 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
                 bindingSetting.apply {
                     bindingSettingContent.apply {
                         arrayOf(
+                            frameLayAnkiSetting,
                             txvFilterSetting,imvFilterOptionVisibility,
                             txvFilterTypedAnswerCorrect,
                             txvFilterTypedAnswerMissed,
                             txvFilterCardRemembered,
                             txvFilterCardNotRemembered,
-                            txvFilterWithFlag,
-                            txvFilterWithoutFlag,
-                            checkboxFilterFlag,
                             checkboxFilterTypedAnswer,
                             checkboxFilterCardRememberStatus,
                             checkboxAutoFlip,
@@ -89,25 +87,17 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
                     alpha = if(!ankiFilter.rememberedFilterActive) 0.5f else 1f
                     isClickable = ankiFilter.rememberedFilterActive
                 }
-                lineLayFilterFlag.apply {
-                    alpha = if(!ankiFilter.flagFilterActive) 0.5f else 1f
-                    isClickable = ankiFilter.flagFilterActive
-                }
                 checkboxFilterTypedAnswer.isSelected = ankiFilter.answerTypedFilterActive
-                checkboxFilterFlag.isSelected = ankiFilter.flagFilterActive
                 checkboxFilterCardRememberStatus.isSelected = ankiFilter.rememberedFilterActive
                 txvFilterCardRemembered.isSelected = ankiFilter.remembered
                 txvFilterCardNotRemembered .isSelected = !(ankiFilter.remembered)
                 txvFilterTypedAnswerCorrect.isSelected = ankiFilter.correctAnswerTyped
                 txvFilterTypedAnswerMissed.isSelected = !ankiFilter.correctAnswerTyped
-                txvFilterWithFlag.isSelected = ankiFilter.flag
-                txvFilterWithoutFlag.isSelected = !ankiFilter.flag
                 arrayOf(txvFilterCardRemembered,
                     txvFilterCardNotRemembered,
                     txvFilterTypedAnswerMissed,
                     txvFilterTypedAnswerCorrect,
-                    txvFilterWithoutFlag,
-                    txvFilterWithFlag,).onEach { it.setTextColor(if(it.isSelected) white else green) }
+                ).onEach { it.setTextColor(if(it.isSelected) white else green) }
             }
 
         }
@@ -176,100 +166,133 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
                 true
             }
         }
-
-        val v = p0
+        val  scrollBinding = binding.bindingSetting.bindingSettingContent
+        fun changeFilterOptionVisibility(){
+            scrollBinding.apply {
+                changeSelectedState(imvFilterOptionVisibility)
+                conLayFilterSetting.children.iterator().forEach {
+                    if(it!=lineLayTitle) changeViewVisibility(it,imvFilterOptionVisibility.isSelected)
+                }
+            }
+        }
+        fun onClickAutoFlipCheckBox(){
+            scrollBinding.apply {
+                changeSelectedStateAndAlpha(checkboxAutoFlip,lineLayAutoFlipDuration)
+                edtAutoFlipSeconds.isEnabled = checkboxAutoFlip.isSelected
+            }
+        }
+        fun onClickReverseSides(){
+            scrollBinding.apply {
+                changeSelectedState(checkboxReverseSides)
+                ankiSettingPopUpViewModel.setReverseCardSide(checkboxReverseSides.isSelected)
+            }
+        }
+        fun onClickTypeAnswer(){
+            scrollBinding.apply {
+                changeSelectedState(checkboxTypeAnswer)
+                ankiSettingPopUpViewModel.setTypeAnswer(checkboxTypeAnswer.isSelected)
+            }
+        }
+        fun saveAutoFlipSec(){
+            scrollBinding.apply {
+                val secondsText = edtAutoFlipSeconds.text.toString()
+                val autoSetting = if(secondsText=="") AutoFlip()
+                else AutoFlip(checkboxAutoFlip.isSelected,edtAutoFlipSeconds.text.toString().toInt())
+                ankiSettingPopUpViewModel.setAutoFlip(autoSetting)
+            }
+        }
+        fun onClickStartAnki(){
+            saveAutoFlipSec()
+            ankiBaseViewModel.setSettingVisible(false)
+            ankiBaseViewModel.returnAnkiBaseNavCon()?.navigate(AnkiFlipBaseFragDirections.toFlipFrag())
+        }
+        fun onClickTxvFilterTypedAnswerCorrect(){
+            val ankiFilter = ankiSettingPopUpViewModel.returnAnkiFilter()
+            scrollBinding.apply {
+                val changed =onCLickEnumTxv(
+                    checkAbility =checkboxFilterTypedAnswer,
+                    txv= txvFilterTypedAnswerCorrect,
+                    opposite =txvFilterTypedAnswerMissed, )
+                if(changed){
+                    ankiFilter.correctAnswerTyped = true
+                    ankiSettingPopUpViewModel.setAnkiFilter(ankiFilter)
+                }
+            }
+        }
+        fun onClickTxvFilterTypedAnswerMissed(){
+            val ankiFilter = ankiSettingPopUpViewModel.returnAnkiFilter()
+            scrollBinding.apply {
+                val changed = onCLickEnumTxv(
+                    checkAbility =checkboxFilterTypedAnswer,
+                    txv= txvFilterTypedAnswerMissed,
+                    opposite =txvFilterTypedAnswerCorrect, )
+                if(changed){
+                    ankiFilter.correctAnswerTyped = false
+                    ankiSettingPopUpViewModel.setAnkiFilter(ankiFilter)
+                }
+            }
+        }
+        fun onClickTxvFilterCardRemembered(){
+            val ankiFilter = ankiSettingPopUpViewModel.returnAnkiFilter()
+            scrollBinding.apply {
+                val changed = onCLickEnumTxv(
+                    checkAbility =  checkboxFilterCardRememberStatus ,
+                    txv= txvFilterCardRemembered,
+                    opposite =  txvFilterCardNotRemembered)
+                if(changed){
+                    ankiFilter.remembered = true
+                    ankiSettingPopUpViewModel.setAnkiFilter(ankiFilter)
+                }
+            }
+        }
+        fun onClickTxvFilterCardNotRemembered(){
+            val ankiFilter = ankiSettingPopUpViewModel.returnAnkiFilter()
+            scrollBinding.apply {
+                val changed = onCLickEnumTxv(
+                    checkAbility =checkboxFilterCardRememberStatus,
+                    txv= txvFilterCardNotRemembered,
+                    opposite =txvFilterCardRemembered, )
+                if(changed){
+                    ankiFilter.remembered = false
+                    ankiSettingPopUpViewModel.setAnkiFilter(ankiFilter)
+                }
+            }
+        }
+        fun onClickFilterCheckBoxRemembered(){
+            val ankiFilter = ankiSettingPopUpViewModel.returnAnkiFilter()
+            scrollBinding.apply {
+                changeSelectedStateAndAlpha(checkboxFilterCardRememberStatus,lineLayFilterRememberStatus)
+                ankiFilter.rememberedFilterActive = checkboxFilterCardRememberStatus.isSelected
+            }
+            ankiSettingPopUpViewModel.setAnkiFilter(ankiFilter)
+        }
+        fun onClickCheckBoxTypedAnswer(){
+            val ankiFilter = ankiSettingPopUpViewModel.returnAnkiFilter()
+            scrollBinding.apply {
+                changeSelectedStateAndAlpha(checkboxTypeAnswer,linLayFilterTypedAnswer)
+                ankiFilter.rememberedFilterActive = checkboxTypeAnswer.isSelected
+            }
+            ankiSettingPopUpViewModel.setAnkiFilter(ankiFilter)
+        }
 
         binding.apply {
             bindingSetting.apply {
                 bindingSettingContent.apply {
                     ankiSettingPopUpViewModel.apply {
-                        when(v){
-                            txvFilterSetting,imvFilterOptionVisibility  ->{
-                                changeSelectedState(imvFilterOptionVisibility)
-                                conLayFilterSetting.children.iterator().forEach {
-                                    if(it!=lineLayTitle) changeViewVisibility(it,imvFilterOptionVisibility.isSelected)
-                                }
-                            }
-                            checkboxAutoFlip                            -> {
-                                val change = returnAutoFlip()
-                                changeSelectedStateAndAlpha(v,lineLayAutoFlipDuration)
-                                edtAutoFlipSeconds.isEnabled = v.isSelected
-                                change?.active = v.isSelected
-                                setAutoFlip(change?: AutoFlip())
-                            }
-                            checkboxReverseSides                        ->  {
-                                changeSelectedState(v)
-                                setReverseCardSide(v.isSelected)
-                            }
-                            checkboxTypeAnswer                          -> {
-                                changeSelectedState(v)
-                                setTypeAnswer(v.isSelected)
-                            }
+                        when(p0){
+                            txvFilterSetting,imvFilterOptionVisibility  -> changeFilterOptionVisibility()
+                            checkboxAutoFlip                            -> onClickAutoFlipCheckBox()
+                            checkboxReverseSides                        ->  onClickReverseSides()
+                            checkboxTypeAnswer                          -> onClickTypeAnswer()
                             imvCloseSetting                             ->  ankiBaseViewModel.setSettingVisible(false)
-                            btnStartAnki                                -> {
-                                ankiBaseViewModel.setSettingVisible(false)
-                                val secondsText = edtAutoFlipSeconds.text.toString()
-                                if(secondsText!="") setAutoFlip(AutoFlip()) else
-                                setAutoFlip(AutoFlip(checkboxAutoFlip.isSelected,edtAutoFlipSeconds.text.toString().toInt()))
-                                ankiBaseViewModel.returnAnkiBaseNavCon()?.navigate(AnkiFlipBaseFragDirections.toFlipFrag())
+                            btnStartAnki                                -> onClickStartAnki()
+                            txvFilterTypedAnswerCorrect                 -> onClickTxvFilterTypedAnswerCorrect()
+                            txvFilterTypedAnswerMissed                  -> onClickTxvFilterTypedAnswerMissed()
+                            txvFilterCardRemembered                     -> onClickTxvFilterCardRemembered()
+                            txvFilterCardNotRemembered                  -> onClickTxvFilterCardNotRemembered()
+                            checkboxFilterTypedAnswer                   -> onClickCheckBoxTypedAnswer()
+                            checkboxFilterCardRememberStatus            -> onClickFilterCheckBoxRemembered()
 
-                            }
-                            else -> {
-                                val filterChange = returnAnkiFilter() ?: AnkiFilter()
-                                filterChange.apply {
-                                    when(v){
-                                        txvFilterTypedAnswerCorrect                 ->
-                                            if(onCLickEnumTxv(
-                                                    checkAbility =checkboxFilterTypedAnswer,
-                                                    txv= v,
-                                                    opposite =txvFilterTypedAnswerMissed, ))
-                                                correctAnswerTyped = true
-                                        txvFilterTypedAnswerMissed                  ->
-                                            if(onCLickEnumTxv(
-                                                    checkAbility =checkboxFilterTypedAnswer,
-                                                    txv= v,
-                                                    opposite =txvFilterTypedAnswerCorrect, ))
-                                                correctAnswerTyped = false
-                                        txvFilterCardRemembered                     ->
-                                            if(onCLickEnumTxv(
-                                                    checkAbility =  checkboxFilterCardRememberStatus ,
-                                                    txv= v,
-                                                    opposite =  txvFilterCardNotRemembered)) remembered = true
-                                        txvFilterCardNotRemembered                  ->
-                                            if(onCLickEnumTxv(
-                                                    checkAbility =checkboxFilterCardRememberStatus,
-                                                    txv= v,
-                                                    opposite =txvFilterCardRemembered, ))
-                                                remembered = false
-                                        txvFilterWithFlag                           ->
-                                            if(onCLickEnumTxv(checkAbility =checkboxFilterFlag,
-                                                    txv= v,
-                                                    opposite =txvFilterWithoutFlag )) flag = true
-                                        txvFilterWithoutFlag                        ->
-                                            if(onCLickEnumTxv(
-                                                    checkAbility =checkboxFilterFlag,
-                                                    txv= v,
-                                                    opposite =txvFilterWithFlag, ))  flag = false
-                                        checkboxFilterFlag                          -> {
-                                            changeSelectedStateAndAlpha(v,lineLayFilterFlag)
-                                            flagFilterActive = v.isSelected
-                                        }
-                                        checkboxFilterTypedAnswer                   -> {
-                                            changeSelectedStateAndAlpha(v,linLayFilterTypedAnswer)
-                                            answerTypedFilterActive = v.isSelected
-                                        }
-                                        checkboxFilterCardRememberStatus            -> {
-                                            changeSelectedStateAndAlpha(v,lineLayFilterRememberStatus)
-                                            rememberedFilterActive = v.isSelected
-                                        }
-
-                                    }
-                                    setAnkiFilter(filterChange)
-                                }
-
-
-
-                            }
 
                         }
                     }

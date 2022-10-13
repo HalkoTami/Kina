@@ -13,7 +13,6 @@ class AnkiSettingPopUpViewModel : ViewModel() {
     fun start(){
         setAnkiFilter(AnkiFilter())
         setAnkiOrder(AnkiOrder.Library)
-        setAutoFlip(AutoFlip())
         setTypeAnswer(false)
         setReverseCardSide(false)
 

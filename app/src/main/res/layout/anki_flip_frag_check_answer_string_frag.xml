@@ -140,13 +140,24 @@
         android:orientation="vertical"
         android:padding="10dp">
         <TextView
+            android:text="裏"
             style="@style/CardTitleTxvCheckAnswerStyle"
             android:id="@+id/txv_title" />
         <TextView
+
             style="@style/CardContentTxvCheckAnswerStyle"
             android:id="@+id/txv_correct_answer" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+    <ImageView
+        android:id="@+id/btn_flip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/lineLay_correct_answer"
+        app:layout_constraintEnd_toEndOf="@id/lineLay_correct_answer"
+        android:src="@drawable/icon_flashcard_flat"
+        android:alpha="0.3"
+        android:layout_margin="10dp"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         app:layout_constraintTop_toBottomOf="@id/lineLay_correct_answer"
@@ -158,6 +169,7 @@
         android:orientation="vertical"
         android:padding="10dp">
         <TextView
+            android:text="あなたの回答"
             style="@style/CardTitleTxvCheckAnswerStyle" />
         <FrameLayout
             android:layout_width="match_parent"
@@ -175,6 +187,8 @@
             <TextView
                 android:id="@+id/txv_your_answer"
                 style="@style/CardContentTxvCheckAnswerStyle"
+                android:layout_height="match_parent"
+
                 />
 
         </FrameLayout>

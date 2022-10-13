@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
@@ -23,7 +24,7 @@ import com.korokoro.kina.ui.viewmodel.AnkiBoxViewModel
 class AnkiBoxListAdapter(
     private val context: Context,
     private val ankiBoxFragViewModel: AnkiBoxViewModel,
-    private  val tab: AnkiBoxFragments,
+    private  val tab: AnkiBoxFragments?,
     private val lifecycleOwner: LifecycleOwner) :
     ListAdapter<Any, AnkiBoxListAdapter.AnkiBoxItemViewHolder>(SearchDiffCallback) {
 
@@ -39,7 +40,7 @@ class AnkiBoxListAdapter(
     class AnkiBoxItemViewHolder (private val binding: AnkiHomeFragRvItemBinding,
                                  val context: Context,
                                  val ankiBoxFragViewModel: AnkiBoxViewModel,
-                                 val tab: AnkiBoxFragments,
+                                 val tab: AnkiBoxFragments?,
                                  val lifecycleOwner: LifecycleOwner) :
         RecyclerView.ViewHolder(binding.root){
 
@@ -50,7 +51,7 @@ class AnkiBoxListAdapter(
             when(item){
                 is File -> {
                     val fileBinding = AnkiHomeFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-                    AnkiBoxFragViewSetUp().setUpRVFileBinding(fileBinding, item,tab, ankiBoxVM = ankiBoxFragViewModel ,context,lifecycleOwner)
+                    AnkiBoxFragViewSetUp().setUpRVFileBinding(fileBinding, item,tab!!, ankiBoxVM = ankiBoxFragViewModel ,context,lifecycleOwner)
                     binding.frameLayAnkiBoxRvContent.layoutParams.height = context.resources.getDimensionPixelSize(
                         R.dimen.anki_box_rv_item_height)
                     binding.frameLayAnkiBoxRvContent.requestLayout()
@@ -61,6 +62,7 @@ class AnkiBoxListAdapter(
                     AnkiBoxFragViewSetUp().setUpRVCard(cardBinding,item,lifecycleOwner,ankiBoxFragViewModel)
                     binding.frameLayAnkiBoxRvContent.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                     binding.frameLayAnkiBoxRvContent.requestLayout()
+                    changeViewVisibility(cardBinding.checkboxAnkiRv,(tab==null).not())
                     cardBinding.root
                 }
                 else -> return

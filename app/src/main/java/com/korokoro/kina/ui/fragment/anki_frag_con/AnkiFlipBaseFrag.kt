@@ -70,7 +70,11 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                         btnFlipNext,
                         btnFlipPrevious,
                         btnAddCard,
-                        btnStopCount,).onEach {
+                        btnStopCount,
+                        confirmEndBinding.btnCloseConfirmEnd,
+                        confirmEndBinding.btnCommitEnd,
+                        confirmEndBinding.btnCancelEnd,
+                        frameLayConfirmEnd).onEach {
                         it.setOnClickListener(
                             this@AnkiFlipBaseFrag)
                     }
@@ -119,10 +123,9 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                ankiFlipBaseViewModel.setAnkiFlipItems(it,ankiSettingPopUpViewModel.returnAnkiFilter())
             }
         }
-        val parentCardObserver = Observer<Card> {
+        val parentCardObserver = Observer<Card?> {
             val flipItems = ankiFlipBaseViewModel.returnFlipItems()
             if((cardBefore==it||it==null).not()) {
-                makeToast(requireActivity(),it.timesFlipped.toString())
                 if(it.id!=cardBefore?.id){
                     if(cardBefore!=null)
                         ankiFlipBaseViewModel.updateLookedTime(cardBefore!!,false)
@@ -145,7 +148,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             if(it.isEmpty().not()) {
                 flipNavCon.popBackStack()
                 if(start){
-                    val startingPosition = if(mainViewModel.returnFragmentStatus()?.before == MainFragment.EditCard) ankiFlipBaseViewModel.returnParentPosition() else 0
+                    val startingPosition = ankiFlipBaseViewModel.returnParentPosition()
                     ankiFlipBaseViewModel.startFlip(ankiSettingPopUpViewModel.returnReverseCardSide(),ankiSettingPopUpViewModel.returnTypeAnswer(),it,startingPosition)
                     start = false
                 }
@@ -174,7 +177,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
         val keyBoardVisibilityObserver = Observer<Boolean>{ visible ->
             val views = arrayOf(binding.linLayFlipBottom,binding.btnRemembered,binding.btnSetFlag)
             views.onEach {
-                changeViewVisibility(it,visible)
+                changeViewVisibility(it,visible.not())
             }
         }
 
@@ -241,7 +244,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-                ankiNavCon.popBackStack()
+                changeViewVisibility(binding.frameLayConfirmEnd,true)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -307,6 +310,8 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                         mainViewModel.returnMainActivityNavCon()
                             ?.navigate(EditCardBaseFragDirections.openCreateCard())
                     }
+                    confirmEndBinding.btnCancelEnd, confirmEndBinding.btnCloseConfirmEnd-> changeViewVisibility(binding.frameLayConfirmEnd,false)
+                    confirmEndBinding.btnCommitEnd -> ankiNavCon.popBackStack()
                 }
             }
         }

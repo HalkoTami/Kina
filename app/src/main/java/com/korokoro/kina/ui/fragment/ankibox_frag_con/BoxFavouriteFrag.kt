@@ -8,7 +8,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import com.korokoro.kina.databinding.FullRvBinding
+import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
@@ -18,6 +20,7 @@ import com.korokoro.kina.ui.viewmodel.MainViewModel
 
 class BoxFavouriteFrag  : Fragment() {
 
+    private val args: BoxFavouriteFragArgs by navArgs()
     private var _binding: FullRvBinding? = null
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
 
@@ -28,6 +31,7 @@ class BoxFavouriteFrag  : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         _binding =  FullRvBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val viewSetUp = AnkiBoxFragViewSetUp()
@@ -38,12 +42,20 @@ class BoxFavouriteFrag  : Fragment() {
         fun makeEmptyVisibleByListSize(list: List<Any>){
             binding.frameLayFullRvEmpty.visibility = if(list.isEmpty()) View.VISIBLE else View.GONE
         }
-        val allFavouriteAnkiBoxFromDBObserver = Observer<List<File>>{
+        val fileId = args.fileId?.single()
+        val fileIdIsNull = fileId == null
+        val allFavouriteAnkiBoxFromDBObserver = Observer<List<Any>>{
             adapter.submitList(it)
             makeEmptyVisibleByListSize(it)
         }
         ankiBoxViewModel.setCurrentChildFragment(AnkiBoxFragments.Favourites)
-        ankiBoxViewModel.allFavouriteAnkiBoxFromDB.observe(viewLifecycleOwner,allFavouriteAnkiBoxFromDBObserver)
+        if(fileIdIsNull){
+            ankiBoxViewModel.allFavouriteAnkiBoxFromDB.observe(viewLifecycleOwner,allFavouriteAnkiBoxFromDBObserver)
+        } else {
+            ankiBoxViewModel.getAnkiBoxRVCards(fileId!!).observe(viewLifecycleOwner,allFavouriteAnkiBoxFromDBObserver)
+        }
+
+
 
         return root
     }

@@ -26,6 +26,9 @@ class AnkiBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun setSettingVisible(boolean: Boolean){
         _settingVisible.value = boolean
     }
+    fun returnSettingVisible():Boolean{
+        return _settingVisible.value ?:false
+    }
     val settingVisible:LiveData<Boolean> = _settingVisible
 
 

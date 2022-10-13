@@ -116,7 +116,9 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
                 a
             }
             AnkiBoxFragments.Favourites -> {
-                return
+               val a = BoxFavouriteFragDirections.toAnkiBoxFavouriteFrag()
+                a.fileId = intArrayOf(item.fileId)
+                a
             }
             AnkiBoxFragments.Library -> {
                 val a = BoxLibraryItemsFragDirections.toLibraryItemsFrag()

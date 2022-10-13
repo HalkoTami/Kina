@@ -60,7 +60,6 @@ class LibraryRVTouchListener(val context: Context,
     private var swipingDistance:Float = 1f
     override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
         super.onScrollLeft(distanceX, motionEvent)
-        makeToast(context,"called")
         scrollView.requestDisallowInterceptTouchEvent(true)
         startPosition = motionEvent
         swipingDistance = distanceX

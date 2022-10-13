@@ -21,7 +21,7 @@ class AnkiBoxFileRVCL(val item: File,
             }
             binding.root -> {
                 when(tab){
-                    AnkiBoxFragments.Favourites -> return
+                    AnkiBoxFragments.Favourites -> ankiBoxVM.openFile(item)
                     AnkiBoxFragments.Library -> ankiBoxVM.openFile(item)
                     AnkiBoxFragments.AllFlashCardCovers ->ankiBoxVM.openFile(item)
                 }

@@ -60,14 +60,14 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
     val countDownAnim:LiveData<AnimationAttributes> = _countDownAnim
 
     fun getCardFromDB(cardId:Int) :LiveData<Card> = repository.getCardByCardId(cardId).asLiveData()
-    private val _parentCard = MutableLiveData<Card>()
-    fun setParentCard(card: Card){
+    private val _parentCard = MutableLiveData<Card?>()
+    fun setParentCard(card: Card?){
         _parentCard.value = card
     }
     fun returnParentCard():Card?{
         return _parentCard.value
     }
-    val parentCard :LiveData<Card> = _parentCard
+    val parentCard :LiveData<Card?> = _parentCard
 
     val getAllCardsFromDB:LiveData<List<Card>> = repository.allCards.asLiveData()
 
@@ -162,19 +162,20 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
             return   if(checkPositionIsOnEndEdge(reverseMode))
                 null else {
                 when(typeAnswer){
-                    true -> when(changeCard){
-                        true -> {
+                    true -> when(returnFlipFragment()){
+                        FlipFragments.CheckAnswerString -> {
                             FlipStringTypeAnswerFragDirections.toTypeAnswerString(
                                 reverseMode.not(),
                                 returnFlipItems()[newPosition].id)
                         }
-                        false -> {
+                        FlipFragments.TypeAnswerString -> {
                             FlipStringCheckAnswerFragDirections.toCheckAnswerString(
                                 reverseMode.not(),
                                 true,
                                 returnFlipItems()[oldPosition].id,
                             )
                         }
+                        else -> return null
                     }
                     false -> {
                         val cardId = if(changeCard) returnFlipItems()[newPosition].id else _parentCard.value!!.id

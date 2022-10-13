@@ -24,7 +24,7 @@ import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.customClasses.ColorPalletStatus
 
 
-class EditCardFrag: Fragment(),View.OnClickListener {
+class EditCardFrag: Fragment() {
 
     private var _binding: CreateCardFragBaseBinding? = null
     private val binding get() = _binding!!
@@ -53,19 +53,8 @@ class EditCardFrag: Fragment(),View.OnClickListener {
         fun booleanToVisibility(visibility: Boolean):Int{
             return if(visibility) View.VISIBLE else View.GONE
         }
-        fun addClickListeners(){
-            binding.apply {
-                arrayOf(
-                    confirmAddToFlipItemBinding.btnCloseConfirm,
-                    confirmAddToFlipItemBinding.btnCommitAdd,
-                    confirmAddToFlipItemBinding.btnNotAdd,
-                    frameLayPopupConfirmAddToFlipItem
-                    ).onEach { it.setOnClickListener(this@EditCardFrag) }
-            }
-        }
 
         setLateInitVars()
-        addClickListeners()
         val frag = childFragmentManager.findFragmentById(binding.fragConEachCardType.id) as NavHostFragment
         cardTypeNavCon = frag.navController
         val parentCardFromDBObserver = Observer<Card>{ card->
@@ -83,9 +72,6 @@ class EditCardFrag: Fragment(),View.OnClickListener {
             createCardViewModel.setParentFlashCardCover(it)
         }
 
-        val confirmPopUpVisibilityObserver = Observer<Boolean>{
-            binding.frameLayPopupConfirmAddToFlipItem.visibility = booleanToVisibility(it)
-        }
         val cardId = args.cardId
         val parentFlashCardId:Int? = args.parentFlashCardCoverId?.single()
         if(cardId!=null){
@@ -102,8 +88,6 @@ class EditCardFrag: Fragment(),View.OnClickListener {
         }
         createCardViewModel.getParentFlashCardCover(parentFlashCardId).observe(viewLifecycleOwner,parentFlashCardCoverObserver)
         createCardViewModel.getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner,sisterCardObserver)
-        createCardViewModel.confirmFlipItemPopUpVisible.observe(viewLifecycleOwner,confirmPopUpVisibilityObserver)
-
 
 
 
@@ -118,19 +102,7 @@ class EditCardFrag: Fragment(),View.OnClickListener {
     }
 
 
-    override fun onClick(v: View?) {
-        binding.apply {
-            when(v){
-                confirmAddToFlipItemBinding.btnCloseConfirm,confirmAddToFlipItemBinding.btnNotAdd -> createCardViewModel.setConfirmFlipItemPopUpVisible(false)
-                confirmAddToFlipItemBinding.btnCommitAdd -> {
-                    ankiBoxViewModel.addToAnkiBoxCardIds(listOf(args.cardId?.single() ?:return))
-                    createCardViewModel.setConfirmFlipItemPopUpVisible(false)
-                }
 
-            }
-        }
-
-    }
 
 
 }

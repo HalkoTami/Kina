@@ -59,7 +59,7 @@
                 android:id="@+id/barrier_enum_left"
                 app:barrierDirection="start"
                 app:constraint_referenced_ids=
-                    "linLay_filter_typed_answer,lineLay_filter_flag,lineLay_filter_remember_status"/>
+                    "linLay_filter_typed_answer,lineLay_filter_remember_status"/>
 
             <ImageView
                 android:contentDescription="@string/anki_setting_checkBox_missed_filter"
@@ -82,15 +82,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/lineLay_filter_remember_status" />
 
-            <ImageView
-                android:contentDescription="@string/anki_setting_checkBox_flag"
-                android:id="@+id/checkbox_filter_flag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/selector_checkbox"
-                app:layout_constraintBottom_toBottomOf="@id/lineLay_filter_flag"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/lineLay_filter_flag" />
 
             <FrameLayout
                 android:id="@+id/linLay_filter_typed_answer"
@@ -192,49 +183,6 @@
             </FrameLayout>
 
 
-            <FrameLayout
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:id="@+id/lineLay_filter_flag"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/checkbox_filter_flag"
-                app:layout_constraintTop_toBottomOf="@id/lineLay_filter_remember_status">
-                <androidx.appcompat.widget.LinearLayoutCompat
-
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:gravity="center_vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/checkbox_filter_flag"
-                    app:layout_constraintTop_toBottomOf="@id/lineLay_filter_remember_status">
-
-                    <TextView
-                        style="@style/EnumTextviewStyle"
-                        android:id="@+id/txv_filter_with_flag"
-                        android:layout_width="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/selector_txv_rectangle_left"
-                        android:text="@string/anki_setting_filter_with_flag"
-                        android:textColor="@color/selectable_txv_color"
-                        />
-
-                    <TextView
-                        style="@style/EnumTextviewStyle"
-                        android:layout_weight="1"
-                        android:id="@+id/txv_filter_without_flag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/selector_txv_rectangle_right"
-                        android:text="@string/anki_setting_filter_without_flag"
-                        android:textColor="@color/selectable_txv_color" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </FrameLayout>
 
 
 

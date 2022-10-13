@@ -10,10 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
+import com.korokoro.kina.actions.hideKeyBoard
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.actions.showKeyBoard
 import com.korokoro.kina.databinding.AnkiFlipFragTypeAnswerStringFragBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.ui.customClasses.FlipFragments
+import com.korokoro.kina.ui.customClasses.NeighbourCardSide
 import com.korokoro.kina.ui.listener.KeyboardListener
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.korokoro.kina.ui.viewmodel.FlipTypeAndCheckViewModel
@@ -49,9 +52,14 @@ class FlipStringTypeAnswerFrag  : Fragment() {
                     }
                 }
             }
+            var keyLis:KeyboardListener? = null
             fun addKeyBoardListener(){
                 val rootView = binding.root
                 rootView.viewTreeObserver.addOnGlobalLayoutListener(object:KeyboardListener(rootView,){
+                    override fun onGlobalLayout() {
+                        super.onGlobalLayout()
+                        keyLis = this
+                    }
                     override fun onKeyBoardAppear() {
                         super.onKeyBoardAppear()
                         typeAndCheckViewModel.setKeyBoardVisible(true)
@@ -65,6 +73,14 @@ class FlipStringTypeAnswerFrag  : Fragment() {
                     }
                 })
             }
+            fun addCL(){
+                binding.btnCheckAnswer.setOnClickListener {
+                    val rootView = binding.root
+                    rootView.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
+                    flipBaseViewModel.flip(NeighbourCardSide.NEXT,ankiSettingPopUpViewModel.returnReverseCardSide(),true)
+                }
+            }
+            addCL()
             addEdtFocusChangeListener()
             addKeyBoardListener()
 
@@ -76,6 +92,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
             binding.txvFlipTitle.text = if(args.answerIsBack)it.stringData?.frontTitle ?:"表" else it.stringData?.backTitle ?:"裏"
             binding.txvContent.text = if(args.answerIsBack)it.stringData?.frontText else it.stringData?.backText
         }
+        setUpViewStart()
         flipBaseViewModel.onChildFragmentsStart(
             FlipFragments.TypeAnswerString,
             ankiSettingPopUpViewModel.returnReverseCardSide(),

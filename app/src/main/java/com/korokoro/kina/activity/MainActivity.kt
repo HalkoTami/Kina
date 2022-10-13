@@ -292,6 +292,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             libraryViewModel.makeAllUnSwiped()
         else if (searchViewModel.returnSearchModeActive())
             searchViewModel.setSearchModeActive(false)
+        else if(ankiBaseViewModel.returnSettingVisible())
+            ankiBaseViewModel.setSettingVisible(false)
         else super.onBackPressed()
 
     }

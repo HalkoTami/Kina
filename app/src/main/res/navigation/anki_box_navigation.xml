@@ -33,7 +33,13 @@
     <fragment
         android:name="com.korokoro.kina.ui.fragment.ankibox_frag_con.BoxFavouriteFrag"
         tools:layout="@layout/full_rv"
-        android:id="@+id/ankiBoxFavourite_frag"/>
+        android:id="@+id/ankiBoxFavourite_frag">
+        <argument
+            android:name="fileId"
+            app:argType="integer[]"
+            android:defaultValue="@null"
+            app:nullable="true" />
+    </fragment>
 
     <action android:id="@+id/to_allFlashCardCover_frag"
         app:destination="@+id/allFlashCardCover_frag"

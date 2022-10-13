@@ -6,7 +6,18 @@
     android:id="@+id/top_con_lay">
 
 
-
+    <FrameLayout
+        style="@style/PopUpFrameLayStyle"
+        android:visibility="gone"
+        android:id="@+id/frameLay_confirm_end"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <include
+            android:id="@+id/confirm_end_binding"
+            layout="@layout/anki_flip_popup_confirm_end"/>
+    </FrameLayout>
     <FrameLayout
         style="@style/TopBarFrameLayStyle"
         android:id="@+id/frameLay_top_bar"

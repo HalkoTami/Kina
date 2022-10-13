@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.AnkiFlipFragCheckAnswerStringFragBinding
 import com.korokoro.kina.db.dataclass.ActivityData
 import com.korokoro.kina.db.dataclass.Card
@@ -49,7 +50,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
                 if(answerRight) R.drawable.icon_correct else R.drawable.icon_missed)!!
         }
         fun getSpeakBubbleContent(answerRight:Boolean):String{
-            return if(answerRight) "正解！" else "残念"
+            return if(answerRight) "正解！" else "残念..."
         }
         fun setResultContent(answerCorrect:Boolean){
             binding.imvResultInRow.setImageDrawable(getResultIcon(answerCorrect))
@@ -90,15 +91,31 @@ class FlipStringCheckAnswerFrag  : Fragment() {
         fun getAnswerCorrectTimes(answerIsBack:Boolean,results:List<ActivityData>):Int{
             return results.filter { it.activityStatus == if(answerIsBack)ActivityStatus.RIGHT_BACK_CONTENT_TYPED else ActivityStatus.RIGHT_FRONT_CONTENT_TYPED }.size
         }
+        fun addCL(){
+            binding.btnFlip.setOnClickListener {
+                val data = ankiFlipBaseViewModel.returnParentCard()?.stringData
+                binding.btnFlip.isSelected = binding.btnFlip.isSelected.not()
+                if(binding.btnFlip.isSelected){
+                    binding.btnFlip.alpha = 1f
+                    binding.txvTitle.text = if(args.answerIsBack)data?.frontTitle ?:"表" else data?.backTitle ?:"裏"
+                    binding.txvCorrectAnswer.text = if(args.answerIsBack)data?.frontText else data?.backText
+                } else {
+                    binding.btnFlip.alpha = 0.5f
+                    binding.txvTitle.text = if(args.answerIsBack)data?.backTitle ?:"答え" else data?.frontTitle ?:"答え"
+                    binding.txvCorrectAnswer.text = if(args.answerIsBack)data?.backText else data?.frontText
+                }
+
+            }
+        }
         _binding =  AnkiFlipFragCheckAnswerStringFragBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val cardFromDBObserver = Observer<Card>{
             ankiFlipBaseViewModel.setParentCard(it)
-            binding.txvTitle.text = if(args.answerIsBack)it.stringData?.backTitle ?:"裏" else it.stringData?.frontTitle ?:"表"
+            binding.txvTitle.text = if(args.answerIsBack)it.stringData?.backTitle ?:"答え" else it.stringData?.frontTitle ?:"答え"
             binding.txvCorrectAnswer.text = if(args.answerIsBack)it.stringData?.backText else it.stringData?.frontText
         }
         val typedAnswersObserver = Observer<MutableMap<Int,String>> {
-            binding.txvYourAnswer.text = it[args.cardId]
+            binding.txvYourAnswer.text = it[args.cardId].toString()
         }
         val activityDataObserver = Observer<List<ActivityData>> {
             setResultContentNoData(it.isNullOrEmpty())
@@ -108,6 +125,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
                     ActivityStatus.RIGHT_BACK_CONTENT_TYPED,
                     ActivityStatus.WRONG_FRONT_CONTENT_TYPED,
                     ActivityStatus.RIGHT_FRONT_CONTENT_TYPED).contains(it.activityStatus)  }
+                if(results.isEmpty()) return@Observer
                 setResultContent(getAnswerCorrect(results.last().activityStatus))
                 binding.txvResultInRow.text  = getResultsInRow(it).toString() +"連続"+(if(getAnswerCorrect(results.last().activityStatus)) "正解" else "不正解") +"中"
                 val correct = getAnswerCorrectTimes(args.answerIsBack,results)
@@ -117,6 +135,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
                 binding.txvProgressAnswerCorrect.text = "正答率:${(correct/challenged.toDouble()*100).toInt()}%"
             }
         }
+        addCL()
         ankiFlipBaseViewModel.getCardFromDB(args.cardId).observe(viewLifecycleOwner,cardFromDBObserver)
         ankiFlipBaseViewModel.onChildFragmentsStart(
             FlipFragments.CheckAnswerString,
@@ -124,7 +143,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
             ankiSettingPopUpViewModel.returnAutoFlip().active)
         flipTypeAndCheckViewModel.typedAnswers.observe(viewLifecycleOwner,typedAnswersObserver)
         flipTypeAndCheckViewModel.getActivityData(args.cardId).observe(viewLifecycleOwner,activityDataObserver)
-
+        flipTypeAndCheckViewModel.setKeyBoardVisible(false)
 
 
         return root
