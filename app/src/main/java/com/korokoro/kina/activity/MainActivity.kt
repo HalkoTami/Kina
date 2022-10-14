@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var deletePopUpViewModel    : DeletePopUpViewModel
     private lateinit var chooseFileMoveTo        : ChooseFileMoveToViewModel
     private lateinit var searchViewModel         : SearchViewModel
+    private lateinit var helpOptionsBinding      : HelpOptionsBinding
 
     private lateinit var binding                  : MainActivityBinding
 
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         fun setMainActivityLateInitVars(){
 
             binding = MainActivityBinding.inflate(layoutInflater)
+            helpOptionsBinding = HelpOptionsBinding.inflate(layoutInflater)
             val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
             factory               = ViewModelFactory((application as RoomApplication).repository)
             mainActivityViewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -83,9 +85,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             chooseFileMoveTo      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
             deletePopUpViewModel  = ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
             searchViewModel       = ViewModelProvider(this,factory)[SearchViewModel::class.java]
-
-
-
             mainNavCon            =   navHostFragment.navController
 
 
@@ -140,7 +139,16 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                             it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,createFileViewModel)) }
                     }
                 }
-
+            }
+            helpOptionsBinding.apply {
+                arrayOf(
+                    menuHowToDeleteItems,
+                    menuHowToCreateItems,
+                    menuHowToEditItems,
+                    menuHowToMoveItems
+                    ).onEach {
+                        it.setOnClickListener(this@MainActivity)
+                }
             }
         }
         fun changeTabView(previous: MainFragment?, now: MainFragment){
@@ -186,7 +194,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val childFragmentStatusObserver      = Observer<MainViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
         }
-        val helpOptionsBinding = HelpOptionsBinding.inflate(layoutInflater)
+
         val helpOptionVisibilityObserver      = Observer<Boolean>{
             fun setUpMenuMode(){
                 when(mainActivityViewModel.returnFragmentStatus()?.now){
@@ -322,21 +330,24 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             bindingAddMenu.apply {
                 bnvBinding.apply {
                 when(v){
-                    bnvImvTabLibrary,bnvTxvTabLibrary -> mainActivityViewModel.changeFragment(
-                        MainFragment.Library)
-                    bnvImvTabAnki,bnvTxvTabAnki       -> mainActivityViewModel.changeFragment(
-                        MainFragment.Anki)
+                    bnvImvTabLibrary,bnvTxvTabLibrary -> mainActivityViewModel.changeFragment(MainFragment.Library)
+                    bnvImvTabAnki,bnvTxvTabAnki       -> mainActivityViewModel.changeFragment(MainFragment.Anki)
                     bnvImvAdd                         -> createFileViewModel.setBottomMenuVisible(true)
-                    fragConViewCover                  -> {
-                        createFileViewModel.makeBothPopUpGone()
-                    }
-                    imvnewCard                        -> {
-                        createCardViewModel.onClickAddNewCardBottomBar()
-                    }
+                    fragConViewCover                  -> createFileViewModel.makeBothPopUpGone()
+                    imvnewCard                        -> createCardViewModel.onClickAddNewCardBottomBar()
                     imvnewTangocho                    -> createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
                     imvnewfolder                      -> createFileViewModel.onClickCreateFile(FileStatus.FOLDER)
                 }
             }
+            }
+        }
+        helpOptionsBinding.apply {
+            val guideClass = InstallGuide(this@MainActivity)
+            when(v){
+                menuHowToDeleteItems -> guideClass.editGuide(1)
+                menuHowToCreateItems -> guideClass.createGuide(startOrder = 1, createCardViewModel, createFileViewModel, libraryViewModel)
+                menuHowToEditItems -> guideClass.editGuide(1)
+                menuHowToMoveItems -> guideClass.editGuide(1)
             }
         }
     }

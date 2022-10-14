@@ -9,9 +9,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.Barrier
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.get
@@ -19,12 +20,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.db.enumclass.FileStatus
+import com.korokoro.kina.ui.customClasses.MyOrientation
+import com.korokoro.kina.ui.customViews.*
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.EditFileViewModel
 import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
-import com.korokoro.kina.ui.customClasses.MyOrientation
-import com.korokoro.kina.ui.customViews.*
 import kotlin.math.abs
+
 
 class InstallGuide(val activity:AppCompatActivity){
     private val onInstallBinding = CallOnInstallBinding.inflate(activity.layoutInflater)
@@ -43,9 +45,11 @@ class InstallGuide(val activity:AppCompatActivity){
     private fun setAlpha(v: View, alpha:Float){
         v.alpha = alpha
     }
-    private fun setPosition(mainView: View, subView: View, position: MyOrientation, margin:Int, matchSize:Boolean){
-                    mainView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
-                override fun onGlobalLayout() {
+    private fun setPositionByXY(mainView: View, subView: View, position: MyOrientation, margin:Int, matchSize:Boolean){
+
+
+        mainView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+            override fun onGlobalLayout() {
                     fun setPositionXAndY(x:Float,y:Float){
                         setXAndY(subView,x,y)
                     }
@@ -89,6 +93,137 @@ class InstallGuide(val activity:AppCompatActivity){
                 }
             })
     }
+    private fun setTextPositionByConstraint(orientation: MyOrientation, mainView:View,subView: View){
+        val constraintLayout: ConstraintLayout = onInstallBinding.root
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+        fun connectVertical(){
+            constraintSet.connect(
+                subView.id,
+                ConstraintSet.TOP,
+                mainView.id,
+                ConstraintSet.TOP,
+                0
+            )
+            constraintSet.connect(
+                subView.id,
+                ConstraintSet.BOTTOM,
+                mainView.id,
+                ConstraintSet.BOTTOM,
+                0
+            )
+        }
+        fun connectRight(){
+            constraintSet.connect(
+                subView.id ,
+                ConstraintSet.START,
+                mainView.id,
+                ConstraintSet.END,
+                0
+            )
+            if(mainView == character){
+                constraintSet.setHorizontalBias(character.id,0.0f)
+            }
+
+            connectVertical()
+            constraintSet.applyTo(onInstallBinding.root)
+        }
+        fun connectLeft(){
+            constraintSet.connect(
+                subView.id ,
+                ConstraintSet.END,
+                mainView.id,
+                ConstraintSet.START,
+                0
+            )
+            if(mainView == character){
+                constraintSet.setHorizontalBias(character.id,1.0f)
+            }
+            connectVertical()
+            constraintSet.applyTo(onInstallBinding.root)
+        }
+        fun connectHorizontal(){
+            constraintSet.connect(
+                subView.id,
+                ConstraintSet.END,
+                mainView.id,
+                ConstraintSet.END,
+                0
+            )
+            constraintSet.connect(
+                subView.id,
+                ConstraintSet.START,
+                mainView.id,
+                ConstraintSet.START,
+                0
+            )
+        }
+        fun connectTop(){
+            constraintSet.connect(
+                subView.id ,
+                ConstraintSet.BOTTOM,
+                mainView.id,
+                ConstraintSet.TOP,
+                0
+            )
+            constraintSet.setVerticalBias(subView.id,1.0f)
+            connectHorizontal()
+            constraintSet.applyTo(onInstallBinding.root)
+        }
+        fun connectBottom(){
+            constraintSet.connect(
+                subView.id ,
+                ConstraintSet.TOP,
+                mainView.id,
+                ConstraintSet.BOTTOM,
+                0
+            )
+            constraintSet.setVerticalBias(subView.id,0.0f)
+            connectHorizontal()
+            constraintSet.applyTo(onInstallBinding.root)
+        }
+        fun connectMiddle(){
+            constraintSet.connect(
+                subView.id ,
+                ConstraintSet.TOP,
+                mainView.id,
+                ConstraintSet.TOP,
+                0
+            )
+            constraintSet.connect(
+                subView.id ,
+                ConstraintSet.BOTTOM,
+                mainView.id,
+                ConstraintSet.BOTTOM,
+                0
+            )
+            constraintSet.connect(
+                subView.id ,
+                ConstraintSet.START,
+                mainView.id,
+                ConstraintSet.START,
+                0
+            )
+            constraintSet.connect(
+                subView.id ,
+                ConstraintSet.END,
+                mainView.id,
+                ConstraintSet.END,
+                0
+            )
+        }
+
+
+        when(orientation){
+            MyOrientation.RIGHT -> connectRight()
+            MyOrientation.BOTTOM-> connectBottom()
+            MyOrientation.LEFT -> connectLeft()
+            MyOrientation.TOP -> connectTop()
+            MyOrientation.MIDDLE -> connectMiddle()
+        }
+
+        constraintSet.applyTo(constraintLayout)
+    }
     private fun removeGlobalListener(){
         globalLayoutSet.onEach {
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
@@ -116,8 +251,41 @@ class InstallGuide(val activity:AppCompatActivity){
         disappear.doOnEnd { views.onEach { changeViewVisibility(it,false) } }
         return if(visible) appear else disappear
     }
-    private fun explainTextAnimation(string: String, orientation: MyOrientation): AnimatorSet {
-        setPosition(character,textView,orientation,10,false)
+    private fun explainTextAnimation(string: String, orientation: MyOrientation,view: View): AnimatorSet {
+
+        setPositionByXY(view,textView,orientation,10,false)
+        fun checkIfOutOfBound(){
+
+            val margin = 10
+            textView.viewTreeObserver.addOnGlobalLayoutListener (
+                object:ViewTreeObserver.OnGlobalLayoutListener{
+                    override fun onGlobalLayout() {
+                        val width = onInstallBinding.root.width
+                        val textviewWidth = textView.width
+                        var a =textView.x+textView.width
+                        if(a>=width){
+                            textView.layoutParams.width = width-textView.x.toInt()-margin
+                            textView.requestLayout()
+                            a = textView.x+textView.width
+                        }
+
+                        var sideX= textView.x
+                        if(sideX<0){
+                            textView.layoutParams.width = textviewWidth.toInt()-abs(sideX).toInt()
+                            textView.requestLayout()
+                        }
+                        textView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                }
+            )
+
+
+
+        }
+
+        checkIfOutOfBound()
+
+
         textView.text = string
         textView.visibility = View.VISIBLE
         val finalDuration:Long = 100
@@ -170,11 +338,11 @@ class InstallGuide(val activity:AppCompatActivity){
                 return
             }
         }
-        setPosition(view,arrow,arrowPosition,20,false)
+        setPositionByXY(view,arrow,arrowPosition,10,false)
     }
     private fun setTouchArea(view: View){
         changeViewVisibility(touchArea,true)
-        setPosition(view,touchArea, MyOrientation.MIDDLE,0,true)
+        setPositionByXY(view,touchArea, MyOrientation.MIDDLE,0,true)
     }
     private fun setHole(view: View, shape: HoleShape){
         removeGlobalListener()
@@ -245,18 +413,19 @@ class InstallGuide(val activity:AppCompatActivity){
                 }
             }
             fun greeting1(){
+                frameLayCallOnInstall.removeAllViews()
                 frameLayCallOnInstall.addView(onInstallBinding.root)
-                setPosition(character,textView, MyOrientation.TOP,10,false)
-                explainTextAnimation("やあ、僕はとさかくん", MyOrientation.TOP)
+//                setPosition(character,textView, MyOrientation.TOP,10,false)
+                explainTextAnimation("やあ、僕はとさかくん", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
             fun greeting2(){
-                explainTextAnimation("これから、KiNaの使い方を説明するね", MyOrientation.TOP).start()
+                explainTextAnimation("これから、KiNaの使い方を説明するね", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
             fun createFlashCard1(){
                 explainTextAnimation("KiNaでは、フォルダと単語帳が作れるよ\n" +
-                        "ボタンをタッチして、単語帳を作ってみよう", MyOrientation.TOP).start()
+                        "ボタンをタッチして、単語帳を作ってみよう", MyOrientation.TOP,character).start()
 
                 setHole(bnvBtnAdd, HoleShape.CIRCLE)
                 setTouchArea(bnvBtnAdd)
@@ -295,20 +464,20 @@ class InstallGuide(val activity:AppCompatActivity){
                 createFileViewModel.makeFilePos0()
                 createFileViewModel.onClickFinish(title)
                 hideKeyBoard(edtCreatingFileTitle,activity)
-                setPosition(imvTabLibrary, character, MyOrientation.TOP,20,false)
-                setPosition(character,textView, MyOrientation.RIGHT,0,false)
-                textView.layoutParams.width = abs(barrier.x + 10 - activity.resources.displayMetrics.widthPixels)
-                    .toInt()
-                textView.requestLayout()
+                setPositionByXY(bnvBtnAdd, character, MyOrientation.TOP,20,false)
+//                setPositionByXY(character,textView, MyOrientation.RIGHT,0,false)
+//                textView.layoutParams.width = abs(barrier.x + 10 - activity.resources.displayMetrics.widthPixels)
+//                    .toInt()
+//                textView.requestLayout()
                 changeViewVisibility(holeView,false)
-                explainTextAnimation("おめでとう！単語帳が追加されたよ", MyOrientation.RIGHT).start()
+                explainTextAnimation("おめでとう！単語帳が追加されたよ", MyOrientation.LEFT,character).start()
                 appearAlphaAnimation(arrayOf(character),true).start()
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard1(){
                 setHole(libraryRv[0], HoleShape.RECTANGLE)
                 setTouchArea(libraryRv[0])
-                explainTextAnimation("中身を見てみよう！", MyOrientation.RIGHT).start()
+                explainTextAnimation("中身を見てみよう！", MyOrientation.RIGHT,character).start()
                 goNextOnClickTouchArea()
             }
             fun checkInsideNewFlashCard2(){
@@ -319,7 +488,7 @@ class InstallGuide(val activity:AppCompatActivity){
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard3(){
-                explainTextAnimation("まだカードがないね\n早速作ってみよう", MyOrientation.RIGHT).start()
+                explainTextAnimation("まだカードがないね\n早速作ってみよう", MyOrientation.RIGHT,character).start()
                 goNextOnClickAnyWhere()
             }
             fun makeNewCard1(){
@@ -345,50 +514,46 @@ class InstallGuide(val activity:AppCompatActivity){
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag1(){
-                setPosition(edtCardFrontTitle,character, MyOrientation.RIGHT,10,false)
-                explainTextAnimation("上半分は、カードの表", MyOrientation.LEFT).start()
-                setPosition(edtCardFrontContent,textView,
-                    MyOrientation.BOTTOM,10,false)
+                setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,10,false)
                 appearAlphaAnimation(arrayOf(character),true).start()
+                explainTextAnimation("上半分は、カードの表", MyOrientation.BOTTOM,character).start()
                 setHole(edtCardFrontContent, HoleShape.RECTANGLE)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag2(){
                 setHole(edtCardBackContent, HoleShape.RECTANGLE)
-                explainTextAnimation("下半分は、カードの裏になっているよ", MyOrientation.BOTTOM).start()
-                setPosition(edtCardFrontContent,textView, MyOrientation.MIDDLE,0,false)
+                explainTextAnimation("下半分は、カードの裏になっているよ", MyOrientation.BOTTOM,character).start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag3(){
                 setHole(edtCardFrontTitle, HoleShape.RECTANGLE)
-                explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！", MyOrientation.LEFT).start()
-                setPosition(edtCardFrontContent,textView, MyOrientation.MIDDLE,0,false)
+                explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！", MyOrientation.LEFT,character).start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag4(){
                 setHole(edtCardBackTitle, HoleShape.RECTANGLE)
-                explainTextAnimation("好みのようにカスタマイズしてね", MyOrientation.LEFT).start()
-                setPosition(edtCardFrontContent,textView, MyOrientation.MIDDLE,0,false)
+                explainTextAnimation("好みのようにカスタマイズしてね", MyOrientation.LEFT,character).start()
+                setPositionByXY(edtCardFrontContent,textView, MyOrientation.MIDDLE,0,false)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation1(){
-                setPosition(edtCardBackContent,character, MyOrientation.TOP,10,false)
-                explainTextAnimation("カードをめくるには、下のナビゲーションボタンを使うよ", MyOrientation.BOTTOM).start()
+                setPositionByXY(edtCardBackContent,character, MyOrientation.TOP,10,false)
+                explainTextAnimation("カードをめくるには、下のナビゲーションボタンを使うよ", MyOrientation.BOTTOM,character).start()
                 setHole(linLayCreateCardNavigation, HoleShape.RECTANGLE)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation2(){
-                explainTextAnimation("新しいカードを前に挿入するのはここ", MyOrientation.TOP).start()
+                explainTextAnimation("新しいカードを前に挿入するのはここ", MyOrientation.TOP,character).start()
                 setArrow(MyOrientation.TOP,createCardInsertNext)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation3(){
-                explainTextAnimation("後ろに挿入するのはここ！", MyOrientation.TOP).start()
+                explainTextAnimation("後ろに挿入するのはここ！", MyOrientation.TOP,character).start()
                 setArrow(MyOrientation.TOP,createCardInsertPrevious)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation4(){
-                explainTextAnimation("矢印ボタンでカードを前後にめくってね！", MyOrientation.TOP).start()
+                explainTextAnimation("矢印ボタンでカードを前後にめくってね！", MyOrientation.TOP,character).start()
                 setArrow(MyOrientation.TOP,createCardNavFlipNext)
                 goNextOnClickAnyWhere()
             }
@@ -397,13 +562,13 @@ class InstallGuide(val activity:AppCompatActivity){
                 goNextOnClickAnyWhere()
             }
             fun goodBye1(){
-                setPosition(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
-                explainTextAnimation("これでガイドは終わりだよ", MyOrientation.TOP).start()
+                setPositionByXY(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
+                explainTextAnimation("これでガイドは終わりだよ", MyOrientation.TOP,character).start()
                 appearAlphaAnimation(arrayOf(character),true).start()
                 goNextOnClickAnyWhere()
             }
             fun goodBye2(){
-                explainTextAnimation("KiNaを楽しんで！", MyOrientation.TOP).start()
+                explainTextAnimation("KiNaを楽しんで！", MyOrientation.TOP,character).start()
                 appearAlphaAnimation(arrayOf(character),false).start()
                 goNextOnClickAnyWhere()
             }

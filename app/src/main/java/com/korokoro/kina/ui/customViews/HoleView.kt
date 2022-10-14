@@ -58,8 +58,8 @@ class HoleView (
 
     init {
         //configure background color
-        val backgroundAlpha = 0.8
-        paint.color = ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.gray), (255 * backgroundAlpha).toInt() )
+        val backgroundAlpha = 0.7
+        paint.color = ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.black), (255 * backgroundAlpha).toInt() )
 
         //configure hole color & mode
         circleHolePaint.color = ContextCompat.getColor(context, android.R.color.transparent)
