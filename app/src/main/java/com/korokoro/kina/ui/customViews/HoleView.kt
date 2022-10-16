@@ -53,12 +53,13 @@ class HoleView (
     private fun configureBitmap() {
         //create bitmap and layer
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        layer = Canvas(bitmap!!)
+        layer  = Canvas(bitmap!!)
     }
 
     init {
+        this.alpha = 0.7f
         //configure background color
-        val backgroundAlpha = 0.7
+        val backgroundAlpha = 1
         paint.color = ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.black), (255 * backgroundAlpha).toInt() )
 
         //configure hole color & mode

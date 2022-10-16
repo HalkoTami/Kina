@@ -140,7 +140,7 @@ class LibraryHomeFrag : Fragment(){
             val sorted = it.sortedBy { it.libOrder }
             libraryBaseViewModel.setParentRVItems(sorted)
             if( adapter.currentList.size == it.size) adapter.submitList(null)
-            adapter.submitList(it)
+            adapter.submitList(sorted)
             changeViewIfRVEmpty(it,binding.frameLayRvEmpty,emptyView)
         }
 

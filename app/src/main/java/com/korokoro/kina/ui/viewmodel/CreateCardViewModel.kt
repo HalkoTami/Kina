@@ -77,12 +77,12 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         return _sisterCards.value ?: mutableListOf()
     }
     val lastInsertedCardFromDB:LiveData<Card> = repository.lastInsertedCard.asLiveData()
-    private val _lastInsertedCard =  MutableLiveData<Card>()
-    val lastInsertedCard: LiveData<Card> = _lastInsertedCard
+    private val _lastInsertedCard =  MutableLiveData<Card?>()
+    val lastInsertedCard: LiveData<Card?> = _lastInsertedCard
     private fun returnLastInsertedCard():Card?{
         return _lastInsertedCard.value
     }
-    fun setLastInsertedCard(card: Card){
+    fun setLastInsertedCard(card: Card?){
         if(card==returnLastInsertedCard()) return else
         _lastInsertedCard.value = card
     }

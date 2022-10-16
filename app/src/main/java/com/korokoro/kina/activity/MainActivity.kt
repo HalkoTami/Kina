@@ -261,6 +261,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val libraryParentFileObserver           = Observer<File>{
             createCardViewModel.setParentFlashCardCover(it)
             createFileViewModel.setParentTokenFileParent(it)
+            createFileViewModel.getChildFilesByFileIdFromDB(it.fileId).observe(this){
+                createFileViewModel.setParentFileSisters(it)
+            }
             createFileViewModel.parentFileParent(it?.parentFileId).observe(this@MainActivity,editFileParentFileObserver)
             createFileViewModel.lastInsertedFile.observe(this,lastInsertedFileObserver)
         }

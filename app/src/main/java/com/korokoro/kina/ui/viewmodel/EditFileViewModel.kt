@@ -3,6 +3,7 @@ package com.korokoro.kina.ui.viewmodel
 import androidx.lifecycle.*
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
+import com.korokoro.kina.db.dataclass.ChildData
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.db.enumclass.FileStatus
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 
 class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
+    fun getChildFilesByFileIdFromDB(fileId: Int?) = repository.getFileDataByParentFileId(fileId).asLiveData()
     private val _toast = MutableLiveData<MakeToastFromVM>()
     private fun makeToastFromVM(string: String){
         _toast.value = MakeToastFromVM(string,true)
@@ -290,6 +292,14 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private fun returnFileToCreate():File?{
         return _fileToCreate.value
     }
+    private val _parentFileSisters = MutableLiveData<List<File>>()
+    val parentFileSisters:LiveData<List<File>> = _parentFileSisters
+    fun setParentFileSisters(list: List<File>){
+        _parentFileSisters.value = list
+    }
+    fun returnParentFileSisters():List<File>{
+        return _parentFileSisters.value ?: mutableListOf()
+    }
     private fun makeEmptyFileToCreate(fileStatus:FileStatus){
         setFileToCreate(
             File(fileId = 0,
@@ -297,7 +307,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 fileStatus = fileStatus ,
                 colorStatus = ColorStatus.GRAY,
                 deleted = false,
-                libOrder = returnPosition() ?:0,
+                libOrder = returnParentFileSisters().size,
                 parentFileId = returnParentTokenFileParent()?.fileId
             ))
     }
@@ -311,7 +321,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun makeFilePos0(){
         val a = returnFileToCreate()?:return
-        a.libOrder = -1
+        a.libOrder = 0
         setFileToCreate(a)
     }
 

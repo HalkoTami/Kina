@@ -4,24 +4,29 @@ import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
 import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.Barrier
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
+import androidx.core.view.children
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
 import com.korokoro.kina.databinding.CallOnInstallBinding
+import com.korokoro.kina.databinding.TouchAreaBinding
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.customClasses.MyOrientation
+import com.korokoro.kina.ui.customClasses.MyPosition
 import com.korokoro.kina.ui.customViews.*
+import com.korokoro.kina.ui.listener.KeyboardListener
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.EditFileViewModel
 import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
@@ -46,17 +51,18 @@ class InstallGuide(val activity:AppCompatActivity){
         v.alpha = alpha
     }
     private fun setPositionByXY(mainView: View, subView: View, position: MyOrientation, margin:Int, matchSize:Boolean){
-
-
+        val before = mainView.rotation
         mainView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
                     fun setPositionXAndY(x:Float,y:Float){
                         setXAndY(subView,x,y)
                     }
-                    globalLayoutSet[mainView] = this
+
+                mainView.rotation = 0f
+                globalLayoutSet[mainView] = this
                     val a = IntArray(2)
                     mainView.getLocationInWindow(a)
-                    val mainViewCenterPosX = a[0].toFloat()+mainView.width/2
+                    val mainViewCenterPosX = a[0].toFloat()+(mainView.width/2).toFloat()
                     val mainViewCenterPosY = a[1].toFloat() +mainView.height/2 -heightDiff
                     val mainViewLeftTopPosX = a[0].toFloat()
                     val mainViewLeftTopPosY = a[1].toFloat()
@@ -83,13 +89,14 @@ class InstallGuide(val activity:AppCompatActivity){
                             )
                         MyOrientation.TOP ->
                             setPositionXAndY(
-                                mainViewCenterPosX-subView.width/2,
+                                mainViewCenterPosX-(subView.width/2).toFloat(),
                                 mainViewLeftTopPosY - subView.height -heightDiff -margin,
                             )
                         MyOrientation.MIDDLE ->
                             setPositionXAndY(mainViewCenterPosX-subView.width/2,
                                 mainViewCenterPosY-subView.height/2)
                     }
+                mainView.rotation = before
                 }
             })
     }
@@ -251,43 +258,43 @@ class InstallGuide(val activity:AppCompatActivity){
         disappear.doOnEnd { views.onEach { changeViewVisibility(it,false) } }
         return if(visible) appear else disappear
     }
+    fun checkIfOutOfBound(checkingView:View, boundView:View,margin: Int){
+        checkingView.viewTreeObserver.addOnGlobalLayoutListener (
+            object:ViewTreeObserver.OnGlobalLayoutListener{
+                override fun onGlobalLayout() {
+                    val width = activity.resources.displayMetrics.widthPixels
+                    val textviewWidth = checkingView.width
+                    val right =checkingView.x+checkingView.width
+                    if(right>width){
+                        makeToast(checkingView.context,"called")
+                        checkingView.layoutParams.width = width-checkingView.x.toInt()-margin
+                        checkingView.requestLayout()
+                        return
+                    }
+
+                    val left= checkingView.x
+                    if(left<0){
+                        checkingView.layoutParams.width = textviewWidth-abs(left).toInt()
+                        checkingView.requestLayout()
+                    }
+                    checkingView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            }
+        )
+
+
+
+    }
     private fun explainTextAnimation(string: String, orientation: MyOrientation,view: View): AnimatorSet {
 
-        setPositionByXY(view,textView,orientation,10,false)
-        fun checkIfOutOfBound(){
 
-            val margin = 10
-            textView.viewTreeObserver.addOnGlobalLayoutListener (
-                object:ViewTreeObserver.OnGlobalLayoutListener{
-                    override fun onGlobalLayout() {
-                        val width = onInstallBinding.root.width
-                        val textviewWidth = textView.width
-                        var a =textView.x+textView.width
-                        if(a>=width){
-                            textView.layoutParams.width = width-textView.x.toInt()-margin
-                            textView.requestLayout()
-                            a = textView.x+textView.width
-                        }
-
-                        var sideX= textView.x
-                        if(sideX<0){
-                            textView.layoutParams.width = textviewWidth.toInt()-abs(sideX).toInt()
-                            textView.requestLayout()
-                        }
-                        textView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    }
-                }
-            )
-
-
-
-        }
-
-        checkIfOutOfBound()
-
-
+        textView.visibility = if(string=="") View.GONE else View.VISIBLE
         textView.text = string
-        textView.visibility = View.VISIBLE
+        textView.layoutParams.width = LayoutParams.WRAP_CONTENT
+        textView.requestLayout()
+        setPositionByXY(view,textView,orientation,0,false)
+        checkIfOutOfBound(textView,onInstallBinding.root,0)
+
         val finalDuration:Long = 100
         val anim2 = ValueAnimator.ofFloat(1.1f,1f)
         anim2.addUpdateListener {
@@ -344,14 +351,15 @@ class InstallGuide(val activity:AppCompatActivity){
         changeViewVisibility(touchArea,true)
         setPositionByXY(view,touchArea, MyOrientation.MIDDLE,0,true)
     }
-    private fun setHole(view: View, shape: HoleShape){
+    private fun setHole(view: View, shape: HoleShape,remove:Boolean){
         removeGlobalListener()
+        val before = view.rotation
         fun setHole(){
             val a = IntArray(2)
             view.getLocationInWindow(a)
             val viewCenterPosX = a[0].toFloat()+view.width/2
             val viewCenterPosY = a[1].toFloat() +view.height/2 -heightDiff
-            onInstallBinding.viewWithHole.circleHolePosition =
+            holeView.circleHolePosition =
                 CirclePosition(viewCenterPosX,viewCenterPosY ,100f)
         }
         fun setRec(margin:Float){
@@ -359,21 +367,28 @@ class InstallGuide(val activity:AppCompatActivity){
             view.getLocationInWindow(a)
             val left = a[0].toFloat()
             val top = a[1].toFloat() -heightDiff
-            onInstallBinding.viewWithHole.recHolePosition =
+            holeView.recHolePosition =
                 RecPosition(left-margin,top-margin,left+view.width+margin,top+view.height+margin)
         }
         changeViewVisibility(holeView,true)
         view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
-                globalLayoutSet[view] = this
+                globalLayoutSet.put(view,this)
+                view.rotation = 0f
                 holeView.circleHolePosition = CirclePosition(0f,0f,0f)
                 holeView.recHolePosition = RecPosition(0f,0f,0f,0f)
                 when(shape){
                     HoleShape.CIRCLE -> setHole()
                     HoleShape.RECTANGLE -> setRec(50f)
                 }
+                view.rotation =before
             }
         })
+    }
+    private fun removeHole(){
+        removeGlobalListener()
+        holeView.recHolePosition = RecPosition(0f,0f,0f,0f)
+        holeView.circleHolePosition = CirclePosition(0f,0f,0f)
     }
     fun createGuide(startOrder:Int,
                     createCardViewModel:CreateCardViewModel,
@@ -386,6 +401,13 @@ class InstallGuide(val activity:AppCompatActivity){
             val createMenuImvNewCard        =activity.findViewById<FrameLayout>(R.id.imvnewCard)
             val frameLayEditFile            =activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
             val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
+            val imvColPalRed                =activity.findViewById<ImageView>(R.id.imv_col_red)
+            val imvColPalBlue                =activity.findViewById<ImageView>(R.id.imv_col_blue)
+            val imvColPaYellow                =activity.findViewById<ImageView>(R.id.imv_col_yellow)
+            val imvColPalGray                =activity.findViewById<ImageView>(R.id.imv_col_gray)
+
+
+
             val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
             val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
             val imvTabLibrary               =activity.findViewById<ImageView>(R.id.bnv_imv_tab_library)
@@ -400,6 +422,8 @@ class InstallGuide(val activity:AppCompatActivity){
             val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
             val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
 
+            val removeOnNext= mutableListOf<View>()
+
 
             fun goNextOnClickAnyWhere(){
                 onInstallBinding.root.setOnClickListener {
@@ -410,8 +434,24 @@ class InstallGuide(val activity:AppCompatActivity){
                 onInstallBinding.root.setOnClickListener(null)
                 touchArea.setOnClickListener {
                     guideInOrder(order + 1)
+
                 }
             }
+            fun addTouchArea(view:View):View{
+                onInstallBinding.root.setOnClickListener(null)
+                val a = TouchAreaBinding.inflate(activity.layoutInflater)
+                removeOnNext.add(a.touchView)
+                a.touchView.tag = 1
+                onInstallBinding.root.addView(a.touchView)
+                setPositionByXY(view,a.touchView,MyOrientation.MIDDLE,0,true)
+                return a.touchView
+            }
+            fun cloneView(view: View) {
+                addTouchArea(view).setOnClickListener {
+                    view.callOnClick()
+                }
+            }
+
             fun greeting1(){
                 frameLayCallOnInstall.removeAllViews()
                 frameLayCallOnInstall.addView(onInstallBinding.root)
@@ -427,31 +467,35 @@ class InstallGuide(val activity:AppCompatActivity){
                 explainTextAnimation("KiNaでは、フォルダと単語帳が作れるよ\n" +
                         "ボタンをタッチして、単語帳を作ってみよう", MyOrientation.TOP,character).start()
 
-                setHole(bnvBtnAdd, HoleShape.CIRCLE)
+                setHole(bnvBtnAdd, HoleShape.CIRCLE,true)
                 setTouchArea(bnvBtnAdd)
                 goNextOnClickTouchArea()
             }
             fun createFlashCard2(){
-                setHole(createMenuImvFlashCard, HoleShape.CIRCLE)
+                setHole(createMenuImvFlashCard, HoleShape.CIRCLE,false)
                 setTouchArea(createMenuImvFlashCard)
                 createFileViewModel.setBottomMenuVisible(true)
                 goNextOnClickTouchArea()
             }
             fun createFlashCard3(){
+
                 changeViewVisibility(onInstallBinding.imvCharacter,false)
                 makeTxvGone()
+                addTouchArea(btnFinish).setOnClickListener {
+                    guideInOrder(order+1)
+                }
                 createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
-                setHole(frameLayEditFile, HoleShape.RECTANGLE)
+                setHole(frameLayEditFile, HoleShape.RECTANGLE,true)
                 setTouchArea(edtCreatingFileTitle)
-                goNextOnClickTouchArea()
-            }
-            fun createFlashCard4(){
+                touchArea.setOnClickListener {
+                    showKeyBoard(edtCreatingFileTitle,activity)
+                     }
                 edtCreatingFileTitle.requestFocus()
                 showKeyBoard(edtCreatingFileTitle,activity)
                 setArrow(MyOrientation.BOTTOM,btnFinish)
-                setTouchArea(btnFinish)
-                goNextOnClickTouchArea()
-
+                arrayOf(imvColPalRed,imvColPalBlue,imvColPalGray,imvColPaYellow).onEach {
+                    cloneView(it)
+                }
             }
             fun createFlashCard5(){
                 val title = edtCreatingFileTitle.text.toString()
@@ -459,23 +503,22 @@ class InstallGuide(val activity:AppCompatActivity){
                     makeToast(activity,"タイトルが必要です")
                     return
                 }
+                onInstallBinding.root.children.iterator().forEach {
+                    if(it.tag == 1)it.visibility = View.GONE
+                }
                 makeTouchAreaGone()
                 makeArrowGone()
                 createFileViewModel.makeFilePos0()
                 createFileViewModel.onClickFinish(title)
                 hideKeyBoard(edtCreatingFileTitle,activity)
-                setPositionByXY(bnvBtnAdd, character, MyOrientation.TOP,20,false)
-//                setPositionByXY(character,textView, MyOrientation.RIGHT,0,false)
-//                textView.layoutParams.width = abs(barrier.x + 10 - activity.resources.displayMetrics.widthPixels)
-//                    .toInt()
-//                textView.requestLayout()
+                setPositionByXY(imvTabLibrary, character, MyOrientation.TOP,20,false)
                 changeViewVisibility(holeView,false)
-                explainTextAnimation("おめでとう！単語帳が追加されたよ", MyOrientation.LEFT,character).start()
+                explainTextAnimation("おめでとう！単語帳が追加されたよ", MyOrientation.RIGHT,character).start()
                 appearAlphaAnimation(arrayOf(character),true).start()
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard1(){
-                setHole(libraryRv[0], HoleShape.RECTANGLE)
+                setHole(libraryRv[0], HoleShape.RECTANGLE,true)
                 setTouchArea(libraryRv[0])
                 explainTextAnimation("中身を見てみよう！", MyOrientation.RIGHT,character).start()
                 goNextOnClickTouchArea()
@@ -483,11 +526,13 @@ class InstallGuide(val activity:AppCompatActivity){
             fun checkInsideNewFlashCard2(){
                 makeTxvGone()
                 makeTouchAreaGone()
-                changeViewVisibility(holeView,false)
+                changeViewVisibility(holeView,true)
+                setHole(character,HoleShape.CIRCLE,true)
                 libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard3(){
+                setHole(character,HoleShape.CIRCLE,true)
                 explainTextAnimation("まだカードがないね\n早速作ってみよう", MyOrientation.RIGHT,character).start()
                 goNextOnClickAnyWhere()
             }
@@ -496,11 +541,11 @@ class InstallGuide(val activity:AppCompatActivity){
                 changeViewVisibility(onInstallBinding.imvCharacter,false)
                 changeViewVisibility(onInstallBinding.viewWithHole,true)
                 setTouchArea(bnvBtnAdd)
-                setHole(bnvBtnAdd, HoleShape.CIRCLE)
+                setHole(bnvBtnAdd, HoleShape.CIRCLE,true)
                 goNextOnClickTouchArea()
             }
             fun makeNewCard2(){
-                setHole(createMenuImvNewCard, HoleShape.CIRCLE)
+                setHole(createMenuImvNewCard, HoleShape.CIRCLE,false)
                 setTouchArea(createMenuImvNewCard)
                 createFileViewModel.setBottomMenuVisible(true)
                 goNextOnClickTouchArea()
@@ -514,24 +559,25 @@ class InstallGuide(val activity:AppCompatActivity){
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag1(){
-                setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,10,false)
+                setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
                 appearAlphaAnimation(arrayOf(character),true).start()
                 explainTextAnimation("上半分は、カードの表", MyOrientation.BOTTOM,character).start()
-                setHole(edtCardFrontContent, HoleShape.RECTANGLE)
+                setHole(edtCardFrontContent, HoleShape.RECTANGLE,true)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag2(){
-                setHole(edtCardBackContent, HoleShape.RECTANGLE)
-                explainTextAnimation("下半分は、カードの裏になっているよ", MyOrientation.BOTTOM,character).start()
+                explainTextAnimation("下半分は、カードの裏になっているよ", MyOrientation.BOTTOM,character)
+                setHole(edtCardBackContent, HoleShape.RECTANGLE,true)
                 goNextOnClickAnyWhere()
+
             }
             fun explainCreateCardFrag3(){
-                setHole(edtCardFrontTitle, HoleShape.RECTANGLE)
-                explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！", MyOrientation.LEFT,character).start()
+                setHole(edtCardFrontTitle, HoleShape.RECTANGLE,true)
+                explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！", MyOrientation.BOTTOM,character).start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag4(){
-                setHole(edtCardBackTitle, HoleShape.RECTANGLE)
+                setHole(edtCardBackTitle, HoleShape.RECTANGLE,true)
                 explainTextAnimation("好みのようにカスタマイズしてね", MyOrientation.LEFT,character).start()
                 setPositionByXY(edtCardFrontContent,textView, MyOrientation.MIDDLE,0,false)
                 goNextOnClickAnyWhere()
@@ -539,7 +585,7 @@ class InstallGuide(val activity:AppCompatActivity){
             fun explainCreateCardNavigation1(){
                 setPositionByXY(edtCardBackContent,character, MyOrientation.TOP,10,false)
                 explainTextAnimation("カードをめくるには、下のナビゲーションボタンを使うよ", MyOrientation.BOTTOM,character).start()
-                setHole(linLayCreateCardNavigation, HoleShape.RECTANGLE)
+                setHole(linLayCreateCardNavigation, HoleShape.RECTANGLE,true)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation2(){
@@ -554,16 +600,21 @@ class InstallGuide(val activity:AppCompatActivity){
             }
             fun explainCreateCardNavigation4(){
                 explainTextAnimation("矢印ボタンでカードを前後にめくってね！", MyOrientation.TOP,character).start()
-                setArrow(MyOrientation.TOP,createCardNavFlipNext)
+                setHole(createCardNavFlipNext,HoleShape.CIRCLE,false)
+                setArrow(MyOrientation.TOP,createCardNavFlipNext,)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation5(){
-                setArrow(MyOrientation.TOP,createCardNavFlipPrevious)
+                setPositionByXY(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
+                explainTextAnimation("", MyOrientation.TOP,character).start()
+                appearAlphaAnimation(arrayOf(character),true).start()
                 goNextOnClickAnyWhere()
+                setHole(createCardNavFlipPrevious,HoleShape.CIRCLE,false)
+                setArrow(MyOrientation.TOP,createCardNavFlipPrevious,)
             }
             fun goodBye1(){
-                setPositionByXY(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
-                explainTextAnimation("これでガイドは終わりだよ", MyOrientation.TOP,character).start()
+//                setPositionByXY(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
+                explainTextAnimation("これでガイドは終わりだよ2", MyOrientation.TOP,character).start()
                 appearAlphaAnimation(arrayOf(character),true).start()
                 goNextOnClickAnyWhere()
             }
@@ -588,26 +639,25 @@ class InstallGuide(val activity:AppCompatActivity){
                 3   ->  createFlashCard1()
                 4   ->  createFlashCard2()
                 5   ->  createFlashCard3()
-                6   ->  createFlashCard4()
-                7   ->  createFlashCard5()
-                8   ->  checkInsideNewFlashCard1()
-                9   ->  checkInsideNewFlashCard2()
-                10  ->  checkInsideNewFlashCard3()
-                11  ->  makeNewCard1()
-                12  ->  makeNewCard2()
-                13  ->  makeNewCard3()
-                14  ->  explainCreateCardFrag1()
-                15  ->  explainCreateCardFrag2()
-                16  ->  explainCreateCardFrag3()
-                17  ->  explainCreateCardFrag4()
-                18  ->  explainCreateCardNavigation1()
-                19  ->  explainCreateCardNavigation2()
-                20  ->  explainCreateCardNavigation3()
-                21  ->  explainCreateCardNavigation4()
-                22  ->  explainCreateCardNavigation5()
-                23  ->  goodBye1()
-                24  ->  goodBye2()
-                25  ->  end()
+                6   ->  createFlashCard5()
+                7   ->  checkInsideNewFlashCard1()
+                8   ->  checkInsideNewFlashCard2()
+                9   ->  checkInsideNewFlashCard3()
+                10  ->  makeNewCard1()
+                11  ->  makeNewCard2()
+                12  ->  makeNewCard3()
+                13  ->  explainCreateCardFrag1()
+                14  ->  explainCreateCardFrag2()
+                15  ->  explainCreateCardFrag3()
+                16  ->  explainCreateCardFrag4()
+                17  ->  explainCreateCardNavigation1()
+                18  ->  explainCreateCardNavigation2()
+                19  ->  explainCreateCardNavigation3()
+                20  ->  explainCreateCardNavigation4()
+                21  ->  explainCreateCardNavigation5()
+                22  ->  goodBye1()
+                23  ->  goodBye2()
+                24  ->  end()
                 else->  return
             }
         }

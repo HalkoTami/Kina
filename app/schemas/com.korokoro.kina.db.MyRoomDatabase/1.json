@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c9f7bfd9e950938d9d6cfc9c120f89a7",
+    "identityHash": "ba91b0c524943d713ddfc54ca2679ec1",
     "entities": [
       {
         "tableName": "tbl_card",
@@ -148,7 +148,7 @@
       },
       {
         "tableName": "tbl_file",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fileId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `deleted` INTEGER, `colorStatus` INTEGER NOT NULL, `fileStatus` INTEGER NOT NULL, `parentFileId` INTEGER, `libOrder` INTEGER, `rememberedCardAmount` INTEGER NOT NULL, `childFoldersAmount` INTEGER NOT NULL, `childFlashCardCoversAmount` INTEGER NOT NULL, `childCardsAmount` INTEGER NOT NULL, `descendantsFoldersAmount` INTEGER NOT NULL, `descendantsFlashCardsCoversAmount` INTEGER NOT NULL, `descendantsCardsAmount` INTEGER NOT NULL, `flippedNeverAmount` INTEGER NOT NULL, `flippedOnceAmount` INTEGER NOT NULL, `flippedTwiceAmount` INTEGER NOT NULL, `flippedThreeTimesAmount` INTEGER NOT NULL, `flippedFourTimesAmount` INTEGER NOT NULL, `flippedFiveTimesAmount` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fileId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `deleted` INTEGER, `colorStatus` INTEGER NOT NULL, `fileStatus` INTEGER NOT NULL, `parentFileId` INTEGER, `libOrder` INTEGER NOT NULL, `rememberedCardAmount` INTEGER NOT NULL, `childFoldersAmount` INTEGER NOT NULL, `childFlashCardCoversAmount` INTEGER NOT NULL, `childCardsAmount` INTEGER NOT NULL, `descendantsFoldersAmount` INTEGER NOT NULL, `descendantsFlashCardsCoversAmount` INTEGER NOT NULL, `descendantsCardsAmount` INTEGER NOT NULL, `flippedNeverAmount` INTEGER NOT NULL, `flippedOnceAmount` INTEGER NOT NULL, `flippedTwiceAmount` INTEGER NOT NULL, `flippedThreeTimesAmount` INTEGER NOT NULL, `flippedFourTimesAmount` INTEGER NOT NULL, `flippedFiveTimesAmount` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "fileId",
@@ -190,7 +190,7 @@
             "fieldPath": "libOrder",
             "columnName": "libOrder",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "rememberedCardAmount",
@@ -454,7 +454,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c9f7bfd9e950938d9d6cfc9c120f89a7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ba91b0c524943d713ddfc54ca2679ec1')"
     ]
   }
 }

@@ -19,6 +19,10 @@ abstract class FileDao: BaseDao<File> {
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
     abstract fun getFileByFileId(lookingFileId:Int?): Flow<File>
 
+    @Query("UPDATE tbl_file SET  libOrder = libOrder + 1 WHERE " +
+            "parentFileId is :parentFileId and libOrder >= :insertingPosition")
+    abstract suspend fun upDateFilePositionBeforeInsert(parentFileId: Int?,insertingPosition: Int)
+
     @Query("select * from tbl_file a where NOT a.deleted AND  " +
             "a.fileStatus = :fileStatusFolderAsInt  " +
             "and a.fileId not in (  " +

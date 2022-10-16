@@ -17,7 +17,7 @@ data class File(
     @ColumnInfo var colorStatus: ColorStatus = ColorStatus.GRAY,
     @ColumnInfo var fileStatus: FileStatus,
     @ColumnInfo var parentFileId: Int? = null,
-    var libOrder: Int? = 0,
+    var libOrder: Int = 0,
     @Embedded
     var childData: ChildData = ChildData(),
     @Embedded

@@ -81,7 +81,7 @@ class EditCardFrag: Fragment() {
         }
         var lastCardOld: Card? = null
         createCardViewModel.lastInsertedCard.observe(viewLifecycleOwner) {
-            if(lastCardOld!=null&&lastCardOld!=it&&lastCardOld!!.id<it.id){
+            if(it!=null&& lastCardOld!=null&&lastCardOld!=it&&lastCardOld!!.id<it.id){
                 createCardViewModel.onClickEditCard(it,cardNavCon)
             }
             lastCardOld = it

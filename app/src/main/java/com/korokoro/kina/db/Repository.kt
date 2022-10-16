@@ -82,6 +82,7 @@ class MyRoomRepository(
         }
     }
     private suspend fun insertFile(file: File){
+        fileDao.upDateFilePositionBeforeInsert(file.parentFileId,file.libOrder)
         fileDao.insert(file)
         val parentFileId = file.parentFileId
         if(parentFileId!=null){
