@@ -69,6 +69,17 @@ class MainViewModel:ViewModel(){
     fun returnHelpOptionVisibility():Boolean{
         return _helpOptionVisibility.value ?:false
     }
+    private val _guideVisibility = MutableLiveData<Boolean>()
+    val guideVisibility:LiveData<Boolean> = _guideVisibility
+    fun setGuideVisibility(boolean: Boolean){
+        _guideVisibility.value = boolean
+    }
+    fun returnGuideVisibility():Boolean{
+        return _guideVisibility.value ?:false
+    }
+    fun checkIfFrameLayHelpIsVisible():Boolean{
+        return returnGuideVisibility()||returnHelpOptionVisibility()
+    }
     private val _bnvCoverVisible = MutableLiveData<Boolean>()
     val bnvCoverVisible:LiveData<Boolean> = _bnvCoverVisible
 

@@ -19,6 +19,7 @@ import com.korokoro.kina.actions.InstallGuide
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.application.RoomApplication
+import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.HelpOptionsBinding
 import com.korokoro.kina.databinding.MainActivityBinding
 import com.korokoro.kina.db.dataclass.Card
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var chooseFileMoveTo        : ChooseFileMoveToViewModel
     private lateinit var searchViewModel         : SearchViewModel
     private lateinit var helpOptionsBinding      : HelpOptionsBinding
+    private lateinit var guideBinding            : CallOnInstallBinding
 
     private lateinit var binding                  : MainActivityBinding
 
@@ -142,6 +144,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             }
             helpOptionsBinding.apply {
                 arrayOf(
+                    root,
                     menuHowToDeleteItems,
                     menuHowToCreateItems,
                     menuHowToEditItems,
@@ -196,21 +199,44 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
 
         val helpOptionVisibilityObserver      = Observer<Boolean>{
+            val frameLayHelp = binding.frameLayCallOnInstall
+            changeViewVisibility(frameLayHelp,mainActivityViewModel.checkIfFrameLayHelpIsVisible())
             fun setUpMenuMode(){
                 when(mainActivityViewModel.returnFragmentStatus()?.now){
-                    MainFragment.Library -> changeViewVisibility(helpOptionsBinding.linLayHelpMenuLibrary,true)
-                    else -> changeViewVisibility(helpOptionsBinding.linLayHelpMenuAnki,true)
+                    MainFragment.Library -> {
+                        changeViewVisibility(helpOptionsBinding.linLayHelpMenuLibrary,true)
+                        changeViewVisibility(helpOptionsBinding.linLayHelpMenuAnki,false)
+                    }
+                    else -> {
+                        changeViewVisibility(helpOptionsBinding.linLayHelpMenuLibrary,false)
+                        changeViewVisibility(helpOptionsBinding.linLayHelpMenuAnki,true)
+                    }
+                }
+                if(libraryViewModel.returnParentRVItems().isEmpty()){
+                    helpOptionsBinding.apply {
+                        arrayOf(menuHowToDeleteItems,
+                            menuHowToEditItems
+                        ).onEach { changeViewVisibility(it,false) }
+                    }
                 }
             }
             setUpMenuMode()
-            if(it) binding.frameLayCallOnInstall.addView(helpOptionsBinding.root)
-            else binding.frameLayCallOnInstall.removeAllViews()
+            if(it) {
+                frameLayHelp.apply {
+                    removeAllViews()
+                    addView(helpOptionsBinding.root)                }
+            } else frameLayHelp.removeView(helpOptionsBinding.root)
+        }
+        val guideVisibilityObserver      = Observer<Boolean>{
+            changeViewVisibility(binding.frameLayCallOnInstall,mainActivityViewModel.checkIfFrameLayHelpIsVisible())
+            if(it) {
+                mainActivityViewModel.setHelpOptionVisibility(false)
+            }
         }
         val lastInsertedFileObserver      = Observer<File>{
             createFileViewModel.setLastInsertedFile(it)
         }
         val bnvVisibilityObserver            = Observer<Boolean>{
-            makeToast(this,it.toString())
             changeViewVisibility(binding.frameBnv,it)
         }
         val bnvCoverObserver            = Observer<Boolean>{
@@ -277,6 +303,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
         mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)
         mainActivityViewModel.helpOptionVisibility  .observe(this,helpOptionVisibilityObserver)
+        mainActivityViewModel.guideVisibility       .observe(this,guideVisibilityObserver)
 //        ー－－－CreateFileViewModelの読み取りー－－－
         createFileViewModel.apply{
             onCreate()
@@ -347,10 +374,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         helpOptionsBinding.apply {
             val guideClass = InstallGuide(this@MainActivity)
             when(v){
-                menuHowToDeleteItems -> guideClass.editGuide(1)
+                menuHowToDeleteItems -> guideClass.editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
                 menuHowToCreateItems -> guideClass.createGuide(startOrder = 1, createCardViewModel, createFileViewModel, libraryViewModel)
-                menuHowToEditItems -> guideClass.editGuide(1)
-                menuHowToMoveItems -> guideClass.editGuide(1)
+                menuHowToEditItems -> guideClass.editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
+                menuHowToMoveItems -> guideClass.editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
             }
         }
     }

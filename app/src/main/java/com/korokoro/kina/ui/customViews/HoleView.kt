@@ -36,16 +36,28 @@ class HoleView (
             //redraw
             this.invalidate()
         }
+    var removeAllHoles:Boolean = false
+        set(value){
+            field = value
+            this.invalidate()
+        }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (bitmap == null) { configureBitmap() }
-
-        //draw background
         layer?.drawRect(0.0f, 0.0f, width.toFloat(), height.toFloat(), paint)
-        layer?.drawRect(recHolePosition.left,recHolePosition.top,recHolePosition.right,recHolePosition.bottom,recHolePaint)
-        //draw hole
-        layer?.drawCircle(circleHolePosition.x, circleHolePosition.y, circleHolePosition.r, circleHolePaint)
+        if(removeAllHoles.not()){
+            layer?.drawRect(recHolePosition.left,recHolePosition.top,recHolePosition.right,recHolePosition.bottom,recHolePaint)
+            //draw hole
+            layer?.drawCircle(circleHolePosition.x, circleHolePosition.y, circleHolePosition.r, circleHolePaint)
+        }
+        else {
+            layer?.drawRect(0f,0f,0f,0f,recHolePaint)
+            //draw hole
+            layer?.drawCircle(0f,0f,0f, circleHolePaint)
+        }
+        //draw background
+
         //draw bitmap
         canvas.drawBitmap(bitmap!!, 0.0f, 0.0f, paint)
     }

@@ -3,8 +3,8 @@ package com.korokoro.kina.actions
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
+import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewTreeObserver
 import android.widget.Button
@@ -12,24 +12,29 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import androidx.core.view.get
+import androidx.core.view.size
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.TouchAreaBinding
+import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.ui.customClasses.MyOrientation
-import com.korokoro.kina.ui.customClasses.MyPosition
+import com.korokoro.kina.ui.animation.Animation
+import com.korokoro.kina.ui.customClasses.*
 import com.korokoro.kina.ui.customViews.*
-import com.korokoro.kina.ui.listener.KeyboardListener
+import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
+import com.korokoro.kina.ui.listener.MyTouchListener
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.EditFileViewModel
 import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
+import com.korokoro.kina.ui.viewmodel.MainViewModel
 import kotlin.math.abs
 
 
@@ -52,6 +57,7 @@ class InstallGuide(val activity:AppCompatActivity){
     }
     private fun setPositionByXY(mainView: View, subView: View, position: MyOrientation, margin:Int, matchSize:Boolean){
         val before = mainView.rotation
+
         mainView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
                     fun setPositionXAndY(x:Float,y:Float){
@@ -106,7 +112,7 @@ class InstallGuide(val activity:AppCompatActivity){
         }
     }
     private fun makeTxvGone(){
-        changeViewVisibility(textView,false)
+        appearAlphaAnimation(textView,false).start()
     }
     private fun makeArrowGone(){
         changeViewVisibility(arrow,false)
@@ -114,18 +120,23 @@ class InstallGuide(val activity:AppCompatActivity){
     private fun makeTouchAreaGone(){
         changeViewVisibility(touchArea,false)
     }
-    private fun appearAlphaAnimation(views :Array<View>, visible:Boolean): ValueAnimator {
-        val appear = ValueAnimator.ofFloat(0f,1f)
+    private fun appearAlphaAnimation(view :View, visible:Boolean): ValueAnimator {
+
+        val appear =if(view == holeView)  ValueAnimator.ofFloat(0f,0.7f) else ValueAnimator.ofFloat(0f,1f)
         val disappear = ValueAnimator.ofFloat(1f,0f)
         arrayOf(appear,disappear).onEach { eachAnimator->
             eachAnimator.addUpdateListener { thisAnimator ->
-                views.onEach { setAlpha(it, thisAnimator.animatedValue as Float) }
+                 setAlpha(view, thisAnimator.animatedValue as Float)
             }
             eachAnimator.duration = 300
         }
-        appear.doOnStart { views.onEach { changeViewVisibility(it,true) } }
-        disappear.doOnEnd { views.onEach { changeViewVisibility(it,false) } }
+        appear.doOnStart {
+            view.alpha = 0f
+            changeViewVisibility(view,true)  }
+        disappear.doOnEnd {  changeViewVisibility(view,false)  }
         return if(visible) appear else disappear
+
+
     }
     fun checkIfOutOfBound(checkingView:View, boundView:View,margin: Int){
         checkingView.viewTreeObserver.addOnGlobalLayoutListener (
@@ -160,7 +171,7 @@ class InstallGuide(val activity:AppCompatActivity){
         textView.layoutParams.width = LayoutParams.WRAP_CONTENT
         textView.requestLayout()
         setPositionByXY(view,textView,orientation,0,false)
-        checkIfOutOfBound(textView,onInstallBinding.root,0)
+        checkIfOutOfBound(textView,onInstallBinding.root,10)
         textView.visibility = if(string=="") View.GONE else View.VISIBLE
 
         val finalDuration:Long = 100
@@ -202,7 +213,7 @@ class InstallGuide(val activity:AppCompatActivity){
 
     }
     private fun setArrow(arrowPosition: MyOrientation, view: View){
-        appearAlphaAnimation(arrayOf(arrow),true).start()
+        appearAlphaAnimation(arrow,true).start()
         when(arrowPosition){
             MyOrientation.BOTTOM-> setArrowDirection(MyOrientation.TOP)
             MyOrientation.LEFT -> setArrowDirection(MyOrientation.RIGHT)
@@ -221,6 +232,7 @@ class InstallGuide(val activity:AppCompatActivity){
     }
     private fun setHole(view: View, shape: HoleShape){
         removeGlobalListener()
+        holeView.removeAllHoles = false
         val before = view.rotation
         fun setHole(){
             val a = IntArray(2)
@@ -253,10 +265,22 @@ class InstallGuide(val activity:AppCompatActivity){
             }
         })
     }
+    private fun addTouchArea(view:View):View{
+        onInstallBinding.root.setOnClickListener(null)
+        val a = TouchAreaBinding.inflate(activity.layoutInflater)
+        a.touchView.tag = 1
+        onInstallBinding.root.addView(a.touchView)
+        setPositionByXY(view,a.touchView,MyOrientation.MIDDLE,0,true)
+        return a.touchView
+    }
+    private fun cloneView(view: View) {
+        addTouchArea(view).setOnClickListener {
+            view.callOnClick()
+        }
+    }
     private fun removeHole(){
         removeGlobalListener()
-        holeView.recHolePosition = RecPosition(0f,0f,0f,0f)
-        holeView.circleHolePosition = CirclePosition(0f,0f,0f)
+        holeView.removeAllHoles = true
     }
     fun createGuide(startOrder:Int,
                     createCardViewModel:CreateCardViewModel,
@@ -270,9 +294,9 @@ class InstallGuide(val activity:AppCompatActivity){
             val frameLayEditFile            =activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
             val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
             val imvColPalRed                =activity.findViewById<ImageView>(R.id.imv_col_red)
-            val imvColPalBlue                =activity.findViewById<ImageView>(R.id.imv_col_blue)
-            val imvColPaYellow                =activity.findViewById<ImageView>(R.id.imv_col_yellow)
-            val imvColPalGray                =activity.findViewById<ImageView>(R.id.imv_col_gray)
+            val imvColPalBlue               =activity.findViewById<ImageView>(R.id.imv_col_blue)
+            val imvColPaYellow              =activity.findViewById<ImageView>(R.id.imv_col_yellow)
+            val imvColPalGray               =activity.findViewById<ImageView>(R.id.imv_col_gray)
 
 
 
@@ -290,7 +314,6 @@ class InstallGuide(val activity:AppCompatActivity){
             val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
             val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
 
-            val removeOnNext= mutableListOf<View>()
 
 
             fun goNextOnClickAnyWhere(){
@@ -308,7 +331,6 @@ class InstallGuide(val activity:AppCompatActivity){
             fun addTouchArea(view:View):View{
                 onInstallBinding.root.setOnClickListener(null)
                 val a = TouchAreaBinding.inflate(activity.layoutInflater)
-                removeOnNext.add(a.touchView)
                 a.touchView.tag = 1
                 onInstallBinding.root.addView(a.touchView)
                 setPositionByXY(view,a.touchView,MyOrientation.MIDDLE,0,true)
@@ -323,6 +345,7 @@ class InstallGuide(val activity:AppCompatActivity){
             fun greeting1(){
                 frameLayCallOnInstall.removeAllViews()
                 frameLayCallOnInstall.addView(onInstallBinding.root)
+                appearAlphaAnimation(character,true).start()
                 explainTextAnimation("やあ、僕はとさかくん", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
@@ -347,24 +370,28 @@ class InstallGuide(val activity:AppCompatActivity){
                 goNextOnClickTouchArea()
             }
             fun createFlashCard3(){
+                AnimatorSet().apply {
+                    playTogether(appearAlphaAnimation(character,false),
+                        appearAlphaAnimation(textView,false),)
+                    doOnEnd {
+                        addTouchArea(btnFinish).setOnClickListener {
+                            guideInOrder(order+1)
+                        }
+                        createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
+                        setHole(frameLayEditFile, HoleShape.RECTANGLE,)
+                        setTouchArea(edtCreatingFileTitle)
+                        touchArea.setOnClickListener {
+                            showKeyBoard(edtCreatingFileTitle,activity)
+                        }
+                        edtCreatingFileTitle.requestFocus()
+                        showKeyBoard(edtCreatingFileTitle,activity)
+                        setArrow(MyOrientation.BOTTOM,btnFinish)
+                        arrayOf(imvColPalRed,imvColPalBlue,imvColPalGray,imvColPaYellow).onEach {
+                            cloneView(it)
+                        } }
+                    start()
+                }
 
-                appearAlphaAnimation(arrayOf(character),false).start()
-                makeTxvGone()
-                addTouchArea(btnFinish).setOnClickListener {
-                    guideInOrder(order+1)
-                }
-                createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
-                setHole(frameLayEditFile, HoleShape.RECTANGLE,)
-                setTouchArea(edtCreatingFileTitle)
-                touchArea.setOnClickListener {
-                    showKeyBoard(edtCreatingFileTitle,activity)
-                     }
-                edtCreatingFileTitle.requestFocus()
-                showKeyBoard(edtCreatingFileTitle,activity)
-                setArrow(MyOrientation.BOTTOM,btnFinish)
-                arrayOf(imvColPalRed,imvColPalBlue,imvColPalGray,imvColPaYellow).onEach {
-                    cloneView(it)
-                }
             }
             fun createFlashCard5(){
                 val title = edtCreatingFileTitle.text.toString()
@@ -372,43 +399,58 @@ class InstallGuide(val activity:AppCompatActivity){
                     makeToast(activity,"タイトルが必要です")
                     return
                 }
+                val lastId = libraryRv.size
+                var newLastId = libraryRv.size
+                var fixedSize = true
+                hideKeyBoard(edtCreatingFileTitle,activity)
                 onInstallBinding.root.children.iterator().forEach {
                     if(it.tag == 1)it.visibility = View.GONE
                 }
                 makeTouchAreaGone()
                 makeArrowGone()
                 createFileViewModel.makeFilePos0()
+
                 createFileViewModel.onClickFinish(title)
-                hideKeyBoard(edtCreatingFileTitle,activity)
+                removeHole()
+                libraryRv.itemAnimator = object:DefaultItemAnimator(){
+                    override fun onAnimationFinished(viewHolder: RecyclerView.ViewHolder) {
+                        super.onAnimationFinished(viewHolder)
+                        val rv = activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+                        newLastId = rv.size
+                        if(lastId+1==newLastId){
+                            guideInOrder(order+1)
+                        }
+
+                    }
+                }
+
+            }
+            fun createFlashCard6(){
+                setHole(libraryRv[0], HoleShape.RECTANGLE)
                 setPositionByXY(imvTabLibrary, character, MyOrientation.TOP,20,false)
-                changeViewVisibility(holeView,false)
-                explainTextAnimation("おめでとう！単語帳が追加されたよ", MyOrientation.RIGHT,character).start()
-                appearAlphaAnimation(arrayOf(character),true).start()
+                appearAlphaAnimation(character,true).start()
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard1(){
-                setHole(libraryRv[0], HoleShape.RECTANGLE)
+                explainTextAnimation("おめでとう！単語帳が追加されたよ\n中身を見てみよう！", MyOrientation.RIGHT,character).start()
                 setTouchArea(libraryRv[0])
-                explainTextAnimation("中身を見てみよう！", MyOrientation.RIGHT,character).start()
-                goNextOnClickTouchArea()
+                 goNextOnClickTouchArea()
             }
             fun checkInsideNewFlashCard2(){
                 makeTxvGone()
                 makeTouchAreaGone()
                 changeViewVisibility(holeView,true)
-                setHole(character,HoleShape.CIRCLE,)
+                removeHole()
                 libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard3(){
-                setHole(character,HoleShape.CIRCLE,)
                 explainTextAnimation("まだカードがないね\n早速作ってみよう", MyOrientation.RIGHT,character).start()
                 goNextOnClickAnyWhere()
             }
             fun makeNewCard1(){
+                appearAlphaAnimation(character,false).start()
                 makeTxvGone()
-                changeViewVisibility(onInstallBinding.imvCharacter,false)
-                changeViewVisibility(onInstallBinding.viewWithHole,true)
                 setTouchArea(bnvBtnAdd)
                 setHole(bnvBtnAdd, HoleShape.CIRCLE,)
                 goNextOnClickTouchArea()
@@ -421,39 +463,40 @@ class InstallGuide(val activity:AppCompatActivity){
             }
             fun makeNewCard3(){
                 createFileViewModel.setBottomMenuVisible(false)
-                changeViewVisibility(holeView,false)
                 makeTouchAreaGone()
+                removeHole()
                 createCardViewModel.onClickAddNewCardBottomBar()
-                appearAlphaAnimation(arrayOf(touchArea,arrow,holeView),false)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag1(){
                 setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
-                appearAlphaAnimation(arrayOf(character),true).start()
+                appearAlphaAnimation(character,true).start()
                 explainTextAnimation("上半分は、カードの表", MyOrientation.BOTTOM,character).start()
                 setHole(edtCardFrontContent, HoleShape.RECTANGLE,)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag2(){
+                setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
                 explainTextAnimation("下半分は、カードの裏になっているよ", MyOrientation.BOTTOM,character)
                 setHole(edtCardBackContent, HoleShape.RECTANGLE,)
                 goNextOnClickAnyWhere()
 
             }
             fun explainCreateCardFrag3(){
+                setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
                 setHole(edtCardFrontTitle, HoleShape.RECTANGLE,)
                 explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！", MyOrientation.BOTTOM,character).start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag4(){
+                setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
                 setHole(edtCardBackTitle, HoleShape.RECTANGLE,)
-                explainTextAnimation("好みのようにカスタマイズしてね", MyOrientation.LEFT,character).start()
-                setPositionByXY(edtCardFrontContent,textView, MyOrientation.MIDDLE,0,false)
+                explainTextAnimation("好みのようにカスタマイズしてね", MyOrientation.MIDDLE,edtCardFrontContent).start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation1(){
-                setPositionByXY(edtCardBackContent,character, MyOrientation.TOP,10,false)
-                explainTextAnimation("カードをめくるには、下のナビゲーションボタンを使うよ", MyOrientation.BOTTOM,character).start()
+                setPositionByXY(edtCardFrontContent,character, MyOrientation.BOTTOM,70,false)
+                explainTextAnimation("カードをめくるには、\n下のナビゲーションボタンを使うよ", MyOrientation.TOP,character).start()
                 setHole(linLayCreateCardNavigation, HoleShape.RECTANGLE,)
                 goNextOnClickAnyWhere()
             }
@@ -469,31 +512,28 @@ class InstallGuide(val activity:AppCompatActivity){
             }
             fun explainCreateCardNavigation4(){
                 explainTextAnimation("矢印ボタンでカードを前後にめくってね！", MyOrientation.TOP,character).start()
-                setHole(createCardNavFlipNext,HoleShape.CIRCLE)
                 setArrow(MyOrientation.TOP,createCardNavFlipNext,)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation5(){
-                setPositionByXY(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
+                appearAlphaAnimation(character,false).start()
                 explainTextAnimation("", MyOrientation.TOP,character).start()
-                appearAlphaAnimation(arrayOf(character),true).start()
+                makeArrowGone()
                 goNextOnClickAnyWhere()
-                setHole(createCardNavFlipPrevious,HoleShape.CIRCLE,)
                 setArrow(MyOrientation.TOP,createCardNavFlipPrevious,)
             }
             fun goodBye1(){
-//                setPositionByXY(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
-                explainTextAnimation("これでガイドは終わりだよ2", MyOrientation.TOP,character).start()
-                appearAlphaAnimation(arrayOf(character),true).start()
+                setPositionByXY(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
+                explainTextAnimation("これでガイドは終わりだよ", MyOrientation.TOP,character).start()
+                appearAlphaAnimation(character,true).start()
                 goNextOnClickAnyWhere()
             }
             fun goodBye2(){
                 explainTextAnimation("KiNaを楽しんで！", MyOrientation.TOP,character).start()
-                appearAlphaAnimation(arrayOf(character),false).start()
                 goNextOnClickAnyWhere()
             }
             fun end(){
-                appearAlphaAnimation(arrayOf(frameLayCallOnInstall),false).start()
+                appearAlphaAnimation(frameLayCallOnInstall,false).start()
                 removeGlobalListener()
                 val sharedPref =  activity.getSharedPreferences(
                     "firstTimeGuide", Context.MODE_PRIVATE) ?: return
@@ -509,39 +549,214 @@ class InstallGuide(val activity:AppCompatActivity){
                 4   ->  createFlashCard2()
                 5   ->  createFlashCard3()
                 6   ->  createFlashCard5()
-                7   ->  checkInsideNewFlashCard1()
-                8   ->  checkInsideNewFlashCard2()
-                9   ->  checkInsideNewFlashCard3()
-                10  ->  makeNewCard1()
-                11  ->  makeNewCard2()
-                12  ->  makeNewCard3()
-                13  ->  explainCreateCardFrag1()
-                14  ->  explainCreateCardFrag2()
-                15  ->  explainCreateCardFrag3()
-                16  ->  explainCreateCardFrag4()
-                17  ->  explainCreateCardNavigation1()
-                18  ->  explainCreateCardNavigation2()
-                19  ->  explainCreateCardNavigation3()
-                20  ->  explainCreateCardNavigation4()
-                21  ->  explainCreateCardNavigation5()
-                22  ->  goodBye1()
-                23  ->  goodBye2()
-                24  ->  end()
+                7   ->  createFlashCard6()
+                8   -> checkInsideNewFlashCard1()
+                9   -> checkInsideNewFlashCard2()
+                10  -> checkInsideNewFlashCard3()
+                11  -> makeNewCard1()
+                12  -> makeNewCard2()
+                13  -> makeNewCard3()
+                14  -> explainCreateCardFrag1()
+                15  -> explainCreateCardFrag2()
+                16  -> explainCreateCardFrag3()
+                17  -> explainCreateCardFrag4()
+                18  -> explainCreateCardNavigation1()
+                19  -> explainCreateCardNavigation2()
+                20  -> explainCreateCardNavigation3()
+                21  -> explainCreateCardNavigation4()
+                22  -> explainCreateCardNavigation5()
+                23  -> goodBye1()
+                24  -> goodBye2()
+                25  -> end()
                 else->  return
             }
         }
         guideInOrder(startOrder)
 
     }
-    fun editGuide(startOrder:Int){
+    fun editGuide(startOrder:Int,mainViewModel: MainViewModel,
+                  libraryViewModel: LibraryBaseViewModel,
+                  createFileViewModel: EditFileViewModel){
+        mainViewModel.setGuideVisibility(true)
+        val frameLayCallOnInstall       =activity.findViewById<FrameLayout>(R.id.frameLay_call_on_install)
         fun guideInOrder(order:Int){
-
-            fun greeting(){
-                appearAlphaAnimation(arrayOf(character),true)
+            val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+            val btnEditFile                   =activity.findViewById<ImageView>(R.id.btn_edit_whole)
+            val frameLayEditFile            =activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
+            val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
+            val imvColPalRed                =activity.findViewById<ImageView>(R.id.imv_col_red)
+            val imvColPalBlue               =activity.findViewById<ImageView>(R.id.imv_col_blue)
+            val imvColPaYellow              =activity.findViewById<ImageView>(R.id.imv_col_yellow)
+            val imvColPalGray               =activity.findViewById<ImageView>(R.id.imv_col_gray)
+            val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
+            fun goNextOnClickAnyWhere(){
+                onInstallBinding.root.setOnClickListener {
+                    guideInOrder(order+1)
+                }
             }
+            fun goNextOnClickTouchArea(touchArea: View) {
+                onInstallBinding.root.setOnClickListener(null)
+                addTouchArea(touchArea).setOnClickListener {
+                    guideInOrder(order + 1)
+                }
+            }
+            fun greeting1(){
+                if(mainViewModel.returnFragmentStatus()?.now!=MainFragment.Library){
+                    mainViewModel.changeFragment(MainFragment.Library)
+                }
+                if(libraryViewModel.returnLibraryFragment()!=LibraryFragment.Home){
+                    libraryViewModel.returnLibraryNavCon()?.navigate(LibraryHomeFragDirections.toLibHome())
+                }
+                frameLayCallOnInstall.addView(onInstallBinding.root)
+                removeHole()
+                appearAlphaAnimation(character,true).start()
+                explainTextAnimation("これから、\n単語帳を編集する方法を説明するよ", MyOrientation.TOP,character).start()
+                goNextOnClickAnyWhere()
+            }
+            fun explainBtn(){
+                setHole(libraryRv[0],HoleShape.RECTANGLE)
+                setPositionByXY(libraryRv[0],character,MyOrientation.BOTTOM,20,false)
+                explainTextAnimation("このアイテムを見てみよう",MyOrientation.BOTTOM,character).start()
+                goNextOnClickAnyWhere()
+
+            }
+            fun explainBtn2(){
+                explainTextAnimation("編集ボタンを表示するには、" +
+                        "\nアイテムを横にスライドするよ",MyOrientation.BOTTOM,
+                    character).start()
+                val area = addTouchArea(libraryRv)
+                area.setOnTouchListener(
+                    object :MyTouchListener(libraryRv.context){
+                        override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
+                            super.onScrollLeft(distanceX, motionEvent)
+                            val started = libraryRv.findChildViewUnder(motionEvent!!.x,motionEvent.y) as ConstraintLayout
+                            if(libraryRv.indexOfChild(started)==0){
+                                val lineLaySwipeShow = started.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return
+                                started.apply {
+                                    if(started.tag== LibRVState.Plane){
+                                        lineLaySwipeShow.layoutParams.width = 1
+                                        lineLaySwipeShow.requestLayout()
+                                        lineLaySwipeShow.children.iterator().forEach {
+                                            it.visibility = View.VISIBLE
+                                        }
+                                        lineLaySwipeShow.visibility = View.VISIBLE
+                                        started.tag = LibRVState.LeftSwiping
+
+                                    }else if(started.tag== LibRVState.LeftSwiping) {
+
+                                        lineLaySwipeShow.layoutParams.width = distanceX.toInt()/5 + 1
+                                        lineLaySwipeShow.requestLayout()
+
+                                    }
+
+                                }
+                            }
+                        }
+                        override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                            if((event?.actionMasked== MotionEvent.ACTION_UP||event?.actionMasked == MotionEvent.ACTION_CANCEL)){
+                                val started = libraryRv[0]
+                                val lineLaySwipeShow = started.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return false
+                                if(started.tag== LibRVState.LeftSwiping){
+                                    if(lineLaySwipeShow.layoutParams.width <25){
+                                        Animation().animateLibRVLeftSwipeLay(lineLaySwipeShow,false)
+                                        started.tag = LibRVState.Plane
+                                    }
+                                    else if (lineLaySwipeShow.layoutParams.width>=25){
+                                        Animation().animateLibRVLeftSwipeLay(lineLaySwipeShow ,true)
+                                        started.tag = LibRVState.LeftSwiped
+                                        libraryViewModel.setLeftSwipedItemExists(true)
+                                        area.visibility = View.GONE
+                                    }
+
+                                }
+
+                            }
+                            return super.onTouch(v, event)
+                        }
+                    }
+                )
+                onInstallBinding.root.setOnClickListener{
+                    if(libraryViewModel.returnLeftSwipedItemExists())
+                        guideInOrder(order+1)
+                }
+
+            }
+            fun explainBtn3(){
+                goNextOnClickAnyWhere()
+                explainTextAnimation("編集してみよう",MyOrientation.BOTTOM,character).start()
+            }
+            fun explainBtn4(){
+                setHole(btnEditFile,HoleShape.CIRCLE)
+                goNextOnClickTouchArea(btnEditFile)
+                setArrow(MyOrientation.LEFT,btnEditFile)
+                AnimatorSet().apply {
+                    playTogether(appearAlphaAnimation(character,false),
+                        appearAlphaAnimation(textView,false))
+                    start()
+                }
+            }
+            fun editFile1(){
+                setHole(frameLayEditFile,HoleShape.RECTANGLE)
+                createFileViewModel.onClickEditFileInRV(
+                    libraryViewModel.returnParentRVItems()[0] as File)
+                goNextOnClickAnyWhere()
+
+            }
+            fun editFile2(){
+                setPositionByXY(frameLayEditFile,character,MyOrientation.BOTTOM,10,false)
+                appearAlphaAnimation(character,true).start()
+                explainTextAnimation("じゃじゃん！",MyOrientation.TOP,frameLayEditFile).start()
+                goNextOnClickAnyWhere()
+            }
+            fun editFile3(){
+                setPositionByXY(frameLayEditFile,character,MyOrientation.BOTTOM,10,false)
+                explainTextAnimation("タイトルを変えたり",MyOrientation.TOP,frameLayEditFile).start()
+                setArrow(MyOrientation.BOTTOM,edtCreatingFileTitle)
+                goNextOnClickAnyWhere()
+            }
+            fun editFile4(){
+                setPositionByXY(frameLayEditFile,character,MyOrientation.BOTTOM,10,false)
+                explainTextAnimation("色で分けて整理してみてね",MyOrientation.TOP,frameLayEditFile).start()
+                arrayOf(imvColPaYellow,imvColPalBlue,imvColPalRed,imvColPalGray).onEach {
+                    cloneView(it)
+                }
+                setArrow(MyOrientation.BOTTOM,imvColPalRed)
+                goNextOnClickAnyWhere()
+            }
+            fun editFile5(){
+                addTouchArea(edtCreatingFileTitle).setOnClickListener {
+                    edtCreatingFileTitle.requestFocus()
+                    showKeyBoard(edtCreatingFileTitle,activity)
+                }
+                AnimatorSet().apply {
+                    playTogether(appearAlphaAnimation(character,false),
+                        appearAlphaAnimation(textView,false))
+                    start()
+                }
+                setArrow(MyOrientation.BOTTOM,btnFinish)
+                goNextOnClickTouchArea(btnFinish)
+            }
+            fun editFile6(){
+                createFileViewModel.onClickFinish(edtCreatingFileTitle.text.toString())
+                appearAlphaAnimation(holeView,false).start()
+                hideKeyBoard(edtCreatingFileTitle,activity)
+                mainViewModel.setGuideVisibility(false)
+            }
+
             when(order){
-                0 -> greeting()
+                0   -> greeting1()
+                1   -> explainBtn()
+                2   -> explainBtn2()
+                3   -> explainBtn3()
+                4   -> explainBtn4()
+                5   -> editFile1()
+                6   -> editFile2()
+                7   -> editFile3()
+                8   -> editFile4()
+                9   -> editFile5()
+                10  -> editFile6()
             }
         }
+        guideInOrder(startOrder)
     }
 }
