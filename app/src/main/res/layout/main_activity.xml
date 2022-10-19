@@ -24,6 +24,7 @@
             android:visibility="visible"/>
     </FrameLayout>
 
+
     <FrameLayout
         android:visibility="visible"
         android:id="@+id/frame_bottomMenu"
@@ -100,5 +101,6 @@
         android:layout_height="match_parent"
         >
     </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

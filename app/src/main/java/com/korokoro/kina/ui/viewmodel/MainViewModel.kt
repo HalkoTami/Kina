@@ -86,6 +86,15 @@ class MainViewModel:ViewModel(){
     fun setBnvCoverVisible (boolean: Boolean){
         _bnvCoverVisible.value = boolean
     }
+    private val _confirmEndGuidePopUpVisible = MutableLiveData<Boolean>()
+    val confirmEndGuidePopUpVisible:LiveData<Boolean> = _confirmEndGuidePopUpVisible
+
+    fun setConfirmEndGuidePopUpVisible (boolean: Boolean){
+        _confirmEndGuidePopUpVisible.value = boolean
+    }
+    fun returnConfirmEndGuidePopUpVisible ():Boolean{
+        return _confirmEndGuidePopUpVisible.value ?:false
+    }
 
     override fun onCleared() {
         super.onCleared()

@@ -63,6 +63,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
+    <FrameLayout
+        style="@style/PopUpFrameLayStyle"
+        android:elevation="21dp"
+        android:id="@+id/frameLay_confirm_end_guide_popUp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+        <include
+            android:id="@+id/confirm_end_guide_binding"
+            layout="@layout/anki_flip_popup_confirm_end"
+            android:visibility="visible"/>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
