@@ -31,14 +31,15 @@ import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.ui.customClasses.*
 import com.korokoro.kina.ui.customViews.*
+import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFragDirections
 import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
 import com.korokoro.kina.ui.listener.MyTouchListener
 import com.korokoro.kina.ui.viewmodel.*
 import kotlin.math.abs
 
 
-class InstallGuide(val activity:AppCompatActivity){
-    private val onInstallBinding = CallOnInstallBinding.inflate(activity.layoutInflater)
+class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnInstallBinding){
+    private val frameLayCallOnInstall       =activity.findViewById<FrameLayout>(R.id.frameLay_call_on_install)
     private val arrow = onInstallBinding.imvFocusArrow
     private val touchArea = onInstallBinding.viewTouchArea
     private val character = onInstallBinding.imvCharacter
@@ -344,8 +345,6 @@ class InstallGuide(val activity:AppCompatActivity){
             }
 
             fun greeting1(){
-                frameLayCallOnInstall.removeAllViews()
-                frameLayCallOnInstall.addView(onInstallBinding.root)
                 appearAlphaAnimation(character,true).start()
                 explainTextAnimation("やあ、僕はとさかくん", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
@@ -534,7 +533,7 @@ class InstallGuide(val activity:AppCompatActivity){
                 goNextOnClickAnyWhere()
             }
             fun end(){
-                appearAlphaAnimation(frameLayCallOnInstall,false).start()
+                mainViewModel.setGuideVisibility(false)
                 removeGlobalListener()
                 val sharedPref =  activity.getSharedPreferences(
                     "firstTimeGuide", Context.MODE_PRIVATE) ?: return
@@ -579,8 +578,8 @@ class InstallGuide(val activity:AppCompatActivity){
                   libraryViewModel: LibraryBaseViewModel,
                   createFileViewModel: EditFileViewModel){
         mainViewModel.setGuideVisibility(true)
-        val frameLayCallOnInstall       =activity.findViewById<FrameLayout>(R.id.frameLay_call_on_install)
         fun guideInOrder(order:Int){
+
             val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
             val btnEditFile                   =activity.findViewById<ImageView>(R.id.btn_edit_whole)
             val frameLayEditFile            =activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
@@ -590,6 +589,7 @@ class InstallGuide(val activity:AppCompatActivity){
             val imvColPaYellow              =activity.findViewById<ImageView>(R.id.imv_col_yellow)
             val imvColPalGray               =activity.findViewById<ImageView>(R.id.imv_col_gray)
             val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
+            onInstallBinding.root.children.iterator().forEach { if(it.tag == 1) it.visibility = View.GONE }
             fun goNextOnClickAnyWhere(){
                 onInstallBinding.root.setOnClickListener {
                     guideInOrder(order+1)
@@ -608,7 +608,7 @@ class InstallGuide(val activity:AppCompatActivity){
                 if(libraryViewModel.returnLibraryFragment()!=LibraryFragment.Home){
                     libraryViewModel.returnLibraryNavCon()?.navigate(LibraryHomeFragDirections.toLibHome())
                 }
-                frameLayCallOnInstall.addView(onInstallBinding.root)
+                appearAlphaAnimation(holeView,true).start()
                 removeHole()
                 appearAlphaAnimation(character,true).start()
                 explainTextAnimation("これから、\n単語帳を編集する方法を説明するよ", MyOrientation.TOP,character).start()
@@ -630,8 +630,8 @@ class InstallGuide(val activity:AppCompatActivity){
                     object :MyTouchListener(libraryRv.context){
                         override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
                             super.onScrollLeft(distanceX, motionEvent)
-                            val started = libraryRv.findChildViewUnder(motionEvent!!.x,motionEvent.y) as ConstraintLayout
-                            if(libraryRv.indexOfChild(started)==0){
+                            val started = libraryRv.findChildViewUnder(motionEvent!!.x,motionEvent.y)
+                            if(started!=null&&libraryRv.indexOfChild(started)==0){
                                 val lineLaySwipeShow = started.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return
                                 started.apply {
                                     if(started.tag== LibRVState.Plane){
@@ -765,9 +765,8 @@ class InstallGuide(val activity:AppCompatActivity){
                     deletePopUpViewModel: DeletePopUpViewModel
                     ){
         mainViewModel.setGuideVisibility(true)
-        val frameLayCallOnInstall       =activity.findViewById<FrameLayout>(R.id.frameLay_call_on_install)
         fun guideInOrder(order: Int){
-
+            onInstallBinding.root.children.iterator().forEach { if(it.tag == 1) it.visibility = View.GONE }
             val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
             val btnDeleteFile           =activity.findViewById<ImageView>(R.id.btn_delete)
             val btnConfirmDelete           =activity.findViewById<Button>(R.id.btn_commit_delete_only_parent)
@@ -798,7 +797,6 @@ class InstallGuide(val activity:AppCompatActivity){
                 if(libraryViewModel.returnLibraryFragment()!=LibraryFragment.Home){
                     libraryViewModel.returnLibraryNavCon()?.navigate(LibraryHomeFragDirections.toLibHome())
                 }
-                frameLayCallOnInstall.addView(onInstallBinding.root)
                 removeHole()
                 appearAlphaAnimation(character,true).start()
                 explainTextAnimation("これから、\nアイテムを削除する方法を説明するよ", MyOrientation.TOP,character).start()
@@ -947,6 +945,113 @@ class InstallGuide(val activity:AppCompatActivity){
                 15  -> explainMultiSelectMode5()
                 16  -> explainMultiSelectMode6()
                 17  -> end()
+            }
+        }
+        guideInOrder(startOrder)
+    }
+    fun moveGuide(startOrder: Int,mainViewModel: MainViewModel,
+                    libraryViewModel:LibraryBaseViewModel,editFileViewModel: EditFileViewModel,
+                    deletePopUpViewModel: DeletePopUpViewModel
+    ){
+        mainViewModel.setGuideVisibility(true)
+        var selectedView:View? = null
+        fun guideInOrder(order: Int){
+            onInstallBinding.root.children.iterator().forEach { if(it.tag == 1) it.visibility = View.GONE }
+            val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+            val btnDeleteFile           =activity.findViewById<ImageView>(R.id.btn_delete)
+            val btnConfirmDelete           =activity.findViewById<Button>(R.id.btn_commit_delete_only_parent)
+            val btnConfirmDeleteOnlyParent           =activity.findViewById<Button>(R.id.delete_only_file)
+            val frameLayConfirmDelete       =activity.findViewById<FrameLayout>(R.id.frameLay_confirm_delete)
+            val frameLayConfirmDeleteWithChildren       =activity.findViewById<FrameLayout>(R.id.frameLay_confirm_delete_with_children)
+            val txvContainingCardAmount       =activity.findViewById<TextView>(R.id.txv_containing_card)
+            val frameLayInBox       =activity.findViewById<ConstraintLayout>(R.id.frameLay_inBox)
+            val txvInBoxCardAmount       =activity.findViewById<TextView>(R.id.txv_inBox_card_amount)
+            val imvMultiModeMenu           =activity.findViewById<ImageView>(R.id.imv_change_menu_visibility)
+            val frameLayMultiModeMenu       =activity.findViewById<FrameLayout>(R.id.frameLay_multi_mode_menu)
+            val lineLayMoveSelectedItem       =activity.findViewById<LinearLayoutCompat>(R.id.linLay_move_selected_items)
+            fun goNextOnClickAnyWhere(){
+                onInstallBinding.root.setOnClickListener {
+                    guideInOrder(order+1)
+                }
+            }
+            fun goNextOnClickTouchArea(touchArea: View) {
+                onInstallBinding.root.setOnClickListener(null)
+                addTouchArea(touchArea).setOnClickListener {
+                    guideInOrder(order + 1)
+                }
+            }
+            fun greeting(){
+                removeHole()
+                appearAlphaAnimation(holeView,true).start()
+                appearAlphaAnimation(character,true).start()
+                explainTextAnimation("これから、\nアイテムを移動する方法を説明するよ", MyOrientation.TOP,character).start()
+                goNextOnClickAnyWhere()
+            }
+            fun greeting2(){
+                explainTextAnimation("フォルダを整理したり、\nインボックスのカードを移動するよ！", MyOrientation.TOP,character).start()
+                goNextOnClickAnyWhere()
+            }
+            fun guideMultiMode(){
+                setHole(libraryRv,HoleShape.RECTANGLE)
+                explainTextAnimation("長押ししてみよう",MyOrientation.TOP,character).start()
+                addTouchArea(libraryRv).setOnTouchListener(object :MyTouchListener(libraryRv.context){
+                    override fun onLongClick(motionEvent: MotionEvent?) {
+                        super.onLongClick(motionEvent)
+                        selectedView = libraryRv.findChildViewUnder(motionEvent!!.x,motionEvent.y)
+                        if(selectedView!=null){
+                            guideInOrder(order+1)
+                        }
+                    }
+                })
+
+            }
+            fun guideMultiMode2(){
+                libraryViewModel.setMultipleSelectMode(true)
+                setHole(selectedView!!,HoleShape.RECTANGLE)
+                selectedView!!.findViewById<ImageView>(R.id.btn_select).apply {
+                    isSelected = true
+                }
+                val position = libraryRv.getChildAdapterPosition(selectedView!!)
+                libraryViewModel.onClickSelectableItem(libraryViewModel.returnParentRVItems()[position],true)
+                goNextOnClickAnyWhere()
+            }
+            fun guideMultiMode3(){
+                explainTextAnimation("メニューを開くよ",MyOrientation.TOP,character).start()
+                setHole(imvMultiModeMenu,HoleShape.CIRCLE)
+                goNextOnClickTouchArea(imvMultiModeMenu)
+            }
+            fun guideMultiMode4(){
+                makeTxvGone()
+                libraryViewModel.setMultiMenuVisibility(true)
+                setHole(frameLayMultiModeMenu,HoleShape.RECTANGLE)
+                setArrow(MyOrientation.LEFT,lineLayMoveSelectedItem)
+                goNextOnClickTouchArea(lineLayMoveSelectedItem)
+            }
+            fun moveToFragment(){
+                removeHole()
+                libraryViewModel.returnLibraryNavCon()?.navigate(LibraryChooseFileMoveToFragDirections.selectFileMoveTo(null))
+                goNextOnClickAnyWhere()
+            }
+
+            when(order){
+                0   -> greeting()
+                1   -> greeting2()
+                2   -> guideMultiMode()
+                3   -> guideMultiMode2()
+                4   -> guideMultiMode3()
+                5   -> guideMultiMode4()
+                6   -> moveToFragment()
+                7   -> return
+                8   -> return
+                9   -> return
+                10  -> return
+                11  -> return
+                12  -> return
+                13  -> return
+                14  -> return
+                15  -> return
+                16  -> return
+                17  -> return
             }
         }
         guideInOrder(startOrder)

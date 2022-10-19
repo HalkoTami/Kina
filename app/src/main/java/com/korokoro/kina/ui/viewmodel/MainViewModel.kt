@@ -95,6 +95,11 @@ class MainViewModel:ViewModel(){
     fun returnConfirmEndGuidePopUpVisible ():Boolean{
         return _confirmEndGuidePopUpVisible.value ?:false
     }
+    fun onClickEndGuide(){
+        setConfirmEndGuidePopUpVisible(false)
+        setGuideVisibility(false)
+        setHelpOptionVisibility(false)
+    }
 
     override fun onCleared() {
         super.onCleared()
