@@ -13,6 +13,15 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     fun getFilesMovableFolders(movingFileIds:List<Int>,parentFileId:Int?):LiveData<List<File>> = repository.getFoldersMovableTo(movingFileIds,parentFileId).asLiveData()
     fun getFilesMovableFlashCards(movingCardsIds:List<Int>):LiveData<List<File>> = repository.getMovableFlashCards(movingCardsIds).asLiveData()
 
+    private val _movableItemExists = MutableLiveData<Boolean>()
+    val movableItemExists:LiveData<Boolean> = _movableItemExists
+    fun setMovableItemExists(boolean: Boolean){
+        _movableItemExists.value = boolean
+    }
+    fun returnMovableItemExists():Boolean{
+        return _movableItemExists.value ?:false
+    }
+
     private val _toast = MutableLiveData<MakeToastFromVM>()
     private fun makeToastFromVM(string: String){
         _toast.value = MakeToastFromVM(string,true)
