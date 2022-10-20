@@ -8,7 +8,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
@@ -17,12 +16,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.korokoro.kina.actions.InstallGuide
 import com.korokoro.kina.actions.changeViewVisibility
-import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.application.RoomApplication
-import com.korokoro.kina.databinding.CallOnInstallBinding
-import com.korokoro.kina.databinding.HelpOptionsBinding
 import com.korokoro.kina.databinding.MainActivityBinding
-import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
@@ -46,7 +41,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var ankiFlipBaseViewModel   : AnkiFlipBaseViewModel
     private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
     private lateinit var deletePopUpViewModel    : DeletePopUpViewModel
-    private lateinit var chooseFileMoveTo        : ChooseFileMoveToViewModel
+    private lateinit var chooseFileMoveToViewModel        : ChooseFileMoveToViewModel
     private lateinit var searchViewModel         : SearchViewModel
 
     private lateinit var binding                  : MainActivityBinding
@@ -82,7 +77,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             libraryViewModel      = ViewModelProvider(this,factory)[LibraryBaseViewModel::class.java]
             ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
             ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
-            chooseFileMoveTo      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
+            chooseFileMoveToViewModel      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
             deletePopUpViewModel  = ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
             searchViewModel       = ViewModelProvider(this,factory)[SearchViewModel::class.java]
             mainNavCon            =   navHostFragment.navController
@@ -397,7 +392,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     menuHowToDeleteItems -> guideClass.deleteGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
                     menuHowToCreateItems -> guideClass.createGuide(startOrder = 1, createCardViewModel, createFileViewModel, libraryViewModel,mainActivityViewModel)
                     menuHowToEditItems -> guideClass.editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
-                    menuHowToMoveItems -> guideClass.moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
+                    menuHowToMoveItems -> guideClass.moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
                 }
             }
         }
