@@ -4,7 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/conLay_guide">
+    android:id="@+id/conLay_guide"
+        >
+
 
     <com.korokoro.kina.ui.customViews.HoleView
         app:layout_constraintTop_toTopOf="parent"
@@ -27,8 +29,8 @@
 
     <ImageView
         android:id="@+id/imv_character"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/tosaka_standin"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,8 +60,8 @@
 
     <View
         android:id="@+id/view_touch_area"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
