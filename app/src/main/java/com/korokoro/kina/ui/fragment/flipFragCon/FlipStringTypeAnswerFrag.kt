@@ -30,7 +30,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
     private val flipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
     private val typeAndCheckViewModel: FlipTypeAndCheckViewModel by activityViewModels()
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
-
+    var keyLis:KeyboardListener? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -52,7 +52,6 @@ class FlipStringTypeAnswerFrag  : Fragment() {
                     }
                 }
             }
-            var keyLis:KeyboardListener? = null
             fun addKeyBoardListener(){
                 val rootView = binding.root
                 rootView.viewTreeObserver.addOnGlobalLayoutListener(object:KeyboardListener(rootView,){
@@ -110,6 +109,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.root.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
         typeAndCheckViewModel.addAnswer(args.cardId, binding.edtTypeAnswer.editableText.toString())
         typeAndCheckViewModel.checkAnswer(flipBaseViewModel.returnParentCard()?:return,args.answerIsBack)
         _binding = null

@@ -21,6 +21,7 @@ import com.korokoro.kina.databinding.MainActivityBinding
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
+import com.korokoro.kina.ui.customClasses.AnkiFragments
 import com.korokoro.kina.ui.customClasses.ColorPalletStatus
 import com.korokoro.kina.ui.customClasses.MainFragment
 import com.korokoro.kina.ui.listener.KeyboardListener
@@ -84,6 +85,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
         }
+        fun checkBnvVisible():Boolean{
+            return !(mainActivityViewModel.returnFragmentStatus()?.now==MainFragment.EditCard
+                    ||ankiBaseViewModel.returnActiveFragment()==AnkiFragments.Flip
+                    )
+        }
         fun setUpMainActivityLayout(){
             binding.apply {
                 frameLayEditFile.visibility = GONE
@@ -94,15 +100,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         var before = true
                         override fun onKeyBoardAppear() {
                             super.onKeyBoardAppear()
-                            before = mainActivityViewModel.returnBnvVisibility() ?:true
                             mainActivityViewModel.setBnvVisibility(false)
                         }
 
                         override fun onKeyBoardDisappear() {
                             super.onKeyBoardDisappear()
-                            mainActivityViewModel.setBnvVisibility(
-                                before)
-
+                            mainActivityViewModel.setBnvVisibility(checkBnvVisible())
                         }
                     }
                 )

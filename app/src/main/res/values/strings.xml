@@ -79,5 +79,11 @@
     <string name="create_string_card_edt_front_title_hint">表のタイトル</string>
     <string name="create_string_card_edt_back_title_hint">裏のタイトル</string>
 
+    <string name="s_p_anki_setting_reverse_side">s_p_anki_setting_reverse_side</string>
+    <string name="s_p_anki_setting_filter_remembered">s_p_anki_setting_filter_remembered</string>
+    <string name="s_p_anki_setting_auto_flip_active">s_p_anki_setting_auto_flip_active</string>
+    <string name="s_p_anki_setting_auto_flip_seconds">s_p_anki_setting_auto_flip_seconds</string>
+    <string name="s_p_anki_setting_type_answer">s_p_anki_setting_type_answer</string>
+
 
 </resources>

@@ -163,12 +163,14 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         binding.apply {
             when (p0) {
                 btnStartAnki -> {
-                    ankiBaseViewModel.setSettingVisible(true)
                     ankiBoxViewModel.apply {
                         if (returnAnkiBoxItems().isEmpty()) ankiBoxViewModel.setModeCardsNotSelected(
                             true
                         )
                     }
+                    ankiBaseViewModel.setSettingVisible(false)
+                    ankiBaseViewModel.returnAnkiBaseNavCon()
+                        ?.navigate(AnkiFlipBaseFragDirections.toFlipFrag())
                 }
                 btnAddToFavouriteAnkiBox -> {
                     if (btnAddToFavouriteAnkiBox.isSelected.not() && ankiBoxViewModel.returnAnkiBoxItems()

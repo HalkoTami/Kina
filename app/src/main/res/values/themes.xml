@@ -49,7 +49,7 @@
         <item name="android:src">@drawable/percentage_container</item>
     </style>
     <style name="SettingLineLayStyle">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:gravity">center_vertical</item>
@@ -204,6 +204,7 @@
         <item name="android:maxLines">2</item>
         <item name="android:padding">3dp</item>
         <item name="android:gravity">center</item>
+
     </style>
     <style name="TopBarFrameLayStyle" >
         <item name="android:layout_height">@dimen/topBar_height</item>

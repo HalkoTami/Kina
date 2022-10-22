@@ -1,5 +1,8 @@
 package com.korokoro.kina.ui.viewmodel
 
+import android.content.SharedPreferences
+import android.provider.Settings.Global.putInt
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,13 +13,7 @@ import com.korokoro.kina.ui.customClasses.AutoFlip
 class AnkiSettingPopUpViewModel : ViewModel() {
 
 
-    fun start(){
-        setAnkiFilter(AnkiFilter())
-        setAnkiOrder(AnkiOrder.Library)
-        setTypeAnswer(false)
-        setReverseCardSide(false)
 
-    }
     private val _ankiOrder = MutableLiveData<AnkiOrder>()
     fun setAnkiOrder(ankiOrder: AnkiOrder){
         _ankiOrder.value = ankiOrder
@@ -52,6 +49,8 @@ class AnkiSettingPopUpViewModel : ViewModel() {
     private val _reverseCardSide = MutableLiveData<Boolean>()
     fun setReverseCardSide(boolean: Boolean){
         _reverseCardSide.value = boolean
+
+
     }
     fun returnReverseCardSide():Boolean{
         return _reverseCardSide.value ?:false

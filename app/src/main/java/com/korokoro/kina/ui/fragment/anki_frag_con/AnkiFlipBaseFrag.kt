@@ -38,6 +38,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
     private val binding get() = _binding!!
     private lateinit var ankiNavCon:NavController
     private lateinit var flipNavCon:NavController
+    var parentCountAnimation:ValueAnimator? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,7 +94,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             flipNavCon = frag.navController
             ankiNavCon= ankiBaseViewModel.returnAnkiBaseNavCon() ?:return
         }
-        var parentCountAnimation:ValueAnimator? = null
+
         var start = true
         var cardBefore :Card? = null
         val cardIds = ankiBoxViewModel.returnAnkiBoxCardIds().distinct()
@@ -110,7 +111,10 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                 AnimationAttributes.EndAnim ->      parentCountAnimation?.end()
                 AnimationAttributes.Pause ->        parentCountAnimation?.pause()
                 AnimationAttributes.Resume ->       parentCountAnimation?.resume()
-                AnimationAttributes.Cancel ->       parentCountAnimation?.cancel()
+                AnimationAttributes.Cancel ->       {parentCountAnimation?.cancel()
+                makeToast(requireActivity(),"called")
+                }
+
                 else ->  return@Observer
             }
         }
@@ -255,6 +259,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        parentCountAnimation?.cancel()
         ankiFlipBaseViewModel.setCountDownAnim(AnimationAttributes.Cancel)
         _binding = null
     }
