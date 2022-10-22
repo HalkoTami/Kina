@@ -64,7 +64,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                         btnFlipItemList,
                         imvEditCard,
                         imvBack,
-                        btnSetFlag,
                         btnRemembered,
                         btnFlipNext,
                         btnFlipPrevious,
@@ -138,7 +137,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                     binding.topBinding.txvCardPosition.text ="${flipItems.indexOf(it)+1}/${flipItems.size}"
                 }
                 binding.btnRemembered.isSelected =  it.remembered
-                binding.btnSetFlag.isSelected = it.flag
                 cardBefore = it
                 createCardViewModel.setStartingCardId(it.id)
                 ankiFlipBaseViewModel.setParentPosition(flipItems.indexOf(it))
@@ -177,7 +175,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             }
         }
         val keyBoardVisibilityObserver = Observer<Boolean>{ visible ->
-            val views = arrayOf(binding.linLayFlipBottom,binding.btnRemembered,binding.btnSetFlag)
+            val views = arrayOf(binding.linLayFlipBottom,binding.btnRemembered,)
             views.onEach {
                 changeViewVisibility(it,visible.not())
             }
@@ -269,10 +267,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                 when (p0) {
                     btnFlipItemList -> ankiNavCon.navigate(AnkiBoxContentFragDirections.toFlipItemRvFrag())
                     imvBack -> requireActivity().onBackPressed()
-                    btnSetFlag -> {
-                        p0.isSelected = !p0.isSelected
-                        ankiFlipBaseViewModel.changeFlagStatus()
-                    }
                     btnRemembered -> {
                         p0.isSelected = !p0.isSelected
                         ankiFlipBaseViewModel.changeRememberStatus()
