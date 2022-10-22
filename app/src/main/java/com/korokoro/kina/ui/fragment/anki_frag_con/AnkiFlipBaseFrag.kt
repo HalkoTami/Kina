@@ -64,8 +64,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                         btnFlipItemList,
                         imvEditCard,
                         imvBack,
-                        imvAnkiSetting,
-                        imvAnkiSetting,
                         btnSetFlag,
                         btnRemembered,
                         btnFlipNext,
@@ -195,6 +193,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
         ankiFlipBaseViewModel.setFlipBaseNavCon(flipNavCon)
         ankiFlipBaseViewModel.setFront(!ankiSettingPopUpViewModel.returnReverseCardSide())
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
+        ankiFlipBaseViewModel.setAutoFlipPaused(false)
 
         ankiFlipBaseViewModel.flipProgress.observe(viewLifecycleOwner,progressObserver)
         ankiFlipBaseViewModel.countDownAnim.observe(viewLifecycleOwner,countDownAnimObserver)
@@ -270,7 +269,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                 when (p0) {
                     btnFlipItemList -> ankiNavCon.navigate(AnkiBoxContentFragDirections.toFlipItemRvFrag())
                     imvBack -> requireActivity().onBackPressed()
-                    imvAnkiSetting -> ankiBaseViewModel.setSettingVisible(true)
                     btnSetFlag -> {
                         p0.isSelected = !p0.isSelected
                         ankiFlipBaseViewModel.changeFlagStatus()
@@ -308,6 +306,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                         ) else ankiFlipBaseViewModel.setCountDownAnim(
                             AnimationAttributes.Resume
                         )
+                        ankiFlipBaseViewModel.setAutoFlipPaused(p0.isSelected)
                     }
                     imvEditCard -> {
                         val editingId = ankiFlipBaseViewModel.returnParentCard()?.id ?: return

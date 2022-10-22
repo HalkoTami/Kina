@@ -21,12 +21,23 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun onChildFragmentsStart(flipFragments: FlipFragments,
                               reverseMode: Boolean,
-                              autoFlip: Boolean){
+                              autoFlip: Boolean, ){
         setFlipFragment(flipFragments)
         if(autoFlip){
+            if(returnAutoFlipPaused().not())
             setCountDownAnim(AnimationAttributes.StartAnim)
         }
     }
+    private val _autoFlipPaused = MutableLiveData<Boolean>()
+    val autoFlipPaused :LiveData<Boolean> = _autoFlipPaused
+    fun setAutoFlipPaused(boolean: Boolean){
+        _autoFlipPaused.value = boolean
+    }
+    fun returnAutoFlipPaused():Boolean{
+        return _autoFlipPaused.value ?:false
+    }
+
+
     private val _flipBaseNavCon = MutableLiveData<NavController>()
     fun setFlipBaseNavCon(navController: NavController){
         _flipBaseNavCon.value = navController
