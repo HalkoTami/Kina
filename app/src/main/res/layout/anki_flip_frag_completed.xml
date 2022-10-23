@@ -5,15 +5,20 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     >
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linLay_comment"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/imv_character_flip_completed"
         android:orientation="vertical"
-        android:layout_marginHorizontal="20dp">
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="@dimen/topBar_height">
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:paddingHorizontal="20dp"
             android:layout_height="58dp"
             android:gravity="center"
             android:textColor="@color/white"
@@ -26,31 +31,145 @@
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:background="@drawable/rec_corner_20"/>
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
     <ImageView
         android:id="@+id/imv_character_flip_completed"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:src="@drawable/happy"
+        android:layout_marginTop="50dp"
         app:layout_constraintTop_toBottomOf="@id/linLay_comment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/frameLay_flip_completed_data"/>
     <FrameLayout
+        android:id="@+id/frameLay_flip_completed_data"
         android:layout_width="200dp"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/rec_corner_10_stroke_5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imv_character_flip_completed"
         >
         <ImageView
-            android:layout_margin="20dp"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:src="@drawable/circle"
-            android:layout_gravity="start|top"
-            app:tint="#C5BA9A"/>
+            style="@style/CompletedDotStyle"
+            android:layout_gravity="start|top"/>
+        <ImageView
+            style="@style/CompletedDotStyle"
+            android:layout_gravity="end|top"/>
+        <ImageView
+            style="@style/CompletedDotStyle"
+            android:layout_gravity="start|bottom"/>
+        <ImageView
+            style="@style/CompletedDotStyle"
+            android:layout_gravity="end|bottom"/>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_marginVertical="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="30dp"
+            android:orientation="vertical">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginBottom="10dp">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_card_ver_2"
+                    android:layout_marginEnd="10dp"/>
+                <TextView
+                    style="@style/TxvUniformSmallStyle"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="24枚"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_remembered_ver_2"/>
+                <TextView
+                    style="@style/TxvUniformSmallStyle"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:lines="2"
+                    android:text="新しく覚えたカード　\n24枚"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="20dp">
+                <ImageView
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="22dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_stop_watch_ver_2"/>
+                <TextView
+                    style="@style/TxvUniformSmallStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="22分"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
     </FrameLayout>
+    <FrameLayout
+        android:id="@+id/frameLay_button_flip_start_again"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/selector_button_light"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frameLay_flip_completed_data"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/linLay_button_end_flip"
+        app:layout_constraintVertical_bias="1"
+        android:layout_marginBottom="30dp"
+        >
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_again_ver_2"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linLay_button_end_flip"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/selector_button_dark"
+        app:layout_constraintStart_toEndOf="@id/frameLay_button_flip_start_again"
+        app:layout_constraintTop_toBottomOf="@id/frameLay_flip_completed_data"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        app:layout_constraintVertical_bias="1"
+        android:layout_marginBottom="30dp"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_check_ver_2"
+            android:layout_marginEnd="20dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_arrow_ver_2"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
