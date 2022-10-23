@@ -25,7 +25,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
         setFlipFragment(flipFragments)
         if(autoFlip){
             if(returnAutoFlipPaused().not())
-            setCountDownAnim(AnimationAttributes.StartAnim)
+                setCountDownAnim(AnimationAttributes.StartAnim)
         }
     }
     private val _autoFlipPaused = MutableLiveData<Boolean>()
