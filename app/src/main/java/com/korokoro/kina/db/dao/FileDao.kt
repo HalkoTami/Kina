@@ -112,7 +112,7 @@ abstract class FileDao: BaseDao<File> {
             " WHERE fileId in ( WITH  generation AS (" +
             " select c.* from tbl_file c Inner Join tbl_x_ref b " +
             " on b.id2 = c.fileId " +
-            "where (b.id1TokenTable = :cardTableInt and b.id1 = :upDatedCardId and b.id2TokenTable = :fileTableInt)" +
+            "where (b.id1TokenXRefType = :cardTableInt and b.id1 = :upDatedCardId and b.id2TokenXRefType = :fileTableInt)" +
             " or c.fileId = :fileId " +
             "UNION ALL" +
             " SELECT a.* from tbl_file a " +

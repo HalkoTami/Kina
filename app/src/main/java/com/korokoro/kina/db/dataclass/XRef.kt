@@ -13,7 +13,7 @@ import com.korokoro.kina.db.typeConverters.XRefTypeConverter
 data class XRef(
     @PrimaryKey(autoGenerate = true) val xRefId:Int,
     var id1: Int,
-    var id1TokenTable:XRefType,
+    var id1TokenXRefType:XRefType,
     var id2: Int,
-    var id2TokenTable:XRefType
+    var id2TokenXRefType:XRefType
 )

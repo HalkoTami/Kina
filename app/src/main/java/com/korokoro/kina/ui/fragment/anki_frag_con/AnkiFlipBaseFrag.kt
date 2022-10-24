@@ -2,6 +2,7 @@ package com.korokoro.kina.ui.fragment.anki_frag_con
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,18 +11,22 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.korokoro.kina.actions.DateTimeActions
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.AnkiFlipFragBaseBinding
 import com.korokoro.kina.db.dataclass.Card
+import com.korokoro.kina.db.enumclass.ActivityStatus
 import com.korokoro.kina.ui.customClasses.*
 import com.korokoro.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.korokoro.kina.ui.viewmodel.*
+import java.util.Date
 
 
 class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
@@ -39,6 +44,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
     private lateinit var ankiNavCon:NavController
     private lateinit var flipNavCon:NavController
     var parentCountAnimation:ValueAnimator? = null
+    private lateinit var flipRoundSharedPref:SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,10 +96,12 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             val frag = childFragmentManager.findFragmentById(binding.fragConViewFlip.id) as NavHostFragment
             flipNavCon = frag.navController
             ankiNavCon= ankiBaseViewModel.returnAnkiBaseNavCon() ?:return
+            flipRoundSharedPref = requireActivity().getSharedPreferences("flip_round",Context.MODE_PRIVATE)
         }
 
         var start = true
         var cardBefore :Card? = null
+        val roundStart = arrayOf(AnkiFragments.AnkiBox,AnkiFragments.FlipCompleted).contains(ankiBaseViewModel.returnActiveFragment())
         val cardIds = ankiBoxViewModel.returnAnkiBoxCardIds().distinct()
         val progressObserver = Observer<Progress>{
             binding.progressBarBinding.progressbarRemembered.progress = ((it.now/it.all.toDouble())*100 ).toInt()
@@ -109,7 +117,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                 AnimationAttributes.Pause ->        parentCountAnimation?.pause()
                 AnimationAttributes.Resume ->       parentCountAnimation?.resume()
                 AnimationAttributes.Cancel ->       {parentCountAnimation?.cancel()
-                makeToast(requireActivity(),"called")
                 }
 
                 else ->  return@Observer
@@ -149,7 +156,10 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                 flipNavCon.popBackStack()
                 if(start){
                     val startingPosition = ankiFlipBaseViewModel.returnParentPosition()
-                    ankiFlipBaseViewModel.startFlip(ankiSettingPopUpViewModel.returnReverseCardSide(),ankiSettingPopUpViewModel.returnTypeAnswer(),it,startingPosition)
+                    ankiFlipBaseViewModel.startFlip(ankiSettingPopUpViewModel.returnReverseCardSide(),
+                        ankiSettingPopUpViewModel.returnTypeAnswer(),it,startingPosition,
+                        roundStart.not()
+                        )
                     start = false
                 }
             } else return@Observer
@@ -192,6 +202,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
         ankiFlipBaseViewModel.setFront(!ankiSettingPopUpViewModel.returnReverseCardSide())
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         ankiFlipBaseViewModel.setAutoFlipPaused(false)
+//        ankiFlipBaseViewModel.saveFlipActionStatus(ActivityStatus.FLIP_ROUND_STARTED)
 
         ankiFlipBaseViewModel.flipProgress.observe(viewLifecycleOwner,progressObserver)
         ankiFlipBaseViewModel.countDownAnim.observe(viewLifecycleOwner,countDownAnimObserver)
@@ -209,6 +220,22 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
 
 
     }
+
+    var pausedTime:Date? = null
+    override fun onPause() {
+        super.onPause()
+        pausedTime = Date()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ankiFlipBaseViewModel.addFlipLeavedTimeInSec(
+            DateTimeActions().getTimeDifference(
+                Date(),pausedTime?:return,DateTimeActions.TimeUnit.SECONDS
+            ))
+    }
+
 
     private fun getCountDownAnim(): ValueAnimator {
         val txv = binding.txvCountDown
@@ -254,6 +281,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
         )
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         parentCountAnimation?.cancel()
@@ -273,11 +301,11 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                     }
                     btnFlipNext -> {
                         ankiSettingPopUpViewModel.apply {
-                            ankiFlipBaseViewModel.flip(
+                            if(ankiFlipBaseViewModel.flip(
                                 NeighbourCardSide.NEXT,
                                 returnReverseCardSide(),
                                 returnTypeAnswer()
-                            )
+                            ).not()) ankiNavCon.navigate(AnkiFlipCompleteFragDirections.toFlipCompletedFrag())
                         }
 
                     }
@@ -309,7 +337,10 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                             ?.navigate(EditCardBaseFragDirections.openCreateCard())
                     }
                     confirmEndBinding.btnCancelEnd, confirmEndBinding.btnCloseConfirmEnd-> changeViewVisibility(binding.frameLayConfirmEnd,false)
-                    confirmEndBinding.btnCommitEnd -> ankiNavCon.popBackStack()
+                    confirmEndBinding.btnCommitEnd -> {
+                        ankiNavCon.popBackStack()
+                        ankiFlipBaseViewModel.saveFlipActionStatus(ActivityStatus.FLIP_ROUND_ENDED)
+                    }
                 }
             }
         }

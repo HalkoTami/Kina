@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item >
         <shape android:shape="rectangle">
@@ -9,4 +9,44 @@
             <corners android:radius="10dp"/>
         </shape>
     </item>
-</selector>
+    <item android:gravity="start|top"
+        android:top="10dp"
+        android:left="10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/light_brown"/>
+            <corners android:radius="500dp"/>
+            <size android:width="10dp"
+                android:height="10dp"/>
+        </shape>
+    </item>
+    <item android:gravity="start|bottom"
+        android:bottom="10dp"
+        android:left="10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/light_brown"/>
+            <corners android:radius="500dp"/>
+            <size android:width="10dp"
+                android:height="10dp"/>
+        </shape>
+    </item>
+    <item android:gravity="right|top"
+        android:top="10dp"
+        android:right="10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/light_brown"/>
+            <corners android:radius="500dp"/>
+            <size android:width="10dp"
+                android:height="10dp"/>
+        </shape>
+    </item>
+    <item android:gravity="right|bottom"
+        android:bottom="10dp"
+        android:right="10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/light_brown"/>
+            <corners android:radius="500dp"/>
+            <size android:width="10dp"
+                android:height="10dp"/>
+        </shape>
+    </item>
+</layer-list>

@@ -31,9 +31,7 @@
     <string name="cd_tango_cho_amount">containing flashcards</string>
     <string name="cd_card_amount">containing cards</string>
     <string name="cd_btn_add_card">add new card</string>
-    <string name="nav_label_main_tab_anki">暗記タブ</string>
-    <string name="nav_label_main_tab_library">ライブラリタブ</string>
-    <string name="nav_label_main_create_card">カード作成</string>
+
     <string name="cd_btn_back">戻る</string>
     <string name="cd_flip_mode">暗記中</string>
     <string name="cd_setting">設定</string>
@@ -84,6 +82,14 @@
     <string name="s_p_anki_setting_auto_flip_active">s_p_anki_setting_auto_flip_active</string>
     <string name="s_p_anki_setting_auto_flip_seconds">s_p_anki_setting_auto_flip_seconds</string>
     <string name="s_p_anki_setting_type_answer">s_p_anki_setting_type_answer</string>
+
+    <string name="nav_label_main_tab_anki">暗記タブ</string>
+    <string name="nav_label_main_tab_library">ライブラリタブ</string>
+    <string name="nav_label_main_create_card">カード作成</string>
+    <string name="nav_label_anki_ankiBox">暗記ボックス</string>
+    <string name="nav_label_anki_flip_item">flip item</string>
+    <string name="nav_label_anki_flip">flip mode</string>
+    <string name="nav_label_anki_flip_completed">flip completed</string>
 
 
 </resources>

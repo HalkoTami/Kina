@@ -19,6 +19,31 @@ import java.util.*
 class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
 
 
+    val allActivityData:LiveData<List<ActivityData>> = repository.allActivity.asLiveData()
+    private val _flipLeavedTimeInSec = MutableLiveData<Int>()
+    private fun setFlipLeavedTimeInSec(timeInSec:Int){
+        _flipLeavedTimeInSec.value = timeInSec
+    }
+    fun addFlipLeavedTimeInSec(timeInSec: Int){
+        setFlipLeavedTimeInSec(returnFlipLeavedTimeInSec()+timeInSec)
+    }
+    fun returnFlipLeavedTimeInSec():Int{
+        return _flipLeavedTimeInSec.value ?:0
+    }
+
+
+    private val _rememberedCardsAmountOnStart = MutableLiveData<Int>()
+    private fun setRememberedCardsAmountOnStart(startingList: List<Card>){
+        _rememberedCardsAmountOnStart.value =  startingList.filter { it.remembered  }.size
+    }
+    private fun returnRememberedCardsAmountOnStart():Int?{
+        return _rememberedCardsAmountOnStart.value
+    }
+    fun getNewlyRememberedCardAmount():Int{
+        return returnFlipItems().filter { it.remembered }.size -(returnRememberedCardsAmountOnStart() ?:0)
+    }
+
+
     fun onChildFragmentsStart(flipFragments: FlipFragments,
                               reverseMode: Boolean,
                               autoFlip: Boolean, ){
@@ -139,7 +164,14 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
     val flipProgress : LiveData<Progress> = _flipProgress
 
 
-    fun startFlip(reverseMode: Boolean,typeAnswer: Boolean,list: List<Card>,startingPosition:Int){
+
+
+    fun startFlip(reverseMode: Boolean,typeAnswer: Boolean,list: List<Card>,startingPosition:Int,flipRoundResumed:Boolean){
+        if(flipRoundResumed.not()) {
+            setRememberedCardsAmountOnStart(list)
+            saveFlipActionStatus(ActivityStatus.FLIP_ROUND_STARTED)
+            setFlipLeavedTimeInSec(0)
+        }
         fun getAction():NavDirections{
             return when (typeAnswer) {
                 true -> {
@@ -162,7 +194,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
         returnFlipBaseNavCon()?.navigate(getAction())
     }
 
-    fun flip(side: NeighbourCardSide, reverseMode:Boolean, typeAnswer:Boolean){
+    fun flip(side: NeighbourCardSide, reverseMode:Boolean, typeAnswer:Boolean):Boolean{
 
         fun getNextFrag():NavDirections?{
             val changeCard = checkChangeToNextCard(reverseMode)
@@ -244,7 +276,8 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
             NeighbourCardSide.PREVIOUS-> getPreviousFrag()
             NeighbourCardSide.NEXT -> getNextFrag()
         }
-        returnFlipBaseNavCon()?.navigate(action ?:return)
+        returnFlipBaseNavCon()?.navigate(action ?:return false)
+        return true
     }
 
 
@@ -277,11 +310,14 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
             repository.update(change)
         }
     }
-    fun changeFlagStatus(){
-        val change = _parentCard.value ?:return
-        change.flag = change.flag.not()
+    fun saveFlipActionStatus(activityStatus: ActivityStatus){
+        val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPAN)
+        val a = ActivityData(id = 0,
+            activityStatus =
+            activityStatus,
+            dateTime =  formatter.format(Date()).toString())
         viewModelScope.launch {
-            repository.update(change)
+            repository.insert(a )
         }
     }
     fun updateFlipped(card:Card){

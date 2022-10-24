@@ -14,7 +14,7 @@ data class ActivityData(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     var activityTokenId:Int?= null,
-    var idTokenTable:DBTable? = null,
+    var idTokenTable:DBTable? = DBTable.TABLE_ACTIVITY_DATA,
     val activityStatus: ActivityStatus,
     val dateTime: String
 )

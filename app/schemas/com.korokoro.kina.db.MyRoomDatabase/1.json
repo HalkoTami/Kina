@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ba91b0c524943d713ddfc54ca2679ec1",
+    "identityHash": "bf3fd84d205914e4d9fa824e749332ce",
     "entities": [
       {
         "tableName": "tbl_card",
@@ -408,7 +408,7 @@
       },
       {
         "tableName": "tbl_x_ref",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`xRefId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id1` INTEGER NOT NULL, `id1TokenTable` INTEGER NOT NULL, `id2` INTEGER NOT NULL, `id2TokenTable` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`xRefId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id1` INTEGER NOT NULL, `id1TokenXRefType` INTEGER NOT NULL, `id2` INTEGER NOT NULL, `id2TokenXRefType` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "xRefId",
@@ -423,8 +423,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "id1TokenTable",
-            "columnName": "id1TokenTable",
+            "fieldPath": "id1TokenXRefType",
+            "columnName": "id1TokenXRefType",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -435,8 +435,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "id2TokenTable",
-            "columnName": "id2TokenTable",
+            "fieldPath": "id2TokenXRefType",
+            "columnName": "id2TokenXRefType",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -454,7 +454,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ba91b0c524943d713ddfc54ca2679ec1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bf3fd84d205914e4d9fa824e749332ce')"
     ]
   }
 }

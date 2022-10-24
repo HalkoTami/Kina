@@ -2,6 +2,7 @@ package com.korokoro.kina.db
 
 import android.content.Context
 import androidx.room.*
+import androidx.room.migration.AutoMigrationSpec
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.korokoro.kina.db.dao.*
 import com.korokoro.kina.db.dataclass.*
@@ -18,7 +19,8 @@ import kotlinx.coroutines.launch
     Choice::class,
     ActivityData::class,
     XRef::class],
-    version = 1, exportSchema = true)
+    version = 1, exportSchema = true,
+)
 @TypeConverters(
     ActivityStatusConverter::class,
     CardStatusConverter::class,
@@ -29,7 +31,17 @@ import kotlinx.coroutines.launch
 )
  abstract class MyRoomDatabase : RoomDatabase() {
 
-
+    @RenameColumn(
+        tableName = "tbl_x_ref",
+        fromColumnName = "id1_token_tbl",
+        toColumnName = "id1_token_x_ref",
+    )
+    @RenameColumn(
+        tableName = "tbl_x_ref",
+        fromColumnName = "id2_token_tbl",
+        toColumnName = "id2_token_x_ref",
+    )
+    class MyAutoMigration : AutoMigrationSpec
 
     abstract fun cardDao(): CardDao
     abstract fun activityDataDao(): ActivityDataDao

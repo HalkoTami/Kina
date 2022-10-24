@@ -22,7 +22,7 @@ enum class LibraryFragment{
     ChooseFileMoveTo,FlashCardCover,Folder,Home,InBox
 }
 enum class AnkiFragments{
-    AnkiBox,Flip
+    AnkiBox,Flip,FlipItems,FlipCompleted
 }
 enum class FlipFragment{
     StringLook,StringType

@@ -16,8 +16,8 @@ abstract class CardDao: BaseDao<Card> {
                 "UNION ALL" +
                 " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
                 "SELECT fileId FROM generation b )) or " +
-                "(b.id1TokenTable = :cardTableInt and " +
-                "b.id2TokenTable = :fileTableInt and  b.id2  in(:fileIdList))  "
+                "(b.id1TokenXRefType = :cardTableInt and " +
+                "b.id2TokenXRefType = :fileTableInt and  b.id2  in(:fileIdList))  "
     )
     abstract fun getDescendantsCardsByMultipleFileId(fileIdList: List<Int>,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
 
@@ -35,8 +35,8 @@ abstract class CardDao: BaseDao<Card> {
                 "UNION ALL" +
                 " SELECT a.* from tbl_file a Inner JOIN generation g ON a.parentFileId = g.fileId )" +
                 "SELECT fileId FROM generation b )) or " +
-                "(b.id1TokenTable = :cardTableInt and " +
-                "b.id2TokenTable = :fileTableInt and  b.id2  in(:fileIdList))  "
+                "(b.id1TokenXRefType = :cardTableInt and " +
+                "b.id2TokenXRefType = :fileTableInt and  b.id2  in(:fileIdList))  "
     )
     abstract   fun getDescendantsCardsIdsByMultipleFileId(fileIdList: List<Int>,cardTableInt:Int,fileTableInt:Int):Flow<List<Int>>
 
@@ -50,8 +50,8 @@ abstract class CardDao: BaseDao<Card> {
             " SELECT d.* from tbl_file d " +
             "Inner JOIN generation g ON g.fileId = d.parentFileId ) " +
             "SELECT fileId FROM generation b  ) or " +
-            "(b.id1TokenTable = :cardTableInt and " +
-            "b.id2TokenTable = :fileTableInt and  b.id2  in(:fileIdList))  "
+            "(b.id1TokenXRefType = :cardTableInt and " +
+            "b.id2TokenXRefType = :fileTableInt and  b.id2  in(:fileIdList))  "
 
     )
     abstract fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
@@ -67,7 +67,7 @@ abstract class CardDao: BaseDao<Card> {
             " SELECT d.* from tbl_file d " +
             "Inner JOIN generation g ON g.fileId = d.parentFileId ) " +
             "SELECT fileId FROM generation b  ) " +
-            "or ( b.id2 = :fileId and b.id1TokenTable = :xRefTypeCardAsInt and b.id2TokenTable = :xRefTypeAnkiBoxFavouriteAsInt )"
+            "or ( b.id2 = :fileId and b.id1TokenXRefType = :xRefTypeCardAsInt and b.id2TokenXRefType = :xRefTypeAnkiBoxFavouriteAsInt )"
     )
     abstract fun getAnkiBoxRVCards(fileId:Int,xRefTypeCardAsInt:Int,xRefTypeAnkiBoxFavouriteAsInt:Int):Flow<List<Card>>
 
@@ -75,9 +75,9 @@ abstract class CardDao: BaseDao<Card> {
     @Query("select * from tbl_card a " +
             "inner join tbl_x_ref b " +
             "on a.id = b.id1 " +
-            "where b.id1TokenTable = :cardTableInt " +
+            "where b.id1TokenXRefType = :cardTableInt " +
             "and b.id2 = :fileId " +
-            "and b.id2TokenTable = :fileTableInt"
+            "and b.id2TokenXRefType = :fileTableInt"
     )
     abstract fun getAnkiBoxFavouriteRVCards(fileId:Int,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
 
@@ -90,7 +90,7 @@ abstract class CardDao: BaseDao<Card> {
     @Query("select * from tbl_card where not deleted AND id in (:cardIds)  ")
     abstract fun getCardByMultipleCardIds(cardIds:List<Int>): Flow<List<Card>>
 
-    @Query("select * from tbl_card where not deleted  ")
+    @Query("select * from tbl_card where not deleted AND belongingFlashCardCoverId  ")
     abstract fun getAllCards(): Flow<List<Card>>
 
     @Query("select * FROM tbl_card " +
@@ -115,6 +115,24 @@ abstract class CardDao: BaseDao<Card> {
     )
     abstract fun searchCardsByWords(search:String):Flow<List<Card>>
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("DELETE FROM tbl_card where id in (" +
+            "select a.id from tbl_card a " +
+            "left outer join tbl_x_ref b on " +
+            "a.id = b.id1 "+
+            "WHERE a.belongingFlashCardCoverId in ( " +
+            "WITH  generation AS (" +
+            " select * from tbl_file where fileId is :fileId " +
+            "Union ALL" +
+            " SELECT d.* from tbl_file d " +
+            "Inner JOIN generation g ON g.fileId = d.parentFileId) " +
+            "SELECT fileId FROM generation b  ) or " +
+            "(b.id1TokenXRefType = :cardTableInt and " +
+            "b.id2TokenXRefType = :fileTableInt and  b.id2  in(:fileId)))  "
+
+
+    )
+    abstract fun deleteAllDescendantsCardsByFileId(fileId: Int?,cardTableInt:Int,fileTableInt:Int)
 
     @Query("SELECT * FROM tbl_card a " +
             " INNER JOIN ( SELECT  MAX(id) id FROM tbl_card c where c.belongingFlashCardCoverId is :flashCardCoverId ) b ON a.id = b.id "

@@ -14,11 +14,30 @@ import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
+import com.korokoro.kina.actions.ViewChangeActions
+import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.korokoro.kina.ui.customClasses.NeighbourCardSide
 import kotlin.math.absoluteValue
 
 class Animation {
+    fun appearAlphaAnimation(view :View, visible:Boolean): ValueAnimator {
+
+        val appear =ValueAnimator.ofFloat(0f,1f)
+        val disappear = ValueAnimator.ofFloat(1f,0f)
+        arrayOf(appear,disappear).onEach { eachAnimator->
+            eachAnimator.addUpdateListener { thisAnimator ->
+                ViewChangeActions().setAlpha(view, thisAnimator.animatedValue as Float)
+            }
+            eachAnimator.duration = 200
+        }
+        appear.doOnStart {
+            view.alpha = 0f
+            changeViewVisibility(view,true)  }
+        disappear.doOnEnd {  changeViewVisibility(view,false)  }
+        return if(visible) appear else disappear
+    }
+
     fun animateFrameBottomMenu(frameBottomMenu: FrameLayout, visible:Boolean){
         val btmMenuAnimator = AnimatorSet().apply{
             val a = ObjectAnimator.ofFloat(frameBottomMenu, View.TRANSLATION_Y, 300f,0f)

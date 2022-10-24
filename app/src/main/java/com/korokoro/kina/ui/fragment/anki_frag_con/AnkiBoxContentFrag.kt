@@ -45,12 +45,14 @@ class AnkiBoxContentFrag  : Fragment() {
             return when(fragmentBefore){
                 AnkiFragments.AnkiBox -> "暗記ボックスアイテム"
                 AnkiFragments.Flip -> "暗記中のアイテム"
+                else -> ""
             }
         }
         fun getTopBarDrawable(fragmentBefore: AnkiFragments):Drawable{
             val id =   when(fragmentBefore){
                 AnkiFragments.AnkiBox -> R.drawable.icon_inbox
                 AnkiFragments.Flip -> R.drawable.icon_card
+                else -> 0
             }
             return ContextCompat.getDrawable(requireActivity(),id)!!
         }
@@ -58,6 +60,7 @@ class AnkiBoxContentFrag  : Fragment() {
             return when(fragmentBefore){
                 AnkiFragments.AnkiBox -> ankiBoxViewModel.returnAnkiBoxItems()
                 AnkiFragments.Flip -> ankiFlipBaseViewModel.returnFlipItems()
+                else    -> mutableListOf()
             }
         }
         fun setUpTopBar(){

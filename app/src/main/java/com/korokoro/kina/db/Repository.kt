@@ -63,6 +63,7 @@ class MyRoomRepository(
     val allFavouriteAnkiBox:Flow<List<File>> = fileDao.getAllFavouriteAnkiBox()
 //    activity
     fun getCardActivity(cardId:Int):Flow<List<ActivityData>> = activityDataDao.getActivityDataByCard(cardId)
+    val allActivity:Flow<List<ActivityData>> = activityDataDao.getAllActivityData()
 
 
     suspend fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {
@@ -70,9 +71,11 @@ class MyRoomRepository(
     }
     suspend fun deleteFileAndAllDescendants(fileId:Int){
         fileDao.deleteFileAndAllDescendants(fileId)
+        cardDao.deleteAllDescendantsCardsByFileId(fileId,xRefTypeCardAsInt,xRefTypeFileAsInt)
+
     }
 
-    private suspend fun insertCard(card: Card){
+    suspend fun insertCard(card: Card){
         cardDao.upDateCardsPositionBeforeInsert(card.belongingFlashCardCoverId,card.libOrder)
         cardDao.insert(card)
         val flashCardCoverId = card.belongingFlashCardCoverId
@@ -120,9 +123,9 @@ class MyRoomRepository(
     private fun createCardAndAnkiBoxFavouriteXRef(cardId: Int,favouriteFileId:Int):XRef{
         return XRef(xRefId = 0,
             id1 = cardId,
-            id1TokenTable = XRefType.CARD,
+            id1TokenXRefType = XRefType.CARD,
             id2 = favouriteFileId,
-            id2TokenTable = XRefType.ANKI_BOX_FAVOURITE)
+            id2TokenXRefType = XRefType.ANKI_BOX_FAVOURITE)
     }
 
     suspend fun saveCardsToFavouriteAnkiBox(list: List<Card>,lastInsertedFileId:Int,newFile:File){

@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.korokoro.kina.databinding.AnkiHomeFragBaseBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
+import com.korokoro.kina.db.enumclass.ActivityStatus
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
 import com.korokoro.kina.ui.customClasses.AnkiBoxTabData

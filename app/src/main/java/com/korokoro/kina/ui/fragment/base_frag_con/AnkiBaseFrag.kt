@@ -118,6 +118,10 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
                 it.visibility = if(settingVisible) View.VISIBLE else View.GONE
             }
         }
+        requireActivity().findViewById<ImageView>(R.id.bnv_imv_add).apply {
+            visibility = View.INVISIBLE
+            isEnabled = false
+        }
         mainViewModel.setChildFragmentStatus(MainFragment.Anki)
         setUpSettingContent()
 
@@ -139,6 +143,10 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        requireActivity().findViewById<ImageView>(R.id.bnv_imv_add).apply {
+            visibility = View.VISIBLE
+            isEnabled = true
+        }
         _binding = null
     }
 

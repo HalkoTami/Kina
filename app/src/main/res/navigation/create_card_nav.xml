@@ -24,7 +24,7 @@
     <action
         android:id="@+id/flip_create_card"
         app:destination="@id/fragment_createCard_Base"
-        app:popUpTo="@navigation/mobile_navigation"
+        app:popUpTo="@navigation/main_navigation"
         app:popUpToInclusive="true"
         />
 
