@@ -1,14 +1,10 @@
 package com.korokoro.kina.ui.view_set_up
 
-import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,14 +18,9 @@ import com.korokoro.kina.db.enumclass.ActivityStatus
 import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
 import com.korokoro.kina.ui.customClasses.ParentFileAncestors
 import com.korokoro.kina.ui.listadapter.AnkiBoxListAdapter
-import com.korokoro.kina.ui.listener.AnkiBoxFragBaseCL
-import com.korokoro.kina.ui.listener.menuBar.AnkiBoxTabChangeCL
 import com.korokoro.kina.ui.listener.recyclerview.AnkiBoxFileRVCL
 import com.korokoro.kina.ui.listener.recyclerview.AnkiBoxRVStringCardCL
 import com.korokoro.kina.ui.viewmodel.AnkiBoxViewModel
-import com.korokoro.kina.ui.viewmodel.AnkiBaseViewModel
-import com.korokoro.kina.ui.viewmodel.AnkiSettingPopUpViewModel
-import com.korokoro.kina.ui.viewmodel.EditFileViewModel
 import kotlin.math.abs
 
 
@@ -38,7 +29,7 @@ class AnkiBoxFragViewSetUp() {
 
 
     fun setUpOrder(stringBinding: LibraryFragRvItemCardStringBinding,card:Card){
-        stringBinding.txvFrontTitle.text = "order ${card.libOrder}"
+        stringBinding.txvFrontTitle.text = "order ${card.cardBefore}"
         stringBinding.txvBackTitle.text = "id ${card.id}"
     }
     fun setUpRVCard(cardBinding: AnkiHomeFragRvItemCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxViewModel){

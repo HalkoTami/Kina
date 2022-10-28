@@ -47,7 +47,7 @@ class MainViewModel:ViewModel(){
             val action =
             when(to){
                 MainFragment.Library -> LibraryBaseFragDirections.toLibrary()
-                MainFragment.EditCard -> EditCardBaseFragDirections.openCreateCard()
+                MainFragment.EditCard ->return
                 MainFragment.Anki -> AnkiBaseFragDirections.toAnki()
             }
             navCOn.navigate(action)

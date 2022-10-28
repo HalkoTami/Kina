@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -15,13 +14,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
 import com.korokoro.kina.actions.changeViewVisibility
-import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.korokoro.kina.databinding.LibraryFragTopBarFileBinding
 import com.korokoro.kina.databinding.RvEmptyBinding
+import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.ui.customClasses.LibraryFragment
-import com.korokoro.kina.ui.fragment.base_frag_con.LibraryBaseFrag
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.korokoro.kina.ui.listener.recyclerview.LibraryRVItemClickListener
@@ -150,11 +148,33 @@ class LibraryFlashCardCoverFrag  : Fragment(){
                 setParentFileAncestorsFromDB(it)
                 editFileViewModel.filterBottomMenuByAncestors(it,returnParentFile() ?:return@observe)
             }
+            fun sortCards(list: List<Card>):List<Card>{
+                val sorted = mutableListOf<Card>()
+                fun getNextCard(cardBefore: Card?){
+                    val nextList = list.filter { it.cardBefore == cardBefore?.id }
+                    if(nextList.size==1){
+                        sorted.addAll(nextList)
+                        getNextCard(nextList.single())
+                    } else if(nextList.size>1){
+                        val sorted = nextList.sortedBy { it.id }.reversed()
+                        sorted.onEach {
+                            val nowPos = sorted.indexOf(it)
+                            if(nowPos>0)
+                                createCardViewModel.upDateCardBefore(it,sorted[nowPos-1].id)
+                        }
+                        getNextCard(sorted.last())
+                    }
+                }
+                getNextCard(null)
+                return  sorted
+
+
+            }
             val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
             topBarBinding.txvFileTitle.text = args.flashCardCoverId.single().toString()
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
 
-                val sorted = it?.sortedBy { it.libOrder }
+                val sorted = sortCards(it ?: mutableListOf())
                 setParentRVItems(sorted ?: mutableListOf())
                 adapter.submitList(sorted)
                 if(it!=null){

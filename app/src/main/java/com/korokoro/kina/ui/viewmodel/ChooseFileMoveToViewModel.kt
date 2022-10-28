@@ -71,7 +71,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
                 is Card -> {
                     updateAncestorsAndChild(it)
                     it.belongingFlashCardCoverId = item.fileId
-                    it.libOrder = item.childData.childCardsAmount + 1
+                    it.cardBefore = item.childData.childCardsAmount + 1
 
                 }
                 is File -> {

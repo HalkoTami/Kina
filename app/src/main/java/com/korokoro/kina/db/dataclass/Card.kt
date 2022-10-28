@@ -14,24 +14,21 @@ data class Card(
     val id:Int,
     @ColumnInfo
     var belongingFlashCardCoverId:Int? = null,
-
+    var cardStatus: CardStatus = CardStatus.STRING,
+    var deleted:Boolean = false,
+    var remembered: Boolean = false,
+    var flag:Boolean = false,
+    var cardBefore: Int? = null,
+    var colorStatus: ColorStatus = ColorStatus.GRAY,
+    var timesFlipped:Int = 0,
+    var lastTypedAnswerCorrect:Boolean? = null,
     @Embedded
     var stringData: StringData? = null,
     @Embedded
     val markerData: MarkerPreviewData? = null,
     @Embedded
     val quizData: QuizData? = null,
-    @ColumnInfo
-    var cardStatus: CardStatus = CardStatus.STRING,
-    @ColumnInfo
-    var deleted:Boolean = false,
-    var remembered: Boolean = false,
-    var flag:Boolean = false,
-    @ColumnInfo
-    var libOrder: Int = 0,
-    var colorStatus: ColorStatus = ColorStatus.GRAY,
-    var timesFlipped:Int = 0,
-    var lastTypedAnswerCorrect:Boolean? = null
+
     )
 
 

@@ -21,9 +21,11 @@ abstract class CardDao: BaseDao<Card> {
     )
     abstract fun getDescendantsCardsByMultipleFileId(fileIdList: List<Int>,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
 
-    @Query("UPDATE tbl_card SET  libOrder = libOrder + 1 WHERE " +
-            "belongingFlashCardCoverId is :fileId and libOrder >= :insertingPosition")
-    abstract suspend fun upDateCardsPositionBeforeInsert(fileId: Int?,insertingPosition: Int)
+//    @Query(
+//        "UPDATE tbl_card SET  cardBefore = cardBefore + 1 WHERE " +
+//                "belongingFlashCardCoverId is :fileId and cardBefore >= :insertingPosition"
+//    )
+//    abstract suspend fun upDateCardsPositionBeforeInsert(fileId: Int?,insertingPosition: Int?)
 
 
     @Query(

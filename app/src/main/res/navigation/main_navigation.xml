@@ -26,6 +26,7 @@
         android:name="com.korokoro.kina.ui.fragment.base_frag_con.EditCardBaseFrag"
         tools:layout="@layout/create_card_frag_main">
 
+
     </fragment>
     <fragment
         android:id="@+id/fragmentAnki"

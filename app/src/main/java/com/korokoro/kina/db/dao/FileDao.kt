@@ -19,6 +19,13 @@ abstract class FileDao: BaseDao<File> {
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
     abstract fun getFileByFileId(lookingFileId:Int?): Flow<File>
 
+    @Query("select * from tbl_file a " +
+            "JOIN  tbl_card b On b.belongingFlashCardCoverId " +
+            "is :lookingFileId" +
+            " where NOT a.deleted AND fileId = :lookingFileId " +
+            " AND NOT b.deleted")
+    abstract fun getFileChildrenCards(lookingFileId:Int?): Flow<Map<File,List<Card>>>
+
     @Query("UPDATE tbl_file SET  libOrder = libOrder + 1 WHERE " +
             "parentFileId is :parentFileId and libOrder >= :insertingPosition")
     abstract suspend fun upDateFilePositionBeforeInsert(parentFileId: Int?,insertingPosition: Int)

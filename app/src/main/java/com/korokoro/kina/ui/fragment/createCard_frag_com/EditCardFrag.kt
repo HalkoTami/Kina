@@ -13,15 +13,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.CreateCardFragBaseBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.db.enumclass.ColorStatus
-import com.korokoro.kina.ui.animation.Animation
-import com.korokoro.kina.ui.view_set_up.ColorPalletViewSetUp
 import com.korokoro.kina.ui.viewmodel.AnkiBoxViewModel
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
-import com.korokoro.kina.ui.customClasses.ColorPalletStatus
 
 
 class EditCardFrag: Fragment() {
@@ -61,16 +58,14 @@ class EditCardFrag: Fragment() {
             createCardViewModel.setParentCard(card)
 
         }
-        val sisterCardObserver = Observer<List<Card>?> {
-            createCardViewModel.apply {
-                val sort = it.sortedBy { it.libOrder }
-                setSisterCards(sort)
-
+        val flashCardAndChildrenCardsObserver = Observer<Map<File,List<Card>>>{
+            if(it.keys.size==1&&it.values.size == 1)
+            { createCardViewModel.setParentFlashCardCover(it.keys.single())
+                createCardViewModel.setSisterCards(it.values.single())
             }
         }
-        val parentFlashCardCoverObserver = Observer<File?> {
-            createCardViewModel.setParentFlashCardCover(it)
-        }
+
+
 
         val cardId = args.cardId
         val parentFlashCardId:Int? = args.parentFlashCardCoverId?.single()
@@ -86,10 +81,9 @@ class EditCardFrag: Fragment() {
             }
             lastCardOld = it
         }
-        createCardViewModel.getParentFlashCardCover(parentFlashCardId).observe(viewLifecycleOwner,parentFlashCardCoverObserver)
-        createCardViewModel.getSisterCards(args.parentFlashCardCoverId?.single()).observe(viewLifecycleOwner,sisterCardObserver)
 
-
+        createCardViewModel.getFileAndChildrenCards(parentFlashCardId)
+            .observe(viewLifecycleOwner,flashCardAndChildrenCardsObserver)
 
 
         return binding.root

@@ -48,6 +48,8 @@ class MyRoomRepository(
     val allCards:Flow<List<Card>> = cardDao.getAllCards()
 //    files
     fun getFileByFileId(fileId:Int?):Flow<File> = fileDao.getFileByFileId(fileId)
+    fun getFileAndChildrenCards(fileId:Int?):Flow<Map<File,List<Card>>> = fileDao.getFileChildrenCards(fileId)
+
     fun getFoldersMovableTo(movingFilesId:List<Int>,parentFileId:Int?):Flow<List<File>> = fileDao.getFoldersMovableTo(movingFilesId, parentFileId,1)
     val lastInsertedFile:Flow<File> = fileDao.getLastInsertedFileId()
     fun getFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = fileDao.myGetFileByParentFileId(parentFileId)
@@ -76,7 +78,7 @@ class MyRoomRepository(
     }
 
     suspend fun insertCard(card: Card){
-        cardDao.upDateCardsPositionBeforeInsert(card.belongingFlashCardCoverId,card.libOrder)
+//        cardDao.upDateCardsPositionBeforeInsert(card.belongingFlashCardCoverId,card.cardBefore)
         cardDao.insert(card)
         val flashCardCoverId = card.belongingFlashCardCoverId
         if(flashCardCoverId!=null){

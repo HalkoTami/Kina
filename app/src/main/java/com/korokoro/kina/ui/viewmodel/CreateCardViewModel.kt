@@ -14,10 +14,13 @@ import com.korokoro.kina.ui.customClasses.AnkiFragments
 import com.korokoro.kina.ui.customClasses.ColorPalletStatus
 import com.korokoro.kina.ui.customClasses.MainFragment
 import com.korokoro.kina.ui.customClasses.NeighbourCardSide
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 
 class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
+
+
 
 
     private val _mainActivityNavCon = MutableLiveData<NavController>()
@@ -31,6 +34,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private fun setOpenEditCard (boolean: Boolean){
         _openEditCard.value = boolean
     }
+
+    fun getFileAndChildrenCards(fileId:Int?): LiveData<Map<File, List<Card>>> = repository.getFileAndChildrenCards(fileId).asLiveData()
 
     fun getParentFlashCardCover(fileId:Int?):LiveData<File?> = repository.getFileByFileId(fileId).asLiveData()
     private val _parentFlashCardCover = MutableLiveData<File?>()
@@ -53,17 +58,42 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun setParentCard(card: Card?){
         val before = _parentCard.value
         if(card==before ) return else
-        _parentCard.value = card
+            _parentCard.value = card
     }
     fun returnParentCard():Card?{
         return _parentCard.value
     }
     val parentCard :LiveData<Card?> = _parentCard
 
+
     fun getSisterCards(fileId: Int?):LiveData<List<Card>> = repository.getCardDataByFileId(fileId).asLiveData()
     private val _sisterCards = MutableLiveData<List<Card>>()
+    fun sortCards(list: List<Card>):List<Card>{
+        val sorted = mutableListOf<Card>()
+        fun getNextCard(cardBefore: Card?){
+            val nextList = list.filter { it.cardBefore == cardBefore?.id }
+            if(nextList.size==1){
+                sorted.addAll(nextList)
+                getNextCard(nextList.single())
+            } else if(nextList.size>1){
+                val sorted = nextList.sortedBy { it.id }.reversed()
+                sorted.onEach {
+                    val nowPos = sorted.indexOf(it)
+                    if(nowPos>0)
+                        upDateCardBefore(it,sorted[nowPos-1].id)
+                }
+                getNextCard(sorted.last())
+            }
+        }
+        getNextCard(null)
+        return  sorted
+
+
+    }
     fun setSisterCards(list:List<Card>){
-        _sisterCards.value = list
+
+        val sorted = sortCards(list)
+        _sisterCards.value = sorted
     }
     private val _startingCardId = MutableLiveData<Int>()
     fun setStartingCardId(int: Int){
@@ -123,10 +153,10 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
     private val _stringData = MutableLiveData<StringData?>()
     val stringData :LiveData<StringData?> =_stringData
-    private fun saveEmptyCard(position:Int,parentFlashCardCoverId:Int?){
+    private fun saveEmptyCard(position:Int?,parentFlashCardCoverId:Int?){
         val newCard = Card(
             id = 0,
-            libOrder =  position,
+            cardBefore =  position,
             deleted = false,
             colorStatus = ColorStatus.GRAY,
             cardStatus = CardStatus.STRING,
@@ -142,6 +172,10 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         val upDating = card
         upDating.stringData = stringData
         update(upDating)
+    }
+    fun upDateCardBefore(card:Card,newCardBefore:Int){
+        card.cardBefore = newCardBefore
+        update(card)
     }
     private fun insert(any: Any){
         viewModelScope.launch {
@@ -165,12 +199,23 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     fun onClickBtnInsert(side: NeighbourCardSide,){
         setOpenEditCard(true)
-        val orderNow= returnSisterCards().indexOf(returnParentCard())
-        saveEmptyCard(
-            when(side){
-                NeighbourCardSide.NEXT -> orderNow + 1
-                NeighbourCardSide.PREVIOUS -> orderNow
-                                },returnParentCard()?.belongingFlashCardCoverId)
+        fun insertToNext(){
+            val nextCard = returnSisterCards().find { it.cardBefore == returnParentCard()?.id }
+            if(nextCard!=null){
+                upDateCardBefore(nextCard,(returnLastInsertedCard()?.id ?:0)+1)
+            }
+            saveEmptyCard(returnParentCard()?.id,returnParentFlashCardCover()?.fileId)
+        }
+        fun insertToBefore(){
+
+            val insertingCardsBefore = returnParentCard()?.cardBefore
+            saveEmptyCard(insertingCardsBefore,returnParentFlashCardCover()?.fileId)
+            upDateCardBefore(returnParentCard()!!,(returnLastInsertedCard()?.id ?:0)+1)
+        }
+        when(side){
+            NeighbourCardSide.NEXT -> insertToNext()
+            NeighbourCardSide.PREVIOUS -> insertToBefore()
+        }
     }
 
 
@@ -205,18 +250,27 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     fun onClickRVAddNewCard(item:Card,mainNavCon:NavController){
         setOpenEditCard(true)
-        saveEmptyCard(item.libOrder + 1,item.belongingFlashCardCoverId,)
+        saveEmptyCard(item.cardBefore ?:0+ 1,item.belongingFlashCardCoverId,)
     }
     fun onClickAddNewCardBottomBar(){
-        returnMainActivityNavCon()?.navigate(EditCardBaseFragDirections.openCreateCard())
+        returnMainActivityNavCon()?.navigate(
+            EditCardBaseFragDirections.openCreateCard())
         setStartingCardId((returnLastInsertedCard()?.id ?:0) + 1)
         setOpenEditCard(true)
-        saveEmptyCard(returnSisterCards().size ,returnParentFlashCardCover()?.fileId)
+        val last = if(returnSisterCards().isEmpty()) null else returnSisterCards().last().id
+        saveEmptyCard(last ,returnParentFlashCardCover()?.fileId)
 
     }
     fun onClickAddNewCardRV(itemBefore:Card){
         returnMainActivityNavCon()?.navigate(EditCardBaseFragDirections.openCreateCard())
-        saveEmptyCard(itemBefore.libOrder +1,returnParentFlashCardCover()?.fileId)
+        setStartingCardId((returnLastInsertedCard()?.id ?:0)+1)
+        val nextCard = returnSisterCards().find { it.cardBefore == itemBefore.id }
+        if(nextCard!=null){
+            upDateCardBefore(nextCard,(returnLastInsertedCard()?.id ?:0)+1)
+        }
+        saveEmptyCard(itemBefore.id,returnParentFlashCardCover()?.fileId)
+
+
         setOpenEditCard(true)
 
     }

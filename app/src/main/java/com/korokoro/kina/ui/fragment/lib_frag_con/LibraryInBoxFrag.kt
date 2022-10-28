@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -146,7 +145,7 @@ class LibraryInBoxFrag  : Fragment(){
             val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
             childCardsFromDB(null).observe(viewLifecycleOwner) {
 
-                val sorted = it?.sortedBy { it.libOrder }
+                val sorted = it?.sortedBy { it.cardBefore }
                 setParentRVItems(sorted?: mutableListOf())
                 adapter.submitList(sorted)
                 if(it.isNullOrEmpty()){

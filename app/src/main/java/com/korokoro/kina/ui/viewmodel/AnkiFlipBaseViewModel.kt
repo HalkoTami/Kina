@@ -292,7 +292,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun setAnkiFlipItems(list: List<Card>,ankiFilter: AnkiFilter){
         val a = mutableListOf<Card>()
         a.addAll(list)
-        a.sortBy { it.libOrder }
+        a.sortBy { it.cardBefore }
         val flag = if(ankiFilter.flagFilterActive) a.filter { it.flag == ankiFilter.flag }else a
         val remembered = if(ankiFilter.rememberedFilterActive) flag.filter { it.remembered == ankiFilter.remembered } else flag
         val answerTyped =  if(ankiFilter.answerTypedFilterActive) remembered.filter { it.lastTypedAnswerCorrect == ankiFilter.correctAnswerTyped } else remembered

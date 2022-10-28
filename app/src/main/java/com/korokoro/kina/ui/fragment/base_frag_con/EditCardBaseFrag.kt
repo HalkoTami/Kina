@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.navArgs
 import com.korokoro.kina.R
 import com.korokoro.kina.databinding.CreateCardFragMainBinding
 import com.korokoro.kina.db.dataclass.Card
@@ -20,12 +21,14 @@ import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.ui.customClasses.AnkiFragments
 import com.korokoro.kina.ui.customClasses.MainFragment
 import com.korokoro.kina.ui.customClasses.NeighbourCardSide
+import com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFragArgs
+import com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFragDirections
 import com.korokoro.kina.ui.view_set_up.GetCustomDrawables
 import com.korokoro.kina.ui.viewmodel.*
 
 
 class EditCardBaseFrag  : Fragment(),View.OnClickListener {
-
+//    private val args : EditCardBaseFragArgs by navArgs()
     private var _binding: CreateCardFragMainBinding? = null
     private val mainViewModel: MainViewModel by activityViewModels()
     private val ankiBaseViewModel: AnkiBaseViewModel by activityViewModels()
@@ -75,7 +78,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             val sisterCards = createCardViewModel.returnSisterCards()
             binding.apply {
                 binding.createCardTopBarBinding.txvPosition.text =
-                    "${card.libOrder+1}/${sisterCards.size}"
+                    "${card.cardBefore?:0+1}/${sisterCards.size}"
                 setAlphaByClickable(nextCard!=null, binding.btnNext)
                 setAlphaByClickable(previousCard!=null, binding.btnPrevious)
                 stringCardViewModel.setParentCard(card)
@@ -85,7 +88,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             val parentCard = createCardViewModel.returnParentCard()
             if(parentCard!=null){
                 binding.createCardTopBarBinding.txvPosition.text =
-                    "${parentCard.libOrder+1}/${it.size}"
+                    "${parentCard.cardBefore?:0+1}/${it.size}"
 
             }
         }
@@ -130,6 +133,21 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             parentFlashCardCover.observe(viewLifecycleOwner,parentFlashCardCoverObserver)
             getSisterCards(parentFlashCardCoverId).observe(viewLifecycleOwner,sisterCardFromDBObserver)
         }
+
+//        val startingCardId =args.startEditCardId
+//        var started = true
+//        if(started){
+//            createCardViewModel.getParentCard(startingCardId).observe(viewLifecycleOwner){
+//                val action = EditCardFragDirections.flipCreateCard()
+//                action.cardId = intArrayOf(it.id)
+//                val flashCardCoverId = it.belongingFlashCardCoverId
+//                action.parentFlashCardCoverId =if(flashCardCoverId!=null) intArrayOf(flashCardCoverId) else null
+//                cardNavCon.navigate(action)
+//                started = false
+//            }
+//
+//        }
+
 
         val root: View = binding.root
         return root
