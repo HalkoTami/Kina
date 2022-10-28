@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var ankiFlipBaseViewModel   : AnkiFlipBaseViewModel
     private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
     private lateinit var deletePopUpViewModel    : DeletePopUpViewModel
-    private lateinit var chooseFileMoveToViewModel        : ChooseFileMoveToViewModel
+    private lateinit var chooseFileMoveToViewModel : ChooseFileMoveToViewModel
     private lateinit var searchViewModel         : SearchViewModel
 
     private lateinit var binding                  : MainActivityBinding

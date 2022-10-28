@@ -111,6 +111,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             MainFragment.Anki -> when(ankiBaseViewModel.returnActiveFragment()) {
                 AnkiFragments.AnkiBox -> null
                 AnkiFragments.Flip -> flipBaseViewModel.returnParentCard()?.belongingFlashCardCoverId
+                else    -> null
             }
             MainFragment.Library -> libraryViewModel.returnParentFile()?.fileId
             else -> null
