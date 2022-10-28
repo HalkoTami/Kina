@@ -19,6 +19,7 @@ data class Card(
     var remembered: Boolean = false,
     var flag:Boolean = false,
     var cardBefore: Int? = null,
+    var libOrder:Int = 0,
     var colorStatus: ColorStatus = ColorStatus.GRAY,
     var timesFlipped:Int = 0,
     var lastTypedAnswerCorrect:Boolean? = null,

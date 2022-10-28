@@ -75,7 +75,7 @@ class LibrarySetUpItems{
                     it.visibility = if(multiMode)View.VISIBLE else View.GONE
                 }
             view.findViewById<ImageView>(R.id.btn_add_new_card).visibility =
-                if(multiMode) View.GONE else View.VISIBLE
+                if(multiMode) View.INVISIBLE else View.VISIBLE
         }
     }
 

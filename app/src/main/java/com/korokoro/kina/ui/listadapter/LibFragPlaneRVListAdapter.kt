@@ -88,6 +88,8 @@ class LibFragPlaneRVListAdapter(
                     val stringCardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
                     viewSetUp.setUpRVStringCardBinding(stringCardBinding, item.stringData, )
                     addL.cardRVStringAddCL(stringCardBinding,item,createCardViewModel,stringCardViewModel,mainNavController)
+                    stringCardBinding.txvFrontTitle.text = item.id.toString()
+                    stringCardBinding.txvBackTitle.text = item.cardBefore.toString()
                     binding.btnAddNewCard.visibility = View.VISIBLE
                     contentView = stringCardBinding.root
                 }

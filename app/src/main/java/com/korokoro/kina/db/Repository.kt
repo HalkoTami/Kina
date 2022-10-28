@@ -1,6 +1,7 @@
 package com.korokoro.kina.db
 
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.LiveData
 import com.korokoro.kina.db.dao.*
 import com.korokoro.kina.db.dataclass.*
 import com.korokoro.kina.db.enumclass.XRefType
@@ -50,7 +51,7 @@ class MyRoomRepository(
     fun getFileByFileId(fileId:Int?):Flow<File> = fileDao.getFileByFileId(fileId)
     fun getFileAndChildrenCards(fileId:Int?):Flow<Map<File,List<Card>>> = fileDao.getFileChildrenCards(fileId)
 
-    fun getFoldersMovableTo(movingFilesId:List<Int>,parentFileId:Int?):Flow<List<File>> = fileDao.getFoldersMovableTo(movingFilesId, parentFileId,1)
+    fun getFoldersMovableTo(movingFilesId:List<Int>,parentFileId:Int?):Flow<Map<File,List<File>>> = fileDao.getFoldersMovableTo(movingFilesId, parentFileId,1)
     val lastInsertedFile:Flow<File> = fileDao.getLastInsertedFileId()
     fun getFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = fileDao.myGetFileByParentFileId(parentFileId)
     fun getLibraryItemsWithDescendantCards(parentFileId:Int?):Flow<List<File>> = fileDao.getLibraryItemsWithDescendantCards(parentFileId)
@@ -61,7 +62,7 @@ class MyRoomRepository(
     fun getAllDescendantsFilesByMultipleFileId(fileIdList: List<Int>):Flow<List<File>> = fileDao.getAllDescendantsFilesByMultipleFileId(fileIdList)
     fun searchFilesByWords(search:String):Flow<List<File>> = fileDao.searchFilesByWords(search)
     val allFlashCardCoverContainsCard:Flow<List<File>> = fileDao.getAllFlashCardCoverContainsCard()
-    fun getMovableFlashCards(movingCardsIds: List<Int>) = fileDao.getFlashCardsMovableTo(movingCardsIds,statusFlashCardAsInt)
+    fun getMovableFlashCards(movingCardsIds: List<Int>) : Flow<Map<File, List<Card>>> = fileDao.getFlashCardsMovableTo(movingCardsIds,statusFlashCardAsInt)
     val allFavouriteAnkiBox:Flow<List<File>> = fileDao.getAllFavouriteAnkiBox()
 //    activity
     fun getCardActivity(cardId:Int):Flow<List<ActivityData>> = activityDataDao.getActivityDataByCard(cardId)

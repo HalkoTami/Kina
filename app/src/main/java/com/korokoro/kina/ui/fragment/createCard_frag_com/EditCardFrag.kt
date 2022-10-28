@@ -55,13 +55,15 @@ class EditCardFrag: Fragment() {
         val frag = childFragmentManager.findFragmentById(binding.fragConEachCardType.id) as NavHostFragment
         cardTypeNavCon = frag.navController
         val parentCardFromDBObserver = Observer<Card>{ card->
-            createCardViewModel.setParentCard(card)
+//            createCardViewModel.setParentCard(card)
 
         }
         val flashCardAndChildrenCardsObserver = Observer<Map<File,List<Card>>>{
             if(it.keys.size==1&&it.values.size == 1)
             { createCardViewModel.setParentFlashCardCover(it.keys.single())
                 createCardViewModel.setSisterCards(it.values.single())
+                val parentCard = it.values.single().find { it.id == args.cardId?.single() }
+                createCardViewModel.setParentCard(parentCard)
             }
         }
 

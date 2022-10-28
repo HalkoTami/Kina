@@ -106,6 +106,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             return a.toList()
         }
         val movingItems = libraryBaseViewModel.returnSelectedItems()
+        val movingItemSisters = libraryBaseViewModel.returnParentRVItems()
         val movingFileIdsList = getMovingFileIdsList(movingItems)
         val movingCardIdsList = getMovingCardIdsList(movingItems)
         val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
@@ -122,19 +123,27 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         val parentFileFromDBObserver = Observer<File> {
             libraryBaseViewModel.setParentFileFromDB(it ?:return@Observer)
         }
-        val movableFoldersObserver = Observer<List<File>>{
-            if(flashcard.not())
-                libraryBaseViewModel.setParentRVItems(it)
+        val movableFoldersObserver = Observer<Map<File,List<File>>>{
+            if(flashcard.not()){
+                libraryBaseViewModel.setParentRVItems(it.map { it.value })
+                adapter.submitList(it.map { it.key })
+                chooseFileMoveToViewModel.setFolderAndChildFilesMap(it)
+            }
+
 
         }
-        val movableFlashCardsObserver = Observer<List<File>>{
-            if(flashcard)
-                libraryBaseViewModel.setParentRVItems(it)
+        val movableFlashCardsObserver = Observer<Map<File,List<Card>>>{
+            if(flashcard){
+                libraryBaseViewModel.setParentRVItems(it.map { it.value })
+                adapter.submitList(it.map { it.key })
+                chooseFileMoveToViewModel.setFlashcardAndChildListMap(it)
+            }
+
         }
         val parentRVItemsObserver = Observer<List<Any>>{
             val list = it.filterIsInstance<File>()
-            adapter.submitList(list)
-            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
+//            adapter.submitList(list)
+//            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
         }
         val parentFileAncestorsObserver = Observer<List<File>> {
             editFileViewModel.filterBottomMenuWhenInChooseFileMoveTo(
@@ -152,8 +161,10 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         addCL()
 
         chooseFileMoveToViewModel.setMovingItems(movingItems)
+        chooseFileMoveToViewModel.setMovingItemsSisters(movingItemSisters)
         chooseFileMoveToViewModel.popUpVisible.observe(viewLifecycleOwner,popUpVisibleObserver)
         chooseFileMoveToViewModel.popUpText.observe(viewLifecycleOwner,popUpTextObserver)
+
         if(movingCardIdsList.isEmpty().not())
             chooseFileMoveToViewModel.getFilesMovableFlashCards(movingCardIdsList).observe(viewLifecycleOwner,movableFlashCardsObserver)
         if(movingFileIdsList.isEmpty().not())

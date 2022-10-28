@@ -30,7 +30,9 @@ abstract class FileDao: BaseDao<File> {
             "parentFileId is :parentFileId and libOrder >= :insertingPosition")
     abstract suspend fun upDateFilePositionBeforeInsert(parentFileId: Int?,insertingPosition: Int)
 
-    @Query("select * from tbl_file a where NOT a.deleted AND  " +
+    @Query("select * from tbl_file a " +
+            "JOIN tbl_file e ON e.parentFileId = a.fileId " +
+            "where NOT a.deleted AND  " +
             "a.fileStatus = :fileStatusFolderAsInt  " +
             "and a.fileId not in (  " +
             "WITH  generation AS ( " +
@@ -39,23 +41,23 @@ abstract class FileDao: BaseDao<File> {
             "SELECT c.* from tbl_file c Inner JOIN generation g ON g.parentFileId = c.fileId ) " +
             "SELECT fileId FROM generation d " +
             " ) " +
-
-//            "and (" +
             "and ((a.parentFileId is :parentFileId " +
             "or a.fileId in ( " +
             "select fileId from tbl_file c where c.parentFileId in ( " +
             "select parentFileId from tbl_file d where d.fileId in (:movingFileIds) ) ) )" +
             "and a.fileId not in (:movingFileIds) )")
-    abstract fun getFoldersMovableTo(movingFileIds: List<Int>, parentFileId: Int?, fileStatusFolderAsInt:Int): Flow<List<File>>
+    abstract fun getFoldersMovableTo(movingFileIds: List<Int>, parentFileId: Int?, fileStatusFolderAsInt:Int): Flow<Map<File,List<File>>>
 
-    @Query("select a.* from tbl_file a " +
+    @Query("select * from tbl_file a " +
+            "JOIN tbl_card d ON d.belongingFlashCardCoverId = a.fileId " +
             "where NOT a.deleted AND  " +
             "a.fileStatus = :fileStatusFlashCardAsInt and " +
             "a.fileId not in (" +
             "select fileId from tbl_file b inner join tbl_card c on c.belongingFlashCardCoverId = b.fileId " +
             "where c.id in (:movingCardIds)" +
-            " )")
-    abstract fun getFlashCardsMovableTo(movingCardIds:List<Int>,fileStatusFlashCardAsInt:Int): Flow<List<File>>
+            " ) " )
+    abstract fun getFlashCardsMovableTo(movingCardIds:List<Int>,fileStatusFlashCardAsInt:Int): Flow<Map<File,List<Card>>>
+
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM tbl_file su WHERE su.parentFileId is :fileId and not su.fileStatus = 3")

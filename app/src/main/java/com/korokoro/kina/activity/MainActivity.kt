@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 //      全部のデータを消したいとき
-//        applicationContext.deleteDatabase("my_database")
+        applicationContext.deleteDatabase("my_database")
 //        ー－－－mainActivityのviewー－－－
         fun checkIfInstall(){
             val sharedPref = this.getSharedPreferences(

@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
+import com.korokoro.kina.actions.SortActions
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.korokoro.kina.databinding.LibraryFragTopBarFileBinding
@@ -148,33 +149,12 @@ class LibraryFlashCardCoverFrag  : Fragment(){
                 setParentFileAncestorsFromDB(it)
                 editFileViewModel.filterBottomMenuByAncestors(it,returnParentFile() ?:return@observe)
             }
-            fun sortCards(list: List<Card>):List<Card>{
-                val sorted = mutableListOf<Card>()
-                fun getNextCard(cardBefore: Card?){
-                    val nextList = list.filter { it.cardBefore == cardBefore?.id }
-                    if(nextList.size==1){
-                        sorted.addAll(nextList)
-                        getNextCard(nextList.single())
-                    } else if(nextList.size>1){
-                        val sorted = nextList.sortedBy { it.id }.reversed()
-                        sorted.onEach {
-                            val nowPos = sorted.indexOf(it)
-                            if(nowPos>0)
-                                createCardViewModel.upDateCardBefore(it,sorted[nowPos-1].id)
-                        }
-                        getNextCard(sorted.last())
-                    }
-                }
-                getNextCard(null)
-                return  sorted
 
-
-            }
             val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
             topBarBinding.txvFileTitle.text = args.flashCardCoverId.single().toString()
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
 
-                val sorted = sortCards(it ?: mutableListOf())
+                val sorted = SortActions().sortCards(it ?: mutableListOf())
                 setParentRVItems(sorted ?: mutableListOf())
                 adapter.submitList(sorted)
                 if(it!=null){

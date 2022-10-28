@@ -2,6 +2,7 @@ package com.korokoro.kina.ui.viewmodel
 
 import androidx.lifecycle.*
 import androidx.navigation.NavController
+import com.korokoro.kina.actions.SortActions
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
@@ -91,8 +92,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     }
     fun setSisterCards(list:List<Card>){
-
-        val sorted = sortCards(list)
+        val sorted = SortActions().getSortedAndUpdatedCardList(list)
         _sisterCards.value = sorted
     }
     private val _startingCardId = MutableLiveData<Int>()
@@ -114,7 +114,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
     fun setLastInsertedCard(card: Card?){
         if(card==returnLastInsertedCard()) return else
-        _lastInsertedCard.value = card
+            _lastInsertedCard.value = card
     }
     private val _cardStatus = MutableLiveData<CardStatus>()
     fun setCardStatus(cardStatus: CardStatus){
@@ -183,7 +183,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         }
 
     }
-    private fun update(any: Any){
+    fun update(any: Any){
         viewModelScope.launch {
             repository.update(any)
         }
