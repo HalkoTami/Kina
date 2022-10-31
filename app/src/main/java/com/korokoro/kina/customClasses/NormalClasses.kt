@@ -1,4 +1,4 @@
-package com.korokoro.kina.ui.customClasses
+package com.korokoro.kina.customClasses
 
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File

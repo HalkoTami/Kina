@@ -3,10 +3,11 @@ package com.korokoro.kina.ui.viewmodel
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.korokoro.kina.actions.SortActions
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.ui.customClasses.MakeToastFromVM
+import com.korokoro.kina.customClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() {
@@ -88,20 +89,19 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     fun moveSelectedItemToFile(navController: NavController){
         val item = returnFileMoveTo() ?:return
         val change = returnMovingItems()
-        val before = returnMovingItemsSisters()
+        val updatedSisters = returnMovingItemsSisters().filterIsInstance<Card>()
         val lastId = SortActions().sortCards(returnFlashcardAndChildListMap()[item]).last().id
 
         val changeCards = change.filterIsInstance<Card>()
+        updatedSisters.onEach {
+            update(it)
+        }
         changeCards.onEach {
+            if(it.cardBefore == null) it.cardBefore = lastId
             it.belongingFlashCardCoverId = item.fileId
             update(it)
         }
-        val beforeCards = before.filterIsInstance<Card>()
-        val cardsBeforeMustChanged = changeCards.filter {item-> changeCards.find { it.cardBefore == item.id}==null }
-        val sorted = SortActions().sortCards(cardsBeforeMustChanged)
-        val a = sorted.first()
-        a.cardBefore = lastId
-        update(a)
+
 
         makeToastFromVM("${item.title}へ移動しました")
         setPopUpVisible(false)

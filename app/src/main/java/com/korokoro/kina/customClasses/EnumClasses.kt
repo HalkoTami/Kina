@@ -1,4 +1,4 @@
-package com.korokoro.kina.ui.customClasses
+package com.korokoro.kina.customClasses
 
 enum class StringFragFocusedOn{
     FrontTitle,FrontContent,BackTitle,BackContent,None
@@ -9,6 +9,7 @@ enum class LibRVState{
 enum class NeighbourCardSide{
     NEXT,PREVIOUS
 }
+
 enum class EditingMode{
     New, Edit
 }

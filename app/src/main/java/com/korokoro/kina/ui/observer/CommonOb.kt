@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.actions.makeToast
-import com.korokoro.kina.ui.customClasses.MakeToastFromVM
+import com.korokoro.kina.customClasses.MakeToastFromVM
 import com.korokoro.kina.ui.view_set_up.LibrarySetUpItems
 import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
 

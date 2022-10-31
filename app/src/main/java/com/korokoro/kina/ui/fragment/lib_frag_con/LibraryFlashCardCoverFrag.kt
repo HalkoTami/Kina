@@ -15,12 +15,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
 import com.korokoro.kina.actions.SortActions
 import com.korokoro.kina.actions.changeViewVisibility
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.korokoro.kina.databinding.LibraryFragTopBarFileBinding
 import com.korokoro.kina.databinding.RvEmptyBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.enumclass.ColorStatus
-import com.korokoro.kina.ui.customClasses.LibraryFragment
+import com.korokoro.kina.customClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.korokoro.kina.ui.listener.recyclerview.LibraryRVItemClickListener
@@ -155,8 +156,8 @@ class LibraryFlashCardCoverFrag  : Fragment(){
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
 
                 val sorted = SortActions().sortCards(it ?: mutableListOf())
-                setParentRVItems(sorted ?: mutableListOf())
-                adapter.submitList(sorted)
+                setParentRVItems(it ?: mutableListOf())
+                adapter.submitList(it)
                 if(it!=null){
                     createCardViewModel.setSisterCards(it)
                 }

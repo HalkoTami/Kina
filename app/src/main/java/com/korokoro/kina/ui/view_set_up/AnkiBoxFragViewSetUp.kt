@@ -15,8 +15,8 @@ import com.korokoro.kina.db.dataclass.ActivityData
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ActivityStatus
-import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
-import com.korokoro.kina.ui.customClasses.ParentFileAncestors
+import com.korokoro.kina.customClasses.AnkiBoxFragments
+import com.korokoro.kina.customClasses.ParentFileAncestors
 import com.korokoro.kina.ui.listadapter.AnkiBoxListAdapter
 import com.korokoro.kina.ui.listener.recyclerview.AnkiBoxFileRVCL
 import com.korokoro.kina.ui.listener.recyclerview.AnkiBoxRVStringCardCL

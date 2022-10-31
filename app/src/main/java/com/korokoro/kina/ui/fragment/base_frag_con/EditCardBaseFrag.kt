@@ -18,9 +18,9 @@ import com.korokoro.kina.R
 import com.korokoro.kina.databinding.CreateCardFragMainBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.ui.customClasses.AnkiFragments
-import com.korokoro.kina.ui.customClasses.MainFragment
-import com.korokoro.kina.ui.customClasses.NeighbourCardSide
+import com.korokoro.kina.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.MainFragment
+import com.korokoro.kina.customClasses.NeighbourCardSide
 import com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFragArgs
 import com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFragDirections
 import com.korokoro.kina.ui.view_set_up.GetCustomDrawables
@@ -191,13 +191,17 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
 
                 btnInsertNext,btnInsertPrevious         -> {
                     when(p0){
-                        btnInsertPrevious                    -> createCardViewModel. onClickBtnInsert(NeighbourCardSide.PREVIOUS)
-                        btnInsertNext                           -> createCardViewModel. onClickBtnInsert(NeighbourCardSide.NEXT)
+                        btnInsertPrevious                    -> createCardViewModel. onClickBtnInsert(
+                            NeighbourCardSide.PREVIOUS)
+                        btnInsertNext                           -> createCardViewModel. onClickBtnInsert(
+                            NeighbourCardSide.NEXT)
                     }
                     createCardViewModel.checkMakePopUpVisible(mainViewModel.returnFragmentStatus() ?:return,ankiBaseViewModel.returnActiveFragment())
                 }
-                btnNext                                 -> createCardViewModel.onClickBtnNavigate(cardNavCon,NeighbourCardSide.NEXT)
-                btnPrevious                             -> createCardViewModel.onClickBtnNavigate(cardNavCon,NeighbourCardSide.PREVIOUS)
+                btnNext                                 -> createCardViewModel.onClickBtnNavigate(cardNavCon,
+                    NeighbourCardSide.NEXT)
+                btnPrevious                             -> createCardViewModel.onClickBtnNavigate(cardNavCon,
+                    NeighbourCardSide.PREVIOUS)
 
             }
         }

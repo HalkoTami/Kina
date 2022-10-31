@@ -6,8 +6,6 @@ class SortActions(){
     fun sortCards(list: List<Card>?):List<Card>{
         val final = mutableListOf<Card>()
         if(list!=null){
-
-            var skippedOrder = 0
             fun getNextCard(cardBefore: Card?){
                 val nextList = list.filter { it.cardBefore == cardBefore?.id }
                 if(nextList.size==1){

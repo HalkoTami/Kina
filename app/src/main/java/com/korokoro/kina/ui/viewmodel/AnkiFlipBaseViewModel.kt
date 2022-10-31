@@ -3,12 +3,12 @@ package com.korokoro.kina.ui.viewmodel
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.ActivityData
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.enumclass.ActivityStatus
 import com.korokoro.kina.db.enumclass.DBTable
-import com.korokoro.kina.ui.customClasses.*
 import com.korokoro.kina.ui.fragment.flipFragCon.FlipStringCheckAnswerFragDirections
 import com.korokoro.kina.ui.fragment.flipFragCon.FlipStringFragDirections
 import com.korokoro.kina.ui.fragment.flipFragCon.FlipStringTypeAnswerFragDirections

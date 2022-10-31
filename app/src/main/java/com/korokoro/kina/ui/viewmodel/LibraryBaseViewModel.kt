@@ -2,15 +2,12 @@ package com.korokoro.kina.ui.viewmodel
 
 import androidx.lifecycle.*
 import androidx.navigation.NavController
+import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
 
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.ui.customClasses.LibRVState
-import com.korokoro.kina.ui.customClasses.LibraryFragment
-import com.korokoro.kina.ui.customClasses.LibraryTopBarMode
-import com.korokoro.kina.ui.customClasses.ParentFileAncestors
 import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFragDirections
 import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFragDirections
 import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFolderFragDirections
@@ -24,7 +21,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setLibraryFragment(fragment: LibraryFragment){
         _parentFragment.value = fragment
     }
-    fun returnLibraryFragment():LibraryFragment?{
+    fun returnLibraryFragment(): LibraryFragment?{
         return _parentFragment.value
     }
     val parentFragment:LiveData<LibraryFragment> = _parentFragment
@@ -115,26 +112,112 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun returnSelectedItems():MutableList<Any>{
         return _selectedItems.value ?: mutableListOf()
     }
-    val selectedItems:LiveData<MutableList<Any>> = _selectedItems
 
-    private fun addToSelectedItem(item: Any){
-        val list = returnSelectedItems()
-        list.add( item)
-        setSelectedItems(list)
+    val selectedItems:LiveData<MutableList<Any>> = _selectedItems
+    private val _reorderedLeftItems = MutableLiveData<List<Any>>()
+    private fun setReorderedLeftItems(list:List<Any>){
+        _reorderedLeftItems.value = list
     }
-    private fun removeFromSelectedItem(item: Any){
-        val list = returnSelectedItems()
-        list.remove( item)
-        setSelectedItems(list)
+    fun getReorderedLeftItems():List<Any>{
+        return _reorderedLeftItems.value ?: mutableListOf()
     }
-//    －－－－click Events－－－－
-    fun onClickSelectableItem(item: Any,boolean: Boolean){
-        if (boolean)  {
-            addToSelectedItem(item)
-        } else {
-            removeFromSelectedItem(item)
+
+    private val _toast = MutableLiveData<MakeToastFromVM>()
+    private fun makeToastFromVM(string: String){
+        _toast.value = MakeToastFromVM(string,true)
+        _toast.value = MakeToastFromVM("",false)
+    }
+
+    val toast :LiveData<MakeToastFromVM> = _toast
+    fun updateLeftItems(item: Card, listAttributes: ListAttributes, leftList: MutableList<Card>):List<Card>{
+        when(listAttributes){
+            ListAttributes.Add ->{
+                leftList.remove(item)
+                var cardOnBorder = returnParentRVItems().filterIsInstance<Card>().find{ it.id == item.cardBefore }
+                var isSelected = leftList.contains(cardOnBorder).not()
+                        &&cardOnBorder!=null
+
+                while ( isSelected){
+                    cardOnBorder = returnParentRVItems().filterIsInstance<Card>().find{ it.id == cardOnBorder?.cardBefore }
+                    isSelected = leftList.contains(cardOnBorder).not()
+                            &&cardOnBorder!=null
+
+                }
+                val cardAfter = leftList.find { it.cardBefore == item.id } ?:return leftList
+                leftList.remove(cardAfter)
+                cardAfter.cardBefore = cardOnBorder?.id
+                leftList.add(cardAfter)
+
+            }
+            ListAttributes.Remove -> {
+                leftList.add(item)
+                val cardAfter = returnParentRVItems().filterIsInstance<Card>().find { it.cardBefore == item.id } ?:return leftList
+                leftList.remove(cardAfter)
+                cardAfter.cardBefore = item.id
+                leftList.add(cardAfter)
+
+
+            }
+        }
+        return leftList
+    }
+    fun sortAndUpdateSelectedCards(list:List<Card>):List<Card>{
+        val sorted = list.sortedBy { returnParentRVItems().indexOf(it) }
+        sorted.onEach {
+            val posBefore = sorted.indexOf(it)-1
+            it.cardBefore = if(posBefore <0) null else if (posBefore in 0..sorted.size) {
+                sorted[posBefore].id
+            } else throw IllegalArgumentException()
+        }
+        return sorted
+    }
+    fun onClickRvSelectCard(item: Card,listAttributes: ListAttributes){
+        val list = returnSelectedItems()
+        val changeItem = item
+        if(list.isEmpty()) setReorderedLeftItems(returnParentRVItems().toMutableList())
+        val leftList = getReorderedLeftItems().filterIsInstance<Card>()
+        when(listAttributes){
+            ListAttributes.Add ->{
+                list.add(changeItem)
+            }
+            ListAttributes.Remove -> list.remove(changeItem)
+        }
+
+        val upDatedLeftItems = updateLeftItems(item,listAttributes,leftList.toMutableList())
+        setReorderedLeftItems(upDatedLeftItems)
+        val updatedSelectedItems = sortAndUpdateSelectedCards(list.filterIsInstance<Card>())
+        setSelectedItems(updatedSelectedItems.toMutableList())
+
+    }
+    fun onClickRvSelect(listAttributes: ListAttributes,item: Any){
+
+
+        when(item){
+            is Card -> {
+                onClickRvSelectCard(item,listAttributes)
+            }
+            else -> return
         }
     }
+
+//    private fun addToSelectedItem(item: Any){
+//        val list = returnSelectedItems()
+//        list.add( item)
+//        setSelectedItems(list)
+//    }
+//    private fun removeFromSelectedItem(item: Any){
+//        val list = returnSelectedItems()
+//        list.remove( item)
+//        setSelectedItems(list)
+//    }
+//    －－－－click Events－－－－
+//    fun onClickSelectableItem(item: Any,boolean: Boolean){
+//        if (boolean)  {
+//            addToSelectedItem(item)
+//        } else {
+//            removeFromSelectedItem(item)
+//        }
+//    }
     fun openNextFile(item: File){
         val action =
         when(item.fileStatus){

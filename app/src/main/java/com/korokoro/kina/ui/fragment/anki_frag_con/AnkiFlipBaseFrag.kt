@@ -20,6 +20,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.korokoro.kina.actions.DateTimeActions
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.actions.makeToast
+import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.databinding.AnkiFlipFragBaseBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.enumclass.ActivityStatus
@@ -101,7 +102,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
 
         var start = true
         var cardBefore :Card? = null
-        val roundStart = arrayOf(AnkiFragments.AnkiBox,AnkiFragments.FlipCompleted).contains(ankiBaseViewModel.returnActiveFragment())
+        val roundStart = arrayOf(AnkiFragments.AnkiBox, AnkiFragments.FlipCompleted).contains(ankiBaseViewModel.returnActiveFragment())
         val cardIds = ankiBoxViewModel.returnAnkiBoxCardIds().distinct()
         val progressObserver = Observer<Progress>{
             binding.progressBarBinding.progressbarRemembered.progress = ((it.now/it.all.toDouble())*100 ).toInt()

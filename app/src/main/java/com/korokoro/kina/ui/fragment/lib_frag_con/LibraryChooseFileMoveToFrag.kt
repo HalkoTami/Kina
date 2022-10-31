@@ -19,7 +19,7 @@ import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.ui.customClasses.LibraryFragment
+import com.korokoro.kina.customClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragChooseFileRVListAdapter
 import com.korokoro.kina.ui.listener.popUp.LibFragPopUpConfirmMoveToFileCL
 import com.korokoro.kina.ui.listener.topbar.LibFragTopBarChooseFileMoveToCL
@@ -106,7 +106,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             return a.toList()
         }
         val movingItems = libraryBaseViewModel.returnSelectedItems()
-        val movingItemSisters = libraryBaseViewModel.returnParentRVItems()
+        val movingItemSisters = libraryBaseViewModel.getReorderedLeftItems()
         val movingFileIdsList = getMovingFileIdsList(movingItems)
         val movingCardIdsList = getMovingCardIdsList(movingItems)
         val emptyView = RvEmptyBinding.inflate(inflater,container,false).root

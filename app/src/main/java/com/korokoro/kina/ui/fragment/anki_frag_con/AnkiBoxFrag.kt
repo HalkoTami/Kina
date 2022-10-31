@@ -17,10 +17,10 @@ import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ActivityStatus
 import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
-import com.korokoro.kina.ui.customClasses.AnkiBoxTabData
-import com.korokoro.kina.ui.customClasses.AnkiFilter
-import com.korokoro.kina.ui.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.AnkiBoxFragments
+import com.korokoro.kina.customClasses.AnkiBoxTabData
+import com.korokoro.kina.customClasses.AnkiFilter
+import com.korokoro.kina.customClasses.AnkiFragments
 import com.korokoro.kina.ui.observer.CommonOb
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.korokoro.kina.ui.viewmodel.*
@@ -77,7 +77,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
 
 
         }
-        fun filterCards(filter: AnkiFilter,cards:List<Card>):List<Card>{
+        fun filterCards(filter: AnkiFilter, cards:List<Card>):List<Card>{
             val a =  cards
             if(filter.rememberedFilterActive){  a.filter { it.remembered == filter.remembered }
             }
@@ -129,7 +129,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         ankiFlipBaseViewModel.setParentCard(null)
         ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
         ankiBoxViewModel.setAnkiBoxNavCon(ankiBoxNavCon)
-        ankiFlipBaseViewModel.setAnkiFlipItems(mutableListOf(),AnkiFilter())
+        ankiFlipBaseViewModel.setAnkiFlipItems(mutableListOf(), AnkiFilter())
         ankiBoxViewModel.toast.observe(viewLifecycleOwner,toastObserver)
         ankiBoxViewModel.currentChildFragment.observe(viewLifecycleOwner,ankiBoxChildFragObserver)
         ankiBoxViewModel.ankiBoxFileIds.observe(viewLifecycleOwner,ankiBoxFileIdsObserver)

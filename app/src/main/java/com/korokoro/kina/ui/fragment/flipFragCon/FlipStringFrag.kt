@@ -16,9 +16,9 @@ import androidx.navigation.fragment.navArgs
 import com.korokoro.kina.R
 import com.korokoro.kina.databinding.AnkiFlipFragLookStringFragBinding
 import com.korokoro.kina.db.dataclass.Card
-import com.korokoro.kina.ui.customClasses.Count
-import com.korokoro.kina.ui.customClasses.CountFlip
-import com.korokoro.kina.ui.customClasses.FlipFragments
+import com.korokoro.kina.customClasses.Count
+import com.korokoro.kina.customClasses.CountFlip
+import com.korokoro.kina.customClasses.FlipFragments
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.korokoro.kina.ui.viewmodel.AnkiSettingPopUpViewModel
 

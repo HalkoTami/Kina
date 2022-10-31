@@ -7,9 +7,9 @@ import com.korokoro.kina.db.dataclass.ChildData
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.ui.customClasses.ColorPalletStatus
-import com.korokoro.kina.ui.customClasses.EditingMode
-import com.korokoro.kina.ui.customClasses.MakeToastFromVM
+import com.korokoro.kina.customClasses.ColorPalletStatus
+import com.korokoro.kina.customClasses.EditingMode
+import com.korokoro.kina.customClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {

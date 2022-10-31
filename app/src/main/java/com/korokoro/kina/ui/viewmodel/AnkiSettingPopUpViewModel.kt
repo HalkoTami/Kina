@@ -6,9 +6,9 @@ import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.korokoro.kina.ui.customClasses.AnkiFilter
-import com.korokoro.kina.ui.customClasses.AnkiOrder
-import com.korokoro.kina.ui.customClasses.AutoFlip
+import com.korokoro.kina.customClasses.AnkiFilter
+import com.korokoro.kina.customClasses.AnkiOrder
+import com.korokoro.kina.customClasses.AutoFlip
 
 class AnkiSettingPopUpViewModel : ViewModel() {
 

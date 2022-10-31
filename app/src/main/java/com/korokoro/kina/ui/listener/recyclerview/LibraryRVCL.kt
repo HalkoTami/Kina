@@ -5,6 +5,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.makeToast
+import com.korokoro.kina.customClasses.ListAttributes
 import com.korokoro.kina.databinding.LibraryFragRvItemBaseBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
@@ -29,8 +31,9 @@ class LibraryRVCL(val item: Any,
             when(v){
                 contentBindingFrame -> {
                     if(libraryViewModel.returnLeftSwipedItemExists()==true) libraryViewModel.makeAllUnSwiped()
-                    else if(libraryViewModel.returnMultiSelectMode()==true){
-                        libraryViewModel.onClickSelectableItem(item,btnSelect.isSelected.not())
+                    else if(libraryViewModel.returnMultiSelectMode()){
+                        libraryViewModel.onClickRvSelect(
+                            if(btnSelect.isSelected) ListAttributes.Remove else ListAttributes.Add,item)
                         btnSelect.isSelected = btnSelect.isSelected.not()
                     }else{
                         when(item){
@@ -70,7 +73,53 @@ class LibraryRVCL(val item: Any,
         super.onLongClick(motionEvent)
         rvBinding.btnSelect.isSelected = true
         libraryViewModel.setMultipleSelectMode(true)
-        libraryViewModel.onClickSelectableItem(item,true)
+        libraryViewModel.onClickRvSelect(ListAttributes.Add,item)
+    }
+
+}
+
+class LibraryRVCLNewCard(val item: Card,
+                  private val libraryViewModel: LibraryBaseViewModel,
+                  private val createFileViewModel: EditFileViewModel,
+                  private val rvBinding: LibraryFragRvItemBaseBinding,
+                  private val deletePopUpViewModel: DeletePopUpViewModel,
+                  private val createCardViewModel: CreateCardViewModel,
+                  val v:View,
+): MyTouchListener(v.context){
+    override fun onSingleTap(motionEvent: MotionEvent?) {
+        super.onSingleTap(motionEvent)
+        rvBinding.apply {
+            when(v){
+                contentBindingFrame -> {
+                    if(libraryViewModel.returnLeftSwipedItemExists()==true) libraryViewModel.makeAllUnSwiped()
+                    else if(libraryViewModel.returnMultiSelectMode()){
+                        val a = item as Card
+                        if(a.cardBefore == null) return
+                        libraryViewModel.onClickRvSelect(
+                            if(btnSelect.isSelected) ListAttributes.Remove else ListAttributes.Add,item)
+                        btnSelect.isSelected = btnSelect.isSelected.not()
+                    }else{
+                        createCardViewModel.onClickEditCardFromRV(item)
+
+                    }
+
+                }
+                btnDelete       -> {
+                    deletePopUpViewModel.setDeletingItem(mutableListOf(item))
+                    deletePopUpViewModel.setConfirmDeleteVisible(true)
+                }
+                btnEditWhole    -> createCardViewModel.onClickEditCardFromRV(item)
+                btnAddNewCard -> createCardViewModel.onClickAddNewCardRV(item)
+            }
+        }
+
+    }
+
+    override fun onLongClick(motionEvent: MotionEvent?) {
+        super.onLongClick(motionEvent)
+        rvBinding.btnSelect.isSelected = true
+        libraryViewModel.setMultipleSelectMode(true)
+        libraryViewModel.onClickRvSelect(ListAttributes.Add,item)
     }
 
 }

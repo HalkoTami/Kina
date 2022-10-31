@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import com.korokoro.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
 import com.korokoro.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.korokoro.kina.ui.fragment.base_frag_con.LibraryBaseFragDirections
-import com.korokoro.kina.ui.customClasses.MainFragment
+import com.korokoro.kina.customClasses.MainFragment
 import kotlinx.coroutines.*
 
 

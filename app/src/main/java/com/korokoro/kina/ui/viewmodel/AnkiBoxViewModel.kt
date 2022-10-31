@@ -7,13 +7,13 @@ import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.ActivityData
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
-import com.korokoro.kina.ui.customClasses.AnkiBoxTabData
+import com.korokoro.kina.customClasses.AnkiBoxFragments
+import com.korokoro.kina.customClasses.AnkiBoxTabData
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.fragment.ankibox_frag_con.BoxFavouriteFragDirections
 import com.korokoro.kina.ui.fragment.ankibox_frag_con.BoxFlashCardCoversFragDirections
 import com.korokoro.kina.ui.fragment.ankibox_frag_con.BoxLibraryItemsFragDirections
-import com.korokoro.kina.ui.customClasses.MakeToastFromVM
+import com.korokoro.kina.customClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {

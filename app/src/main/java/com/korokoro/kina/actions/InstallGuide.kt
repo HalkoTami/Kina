@@ -20,12 +20,12 @@ import androidx.core.view.size
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
+import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.TouchAreaBinding
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
-import com.korokoro.kina.ui.customClasses.*
 import com.korokoro.kina.ui.customViews.*
 import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFragDirections
 import com.korokoro.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
@@ -105,9 +105,10 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     }
     var borderLeftObject:View? = null
     private fun calculatePositionInBorder(view: View,
-                                borderPosition: RecPosition,
-                                verticalOrientation: MyOrientation,
-                                horizontalOrientation: MyOrientation):RecPosition{
+                                          borderPosition: RecPosition,
+                                          verticalOrientation: MyOrientation,
+                                          horizontalOrientation: MyOrientation
+    ):RecPosition{
         val subMiddleTop :Float
         val subMiddleBottom :Float
         val verticalCenter = borderPosition.top + (borderPosition.bottom-borderPosition.top)/2
@@ -182,7 +183,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     fun getScreenHeight():Int{
         return activity.resources.displayMetrics.heightPixels
     }
-    fun getDisplayBorder(side:MyOrientation):Float{
+    fun getDisplayBorder(side: MyOrientation):Float{
         return when(side){
             MyOrientation.RIGHT->  activity.resources.displayMetrics.widthPixels/2f
             MyOrientation.LEFT -> -activity.resources.displayMetrics.widthPixels/2f
@@ -226,7 +227,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     }
     class ViewAndSide(
         var view:View,
-        var side:MyOrientation
+        var side: MyOrientation
     )
     class BorderSet(
         var leftSideSet:ViewAndSide?=null,
@@ -240,13 +241,17 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     private fun setPositionNextTo(mainView: View, subView: View, matchSize:Boolean,myOrientationSet:MyOrientationSet){
         mainView.viewTreeObserver.addOnGlobalLayoutListener {
             val leftSideSet = positionDataMap[subView]?.leftSideSet
-            val borderLeft = if(leftSideSet!=null) setMultipleBorderObject(leftSideSet.view,leftSideSet.side) else getDisplayBorder(MyOrientation.LEFT)
+            val borderLeft = if(leftSideSet!=null) setMultipleBorderObject(leftSideSet.view,leftSideSet.side) else getDisplayBorder(
+                MyOrientation.LEFT)
             val topSideSet = positionDataMap[subView]?.topSideSet
-            val borderTop = if(topSideSet!=null) setMultipleBorderObject(topSideSet.view,topSideSet.side) else getDisplayBorder(MyOrientation.TOP)
+            val borderTop = if(topSideSet!=null) setMultipleBorderObject(topSideSet.view,topSideSet.side) else getDisplayBorder(
+                MyOrientation.TOP)
             val rightSideSet = positionDataMap[subView]?.rightSideSet
-            val borderRight = if(rightSideSet!=null) setMultipleBorderObject(rightSideSet.view,rightSideSet.side) else getDisplayBorder(MyOrientation.RIGHT)
+            val borderRight = if(rightSideSet!=null) setMultipleBorderObject(rightSideSet.view,rightSideSet.side) else getDisplayBorder(
+                MyOrientation.RIGHT)
             val bottomSideSet = positionDataMap[subView]?.bottomSideSet
-            val borderBottom = if(bottomSideSet!=null) setMultipleBorderObject(bottomSideSet.view,bottomSideSet.side) else getDisplayBorder(MyOrientation.BOTTOM)
+            val borderBottom = if(bottomSideSet!=null) setMultipleBorderObject(bottomSideSet.view,bottomSideSet.side) else getDisplayBorder(
+                MyOrientation.BOTTOM)
 
             val mainViewRecPos = getRecPos(mainView)
             val borderRecPos =  if(matchSize) mainViewRecPos else
@@ -341,7 +346,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
 
     }
-    private fun explainTextAnimation(string: String, orientation: MyOrientation,view: View): AnimatorSet {
+    private fun explainTextAnimation(string: String, orientation: MyOrientation, view: View): AnimatorSet {
 
 
         textView.text = string
@@ -447,7 +452,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         val a = TouchAreaBinding.inflate(activity.layoutInflater)
         a.touchView.tag = 1
         onInstallBinding.root.addView(a.touchView)
-        setPositionByXY(view,a.touchView,MyOrientation.MIDDLE,0,true)
+        setPositionByXY(view,a.touchView, MyOrientation.MIDDLE,0,true)
         return a.touchView
     }
     private fun cloneView(view: View) {
@@ -512,7 +517,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 val a = TouchAreaBinding.inflate(activity.layoutInflater)
                 a.touchView.tag = 1
                 onInstallBinding.root.addView(a.touchView)
-                setPositionByXY(view,a.touchView,MyOrientation.MIDDLE,0,true)
+                setPositionByXY(view,a.touchView, MyOrientation.MIDDLE,0,true)
                 return a.touchView
             }
             fun cloneView(view: View) {
@@ -522,15 +527,24 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
             fun tameshi(a:Int){
                 when(a){
-                    1    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.TOP       ,MyOrientation.LEFT))
-                    2    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.TOP       ,MyOrientation.MIDDLE))
-                    3    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.TOP       ,MyOrientation.RIGHT))
-                    4    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.MIDDLE    ,MyOrientation.LEFT))
-                    5    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.MIDDLE    ,MyOrientation.MIDDLE))
-                    6    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.MIDDLE    ,MyOrientation.RIGHT))
-                    7    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.BOTTOM    ,MyOrientation.LEFT))
-                    8    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.BOTTOM    ,MyOrientation.MIDDLE))
-                    9    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.BOTTOM    ,MyOrientation.RIGHT))
+                    1    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.TOP       ,
+                        MyOrientation.LEFT))
+                    2    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.TOP       ,
+                        MyOrientation.MIDDLE))
+                    3    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.TOP       ,
+                        MyOrientation.RIGHT))
+                    4    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.MIDDLE    ,
+                        MyOrientation.LEFT))
+                    5    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.MIDDLE    ,
+                        MyOrientation.MIDDLE))
+                    6    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.MIDDLE    ,
+                        MyOrientation.RIGHT))
+                    7    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.BOTTOM    ,
+                        MyOrientation.LEFT))
+                    8    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.BOTTOM    ,
+                        MyOrientation.MIDDLE))
+                    9    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.BOTTOM    ,
+                        MyOrientation.RIGHT))
                     else -> return
                 }
 
@@ -541,14 +555,17 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
 
                 appearAlphaAnimation(character,true).start()
-              positionDataMap[character] = BorderSet(bottomSideSet = ViewAndSide(touchArea,MyOrientation.TOP))
+              positionDataMap[character] = BorderSet(bottomSideSet = ViewAndSide(touchArea,
+                  MyOrientation.TOP))
                 explainTextAnimation("やあ、僕はとさかくん", MyOrientation.TOP,character).start()
                 var a = 1
                 onInstallBinding.root.setOnClickListener {
                     tameshi(a)
                     a+=1
                 }
-                  setPositionNextTo(touchArea,character, false,MyOrientationSet(MyOrientation.TOP,MyOrientation.MIDDLE))
+                  setPositionNextTo(touchArea,character, false,MyOrientationSet(
+                      MyOrientation.TOP,
+                      MyOrientation.MIDDLE))
 //                goNextOnClickAnyWhere()
             }
             fun greeting2(){
@@ -802,10 +819,10 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 }
             }
             fun greeting1(){
-                if(mainViewModel.returnFragmentStatus()?.now!=MainFragment.Library){
+                if(mainViewModel.returnFragmentStatus()?.now!= MainFragment.Library){
                     mainViewModel.changeFragment(MainFragment.Library)
                 }
-                if(libraryViewModel.returnLibraryFragment()!=LibraryFragment.Home){
+                if(libraryViewModel.returnLibraryFragment()!= LibraryFragment.Home){
                     libraryViewModel.returnLibraryNavCon()?.navigate(LibraryHomeFragDirections.toLibHome())
                 }
                 appearAlphaAnimation(holeView,true).start()
@@ -816,14 +833,14 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
             fun explainBtn(){
                 setHole(libraryRv[0],HoleShape.RECTANGLE)
-                setPositionByXY(libraryRv[0],character,MyOrientation.BOTTOM,20,false)
-                explainTextAnimation("このアイテムを見てみよう",MyOrientation.BOTTOM,character).start()
+                setPositionByXY(libraryRv[0],character, MyOrientation.BOTTOM,20,false)
+                explainTextAnimation("このアイテムを見てみよう", MyOrientation.BOTTOM,character).start()
                 goNextOnClickAnyWhere()
 
             }
             fun explainBtn2(){
                 explainTextAnimation("編集ボタンを表示するには、" +
-                        "\nアイテムを横にスライドするよ",MyOrientation.BOTTOM,
+                        "\nアイテムを横にスライドするよ", MyOrientation.BOTTOM,
                     character).start()
                 val area = addTouchArea(libraryRv)
                 area.setOnTouchListener(
@@ -884,7 +901,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
             fun explainBtn3(){
                 goNextOnClickAnyWhere()
-                explainTextAnimation("編集してみよう",MyOrientation.BOTTOM,character).start()
+                explainTextAnimation("編集してみよう", MyOrientation.BOTTOM,character).start()
             }
             fun explainBtn4(){
                 setHole(btnEditFile,HoleShape.CIRCLE)
@@ -904,20 +921,20 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
             }
             fun editFile2(){
-                setPositionByXY(frameLayEditFile,character,MyOrientation.BOTTOM,10,false)
+                setPositionByXY(frameLayEditFile,character, MyOrientation.BOTTOM,10,false)
                 appearAlphaAnimation(character,true).start()
-                explainTextAnimation("じゃじゃん！",MyOrientation.TOP,frameLayEditFile).start()
+                explainTextAnimation("じゃじゃん！", MyOrientation.TOP,frameLayEditFile).start()
                 goNextOnClickAnyWhere()
             }
             fun editFile3(){
-                setPositionByXY(frameLayEditFile,character,MyOrientation.BOTTOM,10,false)
-                explainTextAnimation("タイトルを変えたり",MyOrientation.TOP,frameLayEditFile).start()
+                setPositionByXY(frameLayEditFile,character, MyOrientation.BOTTOM,10,false)
+                explainTextAnimation("タイトルを変えたり", MyOrientation.TOP,frameLayEditFile).start()
                 setArrow(MyOrientation.BOTTOM,edtCreatingFileTitle)
                 goNextOnClickAnyWhere()
             }
             fun editFile4(){
-                setPositionByXY(frameLayEditFile,character,MyOrientation.BOTTOM,10,false)
-                explainTextAnimation("色で分けて整理してみてね",MyOrientation.TOP,frameLayEditFile).start()
+                setPositionByXY(frameLayEditFile,character, MyOrientation.BOTTOM,10,false)
+                explainTextAnimation("色で分けて整理してみてね", MyOrientation.TOP,frameLayEditFile).start()
                 arrayOf(imvColPaYellow,imvColPalBlue,imvColPalRed,imvColPalGray).onEach {
                     cloneView(it)
                 }
@@ -991,10 +1008,10 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 }
             }
             fun greeting(){
-                if(mainViewModel.returnFragmentStatus()?.now!=MainFragment.Library){
+                if(mainViewModel.returnFragmentStatus()?.now!= MainFragment.Library){
                     mainViewModel.changeFragment(MainFragment.Library)
                 }
-                if(libraryViewModel.returnLibraryFragment()!=LibraryFragment.Home){
+                if(libraryViewModel.returnLibraryFragment()!= LibraryFragment.Home){
                     libraryViewModel.returnLibraryNavCon()?.navigate(LibraryHomeFragDirections.toLibHome())
                 }
                 removeHole()
@@ -1015,14 +1032,14 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
             fun explainBtn3(){
                 setHole(btnDeleteFile,HoleShape.CIRCLE)
-                setPositionByXY(libraryRv[0],character,MyOrientation.BOTTOM,10,false)
-                explainTextAnimation("このボタンで、アイテムを削除できるよ",MyOrientation.BOTTOM,character).start()
+                setPositionByXY(libraryRv[0],character, MyOrientation.BOTTOM,10,false)
+                explainTextAnimation("このボタンで、アイテムを削除できるよ", MyOrientation.BOTTOM,character).start()
                 goNextOnClickAnyWhere()
             }
             fun explainBtn4(){
                 goNextOnClickTouchArea(btnDeleteFile)
                 explainTextAnimation("実際には削除しないので\n" +
-                        "一度押してみよう",MyOrientation.BOTTOM,character).start()
+                        "一度押してみよう", MyOrientation.BOTTOM,character).start()
                 setArrow(MyOrientation.LEFT,btnDeleteFile)
 
             }
@@ -1034,9 +1051,9 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 deletePopUpViewModel.setDeletingItem(mutableListOf(exampleFile))
                 deletePopUpViewModel.setConfirmDeleteVisible(true)
                 setHole(frameLayConfirmDelete,HoleShape.RECTANGLE)
-                setPositionByXY(frameLayConfirmDelete,character,MyOrientation.BOTTOM,50,false)
+                setPositionByXY(frameLayConfirmDelete,character, MyOrientation.BOTTOM,50,false)
                 setArrow(MyOrientation.BOTTOM,btnConfirmDelete)
-                explainTextAnimation("消されないので、試しに削除を押してね！",MyOrientation.TOP,frameLayConfirmDelete).start()
+                explainTextAnimation("消されないので、試しに削除を押してね！", MyOrientation.TOP,frameLayConfirmDelete).start()
                 goNextOnClickTouchArea(btnConfirmDelete)
             }
             fun explainDeleteSystem2(){
@@ -1047,17 +1064,19 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 txvContainingCardAmount.text = "15"
                 setHole(frameLayConfirmDeleteWithChildren,HoleShape.RECTANGLE)
                 setArrow(MyOrientation.BOTTOM,txvContainingCardAmount)
-                explainTextAnimation("単語帳やフォルダに中身が入っていると\n確認画面に映るよ！",MyOrientation.TOP,frameLayConfirmDeleteWithChildren).start()
+                explainTextAnimation("単語帳やフォルダに中身が入っていると\n確認画面に映るよ！",
+                    MyOrientation.TOP,frameLayConfirmDeleteWithChildren).start()
                 goNextOnClickAnyWhere()
             }
             fun explainDeleteSystem3(){
-                explainTextAnimation("中身もすべて消すか、\n残すか選べるよ",MyOrientation.TOP,frameLayConfirmDelete).start()
+                explainTextAnimation("中身もすべて消すか、\n残すか選べるよ", MyOrientation.TOP,frameLayConfirmDelete).start()
                 makeArrowGone()
                 goNextOnClickAnyWhere()
             }
             fun explainDeleteSystem4(){
                 setHole(btnConfirmDeleteOnlyParent,HoleShape.CIRCLE)
-                explainTextAnimation("中身を残す場合、\n中のカードはどの単語帳にも\n入っていないことになるんだ",MyOrientation.TOP,frameLayConfirmDelete).start()
+                explainTextAnimation("中身を残す場合、\n中のカードはどの単語帳にも\n入っていないことになるんだ",
+                    MyOrientation.TOP,frameLayConfirmDelete).start()
                 goNextOnClickAnyWhere()
             }
             fun explainDeleteSystem5(){
@@ -1079,7 +1098,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 removeHole()
                 txvInBoxCardAmount.text = ""
                 changeViewVisibility(txvInBoxCardAmount,false)
-                setPositionByXY(frameLayCallOnInstall,character,MyOrientation.MIDDLE,0,false)
+                setPositionByXY(frameLayCallOnInstall,character, MyOrientation.MIDDLE,0,false)
                 explainTextAnimation("アイテムをまとめて削除したいときは",
                     MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
@@ -1092,7 +1111,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                         guideInOrder(order+1)
                     }
                 })
-                setPositionByXY(libraryRv[0],character,MyOrientation.BOTTOM,50,false)
+                setPositionByXY(libraryRv[0],character, MyOrientation.BOTTOM,50,false)
                 explainTextAnimation("アイテムを長押ししてみて！",
                     MyOrientation.BOTTOM,character).start()
             }
@@ -1117,7 +1136,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
             fun explainMultiSelectMode6(){
                 setHole(frameLayMultiModeMenu,HoleShape.RECTANGLE)
-                setPositionByXY(frameLayMultiModeMenu,character,MyOrientation.BOTTOM,50,false)
+                setPositionByXY(frameLayMultiModeMenu,character, MyOrientation.BOTTOM,50,false)
                 makeTxvGone()
                 goNextOnClickAnyWhere()
             }
@@ -1192,7 +1211,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun guideMultiMode(){
-                explainTextAnimation("アイテムを長押ししてみよう",MyOrientation.TOP,character).start()
+                explainTextAnimation("アイテムを長押ししてみよう", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
 
             }
@@ -1217,11 +1236,11 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                     isSelected = true
                 }
                 val position = libraryRv.getChildAdapterPosition(selectedView!!)
-                libraryViewModel.onClickSelectableItem(libraryViewModel.returnParentRVItems()[position],true)
+                libraryViewModel.onClickRvSelect(ListAttributes.Add,libraryViewModel.returnParentRVItems()[position])
                 goNextOnClickAnyWhere()
             }
             fun guideMultiMode3(){
-                explainTextAnimation("メニューを開くよ",MyOrientation.TOP,character).start()
+                explainTextAnimation("メニューを開くよ", MyOrientation.TOP,character).start()
                 setHole(imvMultiModeMenu,HoleShape.CIRCLE)
                 goNextOnClickTouchArea(imvMultiModeMenu)
             }
@@ -1244,19 +1263,19 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun moveToFragment2(){
-                setPositionByXY(bnvBtnAdd,character,MyOrientation.TOP,0,false)
+                setPositionByXY(bnvBtnAdd,character, MyOrientation.TOP,0,false)
                 appearAlphaAnimation(character,true).start()
-                explainTextAnimation("アイテムの移動先が表示されるよ",MyOrientation.TOP,character).start()
+                explainTextAnimation("アイテムの移動先が表示されるよ", MyOrientation.TOP,character).start()
                 onInstallBinding.root.setOnClickListener {
                     if(libraryRv.size==0) guideInOrder(order+1) else guideInOrder(15)
                 }
             }
             fun moveToFragment3(){
-                explainTextAnimation("また移動先がないね",MyOrientation.TOP,character).start()
+                explainTextAnimation("また移動先がないね", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
             fun createMovableItem(){
-                explainTextAnimation("追加してみよう",MyOrientation.TOP,character).start()
+                explainTextAnimation("追加してみよう", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
             fun createMovableItem2(){
@@ -1300,18 +1319,19 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
             fun selectMovableItem(){
                 setHole(libraryRv,HoleShape.RECTANGLE)
-                explainTextAnimation("移動先を選択できるよ",MyOrientation.TOP,character).start()
+                explainTextAnimation("移動先を選択できるよ", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
             fun selectMovableItem2(){
-                explainTextAnimation("カードは単語帳、\n単語帳はフォルダへ移動する\nことしかできないよ！",MyOrientation.TOP,character).start()
+                explainTextAnimation("カードは単語帳、\n単語帳はフォルダへ移動する\nことしかできないよ！",
+                    MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
             fun selectMovableItem3(){
                 val linLayMove = libraryRv[0].findViewById<FrameLayout>(R.id.rv_base_frameLay_left)
                 setHole(linLayMove,HoleShape.RECTANGLE)
-                setPositionByXY(libraryRv[0],character,MyOrientation.BOTTOM,10,false)
-                explainTextAnimation("ここをタップして移動するよ",MyOrientation.BOTTOM,character).start()
+                setPositionByXY(libraryRv[0],character, MyOrientation.BOTTOM,10,false)
+                explainTextAnimation("ここをタップして移動するよ", MyOrientation.BOTTOM,character).start()
                 setArrow(MyOrientation.BOTTOM,linLayMove)
                 goNextOnClickTouchArea(linLayMove)
             }
@@ -1319,8 +1339,8 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 moveToViewModel.setPopUpVisible(true)
                 makeArrowGone()
                 setHole(frameLayPopUpConfirmMove,HoleShape.RECTANGLE)
-                setPositionByXY(frameLayPopUpConfirmMove,character,MyOrientation.BOTTOM,0,false)
-                explainTextAnimation("最後は確認画面が表示されるよ",MyOrientation.TOP,frameLayPopUpConfirmMove).start()
+                setPositionByXY(frameLayPopUpConfirmMove,character, MyOrientation.BOTTOM,0,false)
+                explainTextAnimation("最後は確認画面が表示されるよ", MyOrientation.TOP,frameLayPopUpConfirmMove).start()
                 goNextOnClickAnyWhere()
             }
             fun end(){

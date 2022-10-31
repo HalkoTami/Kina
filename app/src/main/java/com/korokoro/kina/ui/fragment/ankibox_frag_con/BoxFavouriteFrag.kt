@@ -12,7 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.korokoro.kina.databinding.FullRvBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
+import com.korokoro.kina.customClasses.AnkiBoxFragments
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.korokoro.kina.ui.viewmodel.AnkiBoxViewModel
 import com.korokoro.kina.ui.viewmodel.MainViewModel

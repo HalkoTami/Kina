@@ -4,7 +4,7 @@ import android.view.View
 import androidx.navigation.NavController
 import com.korokoro.kina.databinding.LibraryFragRvItemCardStringBinding
 import com.korokoro.kina.db.dataclass.Card
-import com.korokoro.kina.ui.customClasses.StringFragFocusedOn
+import com.korokoro.kina.customClasses.StringFragFocusedOn
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.CardTypeStringViewModel
 

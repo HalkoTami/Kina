@@ -17,7 +17,7 @@ import androidx.core.view.children
 import com.korokoro.kina.actions.ViewChangeActions
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
-import com.korokoro.kina.ui.customClasses.NeighbourCardSide
+import com.korokoro.kina.customClasses.NeighbourCardSide
 import kotlin.math.absoluteValue
 
 class Animation {

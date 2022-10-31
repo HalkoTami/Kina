@@ -21,7 +21,7 @@ import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
-import com.korokoro.kina.ui.customClasses.LibRVState
+import com.korokoro.kina.customClasses.LibRVState
 
 
 class LibrarySetUpItems{

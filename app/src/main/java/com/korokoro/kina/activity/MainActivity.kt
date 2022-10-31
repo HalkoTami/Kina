@@ -23,9 +23,9 @@ import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ActivityStatus
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
-import com.korokoro.kina.ui.customClasses.AnkiFragments
-import com.korokoro.kina.ui.customClasses.ColorPalletStatus
-import com.korokoro.kina.ui.customClasses.MainFragment
+import com.korokoro.kina.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.ColorPalletStatus
+import com.korokoro.kina.customClasses.MainFragment
 import com.korokoro.kina.ui.listener.KeyboardListener
 import com.korokoro.kina.ui.listener.popUp.EditFilePopUpCL
 import com.korokoro.kina.ui.observer.LibraryOb
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 //      全部のデータを消したいとき
-        applicationContext.deleteDatabase("my_database")
+//        applicationContext.deleteDatabase("my_database")
 //        ー－－－mainActivityのviewー－－－
         fun checkIfInstall(){
             val sharedPref = this.getSharedPreferences(
@@ -88,8 +88,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
         }
         fun checkBnvVisible():Boolean{
-            return !(mainActivityViewModel.returnFragmentStatus()?.now==MainFragment.EditCard
-                    ||ankiBaseViewModel.returnActiveFragment()==AnkiFragments.Flip
+            return !(mainActivityViewModel.returnFragmentStatus()?.now== MainFragment.EditCard
+                    ||ankiBaseViewModel.returnActiveFragment()== AnkiFragments.Flip
                     )
         }
         fun setUpMainActivityLayout(){
@@ -376,8 +376,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             bindingAddMenu.apply {
                 bnvBinding.apply {
                 when(v){
-                    bnvImvTabLibrary,bnvTxvTabLibrary -> mainActivityViewModel.changeFragment(MainFragment.Library)
-                    bnvImvTabAnki,bnvTxvTabAnki       -> mainActivityViewModel.changeFragment(MainFragment.Anki)
+                    bnvImvTabLibrary,bnvTxvTabLibrary -> mainActivityViewModel.changeFragment(
+                        MainFragment.Library)
+                    bnvImvTabAnki,bnvTxvTabAnki       -> mainActivityViewModel.changeFragment(
+                        MainFragment.Anki)
                     bnvImvAdd                         -> createFileViewModel.setBottomMenuVisible(true)
                     fragConViewCover                  -> createFileViewModel.makeBothPopUpGone()
                     imvnewCard                        -> createCardViewModel.onClickAddNewCardBottomBar()

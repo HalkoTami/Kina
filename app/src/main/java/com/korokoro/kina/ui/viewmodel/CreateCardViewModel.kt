@@ -11,10 +11,10 @@ import com.korokoro.kina.db.enumclass.CardStatus
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFragDirections
-import com.korokoro.kina.ui.customClasses.AnkiFragments
-import com.korokoro.kina.ui.customClasses.ColorPalletStatus
-import com.korokoro.kina.ui.customClasses.MainFragment
-import com.korokoro.kina.ui.customClasses.NeighbourCardSide
+import com.korokoro.kina.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.ColorPalletStatus
+import com.korokoro.kina.customClasses.MainFragment
+import com.korokoro.kina.customClasses.NeighbourCardSide
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -156,7 +156,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private fun saveEmptyCard(position:Int?,parentFlashCardCoverId:Int?){
         val newCard = Card(
             id = 0,
-            cardBefore =  position,
+            cardBefore =  position ,
             deleted = false,
             colorStatus = ColorStatus.GRAY,
             cardStatus = CardStatus.STRING,

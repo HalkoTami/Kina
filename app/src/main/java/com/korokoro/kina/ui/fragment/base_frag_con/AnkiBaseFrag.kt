@@ -22,11 +22,11 @@ import com.korokoro.kina.R
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.AnkiFragBaseBinding
 import com.korokoro.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFragDirections
-import com.korokoro.kina.ui.customClasses.MainFragment
+import com.korokoro.kina.customClasses.MainFragment
 import com.korokoro.kina.ui.viewmodel.*
-import com.korokoro.kina.ui.customClasses.AnkiFilter
-import com.korokoro.kina.ui.customClasses.AnkiFragments
-import com.korokoro.kina.ui.customClasses.AutoFlip
+import com.korokoro.kina.customClasses.AnkiFilter
+import com.korokoro.kina.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.AutoFlip
 
 
 class AnkiBaseFrag  : Fragment(),View.OnClickListener {
@@ -92,7 +92,8 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
                 val filterRemembered =  ankiSettingSharedPref.getBoolean(
                     requireActivity().getString(R.string.s_p_anki_setting_filter_remembered),false)
                 val autoFlipSec = ankiSettingSharedPref.getInt(
-                    requireActivity().getString(R.string.s_p_anki_setting_auto_flip_seconds),AutoFlip().seconds)
+                    requireActivity().getString(R.string.s_p_anki_setting_auto_flip_seconds),
+                    AutoFlip().seconds)
                 setSelectedStateAndAlpha(checkboxReverseSides,linLayAnkiSettingReverseSide,reverseSide)
                 setSelectedStateAndAlpha(checkboxAutoFlip,linLayAnkiSettingAutoFlip,autoFLip)
                 edtAutoFlipSeconds.isEnabled = autoFLip
@@ -220,7 +221,7 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
         fun onClickStartAnki() {
             saveAutoFlipSec()
             ankiBaseViewModel.setSettingVisible(false)
-            if(ankiBaseViewModel.returnActiveFragment()==AnkiFragments.Flip)
+            if(ankiBaseViewModel.returnActiveFragment()== AnkiFragments.Flip)
                 ankiBaseViewModel.returnAnkiBaseNavCon()?.popBackStack()
             ankiBaseViewModel.returnAnkiBaseNavCon()
                 ?.navigate(AnkiFlipBaseFragDirections.toFlipFrag())

@@ -19,8 +19,8 @@ import com.korokoro.kina.databinding.FragAnkiContentRvBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.korokoro.kina.ui.viewmodel.*
-import com.korokoro.kina.ui.customClasses.AnkiBoxFragments
-import com.korokoro.kina.ui.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.AnkiBoxFragments
+import com.korokoro.kina.customClasses.AnkiFragments
 
 
 class AnkiBoxContentFrag  : Fragment() {

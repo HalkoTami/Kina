@@ -8,15 +8,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
 import com.korokoro.kina.actions.makeToast
+import com.korokoro.kina.customClasses.LibRVState
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.ui.listener.recyclerview.LibraryRVCL
+import com.korokoro.kina.ui.listener.recyclerview.LibraryRVCLNewCard
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.korokoro.kina.ui.view_set_up.LibraryAddListeners
 import com.korokoro.kina.ui.view_set_up.LibrarySetUpItems
 import com.korokoro.kina.ui.viewmodel.*
-import com.korokoro.kina.ui.customClasses.LibRVState
 
 
 /**
@@ -54,7 +55,7 @@ class LibFragPlaneRVListAdapter(
                  createFileViewModel: EditFileViewModel,
                  deletePopUpViewModel: DeletePopUpViewModel,
         ){
-            fun libRVButtonsAddCL(
+            fun libRVButtonsAddCL(item:Any
             ){ binding.apply {
                 arrayOf(
                     root,
@@ -63,12 +64,29 @@ class LibFragPlaneRVListAdapter(
                     btnSelect,
                     btnAddNewCard,
                     btnEditWhole
-                ).onEach { it.setOnTouchListener(
+                ).onEach {
+                    it.setOnTouchListener(
                     LibraryRVCL(item,libraryViewModel, createFileViewModel,binding,deletePopUpViewModel,createCardViewModel,it)
                 )
                 }
             }
             }
+//            fun addCardCL(item: Card){
+//                binding.apply {
+//                    arrayOf(
+//                        root,
+//                        contentBindingFrame,
+//                        btnDelete,
+//                        btnSelect,
+//                        btnAddNewCard,
+//                        btnEditWhole
+//                    ).onEach {
+//                        it.setOnTouchListener(
+//                            LibraryRVCLNewCard(item,libraryViewModel, createFileViewModel,binding,deletePopUpViewModel,createCardViewModel,it)
+//                        )
+//                    }
+//                }
+//            }
             binding.contentBindingFrame.removeAllViews()
 //            親レイアウトのclick listener
 
@@ -83,11 +101,15 @@ class LibFragPlaneRVListAdapter(
                     binding.btnAddNewCard.visibility = View.GONE
                     contentView = fileBinding.root
 
+                    libRVButtonsAddCL(item)
                 }
                 is Card -> {
                     val stringCardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
                     viewSetUp.setUpRVStringCardBinding(stringCardBinding, item.stringData, )
+
                     addL.cardRVStringAddCL(stringCardBinding,item,createCardViewModel,stringCardViewModel,mainNavController)
+//                    addCardCL(item)
+                    libRVButtonsAddCL(item)
                     stringCardBinding.txvFrontTitle.text = item.id.toString()
                     stringCardBinding.txvBackTitle.text = item.cardBefore.toString()
                     binding.btnAddNewCard.visibility = View.VISIBLE
@@ -105,7 +127,7 @@ class LibFragPlaneRVListAdapter(
                 linLaySwipeShow.visibility = View.GONE
                 if(libraryViewModel.returnMultiSelectMode()== true) btnSelect.visibility = View.VISIBLE
             }
-            libRVButtonsAddCL()
+
             binding.contentBindingFrame.addView(contentView)
 //            TODo
 

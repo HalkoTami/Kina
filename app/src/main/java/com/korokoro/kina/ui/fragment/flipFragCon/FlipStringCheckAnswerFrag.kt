@@ -18,7 +18,7 @@ import com.korokoro.kina.databinding.AnkiFlipFragCheckAnswerStringFragBinding
 import com.korokoro.kina.db.dataclass.ActivityData
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.enumclass.ActivityStatus
-import com.korokoro.kina.ui.customClasses.FlipFragments
+import com.korokoro.kina.customClasses.FlipFragments
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.korokoro.kina.ui.viewmodel.FlipTypeAndCheckViewModel
 import com.korokoro.kina.ui.viewmodel.AnkiSettingPopUpViewModel

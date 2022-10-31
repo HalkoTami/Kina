@@ -15,8 +15,8 @@ import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.actions.showKeyBoard
 import com.korokoro.kina.databinding.AnkiFlipFragTypeAnswerStringFragBinding
 import com.korokoro.kina.db.dataclass.Card
-import com.korokoro.kina.ui.customClasses.FlipFragments
-import com.korokoro.kina.ui.customClasses.NeighbourCardSide
+import com.korokoro.kina.customClasses.FlipFragments
+import com.korokoro.kina.customClasses.NeighbourCardSide
 import com.korokoro.kina.ui.listener.KeyboardListener
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.korokoro.kina.ui.viewmodel.FlipTypeAndCheckViewModel

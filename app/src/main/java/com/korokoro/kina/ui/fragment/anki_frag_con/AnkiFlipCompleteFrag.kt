@@ -17,7 +17,7 @@ import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.AnkiFlipFragCompletedBinding
 import com.korokoro.kina.db.enumclass.ActivityStatus
 import com.korokoro.kina.ui.animation.Animation
-import com.korokoro.kina.ui.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.AnkiFragments
 import com.korokoro.kina.ui.viewmodel.AnkiBaseViewModel
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import java.util.*

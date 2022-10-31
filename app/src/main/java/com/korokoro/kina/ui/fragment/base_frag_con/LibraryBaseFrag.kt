@@ -11,8 +11,8 @@ import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.LibraryFragBinding
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.ui.customClasses.LibraryFragment
-import com.korokoro.kina.ui.customClasses.MainFragment
+import com.korokoro.kina.customClasses.LibraryFragment
+import com.korokoro.kina.customClasses.MainFragment
 import com.korokoro.kina.ui.observer.CommonOb
 import com.korokoro.kina.ui.viewmodel.*
 
@@ -142,6 +142,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         libraryBaseViewModel.parentFragment.observe(viewLifecycleOwner,libraryFragObserver)
         chooseFileMoveToViewModel.toast.observe(viewLifecycleOwner,toastObserver)
         deletePopUpViewModel.toast.observe(viewLifecycleOwner,toastObserver)
+        libraryBaseViewModel.toast.observe(viewLifecycleOwner,toastObserver)
         deletePopUpViewModel.confirmDeleteView.observe(viewLifecycleOwner,confirmDeleteViewObserver)
         deletePopUpViewModel.confirmDeleteWithChildrenView.observe(viewLifecycleOwner,confirmDeleteWithChildrenViewObserver)
         deletePopUpViewModel.deletingItem.observe(viewLifecycleOwner,deletingItemObserver)
