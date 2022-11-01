@@ -19,12 +19,11 @@ abstract class FileDao: BaseDao<File> {
     @Query("select * from tbl_file where NOT deleted AND fileId = :lookingFileId ")
     abstract fun getFileByFileId(lookingFileId:Int?): Flow<File>
 
-    @Query("select * from tbl_file a " +
-            "JOIN  tbl_card b On b.belongingFlashCardCoverId " +
-            "is :lookingFileId" +
-            " where NOT a.deleted AND fileId = :lookingFileId " +
+    @Query(" select * from tbl_file a " +
+            "JOIN  tbl_card b On b.belongingFlashCardCoverId is a.fileId " +
+            " where NOT a.deleted AND a.fileId = :fileId" +
             " AND NOT b.deleted")
-    abstract fun getFileChildrenCards(lookingFileId:Int?): Flow<Map<File,List<Card>>>
+    abstract fun getFileChildrenCards(fileId: Int?): Flow<Map<File,List<Card>>>
 
 
     @Query("select * from tbl_file a " +
@@ -57,7 +56,14 @@ abstract class FileDao: BaseDao<File> {
 
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM tbl_file su WHERE su.parentFileId is :fileId and not su.fileStatus = 3")
+    @Query(
+            " WITH  generation AS (" +
+            " select *, 1 as level from tbl_file   where parentFileId is :fileId " +
+            "and fileBefore is null " +
+            "and not fileStatus = 3 " +
+            "UNION ALL" +
+            " SELECT a.*, g.level + 1 as level  from tbl_file a Inner JOIN generation g ON g.fileId = a.fileBefore )" +
+            "SELECT  b.* FROM generation b order by level  ")
     abstract fun myGetFileByParentFileId(fileId: Int?): Flow<List<File>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

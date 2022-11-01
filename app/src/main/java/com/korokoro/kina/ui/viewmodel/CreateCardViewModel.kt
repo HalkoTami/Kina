@@ -37,6 +37,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
     fun getFileAndChildrenCards(fileId:Int?): LiveData<Map<File, List<Card>>> = repository.getFileAndChildrenCards(fileId).asLiveData()
+    val cardsWithoutCardsFlashCard:LiveData<List<Card>?> =  this.repository.getCardDataByFileIdSorted(null).asLiveData()
 
     fun getParentFlashCardCover(fileId:Int?):LiveData<File?> = repository.getFileByFileId(fileId).asLiveData()
     private val _parentFlashCardCover = MutableLiveData<File?>()

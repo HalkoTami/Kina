@@ -59,12 +59,16 @@ class EditCardFrag: Fragment() {
 
         }
         val flashCardAndChildrenCardsObserver = Observer<Map<File,List<Card>>>{
-            if(it.keys.size==1&&it.values.size == 1)
+            val file = it.keys
+            val cards = it.values
+            if(it.keys.size == 1 && it.values.size == 1)
             { createCardViewModel.setParentFlashCardCover(it.keys.single())
                 val parentCard = it.values.single().find { it.id == args.cardId?.single() }
                 createCardViewModel.setParentCard(parentCard)
                 createCardViewModel.setSisterCards(it.values.single())
+
             }
+
         }
 
 
@@ -84,9 +88,19 @@ class EditCardFrag: Fragment() {
             lastCardOld = it
         }
 
-        createCardViewModel.getFileAndChildrenCards(parentFlashCardId)
-            .observe(viewLifecycleOwner,flashCardAndChildrenCardsObserver)
 
+
+        if(parentFlashCardId==null){
+            createCardViewModel.cardsWithoutCardsFlashCard.observe(viewLifecycleOwner){
+                createCardViewModel.setParentFlashCardCover(null)
+                val parentCard = it?.find { it.id == args.cardId?.single() } ?:return@observe
+                createCardViewModel.setParentCard(parentCard)
+                createCardViewModel.setSisterCards(it)
+            }
+        } else {
+            createCardViewModel.getFileAndChildrenCards(parentFlashCardId)
+                .observe(viewLifecycleOwner,flashCardAndChildrenCardsObserver)
+        }
 
         return binding.root
     }
