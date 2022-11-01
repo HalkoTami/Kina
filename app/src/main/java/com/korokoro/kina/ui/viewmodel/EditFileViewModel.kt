@@ -306,7 +306,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 fileStatus = fileStatus ,
                 colorStatus = ColorStatus.GRAY,
                 deleted = false,
-                fileBefore = null,
+                fileBefore = returnParentFileSisters().lastOrNull()?.fileId,
                 parentFileId = returnParentTokenFileParent()?.fileId
             ))
     }
