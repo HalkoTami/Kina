@@ -156,10 +156,10 @@ class LibraryFlashCardCoverFrag  : Fragment(){
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
 
                 val sorted = SortActions().sortCards(it ?: mutableListOf())
-                setParentRVItems(it ?: mutableListOf())
-                adapter.submitList(it)
+                setParentRVItems(sorted ?: mutableListOf())
+                adapter.submitList(sorted)
                 if(it!=null){
-                    createCardViewModel.setSisterCards(it)
+                    createCardViewModel.setSisterCards(sorted)
                 }
                 if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)

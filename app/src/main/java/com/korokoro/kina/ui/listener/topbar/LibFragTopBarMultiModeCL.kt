@@ -35,7 +35,7 @@ class LibFragTopBarMultiModeCL(
                 }
                 menuBinding.linLayDeleteSelectedItems -> if(notSelected) makeToast(v.context,"todo")
                 else {
-                    deletePopUpViewModel.setDeletingItem(libVM.returnSelectedItems())
+                    deletePopUpViewModel.setDeletingItem(libVM.returnSelectedItems().toMutableList())
                     deletePopUpViewModel.setConfirmDeleteVisible(true)
 
                 }

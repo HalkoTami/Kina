@@ -102,18 +102,18 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         setParentRVItems(mutableListOf())
     }
 //    selected Items
-    private val _selectedItems = MutableLiveData<MutableList<Any>>()
-    private fun setSelectedItems(list:MutableList<Any>){
+    private val _selectedItems = MutableLiveData<List<Any>>()
+    private fun setSelectedItems(list:List<Any>){
         _selectedItems.value = list
     }
     fun clearSelectedItems(){
         setSelectedItems(mutableListOf())
     }
-    fun returnSelectedItems():MutableList<Any>{
+    fun returnSelectedItems():List<Any>{
         return _selectedItems.value ?: mutableListOf()
     }
 
-    val selectedItems:LiveData<MutableList<Any>> = _selectedItems
+    val selectedItems:LiveData<List<Any>> = _selectedItems
     private val _reorderedLeftItems = MutableLiveData<List<Any>>()
     private fun setReorderedLeftItems(list:List<Any>){
         _reorderedLeftItems.value = list
@@ -129,48 +129,58 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
 
     val toast :LiveData<MakeToastFromVM> = _toast
-    fun updateLeftItems(item: Card, listAttributes: ListAttributes,){
-        when(listAttributes){
-            ListAttributes.Add ->{
-
-            }
-            ListAttributes.Remove -> {
-
-
-            }
+    fun updateLeftItems(parentCards:List<Card>){
+        val updateList = mutableListOf<Card>()
+        val selectedList =  returnSelectedItems().filterIsInstance<Card>()
+        fun checkIsSelected(card:Card):Boolean{
+            return selectedList.map { it.id }.contains(card.id)
         }
-
+        var lastUnselectedCard:Card? = null
+        fun getNextCard(cardId: Int?){
+            val nextCard = parentCards.find { it.cardBefore == cardId } ?:return
+            if(checkIsSelected(nextCard).not()) {
+                val new = nextCard.copy()
+                new.cardBefore = lastUnselectedCard?.id
+                lastUnselectedCard = new
+                updateList.add(new)
+            }
+            getNextCard(nextCard.id)
+        }
+        getNextCard(null)
+        setReorderedLeftItems(updateList)
     }
-    fun sortAndUpdateSelectedCards(list:List<Card>):List<Card>{
-        val sorted = list.sortedBy { returnParentRVItems().indexOf(it) }
+    fun sortAndUpdateSelectedCards(){
+        val sorted = returnSelectedItems().sortedBy { returnParentRVItems().indexOf(it) }.filterIsInstance<Card>()
+        val newUpdatedList = mutableListOf<Card>()
         sorted.onEach {
+            val newCard = it.copy()
             val posBefore = sorted.indexOf(it)-1
-            it.cardBefore = if(posBefore <0) null else if (posBefore in 0..sorted.size) {
+            newCard.cardBefore = if(posBefore <0) null else if (posBefore in 0..sorted.size) {
                 sorted[posBefore].id
+
             } else throw IllegalArgumentException()
+            newUpdatedList.add(newCard)
         }
-        return sorted
+        setSelectedItems(newUpdatedList)
     }
     fun onClickRvSelectCard(item: Card,listAttributes: ListAttributes){
-        val list = returnSelectedItems()
-        val changeItem = item
-        if(list.isEmpty()) setReorderedLeftItems(returnParentRVItems().toMutableList())
-        val leftList = getReorderedLeftItems().filterIsInstance<Card>().toMutableList()
+        val list = returnSelectedItems().filterIsInstance<Card>()
+        val parentList = returnParentRVItems().filterIsInstance<Card>()
+        val mList = mutableListOf<Card>()
+        mList.addAll(list)
         when(listAttributes){
             ListAttributes.Add ->{
-                list.add(changeItem)
-                leftList.remove(changeItem)
+                mList.add(item)
+
             }
             ListAttributes.Remove -> {
-                list.remove(changeItem)
-                leftList.add(changeItem)
+                mList.remove(item)
             }
         }
 
-        setReorderedLeftItems(leftList)
-        updateLeftItems(item,listAttributes)
-//        val updatedSelectedItems = sortAndUpdateSelectedCards(list.filterIsInstance<Card>())
-        setSelectedItems(list.toMutableList())
+        setSelectedItems(mList)
+        updateLeftItems(parentList)
+        sortAndUpdateSelectedCards()
 
     }
     fun onClickRvSelect(listAttributes: ListAttributes,item: Any){
