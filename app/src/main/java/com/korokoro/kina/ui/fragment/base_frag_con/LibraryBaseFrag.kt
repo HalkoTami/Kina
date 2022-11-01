@@ -105,6 +105,11 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
                 else -> libraryBaseViewModel.clearSelectedItems()
             }
         }
+        val reorderedLeftItemsObserver = Observer<List<Any>> {
+            val updateNeeded = libraryBaseViewModel.filterReorderedItemsForUpdate()
+            chooseFileMoveToViewModel.setMovingItemSistersUpdateNeeded(updateNeeded)
+            deletePopUpViewModel.setDeletingItemsSistersUpdateNeeded(updateNeeded)
+        }
         searchViewModel.searchingText.observe(viewLifecycleOwner){ searchText ->
             if(searchText == "")  {
                 requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
@@ -139,6 +144,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         mainViewModel.setChildFragmentStatus(MainFragment.Library)
         mainViewModel.setBnvVisibility(true)
 
+        libraryBaseViewModel.reorderedLeftItems.observe(viewLifecycleOwner,reorderedLeftItemsObserver)
         libraryBaseViewModel.parentFragment.observe(viewLifecycleOwner,libraryFragObserver)
         chooseFileMoveToViewModel.toast.observe(viewLifecycleOwner,toastObserver)
         deletePopUpViewModel.toast.observe(viewLifecycleOwner,toastObserver)

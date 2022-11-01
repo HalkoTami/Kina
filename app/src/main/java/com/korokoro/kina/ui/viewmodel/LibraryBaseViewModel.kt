@@ -115,11 +115,20 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
     val selectedItems:LiveData<List<Any>> = _selectedItems
     private val _reorderedLeftItems = MutableLiveData<List<Any>>()
+    val reorderedLeftItems:LiveData<List<Any>> = _reorderedLeftItems
     private fun setReorderedLeftItems(list:List<Any>){
         _reorderedLeftItems.value = list
     }
     fun getReorderedLeftItems():List<Any>{
         return _reorderedLeftItems.value ?: mutableListOf()
+    }
+    fun filterReorderedItemsForUpdate():List<Any>{
+        val updateNeeded = mutableListOf<Any>()
+        getReorderedLeftItems().onEach { reOrderedItem ->
+            val sameItem = returnParentRVItems().find { it == reOrderedItem }
+            if(sameItem==null) updateNeeded.add(reOrderedItem)
+        }
+        return  updateNeeded
     }
 
     private val _toast = MutableLiveData<MakeToastFromVM>()

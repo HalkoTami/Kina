@@ -61,9 +61,9 @@ class EditCardFrag: Fragment() {
         val flashCardAndChildrenCardsObserver = Observer<Map<File,List<Card>>>{
             if(it.keys.size==1&&it.values.size == 1)
             { createCardViewModel.setParentFlashCardCover(it.keys.single())
-                createCardViewModel.setSisterCards(it.values.single())
                 val parentCard = it.values.single().find { it.id == args.cardId?.single() }
                 createCardViewModel.setParentCard(parentCard)
+                createCardViewModel.setSisterCards(it.values.single())
             }
         }
 

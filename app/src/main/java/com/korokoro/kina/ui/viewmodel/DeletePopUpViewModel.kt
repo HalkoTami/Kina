@@ -37,8 +37,10 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         } else makeToastFromVM("選択中のアイテムを削除しました")
     }
     private fun deleteCards(cards: List<Card> ){
+        val updateNeeded = getDeletingItemsSistersUpdateNeeded()
         viewModelScope.launch {
             repository.deleteMultiple(cards)
+            repository.updateMultiple(updateNeeded)
         }
         makeToastFromVM("${cards.size}枚のカードを削除しました")
     }
@@ -120,7 +122,13 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         deleteMultipleFiles(returnDeletingItems().filterIsInstance<File>(),true)
         setConfirmDeleteWithChildrenVisible(false)
     }
-
+    private val _deletingItemsSistersUpdateNeeded = MutableLiveData<List<Any>>()
+    fun setDeletingItemsSistersUpdateNeeded(list:List<Any>){
+        _deletingItemsSistersUpdateNeeded.value = list
+    }
+    fun getDeletingItemsSistersUpdateNeeded():List<Any>{
+        return _deletingItemsSistersUpdateNeeded.value ?: mutableListOf()
+    }
 
     class ConfirmDeleteView(
         var visible:Boolean = false,

@@ -159,7 +159,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
                 setParentRVItems(sorted ?: mutableListOf())
                 adapter.submitList(sorted)
                 if(it!=null){
-                    createCardViewModel.setSisterCards(sorted)
+                    createCardViewModel.setSisterCards(it)
                 }
                 if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)

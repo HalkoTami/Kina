@@ -77,13 +77,13 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
                 sorted.addAll(nextList)
                 getNextCard(nextList.single())
             } else if(nextList.size>1){
-                val sorted = nextList.sortedBy { it.id }.reversed()
-                sorted.onEach {
-                    val nowPos = sorted.indexOf(it)
+                val cardBeforeDoubledSorted = nextList.sortedBy { it.id }.reversed()
+                cardBeforeDoubledSorted.onEach {
+                    val nowPos = cardBeforeDoubledSorted.indexOf(it)
                     if(nowPos>0)
-                        upDateCardBefore(it,sorted[nowPos-1].id)
+                        upDateCardBefore(it,cardBeforeDoubledSorted[nowPos-1].id)
                 }
-                getNextCard(sorted.last())
+                getNextCard(cardBeforeDoubledSorted.last())
             }
         }
         getNextCard(null)
@@ -92,7 +92,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     }
     fun setSisterCards(list:List<Card>){
-        val sorted = SortActions().getSortedAndUpdatedCardList(list)
+        val sorted = sortCards(list)
         _sisterCards.value = sorted
     }
     private val _startingCardId = MutableLiveData<Int>()

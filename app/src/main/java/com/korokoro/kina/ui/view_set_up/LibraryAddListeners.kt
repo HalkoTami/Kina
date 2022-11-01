@@ -42,7 +42,7 @@ class LibraryAddListeners(){
 
         fun searchAddCL(){
             if(imvSearchLoup!=null)
-            arrayOf(imvSearchLoup,binding.bindingSearch.txvCancel).onEach {
+                arrayOf(imvSearchLoup,binding.bindingSearch.txvCancel).onEach {
                 it.setOnClickListener(LibFragSearchBarCL(
                     context,imvSearchLoup,binding.frameLaySearchBar,binding.bindingSearch,searchViewModel,inputMethodManager
                 ))

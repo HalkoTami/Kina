@@ -161,7 +161,6 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         addCL()
 
         chooseFileMoveToViewModel.setMovingItems(movingItems)
-        chooseFileMoveToViewModel.setMovingItemsSisters(movingItemSisters)
         chooseFileMoveToViewModel.popUpVisible.observe(viewLifecycleOwner,popUpVisibleObserver)
         chooseFileMoveToViewModel.popUpText.observe(viewLifecycleOwner,popUpTextObserver)
 

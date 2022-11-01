@@ -3,7 +3,6 @@ package com.korokoro.kina.ui.viewmodel
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.korokoro.kina.actions.SortActions
-import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
@@ -57,12 +56,12 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     fun returnMovingItems():List<Any>{
         return _movingItems.value ?: mutableListOf()
     }
-    private val _movingItemsSisters = MutableLiveData<List<Any>>()
-    fun setMovingItemsSisters(list:List<Any>){
-        _movingItemsSisters.value = list
+    private val _movingItemSistersUpdateNeeded = MutableLiveData<List<Any>>()
+    fun setMovingItemSistersUpdateNeeded(list:List<Any>){
+        _movingItemSistersUpdateNeeded.value = list
     }
-    fun returnMovingItemsSisters():List<Any>{
-        return _movingItemsSisters.value ?: mutableListOf()
+    private fun getMovingItemSistersUpdateNeeded():List<Any>{
+        return _movingItemSistersUpdateNeeded.value ?: mutableListOf()
     }
     private val _fileMoveTo = MutableLiveData<File>()
     private fun setFileMoveTo(file: File){
@@ -89,7 +88,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     fun moveSelectedItemToFile(navController: NavController){
         val item = returnFileMoveTo() ?:return
         val change = returnMovingItems()
-        val updatedSisters = returnMovingItemsSisters().filterIsInstance<Card>()
+        val updatedSisters = getMovingItemSistersUpdateNeeded().filterIsInstance<Card>()
         val lastId = SortActions().sortCards(returnFlashcardAndChildListMap()[item]).last().id
 
         val changeCards = change.filterIsInstance<Card>()
