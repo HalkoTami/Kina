@@ -26,9 +26,6 @@ abstract class FileDao: BaseDao<File> {
             " AND NOT b.deleted")
     abstract fun getFileChildrenCards(lookingFileId:Int?): Flow<Map<File,List<Card>>>
 
-    @Query("UPDATE tbl_file SET  libOrder = libOrder + 1 WHERE " +
-            "parentFileId is :parentFileId and libOrder >= :insertingPosition")
-    abstract suspend fun upDateFilePositionBeforeInsert(parentFileId: Int?,insertingPosition: Int)
 
     @Query("select * from tbl_file a " +
             "JOIN tbl_file e ON e.parentFileId = a.fileId " +
@@ -83,51 +80,6 @@ abstract class FileDao: BaseDao<File> {
             " SELECT a.* from tbl_file a Inner JOIN generation g ON g.parentFileId = a.fileId )" +
             "SELECT * FROM generation b ")
     abstract fun getAllAncestorsByChildFileId(fileId: Int?): Flow<List<File>>
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("UPDATE tbl_file SET descendantsCardsAmount = descendantsCardsAmount + :amount " +
-            " WHERE fileId in ( WITH  generation AS (" +
-            " select * from tbl_file where fileId = :fileId  " +
-            "UNION ALL" +
-            " SELECT a.* from tbl_file a " +
-            " Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
-            "SELECT fileId FROM generation b ) ")
-    abstract suspend fun upDateAncestorsCardAmount(fileId: Int,amount: Int)
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("UPDATE tbl_file SET descendantsFoldersAmount = descendantsFoldersAmount + :amount " +
-            " WHERE fileId in ( WITH  generation AS (" +
-            " select * from tbl_file where fileId = :fileId  " +
-            "UNION ALL" +
-            " SELECT a.* from tbl_file a " +
-            " Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
-            "SELECT fileId FROM generation b ) ")
-    abstract suspend fun upDateAncestorsFolderAmount(fileId: Int,amount: Int)
-
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("UPDATE tbl_file SET descendantsFlashCardsCoversAmount = descendantsFlashCardsCoversAmount + :amount " +
-            " WHERE fileId in ( WITH  generation AS (" +
-            " select * from tbl_file where fileId = :fileId  " +
-            "UNION ALL" +
-            " SELECT a.* from tbl_file a " +
-            " Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
-            "SELECT fileId FROM generation b ) ")
-    abstract suspend fun upDateAncestorsFlashCardCoverAmount(fileId: Int,amount:Int)
-
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("UPDATE tbl_file " +
-            "SET flippedOnceAmount = (select  Count( id  ) from tbl_card where timesFlipped = 1 and belongingFlashCardCoverId = :fileId )" +
-            "and  flippedTwiceAmount = (select  Count( id  ) from tbl_card where timesFlipped = 2 and belongingFlashCardCoverId = :fileId )" +
-            "and flippedThreeTimesAmount = (select  Count( id  ) from tbl_card where timesFlipped = 3 and belongingFlashCardCoverId = :fileId )" +
-            "and flippedFourTimesAmount = (select  Count( id  ) from tbl_card where timesFlipped >= 4 and belongingFlashCardCoverId = :fileId )" +
-            " WHERE fileId in ( WITH  generation AS (" +
-            " select c.* from tbl_file c Inner Join tbl_x_ref b " +
-            " on b.id2 = c.fileId " +
-            "where (b.id1TokenXRefType = :cardTableInt and b.id1 = :upDatedCardId and b.id2TokenXRefType = :fileTableInt)" +
-            " or c.fileId = :fileId " +
-            "UNION ALL" +
-            " SELECT a.* from tbl_file a " +
-            " Inner JOIN generation g ON g.parentFileId = a.fileId ) " +
-            "SELECT fileId FROM generation b  )")
-    abstract suspend fun upDateAncestorsFlipCount(upDatedCardId:Int,fileId: Int?,cardTableInt:Int,fileTableInt:Int)
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("WITH  generation AS (" +
@@ -139,14 +91,6 @@ abstract class FileDao: BaseDao<File> {
     @Query("UPDATE tbl_file SET parentFileId = :newParentFileId  WHERE parentFileId = :deletedFileId")
     abstract suspend fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?)
 
-    @Query("UPDATE tbl_file SET childFoldersAmount = childFoldersAmount + :amount  WHERE fileId = :fileId")
-    abstract suspend fun upDateFileChildFoldersAmount(fileId: Int,amount: Int)
-
-    @Query("UPDATE tbl_file SET childFlashCardCoversAmount = childFlashCardCoversAmount + :amount  WHERE fileId = :fileId")
-    abstract suspend fun upDateFileChildFlashCardCoversAmount(fileId: Int,amount: Int)
-
-    @Query("UPDATE tbl_file SET childCardsAmount = childCardsAmount + :amount  WHERE fileId = :fileId")
-    abstract suspend fun upDateFileChildCardsAmount(fileId: Int,amount: Int)
 
     @Query("DELETE FROM tbl_file  WHERE fileId in (" +
             " WITH generation AS (" +

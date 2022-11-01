@@ -62,34 +62,34 @@ import kotlinx.coroutines.launch
                     val fileDao = database.fileDao()
                     val cardDao = database.cardDao()
                     val firstFile = File(
-                        fileId = 0,
+                        fileId = 1,
                         title = "フォルダ1",
                         deleted = false,
                         colorStatus=  ColorStatus.GRAY,
                         fileStatus = FileStatus.FOLDER,
-                        libOrder = 0,
+                        fileBefore = null,
                         parentFileId = null)
                     val firstChildFile = File(
-                        fileId = 0,
+                        fileId = 2,
                         title = "子フォルダ",
                         deleted = false,
                         colorStatus=  ColorStatus.RED,
                         fileStatus = FileStatus.FOLDER,
-                        libOrder = 0,
+                        fileBefore = null,
                         parentFileId = 1
                     )
                     val firstFlashCardWithoutParent = File(
-                    fileId = 0,
+                    fileId = 3,
                     fileStatus = FileStatus.FLASHCARD_COVER,
                     title = "単語帳1",
                     )
                     val firstChildFlashCard = File(
-                        fileId = 0,
+                        fileId = 4,
                         title = "単語帳2",
                         deleted = false,
                         colorStatus=  ColorStatus.BLUE,
                         fileStatus = FileStatus.FLASHCARD_COVER,
-                        libOrder = 1,
+                        fileBefore = 2,
                         parentFileId = 1
                     )
                     val firstCard = Card(

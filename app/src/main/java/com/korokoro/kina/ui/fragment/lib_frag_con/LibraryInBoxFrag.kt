@@ -145,7 +145,7 @@ class LibraryInBoxFrag  : Fragment(){
             val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
             childCardsFromDB(null).observe(viewLifecycleOwner) {
 
-                val sorted = it?.sortedBy { it.cardBefore }
+                val sorted = it
                 setParentRVItems(sorted?: mutableListOf())
                 adapter.submitList(sorted)
                 if(it.isNullOrEmpty()){

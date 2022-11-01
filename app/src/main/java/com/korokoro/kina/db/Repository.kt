@@ -28,46 +28,39 @@ class MyRoomRepository(
     private val fileStatusConverter = FileStatusConverter()
     private val statusFolderAsInt = fileStatusConverter.fromFileStatus(FileStatus.FOLDER)
     private val statusFlashCardAsInt = fileStatusConverter.fromFileStatus(FileStatus.FLASHCARD_COVER)
-//cards
+//lastInsertedItems
+    val lastInsertedCard                                                    :Flow<Card>         = cardDao.getLastInsertedCard()
+    val lastInsertedFile                                                    :Flow<File>         = fileDao.getLastInsertedFileId()
 
-    fun getCardDataByFileId(parentFileId: Int?):Flow<List<Card>>  = cardDao.getCardsDataByFileId(parentFileId)
-    fun getAllDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>> =
-        cardDao.getAllDescendantsCardsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
-    fun getDescendantsCardsByMultipleFileId(fileIdList: List<Int>):Flow<List<Card>> =
-        cardDao.getDescendantsCardsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
-    fun getCardsByMultipleCardId(cardIds:List<Int>):Flow<List<Card>> = cardDao.getCardByMultipleCardIds(cardIds)
-    fun getCardByCardId(cardId:Int?):Flow<Card> = cardDao.getCardByCardId(cardId)
-    fun lastInsertedCardByFlashCard(flashCardId: Int?):Flow<Card> = cardDao.getLastInsertedCardByFlashCard(flashCardId)
-    val lastInsertedCard:Flow<Card> = cardDao.getLastInsertedCard()
-    fun searchCardsByWords(search:String):Flow<List<Card>> = cardDao.searchCardsByWords(search)
-    fun getAnkiBoxRVCards(fileId:Int):Flow<List<Card>> =
-        cardDao.getAnkiBoxRVCards(fileId,xRefTypeCardAsInt,xRefTypeFileAsInt)
-    fun getDescendantsCardsIsByMultipleFileId(fileIdList: List<Int>):Flow<List<Int>> =
-        cardDao.getDescendantsCardsIdsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
-    fun getAnkiBoxFavouriteRVCards(fileId:Int):Flow<List<Card>> =
-        cardDao.getAnkiBoxFavouriteRVCards(fileId,xRefTypeCardAsInt,xRefTypeFileAsInt)
-    val allCards:Flow<List<Card>> = cardDao.getAllCards()
+
+    fun getCardDataByFileId                    (parentFileId: Int?)         :Flow<List<Card>>   = cardDao.getCardsDataByFileId(parentFileId)
+    fun getCardDataByFileIdSorted              (parentFileId: Int?)         :Flow<List<Card>>   = cardDao.getCardsDataByFileIdSorted(parentFileId)
+
+    fun getAllDescendantsCardsByMultipleFileId (fileIdList: List<Int>)      :Flow<List<Card>>   = cardDao.getAllDescendantsCardsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
+    fun getCardsByMultipleCardId               (cardIds:List<Int>)          :Flow<List<Card>>   = cardDao.getCardByMultipleCardIds(cardIds)
+    fun getCardByCardId                        (cardId:Int?)                :Flow<Card>         = cardDao.getCardByCardId(cardId)
+    fun searchCardsByWords                     (search:String)              :Flow<List<Card>>   = cardDao.searchCardsByWords(search)
+    fun getAnkiBoxRVCards                      (fileId:Int)                 :Flow<List<Card>>   = cardDao.getAnkiBoxRVCards(fileId,xRefTypeCardAsInt,xRefTypeFileAsInt)
+    fun getDescendantsCardsIsByMultipleFileId  (fileIdList: List<Int>)      :Flow<List<Int>>    = cardDao.getDescendantsCardsIdsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
+    val allCards                                                            :Flow<List<Card>>   = cardDao.getAllCards()
 //    files
-    fun getFileByFileId(fileId:Int?):Flow<File> = fileDao.getFileByFileId(fileId)
-    fun getFileAndChildrenCards(fileId:Int?):Flow<Map<File,List<Card>>> = fileDao.getFileChildrenCards(fileId)
-
-    fun getFoldersMovableTo(movingFilesId:List<Int>,parentFileId:Int?):Flow<Map<File,List<File>>> = fileDao.getFoldersMovableTo(movingFilesId, parentFileId,1)
-    val lastInsertedFile:Flow<File> = fileDao.getLastInsertedFileId()
-    fun getFileDataByParentFileId(parentFileId:Int?):Flow<List<File>> = fileDao.myGetFileByParentFileId(parentFileId)
-    fun getLibraryItemsWithDescendantCards(parentFileId:Int?):Flow<List<File>> = fileDao.getLibraryItemsWithDescendantCards(parentFileId)
-
-    fun getAnkiBoxRVDescendantsFolders(fileId:Int):Flow<List<File>> = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFolderAsInt)
-    fun getAnkiBoxRVDescendantsFlashCards(fileId:Int):Flow<List<File>> = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFlashCardAsInt)
-    fun getAllAncestorsByFileId(fileId: Int?):Flow<List<File>> = fileDao.getAllAncestorsByChildFileId(fileId)
-    fun getAllDescendantsFilesByMultipleFileId(fileIdList: List<Int>):Flow<List<File>> = fileDao.getAllDescendantsFilesByMultipleFileId(fileIdList)
-    fun searchFilesByWords(search:String):Flow<List<File>> = fileDao.searchFilesByWords(search)
-    val allFlashCardCoverContainsCard:Flow<List<File>> = fileDao.getAllFlashCardCoverContainsCard()
-    fun getMovableFlashCards(movingCardsIds: List<Int>) : Flow<Map<File, List<Card>>> = fileDao.getFlashCardsMovableTo(movingCardsIds,statusFlashCardAsInt)
-    val allFavouriteAnkiBox:Flow<List<File>> = fileDao.getAllFavouriteAnkiBox()
+    fun getFileByFileId                        (fileId:Int?)                :Flow<File>         = fileDao.getFileByFileId(fileId)
+    fun getFileAndChildrenCards                (fileId:Int?)                :Flow<Map<File,List<Card>>> = fileDao.getFileChildrenCards(fileId)
+    fun getFoldersMovableTo                    (movingFilesId:List<Int>
+                                                ,parentFileId:Int?)         :Flow<Map<File,List<File>>> = fileDao.getFoldersMovableTo(movingFilesId, parentFileId,1)
+    fun getFileDataByParentFileId              (parentFileId:Int?)          :Flow<List<File>>           = fileDao.myGetFileByParentFileId(parentFileId)
+    fun getLibraryItemsWithDescendantCards     (parentFileId:Int?)          :Flow<List<File>>           = fileDao.getLibraryItemsWithDescendantCards(parentFileId)
+    fun getAnkiBoxRVDescendantsFolders         (fileId:Int)                 :Flow<List<File>>           = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFolderAsInt)
+    fun getAnkiBoxRVDescendantsFlashCards      (fileId:Int)                 :Flow<List<File>>           = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFlashCardAsInt)
+    fun getAllAncestorsByFileId                (fileId: Int?)               :Flow<List<File>>           = fileDao.getAllAncestorsByChildFileId(fileId)
+    fun getAllDescendantsFilesByMultipleFileId (fileIdList: List<Int>)      :Flow<List<File>>           = fileDao.getAllDescendantsFilesByMultipleFileId(fileIdList)
+    fun searchFilesByWords                     (search:String)              :Flow<List<File>>           = fileDao.searchFilesByWords(search)
+    val allFlashCardCoverContainsCard                                       :Flow<List<File>>           = fileDao.getAllFlashCardCoverContainsCard()
+    fun getMovableFlashCards                   (movingCardsIds: List<Int>)  :Flow<Map<File, List<Card>>> = fileDao.getFlashCardsMovableTo(movingCardsIds,statusFlashCardAsInt)
+    val allFavouriteAnkiBox                                                 :Flow<List<File>>           = fileDao.getAllFavouriteAnkiBox()
 //    activity
-    fun getCardActivity(cardId:Int):Flow<List<ActivityData>> = activityDataDao.getActivityDataByCard(cardId)
-    val allActivity:Flow<List<ActivityData>> = activityDataDao.getAllActivityData()
-
+    fun getCardActivity                        (cardId:Int)                 :Flow<List<ActivityData>>       = activityDataDao.getActivityDataByCard(cardId)
+    val allActivity                                                         :Flow<List<ActivityData>>       = activityDataDao.getAllActivityData()
 
     suspend fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {
         fileDao.upDateChildFilesOfDeletedFile(deletedFileId,newParentFileId)
@@ -78,33 +71,6 @@ class MyRoomRepository(
 
     }
 
-    suspend fun insertCard(card: Card){
-//        cardDao.upDateCardsPositionBeforeInsert(card.belongingFlashCardCoverId,card.cardBefore)
-        cardDao.insert(card)
-        val flashCardCoverId = card.belongingFlashCardCoverId
-        if(flashCardCoverId!=null){
-            fileDao.upDateFileChildCardsAmount(flashCardCoverId,1)
-            fileDao.upDateAncestorsCardAmount(flashCardCoverId,1)
-        }
-    }
-    private suspend fun insertFile(file: File){
-        fileDao.upDateFilePositionBeforeInsert(file.parentFileId,file.libOrder)
-        fileDao.insert(file)
-        val parentFileId = file.parentFileId
-        if(parentFileId!=null){
-            when (file.fileStatus){
-                FileStatus.FOLDER -> {
-                    fileDao.upDateAncestorsFolderAmount(parentFileId,1)
-                    fileDao.upDateFileChildFoldersAmount(parentFileId,1)
-                }
-                FileStatus.FLASHCARD_COVER ->{
-                    fileDao.upDateAncestorsFlashCardCoverAmount(parentFileId,1)
-                    fileDao.upDateFileChildFlashCardCoversAmount(parentFileId,1)
-                }
-                else -> return
-            }
-        }
-    }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -112,8 +78,8 @@ class MyRoomRepository(
 
         when (item) {
             is XRef -> xRefDao.insert(item)
-            is Card -> insertCard(item)
-            is File -> insertFile(item)
+            is Card -> cardDao.insert(item)
+            is File -> fileDao.insert(item)
             is User -> userDao.insert(item)
             is MarkerData -> markerDataDao.insert(item)
             is Choice -> choiceDao.insert(item)
@@ -152,18 +118,6 @@ class MyRoomRepository(
 
     }
 
-    suspend fun upDateAncestorsAndChild(item:Card, newParentFileId: Int?){
-        val oldParent = item.belongingFlashCardCoverId
-        if(oldParent!=null){
-            fileDao.upDateAncestorsCardAmount(oldParent,-1)
-            fileDao.upDateFileChildCardsAmount(oldParent,-1)
-        }
-        if(newParentFileId!=null){
-            fileDao.upDateAncestorsCardAmount(newParentFileId,1)
-            fileDao.upDateFileChildCardsAmount(newParentFileId,1)
-        }
-
-    }
     suspend fun updateCardFlippedTime(card:Card){
         cardDao.upDateCardFlippedTimes(card.id)
     }

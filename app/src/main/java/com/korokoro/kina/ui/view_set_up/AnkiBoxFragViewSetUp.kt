@@ -149,8 +149,6 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                 )
                 txvFileTitle.text = file.title
 
-                txvAnkiBoxFlashCardAmount.text = file.descendantsData.descendantsFlashCardsCoversAmount.toString()
-                txvAnkiBoxFolderAmount.text = file.descendantsData.descendantsFoldersAmount.toString()
                 arrayOf(root,checkboxAnkiRv).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
                     file,
                     ankiBoxVM = ankiBoxVM,

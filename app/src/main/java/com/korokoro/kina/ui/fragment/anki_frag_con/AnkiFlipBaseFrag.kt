@@ -11,7 +11,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -19,12 +18,10 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.korokoro.kina.actions.DateTimeActions
 import com.korokoro.kina.actions.changeViewVisibility
-import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.databinding.AnkiFlipFragBaseBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.enumclass.ActivityStatus
-import com.korokoro.kina.ui.customClasses.*
 import com.korokoro.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.korokoro.kina.ui.viewmodel.*
 import java.util.Date

@@ -3,7 +3,6 @@ package com.korokoro.kina.ui.viewmodel
 import androidx.lifecycle.*
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
-import com.korokoro.kina.db.dataclass.ChildData
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.db.enumclass.FileStatus
@@ -307,7 +306,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 fileStatus = fileStatus ,
                 colorStatus = ColorStatus.GRAY,
                 deleted = false,
-                libOrder = returnParentFileSisters().size,
+                fileBefore = returnParentFileSisters().size,
                 parentFileId = returnParentTokenFileParent()?.fileId
             ))
     }
@@ -321,7 +320,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     fun makeFilePos0(){
         val a = returnFileToCreate()?:return
-        a.libOrder = 0
+        a.fileBefore = 0
         setFileToCreate(a)
     }
 

@@ -157,7 +157,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
 
                 val sorted = SortActions().sortCards(it ?: mutableListOf())
                 setParentRVItems(sorted ?: mutableListOf())
-                adapter.submitList(sorted)
+                adapter.submitList(it)
                 if(it!=null){
                     createCardViewModel.setSisterCards(it)
                 }

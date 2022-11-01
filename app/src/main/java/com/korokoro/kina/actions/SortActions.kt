@@ -1,6 +1,7 @@
 package com.korokoro.kina.actions
 
 import com.korokoro.kina.db.dataclass.Card
+import com.korokoro.kina.db.dataclass.File
 
 class SortActions(){
     fun sortCards(list: List<Card>?):List<Card>{
@@ -21,21 +22,6 @@ class SortActions(){
         }
         return  final
     }
-    fun getSortedAndUpdatedCardList(list: List<Card>?):List<Card>{
-        val sorted =  sortCards(list).toMutableList()
-        sorted.onEach { eachCard ->
-            val sameLibOrder =  sorted.filter { it.cardBefore == eachCard.cardBefore }
-            if(sameLibOrder.size>1){
-                val sameLibSorted = sameLibOrder.sortedBy { it.id }.reversed()
-                sameLibOrder.onEach {
-                    val parentIndex = sameLibSorted.indexOf(it)
-                    if(parentIndex>0){
-                        it.cardBefore = sameLibSorted[parentIndex-1].id
-                    }
-                }
-            }
 
-        }
-        return sorted
-    }
+
 }

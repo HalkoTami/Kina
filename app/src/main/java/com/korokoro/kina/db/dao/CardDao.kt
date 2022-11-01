@@ -99,7 +99,14 @@ abstract class CardDao: BaseDao<Card> {
             "where not deleted AND belongingFlashCardCoverId is :belongingFileId "
     )
     abstract fun getCardsDataByFileId(belongingFileId: Int?):Flow<List<Card>>
-
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("WITH  generation AS (" +
+            " select *, 1 as level from tbl_card   where belongingFlashCardCoverId is :belongingFileId and cardBefore is null " +
+            "UNION ALL" +
+            " SELECT a.*, g.level + 1 as level  from tbl_card a Inner JOIN generation g ON g.id = a.cardBefore )" +
+            "SELECT  b.* FROM generation b order by level  "
+    )
+    abstract fun getCardsDataByFileIdSorted(belongingFileId: Int?):Flow<List<Card>>
     @Query("select * FROM tbl_card " +
             "where not deleted AND belongingFlashCardCoverId in(:fileIdList) "
     )

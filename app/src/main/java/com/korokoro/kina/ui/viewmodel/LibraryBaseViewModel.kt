@@ -78,7 +78,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun childFilesFromDB(int: Int?):LiveData<List<File>> = this.repository.getFileDataByParentFileId(int).asLiveData()
 
 //    ファイルの中のカード
-    fun childCardsFromDB(int: Int?):LiveData<List<Card>?> =  this.repository.getCardDataByFileId(int).asLiveData()
+    fun childCardsFromDB(int: Int?):LiveData<List<Card>?> =  this.repository.getCardDataByFileIdSorted(int).asLiveData()
 
 //    －－－－－－－－
 
