@@ -81,9 +81,6 @@ class LibraryHomeFrag : Fragment(){
             )
         }
         fun homeTopBarAddCL(){
-            topBarBinding.btnHelp.setOnClickListener {
-               mainViewModel.setHelpOptionVisibility(true)
-            }
             arrayOf(
                 topBarBinding.frameLayInBox,
             ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(topBarBinding, libraryBaseViewModel)) }

@@ -80,7 +80,6 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             binding.apply {
                 binding.createCardTopBarBinding.txvPosition.text =
                     "${sisterCards.indexOf(parentCard)+1}/${sisterCards.size}"
-                binding.createCardTopBarBinding.txvEditingFileTitle.text = parentCard?.id.toString() + "  " + parentCard?.cardBefore.toString()
                 setAlphaByClickable(nextCard!=null, binding.btnNext)
                 setAlphaByClickable(previousCard!=null, binding.btnPrevious)
                 stringCardViewModel.setParentCard(card)

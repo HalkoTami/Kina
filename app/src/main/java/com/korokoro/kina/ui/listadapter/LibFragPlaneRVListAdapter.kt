@@ -110,8 +110,6 @@ class LibFragPlaneRVListAdapter(
                     addL.cardRVStringAddCL(stringCardBinding,item,createCardViewModel,stringCardViewModel,mainNavController)
 //                    addCardCL(item)
                     libRVButtonsAddCL(item)
-                    stringCardBinding.txvFrontTitle.text = item.id.toString()
-                    stringCardBinding.txvBackTitle.text = item.cardBefore.toString()
                     binding.btnAddNewCard.visibility = View.VISIBLE
                     contentView = stringCardBinding.root
                 }

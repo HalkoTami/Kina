@@ -141,7 +141,7 @@ abstract class CardDao: BaseDao<Card> {
 
 
     )
-    abstract fun deleteAllDescendantsCardsByFileId(fileId: Int?,cardTableInt:Int,fileTableInt:Int)
+    abstract suspend fun deleteAllDescendantsCardsByFileId(fileId: Int?,cardTableInt:Int,fileTableInt:Int)
 
     @Query("SELECT * FROM tbl_card a " +
             " INNER JOIN ( SELECT  MAX(id) id FROM tbl_card c where c.belongingFlashCardCoverId is :flashCardCoverId ) b ON a.id = b.id "

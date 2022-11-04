@@ -336,6 +336,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
     }
 
+    fun addSampleFlashCard(){
+        val lastId =    createFileViewModel.returnLastInsertedFile()?.fileId ?:0
+        createFileViewModel.lastInsertedFile
+    }
 
     override fun onBackPressed() {
         if(mainActivityViewModel.returnGuideVisibility())
