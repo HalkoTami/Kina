@@ -525,56 +525,18 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                     view.callOnClick()
                 }
             }
-            fun tameshi(a:Int){
-                when(a){
-                    1    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.TOP       ,
-                        MyOrientation.LEFT))
-                    2    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.TOP       ,
-                        MyOrientation.MIDDLE))
-                    3    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.TOP       ,
-                        MyOrientation.RIGHT))
-                    4    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.MIDDLE    ,
-                        MyOrientation.LEFT))
-                    5    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.MIDDLE    ,
-                        MyOrientation.MIDDLE))
-                    6    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.MIDDLE    ,
-                        MyOrientation.RIGHT))
-                    7    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.BOTTOM    ,
-                        MyOrientation.LEFT))
-                    8    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.BOTTOM    ,
-                        MyOrientation.MIDDLE))
-                    9    -> setPositionNextTo(touchArea,character,false, MyOrientationSet( MyOrientation.BOTTOM    ,
-                        MyOrientation.RIGHT))
-                    else -> return
-                }
-
-            }
 
             fun greeting1(){
 
-
-
                 appearAlphaAnimation(character,true).start()
-              positionDataMap[character] = BorderSet(bottomSideSet = ViewAndSide(touchArea,
-                  MyOrientation.TOP))
                 explainTextAnimation("やあ、僕はとさかくん", MyOrientation.TOP,character).start()
-                var a = 1
-                onInstallBinding.root.setOnClickListener {
-                    tameshi(a)
-                    a+=1
-                }
-                  setPositionNextTo(touchArea,character, false,MyOrientationSet(
-                      MyOrientation.TOP,
-                      MyOrientation.MIDDLE))
-//                goNextOnClickAnyWhere()
+                goNextOnClickAnyWhere()
             }
             fun greeting2(){
                 explainTextAnimation("これから、KiNaの使い方を説明するね", MyOrientation.TOP,character).start()
-//                setPositionNextTo(bnvBtnAdd,character, MyOrientationSet(MyOrientation.RIGHT, MyOrientation.BOTTOM,MyOrientation.LEFT))
                 goNextOnClickAnyWhere()
             }
             fun createFlashCard1(){
-//                setPositionNextTo(bnvBtnAdd,character, MyOrientationSet(MyOrientation.RIGHT, MyOrientation.BOTTOM,MyOrientation.LEFT))
                 explainTextAnimation("KiNaでは、フォルダと単語帳が作れるよ\n" +
                         "ボタンをタッチして、単語帳を作ってみよう", MyOrientation.TOP,character).start()
 

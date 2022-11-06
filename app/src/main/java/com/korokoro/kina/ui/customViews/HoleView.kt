@@ -7,9 +7,10 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.korokoro.kina.R
+import com.korokoro.kina.customClasses.CirclePosition
+import com.korokoro.kina.customClasses.RecPosition
 
-class CirclePosition(var x: Float, var y: Float, var r: Float)
-class RecPosition(var left: Float, var top: Float, var right: Float,var bottom:Float)
+
 enum class HoleShape{
     CIRCLE,RECTANGLE
 }

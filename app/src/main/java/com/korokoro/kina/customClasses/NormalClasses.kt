@@ -20,7 +20,9 @@ class AutoFlip(
     var active:Boolean = false,
     var seconds:Int = 20
 )
-
+class CirclePosition(var x: Float, var y: Float, var r: Float)
+class RecPosition(var left: Float, var top: Float, var right: Float,var bottom:Float)
+class ViewCenterPosition(val x:Float, val y:Float)
 
 
 class CountFlip(
