@@ -9,6 +9,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activity.MainActivity">
 
+    <com.korokoro.kina.ui.customViews.HoleViewVer2
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <FrameLayout
         style="@style/PopUpFrameLayStyle"

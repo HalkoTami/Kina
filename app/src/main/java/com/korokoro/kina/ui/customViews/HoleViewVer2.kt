@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewTreeObserver
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.korokoro.kina.R
@@ -35,10 +36,21 @@ class HoleViewVer2 (
     var viewUnderHole:View? = null
         set(value){
             field = value
-            if(viewUnderHole!=null){
-                recHolePosition = ViewChangeActions().getRecPos(viewUnderHole!!)
-                circleHolePosition = ViewChangeActions().getCirclePos(viewUnderHole!!)
+            val view = viewUnderHole
+            if(view == null){
+                this.invalidate()
+            } else{
+                view.viewTreeObserver.addOnGlobalLayoutListener {
+                    object :ViewTreeObserver.OnGlobalLayoutListener{
+                        override fun onGlobalLayout() {
+                            recHolePosition = ViewChangeActions().getRecPos(view)
+                            circleHolePosition = ViewChangeActions().getCirclePos(view)
+                            view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        }
+                    }
+                }
             }
+
         }
     private var circleHolePosition: CirclePosition = CirclePosition(0.0f, 0.0f, 0.0f)
         set(value) {
