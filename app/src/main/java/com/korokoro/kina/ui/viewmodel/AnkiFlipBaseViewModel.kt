@@ -240,7 +240,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
             val flipToFront = (changeCard&&reverseMode)||(!changeCard&&reverseMode.not())
             val oldPosition = returnParentPosition()
             val newPosition = returnParentPosition() - 1
-            return if(checkPositionIsOnStartEdge(reverseMode))
+            return if(checkPositionIsOnStartEdge(reverseMode)||returnFlipItems().size==0)
                 null else {
                 when(typeAnswer){
                     true -> when(changeCard){
@@ -258,7 +258,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
                         }
                     }
                     false -> {
-                        val cardId = if(changeCard) returnFlipItems()[newPosition].id else _parentCard.value!!.id
+                        val cardId = if(changeCard) returnFlipItems()[newPosition].id else returnParentCard()?.id ?:return null
                         val action =
                             FlipStringFragDirections.toFlipString(
                             )

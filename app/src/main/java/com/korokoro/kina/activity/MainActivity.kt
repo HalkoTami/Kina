@@ -197,7 +197,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         setUpMainActivityLayout()
         addMainActivityClickListeners()
         setContentView(binding.root)
-        checkIfInstall()
 
         val childFragmentStatusObserver      = Observer<MainViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
