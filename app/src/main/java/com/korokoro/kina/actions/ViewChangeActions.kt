@@ -27,11 +27,11 @@ class ViewChangeActions {
         val a = IntArray(2)
         view.getLocationInWindow(a)
         val viewX = a[0].toFloat()
-        val viewY = a[1].toFloat()
-        val left = viewX -screenWidth/2
-        val top = viewY -screenHeight/2
-        val right = viewX + view.width -screenWidth/2
-        val bottom = viewY + view.height- screenHeight/2
+        val viewY = a[1].toFloat() - getWindowDisplayHeightDiff(view.context.resources)
+        val left = viewX
+        val top = viewY
+        val right = viewX + view.width
+        val bottom = viewY + view.height
         val pos = RecPosition(left = left,top=top,right, bottom)
         return pos
     }

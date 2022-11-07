@@ -26,6 +26,7 @@ import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.customClasses.AnkiFragments
 import com.korokoro.kina.customClasses.ColorPalletStatus
 import com.korokoro.kina.customClasses.MainFragment
+import com.korokoro.kina.ui.customViews.HoleShape
 import com.korokoro.kina.ui.listener.KeyboardListener
 import com.korokoro.kina.ui.listener.popUp.EditFilePopUpCL
 import com.korokoro.kina.ui.observer.LibraryOb
@@ -192,13 +193,17 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
             ViewModelProvider(this,factory)[FlipTypeAndCheckViewModel::class.java]
         }
+        fun sample(){
+            binding.sample.holeShape = HoleShape.RECTANGLE
+            binding.sample.viewUnderHole = ( binding.bnvBinding.bnvImvAdd)
+            }
         setMainActivityLateInitVars()
         createAllViewModels()
         setUpMainActivityLayout()
         addMainActivityClickListeners()
         setContentView(binding.root)
         checkIfInstall()
-
+        sample()
         val childFragmentStatusObserver      = Observer<MainViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
         }

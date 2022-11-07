@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.korokoro.kina.R
 import com.korokoro.kina.actions.ViewChangeActions
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.customClasses.CirclePosition
 import com.korokoro.kina.customClasses.RecPosition
 
@@ -22,7 +23,7 @@ class HoleViewVer2 (
     private var layer: Canvas? = null
 
     //position of hole
-    var holeShape:HoleShape = HoleShape.RECTANGLE
+    var holeShape:HoleShape = HoleShape.CIRCLE
         set(value){
             field = value
             this.invalidate()
@@ -33,6 +34,7 @@ class HoleViewVer2 (
             this.invalidate()
         }
 
+
     var viewUnderHole:View? = null
         set(value){
             field = value
@@ -40,44 +42,43 @@ class HoleViewVer2 (
             if(view == null){
                 this.invalidate()
             } else{
-                view.viewTreeObserver.addOnGlobalLayoutListener {
+                view.viewTreeObserver.addOnGlobalLayoutListener (
                     object :ViewTreeObserver.OnGlobalLayoutListener{
-                        override fun onGlobalLayout() {
-                            recHolePosition = ViewChangeActions().getRecPos(view)
-                            circleHolePosition = ViewChangeActions().getCirclePos(view)
-                            view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                        }
+                    override fun onGlobalLayout() {
+                        recHolePosition = ViewChangeActions().getRecPos(view)
+                        circleHolePosition = ViewChangeActions().getCirclePos(view)
+                        this@HoleViewVer2.invalidate()
+                        view.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
-                }
+
+                    }
+                )
+
+
             }
 
         }
     private var circleHolePosition: CirclePosition = CirclePosition(0.0f, 0.0f, 0.0f)
-        set(value) {
-            field = value
-            //redraw
-            this.invalidate()
-        }
+
     private var recHolePosition: RecPosition = RecPosition(0.0f, 0.0f, 0.0f,0.0f)
-        set(value) {
-            field = value
-            //redraw
-            this.invalidate()
-        }
 
 
+
+
+    private fun getRecPos(view: View):RecPosition{
+        return ViewChangeActions().getRecPos(view)
+    }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (bitmap == null) { configureBitmap() }
         layer?.drawRect(0.0f, 0.0f, width.toFloat(), height.toFloat(), paint)
         if(viewUnderHole!=null){
-
             when(holeShape){
                 HoleShape.RECTANGLE  ->
-                    layer?.drawRect(recHolePosition.left-holeMargin,
-                        recHolePosition.top-holeMargin,
-                        recHolePosition.right+holeMargin,
-                        recHolePosition.bottom+holeMargin,holePaint)
+                        layer?.drawRoundRect(recHolePosition.left-holeMargin,
+                            recHolePosition.top-holeMargin,
+                            recHolePosition.right+holeMargin,
+                            recHolePosition.bottom+holeMargin,10f,10f,holePaint)
                 HoleShape.CIRCLE     ->
                     layer?.drawCircle(circleHolePosition.x, circleHolePosition.y,
                         circleHolePosition.r+holeMargin, holePaint)
@@ -86,11 +87,11 @@ class HoleViewVer2 (
         }
         else {
             layer?.drawRect(0f,0f,0f,0f,holePaint)
-         }
+        }
         //draw background
-
         //draw bitmap
         canvas.drawBitmap(bitmap!!, 0.0f, 0.0f, paint)
+
     }
 
     private fun configureBitmap() {

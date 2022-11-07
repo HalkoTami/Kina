@@ -10,6 +10,8 @@
     tools:context=".activity.MainActivity">
 
     <com.korokoro.kina.ui.customViews.HoleViewVer2
+        android:id="@+id/sample"
+        android:elevation="100dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
