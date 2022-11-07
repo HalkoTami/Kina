@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.korokoro.kina.R
 import com.korokoro.kina.actions.InstallGuide
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.actions.makeToast
@@ -195,7 +196,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         fun sample(){
             binding.sample.holeShape = HoleShape.RECTANGLE
-            binding.sample.viewUnderHole = ( binding.bnvBinding.bnvImvAdd)
+            binding.sample.viewUnderHole = binding.frameBottomMenu
+
             }
         setMainActivityLateInitVars()
         createAllViewModels()

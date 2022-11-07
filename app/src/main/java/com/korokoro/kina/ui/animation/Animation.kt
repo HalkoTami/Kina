@@ -42,6 +42,9 @@ class Animation {
         val btmMenuAnimator = AnimatorSet().apply{
             val a = ObjectAnimator.ofFloat(frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
             val b = ObjectAnimator.ofFloat(frameBottomMenu, View.ALPHA,0f,1f)
+            a.addUpdateListener {
+                frameBottomMenu.requestLayout()
+            }
             playTogether(a,b)
             duration = 200
         }

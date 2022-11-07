@@ -23,6 +23,11 @@ class HoleViewVer2 (
     private var layer: Canvas? = null
 
     //position of hole
+    var recRadius:Float = 0f
+        set(value){
+            field = value
+            this.invalidate()
+        }
     var holeShape:HoleShape = HoleShape.CIRCLE
         set(value){
             field = value
@@ -33,24 +38,36 @@ class HoleViewVer2 (
             field = value
             this.invalidate()
         }
+    private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
+
+    fun removeGlobalLayout(){
+        globalLayoutSet.onEach {
+            it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
+        }
+    }
 
 
     var viewUnderHole:View? = null
         set(value){
             field = value
-            val view = viewUnderHole
+            val view = field
             if(view == null){
                 this.invalidate()
             } else{
+                noHole = false
+                removeGlobalLayout()
                 view.viewTreeObserver.addOnGlobalLayoutListener (
                     object :ViewTreeObserver.OnGlobalLayoutListener{
                     override fun onGlobalLayout() {
+                        if(globalLayoutSet[view]==null){
+                            globalLayoutSet[view] = this
+                        }
                         recHolePosition = ViewChangeActions().getRecPos(view)
                         circleHolePosition = ViewChangeActions().getCirclePos(view)
+                        noHole = (field!!.visibility == View.GONE)||(field!!.visibility == INVISIBLE)
                         this@HoleViewVer2.invalidate()
-                        view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    }
 
+                    }
                     }
                 )
 
@@ -62,6 +79,7 @@ class HoleViewVer2 (
 
     private var recHolePosition: RecPosition = RecPosition(0.0f, 0.0f, 0.0f,0.0f)
 
+    var noHole:Boolean = true
 
 
 
@@ -72,13 +90,13 @@ class HoleViewVer2 (
         super.onDraw(canvas)
         if (bitmap == null) { configureBitmap() }
         layer?.drawRect(0.0f, 0.0f, width.toFloat(), height.toFloat(), paint)
-        if(viewUnderHole!=null){
+        if(noHole.not()){
             when(holeShape){
                 HoleShape.RECTANGLE  ->
                         layer?.drawRoundRect(recHolePosition.left-holeMargin,
                             recHolePosition.top-holeMargin,
                             recHolePosition.right+holeMargin,
-                            recHolePosition.bottom+holeMargin,10f,10f,holePaint)
+                            recHolePosition.bottom+holeMargin,recRadius,recRadius,holePaint)
                 HoleShape.CIRCLE     ->
                     layer?.drawCircle(circleHolePosition.x, circleHolePosition.y,
                         circleHolePosition.r+holeMargin, holePaint)

@@ -22,8 +22,6 @@ class ViewChangeActions {
         return context.resources.displayMetrics.heightPixels
     }
     fun getRecPos(view: View): RecPosition {
-        val screenWidth = getScreenWidth(view.context)
-        val screenHeight = getScreenHeight(view.context)
         val a = IntArray(2)
         view.getLocationInWindow(a)
         val viewX = a[0].toFloat()
