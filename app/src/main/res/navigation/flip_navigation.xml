@@ -5,7 +5,7 @@
     android:id="@+id/flip_navigation"
     app:startDestination="@id/flip_string_look_frag">
     <fragment android:id="@+id/flip_string_look_frag"
-        android:name="com.korokoro.kina.ui.fragment.flipFragCon.FlipStringFrag"
+        android:name="com.koronnu.kina.ui.fragment.flipFragCon.FlipStringFrag"
         tools:layout="@layout/anki_flip_frag_look_string_frag">
         <argument android:name="front"
             app:argType="boolean"
@@ -16,7 +16,7 @@
             android:defaultValue="@null"/>
     </fragment>
     <fragment android:id="@+id/flip_string_type_answer_frag"
-        android:name="com.korokoro.kina.ui.fragment.flipFragCon.FlipStringTypeAnswerFrag"
+        android:name="com.koronnu.kina.ui.fragment.flipFragCon.FlipStringTypeAnswerFrag"
         tools:layout="@layout/anki_flip_frag_type_answer_string_frag">
         <argument android:name="answer_is_back"
             app:argType="boolean"/>
@@ -25,7 +25,7 @@
 
     </fragment>
     <fragment android:id="@+id/flip_string_check_answer_frag"
-        android:name="com.korokoro.kina.ui.fragment.flipFragCon.FlipStringCheckAnswerFrag"
+        android:name="com.koronnu.kina.ui.fragment.flipFragCon.FlipStringCheckAnswerFrag"
         tools:layout="@layout/anki_flip_frag_check_answer_string_frag">
         <argument android:name="answer_is_back"
             app:argType="boolean"/>

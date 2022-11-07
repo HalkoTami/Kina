@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragmentLibrary"
-        android:name="com.korokoro.kina.ui.fragment.base_frag_con.LibraryBaseFrag"
+        android:name="com.koronnu.kina.ui.fragment.base_frag_con.LibraryBaseFrag"
         android:label="@string/nav_label_main_tab_library"
         tools:layout="@layout/library_frag" >
 
@@ -23,7 +23,7 @@
     <fragment
         android:id="@+id/fragmentCreateCard"
         android:label="@string/nav_label_main_create_card"
-        android:name="com.korokoro.kina.ui.fragment.base_frag_con.EditCardBaseFrag"
+        android:name="com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFrag"
         tools:layout="@layout/create_card_frag_main">
 
 
@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/fragmentAnki"
         android:label="@string/nav_label_main_tab_anki"
-        android:name="com.korokoro.kina.ui.fragment.base_frag_con.AnkiBaseFrag"
+        android:name="com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFrag"
         tools:layout="@layout/anki_frag_base">
 
     </fragment>

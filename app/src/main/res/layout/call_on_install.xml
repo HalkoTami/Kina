@@ -8,7 +8,7 @@
         >
 
 
-    <com.korokoro.kina.ui.customViews.HoleView
+    <com.koronnu.kina.ui.customViews.HoleView
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/view_with_hole"
