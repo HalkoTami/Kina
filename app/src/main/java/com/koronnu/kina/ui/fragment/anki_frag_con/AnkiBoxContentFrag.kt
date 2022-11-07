@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -14,12 +13,10 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.FragAnkiContentRvBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.viewmodel.*
-import com.koronnu.kina.customClasses.AnkiBoxFragments
 import com.koronnu.kina.customClasses.AnkiFragments
 
 

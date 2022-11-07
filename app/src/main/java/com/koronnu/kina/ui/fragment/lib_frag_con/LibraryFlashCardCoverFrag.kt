@@ -15,11 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
 import com.koronnu.kina.actions.SortActions
 import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.koronnu.kina.databinding.LibraryFragTopBarFileBinding
 import com.koronnu.kina.databinding.RvEmptyBinding
-import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.customClasses.LibraryFragment
 import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter

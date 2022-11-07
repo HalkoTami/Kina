@@ -13,7 +13,6 @@ import androidx.fragment.app.activityViewModels
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.DateTimeActions
 import com.koronnu.kina.actions.NavigationActions
-import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.AnkiFlipFragCompletedBinding
 import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.ui.animation.Animation

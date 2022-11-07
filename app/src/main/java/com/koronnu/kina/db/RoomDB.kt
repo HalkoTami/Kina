@@ -6,7 +6,6 @@ import androidx.room.migration.AutoMigrationSpec
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.koronnu.kina.db.dao.*
 import com.koronnu.kina.db.dataclass.*
-import com.koronnu.kina.db.enumclass.*
 import com.koronnu.kina.db.typeConverters.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

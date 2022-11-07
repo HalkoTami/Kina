@@ -3,9 +3,6 @@ package com.koronnu.kina.ui.listener.recyclerview
 
 import android.view.MotionEvent
 import android.view.View
-import android.widget.ImageView
-import com.koronnu.kina.R
-import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.customClasses.ListAttributes
 import com.koronnu.kina.databinding.LibraryFragRvItemBaseBinding
 import com.koronnu.kina.db.dataclass.Card

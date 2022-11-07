@@ -1,7 +1,6 @@
 package com.koronnu.kina.actions
 
 import androidx.navigation.NavController
-import com.koronnu.kina.R
 
 class NavigationActions {
     private fun getDesLabelInPos(navCon: NavController,minus:Int):String{

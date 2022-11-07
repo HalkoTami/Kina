@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
 import com.koronnu.kina.databinding.CreateCardFragMainBinding
 import com.koronnu.kina.db.dataclass.Card
@@ -21,8 +20,6 @@ import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.AnkiFragments
 import com.koronnu.kina.customClasses.MainFragment
 import com.koronnu.kina.customClasses.NeighbourCardSide
-import com.koronnu.kina.ui.fragment.createCard_frag_com.EditCardFragArgs
-import com.koronnu.kina.ui.fragment.createCard_frag_com.EditCardFragDirections
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.viewmodel.*
 

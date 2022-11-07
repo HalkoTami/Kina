@@ -13,7 +13,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.databinding.CreateCardFragBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File

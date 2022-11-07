@@ -1,8 +1,5 @@
 package com.koronnu.kina.ui.viewmodel
 
-import android.content.SharedPreferences
-import android.provider.Settings.Global.putInt
-import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

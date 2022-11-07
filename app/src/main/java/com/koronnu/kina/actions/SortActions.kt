@@ -1,7 +1,6 @@
 package com.koronnu.kina.actions
 
 import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
 
 class SortActions(){
     fun sortCards(list: List<Card>?):List<Card>{

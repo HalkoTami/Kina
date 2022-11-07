@@ -1,17 +1,12 @@
 package com.koronnu.kina.ui.fragment.flipFragCon
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.koronnu.kina.actions.hideKeyBoard
-import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.actions.showKeyBoard
 import com.koronnu.kina.databinding.AnkiFlipFragTypeAnswerStringFragBinding
 import com.koronnu.kina.db.dataclass.Card

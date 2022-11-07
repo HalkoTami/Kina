@@ -1,6 +1,5 @@
 package com.koronnu.kina.ui.listener.topbar
 import android.view.View
-import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.databinding.LibraryFragTopBarHomeBinding
 import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
 

@@ -1,7 +1,6 @@
 package com.koronnu.kina.db
 
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
 import com.koronnu.kina.db.dao.*
 import com.koronnu.kina.db.dataclass.*
 import com.koronnu.kina.db.enumclass.XRefType

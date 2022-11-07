@@ -1,7 +1,6 @@
 package com.koronnu.kina.ui.listener.recyclerview
 
 import android.view.View
-import androidx.navigation.NavController
 import com.koronnu.kina.databinding.LibraryFragRvItemCardStringBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.customClasses.StringFragFocusedOn

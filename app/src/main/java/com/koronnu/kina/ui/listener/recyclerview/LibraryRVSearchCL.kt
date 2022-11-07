@@ -4,10 +4,8 @@ import android.view.View
 import com.koronnu.kina.databinding.LibraryFragRvItemBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.koronnu.kina.ui.viewmodel.CreateCardViewModel
 import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
-import com.koronnu.kina.ui.viewmodel.MainViewModel
 
 class LibraryRVSearchCL(
     val item: Any,

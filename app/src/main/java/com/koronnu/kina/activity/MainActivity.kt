@@ -16,11 +16,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.actions.InstallGuide
 import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.databinding.MainActivityBinding
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.customClasses.AnkiFragments

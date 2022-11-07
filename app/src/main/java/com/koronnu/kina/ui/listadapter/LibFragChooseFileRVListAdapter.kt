@@ -12,7 +12,6 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVChooseFileMoveToCL
-import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
 import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.ChooseFileMoveToViewModel
 import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel

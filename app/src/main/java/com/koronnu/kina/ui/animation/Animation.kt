@@ -7,17 +7,12 @@ import android.animation.ValueAnimator
 import android.os.Build
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import com.koronnu.kina.actions.ViewChangeActions
 import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
-import com.koronnu.kina.customClasses.NeighbourCardSide
 import kotlin.math.absoluteValue
 
 class Animation {

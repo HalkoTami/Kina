@@ -3,16 +3,10 @@ package com.koronnu.kina.actions
 import android.content.Context
 import android.content.res.Resources
 import android.view.View
-import android.view.ViewTreeObserver
-import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.navigation.NavController
-import com.koronnu.kina.R
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 fun makeToast(context: Context, string: String){

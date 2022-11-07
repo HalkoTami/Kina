@@ -2,16 +2,12 @@ package com.koronnu.kina.ui.observer
 
 import android.content.Context
 import android.text.SpannableStringBuilder
-import android.widget.ImageView
 import androidx.lifecycle.Observer
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.koronnu.kina.databinding.MainActivityPopupEditFileBinding
-import com.koronnu.kina.ui.view_set_up.ColorPalletViewSetUp
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.viewmodel.EditFileViewModel
-import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
-import com.koronnu.kina.ui.viewmodel.MainViewModel
 import com.koronnu.kina.ui.viewmodel.SearchViewModel
 
 class LibraryOb {

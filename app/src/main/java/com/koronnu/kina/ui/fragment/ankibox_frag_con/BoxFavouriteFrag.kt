@@ -4,18 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.databinding.FullRvBinding
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.AnkiBoxFragments
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
-import com.koronnu.kina.ui.viewmodel.MainViewModel
 
 
 class BoxFavouriteFrag  : Fragment() {

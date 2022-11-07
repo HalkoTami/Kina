@@ -7,14 +7,11 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.customClasses.LibRVState
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVCL
-import com.koronnu.kina.ui.listener.recyclerview.LibraryRVCLNewCard
-import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
 import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.*

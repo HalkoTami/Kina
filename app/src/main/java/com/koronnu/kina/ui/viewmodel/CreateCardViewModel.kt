@@ -2,7 +2,6 @@ package com.koronnu.kina.ui.viewmodel
 
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import com.koronnu.kina.actions.SortActions
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
@@ -15,7 +14,6 @@ import com.koronnu.kina.customClasses.AnkiFragments
 import com.koronnu.kina.customClasses.ColorPalletStatus
 import com.koronnu.kina.customClasses.MainFragment
 import com.koronnu.kina.customClasses.NeighbourCardSide
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 

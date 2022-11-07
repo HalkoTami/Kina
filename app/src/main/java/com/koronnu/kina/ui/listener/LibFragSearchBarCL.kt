@@ -1,6 +1,5 @@
 package com.koronnu.kina.ui.listener
 import android.content.Context
-import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout

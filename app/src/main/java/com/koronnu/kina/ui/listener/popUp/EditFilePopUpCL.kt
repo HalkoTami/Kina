@@ -1,7 +1,6 @@
 package com.koronnu.kina.ui.listener.popUp
 
 import android.view.View
-import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.databinding.MainActivityPopupEditFileBinding
 import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.ui.viewmodel.EditFileViewModel

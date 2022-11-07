@@ -3,7 +3,6 @@ package com.koronnu.kina.ui.viewmodel
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
-import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.koronnu.kina.ui.fragment.base_frag_con.LibraryBaseFragDirections
 import com.koronnu.kina.customClasses.MainFragment
 import kotlinx.coroutines.*
