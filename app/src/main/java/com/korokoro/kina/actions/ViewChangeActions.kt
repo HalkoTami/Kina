@@ -22,6 +22,31 @@ class ViewChangeActions {
     fun getScreenHeight(context:Context):Int{
         return context.resources.displayMetrics.heightPixels
     }
+    fun saveSimplePosRelation(movingView:View,standardView:View,orientation: MyOrientation,fit:Boolean,borderDataMap:MutableMap<View,BorderSet>){
+        val borderSet = when(orientation){
+            MyOrientation.TOP -> BorderSet(bottomSideSet = ViewAndSide(standardView,MyOrientation.TOP),
+                leftSideSet = if(fit) ViewAndSide(standardView,MyOrientation.LEFT) else null,
+                rightSideSet = if(fit) ViewAndSide(standardView,MyOrientation.RIGHT) else null
+            )
+            MyOrientation.LEFT -> BorderSet(rightSideSet = ViewAndSide(standardView,MyOrientation.LEFT),
+                topSideSet = if(fit) ViewAndSide(standardView,MyOrientation.TOP) else null,
+                bottomSideSet = if(fit) ViewAndSide(standardView,MyOrientation.BOTTOM) else null
+            )
+            MyOrientation.RIGHT -> BorderSet(leftSideSet = ViewAndSide(standardView,MyOrientation.RIGHT),
+                topSideSet = if(fit) ViewAndSide(standardView,MyOrientation.TOP) else null,
+                bottomSideSet = if(fit) ViewAndSide(standardView,MyOrientation.BOTTOM) else null)
+            MyOrientation.BOTTOM -> BorderSet(topSideSet = ViewAndSide(standardView,MyOrientation.BOTTOM),
+                leftSideSet = if(fit) ViewAndSide(standardView,MyOrientation.LEFT) else null,
+                rightSideSet = if(fit) ViewAndSide(standardView,MyOrientation.RIGHT) else null)
+            MyOrientation.MIDDLE -> BorderSet(
+                bottomSideSet = ViewAndSide(standardView,MyOrientation.BOTTOM),
+                leftSideSet = ViewAndSide(standardView,MyOrientation.LEFT),
+                rightSideSet = ViewAndSide(standardView,MyOrientation.RIGHT),
+                topSideSet = ViewAndSide(standardView,MyOrientation.TOP))
+        }
+        if(borderDataMap[movingView]!=null) borderDataMap.remove(movingView)
+        borderDataMap[movingView] = borderSet
+    }
     fun getRecPos(view: View): RecPosition {
         val a = IntArray(2)
         view.getLocationInWindow(a)
@@ -113,7 +138,7 @@ class ViewChangeActions {
     fun setPositionByMargin(
         view: View,
         matchSize:Boolean,
-        myOrientationSet: InstallGuide.MyOrientationSet,
+        myOrientationSet: MyOrientationSet,
         positionDataMap:Map<View, BorderSet>,
         constraintLayout: ConstraintLayout){
 

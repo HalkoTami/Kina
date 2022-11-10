@@ -15,9 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.korokoro.kina.R
-import com.korokoro.kina.actions.InstallGuide
-import com.korokoro.kina.actions.changeViewVisibility
-import com.korokoro.kina.actions.makeToast
+import com.korokoro.kina.actions.*
 import com.korokoro.kina.application.RoomApplication
 import com.korokoro.kina.databinding.MainActivityBinding
 import com.korokoro.kina.db.dataclass.File
@@ -63,7 +61,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             val sharedPref = this.getSharedPreferences(
                 "firstTimeGuide", Context.MODE_PRIVATE) ?: return
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
-                InstallGuide(this,binding.guideBinding).createGuide(
+                CreateGuide(this,binding.guideBinding).createGuide(
                     startOrder = 1,
                     createCardViewModel,
                     createFileViewModel,
@@ -401,12 +399,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 }
             }
             helpOptionBinding.apply {
-                val guideClass = InstallGuide(this@MainActivity,guideBinding)
                 when(v){
-                    menuHowToDeleteItems -> guideClass.deleteGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
-                    menuHowToCreateItems -> guideClass.createGuide(startOrder = 1, createCardViewModel, createFileViewModel, libraryViewModel,mainActivityViewModel)
-                    menuHowToEditItems -> guideClass.editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
-                    menuHowToMoveItems -> guideClass.moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
+                    menuHowToDeleteItems -> DeleteGuide().deleteGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
+                    menuHowToCreateItems -> CreateGuide(this@MainActivity,binding.guideBinding).createGuide(startOrder = 1, createCardViewModel, createFileViewModel, libraryViewModel,mainActivityViewModel)
+                    menuHowToEditItems -> EditGuide().editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
+                    menuHowToMoveItems -> MoveGuide(this@MainActivity,binding.guideBinding).moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
                 }
             }
         }

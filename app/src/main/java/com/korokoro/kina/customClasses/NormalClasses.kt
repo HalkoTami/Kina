@@ -20,6 +20,11 @@ class ViewAndSide(
     var view: View,
     var side: MyOrientation
 )
+class MyOrientationSet(
+    val verticalOrientation: MyOrientation,
+    val horizontalOrientation: MyOrientation
+)
+
 class BorderSet(
     var leftSideSet:ViewAndSide?=null,
     var topSideSet:ViewAndSide?=null,
