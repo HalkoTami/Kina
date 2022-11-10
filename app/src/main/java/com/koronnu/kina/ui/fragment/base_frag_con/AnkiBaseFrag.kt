@@ -128,6 +128,7 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
 
 
 
+
         val root: View = binding.root
 
 

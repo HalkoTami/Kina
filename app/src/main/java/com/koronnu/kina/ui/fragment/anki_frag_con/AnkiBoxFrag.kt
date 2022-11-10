@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.AnkiHomeFragBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
@@ -117,6 +118,13 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
             viewSetUp.setUpAnkiBoxRing(it,binding.ringBinding)
             binding.btnStartAnki.text = if(it.isEmpty()) "カードを選ばず暗記" else "暗記開始"
         }
+        val allCardsObserver = Observer<List<Card>> {
+             arrayOf(
+                binding.btnStartAnki,binding.topBarBinding.btnSetting
+            ).onEach { view -> changeViewVisibility(view,
+                 it.isNotEmpty()
+             ) }
+        }
 
 
 
@@ -127,6 +135,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         ankiFlipBaseViewModel.setParentPosition(0)
         ankiFlipBaseViewModel.setParentCard(null)
         ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
+        ankiFlipBaseViewModel.getAllCardsFromDB.observe(viewLifecycleOwner,allCardsObserver)
         ankiBoxViewModel.setAnkiBoxNavCon(ankiBoxNavCon)
         ankiFlipBaseViewModel.setAnkiFlipItems(mutableListOf(), AnkiFilter())
         ankiBoxViewModel.toast.observe(viewLifecycleOwner,toastObserver)
