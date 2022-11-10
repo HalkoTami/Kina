@@ -159,6 +159,10 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         return RecPosition(left,top, right, bottom)
     }
 
+    fun saveBorderDataMap(view: View,set:BorderSet){
+        if(borderDataMap[view]!=null) borderDataMap.remove(view)
+        borderDataMap[view] = set
+    }
     var borderRight:Float? = null
     var borderLeft:Float? = null
     var borderTop:Float? = null
@@ -229,6 +233,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     private fun setPositionByMargin(view: View,myOrientationSet:MyOrientationSet){
         ViewChangeActions().setPositionByMargin(view,false,myOrientationSet,borderDataMap,onInstallBinding.root)
     }
+
     private fun removeGlobalListener(){
         globalLayoutSet.onEach {
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
@@ -288,7 +293,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
     }
     fun saveSimplePosRelation(movingView:View,standardView:View,orientation: MyOrientation){
-        borderDataMap[movingView] = when(orientation){
+        val borderSet = when(orientation){
             MyOrientation.TOP -> BorderSet(bottomSideSet = ViewAndSide(standardView,MyOrientation.TOP))
             MyOrientation.LEFT -> BorderSet(rightSideSet = ViewAndSide(standardView,MyOrientation.LEFT) )
             MyOrientation.RIGHT -> BorderSet(leftSideSet = ViewAndSide(standardView,MyOrientation.RIGHT) )
@@ -298,9 +303,9 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 leftSideSet = ViewAndSide(standardView,MyOrientation.LEFT),
                 rightSideSet = ViewAndSide(standardView,MyOrientation.RIGHT),
                 topSideSet = ViewAndSide(standardView,MyOrientation.TOP))
-
-
         }
+        if(borderDataMap[movingView]!=null) borderDataMap.remove(movingView)
+            borderDataMap[movingView] = borderSet
     }
     private fun explainTextAnimation(string: String, orientation: MyOrientation,view: View ): AnimatorSet {
 
@@ -431,8 +436,8 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         }
     }
     private fun removeHole(){
-        removeGlobalListener()
-        holeView.viewUnderHole = null
+        holeView.removeGlobalLayout()
+        holeView.noHole = true
     }
     fun createGuide(startOrder:Int,
                     createCardViewModel:CreateCardViewModel,
@@ -486,8 +491,33 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 onInstallBinding.root.setOnClickListener(null)
                 val a = TouchAreaBinding.inflate(activity.layoutInflater)
                 a.touchView.tag = 1
+
+                val id = View.generateViewId()
+                a.touchView.id = id
                 onInstallBinding.root.addView(a.touchView)
-                setPositionByXY(view,a.touchView, MyOrientation.MIDDLE,0,true)
+                val con = ConstraintSet()
+                con.clone(onInstallBinding.root)
+//
+                con.connect(id, ConstraintSet.RIGHT ,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,)
+                con.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID,ConstraintSet.TOP,)
+                con.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,ConstraintSet.BOTTOM,)
+                con.connect(id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID,ConstraintSet.LEFT,)
+
+                con.applyTo(onInstallBinding.root)
+                saveBorderDataMap(a.touchView, BorderSet(
+                    topSideSet = ViewAndSide(view,MyOrientation.TOP),
+                    bottomSideSet = ViewAndSide(view,MyOrientation.BOTTOM),
+                    leftSideSet = ViewAndSide(view,MyOrientation.LEFT),
+                    rightSideSet = ViewAndSide(view,MyOrientation.RIGHT),
+
+                )
+                )
+                ViewChangeActions().setPositionByMargin(
+                    view = a.touchView,
+                    myOrientationSet = MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE),
+                    constraintLayout = onInstallBinding.root,
+                    matchSize = true,
+                    positionDataMap = borderDataMap)
                 return a.touchView
             }
             fun cloneView(view: View) {
@@ -500,26 +530,24 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 appearAlphaAnimation(character,true).start()
                 setPositionByMargin(character, MyOrientationSet(
                     MyOrientation.MIDDLE,MyOrientation.MIDDLE))
-                borderDataMap[textView] = BorderSet(bottomSideSet = ViewAndSide(character,MyOrientation.TOP))
                 explainTextAnimation("やあ、僕はとさかくん", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
             fun greeting2(){
-
-
                 explainTextAnimation("これから、KiNaの使い方を説明するね", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
             fun createFlashCard1(){
                 explainTextAnimation("KiNaでは、フォルダと単語帳が作れるよ\n" +
                         "ボタンをタッチして、単語帳を作ってみよう", MyOrientation.TOP,character).start()
-
                 setArrow(MyOrientation.TOP,bnvBtnAdd)
+                holeView.holeMargin = 20
                 setHole(bnvBtnAdd)
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
             fun createFlashCard2(){
                 setArrow(MyOrientation.TOP,createMenuImvFlashCard)
+                holeView.recRadius = 20f
                 setHole(createMenuImvFlashCard)
                 createFileViewModel.setBottomMenuVisible(true)
                 goNextOnClickTouchArea(createMenuImvFlashCard)
@@ -549,6 +577,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 }
 
             }
+
             fun createFlashCard5(){
                 val title = edtCreatingFileTitle.text.toString()
                 if(title == "") {
@@ -582,32 +611,32 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
             fun createFlashCard6(){
                 setHole(libraryRv[0])
-                setPositionByXY(imvTabLibrary, character, MyOrientation.TOP,20,false)
+                setPositionByMargin( character, MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT))
                 appearAlphaAnimation(character,true).start()
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard1(){
-                borderDataMap[textView] = BorderSet(
+                saveBorderDataMap(textView,BorderSet(
                     leftSideSet = ViewAndSide(character,MyOrientation.RIGHT),
                     bottomSideSet = ViewAndSide(character,MyOrientation.BOTTOM),
                     topSideSet = ViewAndSide(character,MyOrientation.TOP)
-                )
+                ))
                 explainTextAnimationManual("おめでとう！単語帳が追加されたよ\n中身を見てみよう！",
-                    MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.LEFT)
+                    MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE)
                 ).start()
                  goNextOnClickTouchArea(libraryRv[0])
             }
             fun checkInsideNewFlashCard2(){
                 makeTxvGone()
                 makeTouchAreaGone()
-                changeViewVisibility(holeView,true)
                 removeHole()
+                changeViewVisibility(holeView,true)
                 libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard3(){
                 explainTextAnimationManual("まだカードがないね\n早速作ってみよう",
-                    MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.LEFT)).start()
+                    MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE)).start()
                 goNextOnClickAnyWhere()
             }
             fun makeNewCard1(){
@@ -629,33 +658,35 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag1(){
-                setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
+                saveSimplePosRelation(character,edtCardFrontContent,MyOrientation.TOP)
+                setPositionByMargin(character, MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT))
                 appearAlphaAnimation(character,true).start()
                 explainTextAnimation("上半分は、カードの表", MyOrientation.BOTTOM,character).start()
                 setHole(edtCardFrontContent)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag2(){
-                setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
+                setPositionByMargin(character, MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT))
                 explainTextAnimation("下半分は、カードの裏になっているよ", MyOrientation.BOTTOM,character)
                 setHole(edtCardBackContent)
                 goNextOnClickAnyWhere()
 
             }
             fun explainCreateCardFrag3(){
-                setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
+                saveBorderDataMap(character, BorderSet(bottomSideSet = ViewAndSide(edtCardBackTitle,MyOrientation.TOP)))
+                setPositionByMargin(character, MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT))
                 setHole(edtCardFrontTitle)
                 explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！", MyOrientation.BOTTOM,character).start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag4(){
-                setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
                 setHole(edtCardBackTitle)
                 explainTextAnimation("好みのようにカスタマイズしてね", MyOrientation.MIDDLE,edtCardFrontContent).start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation1(){
-                setPositionByXY(edtCardFrontContent,character, MyOrientation.BOTTOM,70,false)
+                saveBorderDataMap(character,BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,MyOrientation.TOP)))
+                setPositionByMargin(character, MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.MIDDLE))
                 explainTextAnimation("カードをめくるには、\n下のナビゲーションボタンを使うよ", MyOrientation.TOP,character).start()
                 setHole(linLayCreateCardNavigation)
                 goNextOnClickAnyWhere()
@@ -683,7 +714,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 setArrow(MyOrientation.TOP, createCardNavFlipPrevious)
             }
             fun goodBye1(){
-                setPositionByXY(onInstallBinding.root,character, MyOrientation.MIDDLE,0,false)
+                setPositionByMargin(character, MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE))
                 explainTextAnimation("これでガイドは終わりだよ", MyOrientation.TOP,character).start()
                 appearAlphaAnimation(character,true).start()
                 goNextOnClickAnyWhere()
@@ -701,6 +732,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 editor.putBoolean("firstTimeGuide", true)
                 editor.apply()
             }
+
 
             when(order){
                 1   ->  greeting1()

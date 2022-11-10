@@ -21,6 +21,7 @@ class HoleViewVer2 (
     private var holePaint: Paint = Paint()
     private var bitmap: Bitmap? = null
     private var layer: Canvas? = null
+    private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
 
     //position of hole
     var recRadius:Float = 0f
@@ -38,7 +39,6 @@ class HoleViewVer2 (
             field = value
             this.invalidate()
         }
-    private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
 
     fun removeGlobalLayout(){
         globalLayoutSet.onEach {
@@ -59,9 +59,7 @@ class HoleViewVer2 (
                 view.viewTreeObserver.addOnGlobalLayoutListener (
                     object :ViewTreeObserver.OnGlobalLayoutListener{
                     override fun onGlobalLayout() {
-                        if(globalLayoutSet[view]==null){
-                            globalLayoutSet[view] = this
-                        }
+                        globalLayoutSet[view] = this
                         recHolePosition = ViewChangeActions().getRecPos(view)
                         circleHolePosition = ViewChangeActions().getCirclePos(view)
                         noHole = (view.visibility == View.GONE)||(view.visibility == INVISIBLE)
@@ -80,9 +78,10 @@ class HoleViewVer2 (
     private var recHolePosition: RecPosition = RecPosition(0.0f, 0.0f, 0.0f,0.0f)
 
     var noHole:Boolean = true
-
-
-
+        set(value){
+            field = value
+            this.invalidate()
+        }
     private fun getRecPos(view: View):RecPosition{
         return ViewChangeActions().getRecPos(view)
     }
