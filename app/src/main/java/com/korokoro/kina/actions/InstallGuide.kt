@@ -103,7 +103,6 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 }
             })
     }
-    var borderLeftObject:View? = null
     private fun calculatePositionInBorder(view: View,
                                           borderPosition: RecPosition,
                                           verticalOrientation: MyOrientation,
@@ -159,11 +158,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         val right = (if(subMiddleRight<borderPosition.right)subMiddleRight else borderPosition.right)
         return RecPosition(left,top, right, bottom)
     }
-    fun getNavBarHeight():Int{
-        val a = activity.resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        val b = activity.resources.getDimensionPixelSize(a)
-        return  b
-    }
+
     var borderRight:Float? = null
     var borderLeft:Float? = null
     var borderTop:Float? = null
@@ -412,40 +407,43 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         changeViewVisibility(touchArea,true)
         setPositionByXY(view,touchArea, MyOrientation.MIDDLE,0,true)
     }
-    private fun setHole(view: View, shape: HoleShape){
-        removeGlobalListener()
-        holeView.removeAllHoles = false
-        val before = view.rotation
-        fun setHole(){
-            val a = IntArray(2)
-            view.getLocationInWindow(a)
-            val viewCenterPosX = a[0].toFloat()+view.width/2
-            val viewCenterPosY = a[1].toFloat() +view.height/2 -heightDiff
-            holeView.circleHolePosition =
-                CirclePosition(viewCenterPosX,viewCenterPosY ,100f)
-        }
-        fun setRec(margin:Float){
-            val a = IntArray(2)
-            view.getLocationInWindow(a)
-            val left = a[0].toFloat()
-            val top = a[1].toFloat() -heightDiff
-            holeView.recHolePosition =
-                RecPosition(left-margin,top-margin,left+view.width+margin,top+view.height+margin)
-        }
-        changeViewVisibility(holeView,true)
-        view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
-            override fun onGlobalLayout() {
-                globalLayoutSet.put(view,this)
-                view.rotation = 0f
-                holeView.circleHolePosition = CirclePosition(0f,0f,0f)
-                holeView.recHolePosition = RecPosition(0f,0f,0f,0f)
-                when(shape){
-                    HoleShape.CIRCLE -> setHole()
-                    HoleShape.RECTANGLE -> setRec(0f)
-                }
-                view.rotation =before
-            }
-        })
+//    private fun setHole(view: View, shape: HoleShape){
+//        removeGlobalListener()
+//        holeView.removeAllHoles = false
+//        val before = view.rotation
+//        fun setHole(){
+//            val a = IntArray(2)
+//            view.getLocationInWindow(a)
+//            val viewCenterPosX = a[0].toFloat()+view.width/2
+//            val viewCenterPosY = a[1].toFloat() +view.height/2 -heightDiff
+//            holeView.circleHolePosition =
+//                CirclePosition(viewCenterPosX,viewCenterPosY ,100f)
+//        }
+//        fun setRec(margin:Float){
+//            val a = IntArray(2)
+//            view.getLocationInWindow(a)
+//            val left = a[0].toFloat()
+//            val top = a[1].toFloat() -heightDiff
+//            holeView.recHolePosition =
+//                RecPosition(left-margin,top-margin,left+view.width+margin,top+view.height+margin)
+//        }
+//        changeViewVisibility(holeView,true)
+//        view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+//            override fun onGlobalLayout() {
+//                globalLayoutSet.put(view,this)
+//                view.rotation = 0f
+//                holeView.circleHolePosition = CirclePosition(0f,0f,0f)
+//                holeView.recHolePosition = RecPosition(0f,0f,0f,0f)
+//                when(shape){
+//                    HoleShape.CIRCLE -> setHole()
+//                    HoleShape.RECTANGLE -> setRec(0f)
+//                }
+//                view.rotation =before
+//            }
+//        })
+//    }
+    fun setHole(viewUnderHole:View){
+        holeView.viewUnderHole = viewUnderHole
     }
     private fun addTouchArea(view:View):View{
         onInstallBinding.root.setOnClickListener(null)
@@ -462,7 +460,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     }
     private fun removeHole(){
         removeGlobalListener()
-        holeView.removeAllHoles = true
+        holeView.viewUnderHole = null
     }
     fun createGuide(startOrder:Int,
                     createCardViewModel:CreateCardViewModel,
@@ -541,12 +539,12 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                         "ボタンをタッチして、単語帳を作ってみよう", MyOrientation.TOP,character).start()
 
                 setArrow(MyOrientation.TOP,bnvBtnAdd)
-                setHole(bnvBtnAdd, HoleShape.CIRCLE)
+                setHole(bnvBtnAdd)
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
             fun createFlashCard2(){
                 setArrow(MyOrientation.TOP,createMenuImvFlashCard)
-                setHole(createMenuImvFlashCard, HoleShape.CIRCLE)
+                setHole(createMenuImvFlashCard)
                 createFileViewModel.setBottomMenuVisible(true)
                 goNextOnClickTouchArea(createMenuImvFlashCard)
             }
@@ -559,9 +557,10 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                     doOnEnd {
                         goNextOnClickTouchArea(btnFinish)
                         createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
-                        setHole(frameLayEditFile, HoleShape.RECTANGLE)
+                        holeView.holeShape = HoleShape.RECTANGLE
+                        setHole(frameLayEditFile)
                         setTouchArea(edtCreatingFileTitle)
-                        addTouchArea(edtCardFrontTitle).setOnClickListener {
+                        addTouchArea(edtCreatingFileTitle).setOnClickListener {
                             showKeyBoard(edtCreatingFileTitle,activity)
                         }
                         edtCreatingFileTitle.requestFocus()
@@ -589,9 +588,8 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 }
                 makeTouchAreaGone()
                 makeArrowGone()
-                createFileViewModel.makeFilePos0()
 
-                createFileViewModel.onClickFinish(title)
+                createFileViewModel.makeFileInGuide(title)
                 removeHole()
                 libraryRv.itemAnimator = object:DefaultItemAnimator(){
                     override fun onAnimationFinished(viewHolder: RecyclerView.ViewHolder) {
@@ -607,7 +605,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
             }
             fun createFlashCard6(){
-                setHole(libraryRv[0], HoleShape.RECTANGLE)
+                setHole(libraryRv[0])
                 setPositionByXY(imvTabLibrary, character, MyOrientation.TOP,20,false)
                 appearAlphaAnimation(character,true).start()
                 goNextOnClickAnyWhere()
@@ -631,12 +629,11 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             fun makeNewCard1(){
                 appearAlphaAnimation(character,false).start()
                 makeTxvGone()
-
-                setHole(bnvBtnAdd, HoleShape.CIRCLE)
+                setHole(bnvBtnAdd)
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
             fun makeNewCard2(){
-                setHole(createMenuImvNewCard, HoleShape.CIRCLE)
+                setHole(createMenuImvNewCard)
                 createFileViewModel.setBottomMenuVisible(true)
                 goNextOnClickTouchArea(createMenuImvNewCard)
             }
@@ -651,32 +648,32 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
                 appearAlphaAnimation(character,true).start()
                 explainTextAnimation("上半分は、カードの表", MyOrientation.BOTTOM,character).start()
-                setHole(edtCardFrontContent, HoleShape.RECTANGLE)
+                setHole(edtCardFrontContent)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag2(){
                 setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
                 explainTextAnimation("下半分は、カードの裏になっているよ", MyOrientation.BOTTOM,character)
-                setHole(edtCardBackContent, HoleShape.RECTANGLE)
+                setHole(edtCardBackContent)
                 goNextOnClickAnyWhere()
 
             }
             fun explainCreateCardFrag3(){
                 setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
-                setHole(edtCardFrontTitle, HoleShape.RECTANGLE)
+                setHole(edtCardFrontTitle)
                 explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！", MyOrientation.BOTTOM,character).start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag4(){
                 setPositionByXY(edtCardFrontTitle,character, MyOrientation.RIGHT,0,false)
-                setHole(edtCardBackTitle, HoleShape.RECTANGLE)
+                setHole(edtCardBackTitle)
                 explainTextAnimation("好みのようにカスタマイズしてね", MyOrientation.MIDDLE,edtCardFrontContent).start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation1(){
                 setPositionByXY(edtCardFrontContent,character, MyOrientation.BOTTOM,70,false)
                 explainTextAnimation("カードをめくるには、\n下のナビゲーションボタンを使うよ", MyOrientation.TOP,character).start()
-                setHole(linLayCreateCardNavigation, HoleShape.RECTANGLE)
+                setHole(linLayCreateCardNavigation)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation2(){
@@ -794,7 +791,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun explainBtn(){
-                setHole(libraryRv[0],HoleShape.RECTANGLE)
+                setHole(libraryRv[0])
                 setPositionByXY(libraryRv[0],character, MyOrientation.BOTTOM,20,false)
                 explainTextAnimation("このアイテムを見てみよう", MyOrientation.BOTTOM,character).start()
                 goNextOnClickAnyWhere()
@@ -866,7 +863,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 explainTextAnimation("編集してみよう", MyOrientation.BOTTOM,character).start()
             }
             fun explainBtn4(){
-                setHole(btnEditFile,HoleShape.CIRCLE)
+                setHole(btnEditFile)
                 goNextOnClickTouchArea(btnEditFile)
                 setArrow(MyOrientation.LEFT,btnEditFile)
                 AnimatorSet().apply {
@@ -876,7 +873,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 }
             }
             fun editFile1(){
-                setHole(frameLayEditFile,HoleShape.RECTANGLE)
+                setHole(frameLayEditFile)
                 createFileViewModel.onClickEditFileInRV(
                     libraryViewModel.returnParentRVItems()[0] as File)
                 goNextOnClickAnyWhere()
@@ -993,7 +990,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 }
             }
             fun explainBtn3(){
-                setHole(btnDeleteFile,HoleShape.CIRCLE)
+                setHole(btnDeleteFile)
                 setPositionByXY(libraryRv[0],character, MyOrientation.BOTTOM,10,false)
                 explainTextAnimation("このボタンで、アイテムを削除できるよ", MyOrientation.BOTTOM,character).start()
                 goNextOnClickAnyWhere()
@@ -1012,7 +1009,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                     fileStatus = FileStatus.FLASHCARD_COVER)
                 deletePopUpViewModel.setDeletingItem(mutableListOf(exampleFile))
                 deletePopUpViewModel.setConfirmDeleteVisible(true)
-                setHole(frameLayConfirmDelete,HoleShape.RECTANGLE)
+                setHole(frameLayConfirmDelete)
                 setPositionByXY(frameLayConfirmDelete,character, MyOrientation.BOTTOM,50,false)
                 setArrow(MyOrientation.BOTTOM,btnConfirmDelete)
                 explainTextAnimation("消されないので、試しに削除を押してね！", MyOrientation.TOP,frameLayConfirmDelete).start()
@@ -1024,7 +1021,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                     setConfirmDeleteWithChildrenVisible(true)
                 }
                 txvContainingCardAmount.text = "15"
-                setHole(frameLayConfirmDeleteWithChildren,HoleShape.RECTANGLE)
+                setHole(frameLayConfirmDeleteWithChildren)
                 setArrow(MyOrientation.BOTTOM,txvContainingCardAmount)
                 explainTextAnimation("単語帳やフォルダに中身が入っていると\n確認画面に映るよ！",
                     MyOrientation.TOP,frameLayConfirmDeleteWithChildren).start()
@@ -1036,7 +1033,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun explainDeleteSystem4(){
-                setHole(btnConfirmDeleteOnlyParent,HoleShape.CIRCLE)
+                setHole(btnConfirmDeleteOnlyParent)
                 explainTextAnimation("中身を残す場合、\n中のカードはどの単語帳にも\n入っていないことになるんだ",
                     MyOrientation.TOP,frameLayConfirmDelete).start()
                 goNextOnClickAnyWhere()
@@ -1051,7 +1048,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             fun explainDeleteSystem6(){
                 explainTextAnimation("InBoxの中に移るよ！",
                     MyOrientation.TOP,character).start()
-                setHole(frameLayInBox,HoleShape.CIRCLE)
+                setHole(frameLayInBox)
                 txvInBoxCardAmount.text = "15"
                 changeViewVisibility(txvInBoxCardAmount,true)
                 goNextOnClickAnyWhere()
@@ -1066,7 +1063,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun explainMultiSelectMode2(){
-                setHole(libraryRv[0],HoleShape.RECTANGLE)
+                setHole(libraryRv[0])
                 addTouchArea(libraryRv[0]).setOnTouchListener(object :MyTouchListener(libraryRv.context){
                     override fun onLongClick(motionEvent: MotionEvent?) {
                         super.onLongClick(motionEvent)
@@ -1088,7 +1085,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun explainMultiSelectMode5(){
-                setHole(imvMultiModeMenu,HoleShape.CIRCLE)
+                setHole(imvMultiModeMenu)
                 addTouchArea(imvMultiModeMenu).setOnClickListener {
                     libraryViewModel.setMultiMenuVisibility(true)
                     guideInOrder(order+1)
@@ -1097,7 +1094,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                     MyOrientation.BOTTOM,character).start()
             }
             fun explainMultiSelectMode6(){
-                setHole(frameLayMultiModeMenu,HoleShape.RECTANGLE)
+                setHole(frameLayMultiModeMenu)
                 setPositionByXY(frameLayMultiModeMenu,character, MyOrientation.BOTTOM,50,false)
                 makeTxvGone()
                 goNextOnClickAnyWhere()
@@ -1180,7 +1177,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             fun guideMultiMode2of1(){
                 appearAlphaAnimation(character,false).start()
                 makeTxvGone()
-                setHole(libraryRv,HoleShape.RECTANGLE)
+                setHole(libraryRv)
                 addTouchArea(libraryRv).setOnTouchListener(object :MyTouchListener(libraryRv.context){
                     override fun onLongClick(motionEvent: MotionEvent?) {
                         super.onLongClick(motionEvent)
@@ -1193,7 +1190,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
             fun guideMultiMode2(){
                 libraryViewModel.setMultipleSelectMode(true)
-                setHole(selectedView!!,HoleShape.RECTANGLE)
+                setHole(selectedView!!)
                 selectedView!!.findViewById<ImageView>(R.id.btn_select).apply {
                     isSelected = true
                 }
@@ -1203,14 +1200,14 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
             fun guideMultiMode3(){
                 explainTextAnimation("メニューを開くよ", MyOrientation.TOP,character).start()
-                setHole(imvMultiModeMenu,HoleShape.CIRCLE)
+                setHole(imvMultiModeMenu)
                 goNextOnClickTouchArea(imvMultiModeMenu)
             }
             fun guideMultiMode4(){
                 makeTxvGone()
                 appearAlphaAnimation(character,false).start()
                 libraryViewModel.setMultiMenuVisibility(true)
-                setHole(frameLayMultiModeMenu,HoleShape.RECTANGLE)
+                setHole(frameLayMultiModeMenu)
                 setArrow(MyOrientation.LEFT,lineLayMoveSelectedItem)
                 goNextOnClickTouchArea(lineLayMoveSelectedItem)
             }
@@ -1241,7 +1238,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun createMovableItem2(){
-                setHole(bnvBtnAdd,HoleShape.CIRCLE)
+                setHole(bnvBtnAdd)
                 appearAlphaAnimation(holeView,true).start()
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
@@ -1255,7 +1252,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                     editFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
                     guideInOrder(order+1)
                 }
-                setHole(frameLayBottomMenu,HoleShape.RECTANGLE)
+                setHole(frameLayBottomMenu)
             }
             fun createMovableItem4(){
                 createGuide(5,createCardViewModel,editFileViewModel,libraryViewModel,mainViewModel)
@@ -1280,7 +1277,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun selectMovableItem(){
-                setHole(libraryRv,HoleShape.RECTANGLE)
+                setHole(libraryRv)
                 explainTextAnimation("移動先を選択できるよ", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
@@ -1291,7 +1288,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
             fun selectMovableItem3(){
                 val linLayMove = libraryRv[0].findViewById<FrameLayout>(R.id.rv_base_frameLay_left)
-                setHole(linLayMove,HoleShape.RECTANGLE)
+                setHole(linLayMove)
                 setPositionByXY(libraryRv[0],character, MyOrientation.BOTTOM,10,false)
                 explainTextAnimation("ここをタップして移動するよ", MyOrientation.BOTTOM,character).start()
                 setArrow(MyOrientation.BOTTOM,linLayMove)
@@ -1300,7 +1297,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             fun explainPopUp(){
                 moveToViewModel.setPopUpVisible(true)
                 makeArrowGone()
-                setHole(frameLayPopUpConfirmMove,HoleShape.RECTANGLE)
+                setHole(frameLayPopUpConfirmMove)
                 setPositionByXY(frameLayPopUpConfirmMove,character, MyOrientation.BOTTOM,0,false)
                 explainTextAnimation("最後は確認画面が表示されるよ", MyOrientation.TOP,frameLayPopUpConfirmMove).start()
                 goNextOnClickAnyWhere()

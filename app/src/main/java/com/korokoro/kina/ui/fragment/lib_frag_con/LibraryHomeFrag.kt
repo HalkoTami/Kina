@@ -87,6 +87,9 @@ class LibraryHomeFrag : Fragment(){
         }
         fun addCL(){
             homeTopBarAddCL()
+            topBarBinding.btnGuide.setOnClickListener{
+                mainViewModel.setHelpOptionVisibility(true)
+            }
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
                 libraryBaseViewModel,
@@ -151,6 +154,7 @@ class LibraryHomeFrag : Fragment(){
         searchViewModel.matchedItems.observe(viewLifecycleOwner){
             searchAdapter.submitList(it)
         }
+        libraryBaseViewModel.setParentFile(null)
         searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
         libraryBaseViewModel.apply {
             setLibraryFragment(LibraryFragment.Home)

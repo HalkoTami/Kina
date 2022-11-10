@@ -8,7 +8,7 @@
         >
 
 
-    <com.korokoro.kina.ui.customViews.HoleView
+    <com.korokoro.kina.ui.customViews.HoleViewVer2
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/view_with_hole"
@@ -36,7 +36,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/red"
 
         />
     <androidx.constraintlayout.widget.Barrier
@@ -66,7 +65,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/red"/>
+        />
 
     <FrameLayout
         style="@style/PopUpFrameLayStyle"

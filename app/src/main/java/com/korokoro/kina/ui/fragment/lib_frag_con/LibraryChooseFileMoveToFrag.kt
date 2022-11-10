@@ -12,9 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
-import com.korokoro.kina.actions.changeViewIfRVEmpty
 import com.korokoro.kina.actions.changeViewVisibility
-import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
@@ -121,7 +119,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             binding.confirmMoveToBinding.txvConfirmMove.text = it
         }
         val parentFileFromDBObserver = Observer<File> {
-            libraryBaseViewModel.setParentFileFromDB(it ?:return@Observer)
+            libraryBaseViewModel.setParentFile(it ?:return@Observer)
         }
         val movableFoldersObserver = Observer<Map<File,List<File>>>{
             if(flashcard.not()){

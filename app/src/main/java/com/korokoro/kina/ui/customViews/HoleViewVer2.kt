@@ -64,7 +64,7 @@ class HoleViewVer2 (
                         }
                         recHolePosition = ViewChangeActions().getRecPos(view)
                         circleHolePosition = ViewChangeActions().getCirclePos(view)
-                        noHole = (field!!.visibility == View.GONE)||(field!!.visibility == INVISIBLE)
+                        noHole = (view.visibility == View.GONE)||(view.visibility == INVISIBLE)
                         this@HoleViewVer2.invalidate()
 
                     }

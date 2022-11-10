@@ -47,13 +47,13 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
 //    今開いてるファイル
     fun  parentFileFromDB(int: Int?):LiveData<File> = repository.getFileByFileId(int).asLiveData()
-    fun setParentFileFromDB (file: File){
+    fun setParentFile (file: File?){
         _parentFile.value = file
         changeTopBarMode()
 
     }
-    private val _parentFile = MutableLiveData<File>()
-    val parentFile:LiveData<File> = _parentFile
+    private val _parentFile = MutableLiveData<File?>()
+    val parentFile:LiveData<File?> = _parentFile
     fun returnParentFile():File?{
         return _parentFile.value
     }

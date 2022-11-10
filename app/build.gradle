@@ -15,7 +15,7 @@ android {
         applicationId "com.korokoro.kina"
         minSdk 21
         targetSdk 33
-        versionCode 2
+        versionCode 4
         versionName "1.0.0"
         kapt {
             arguments {

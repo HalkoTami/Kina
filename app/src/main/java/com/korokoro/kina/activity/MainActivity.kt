@@ -194,18 +194,13 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
             ViewModelProvider(this,factory)[FlipTypeAndCheckViewModel::class.java]
         }
-        fun sample(){
-            binding.sample.holeShape = HoleShape.RECTANGLE
-            binding.sample.viewUnderHole = binding.frameBottomMenu
 
-            }
         setMainActivityLateInitVars()
         createAllViewModels()
         setUpMainActivityLayout()
         addMainActivityClickListeners()
         setContentView(binding.root)
         checkIfInstall()
-        sample()
         val childFragmentStatusObserver      = Observer<MainViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
         }
@@ -300,10 +295,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val editFileParentFileObserver           = Observer<File> {
             createFileViewModel.parentFileParent(it?.fileId).observe(this,parentFileParentObserver)
         }
-        val libraryParentFileObserver           = Observer<File>{
+        val libraryParentFileObserver           = Observer<File?>{
             createCardViewModel.setParentFlashCardCover(it)
             createFileViewModel.setParentTokenFileParent(it)
-            createFileViewModel.getChildFilesByFileIdFromDB(it.fileId).observe(this){
+            createFileViewModel.getChildFilesByFileIdFromDB(it?.fileId).observe(this){
                 createFileViewModel.setParentFileSisters(it)
             }
             createFileViewModel.parentFileParent(it?.parentFileId).observe(this@MainActivity,editFileParentFileObserver)

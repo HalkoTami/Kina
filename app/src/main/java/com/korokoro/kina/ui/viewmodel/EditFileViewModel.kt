@@ -318,10 +318,14 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         return _fileToEdit.value
     }
 
-    fun makeFilePos0(){
+    fun makeFileInGuide(title: String){
+        setEditFilePopUpVisible(false)
         val a = returnFileToCreate()?:return
-        a.fileBefore = 0
-        setFileToCreate(a)
+        a.fileBefore = null
+        val first = returnParentFileSisters().firstOrNull()
+        first?.fileBefore = (returnLastInsertedFileId()?:0) + 1
+        onClickFinish(title)
+        upDateFile(first ?:return)
     }
 
     fun onClickFinish(title:String){
