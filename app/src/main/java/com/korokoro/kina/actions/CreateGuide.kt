@@ -260,6 +260,11 @@ class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnIn
             val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
             val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
 
+            fun deletePreviousTouchAreas(){
+                onInstallBinding.root.children.iterator().forEach {
+                    if(it.tag == 1) changeViewVisibility(it,false)
+                }
+            }
 
 
             fun goNextOnClickAnyWhere(){
@@ -372,6 +377,7 @@ class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnIn
             }
             fun checkInsideNewFlashCard1(){
                 textPosData = ViewAndSide(actions.character,MyOrientation.RIGHT)
+                textFit = true
                 explainTextAnimation("おめでとう！単語帳が追加されたよ\n中身を見てみよう！",
                 ).start()
                  goNextOnClickTouchArea(libraryRv[0])
@@ -484,6 +490,7 @@ class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnIn
             }
 
 
+            deletePreviousTouchAreas()
             when(order){
                 1   ->  greeting1()
                 2   ->  greeting2()
@@ -513,6 +520,7 @@ class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnIn
                 else->  return
             }
         }
+
         guideInOrder(startOrder)
 
     }
