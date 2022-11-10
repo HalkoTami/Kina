@@ -220,68 +220,14 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
         con.applyTo(onInstallBinding.root)
     }
-    class ViewAndSide(
-        var view:View,
-        var side: MyOrientation
-    )
-    class BorderSet(
-        var leftSideSet:ViewAndSide?=null,
-        var topSideSet:ViewAndSide?=null,
-        var rightSideSet:ViewAndSide?=null,
-        var bottomSideSet:ViewAndSide?=null
-    )
-    val positionDataMap = mutableMapOf<View,BorderSet>()
+
+    val borderDataMap = mutableMapOf<View,BorderSet>()
 
 
-    private fun setPositionNextTo(mainView: View, subView: View, matchSize:Boolean,myOrientationSet:MyOrientationSet){
-        mainView.viewTreeObserver.addOnGlobalLayoutListener {
-            val leftSideSet = positionDataMap[subView]?.leftSideSet
-            val borderLeft = if(leftSideSet!=null) setMultipleBorderObject(leftSideSet.view,leftSideSet.side) else getDisplayBorder(
-                MyOrientation.LEFT)
-            val topSideSet = positionDataMap[subView]?.topSideSet
-            val borderTop = if(topSideSet!=null) setMultipleBorderObject(topSideSet.view,topSideSet.side) else getDisplayBorder(
-                MyOrientation.TOP)
-            val rightSideSet = positionDataMap[subView]?.rightSideSet
-            val borderRight = if(rightSideSet!=null) setMultipleBorderObject(rightSideSet.view,rightSideSet.side) else getDisplayBorder(
-                MyOrientation.RIGHT)
-            val bottomSideSet = positionDataMap[subView]?.bottomSideSet
-            val borderBottom = if(bottomSideSet!=null) setMultipleBorderObject(bottomSideSet.view,bottomSideSet.side) else getDisplayBorder(
-                MyOrientation.BOTTOM)
-
-            val mainViewRecPos = getRecPos(mainView)
-            val borderRecPos =  if(matchSize) mainViewRecPos else
-                RecPosition(borderLeft,borderTop,borderRight,borderBottom)
-            val result =calculatePositionInBorder(
-                subView,
-                borderRecPos,
-                myOrientationSet.verticalOrientation,
-                myOrientationSet.horizontalOrientation
-            )
-            val topDiff = abs(borderTop-getDisplayBorder(MyOrientation.TOP))
-            val rightDiff = abs(borderRight-getDisplayBorder(MyOrientation.RIGHT))
-            val leftDiff = abs(borderLeft-getDisplayBorder(MyOrientation.LEFT))
-            val bottomDiff = abs(borderBottom-getDisplayBorder(MyOrientation.BOTTOM))
-            fun setPosition(recPosition: RecPosition){
-                val con = ConstraintSet()
-                con.clone(onInstallBinding.root)
-                val marginTop = (abs(borderTop!!-recPosition.top)  -bottomDiff ).toInt()
-                val marginBottom = (abs(borderBottom!!-recPosition.bottom)  - topDiff  ).toInt()
-                val marginStart = (abs(borderLeft!!-recPosition.left)-rightDiff).toInt()
-                val marginEnd = (abs(borderRight!!-recPosition.right)-leftDiff).toInt()
-//
-                con.setMargin(character.id,ConstraintSet.TOP, marginTop)
-                con.setMargin(character.id,ConstraintSet.BOTTOM, marginBottom)
-                con.setMargin(character.id,ConstraintSet.START, marginStart)
-                con.setMargin(character.id,ConstraintSet.END, marginEnd)
-
-                con.applyTo(onInstallBinding.root)
-
-            }
-            setPosition(result)
 
 
-        }
-
+    private fun setPositionByMargin(view: View,myOrientationSet:MyOrientationSet){
+        ViewChangeActions().setPositionByMargin(view,false,myOrientationSet,borderDataMap,onInstallBinding.root)
     }
     private fun removeGlobalListener(){
         globalLayoutSet.onEach {
@@ -341,13 +287,73 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
 
     }
-    private fun explainTextAnimation(string: String, orientation: MyOrientation, view: View): AnimatorSet {
+    fun saveSimplePosRelation(movingView:View,standardView:View,orientation: MyOrientation){
+        borderDataMap[movingView] = when(orientation){
+            MyOrientation.TOP -> BorderSet(bottomSideSet = ViewAndSide(standardView,MyOrientation.TOP))
+            MyOrientation.LEFT -> BorderSet(rightSideSet = ViewAndSide(standardView,MyOrientation.LEFT) )
+            MyOrientation.RIGHT -> BorderSet(leftSideSet = ViewAndSide(standardView,MyOrientation.RIGHT) )
+            MyOrientation.BOTTOM -> BorderSet(topSideSet = ViewAndSide(standardView,MyOrientation.BOTTOM) )
+            MyOrientation.MIDDLE -> BorderSet(
+                bottomSideSet = ViewAndSide(standardView,MyOrientation.BOTTOM),
+                leftSideSet = ViewAndSide(standardView,MyOrientation.LEFT),
+                rightSideSet = ViewAndSide(standardView,MyOrientation.RIGHT),
+                topSideSet = ViewAndSide(standardView,MyOrientation.TOP))
+
+
+        }
+    }
+    private fun explainTextAnimation(string: String, orientation: MyOrientation,view: View ): AnimatorSet {
 
 
         textView.text = string
         textView.layoutParams.width = LayoutParams.WRAP_CONTENT
         textView.requestLayout()
-        setPositionByXY(view,textView,orientation,0,false)
+        saveSimplePosRelation(textView,view,orientation)
+        val set = when(orientation){
+            MyOrientation.TOP     -> MyOrientationSet(verticalOrientation = MyOrientation.BOTTOM,horizontalOrientation = MyOrientation.MIDDLE)
+            MyOrientation.LEFT    -> MyOrientationSet(verticalOrientation = MyOrientation.MIDDLE,horizontalOrientation = MyOrientation.RIGHT)
+            MyOrientation.RIGHT   -> MyOrientationSet(verticalOrientation = MyOrientation.MIDDLE,horizontalOrientation = MyOrientation.LEFT)
+            MyOrientation.BOTTOM  -> MyOrientationSet(verticalOrientation = MyOrientation.TOP,horizontalOrientation = MyOrientation.MIDDLE)
+            MyOrientation.MIDDLE  -> MyOrientationSet(verticalOrientation = MyOrientation.MIDDLE,horizontalOrientation = MyOrientation.MIDDLE)
+        }
+        setPositionByMargin(textView, set)
+        checkIfOutOfBound(textView,onInstallBinding.root,10)
+        textView.visibility = if(string=="") View.GONE else View.VISIBLE
+
+        val finalDuration:Long = 100
+        val anim2 = ValueAnimator.ofFloat(1.1f,1f)
+        anim2.addUpdateListener {
+            val progressPer = it.animatedValue as Float
+            setScale(textView,progressPer,progressPer)
+        }
+        val anim = ValueAnimator.ofFloat(0.7f,1.1f)
+        anim.addUpdateListener {
+            val progressPer = it.animatedValue as Float
+            setScale(textView,progressPer,progressPer)
+        }
+        val animAlpha = ValueAnimator.ofFloat(0f,1f)
+        anim.addUpdateListener {
+            setAlpha(textView,it.animatedValue as Float)
+        }
+        val scaleAnim = AnimatorSet().apply {
+            playSequentially(anim,anim2)
+            anim2.duration = finalDuration*0.3.toLong()
+            anim.duration = finalDuration*0.7.toLong()
+        }
+        val finalAnim = AnimatorSet().apply {
+            playTogether(animAlpha,scaleAnim)
+            scaleAnim.duration = finalDuration
+        }
+
+        return finalAnim
+    }
+    private fun explainTextAnimationManual(string: String, orientation: MyOrientationSet ): AnimatorSet {
+
+
+        textView.text = string
+        textView.layoutParams.width = LayoutParams.WRAP_CONTENT
+        textView.requestLayout()
+        setPositionByMargin(textView, orientation)
         checkIfOutOfBound(textView,onInstallBinding.root,10)
         textView.visibility = if(string=="") View.GONE else View.VISIBLE
 
@@ -407,41 +413,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         changeViewVisibility(touchArea,true)
         setPositionByXY(view,touchArea, MyOrientation.MIDDLE,0,true)
     }
-//    private fun setHole(view: View, shape: HoleShape){
-//        removeGlobalListener()
-//        holeView.removeAllHoles = false
-//        val before = view.rotation
-//        fun setHole(){
-//            val a = IntArray(2)
-//            view.getLocationInWindow(a)
-//            val viewCenterPosX = a[0].toFloat()+view.width/2
-//            val viewCenterPosY = a[1].toFloat() +view.height/2 -heightDiff
-//            holeView.circleHolePosition =
-//                CirclePosition(viewCenterPosX,viewCenterPosY ,100f)
-//        }
-//        fun setRec(margin:Float){
-//            val a = IntArray(2)
-//            view.getLocationInWindow(a)
-//            val left = a[0].toFloat()
-//            val top = a[1].toFloat() -heightDiff
-//            holeView.recHolePosition =
-//                RecPosition(left-margin,top-margin,left+view.width+margin,top+view.height+margin)
-//        }
-//        changeViewVisibility(holeView,true)
-//        view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
-//            override fun onGlobalLayout() {
-//                globalLayoutSet.put(view,this)
-//                view.rotation = 0f
-//                holeView.circleHolePosition = CirclePosition(0f,0f,0f)
-//                holeView.recHolePosition = RecPosition(0f,0f,0f,0f)
-//                when(shape){
-//                    HoleShape.CIRCLE -> setHole()
-//                    HoleShape.RECTANGLE -> setRec(0f)
-//                }
-//                view.rotation =before
-//            }
-//        })
-//    }
+
     fun setHole(viewUnderHole:View){
         holeView.viewUnderHole = viewUnderHole
     }
@@ -525,12 +497,16 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
 
             fun greeting1(){
-
                 appearAlphaAnimation(character,true).start()
+                setPositionByMargin(character, MyOrientationSet(
+                    MyOrientation.MIDDLE,MyOrientation.MIDDLE))
+                borderDataMap[textView] = BorderSet(bottomSideSet = ViewAndSide(character,MyOrientation.TOP))
                 explainTextAnimation("やあ、僕はとさかくん", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
             fun greeting2(){
+
+
                 explainTextAnimation("これから、KiNaの使い方を説明するね", MyOrientation.TOP,character).start()
                 goNextOnClickAnyWhere()
             }
@@ -611,7 +587,14 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard1(){
-                explainTextAnimation("おめでとう！単語帳が追加されたよ\n中身を見てみよう！", MyOrientation.RIGHT,character).start()
+                borderDataMap[textView] = BorderSet(
+                    leftSideSet = ViewAndSide(character,MyOrientation.RIGHT),
+                    bottomSideSet = ViewAndSide(character,MyOrientation.BOTTOM),
+                    topSideSet = ViewAndSide(character,MyOrientation.TOP)
+                )
+                explainTextAnimationManual("おめでとう！単語帳が追加されたよ\n中身を見てみよう！",
+                    MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.LEFT)
+                ).start()
                  goNextOnClickTouchArea(libraryRv[0])
             }
             fun checkInsideNewFlashCard2(){
@@ -623,7 +606,8 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard3(){
-                explainTextAnimation("まだカードがないね\n早速作ってみよう", MyOrientation.RIGHT,character).start()
+                explainTextAnimationManual("まだカードがないね\n早速作ってみよう",
+                    MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.LEFT)).start()
                 goNextOnClickAnyWhere()
             }
             fun makeNewCard1(){

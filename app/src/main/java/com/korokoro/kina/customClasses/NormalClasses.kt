@@ -1,5 +1,6 @@
 package com.korokoro.kina.customClasses
 
+import android.view.View
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus
@@ -15,7 +16,16 @@ class AnkiFilter(var correctAnswerTyped:Boolean = false,
                  var flag:Boolean = true,
                  var flagFilterActive :Boolean = false)
 
-
+class ViewAndSide(
+    var view: View,
+    var side: MyOrientation
+)
+class BorderSet(
+    var leftSideSet:ViewAndSide?=null,
+    var topSideSet:ViewAndSide?=null,
+    var rightSideSet:ViewAndSide?=null,
+    var bottomSideSet:ViewAndSide?=null
+)
 class AutoFlip(
     var active:Boolean = false,
     var seconds:Int = 20
