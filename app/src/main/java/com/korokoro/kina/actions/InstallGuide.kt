@@ -33,13 +33,15 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
 
 
-    fun setPositionByMargin( positionData: ViewAndPositionData,
-                            globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>, matchSize:Boolean){
+    fun setPositionByMargin(positionData: ViewAndPositionData,
+                            globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>,
+                            fillBorder:Boolean,
+                            fillIfOutOfBorder:Boolean){
         removeGlobalListener(globalLayoutSet)
         val view = positionData.view
         view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
-                ViewChangeActions().setPositionByMargin(matchSize,positionData,onInstallBinding.root)
+                ViewChangeActions().setPositionByMargin(fillBorder,fillIfOutOfBorder,positionData,onInstallBinding.root)
                 globalLayoutSet[view] = this
             }
         })
@@ -96,7 +98,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         textView.layoutParams.width = LayoutParams.WRAP_CONTENT
         textView.requestLayout()
          val posData = ViewAndPositionData(textView,getSimplePosRelation(view,orientation,fit) ,getOriSetByNextToPosition(orientation))
-        setPositionByMargin(posData,globalLayoutSet,false)
+        setPositionByMargin(posData,globalLayoutSet,false,true)
         textView.visibility = if(string=="") View.GONE else View.VISIBLE
 
         val finalDuration:Long = 100
@@ -160,10 +162,10 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         }
 
          val positionData = ViewAndPositionData(arrow,getSimplePosRelation(view,arrowPosition,true),getOriSetByNextToPosition(arrowPosition))
-        setPositionByMargin(positionData,globalLayoutSet,false)
+        setPositionByMargin(positionData,globalLayoutSet,false,false)
     }
 
-    fun setHole(viewUnderHole:View){
+    private fun setHole(viewUnderHole:View){
         holeView.viewUnderHole = viewUnderHole
     }
 
@@ -201,8 +203,9 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             ,MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE))
         setPositionByMargin(
             positionData,
-            matchSize = true,
-            globalLayoutSet = globalLayoutSet)
+            fillBorder = true,
+            globalLayoutSet = globalLayoutSet,
+            fillIfOutOfBorder = true)
 
 
         return a.touchView

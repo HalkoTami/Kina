@@ -33,7 +33,8 @@ class BorderSet(
     var leftSideSet:ViewAndSide?=null,
     var topSideSet:ViewAndSide?=null,
     var rightSideSet:ViewAndSide?=null,
-    var bottomSideSet:ViewAndSide?=null
+    var bottomSideSet:ViewAndSide?=null,
+
 )
 class ViewAndPositionData(
     val view: View,

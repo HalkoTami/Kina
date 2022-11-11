@@ -39,9 +39,21 @@ class CreateGuide(val activity:AppCompatActivity,
             field = value
             setCharacterPos()
         }
+
+    private var createHoleShape:HoleShape = HoleShape.CIRCLE
+
+    private var viewUnderHole:View? = null
+        set(value) {
+            field = value
+            actions.holeView.apply {
+                holeShape = createHoleShape
+                viewUnderHole = value
+            }
+
+        }
     private fun setCharacterPos(){
         val data = ViewAndPositionData(actions.character,characterBorderSet,characterOrientation)
-        actions.setPositionByMargin(data,globalLayoutSet,false)
+        actions.setPositionByMargin(data,globalLayoutSet,false,true)
     }
     private var textPosData:ViewAndSide = ViewAndSide(actions.character,MyOrientation.TOP)
     private var textFit:Boolean = false
@@ -114,7 +126,6 @@ class CreateGuide(val activity:AppCompatActivity,
 
             fun greeting1(){
                 actions.appearAlphaAnimation(actions.character,true).start()
-                setCharacterPos()
                 explainTextAnimation("やあ、僕はとさかくん").start()
                 goNextOnClickAnyWhere()
             }
@@ -126,14 +137,12 @@ class CreateGuide(val activity:AppCompatActivity,
                 explainTextAnimation("KiNaでは、フォルダと単語帳が作れるよ\n" +
                         "ボタンをタッチして、単語帳を作ってみよう", ).start()
                 setArrow(MyOrientation.TOP,bnvBtnAdd)
-                actions.setHoleMargin(20)
-                actions.setHole(bnvBtnAdd)
+                viewUnderHole = bnvBtnAdd
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
             fun createFlashCard2(){
                 setArrow(MyOrientation.TOP,createMenuImvFlashCard)
-                actions.setHoleRecRadius(20)
-                actions.setHole(createMenuImvFlashCard)
+                viewUnderHole = createMenuImvFlashCard
                 createFileViewModel.setBottomMenuVisible(true)
                 goNextOnClickTouchArea(createMenuImvFlashCard)
             }
@@ -146,8 +155,8 @@ class CreateGuide(val activity:AppCompatActivity,
                     doOnEnd {
                         goNextOnClickTouchArea(btnFinish)
                         createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
-                        actions.holeView.holeShape = HoleShape.RECTANGLE
-                        actions.setHole(frameLayEditFile)
+                        createHoleShape = HoleShape.RECTANGLE
+                        viewUnderHole = frameLayEditFile
                         addTouchArea(edtCreatingFileTitle)
                         addTouchArea(edtCreatingFileTitle).setOnClickListener {
                             showKeyBoard(edtCreatingFileTitle,activity)
@@ -194,7 +203,7 @@ class CreateGuide(val activity:AppCompatActivity,
 
             }
             fun createFlashCard6(){
-                actions.setHole(libraryRv[0])
+                viewUnderHole = libraryRv[0]
                 characterOrientation = MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT)
                 actions.appearAlphaAnimation(actions.character,true).start()
                 goNextOnClickAnyWhere()
@@ -222,11 +231,11 @@ class CreateGuide(val activity:AppCompatActivity,
             fun makeNewCard1(){
                 actions.appearAlphaAnimation(actions.character,false).start()
                 actions.makeTxvGone()
-                actions.setHole(bnvBtnAdd)
+                viewUnderHole = bnvBtnAdd
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
             fun makeNewCard2(){
-                actions.setHole(createMenuImvNewCard)
+                viewUnderHole = createMenuImvNewCard
                 createFileViewModel.setBottomMenuVisible(true)
                 goNextOnClickTouchArea(createMenuImvNewCard)
             }
@@ -241,23 +250,23 @@ class CreateGuide(val activity:AppCompatActivity,
                 characterBorderSet = actions.getSimplePosRelation(edtCardFrontContent,MyOrientation.TOP,false)
                 actions.appearAlphaAnimation(actions.character,true).start()
                 explainTextAnimation("上半分は、カードの表" ).start()
-                actions.setHole(edtCardFrontContent)
+                viewUnderHole = edtCardFrontContent
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag2(){
                 explainTextAnimation("下半分は、カードの裏になっているよ" )
-                actions.setHole(edtCardBackContent)
+                viewUnderHole = edtCardFrontContent
                 goNextOnClickAnyWhere()
 
             }
             fun explainCreateCardFrag3(){
                 characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackTitle,MyOrientation.TOP))
-                actions.setHole(edtCardFrontTitle)
+                viewUnderHole = edtCardFrontTitle
                 explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！").start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag4(){
-                actions.setHole(edtCardBackTitle)
+                viewUnderHole = edtCardBackTitle
                 textPosData = ViewAndSide(edtCardBackTitle,MyOrientation.TOP)
                 textFit = false
                 explainTextAnimation("好みのようにカスタマイズしてね").start()
@@ -267,7 +276,7 @@ class CreateGuide(val activity:AppCompatActivity,
                 characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,MyOrientation.TOP))
                 characterOrientation = MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.MIDDLE)
                 explainTextAnimation("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
-                actions.setHole(linLayCreateCardNavigation)
+                viewUnderHole = linLayCreateCardNavigation
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation2(){

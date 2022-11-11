@@ -24,7 +24,7 @@ class HoleViewVer2 (
     private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
 
     //position of hole
-    var recRadius:Float = 0f
+    var recRadius:Float = 20f
         set(value){
             field = value
             this.invalidate()
@@ -34,7 +34,7 @@ class HoleViewVer2 (
             field = value
             this.invalidate()
         }
-    var holeMargin:Int = 0
+    var holeMargin:Int = 20
         set(value){
             field = value
             this.invalidate()

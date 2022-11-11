@@ -135,7 +135,8 @@ class ViewChangeActions {
         return RecPosition(left,top, right, bottom)
     }
     fun setPositionByMargin(
-        matchSize:Boolean,
+        fillBorder:Boolean,
+        fillIfOutOfBorder:Boolean,
         positionData: ViewAndPositionData,
         constraintLayout: ConstraintLayout){
         val view = positionData.view
@@ -159,9 +160,16 @@ class ViewChangeActions {
 
 
                     val borderRecPos = RecPosition(borderLeft,borderTop,borderRight,borderBottom)
-                    if(matchSize) {
+                    if(fillBorder) {
                         view.layoutParams.width = abs(borderLeft-borderRight).toInt()
                         view.layoutParams.height = abs(borderTop-borderBottom).toInt()
+                        view.requestLayout()
+                    }
+                    if(fillIfOutOfBorder){
+                        val borderWidth = abs(borderRecPos.right-borderRecPos.left).toInt()
+                        val borderHeight = abs(borderRecPos.top-borderRecPos.bottom).toInt()
+                        if(view.width>borderWidth) view.layoutParams.width = borderWidth
+                        if(view.height>borderHeight) view.layoutParams.height = borderHeight
                         view.requestLayout()
                     }
 
