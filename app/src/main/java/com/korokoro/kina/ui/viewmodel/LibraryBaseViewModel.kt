@@ -138,7 +138,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
 
     val toast :LiveData<MakeToastFromVM> = _toast
-    fun updateLeftItems(parentCards:List<Card>){
+    private fun updateLeftCardItems(parentCards:List<Card>){
         val updateList = mutableListOf<Card>()
         val selectedList =  returnSelectedItems().filterIsInstance<Card>()
         fun checkIsSelected(card:Card):Boolean{
@@ -158,7 +158,27 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         getNextCard(null)
         setReorderedLeftItems(updateList)
     }
-    fun sortAndUpdateSelectedCards(){
+    private fun updateLeftFileItems(parentCards:List<File>){
+        val updateList = mutableListOf<File>()
+        val selectedList =  returnSelectedItems().filterIsInstance<File>()
+        fun checkIsSelected(file: File):Boolean{
+            return selectedList.map { it.fileId }.contains(file.fileId)
+        }
+        var lastUnselectedFile:File? = null
+        fun getNextFile(fileId: Int?){
+            val nextFile = parentCards.find { it.fileBefore == fileId } ?:return
+            if(checkIsSelected(nextFile).not()) {
+                val new = nextFile.copy()
+                new.fileBefore = lastUnselectedFile?.fileId
+                lastUnselectedFile = new
+                updateList.add(new)
+            }
+            getNextFile(nextFile.fileId)
+        }
+        getNextFile(null)
+        setReorderedLeftItems(updateList)
+    }
+    private fun sortAndUpdateSelectedCards(){
         val sorted = returnSelectedItems().sortedBy { returnParentRVItems().indexOf(it) }.filterIsInstance<Card>()
         val newUpdatedList = mutableListOf<Card>()
         sorted.onEach {
@@ -172,7 +192,21 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         }
         setSelectedItems(newUpdatedList)
     }
-    fun onClickRvSelectCard(item: Card,listAttributes: ListAttributes){
+    private fun sortAndUpdateSelectedFiles(){
+        val sorted = returnSelectedItems().sortedBy { returnParentRVItems().indexOf(it) }.filterIsInstance<File>()
+        val newUpdatedList = mutableListOf<File>()
+        sorted.onEach {
+            val newFile = it.copy()
+            val posBefore = sorted.indexOf(it)-1
+            newFile.fileBefore = if(posBefore <0) null else if (posBefore in 0..sorted.size) {
+                sorted[posBefore].fileId
+
+            } else throw IllegalArgumentException()
+            newUpdatedList.add(newFile)
+        }
+        setSelectedItems(newUpdatedList)
+    }
+    private fun onClickRvSelectCard(item: Card,listAttributes: ListAttributes){
         val list = returnSelectedItems().filterIsInstance<Card>()
         val parentList = returnParentRVItems().filterIsInstance<Card>()
         val mList = mutableListOf<Card>()
@@ -188,17 +222,34 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         }
 
         setSelectedItems(mList)
-        updateLeftItems(parentList)
+        updateLeftCardItems(parentList)
         sortAndUpdateSelectedCards()
+
+    }
+    private fun onClickRvSelectFile(item: File,listAttributes: ListAttributes){
+        val list = returnSelectedItems().filterIsInstance<File>()
+        val parentList = returnParentRVItems().filterIsInstance<File>()
+        val mList = mutableListOf<File>()
+        mList.addAll(list)
+        when(listAttributes){
+            ListAttributes.Add ->{
+                mList.add(item)
+            }
+            ListAttributes.Remove -> {
+                mList.remove(item)
+            }
+        }
+        setSelectedItems(mList)
+        updateLeftFileItems(parentList)
+        sortAndUpdateSelectedFiles()
 
     }
     fun onClickRvSelect(listAttributes: ListAttributes,item: Any){
 
 
         when(item){
-            is Card -> {
-                onClickRvSelectCard(item,listAttributes)
-            }
+            is Card -> onClickRvSelectCard(item,listAttributes)
+            is File -> onClickRvSelectFile(item,listAttributes)
             else -> return
         }
     }

@@ -46,6 +46,7 @@ fun hideKeyBoard(editText: EditText,context: Context){
 }
 fun changeViewIfRVEmpty(list: List<Any>, frameLayout: FrameLayout, emptyView: View){
     if(list.isEmpty()){
+        frameLayout.removeAllViews()
         frameLayout.addView(emptyView)
     } else {
         frameLayout.removeView(emptyView)
