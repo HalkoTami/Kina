@@ -27,6 +27,12 @@ class CreateGuide(val activity:AppCompatActivity,
     private val borderDataMap = mutableMapOf<View,BorderSet>()
     private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
 
+    fun removeAllGlobalLayoutSet(){
+        globalLayoutSet.onEach {
+            it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
+        }
+        actions.holeView.removeGlobalLayout()
+    }
 
 
     private var characterBorderSet:BorderSet = BorderSet()
@@ -41,12 +47,14 @@ class CreateGuide(val activity:AppCompatActivity,
         }
 
     private var createHoleShape:HoleShape = HoleShape.CIRCLE
+    private var createAnimateHole :Boolean = true
 
     private var viewUnderHole:View? = null
         set(value) {
             field = value
             actions.holeView.apply {
                 holeShape = createHoleShape
+                animate = createAnimateHole
                 viewUnderHole = value
             }
 
@@ -125,6 +133,10 @@ class CreateGuide(val activity:AppCompatActivity,
             }
 
             fun greeting1(){
+                actions.removeHole()
+                actions.makeArrowGone()
+                characterOrientation = MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE)
+                characterBorderSet = BorderSet()
                 actions.appearAlphaAnimation(actions.character,true).start()
                 explainTextAnimation("やあ、僕はとさかくん").start()
                 goNextOnClickAnyWhere()
@@ -142,6 +154,7 @@ class CreateGuide(val activity:AppCompatActivity,
             }
             fun createFlashCard2(){
                 setArrow(MyOrientation.TOP,createMenuImvFlashCard)
+                createAnimateHole = false
                 viewUnderHole = createMenuImvFlashCard
                 createFileViewModel.setBottomMenuVisible(true)
                 goNextOnClickTouchArea(createMenuImvFlashCard)
@@ -203,6 +216,7 @@ class CreateGuide(val activity:AppCompatActivity,
 
             }
             fun createFlashCard6(){
+                createAnimateHole = true
                 viewUnderHole = libraryRv[0]
                 characterOrientation = MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT)
                 actions.appearAlphaAnimation(actions.character,true).start()
@@ -235,6 +249,7 @@ class CreateGuide(val activity:AppCompatActivity,
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
             fun makeNewCard2(){
+                createAnimateHole = false
                 viewUnderHole = createMenuImvNewCard
                 createFileViewModel.setBottomMenuVisible(true)
                 goNextOnClickTouchArea(createMenuImvNewCard)
@@ -250,6 +265,7 @@ class CreateGuide(val activity:AppCompatActivity,
                 characterBorderSet = actions.getSimplePosRelation(edtCardFrontContent,MyOrientation.TOP,false)
                 actions.appearAlphaAnimation(actions.character,true).start()
                 explainTextAnimation("上半分は、カードの表" ).start()
+                createAnimateHole = true
                 viewUnderHole = edtCardFrontContent
                 goNextOnClickAnyWhere()
             }
