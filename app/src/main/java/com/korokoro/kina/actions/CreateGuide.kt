@@ -2,16 +2,12 @@ package com.korokoro.kina.actions
 
 import android.animation.AnimatorSet
 import android.content.Context
-import android.graphics.drawable.GradientDrawable.Orientation
 import android.view.View
-import android.view.ViewGroup.LayoutParams
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.core.view.size
@@ -20,215 +16,45 @@ import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
 import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.databinding.CallOnInstallBinding
-import com.korokoro.kina.databinding.TouchAreaBinding
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.customViews.*
 import com.korokoro.kina.ui.viewmodel.*
-import kotlin.math.abs
 
 
-class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnInstallBinding){
+class CreateGuide(val activity:AppCompatActivity,
+                  private val onInstallBinding: CallOnInstallBinding){
     val actions = InstallGuide(activity,onInstallBinding)
-    val borderDataMap = mutableMapOf<View,BorderSet>()
-    val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
-//
-    fun saveBorderDataMap(view: View,set:BorderSet){
-        actions.saveBorderDataMap(view,set, borderDataMap)
+    private val borderDataMap = mutableMapOf<View,BorderSet>()
+    private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
+
+
+
+    private var characterBorderSet:BorderSet = BorderSet()
+        set(value) {
+            field = value
+            setCharacterPos()
+        }
+    private var characterOrientation:MyOrientationSet = MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE)
+        set(value) {
+            field = value
+            setCharacterPos()
+        }
+    private fun setCharacterPos(){
+        val data = ViewAndPositionData(actions.character,characterBorderSet,characterOrientation)
+        actions.setPositionByMargin(data,globalLayoutSet,false)
     }
-//
-//
-    private fun setPositionByMargin(view: View,myOrientationSet:MyOrientationSet){
-         ViewChangeActions().setPositionByMargin(view,false,myOrientationSet,borderDataMap,onInstallBinding.root)
-    }
-    var textPosData:ViewAndSide = ViewAndSide(actions.character,MyOrientation.TOP)
-    var textFit:Boolean = false
+    private var textPosData:ViewAndSide = ViewAndSide(actions.character,MyOrientation.TOP)
+    private var textFit:Boolean = false
     private fun explainTextAnimation(string: String):AnimatorSet{
-        return actions.explainTextAnimation(string= string,textPosData.side,textPosData.view,borderDataMap,textFit,globalLayoutSet)
+        return actions.explainTextAnimation(string= string,textPosData.side,textPosData.view,textFit,globalLayoutSet)
     }
     private fun setArrow(arrowPosition: MyOrientation,view: View){
-        actions.setArrow(arrowPosition,view,borderDataMap)
+        actions.setArrow(arrowPosition,view,globalLayoutSet)
     }
     private fun addTouchArea(view: View):View{
-        return actions.addTouchArea(view,borderDataMap)
+        return actions.copyViewInConLay(view,borderDataMap,globalLayoutSet)
     }
-    private fun saveSimplePosRelation(movingView: View,standardView:View,orientation: MyOrientation,fit:Boolean){
-        actions.saveSimplePosRelation(movingView,standardView,orientation,fit,borderDataMap)
-    }
-//
-//    private fun makeTxvGone(){
-//        appearAlphaAnimation(textView,false).start()
-//    }
-//    private fun makeArrowGone(){
-//        changeViewVisibility(arrow,false)
-//    }
-//    private fun makeTouchAreaGone(){
-//        changeViewVisibility(touchArea,false)
-//    }
-//    private fun appearAlphaAnimation(view :View, visible:Boolean): ValueAnimator {
-//
-//
-//        return if(visible) appear else disappear
-//
-//
-//    }
-//
-//    private fun explainTextAnimation(string: String, orientation: MyOrientation,view: View ): AnimatorSet {
-//
-//
-//        textView.text = string
-//        textView.layoutParams.width = LayoutParams.WRAP_CONTENT
-//        textView.requestLayout()
-//        saveSimplePosRelation(textView,view,orientation)
-//        val set = when(orientation){
-//            MyOrientation.TOP     -> MyOrientationSet(verticalOrientation = MyOrientation.BOTTOM,horizontalOrientation = MyOrientation.MIDDLE)
-//            MyOrientation.LEFT    -> MyOrientationSet(verticalOrientation = MyOrientation.MIDDLE,horizontalOrientation = MyOrientation.RIGHT)
-//            MyOrientation.RIGHT   -> MyOrientationSet(verticalOrientation = MyOrientation.MIDDLE,horizontalOrientation = MyOrientation.LEFT)
-//            MyOrientation.BOTTOM  -> MyOrientationSet(verticalOrientation = MyOrientation.TOP,horizontalOrientation = MyOrientation.MIDDLE)
-//            MyOrientation.MIDDLE  -> MyOrientationSet(verticalOrientation = MyOrientation.MIDDLE,horizontalOrientation = MyOrientation.MIDDLE)
-//        }
-//        setPositionByMargin(textView, set)
-//        checkIfOutOfBound(textView,onInstallBinding.root,10)
-//        textView.visibility = if(string=="") View.GONE else View.VISIBLE
-//
-//        val finalDuration:Long = 100
-//        val anim2 = ValueAnimator.ofFloat(1.1f,1f)
-//        anim2.addUpdateListener {
-//            val progressPer = it.animatedValue as Float
-//            setScale(textView,progressPer,progressPer)
-//        }
-//        val anim = ValueAnimator.ofFloat(0.7f,1.1f)
-//        anim.addUpdateListener {
-//            val progressPer = it.animatedValue as Float
-//            setScale(textView,progressPer,progressPer)
-//        }
-//        val animAlpha = ValueAnimator.ofFloat(0f,1f)
-//        anim.addUpdateListener {
-//            setAlpha(textView,it.animatedValue as Float)
-//        }
-//        val scaleAnim = AnimatorSet().apply {
-//            playSequentially(anim,anim2)
-//            anim2.duration = finalDuration*0.3.toLong()
-//            anim.duration = finalDuration*0.7.toLong()
-//        }
-//        val finalAnim = AnimatorSet().apply {
-//            playTogether(animAlpha,scaleAnim)
-//            scaleAnim.duration = finalDuration
-//        }
-//
-//        return finalAnim
-//    }
-//    private fun explainTextAnimationManual(string: String, orientation: MyOrientationSet ): AnimatorSet {
-//
-//
-//        textView.text = string
-//        textView.layoutParams.width = LayoutParams.WRAP_CONTENT
-//        textView.requestLayout()
-//        setPositionByMargin(textView, orientation)
-//        checkIfOutOfBound(textView,onInstallBinding.root,10)
-//        textView.visibility = if(string=="") View.GONE else View.VISIBLE
-//
-//        val finalDuration:Long = 100
-//        val anim2 = ValueAnimator.ofFloat(1.1f,1f)
-//        anim2.addUpdateListener {
-//            val progressPer = it.animatedValue as Float
-//            setScale(textView,progressPer,progressPer)
-//        }
-//        val anim = ValueAnimator.ofFloat(0.7f,1.1f)
-//        anim.addUpdateListener {
-//            val progressPer = it.animatedValue as Float
-//            setScale(textView,progressPer,progressPer)
-//        }
-//        val animAlpha = ValueAnimator.ofFloat(0f,1f)
-//        anim.addUpdateListener {
-//            setAlpha(textView,it.animatedValue as Float)
-//        }
-//        val scaleAnim = AnimatorSet().apply {
-//            playSequentially(anim,anim2)
-//            anim2.duration = finalDuration*0.3.toLong()
-//            anim.duration = finalDuration*0.7.toLong()
-//        }
-//        val finalAnim = AnimatorSet().apply {
-//            playTogether(animAlpha,scaleAnim)
-//            scaleAnim.duration = finalDuration
-//        }
-//
-//        return finalAnim
-//    }
-//    private fun setArrowDirection(direction: MyOrientation){
-//        arrow.rotation =
-//            when(direction){
-//                MyOrientation.BOTTOM-> -450f
-//                MyOrientation.LEFT -> 0f
-//                MyOrientation.RIGHT -> 900f
-//                MyOrientation.TOP -> 450f
-//                else -> return
-//            }
-//
-//    }
-//    private fun setArrow(arrowPosition: MyOrientation, view: View){
-//        appearAlphaAnimation(arrow,true).start()
-//        when(arrowPosition){
-//            MyOrientation.BOTTOM-> setArrowDirection(MyOrientation.TOP)
-//            MyOrientation.LEFT -> setArrowDirection(MyOrientation.RIGHT)
-//            MyOrientation.RIGHT -> setArrowDirection(MyOrientation.LEFT)
-//            MyOrientation.TOP -> setArrowDirection(MyOrientation.BOTTOM)
-//            else ->  {
-//                makeTouchAreaGone()
-//                return
-//            }
-//        }
-//        setPositionByXY(view,arrow,arrowPosition,10,false)
-//    }
-//    private fun setTouchArea(view: View){
-//        changeViewVisibility(touchArea,true)
-//        setPositionByXY(view,touchArea, MyOrientation.MIDDLE,0,true)
-//    }
-//
-//    fun setHole(viewUnderHole:View){
-//        holeView.viewUnderHole = viewUnderHole
-//    }
-//    private fun cloneView(view: View) {
-//        addTouchArea(view).setOnClickListener {
-//            view.callOnClick()
-//        }
-//    }
-//    fun addTouchArea(view:View):View{
-//        onInstallBinding.root.setOnClickListener(null)
-//        val a = TouchAreaBinding.inflate(activity.layoutInflater)
-//        a.touchView.tag = 1
-//
-//        val id = View.generateViewId()
-//        a.touchView.id = id
-//        onInstallBinding.root.addView(a.touchView)
-//        val con = ConstraintSet()
-//        con.clone(onInstallBinding.root)
-////
-//        con.connect(id, ConstraintSet.RIGHT ,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,)
-//        con.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID,ConstraintSet.TOP,)
-//        con.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,ConstraintSet.BOTTOM,)
-//        con.connect(id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID,ConstraintSet.LEFT,)
-//
-//        con.applyTo(onInstallBinding.root)
-//        saveBorderDataMap(a.touchView, BorderSet(
-//            topSideSet = ViewAndSide(view,MyOrientation.TOP),
-//            bottomSideSet = ViewAndSide(view,MyOrientation.BOTTOM),
-//            leftSideSet = ViewAndSide(view,MyOrientation.LEFT),
-//            rightSideSet = ViewAndSide(view,MyOrientation.RIGHT),
-//
-//            )
-//        )
-//        ViewChangeActions().setPositionByMargin(
-//            view = a.touchView,
-//            myOrientationSet = MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE),
-//            constraintLayout = onInstallBinding.root,
-//            matchSize = true,
-//            positionDataMap = borderDataMap)
-//        return a.touchView
-//    }
-//    private fun removeHole(){
-//        holeView.removeGlobalLayout()
-//        holeView.noHole = true
-//    }
+
     fun createGuide(startOrder:Int,
                     createCardViewModel:CreateCardViewModel,
                     createFileViewModel:EditFileViewModel,
@@ -288,8 +114,7 @@ class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnIn
 
             fun greeting1(){
                 actions.appearAlphaAnimation(actions.character,true).start()
-                setPositionByMargin(actions.character, MyOrientationSet(
-                    MyOrientation.MIDDLE,MyOrientation.MIDDLE))
+                setCharacterPos()
                 explainTextAnimation("やあ、僕はとさかくん").start()
                 goNextOnClickAnyWhere()
             }
@@ -345,8 +170,7 @@ class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnIn
                     return
                 }
                 val lastId = libraryRv.size
-                var newLastId = libraryRv.size
-                var fixedSize = true
+                var newLastId:Int
                 hideKeyBoard(edtCreatingFileTitle,activity)
                 onInstallBinding.root.children.iterator().forEach {
                     if(it.tag == 1)it.visibility = View.GONE
@@ -371,7 +195,7 @@ class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnIn
             }
             fun createFlashCard6(){
                 actions.setHole(libraryRv[0])
-                setPositionByMargin( actions.character, MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT))
+                characterOrientation = MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT)
                 actions.appearAlphaAnimation(actions.character,true).start()
                 goNextOnClickAnyWhere()
             }
@@ -414,23 +238,20 @@ class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag1(){
-                saveSimplePosRelation(actions.character,edtCardFrontContent,MyOrientation.TOP,false)
-                setPositionByMargin(actions.character, MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT))
+                characterBorderSet = actions.getSimplePosRelation(edtCardFrontContent,MyOrientation.TOP,false)
                 actions.appearAlphaAnimation(actions.character,true).start()
-                explainTextAnimation("上半分は、カードの表", ).start()
+                explainTextAnimation("上半分は、カードの表" ).start()
                 actions.setHole(edtCardFrontContent)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag2(){
-                setPositionByMargin(actions.character, MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT))
-                explainTextAnimation("下半分は、カードの裏になっているよ", )
+                explainTextAnimation("下半分は、カードの裏になっているよ" )
                 actions.setHole(edtCardBackContent)
                 goNextOnClickAnyWhere()
 
             }
             fun explainCreateCardFrag3(){
-                saveBorderDataMap(actions.character, BorderSet(bottomSideSet = ViewAndSide(edtCardBackTitle,MyOrientation.TOP)))
-                setPositionByMargin(actions.character, MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT))
+                characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackTitle,MyOrientation.TOP))
                 actions.setHole(edtCardFrontTitle)
                 explainTextAnimation("カードの裏表にタイトルを付けることもできるんだ！").start()
                 goNextOnClickAnyWhere()
@@ -443,24 +264,24 @@ class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnIn
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation1(){
-                saveBorderDataMap(actions.character,BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,MyOrientation.TOP)))
-                setPositionByMargin(actions.character, MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.MIDDLE))
-                explainTextAnimation("カードをめくるには、\n下のナビゲーションボタンを使うよ", ).start()
+                characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,MyOrientation.TOP))
+                characterOrientation = MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.MIDDLE)
+                explainTextAnimation("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
                 actions.setHole(linLayCreateCardNavigation)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation2(){
-                explainTextAnimation("新しいカードを前に挿入するのはここ",).start()
+                explainTextAnimation("新しいカードを前に挿入するのはここ").start()
                 setArrow(MyOrientation.TOP,createCardInsertNext)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation3(){
-                explainTextAnimation("後ろに挿入するのはここ！",).start()
+                explainTextAnimation("後ろに挿入するのはここ！").start()
                 setArrow(MyOrientation.TOP,createCardInsertPrevious)
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation4(){
-                explainTextAnimation("矢印ボタンでカードを前後にめくってね！", ).start()
+                explainTextAnimation("矢印ボタンでカードを前後にめくってね！" ).start()
                 setArrow(MyOrientation.TOP, createCardNavFlipNext)
                 goNextOnClickAnyWhere()
             }
@@ -471,8 +292,8 @@ class CreateGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnIn
                 setArrow(MyOrientation.TOP, createCardNavFlipPrevious)
             }
             fun goodBye1(){
-                setPositionByMargin(actions.character, MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE))
-                explainTextAnimation("これでガイドは終わりだよ",).start()
+                characterOrientation = MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE)
+                explainTextAnimation("これでガイドは終わりだよ").start()
                 actions.appearAlphaAnimation(actions.character,true).start()
                 goNextOnClickAnyWhere()
             }

@@ -24,12 +24,21 @@ class MyOrientationSet(
     val verticalOrientation: MyOrientation,
     val horizontalOrientation: MyOrientation
 )
+class MyOrientationSetNew(
+    val verticalOrientation: MyVerticalOrientation,
+    val horizontalOrientation: MyHorizontalOrientation
+)
 
 class BorderSet(
     var leftSideSet:ViewAndSide?=null,
     var topSideSet:ViewAndSide?=null,
     var rightSideSet:ViewAndSide?=null,
     var bottomSideSet:ViewAndSide?=null
+)
+class ViewAndPositionData(
+    val view: View,
+    var borderSet: BorderSet,
+    var orientation:MyOrientationSet
 )
 class AutoFlip(
     var active:Boolean = false,

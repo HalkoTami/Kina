@@ -44,6 +44,12 @@ enum class AnkiBoxFragments{
 enum class MyOrientation{
     TOP,BOTTOM,LEFT,RIGHT,MIDDLE
 }
+enum class MyVerticalOrientation{
+    BOTTOM,MIDDLE,TOP
+}
+enum class MyHorizontalOrientation{
+    LEFT,RIGHT,MIDDLE
+}
 
 enum class LibraryParentFolder{
     Home,Folder,FlashCard
