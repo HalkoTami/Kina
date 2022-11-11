@@ -15,5 +15,4 @@
     <dimen name="popUp_frameLay_width">300dp</dimen>
     <dimen name="popUp_frameLay_height_large">250dp</dimen>
     <dimen name="popUp_frameLay_height_middle">200dp</dimen>
-
 </resources>

@@ -33,7 +33,6 @@ class CreateGuide(val activity:AppCompatActivity,
         globalLayoutSet.onEach {
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
         }
-        actions.holeView.removeGlobalLayout()
     }
 
 
@@ -140,6 +139,7 @@ class CreateGuide(val activity:AppCompatActivity,
             }
 
             fun greeting1(){
+                textPosData = ViewAndSide(actions.character,MyOrientation.TOP)
                 actions.removeHole()
                 actions.makeArrowGone()
                 characterOrientation = MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE)
@@ -154,7 +154,7 @@ class CreateGuide(val activity:AppCompatActivity,
             }
             fun createFlashCard1(){
                 explainTextAnimation("KiNaでは、フォルダと単語帳が作れるよ\n" +
-                        "ボタンをタッチして、単語帳を作ってみよう", ).start()
+                        "ボタンをタッチして、単語帳を作ってみよう" ).start()
                 setArrow(MyOrientation.TOP,bnvBtnAdd)
                 viewUnderHole = bnvBtnAdd
                 goNextOnClickTouchArea(bnvBtnAdd)
@@ -198,6 +198,7 @@ class CreateGuide(val activity:AppCompatActivity,
                     makeToast(activity,"タイトルが必要です")
                     return
                 }
+                actions.removeHole()
                 val lastId = libraryRv.size
                 var newLastId:Int
                 hideKeyBoard(edtCreatingFileTitle,activity)
@@ -206,9 +207,7 @@ class CreateGuide(val activity:AppCompatActivity,
                 }
                 actions.makeTouchAreaGone()
                 actions.makeArrowGone()
-
                 createFileViewModel.makeFileInGuide(title)
-                actions.removeHole()
                 libraryRv.itemAnimator = object:DefaultItemAnimator(){
                     override fun onAnimationFinished(viewHolder: RecyclerView.ViewHolder) {
                         super.onAnimationFinished(viewHolder)
@@ -225,12 +224,14 @@ class CreateGuide(val activity:AppCompatActivity,
             fun createFlashCard6(){
                 createAnimateHole = true
                 viewUnderHole = libraryRv[0]
-                alphaAnimateCharacterPos(characterBorderSet,MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT)).start()
+
+                characterOrientation = MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT)
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard1(){
                 textPosData = ViewAndSide(actions.character,MyOrientation.RIGHT)
                 textFit = true
+
                 explainTextAnimation("おめでとう！単語帳が追加されたよ\n中身を見てみよう！",
                 ).start()
                  goNextOnClickTouchArea(libraryRv[0])

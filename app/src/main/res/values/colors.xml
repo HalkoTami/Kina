@@ -29,6 +29,7 @@
     <color name="dark_brown">#684F0A</color>
     <color name="button_before_press_light">#BFD8CF</color>
     <color name="button_before_press_shadow_light">#7AB39D</color>
+    <color name="speak_bubble_gray">#595959</color>
 
 
 </resources>

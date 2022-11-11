@@ -10,8 +10,18 @@ import kotlin.math.abs
 
 class ViewChangeActions {
     fun setScale(v: View, x:Float, y:Float){
-        v.scaleX = x
-        v.scaleY = y
+        v.viewTreeObserver.addOnGlobalLayoutListener(
+            object :ViewTreeObserver.OnGlobalLayoutListener{
+                override fun onGlobalLayout() {
+                    v.scaleX = x
+                    v.scaleY = y
+                    v.pivotX = v.width.toFloat()/2
+                    v.pivotY = v.height.toFloat()/2
+                    v.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            }
+        )
+        v.requestLayout()
     }
     fun setAlpha(v: View, alpha:Float){
         v.alpha = alpha

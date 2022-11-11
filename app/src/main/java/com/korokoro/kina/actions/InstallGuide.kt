@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
+import androidx.core.view.marginStart
 import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.TouchAreaBinding
@@ -19,7 +20,8 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     val arrow = onInstallBinding.imvFocusArrow
     val character = onInstallBinding.imvCharacter
     val holeView = onInstallBinding.viewWithHole
-    val textView = onInstallBinding.txvExplain
+    val textView = onInstallBinding.txvExplaino
+    val conLaySpeakBubble = onInstallBinding.linLaySpeakBubble
 
 
 
@@ -77,7 +79,9 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         }
     }
     fun makeTxvGone(){
-        appearAlphaAnimation(textView,false).start()
+        changeViewVisibility(textView,false)
+        changeViewVisibility(onInstallBinding.sbBottom,false)
+
     }
     fun makeArrowGone(){
         changeViewVisibility(arrow,false)
@@ -121,33 +125,57 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         textView.text = string
         textView.layoutParams.width = LayoutParams.WRAP_CONTENT
         textView.requestLayout()
-         val posData = ViewAndPositionData(textView,getSimplePosRelation(view,orientation,fit) ,getOriSetByNextToPosition(orientation))
-        setPositionByMargin(posData,globalLayoutSet,false,true)
-        textView.visibility = if(string=="") View.GONE else View.VISIBLE
+         onInstallBinding.linLaySpeakBubble.requestLayout()
+         val posData = ViewAndPositionData(conLaySpeakBubble,getSimplePosRelation(view,orientation,fit) ,getOriSetByNextToPosition(orientation))
+         setPositionByMargin(posData,globalLayoutSet,false,true)
+         textView.visibility = if(string=="") View.GONE else View.VISIBLE
+         onInstallBinding.sbBottom.visibility =  if(string=="") View.GONE else View.VISIBLE
 
-        val finalDuration:Long = 100
-        val anim2 = ValueAnimator.ofFloat(1.1f,1f)
-        anim2.addUpdateListener {
-            val progressPer = it.animatedValue as Float
-            ViewChangeActions().setScale(textView,progressPer,progressPer)
-        }
-        val anim = ValueAnimator.ofFloat(0.7f,1.1f)
-        anim.addUpdateListener {
-            val progressPer = it.animatedValue as Float
-            ViewChangeActions().setScale(textView,progressPer,progressPer)
-        }
+        val finalDuration:Long = 200
+
+         val anim1 = ValueAnimator.ofFloat(0.7f,1.1f)
+         val anim2 = ValueAnimator.ofFloat(1.1f,1f)
+
+         arrayOf(anim1,anim2).onEach {
+             it.addUpdateListener {
+                 val progressPer = it.animatedValue as Float
+                 ViewChangeActions().setScale(conLaySpeakBubble,progressPer,progressPer)
+                 ViewChangeActions().setScale(textView,progressPer,progressPer)
+
+             }
+         }
         val animAlpha = ValueAnimator.ofFloat(0f,1f)
-        anim.addUpdateListener {
-            ViewChangeActions().setAlpha(textView,it.animatedValue as Float)
-        }
+         animAlpha.addUpdateListener {
+             ViewChangeActions().setAlpha(textView,it.animatedValue as Float)
+         }
         val scaleAnim = AnimatorSet().apply {
-            playSequentially(anim,anim2)
+            playSequentially( anim1,anim2)
+            doOnStart {
+                ViewChangeActions().setScale(textView,0.7f,0.7f)
+                ViewChangeActions().setScale(conLaySpeakBubble,0.7f,0.7f)
+            }
+            anim1.duration = finalDuration*0.7.toLong()
             anim2.duration = finalDuration*0.3.toLong()
-            anim.duration = finalDuration*0.7.toLong()
         }
+         val bottomAnim1 = ValueAnimator.ofFloat(0f,1f)
+
+         val bottomTransAnim1 = ValueAnimator.ofFloat(1f,0.2f)
+         val bottomTransAnim2 = ValueAnimator.ofFloat(0.4f,1.1f)
+         val bottomTransAnim3 = ValueAnimator.ofFloat(1.1f,1f)
+         arrayOf(bottomTransAnim1,bottomTransAnim2,bottomTransAnim3).onEach {
+             it.addUpdateListener {
+                 ViewChangeActions().setScale(onInstallBinding.sbBottom,it.animatedValue as Float,1f)
+                 onInstallBinding.sbBottom.pivotX = 0f
+             }
+         }
+
+         val bottomTransAnim = AnimatorSet().apply {
+             playSequentially( bottomTransAnim1,bottomTransAnim2,bottomTransAnim3)
+         }
         val finalAnim = AnimatorSet().apply {
-            playTogether(animAlpha,scaleAnim)
+            playTogether(animAlpha,scaleAnim,bottomAnim1,bottomTransAnim)
             scaleAnim.duration = finalDuration
+            bottomTransAnim.duration = finalDuration
         }
 
         return finalAnim
@@ -194,7 +222,6 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     }
 
     fun removeHole(){
-        holeView.removeGlobalLayout()
         holeView.noHole = true
     }
     fun copyViewInConLay(view:View, borderDataMap: MutableMap<View, BorderSet>, globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>):View{

@@ -14,28 +14,47 @@
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <com.korokoro.kina.ui.customViews.GuideSpeakBubble
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:textColor="@color/white"
-        android:id="@+id/guide_speak_bubble"
-        android:text="hello"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-    <TextView
-        style="@style/OnInstallTextView"
-        android:id="@+id/txv_explain"
-        android:visibility="gone"
-        android:text = "hello"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linLay_speak_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        >
+        <TextView
+            style="@style/OnInstallTextView"
+
+            android:id="@+id/txv_explaino"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="15dp"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            />
+        <View
+            android:id="@+id/sb_bottom"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.7"
+            android:layout_height="10dp"
+            android:background="@drawable/rectangle_green_stroke"
+            android:backgroundTint="@color/black"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txv_explaino"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
     <ImageView
@@ -59,13 +78,12 @@
         android:layout_height="50dp"
         android:elevation="25dp"
         android:src="@drawable/icon_guide_arrow"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.121"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.61" />
+        />
 
     <FrameLayout
         style="@style/PopUpFrameLayStyle"
