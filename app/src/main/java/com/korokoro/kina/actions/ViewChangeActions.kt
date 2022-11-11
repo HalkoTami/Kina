@@ -144,6 +144,8 @@ class ViewChangeActions {
             object :ViewTreeObserver.OnGlobalLayoutListener{
                 override fun onGlobalLayout() {
 
+                    val rotationBefore = view.rotation
+                    view.rotation = 0f
                     val leftSideSet = positionData.borderSet.leftSideSet
                     val borderLeft = if(leftSideSet!=null) getViewBorderPos(leftSideSet.view,leftSideSet.side)
                     else getViewBorderPos(constraintLayout,MyOrientation.LEFT)
@@ -200,6 +202,7 @@ class ViewChangeActions {
 
                     }
                     setPosition(result)
+                    view.rotation = rotationBefore
                     view.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
 

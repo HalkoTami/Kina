@@ -29,7 +29,31 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         borderDataMap[view] = set
     }
 
+    fun alphaAnimatePos(data: ViewAndPositionData,globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>):AnimatorSet{
+        val view = data.view
+        val disappear = ValueAnimator.ofFloat(1f,0f)
+        disappear.addUpdateListener {
+            view.alpha = it.animatedValue as Float
+        }
+        disappear.doOnEnd {
+            changeViewVisibility(view,false)
+            setPositionByMargin(data,globalLayoutSet,false,true)
+        }
+        val appear = ValueAnimator.ofFloat(0f,1f)
+        appear.doOnEnd {
+            changeViewVisibility(view,true)
+        }
+        appear.addUpdateListener {
+            view.alpha = it.animatedValue as Float
+        }
+        return AnimatorSet().apply {
 
+            playSequentially(disappear,appear)
+            duration= 500
+        }
+
+
+    }
 
 
 
@@ -150,19 +174,19 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     }
      fun setArrow(arrowPosition: MyOrientation, view: View,globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
         appearAlphaAnimation(arrow,true).start()
-        when(arrowPosition){
-            MyOrientation.BOTTOM-> setArrowDirection(MyOrientation.TOP)
-            MyOrientation.LEFT -> setArrowDirection(MyOrientation.RIGHT)
-            MyOrientation.RIGHT -> setArrowDirection(MyOrientation.LEFT)
-            MyOrientation.TOP -> setArrowDirection(MyOrientation.BOTTOM)
-            else ->  {
-                makeTouchAreaGone()
-                return
-            }
-        }
 
          val positionData = ViewAndPositionData(arrow,getSimplePosRelation(view,arrowPosition,true),getOriSetByNextToPosition(arrowPosition))
         setPositionByMargin(positionData,globalLayoutSet,false,false)
+         when(arrowPosition){
+             MyOrientation.BOTTOM-> setArrowDirection(MyOrientation.TOP)
+             MyOrientation.LEFT -> setArrowDirection(MyOrientation.RIGHT)
+             MyOrientation.RIGHT -> setArrowDirection(MyOrientation.LEFT)
+             MyOrientation.TOP -> setArrowDirection(MyOrientation.BOTTOM)
+             else ->  {
+                 makeTouchAreaGone()
+                 return
+             }
+         }
     }
 
     private fun setHole(viewUnderHole:View){

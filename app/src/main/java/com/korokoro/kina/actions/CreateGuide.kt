@@ -1,6 +1,7 @@
 package com.korokoro.kina.actions
 
 import android.animation.AnimatorSet
+import android.animation.ValueAnimator
 import android.content.Context
 import android.view.View
 import android.view.ViewTreeObserver
@@ -8,6 +9,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.core.view.size
@@ -60,8 +62,13 @@ class CreateGuide(val activity:AppCompatActivity,
 
         }
     private fun setCharacterPos(){
-        val data = ViewAndPositionData(actions.character,characterBorderSet,characterOrientation)
+        val character = actions.character
+        val data = ViewAndPositionData(character,characterBorderSet,characterOrientation)
         actions.setPositionByMargin(data,globalLayoutSet,false,true)
+    }
+    private fun alphaAnimateCharacterPos(characterBorderSet: BorderSet,characterOrientation: MyOrientationSet):AnimatorSet{
+        val data = ViewAndPositionData(actions.character,characterBorderSet,characterOrientation)
+        return actions.alphaAnimatePos(data,globalLayoutSet)
     }
     private var textPosData:ViewAndSide = ViewAndSide(actions.character,MyOrientation.TOP)
     private var textFit:Boolean = false
@@ -218,8 +225,7 @@ class CreateGuide(val activity:AppCompatActivity,
             fun createFlashCard6(){
                 createAnimateHole = true
                 viewUnderHole = libraryRv[0]
-                characterOrientation = MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT)
-                actions.appearAlphaAnimation(actions.character,true).start()
+                alphaAnimateCharacterPos(characterBorderSet,MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT)).start()
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard1(){
