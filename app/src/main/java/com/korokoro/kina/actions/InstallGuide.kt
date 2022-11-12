@@ -206,10 +206,10 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     }
     fun setMarginByNextToPosition(movingViewPosition:MyOrientation,margin: Int,borderSet: BorderSet):BorderSet{
         when(movingViewPosition){
-            MyOrientation.BOTTOM->   borderSet.topMargin = margin
-            MyOrientation.LEFT ->    borderSet.rightMargin = margin
-            MyOrientation.RIGHT ->   borderSet.leftMargin = margin
-            MyOrientation.TOP ->     borderSet.bottomMargin = margin
+            MyOrientation.BOTTOM->   borderSet.margin.topMargin = margin
+            MyOrientation.LEFT ->    borderSet.margin.rightMargin = margin
+            MyOrientation.RIGHT ->   borderSet.margin.leftMargin = margin
+            MyOrientation.TOP ->     borderSet.margin.bottomMargin = margin
             MyOrientation.MIDDLE -> {}
         }
         return borderSet

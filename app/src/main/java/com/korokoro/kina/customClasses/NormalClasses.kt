@@ -36,12 +36,15 @@ class BorderSet(
     var topSideSet:ViewAndSide?=null,
     var rightSideSet:ViewAndSide?=null,
     var bottomSideSet:ViewAndSide?=null,
+    var margin: MyMargin = MyMargin()
+
+    )
+class MyMargin(
     var leftMargin:Int = 0,
     var topMargin:Int = 0,
     var rightMargin:Int = 0,
-    var bottomMargin:Int = 0,
-
-    )
+    var bottomMargin:Int = 0
+)
 class ViewAndPositionData(
     val view: View,
     var borderSet: BorderSet,
@@ -79,7 +82,7 @@ class AnkiBoxTabData(
     var currentTab: AnkiBoxFragments,
     var before: AnkiBoxFragments?
 )
-class MySize(
+class MySizeParams(
     val width:Int,
     val height:Int
 )
