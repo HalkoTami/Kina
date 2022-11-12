@@ -38,8 +38,6 @@ class CreateGuide(val activity:AppCompatActivity,
     private var characterBorderSet:BorderSet = BorderSet()
         set(value) {
             field = value
-            characterPositionData.borderSet = value
-            setPos(characterPositionData)
         }
     private var characterOrientation:MyOrientationSetNew =
         MyOrientationSetNew(MyVerticalOrientation.MIDDLE,
@@ -48,10 +46,8 @@ class CreateGuide(val activity:AppCompatActivity,
         set(value) {
             value.borderAttributes = BorderAttributes.FillIfOutOfBorder
             field = value
-            characterPositionData.orientation = value
-            setPos(characterPositionData)
+
         }
-    private val characterPositionData :ViewAndPositionData = ViewAndPositionData(actions.character,characterBorderSet,characterOrientation)
     private var createHoleShape:HoleShape = HoleShape.CIRCLE
     private var createAnimateHole :Boolean = true
 
@@ -65,22 +61,32 @@ class CreateGuide(val activity:AppCompatActivity,
             }
 
         }
+    private fun setCharacterPos(){
+        characterOrientation.borderAttributes = BorderAttributes.FillIfOutOfBorder
+        setPos(ViewAndPositionData(actions.character,characterBorderSet,characterOrientation))
+    }
     private fun setPos(data: ViewAndPositionData){
         actions.setPositionByMargin(data,globalLayoutSet)
     }
 
-    private var textPosData:ViewAndSide = ViewAndSide(actions.character,MyOrientation.TOP)
+    private var textPosData:BorderSet = BorderSet()
+    private var textOrientation:MyOrientationSetNew = MyOrientationSetNew()
     private var textFit:Boolean = false
 
     private fun explainTextAnimation(string: String):AnimatorSet{
-        return actions.explainTextAnimation(string= string,textPosData.side,textPosData.view,textFit,globalLayoutSet)
+        return actions.explainTextAnimation(string= string, orientation = textOrientation, textPosData,globalLayoutSet)
     }
-    private val arrowMargin = 20
+    private val arrowMargin = 0
     private fun setArrow(arrowPosition: MyOrientation,view: View){
         actions.setArrow(arrowPosition,view,globalLayoutSet,arrowMargin)
     }
     private fun addTouchArea(view: View):View{
         return actions.copyViewInConLay(view,borderDataMap,globalLayoutSet)
+    }
+    private fun cloneView(view: View) {
+        addTouchArea(view).setOnClickListener {
+            view.callOnClick()
+        }
     }
 
     fun createGuide(startOrder:Int,
@@ -134,11 +140,7 @@ class CreateGuide(val activity:AppCompatActivity,
                 }
             }
 
-            fun cloneView(view: View) {
-                addTouchArea(view).setOnClickListener {
-                    view.callOnClick()
-                }
-            }
+
 
             fun greeting1(){
                 actions.setUpFirstView(globalLayoutSet)
@@ -158,8 +160,9 @@ class CreateGuide(val activity:AppCompatActivity,
                 goNextOnClickAnyWhere()
             }
             fun createFlashCard1prt2(){
-                viewUnderHole = bnvBtnAdd
+                actions.changeArrowVisibility(true).start()
                 setArrow(MyOrientation.TOP,bnvBtnAdd)
+                viewUnderHole = bnvBtnAdd
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
             fun createFlashCard2(){
@@ -233,13 +236,13 @@ class CreateGuide(val activity:AppCompatActivity,
             }
             fun checkInsideNewFlashCard1(){
                 characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
+                setCharacterPos()
                 actions.changeCharacterVisibility(true).start()
-                textPosData = ViewAndSide(actions.character,MyOrientation.RIGHT)
                 textFit = true
-
-                actions.appearAlphaAnimation(actions.conLaySpeakBubble,true).start()
+                textPosData = ViewAndSide(actions.character,MyOrientation.RIGHT)
                 explainTextAnimation("おめでとう！単語帳が追加されたよ\n中身を見てみよう！",
                 ).start()
+
                  goNextOnClickTouchArea(libraryRv[0])
             }
             fun checkInsideNewFlashCard2(){
@@ -353,29 +356,31 @@ class CreateGuide(val activity:AppCompatActivity,
             when(order){
                 1   ->  greeting1()
                 2   ->  greeting2()
-                3   ->  createFlashCard1prt1()
-                4   ->  createFlashCard2()
-                5   ->  createFlashCard3()
-                6   ->  createFlashCard5()
-                7   ->  createFlashCard6()
-                8   -> checkInsideNewFlashCard1()
-                9   -> checkInsideNewFlashCard2()
-                10  -> checkInsideNewFlashCard3()
-                11  -> makeNewCard1()
-                12  -> makeNewCard2()
-                13  -> makeNewCard3()
-                14  -> explainCreateCardFrag1()
-                15  -> explainCreateCardFrag2()
-                16  -> explainCreateCardFrag3()
-                17  -> explainCreateCardFrag4()
-                18  -> explainCreateCardNavigation1()
-                19  -> explainCreateCardNavigation2()
-                20  -> explainCreateCardNavigation3()
-                21  -> explainCreateCardNavigation4()
-                22  -> explainCreateCardNavigation5()
-                23  -> goodBye1()
-                24  -> goodBye2()
-                25  -> end()
+                3   ->  createFlashCard0()
+                4   ->  createFlashCard1prt1()
+                5   ->  createFlashCard1prt2()
+                6   ->  createFlashCard2()
+                7   ->  createFlashCard3()
+                8   ->  createFlashCard5()
+                9   ->  createFlashCard6()
+                10  -> checkInsideNewFlashCard1()
+                11  -> checkInsideNewFlashCard2()
+                12  -> checkInsideNewFlashCard3()
+                13  -> makeNewCard1()
+                14  -> makeNewCard2()
+                15  -> makeNewCard3()
+                16  -> explainCreateCardFrag1()
+                17  -> explainCreateCardFrag2()
+                18  -> explainCreateCardFrag3()
+                19  -> explainCreateCardFrag4()
+                20  -> explainCreateCardNavigation1()
+                21  -> explainCreateCardNavigation2()
+                22  -> explainCreateCardNavigation3()
+                23  -> explainCreateCardNavigation4()
+                24  -> explainCreateCardNavigation5()
+                25  -> goodBye1()
+                26  -> goodBye2()
+                27  ->end()
                 else->  return
             }
         }

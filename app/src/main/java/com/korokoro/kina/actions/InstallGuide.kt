@@ -65,6 +65,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 globalLayoutSet[view] = this
             }
         })
+        view.requestLayout()
     }
 
     fun removeGlobalListener(globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
@@ -123,20 +124,18 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     fun setHoleRecRadius(int: Int){
         holeView.recRadius = int.toFloat()
     }
-     fun explainTextAnimation(string: String, orientation: MyOrientation,view: View,fit: Boolean
+     fun explainTextAnimation(string: String, orientation: MyOrientationSetNew,borderSet: BorderSet
                               ,globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>): AnimatorSet {
 
 
         textView.text = string
         textView.layoutParams.width = LayoutParams.WRAP_CONTENT
         textView.requestLayout()
-         onInstallBinding.linLaySpeakBubble.requestLayout()
          val posData = ViewAndPositionData(
              conLaySpeakBubble,
-             getSimplePosRelation(view,orientation,fit) ,
-             getOriSetByNextToPosition(orientation,BorderAttributes.FillIfOutOfBorder))
+             borderSet = borderSet ,
+             orientation= orientation)
          setPositionByMargin(posData,globalLayoutSet)
-         conLaySpeakBubble.visibility = if(string=="") View.GONE else View.VISIBLE
 
 
         val finalDuration:Long = 200
@@ -177,7 +176,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
              playSequentially( bottomTransAnim1,bottomTransAnim2,bottomTransAnim3)
          }
         val finalAnim = AnimatorSet().apply {
-            playTogether(scaleAnim,bottomAnim1,bottomTransAnim)
+            playTogether(scaleAnim,bottomAnim1,bottomTransAnim,changeSpeakBubbleVisibility(true))
             scaleAnim.duration = finalDuration
             bottomTransAnim.duration = finalDuration
         }
@@ -224,7 +223,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
          val borderSetWithMargin = setMarginByNextToPosition(arrowPosition,margin,getBorderSet)
          val positionData = ViewAndPositionData(arrow,
              borderSetWithMargin,
-             getOriSetByNextToPosition(arrowPosition,BorderAttributes.FillIfOutOfBorder))
+             getOriSetByNextToPosition(arrowPosition,BorderAttributes.None))
 
         setPositionByMargin(positionData,globalLayoutSet)
          when(arrowPosition){
@@ -237,7 +236,9 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                  return
              }
          }
-    }
+//         changeViewVisibility(arrow,true)
+
+     }
 
     private fun setHole(viewUnderHole:View){
         holeView.viewUnderHole = viewUnderHole

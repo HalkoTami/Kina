@@ -138,15 +138,16 @@ class ViewChangeActions {
         return RecPosition(left,top, right, bottom)
     }
     fun getBorderFromBorderSet(borderSet: BorderSet,borderSide:MyOrientation,parentView:View):Float{
-        return getViewBorderPos(
-            when(borderSide){
-                MyOrientation.BOTTOM   -> borderSet.bottomSideSet  ?: ViewAndSide(parentView,MyOrientation.BOTTOM)
-                MyOrientation.TOP      -> borderSet.topSideSet     ?: ViewAndSide(parentView,MyOrientation.TOP   )
-                MyOrientation.LEFT     -> borderSet.leftSideSet    ?: ViewAndSide(parentView,MyOrientation.LEFT  )
-                MyOrientation.RIGHT    -> borderSet.rightSideSet   ?: ViewAndSide(parentView,MyOrientation.RIGHT )
-                MyOrientation.MIDDLE   -> ViewAndSide(parentView,MyOrientation.MIDDLE)
-            }
-        )
+        val margin = borderSet.margin
+        return when(borderSide){
+            MyOrientation.BOTTOM   -> getViewBorderPos(borderSet.bottomSideSet  ?: ViewAndSide(parentView,MyOrientation.BOTTOM)) - margin.bottomMargin
+            MyOrientation.TOP      -> getViewBorderPos(borderSet.topSideSet     ?: ViewAndSide(parentView,MyOrientation.TOP   )) + margin.topMargin
+            MyOrientation.LEFT     -> getViewBorderPos(borderSet.leftSideSet    ?: ViewAndSide(parentView,MyOrientation.LEFT  )) + margin.leftMargin
+            MyOrientation.RIGHT    -> getViewBorderPos(borderSet.rightSideSet   ?: ViewAndSide(parentView,MyOrientation.RIGHT )) - margin.rightMargin
+            MyOrientation.MIDDLE   -> getViewBorderPos(ViewAndSide(parentView,MyOrientation.MIDDLE))
+        }
+
+
     }
     fun getSizeFromRecPos(recPosition: RecPosition):MySizeParams{
         return MySizeParams(
@@ -172,11 +173,11 @@ class ViewChangeActions {
             BorderAttributes.None -> {}
         }
     }
-    fun getMarginFromRecPos(borderRecPos: RecPosition,viewRecPos: RecPosition,margin:MyMargin):MyMargin{
-        val marginTop    = (abs(borderRecPos.top   -viewRecPos.top   )).toInt() + margin.topMargin
-        val marginBottom = (abs(borderRecPos.bottom-viewRecPos.bottom)).toInt() + margin.bottomMargin
-        val marginStart  = (abs(borderRecPos.left  -viewRecPos.left  )).toInt() + margin.leftMargin
-        val marginEnd    = (abs(borderRecPos.right -viewRecPos.right )).toInt() + margin.rightMargin
+    fun getMarginFromRecPos(borderRecPos: RecPosition,viewRecPos: RecPosition):MyMargin{
+        val marginTop    = (abs(borderRecPos.top   -viewRecPos.top   )).toInt()
+        val marginBottom = (abs(borderRecPos.bottom-viewRecPos.bottom)).toInt()
+        val marginStart  = (abs(borderRecPos.left  -viewRecPos.left  )).toInt()
+        val marginEnd    = (abs(borderRecPos.right -viewRecPos.right )).toInt()
         return MyMargin(topMargin = marginTop,
         leftMargin = marginStart,
         rightMargin = marginEnd,
@@ -210,6 +211,7 @@ class ViewChangeActions {
                     }
                     val rotationBefore = view.rotation
                     view.rotation = 0f
+
                     val borderLeft = getBorder(MyOrientation.LEFT)
                     val borderTop = getBorder(MyOrientation.TOP)
                     val borderRight = getBorder(MyOrientation.RIGHT)
@@ -231,7 +233,7 @@ class ViewChangeActions {
                         left =  getConBorder(MyOrientation.LEFT),
                         right = getConBorder(MyOrientation.RIGHT)
                     )
-                    val finalMargin = getMarginFromRecPos(conBorder,result,borderSet.margin)
+                    val finalMargin = getMarginFromRecPos(conBorder,result)
                     setMarginFromRecPosToConLay(view,finalMargin,constraintLayout)
                     view.rotation = rotationBefore
                     view.viewTreeObserver.removeOnGlobalLayoutListener(this)
