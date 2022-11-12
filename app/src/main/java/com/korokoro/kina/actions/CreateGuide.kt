@@ -69,12 +69,12 @@ class CreateGuide(val activity:AppCompatActivity,
         actions.setPositionByMargin(data,globalLayoutSet)
     }
 
-    private var textPosData:BorderSet = BorderSet()
-    private var textOrientation:MyOrientationSetNew = MyOrientationSetNew()
+    private val speakBubbleMargin = 50
+    private var textPosData:ViewAndSide = ViewAndSide(actions.character,MyOrientation.TOP)
     private var textFit:Boolean = false
 
     private fun explainTextAnimation(string: String):AnimatorSet{
-        return actions.explainTextAnimation(string= string, orientation = textOrientation, textPosData,globalLayoutSet)
+        return actions.explainTextAnimation(string= string, textPosData, globalLayoutSet,textFit,speakBubbleMargin)
     }
     private val arrowMargin = 0
     private fun setArrow(arrowPosition: MyOrientation,view: View){
@@ -230,16 +230,18 @@ class CreateGuide(val activity:AppCompatActivity,
             fun createFlashCard6(){
                 createAnimateHole = true
                 viewUnderHole = libraryRv[0]
-
+                characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
+                actions.setCharacterSize(R.dimen.character_size_small)
+                setCharacterPos()
 
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard1(){
-                characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
-                setCharacterPos()
+
                 actions.changeCharacterVisibility(true).start()
                 textFit = true
                 textPosData = ViewAndSide(actions.character,MyOrientation.RIGHT)
+
                 explainTextAnimation("おめでとう！単語帳が追加されたよ\n中身を見てみよう！",
                 ).start()
 

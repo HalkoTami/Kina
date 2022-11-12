@@ -94,6 +94,14 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         return ViewChangeActions().getSimpleBorderSet(standardView,orientation,fit)
     }
 
+    fun setCharacterSize(dimenId: Int){
+        character.apply {
+            val sizeLarge = getPixelSize(dimenId)
+            layoutParams.width = sizeLarge
+            layoutParams.height = sizeLarge
+            requestLayout()
+        }
+    }
     fun setUpFirstView(globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
         onInstallBinding.root.children.filter { it.id == touchAreaTag }.onEach {
             onInstallBinding.root.removeView(it)
@@ -109,12 +117,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 BorderAttributes.FillIfOutOfBorder)
         )
         setPositionByMargin(characterPosData,globalLayoutSet,)
-        character.apply {
-            val sizeLarge = getPixelSize(R.dimen.character_size_large)
-            layoutParams.width = sizeLarge
-            layoutParams.height = sizeLarge
-            requestLayout()
-        }
+        setCharacterSize(R.dimen.character_size_large)
         changeCharacterVisibility(true).start()
 
     }
@@ -124,17 +127,20 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     fun setHoleRecRadius(int: Int){
         holeView.recRadius = int.toFloat()
     }
-     fun explainTextAnimation(string: String, orientation: MyOrientationSetNew,borderSet: BorderSet
-                              ,globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>): AnimatorSet {
+     fun explainTextAnimation(string: String, viewAndSide: ViewAndSide
+                              ,globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>,
+                              textFit:Boolean,margin:Int): AnimatorSet {
 
 
         textView.text = string
         textView.layoutParams.width = LayoutParams.WRAP_CONTENT
         textView.requestLayout()
+         val getBorderSet = getSimplePosRelation(viewAndSide.view,viewAndSide.side,textFit)
+         getBorderSet.margin = MyMargin(margin,margin  ,margin,margin)
          val posData = ViewAndPositionData(
              conLaySpeakBubble,
-             borderSet = borderSet ,
-             orientation= orientation)
+             borderSet = getBorderSet ,
+             orientation= getOriSetByNextToPosition(viewAndSide.side,BorderAttributes.FillIfOutOfBorder))
          setPositionByMargin(posData,globalLayoutSet)
 
 
@@ -154,8 +160,9 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         val scaleAnim = AnimatorSet().apply {
             playSequentially( anim1,anim2)
             doOnStart {
-                ViewChangeActions().setScale(textView,0.7f,0.7f)
                 ViewChangeActions().setScale(conLaySpeakBubble,0.7f,0.7f)
+                ViewChangeActions().setScale(textView,0.7f,0.7f)
+
             }
             anim1.duration = finalDuration*0.7.toLong()
             anim2.duration = finalDuration*0.3.toLong()
