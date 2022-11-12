@@ -1,7 +1,6 @@
 package com.korokoro.kina.actions
 
 import android.animation.AnimatorSet
-import android.animation.ValueAnimator
 import android.content.Context
 import android.view.View
 import android.view.ViewTreeObserver
@@ -9,7 +8,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.core.view.size
@@ -36,17 +34,24 @@ class CreateGuide(val activity:AppCompatActivity,
     }
 
 
+
     private var characterBorderSet:BorderSet = BorderSet()
         set(value) {
             field = value
-            setCharacterPos()
+            characterPositionData.borderSet = value
+            setPos(characterPositionData)
         }
-    private var characterOrientation:MyOrientationSet = MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE)
+    private var characterOrientation:MyOrientationSetNew =
+        MyOrientationSetNew(MyVerticalOrientation.MIDDLE,
+            MyHorizontalOrientation.MIDDLE,
+            BorderAttributes.FillIfOutOfBorder)
         set(value) {
+            value.borderAttributes = BorderAttributes.FillIfOutOfBorder
             field = value
-            setCharacterPos()
+            characterPositionData.orientation = value
+            setPos(characterPositionData)
         }
-
+    private val characterPositionData :ViewAndPositionData = ViewAndPositionData(actions.character,characterBorderSet,characterOrientation)
     private var createHoleShape:HoleShape = HoleShape.CIRCLE
     private var createAnimateHole :Boolean = true
 
@@ -60,22 +65,19 @@ class CreateGuide(val activity:AppCompatActivity,
             }
 
         }
-    private fun setCharacterPos(){
-        val character = actions.character
-        val data = ViewAndPositionData(character,characterBorderSet,characterOrientation)
-        actions.setPositionByMargin(data,globalLayoutSet,false,true)
+    private fun setPos(data: ViewAndPositionData){
+        actions.setPositionByMargin(data,globalLayoutSet)
     }
-    private fun alphaAnimateCharacterPos(characterBorderSet: BorderSet,characterOrientation: MyOrientationSet):AnimatorSet{
-        val data = ViewAndPositionData(actions.character,characterBorderSet,characterOrientation)
-        return actions.alphaAnimatePos(data,globalLayoutSet)
-    }
+
     private var textPosData:ViewAndSide = ViewAndSide(actions.character,MyOrientation.TOP)
     private var textFit:Boolean = false
+
     private fun explainTextAnimation(string: String):AnimatorSet{
         return actions.explainTextAnimation(string= string,textPosData.side,textPosData.view,textFit,globalLayoutSet)
     }
+    private val arrowMargin = 20
     private fun setArrow(arrowPosition: MyOrientation,view: View){
-        actions.setArrow(arrowPosition,view,globalLayoutSet)
+        actions.setArrow(arrowPosition,view,globalLayoutSet,arrowMargin)
     }
     private fun addTouchArea(view: View):View{
         return actions.copyViewInConLay(view,borderDataMap,globalLayoutSet)
@@ -139,12 +141,7 @@ class CreateGuide(val activity:AppCompatActivity,
             }
 
             fun greeting1(){
-                textPosData = ViewAndSide(actions.character,MyOrientation.TOP)
-                actions.removeHole()
-                actions.makeArrowGone()
-                characterOrientation = MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE)
-                characterBorderSet = BorderSet()
-                actions.appearAlphaAnimation(actions.character,true).start()
+                actions.setUpFirstView(globalLayoutSet)
                 explainTextAnimation("やあ、僕はとさかくん").start()
                 goNextOnClickAnyWhere()
             }
@@ -152,11 +149,17 @@ class CreateGuide(val activity:AppCompatActivity,
                 explainTextAnimation("これから、KiNaの使い方を説明するね").start()
                 goNextOnClickAnyWhere()
             }
-            fun createFlashCard1(){
-                explainTextAnimation("KiNaでは、フォルダと単語帳が作れるよ\n" +
-                        "ボタンをタッチして、単語帳を作ってみよう" ).start()
-                setArrow(MyOrientation.TOP,bnvBtnAdd)
+            fun createFlashCard0(){
+                explainTextAnimation("KiNaでは、フォルダと単語帳が作れるよ").start()
+                goNextOnClickAnyWhere()
+            }
+            fun createFlashCard1prt1(){
+                explainTextAnimation("ボタンをタッチして、\n単語帳を作ってみよう" ).start()
+                goNextOnClickAnyWhere()
+            }
+            fun createFlashCard1prt2(){
                 viewUnderHole = bnvBtnAdd
+                setArrow(MyOrientation.TOP,bnvBtnAdd)
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
             fun createFlashCard2(){
@@ -170,7 +173,7 @@ class CreateGuide(val activity:AppCompatActivity,
                 AnimatorSet().apply {
                     playTogether(
                         actions.appearAlphaAnimation(actions.character, false),
-                        actions.appearAlphaAnimation(actions.textView, false),
+                        actions.appearAlphaAnimation(actions.conLaySpeakBubble, false),
                     )
                     doOnEnd {
                         goNextOnClickTouchArea(btnFinish)
@@ -206,7 +209,7 @@ class CreateGuide(val activity:AppCompatActivity,
                     if(it.tag == 1)it.visibility = View.GONE
                 }
                 actions.makeTouchAreaGone()
-                actions.makeArrowGone()
+                actions.changeArrowVisibility(false).start()
                 createFileViewModel.makeFileInGuide(title)
                 libraryRv.itemAnimator = object:DefaultItemAnimator(){
                     override fun onAnimationFinished(viewHolder: RecyclerView.ViewHolder) {
@@ -225,19 +228,22 @@ class CreateGuide(val activity:AppCompatActivity,
                 createAnimateHole = true
                 viewUnderHole = libraryRv[0]
 
-                characterOrientation = MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.LEFT)
+
                 goNextOnClickAnyWhere()
             }
             fun checkInsideNewFlashCard1(){
+                characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
+                actions.changeCharacterVisibility(true).start()
                 textPosData = ViewAndSide(actions.character,MyOrientation.RIGHT)
                 textFit = true
 
+                actions.appearAlphaAnimation(actions.conLaySpeakBubble,true).start()
                 explainTextAnimation("おめでとう！単語帳が追加されたよ\n中身を見てみよう！",
                 ).start()
                  goNextOnClickTouchArea(libraryRv[0])
             }
             fun checkInsideNewFlashCard2(){
-                actions.makeTxvGone()
+                actions.changeSpeakBubbleVisibility(false).start()
                 actions.makeTouchAreaGone()
                 actions.removeHole()
                 changeViewVisibility(actions.holeView,true)
@@ -251,7 +257,7 @@ class CreateGuide(val activity:AppCompatActivity,
             }
             fun makeNewCard1(){
                 actions.appearAlphaAnimation(actions.character,false).start()
-                actions.makeTxvGone()
+                actions.changeSpeakBubbleVisibility(false).start()
                 viewUnderHole = bnvBtnAdd
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
@@ -297,7 +303,7 @@ class CreateGuide(val activity:AppCompatActivity,
             }
             fun explainCreateCardNavigation1(){
                 characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,MyOrientation.TOP))
-                characterOrientation = MyOrientationSet(MyOrientation.BOTTOM,MyOrientation.MIDDLE)
+                characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.MIDDLE)
                 explainTextAnimation("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
                 viewUnderHole = linLayCreateCardNavigation
                 goNextOnClickAnyWhere()
@@ -319,12 +325,12 @@ class CreateGuide(val activity:AppCompatActivity,
             }
             fun explainCreateCardNavigation5(){
                 actions.appearAlphaAnimation(actions.character,false).start()
-                actions.makeArrowGone()
+                actions.changeArrowVisibility(false).start()
                 goNextOnClickAnyWhere()
                 setArrow(MyOrientation.TOP, createCardNavFlipPrevious)
             }
             fun goodBye1(){
-                characterOrientation = MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE)
+                characterOrientation = MyOrientationSetNew(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
                 explainTextAnimation("これでガイドは終わりだよ").start()
                 actions.appearAlphaAnimation(actions.character,true).start()
                 goNextOnClickAnyWhere()
@@ -347,7 +353,7 @@ class CreateGuide(val activity:AppCompatActivity,
             when(order){
                 1   ->  greeting1()
                 2   ->  greeting2()
-                3   ->  createFlashCard1()
+                3   ->  createFlashCard1prt1()
                 4   ->  createFlashCard2()
                 5   ->  createFlashCard3()
                 6   ->  createFlashCard5()

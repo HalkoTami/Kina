@@ -10,10 +10,11 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
-import androidx.core.view.marginStart
+import com.korokoro.kina.R
 import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.TouchAreaBinding
+import com.korokoro.kina.ui.animation.Animation
 
 
 class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnInstallBinding){
@@ -22,9 +23,13 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     val holeView = onInstallBinding.viewWithHole
     val textView = onInstallBinding.txvExplaino
     val conLaySpeakBubble = onInstallBinding.linLaySpeakBubble
+    val touchAreaTag = 1
 
 
 
+    fun getPixelSize(dimenId:Int):Int{
+        return activity.resources.getDimensionPixelSize(dimenId)
+    }
 
     fun saveBorderDataMap(view: View,set:BorderSet,borderDataMap:MutableMap<View,BorderSet>){
         if(borderDataMap[view]!=null) borderDataMap.remove(view)
@@ -33,21 +38,12 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
     fun alphaAnimatePos(data: ViewAndPositionData,globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>):AnimatorSet{
         val view = data.view
-        val disappear = ValueAnimator.ofFloat(1f,0f)
-        disappear.addUpdateListener {
-            view.alpha = it.animatedValue as Float
-        }
+        val disappear = appearAlphaAnimation(view,false)
         disappear.doOnEnd {
             changeViewVisibility(view,false)
-            setPositionByMargin(data,globalLayoutSet,false,true)
+            setPositionByMargin(data,globalLayoutSet)
         }
-        val appear = ValueAnimator.ofFloat(0f,1f)
-        appear.doOnEnd {
-            changeViewVisibility(view,true)
-        }
-        appear.addUpdateListener {
-            view.alpha = it.animatedValue as Float
-        }
+        val appear =  appearAlphaAnimation(view,true)
         return AnimatorSet().apply {
 
             playSequentially(disappear,appear)
@@ -60,14 +56,12 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
 
     fun setPositionByMargin(positionData: ViewAndPositionData,
-                            globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>,
-                            fillBorder:Boolean,
-                            fillIfOutOfBorder:Boolean){
+                            globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>, ){
         removeGlobalListener(globalLayoutSet)
         val view = positionData.view
         view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
-                ViewChangeActions().setPositionByMargin(fillBorder,fillIfOutOfBorder,positionData,onInstallBinding.root)
+                ViewChangeActions().setPositionByMargin(positionData,onInstallBinding.root)
                 globalLayoutSet[view] = this
             }
         })
@@ -78,13 +72,14 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
         }
     }
-    fun makeTxvGone(){
-        changeViewVisibility(textView,false)
-        changeViewVisibility(onInstallBinding.sbBottom,false)
-
+    fun changeSpeakBubbleVisibility(visible: Boolean):ValueAnimator{
+        return appearAlphaAnimation(conLaySpeakBubble,visible)
     }
-    fun makeArrowGone(){
-        changeViewVisibility(arrow,false)
+    fun changeCharacterVisibility(visible: Boolean):ValueAnimator{
+        return appearAlphaAnimation(character,visible)
+    }
+    fun changeArrowVisibility(visible: Boolean):ValueAnimator{
+        return appearAlphaAnimation(arrow,visible)
     }
     fun makeTouchAreaGone(){
         onInstallBinding.root.children.iterator().forEach {
@@ -92,25 +87,35 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         }
     }
     fun appearAlphaAnimation(view :View, visible:Boolean): ValueAnimator {
-
-        val appear =if(view == holeView)  ValueAnimator.ofFloat(0f,0.7f) else ValueAnimator.ofFloat(0f,1f)
-        val disappear = ValueAnimator.ofFloat(1f,0f)
-        arrayOf(appear,disappear).onEach { eachAnimator->
-            eachAnimator.addUpdateListener { thisAnimator ->
-                 ViewChangeActions().setAlpha(view, thisAnimator.animatedValue as Float)
-            }
-            eachAnimator.duration = 300
-        }
-        appear.doOnStart {
-            view.alpha = 0f
-            changeViewVisibility(view,true)  }
-        disappear.doOnEnd {  changeViewVisibility(view,false)  }
-        return if(visible) appear else disappear
-
-
+        return Animation().appearAlphaAnimation(view,visible,if(view == holeView)0.7f else 1f)
     }
     fun getSimplePosRelation(standardView:View, orientation: MyOrientation, fit:Boolean):BorderSet{
         return ViewChangeActions().getSimpleBorderSet(standardView,orientation,fit)
+    }
+
+    fun setUpFirstView(globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
+        onInstallBinding.root.children.filter { it.id == touchAreaTag }.onEach {
+            onInstallBinding.root.removeView(it)
+        }
+        changeMulVisibility(arrayOf(character,arrow,conLaySpeakBubble),false)
+        removeHole()
+        val characterPosData = ViewAndPositionData(
+            character,
+            BorderSet(),
+            MyOrientationSetNew(
+                MyVerticalOrientation.MIDDLE,
+                MyHorizontalOrientation.MIDDLE,
+                BorderAttributes.FillIfOutOfBorder)
+        )
+        setPositionByMargin(characterPosData,globalLayoutSet,)
+        character.apply {
+            val sizeLarge = getPixelSize(R.dimen.character_size_large)
+            layoutParams.width = sizeLarge
+            layoutParams.height = sizeLarge
+            requestLayout()
+        }
+        changeCharacterVisibility(true).start()
+
     }
     fun setHoleMargin(int: Int){
         holeView.holeMargin = int
@@ -126,10 +131,13 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         textView.layoutParams.width = LayoutParams.WRAP_CONTENT
         textView.requestLayout()
          onInstallBinding.linLaySpeakBubble.requestLayout()
-         val posData = ViewAndPositionData(conLaySpeakBubble,getSimplePosRelation(view,orientation,fit) ,getOriSetByNextToPosition(orientation))
-         setPositionByMargin(posData,globalLayoutSet,false,true)
-         textView.visibility = if(string=="") View.GONE else View.VISIBLE
-         onInstallBinding.sbBottom.visibility =  if(string=="") View.GONE else View.VISIBLE
+         val posData = ViewAndPositionData(
+             conLaySpeakBubble,
+             getSimplePosRelation(view,orientation,fit) ,
+             getOriSetByNextToPosition(orientation,BorderAttributes.FillIfOutOfBorder))
+         setPositionByMargin(posData,globalLayoutSet)
+         conLaySpeakBubble.visibility = if(string=="") View.GONE else View.VISIBLE
+
 
         val finalDuration:Long = 200
 
@@ -143,10 +151,6 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                  ViewChangeActions().setScale(textView,progressPer,progressPer)
 
              }
-         }
-        val animAlpha = ValueAnimator.ofFloat(0f,1f)
-         animAlpha.addUpdateListener {
-             ViewChangeActions().setAlpha(textView,it.animatedValue as Float)
          }
         val scaleAnim = AnimatorSet().apply {
             playSequentially( anim1,anim2)
@@ -173,7 +177,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
              playSequentially( bottomTransAnim1,bottomTransAnim2,bottomTransAnim3)
          }
         val finalAnim = AnimatorSet().apply {
-            playTogether(animAlpha,scaleAnim,bottomAnim1,bottomTransAnim)
+            playTogether(scaleAnim,bottomAnim1,bottomTransAnim)
             scaleAnim.duration = finalDuration
             bottomTransAnim.duration = finalDuration
         }
@@ -191,20 +195,38 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
 
     }
-    fun getOriSetByNextToPosition(movingViewPosition:MyOrientation):MyOrientationSet{
+    fun getOriSetByNextToPosition(movingViewPosition:MyOrientation,attributes: BorderAttributes):MyOrientationSetNew{
         return when(movingViewPosition){
-            MyOrientation.BOTTOM-> MyOrientationSet(verticalOrientation = MyOrientation.TOP , horizontalOrientation = MyOrientation.MIDDLE )
-            MyOrientation.LEFT -> MyOrientationSet(verticalOrientation = MyOrientation.MIDDLE, horizontalOrientation = MyOrientation.RIGHT)
-            MyOrientation.RIGHT -> MyOrientationSet(verticalOrientation = MyOrientation.MIDDLE , horizontalOrientation = MyOrientation.LEFT )
-            MyOrientation.TOP -> MyOrientationSet(verticalOrientation = MyOrientation.BOTTOM, horizontalOrientation = MyOrientation.MIDDLE )
-            else -> MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE)
+            MyOrientation.BOTTOM-> MyOrientationSetNew(MyVerticalOrientation.TOP , MyHorizontalOrientation.MIDDLE,attributes )
+            MyOrientation.LEFT -> MyOrientationSetNew( MyVerticalOrientation.MIDDLE, MyHorizontalOrientation.RIGHT,attributes)
+            MyOrientation.RIGHT -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE , MyHorizontalOrientation.LEFT,attributes )
+            MyOrientation.TOP -> MyOrientationSetNew(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE ,attributes)
+            else -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE,attributes)
         }
     }
-     fun setArrow(arrowPosition: MyOrientation, view: View,globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
+    fun setMarginByNextToPosition(movingViewPosition:MyOrientation,margin: Int,borderSet: BorderSet):BorderSet{
+        when(movingViewPosition){
+            MyOrientation.BOTTOM->   borderSet.topMargin = margin
+            MyOrientation.LEFT ->    borderSet.rightMargin = margin
+            MyOrientation.RIGHT ->   borderSet.leftMargin = margin
+            MyOrientation.TOP ->     borderSet.bottomMargin = margin
+            MyOrientation.MIDDLE -> {}
+        }
+        return borderSet
+    }
+     fun setArrow(arrowPosition: MyOrientation,
+                  view: View,
+                  globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>,
+                  margin:Int){
         appearAlphaAnimation(arrow,true).start()
 
-         val positionData = ViewAndPositionData(arrow,getSimplePosRelation(view,arrowPosition,true),getOriSetByNextToPosition(arrowPosition))
-        setPositionByMargin(positionData,globalLayoutSet,false,false)
+         val getBorderSet = getSimplePosRelation(view,arrowPosition, true)
+         val borderSetWithMargin = setMarginByNextToPosition(arrowPosition,margin,getBorderSet)
+         val positionData = ViewAndPositionData(arrow,
+             borderSetWithMargin,
+             getOriSetByNextToPosition(arrowPosition,BorderAttributes.FillIfOutOfBorder))
+
+        setPositionByMargin(positionData,globalLayoutSet)
          when(arrowPosition){
              MyOrientation.BOTTOM-> setArrowDirection(MyOrientation.TOP)
              MyOrientation.LEFT -> setArrowDirection(MyOrientation.RIGHT)
@@ -222,6 +244,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     }
 
     fun removeHole(){
+        holeView.removeGlobalLayout()
         holeView.noHole = true
     }
     fun copyViewInConLay(view:View, borderDataMap: MutableMap<View, BorderSet>, globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>):View{
@@ -251,12 +274,10 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         )
         val positionData = ViewAndPositionData(a.touchView
             ,getSimplePosRelation(view,MyOrientation.MIDDLE,true)
-            ,MyOrientationSet(MyOrientation.MIDDLE,MyOrientation.MIDDLE))
+            ,MyOrientationSetNew(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE,BorderAttributes.FillBorder))
         setPositionByMargin(
             positionData,
-            fillBorder = true,
-            globalLayoutSet = globalLayoutSet,
-            fillIfOutOfBorder = true)
+            globalLayoutSet = globalLayoutSet)
 
 
         return a.touchView

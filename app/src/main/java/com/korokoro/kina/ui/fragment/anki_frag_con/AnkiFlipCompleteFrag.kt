@@ -37,7 +37,7 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = AnkiFlipFragCompletedBinding.inflate(inflater, container, false)
-        Animation().appearAlphaAnimation(binding.root,true).start()
+        Animation().appearAlphaAnimation(binding.root,true,1f).start()
         flipRoundSharedPref = requireActivity().getSharedPreferences("flip_round",Context.MODE_PRIVATE)
 
         ankiFlipBaseViewModel.allActivityData.observe(viewLifecycleOwner){
@@ -73,7 +73,7 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
     }
 
     private fun onClickEndFlip(){
-        Animation().appearAlphaAnimation(binding.root,false).apply {
+        Animation().appearAlphaAnimation(binding.root,false,1f).apply {
             doOnEnd {
                 navigateToAnkiBox()
             }
@@ -83,7 +83,7 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
     private fun onClickStartAgain(){
         ankiFlipBaseViewModel.setParentPosition(0)
         ankiFlipBaseViewModel.setParentCard(null)
-        Animation().appearAlphaAnimation(binding.root,false).apply {
+        Animation().appearAlphaAnimation(binding.root,false,1f).apply {
             doOnEnd {
                 navigateToFlipStart()
             }

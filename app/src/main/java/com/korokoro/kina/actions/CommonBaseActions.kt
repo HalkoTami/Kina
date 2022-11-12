@@ -36,6 +36,9 @@ fun getWindowDisplayHeightDiff(resources: Resources): Int {
 fun changeViewVisibility(view:View,visibility: Boolean){
     view.visibility = if(visibility) View.VISIBLE else View.GONE
 }
+fun changeMulVisibility( views : Array<View>,visibility: Boolean){
+    views.onEach { changeViewVisibility(it,visibility) }
+}
 fun showKeyBoard(editText: EditText,context: Context){
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.showSoftInput(editText, 0)

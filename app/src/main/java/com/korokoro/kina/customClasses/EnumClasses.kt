@@ -34,6 +34,9 @@ enum class FlipFragments{
 enum class Count{
     Start,End
 }
+enum class BorderAttributes{
+    FillBorder,FillIfOutOfBorder,None
+}
 enum class AnimationAttributes{
     StartAnim,EndAnim,Pause,Resume,Cancel
 }

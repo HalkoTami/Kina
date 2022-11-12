@@ -25,8 +25,10 @@ class MyOrientationSet(
     val horizontalOrientation: MyOrientation
 )
 class MyOrientationSetNew(
-    val verticalOrientation: MyVerticalOrientation,
-    val horizontalOrientation: MyHorizontalOrientation
+    var verticalOrientation: MyVerticalOrientation = MyVerticalOrientation.MIDDLE,
+    var horizontalOrientation: MyHorizontalOrientation = MyHorizontalOrientation.MIDDLE,
+    var borderAttributes: BorderAttributes = BorderAttributes.FillIfOutOfBorder
+
 )
 
 class BorderSet(
@@ -34,12 +36,16 @@ class BorderSet(
     var topSideSet:ViewAndSide?=null,
     var rightSideSet:ViewAndSide?=null,
     var bottomSideSet:ViewAndSide?=null,
+    var leftMargin:Int = 0,
+    var topMargin:Int = 0,
+    var rightMargin:Int = 0,
+    var bottomMargin:Int = 0,
 
-)
+    )
 class ViewAndPositionData(
     val view: View,
     var borderSet: BorderSet,
-    var orientation:MyOrientationSet
+    var orientation:MyOrientationSetNew
 )
 class AutoFlip(
     var active:Boolean = false,

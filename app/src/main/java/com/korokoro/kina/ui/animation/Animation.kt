@@ -21,10 +21,11 @@ import com.korokoro.kina.customClasses.NeighbourCardSide
 import kotlin.math.absoluteValue
 
 class Animation {
-    fun appearAlphaAnimation(view :View, visible:Boolean): ValueAnimator {
 
-        val appear =ValueAnimator.ofFloat(0f,1f)
-        val disappear = ValueAnimator.ofFloat(1f,0f)
+    fun appearAlphaAnimation(view :View, visible:Boolean,defaultAlpha:Float): ValueAnimator {
+
+        val appear =ValueAnimator.ofFloat(0f,defaultAlpha)
+        val disappear = ValueAnimator.ofFloat(defaultAlpha,0f)
         arrayOf(appear,disappear).onEach { eachAnimator->
             eachAnimator.addUpdateListener { thisAnimator ->
                 ViewChangeActions().setAlpha(view, thisAnimator.animatedValue as Float)
