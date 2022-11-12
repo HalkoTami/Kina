@@ -90,7 +90,7 @@ class ViewChangeActions {
             MyOrientation.MIDDLE-> getCenterPos(view).x
         }
     }
-    private fun calculatePositionInBorder(view: View,
+    fun calculatePositionInBorder(view: View,
                                           borderPosition: RecPosition,
                                           verticalOrientation: MyVerticalOrientation,
                                           horizontalOrientation: MyHorizontalOrientation

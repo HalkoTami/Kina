@@ -111,7 +111,7 @@ class HoleViewVer2 (
     set(value) {
         field = value
         if(value!=null)
-        recHolePosition = value
+            recHolePosition = value
         this.invalidate()
     }
     private var animCirclePos : CirclePosition? = null
@@ -193,14 +193,22 @@ class HoleViewVer2 (
     private fun getRecPos(view: View):RecPosition{
         return ViewChangeActions().getRecPos(view)
     }
+    var leftDiff = 0f
+    var rightDiff = 0f
+    fun setLeftDiff(){
+        leftDiff = abs((context.resources.displayMetrics.widthPixels/2)-ViewChangeActions().getRecPos(this).left)
+        rightDiff = abs(ViewChangeActions().getRecPos(this).right-(context.resources.displayMetrics.widthPixels/2))
+
+    }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (bitmap == null) { configureBitmap() }
         layer?.drawRect(0.0f, 0.0f, width.toFloat(), height.toFloat(), paint)
+        setLeftDiff()
         if(noHole.not()){
             when(holeShape){
                 HoleShape.RECTANGLE  ->
-                    layer?.drawRoundRect(recHolePosition.left-holeMargin,
+                    layer?.drawRoundRect(recHolePosition.left-holeMargin-leftDiff,
                         recHolePosition.top-holeMargin,
                         recHolePosition.right+holeMargin,
                         recHolePosition.bottom+holeMargin,recRadius,recRadius,holePaint)
