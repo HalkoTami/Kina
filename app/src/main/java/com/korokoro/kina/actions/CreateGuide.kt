@@ -86,6 +86,7 @@ class CreateGuide(val activity:AppCompatActivity,
 
     private var textFit:Boolean = false
 
+    private var spbAppearOnEnd = true
     private fun setTextPos(string: String):ValueAnimator{
 
         val anim = actions.changeSpeakBubbleVisibility(false).apply {
@@ -97,7 +98,7 @@ class CreateGuide(val activity:AppCompatActivity,
                     borderSet = spbBorderSet ,
                     orientation= spbOrientation)
                 setPos(posData)
-                actions.speakBubbleTextAnimation().start()
+                if(spbAppearOnEnd) actions.speakBubbleTextAnimation().start()
             }
             duration = 100
         }
@@ -306,29 +307,39 @@ class CreateGuide(val activity:AppCompatActivity,
             }
             fun explainCreateCardFrag1(){
                 characterBorderSet = actions.getSimplePosRelation(edtCardFrontContent,MyOrientation.TOP,false)
+                setCharacterPos()
                 actions.appearAlphaAnimation(actions.character,true).start()
+                textFit = true
+                textPosData = ViewAndSide(actions.character,MyOrientation.RIGHT)
                 setTextPos("上半分は、カードの表" ).start()
                 createAnimateHole = true
                 viewUnderHole = edtCardFrontContent
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag2(){
-                this.setTextPos("下半分は、カードの裏になっているよ" ).start()
-                viewUnderHole = edtCardFrontContent
+                setTextPos("下半分は、カードの裏になっているよ" ).start()
+                viewUnderHole = edtCardBackContent
                 goNextOnClickAnyWhere()
 
             }
             fun explainCreateCardFrag3(){
-                characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackTitle,MyOrientation.TOP))
+                characterBorderSet = BorderSet(topSideSet = ViewAndSide(edtCardFrontTitle,MyOrientation.BOTTOM),
+                    bottomSideSet = ViewAndSide(edtCardBackTitle,MyOrientation.TOP) )
+                characterOrientation = MyOrientationSetNew(MyVerticalOrientation.TOP,MyHorizontalOrientation.LEFT)
+                setCharacterPos()
+                textFit = false
                 viewUnderHole = edtCardFrontTitle
                 setTextPos("カードの裏表にタイトルを付けることもできるんだ！").start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardFrag4(){
                 viewUnderHole = edtCardBackTitle
-                textPosData = ViewAndSide(edtCardBackTitle,MyOrientation.TOP)
-                textFit = false
-                setTextPos("好みのようにカスタマイズしてね")
+                characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
+                setCharacterPos()
+                spbBorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character,MyOrientation.BOTTOM)
+                    , leftSideSet = ViewAndSide(actions.character,MyOrientation.RIGHT))
+                spbOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.MIDDLE)
+                setTextPos("好みのようにカスタマイズしてね").start()
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation1(){
@@ -354,13 +365,14 @@ class CreateGuide(val activity:AppCompatActivity,
                 goNextOnClickAnyWhere()
             }
             fun explainCreateCardNavigation5(){
-                actions.appearAlphaAnimation(actions.character,false).start()
-                actions.changeArrowVisibility(false).start()
-                goNextOnClickAnyWhere()
                 setArrow(MyOrientation.TOP, createCardNavFlipPrevious)
+                goNextOnClickAnyWhere()
             }
             fun goodBye1(){
+                actions.removeHole()
+                actions.changeArrowVisibility(false).start()
                 characterOrientation = MyOrientationSetNew(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
+                setCharacterPos()
                 setTextPos("これでガイドは終わりだよ").start()
                 actions.appearAlphaAnimation(actions.character,true).start()
                 goNextOnClickAnyWhere()

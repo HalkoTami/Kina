@@ -82,13 +82,17 @@ class ViewChangeActions {
     }
     fun getViewBorderPos(viewAndSide: ViewAndSide):Float{
         val view = viewAndSide.view
-        return when(viewAndSide.side){
+        val rotationBefore = view.rotation
+        view.rotation = 0f
+        val pos = when(viewAndSide.side){
             MyOrientation.RIGHT -> getRecPos(view).right
             MyOrientation.LEFT  -> getRecPos(view).left
             MyOrientation.BOTTOM-> getRecPos(view).bottom
             MyOrientation.TOP   -> getRecPos(view).top
             MyOrientation.MIDDLE-> getCenterPos(view).x
         }
+        view.rotation = rotationBefore
+        return pos
     }
     fun calculatePositionInBorder(view: View,
                                           borderPosition: RecPosition,
