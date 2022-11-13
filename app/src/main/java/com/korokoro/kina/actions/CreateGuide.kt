@@ -23,7 +23,8 @@ import com.korokoro.kina.ui.viewmodel.*
 
 
 class CreateGuide(val activity:AppCompatActivity,
-                  private val onInstallBinding: CallOnInstallBinding){
+                  private val onInstallBinding: CallOnInstallBinding,
+                  val frameLay:FrameLayout){
     val actions = InstallGuide(activity,onInstallBinding)
     private val borderDataMap = mutableMapOf<View,BorderSet>()
     private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
@@ -75,6 +76,7 @@ class CreateGuide(val activity:AppCompatActivity,
             field = value
             spbBorderSet.margin = value
         }
+    var freshCreated = true
     private var textPosData:ViewAndSide = ViewAndSide(actions.character,MyOrientation.TOP)
     set(value) {
         field = value
@@ -82,7 +84,7 @@ class CreateGuide(val activity:AppCompatActivity,
         spbOrientation = ViewChangeActions().getOriSetByNextToPosition(value.side,BorderAttributes.FillIfOutOfBorder)
     }
     private var spbBorderSet:BorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character,MyOrientation.TOP))
-    private var spbOrientation:MyOrientationSetNew = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.MIDDLE)
+    private var spbOrientation:MyOrientationSetNew = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.MIDDLE,BorderAttributes.FillIfOutOfBorder)
 
     private var textFit:Boolean = false
 
@@ -125,6 +127,7 @@ class CreateGuide(val activity:AppCompatActivity,
                     libraryViewModel:LibraryBaseViewModel,
                     mainViewModel: MainViewModel){
         mainViewModel.setGuideVisibility(true)
+        freshCreated = false
         fun guideInOrder(order:Int){
             val bnvBtnAdd                   =activity.findViewById<ImageView>(R.id.bnv_imv_add)
             val createMenuImvFlashCard      =activity.findViewById<FrameLayout>(R.id.imvnewTangocho)
@@ -168,11 +171,15 @@ class CreateGuide(val activity:AppCompatActivity,
 
 
 
+
             fun greeting1(){
+                frameLay.removeAllViews()
+                frameLay.addView(onInstallBinding.root)
+
                 actions.setUpFirstView(globalLayoutSet)
                 setTextPos("やあ、僕はとさかくん").start()
-                actions.changeSpeakBubbleVisibility(true).start()
                 goNextOnClickAnyWhere()
+
             }
             fun greeting2(){
                 setTextPos("これから、KiNaの使い方を説明するね").start()
@@ -193,6 +200,7 @@ class CreateGuide(val activity:AppCompatActivity,
                 goNextOnClickTouchArea(bnvBtnAdd)
             }
             fun createFlashCard2(){
+
                 setArrow(MyOrientation.TOP,createMenuImvFlashCard)
                 createAnimateHole = false
                 viewUnderHole = createMenuImvFlashCard
@@ -371,8 +379,10 @@ class CreateGuide(val activity:AppCompatActivity,
             fun goodBye1(){
                 actions.removeHole()
                 actions.changeArrowVisibility(false).start()
+                characterBorderSet = BorderSet()
                 characterOrientation = MyOrientationSetNew(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
                 setCharacterPos()
+                textPosData = ViewAndSide(actions.character,MyOrientation.TOP)
                 setTextPos("これでガイドは終わりだよ").start()
                 actions.appearAlphaAnimation(actions.character,true).start()
                 goNextOnClickAnyWhere()
@@ -391,6 +401,7 @@ class CreateGuide(val activity:AppCompatActivity,
             }
 
 
+            actions.makeTouchAreaGone()
             when(order){
                 1   ->  greeting1()
                 2   ->  greeting2()

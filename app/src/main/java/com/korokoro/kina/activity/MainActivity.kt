@@ -25,6 +25,8 @@ import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.customClasses.AnkiFragments
 import com.korokoro.kina.customClasses.ColorPalletStatus
 import com.korokoro.kina.customClasses.MainFragment
+import com.korokoro.kina.databinding.CallOnInstallBinding
+import com.korokoro.kina.databinding.HelpOptionsBinding
 import com.korokoro.kina.ui.customViews.HoleShape
 import com.korokoro.kina.ui.listener.KeyboardListener
 import com.korokoro.kina.ui.listener.popUp.EditFilePopUpCL
@@ -48,8 +50,23 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var searchViewModel         : SearchViewModel
 
     private lateinit var binding                  : MainActivityBinding
+    private lateinit var callOnInstallBinding: CallOnInstallBinding
 
-
+    fun refreshInstallGuide(){
+        callOnInstallBinding = CallOnInstallBinding.inflate(layoutInflater)
+        callOnInstallBinding.confirmEndGuideBinding.apply {
+            arrayOf(btnCancelEnd,
+                btnCloseConfirmEnd,
+                btnCommitEnd).onEach {
+                it.setOnClickListener {
+                    when(it){
+                        btnCancelEnd,btnCloseConfirmEnd -> mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
+                        btnCommitEnd                    -> mainActivityViewModel.onClickEndGuide()
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,11 +74,13 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //      全部のデータを消したいとき
 //        applicationContext.deleteDatabase("my_database")
 //        ー－－－mainActivityのviewー－－－
+
         fun checkIfInstall(){
             val sharedPref = this.getSharedPreferences(
                 "firstTimeGuide", Context.MODE_PRIVATE) ?: return
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
-                CreateGuide(this,binding.guideBinding).createGuide(
+                refreshInstallGuide()
+                CreateGuide(this,callOnInstallBinding,binding.frameLayCallOnInstall).createGuide(
                     startOrder = 1,
                     createCardViewModel,
                     createFileViewModel,
@@ -139,24 +158,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                             it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,createFileViewModel)) }
                     }
                 }
-                guideBinding.confirmEndGuideBinding.apply {
-                    arrayOf(btnCancelEnd,
-                        btnCloseConfirmEnd,
-                    btnCommitEnd).onEach {
-                        it.setOnClickListener(this@MainActivity)
-                    }
-                }
-            }
-            binding.helpOptionBinding.apply {
-                arrayOf(
-                    root,
-                    menuHowToDeleteItems,
-                    menuHowToCreateItems,
-                    menuHowToEditItems,
-                    menuHowToMoveItems
-                    ).onEach {
-                        it.setOnClickListener(this@MainActivity)
-                }
             }
         }
         fun changeTabView(previous: MainFragment?, now: MainFragment){
@@ -203,14 +204,16 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             changeTabView(it.before,it.now)
         }
         val confirmEndGuideObserver         = Observer<Boolean>{
-            changeViewVisibility(binding.guideBinding.frameLayConfirmEndGuidePopUp,it)
+            changeViewVisibility(callOnInstallBinding.frameLayConfirmEndGuidePopUp,it)
         }
 
         val helpOptionVisibilityObserver      = Observer<Boolean>{
             val frameLayHelp = binding.frameLayCallOnInstall
-            changeViewVisibility(frameLayHelp,mainActivityViewModel.checkIfFrameLayHelpIsVisible())
+            changeViewVisibility(frameLayHelp,it)
+
             fun setUpMenuMode(){
-                binding.helpOptionBinding.apply {
+                val helpBinding = HelpOptionsBinding.inflate(layoutInflater)
+                helpBinding.apply {
                     when(mainActivityViewModel.returnFragmentStatus()?.now){
                         MainFragment.Library -> {
                             changeViewVisibility(linLayHelpMenuLibrary,true)
@@ -227,20 +230,40 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         ).onEach { changeViewVisibility(it,false) }
                     }
                 }
+                helpBinding.apply {
+                    arrayOf(
+                        root,
+                        menuHowToDeleteItems,
+                        menuHowToCreateItems,
+                        menuHowToEditItems,
+                        menuHowToMoveItems
+                    ).onEach {
+                        it.setOnClickListener {
+                            when(it){
+                                menuHowToDeleteItems -> DeleteGuide().deleteGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
+                                menuHowToCreateItems -> {
+                                    refreshInstallGuide()
+                                    CreateGuide(this@MainActivity, callOnInstallBinding,binding.frameLayCallOnInstall).createGuide(startOrder = 1, createCardViewModel, createFileViewModel, libraryViewModel,mainActivityViewModel)
+                                }
+                                menuHowToEditItems -> EditGuide().editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
+                                menuHowToMoveItems -> {
+                                    refreshInstallGuide()
+                                    MoveGuide(this@MainActivity,callOnInstallBinding).moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
+                                }
+                            }
+                        }
+                    }
+                }
+                frameLayHelp.addView(helpBinding.root)
 
             }
-            setUpMenuMode()
-            if(it) {
-                changeViewVisibility(binding.helpOptionBinding.root,true)
-                changeViewVisibility(binding.guideBinding.root,false)
-            } else changeViewVisibility(binding.helpOptionBinding.root,false)
+            if(it) setUpMenuMode() else frameLayHelp.removeAllViews()
         }
         val guideVisibilityObserver      = Observer<Boolean>{
             changeViewVisibility(binding.frameLayCallOnInstall,mainActivityViewModel.checkIfFrameLayHelpIsVisible())
-            if(it) {
-                changeViewVisibility(binding.helpOptionBinding.root,false)
-                changeViewVisibility(binding.guideBinding.root,true)
-            } else changeViewVisibility(binding.guideBinding.root,false)
+            if(it.not()){
+              binding.frameLayCallOnInstall.removeAllViews()
+            }
         }
         val lastInsertedFileObserver      = Observer<File>{
             createFileViewModel.setLastInsertedFile(it)
@@ -392,20 +415,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 }
             }
             }
-            guideBinding.confirmEndGuideBinding.apply {
-                when(v){
-                    btnCancelEnd,btnCloseConfirmEnd -> mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-                    btnCommitEnd                    -> mainActivityViewModel.onClickEndGuide()
-                }
-            }
-            helpOptionBinding.apply {
-                when(v){
-                    menuHowToDeleteItems -> DeleteGuide().deleteGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
-                    menuHowToCreateItems -> CreateGuide(this@MainActivity,binding.guideBinding).createGuide(startOrder = 1, createCardViewModel, createFileViewModel, libraryViewModel,mainActivityViewModel)
-                    menuHowToEditItems -> EditGuide().editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
-                    menuHowToMoveItems -> MoveGuide(this@MainActivity,binding.guideBinding).moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
-                }
-            }
+
         }
 
     }
