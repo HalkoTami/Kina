@@ -3,7 +3,6 @@ package com.korokoro.kina.actions
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.view.View
-import android.view.ViewGroup.LayoutParams
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
@@ -127,45 +126,30 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     fun setHoleRecRadius(int: Int){
         holeView.recRadius = int.toFloat()
     }
-     fun explainTextAnimation(string: String, viewAndSide: ViewAndSide
-                              ,globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>,
-                              textFit:Boolean,margin:Int): AnimatorSet {
+     fun speakBubbleTextAnimation(): AnimatorSet {
 
+         val finalDuration:Long = 200
 
-        textView.text = string
-        textView.layoutParams.width = LayoutParams.WRAP_CONTENT
-        textView.requestLayout()
-         val getBorderSet = getSimplePosRelation(viewAndSide.view,viewAndSide.side,textFit)
-         getBorderSet.margin = MyMargin(margin,margin  ,margin,margin)
-         val posData = ViewAndPositionData(
-             conLaySpeakBubble,
-             borderSet = getBorderSet ,
-             orientation= getOriSetByNextToPosition(viewAndSide.side,BorderAttributes.FillIfOutOfBorder))
-         setPositionByMargin(posData,globalLayoutSet)
+         val txvScaleAnim1 = ValueAnimator.ofFloat(0.7f,1.1f)
+         val txvScaleAnim2 = ValueAnimator.ofFloat(1.1f,1f)
 
-
-        val finalDuration:Long = 200
-
-         val anim1 = ValueAnimator.ofFloat(0.7f,1.1f)
-         val anim2 = ValueAnimator.ofFloat(1.1f,1f)
-
-         arrayOf(anim1,anim2).onEach {
+         arrayOf(txvScaleAnim1,txvScaleAnim2).onEach {
              it.addUpdateListener {
                  val progressPer = it.animatedValue as Float
                  ViewChangeActions().setScale(conLaySpeakBubble,progressPer,progressPer)
-                 ViewChangeActions().setScale(textView,progressPer,progressPer)
+//                 ViewChangeActions().setScale(textView,progressPer,progressPer)
 
              }
          }
-        val scaleAnim = AnimatorSet().apply {
-            playSequentially( anim1,anim2)
+        val txvScaleAnimSet = AnimatorSet().apply {
+            playSequentially( txvScaleAnim1,txvScaleAnim2)
             doOnStart {
                 ViewChangeActions().setScale(conLaySpeakBubble,0.7f,0.7f)
-                ViewChangeActions().setScale(textView,0.7f,0.7f)
+//                ViewChangeActions().setScale(textView,0.7f,0.7f)
 
             }
-            anim1.duration = finalDuration*0.7.toLong()
-            anim2.duration = finalDuration*0.3.toLong()
+            txvScaleAnim1.duration = finalDuration*0.7.toLong()
+            txvScaleAnim2.duration = finalDuration*0.3.toLong()
         }
          val bottomAnim1 = ValueAnimator.ofFloat(0f,1f)
 
@@ -183,8 +167,8 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
              playSequentially( bottomTransAnim1,bottomTransAnim2,bottomTransAnim3)
          }
         val finalAnim = AnimatorSet().apply {
-            playTogether(scaleAnim,bottomAnim1,bottomTransAnim,changeSpeakBubbleVisibility(true))
-            scaleAnim.duration = finalDuration
+            playTogether(txvScaleAnimSet,bottomAnim1,bottomTransAnim,changeSpeakBubbleVisibility(true))
+            txvScaleAnimSet.duration = finalDuration
             bottomTransAnim.duration = finalDuration
         }
 
@@ -201,15 +185,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
 
     }
-    fun getOriSetByNextToPosition(movingViewPosition:MyOrientation,attributes: BorderAttributes):MyOrientationSetNew{
-        return when(movingViewPosition){
-            MyOrientation.BOTTOM-> MyOrientationSetNew(MyVerticalOrientation.TOP , MyHorizontalOrientation.MIDDLE,attributes )
-            MyOrientation.LEFT -> MyOrientationSetNew( MyVerticalOrientation.MIDDLE, MyHorizontalOrientation.RIGHT,attributes)
-            MyOrientation.RIGHT -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE , MyHorizontalOrientation.LEFT,attributes )
-            MyOrientation.TOP -> MyOrientationSetNew(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE ,attributes)
-            else -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE,attributes)
-        }
-    }
+
     fun setMarginByNextToPosition(movingViewPosition:MyOrientation,margin: Int,borderSet: BorderSet):BorderSet{
         when(movingViewPosition){
             MyOrientation.BOTTOM->   borderSet.margin.topMargin = margin
@@ -230,7 +206,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
          val borderSetWithMargin = setMarginByNextToPosition(arrowPosition,margin,getBorderSet)
          val positionData = ViewAndPositionData(arrow,
              borderSetWithMargin,
-             getOriSetByNextToPosition(arrowPosition,BorderAttributes.None))
+             ViewChangeActions().getOriSetByNextToPosition(arrowPosition,BorderAttributes.None))
 
         setPositionByMargin(positionData,globalLayoutSet)
          when(arrowPosition){

@@ -244,4 +244,13 @@ class ViewChangeActions {
         view.requestLayout()
 
     }
+    fun getOriSetByNextToPosition(movingViewPosition:MyOrientation,attributes: BorderAttributes):MyOrientationSetNew{
+        return when(movingViewPosition){
+            MyOrientation.BOTTOM-> MyOrientationSetNew(MyVerticalOrientation.TOP , MyHorizontalOrientation.MIDDLE,attributes )
+            MyOrientation.LEFT -> MyOrientationSetNew( MyVerticalOrientation.MIDDLE, MyHorizontalOrientation.RIGHT,attributes)
+            MyOrientation.RIGHT -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE , MyHorizontalOrientation.LEFT,attributes )
+            MyOrientation.TOP -> MyOrientationSetNew(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE ,attributes)
+            else -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE,attributes)
+        }
+    }
 }
