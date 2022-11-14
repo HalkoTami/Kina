@@ -110,6 +110,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private val _selectedItems = MutableLiveData<List<Any>>()
     private fun setSelectedItems(list:List<Any>){
         _selectedItems.value = list
+        setAllRVSelected((list.size == returnParentRVItems().size))
     }
     fun clearSelectedItems(){
         setSelectedItems(mutableListOf())
@@ -388,8 +389,19 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private val _changeAllRVSelectedStatus = MutableLiveData<Boolean>()
     fun changeAllRVSelectedStatus (selected:Boolean){
         _changeAllRVSelectedStatus.value = selected
-        if(selected) setSelectedItems(returnParentRVItems().toMutableList())
+        if(selected) {
+            setSelectedItems(returnParentRVItems().toMutableList())
+            setAllRVSelected(true)
+        }
         else setSelectedItems(mutableListOf())
+    }
+    private val _allRVItemSelected = MutableLiveData<Boolean>()
+    val allRVItemSelected:LiveData<Boolean> = _allRVItemSelected
+    fun setAllRVSelected (selected:Boolean){
+        _allRVItemSelected.value = selected
+    }
+    fun getAllRVItemSelected ():Boolean{
+        return _allRVItemSelected.value ?:false
     }
 
     val changeAllRVSelectedStatus:LiveData<Boolean> = _changeAllRVSelectedStatus

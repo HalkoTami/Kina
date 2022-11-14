@@ -17,6 +17,12 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
 
     val toast :LiveData<MakeToastFromVM> = _toast
 
+    fun onCLickMultiMenuDelete(selectedItems:List<Any>){
+        if(selectedItems.isEmpty()) return
+        setDeletingItem(selectedItems.toMutableList())
+        setConfirmDeleteVisible(true)
+    }
+
     private fun deleteSingleFile(file: File, deleteChildren:Boolean){
         viewModelScope.launch {
             if(!deleteChildren){

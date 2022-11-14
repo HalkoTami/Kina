@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -21,6 +22,9 @@ fun getWindowDisplayHeightDiff(activity:AppCompatActivity): Int {
     val win = activity.window
     win.decorView.getWindowVisibleDisplayFrame(rect)
     return rect.top
+}
+fun setClickListeners(views: Array<View>,clickListener: OnClickListener){
+    views.onEach { it.setOnClickListener (clickListener) }
 }
 
 

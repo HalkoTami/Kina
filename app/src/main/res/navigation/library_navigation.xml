@@ -6,6 +6,25 @@
     app:startDestination="@+id/fragLibraryHome">
 
     <fragment
+        android:id="@+id/fragLibraryChild"
+        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryChildFrag"
+        android:label="library"
+        tools:layout="@layout/library_child_frag_with_mul_mode_base" >
+        <argument
+            android:name="fragType"
+            app:argType="com.korokoro.kina.customClasses.enumClasses.LibraryFragment"
+            />
+        <argument
+            android:name="folderId"
+            app:argType="integer[]"
+            />
+        <argument
+            android:name="flashCardCoverId"
+            app:argType="integer[]"
+            />
+
+    </fragment>
+    <fragment
         android:id="@+id/fragLibraryHome"
         android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryHomeFrag"
         android:label="library"
