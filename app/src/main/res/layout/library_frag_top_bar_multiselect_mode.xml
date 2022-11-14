@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_close"
-        />
+        android:contentDescription="TODO" />
     <ImageView
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
@@ -18,7 +18,7 @@
         android:minHeight="20dp"
 
         android:src="@drawable/select_rv_item"
-        />
+        android:contentDescription="TODO" />
 
     <TextView
         style="@style/TopBarTxvSizeNormalStyle"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
 
         android:src="@drawable/icon_menu"
-        />
+        android:contentDescription="TODO" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

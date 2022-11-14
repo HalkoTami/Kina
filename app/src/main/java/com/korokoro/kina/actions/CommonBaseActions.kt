@@ -2,6 +2,7 @@ package com.korokoro.kina.actions
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Rect
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.Window
@@ -9,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import com.korokoro.kina.R
 import java.text.SimpleDateFormat
@@ -24,6 +26,10 @@ fun setXAndY(view: View, x:Float, y:Float){
 }
 
 fun getWindowDisplayHeightDiff(resources: Resources): Int {
+//    val rect = Rect()
+//    val win = activity.window
+//    win.decorView.getWindowVisibleDisplayFrame(rect)
+//    return rect.top
     var statusBarHeight = 0
     val resourceId: Int = resources.getIdentifier("status_bar_height", "dimen", "android")
     if (resourceId > 0) {

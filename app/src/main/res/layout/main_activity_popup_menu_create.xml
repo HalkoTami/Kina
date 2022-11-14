@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="60dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,13 +23,15 @@
                     android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/icon_file"/>
+                    android:src="@drawable/icon_file"
+                    android:contentDescription="TODO" />
 
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_gravity="end|bottom"
-                    android:src="@drawable/icon_create_small" />
+                    android:src="@drawable/icon_create_small"
+                    tools:ignore="ContentDescription" />
 
 
         </FrameLayout>
@@ -46,13 +49,15 @@
                     android:padding="3dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/icon_tab_library"/>
+                    android:src="@drawable/icon_tab_library"
+                    android:contentDescription="TODO" />
 
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_gravity="end|bottom"
-                    android:src="@drawable/icon_create_small" />
+                    android:src="@drawable/icon_create_small"
+                    tools:ignore="ContentDescription" />
         </FrameLayout>
         <FrameLayout
             android:id="@+id/imvnewCard"
@@ -67,13 +72,15 @@
                     android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/icon_card"/>
+                    android:src="@drawable/icon_card"
+                    android:contentDescription="TODO" />
 
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_gravity="end|bottom"
-                    android:src="@drawable/icon_create_small" />
+                    android:src="@drawable/icon_create_small"
+                    tools:ignore="ContentDescription" />
         </FrameLayout>
 
 

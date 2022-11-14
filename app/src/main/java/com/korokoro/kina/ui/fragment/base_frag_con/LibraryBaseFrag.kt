@@ -47,10 +47,10 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
                     onlyP.btnCloseConfirmDeleteOnlyParentPopup,
                     onlyP.btnCommitDeleteOnlyParent,
                     onlyP.btnCancel,
-                    deleteAllC.btnCloseConfirmDeleteOnlyParentPopup,
+                    deleteAllC.btnCloseConfirmDeleteChildrenPopup,
                     deleteAllC.btnDeleteAllChildren,
                     deleteAllC.deleteOnlyFile,
-                    deleteAllC.btnCancel,
+                    deleteAllC.btnCancelDeleteChildren,
                     binding.background
                 )   .onEach {
                     it.setOnClickListener(this)
@@ -178,10 +178,10 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
 
             }
             onlyP.btnCancel -> deletePopUpViewModel.setConfirmDeleteVisible(false)
-            deleteAllC.btnCloseConfirmDeleteOnlyParentPopup -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
+            deleteAllC.btnCloseConfirmDeleteChildrenPopup -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
             deleteAllC.btnDeleteAllChildren -> deletePopUpViewModel.deleteFileWithChildren()
             deleteAllC.deleteOnlyFile -> deletePopUpViewModel.deleteOnlyFile()
-            deleteAllC.btnCancel -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
+            deleteAllC.btnCancelDeleteChildren -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
         }
     }
 

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
 
         android:src="@drawable/icon_home"
-        />
+        android:contentDescription="TODO" />
 
     <TextView
         style="@style/TopBarTxvSizeNormalStyle"
@@ -47,7 +47,8 @@
             android:layout_height="wrap_content"
 
             app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/icon_inbox"/>
+            android:src="@drawable/icon_inbox"
+            android:contentDescription="TODO" />
 
         <TextView
             android:textSize="10sp"
@@ -73,7 +74,8 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/icon_help"
-        android:id="@+id/btn_guide"/>
+        android:id="@+id/btn_guide"
+        android:contentDescription="TODO" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

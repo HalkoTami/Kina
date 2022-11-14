@@ -157,7 +157,8 @@
         app:layout_constraintEnd_toEndOf="@id/lineLay_correct_answer"
         android:src="@drawable/icon_flashcard_flat"
         android:alpha="0.3"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:contentDescription="TODO"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         app:layout_constraintTop_toBottomOf="@id/lineLay_correct_answer"

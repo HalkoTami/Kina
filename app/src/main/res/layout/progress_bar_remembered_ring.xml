@@ -32,7 +32,7 @@
             android:layout_gravity="center"
 
 
-            />
+            android:contentDescription="TODO" />
 
 
     </FrameLayout>

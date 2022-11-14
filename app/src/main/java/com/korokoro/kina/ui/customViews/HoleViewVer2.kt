@@ -61,22 +61,22 @@ class HoleViewVer2 (
                 val beforeWasNoHole = noHole
                 if(beforeWasNoHole) noHole = false
                 removeGlobalLayout()
-                if(animate){
-                    view.viewTreeObserver.addOnGlobalLayoutListener (
+                if(animate) {
+                    view.viewTreeObserver.addOnGlobalLayoutListener(
                         object :ViewTreeObserver.OnGlobalLayoutListener{
                             override fun onGlobalLayout() {
                                 val centerPos = ViewChangeActions().getCenterPos(view)
                                 val startRecPos = if(beforeWasNoHole) RecPosition(
-                                    top = centerPos.y,
-                                    bottom = centerPos.y,
-                                    left = centerPos.x,
-                                    right = centerPos.x
-                                ) else recHolePosition
+                                        top = centerPos.y,
+                                        bottom = centerPos.y,
+                                        left = centerPos.x,
+                                        right = centerPos.x
+                                    ) else recHolePosition
                                 val startCirclePos = if(beforeWasNoHole) CirclePosition(
-                                    x = centerPos.x,
-                                    y = centerPos.y,
-                                    r = 0f
-                                ) else circleHolePosition
+                                        x = centerPos.x,
+                                        y = centerPos.y,
+                                        r = 0f
+                                    ) else circleHolePosition
                                 when(holeShape){
                                     HoleShape.RECTANGLE -> animateRecHole(startRecPos,ViewChangeActions().getRecPos(view))
                                     HoleShape.CIRCLE    -> animateCircleHole(startCirclePos,ViewChangeActions().getCirclePos(view))
@@ -87,21 +87,18 @@ class HoleViewVer2 (
                             }
                         }
                     )
-
-                } else
-                view.viewTreeObserver.addOnGlobalLayoutListener (
-                    object :ViewTreeObserver.OnGlobalLayoutListener{
-                    override fun onGlobalLayout() {
-                        globalLayoutSet[view] = this
-                        recHolePosition = ViewChangeActions().getRecPos(view)
-                        circleHolePosition = ViewChangeActions().getCirclePos(view)
-                        noHole = (view.visibility == View.GONE)||(view.visibility == INVISIBLE)
-                        this@HoleViewVer2.invalidate()
-
-
-                    }
-                    }
+                } else view.viewTreeObserver.addOnGlobalLayoutListener (
+                        object :ViewTreeObserver.OnGlobalLayoutListener{
+                            override fun onGlobalLayout() {
+                                globalLayoutSet[view] = this
+                                recHolePosition = ViewChangeActions().getRecPos(view)
+                                circleHolePosition = ViewChangeActions().getCirclePos(view)
+                                noHole = (view.visibility == View.GONE)||(view.visibility == INVISIBLE)
+                                this@HoleViewVer2.invalidate()
+                            }
+                        }
                 )
+
 
 
             }

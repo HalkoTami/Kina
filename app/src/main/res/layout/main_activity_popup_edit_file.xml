@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="5dp"
-        />
+        android:contentDescription="TODO" />
 
     <FrameLayout
         android:id="@+id/linearLayoutCompat"
@@ -39,7 +39,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="10dp"
                 android:minWidth="8dp"
-                android:src="@drawable/icon_home" />
+                android:src="@drawable/icon_home"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:layout_weight="1"
@@ -55,7 +56,8 @@
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="7dp"
-                android:src="@drawable/icon_polygon" />
+                android:src="@drawable/icon_polygon"
+                tools:ignore="ContentDescription" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -84,7 +86,8 @@
                 android:src="@drawable/icon_file"
                 app:layout_constraintBottom_toTopOf="@id/edt_file_title"
                 app:layout_constraintStart_toStartOf="@id/edt_file_title"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat" />
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat"
+                tools:ignore="ContentDescription" />
             <TextView
                 style="@style/PopUpTextView"
                 android:id="@+id/txv_hint"

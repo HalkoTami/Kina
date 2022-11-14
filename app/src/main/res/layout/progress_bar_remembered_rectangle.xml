@@ -31,7 +31,8 @@
             android:layout_gravity="center_vertical"
             android:src="@drawable/icon_remembered_selectable"
 
-            android:translationX="0dp" />
+            android:translationX="0dp"
+            android:contentDescription="TODO" />
     </FrameLayout>
 
 </layout>

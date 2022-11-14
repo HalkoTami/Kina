@@ -104,13 +104,13 @@ class CreateGuide(val activity:AppCompatActivity,
         }
     }
 
-    fun goNextOnClickAnyWhere(func:()->Unit){
+    private fun goNextOnClickAnyWhere(func:()->Unit){
         onInstallBinding.root.setOnClickListener {
             actions.makeTouchAreaGone()
             func()
         }
     }
-    fun goNextOnClickTouchArea(view: View,func: () -> Unit) {
+    private fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
         onInstallBinding.root.setOnClickListener(null)
         addTouchArea(view).setOnClickListener {
             actions.makeTouchAreaGone()
@@ -118,7 +118,7 @@ class CreateGuide(val activity:AppCompatActivity,
         }
     }
 
-    fun greeting1(){
+    private fun greeting1(){
         frameLay.removeAllViews()
         frameLay.addView(onInstallBinding.root)
 
@@ -126,26 +126,26 @@ class CreateGuide(val activity:AppCompatActivity,
         setTextPos("やあ、僕はとさかくん").start()
         goNextOnClickAnyWhere { greeting2() }
     }
-    fun greeting2(){
+    private fun greeting2(){
         setTextPos("これから、KiNaの使い方を説明するね").start()
         goNextOnClickAnyWhere{createFlashCard0()}
     }
-    fun createFlashCard0(){
+    private fun createFlashCard0(){
         setTextPos("KiNaでは、フォルダと単語帳が作れるよ").start()
         goNextOnClickAnyWhere{createFlashCard1prt1()}
     }
-    fun createFlashCard1prt1(){
+    private fun createFlashCard1prt1(){
         setTextPos("ボタンをタッチして、\n単語帳を作ってみよう" ).start()
         goNextOnClickAnyWhere{createFlashCard1prt2()}
     }
-    fun createFlashCard1prt2(){
+    private fun createFlashCard1prt2(){
         val bnvBtnAdd=activity.findViewById<ImageView>(R.id.bnv_imv_add)
         actions.changeArrowVisibility(true).start()
         setArrow(MyOrientation.TOP,bnvBtnAdd)
         viewUnderHole = bnvBtnAdd
         goNextOnClickTouchArea(bnvBtnAdd){createFlashCard2()}
     }
-    fun createFlashCard2(){
+    private fun createFlashCard2(){
         val createMenuImvFlashCard      =activity.findViewById<FrameLayout>(R.id.imvnewTangocho)
         setArrow(MyOrientation.TOP,createMenuImvFlashCard)
         createAnimateHole = false
@@ -153,7 +153,7 @@ class CreateGuide(val activity:AppCompatActivity,
         createFileViewModel.setBottomMenuVisible(true)
         goNextOnClickTouchArea(createMenuImvFlashCard){createFlashCard3()}
     }
-    fun createFlashCard3(){
+    private fun createFlashCard3(){
         val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
         val frameLayEditFile            =activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
         val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
@@ -186,7 +186,7 @@ class CreateGuide(val activity:AppCompatActivity,
 
     }
 
-    fun createFlashCard5(edtCreatingFileTitle:EditText){
+    private fun createFlashCard5(edtCreatingFileTitle:EditText){
         val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
         val title = edtCreatingFileTitle.text.toString()
         if(title == "") {
@@ -216,7 +216,7 @@ class CreateGuide(val activity:AppCompatActivity,
         }
 
     }
-    fun createFlashCard6(libraryRv:RecyclerView){
+    private fun createFlashCard6(libraryRv:RecyclerView){
         createAnimateHole = true
         viewUnderHole = libraryRv[0]
         characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
@@ -225,7 +225,7 @@ class CreateGuide(val activity:AppCompatActivity,
 
         goNextOnClickAnyWhere{checkInsideNewFlashCard1(libraryRv)}
     }
-    fun checkInsideNewFlashCard1(libraryRv: RecyclerView){
+    private fun checkInsideNewFlashCard1(libraryRv: RecyclerView){
 
         actions.changeCharacterVisibility(true).start()
         textPosData = ViewAndSide(actions.character,MyOrientation.RIGHT)
@@ -235,7 +235,7 @@ class CreateGuide(val activity:AppCompatActivity,
 
         goNextOnClickTouchArea(libraryRv[0]){checkInsideNewFlashCard2()}
     }
-    fun checkInsideNewFlashCard2(){
+    private fun checkInsideNewFlashCard2(){
         actions.changeSpeakBubbleVisibility(false).start()
         actions.makeTouchAreaGone()
         actions.removeHole()
@@ -243,33 +243,33 @@ class CreateGuide(val activity:AppCompatActivity,
         libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
         goNextOnClickAnyWhere{checkInsideNewFlashCard3()}
     }
-    fun checkInsideNewFlashCard3(){
+    private fun checkInsideNewFlashCard3(){
         setTextPos("まだカードがないね\n早速作ってみよう",
         ).start()
         goNextOnClickAnyWhere{makeNewCard1()}
     }
-    fun makeNewCard1(){
+    private fun makeNewCard1(){
         val bnvBtnAdd=activity.findViewById<ImageView>(R.id.bnv_imv_add)
         actions.appearAlphaAnimation(actions.character,false).start()
         actions.changeSpeakBubbleVisibility(false).start()
         viewUnderHole = bnvBtnAdd
         goNextOnClickTouchArea(bnvBtnAdd){makeNewCard2()}
     }
-    fun makeNewCard2(){
+    private fun makeNewCard2(){
         val createMenuImvNewCard        =activity.findViewById<FrameLayout>(R.id.imvnewCard)
         createAnimateHole = false
         viewUnderHole = createMenuImvNewCard
         createFileViewModel.setBottomMenuVisible(true)
         goNextOnClickTouchArea(createMenuImvNewCard){makeNewCard3()}
     }
-    fun makeNewCard3(){
+    private fun makeNewCard3(){
         createFileViewModel.setBottomMenuVisible(false)
         actions.makeTouchAreaGone()
         actions.removeHole()
         createCardViewModel.onClickAddNewCardBottomBar()
         goNextOnClickAnyWhere{explainCreateCardFrag1()}
     }
-    fun explainCreateCardFrag1(){
+    private fun explainCreateCardFrag1(){
         val edtCardFrontContent         =activity.findViewById<EditText>(R.id.edt_front_content)
         characterBorderSet = actions.getSimplePosRelation(edtCardFrontContent,MyOrientation.TOP,false)
         setCharacterPos()
@@ -281,14 +281,14 @@ class CreateGuide(val activity:AppCompatActivity,
         viewUnderHole = edtCardFrontContent
         goNextOnClickAnyWhere{explainCreateCardFrag2()}
     }
-    fun explainCreateCardFrag2(){
+    private fun explainCreateCardFrag2(){
         val edtCardBackContent          =activity.findViewById<EditText>(R.id.edt_back_content)
         setTextPos("下半分は、カードの裏になっているよ" ).start()
         viewUnderHole = edtCardBackContent
         goNextOnClickAnyWhere{explainCreateCardFrag3()}
 
     }
-    fun explainCreateCardFrag3(){
+    private fun explainCreateCardFrag3(){
         val edtCardFrontTitle           =activity.findViewById<EditText>(R.id.edt_front_title)
         val edtCardBackTitle            =activity.findViewById<EditText>(R.id.edt_back_title)
         characterBorderSet = BorderSet(topSideSet = ViewAndSide(edtCardFrontTitle,MyOrientation.BOTTOM),
@@ -300,7 +300,7 @@ class CreateGuide(val activity:AppCompatActivity,
         setTextPos("カードの裏表にタイトルを付けることもできるんだ！").start()
         goNextOnClickAnyWhere{explainCreateCardFrag4(edtCardBackTitle)}
     }
-    fun explainCreateCardFrag4(edtCardBackTitle:EditText){
+    private fun explainCreateCardFrag4(edtCardBackTitle:EditText){
         viewUnderHole = edtCardBackTitle
         characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
         setCharacterPos()
@@ -310,7 +310,7 @@ class CreateGuide(val activity:AppCompatActivity,
         setTextPos("好みのようにカスタマイズしてね").start()
         goNextOnClickAnyWhere{explainCreateCardNavigation1()}
     }
-    fun explainCreateCardNavigation1(){
+    private fun explainCreateCardNavigation1(){
         val edtCardBackContent          =activity.findViewById<EditText>(R.id.edt_back_content)
         val linLayCreateCardNavigation  =activity.findViewById<ConstraintLayout>(R.id.lay_navigate_buttons)
         characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,MyOrientation.TOP))
@@ -319,30 +319,30 @@ class CreateGuide(val activity:AppCompatActivity,
         viewUnderHole = linLayCreateCardNavigation
         goNextOnClickAnyWhere{explainCreateCardNavigation2()}
     }
-    fun explainCreateCardNavigation2(){
+    private fun explainCreateCardNavigation2(){
         val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
         setTextPos("新しいカードを前に挿入するのはここ").start()
         setArrow(MyOrientation.TOP,createCardInsertNext)
         goNextOnClickAnyWhere{explainCreateCardNavigation3()}
     }
-    fun explainCreateCardNavigation3(){
+    private fun explainCreateCardNavigation3(){
         val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
         setTextPos("後ろに挿入するのはここ！").start()
         setArrow(MyOrientation.TOP,createCardInsertPrevious)
         goNextOnClickAnyWhere{explainCreateCardNavigation4()}
     }
-    fun explainCreateCardNavigation4(){
+    private fun explainCreateCardNavigation4(){
         val createCardNavFlipNext       =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_next)
         setTextPos("矢印ボタンでカードを前後にめくってね！" ).start()
         setArrow(MyOrientation.TOP, createCardNavFlipNext)
         goNextOnClickAnyWhere{explainCreateCardNavigation5()}
     }
-    fun explainCreateCardNavigation5(){
+    private fun explainCreateCardNavigation5(){
         val createCardNavFlipPrevious   =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_previous)
         setArrow(MyOrientation.TOP, createCardNavFlipPrevious)
         goNextOnClickAnyWhere{goodBye1()}
     }
-    fun goodBye1(){
+    private fun goodBye1(){
         actions.removeHole()
         actions.changeArrowVisibility(false).start()
         characterBorderSet = BorderSet()
@@ -353,11 +353,11 @@ class CreateGuide(val activity:AppCompatActivity,
         actions.appearAlphaAnimation(actions.character,true).start()
         goNextOnClickAnyWhere{goodBye2()}
     }
-    fun goodBye2(){
+    private fun goodBye2(){
         setTextPos("KiNaを楽しんで！").start()
         goNextOnClickAnyWhere{end()}
     }
-    fun end(){
+    private fun end(){
         mainViewModel.setGuideVisibility(false)
         val sharedPref =  activity.getSharedPreferences(
             "firstTimeGuide", Context.MODE_PRIVATE) ?: return

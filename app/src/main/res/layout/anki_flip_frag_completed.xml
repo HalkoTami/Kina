@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     >
@@ -41,11 +42,12 @@
                 android:text="暗記アイテムを一周したよ!"
                 />
             <ImageView
-
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="@drawable/rec_corner_20"/>
+                android:background="@drawable/rec_corner_20"
+                tools:ignore="ContentDescription" />
             <ImageView
+                tools:ignore="ContentDescription"
                 android:layout_marginTop="5dp"
                 android:layout_marginHorizontal="20dp"
                 android:layout_width="match_parent"
@@ -63,7 +65,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="0.3"/>
+            app:layout_constraintVertical_bias="0.3"
+            tools:ignore="ContentDescription" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/conLay_flip_completed_data"
@@ -99,7 +102,8 @@
                         android:layout_weight="2"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="10dp"
-                        android:src="@drawable/icon_card_ver_2" />
+                        android:src="@drawable/icon_card_ver_2"
+                        tools:ignore="ContentDescription" />
                     <TextView
                         android:id="@+id/txv_flipped_items_amount"
                         style="@style/TxvUniformLargeStyle"
@@ -123,7 +127,8 @@
                     android:layout_width="100dp"
                     android:layout_height="5dp"
                     app:layout_constraintVertical_bias="0.33"
-                    android:src="@drawable/rec_corner_20" />
+                    android:src="@drawable/rec_corner_20"
+                    tools:ignore="ContentDescription" />
                 <TextView
                     style="@style/TxvUniformSmallStyle"
                     android:layout_width="match_parent"
@@ -158,7 +163,8 @@
                         android:layout_weight="2"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="10dp"
-                        android:src="@drawable/icon_remembered_ver_2" />
+                        android:src="@drawable/icon_remembered_ver_2"
+                        tools:ignore="ContentDescription" />
                     <TextView
                         android:id="@+id/txv_newly_remembered_card_amount"
                         style="@style/TxvUniformLargeStyle"
@@ -182,7 +188,8 @@
                     android:layout_width="100dp"
                     android:layout_height="5dp"
                     app:layout_constraintVertical_bias="0.33"
-                    android:src="@drawable/rec_corner_20" />
+                    android:src="@drawable/rec_corner_20"
+                    tools:ignore="ContentDescription" />
                 <TextView
                     style="@style/TxvUniformSmallStyle"
                     android:layout_width="match_parent"
@@ -216,7 +223,8 @@
                         android:layout_weight="2"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="10dp"
-                        android:src="@drawable/icon_stop_watch_ver_2" />
+                        android:src="@drawable/icon_stop_watch_ver_2"
+                        tools:ignore="ContentDescription" />
                     <TextView
                         style="@style/TxvUniformLargeStyle"
                         android:id="@+id/txv_flipped_minutes"
@@ -240,7 +248,8 @@
                     android:layout_width="100dp"
                     android:layout_height="5dp"
                     app:layout_constraintVertical_bias="0.33"
-                    android:src="@drawable/rec_corner_20" />
+                    android:src="@drawable/rec_corner_20"
+                    tools:ignore="ContentDescription" />
                 <TextView
                     style="@style/TxvUniformSmallStyle"
                     android:layout_width="match_parent"
@@ -270,12 +279,14 @@
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintHeight_percent="0.08"
         app:layout_constraintWidth_percent="0.3"
+        android:contentDescription="@string/cd_repeat_flip"
         >
         <ImageView
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_again_ver_2"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            tools:ignore="ContentDescription" />
     </FrameLayout>
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linLay_button_end_flip"
@@ -291,16 +302,19 @@
         app:layout_constraintHeight_percent="0.08"
         app:layout_constraintWidth_percent="0.3"
         android:gravity="center"
+        android:contentDescription="@string/cd_done"
         >
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_check_ver_2"
-            android:layout_marginEnd="20dp"/>
+            android:layout_marginEnd="20dp"
+            tools:ignore="ContentDescription" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_arrow_ver_2"/>
+            android:src="@drawable/icon_arrow_ver_2"
+            tools:ignore="ContentDescription" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

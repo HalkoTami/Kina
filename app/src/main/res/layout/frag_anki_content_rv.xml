@@ -18,7 +18,8 @@
                android:id="@+id/imv_flip_or_anki_box"
                android:layout_width="wrap_content"
                android:layout_height="match_parent"
-               android:src="@drawable/icon_card"/>
+               android:src="@drawable/icon_card"
+               tools:ignore="ContentDescription" />
            <TextView
                style="@style/TopBarTxvSizeNormalStyle"
                android:id="@+id/txv_top_bar_title"

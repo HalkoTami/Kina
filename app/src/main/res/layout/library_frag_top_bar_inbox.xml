@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
 
         android:src="@drawable/icon_inbox"
-        />
+        android:contentDescription="TODO" />
 
     <TextView
         style="@style/TopBarTxvSizeNormalStyle"
@@ -24,14 +24,15 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:src="@drawable/icon_move_to_flashcard_cover"
-        />
+        android:contentDescription="TODO" />
 
     <ImageView
         android:id="@+id/imv_close_inbox"
         android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/icon_close"/>
+        android:src="@drawable/icon_close"
+        android:contentDescription="TODO" />
 
 
 

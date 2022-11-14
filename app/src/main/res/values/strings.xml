@@ -90,6 +90,15 @@
     <string name="nav_label_anki_flip_item">flip item</string>
     <string name="nav_label_anki_flip">flip mode</string>
     <string name="nav_label_anki_flip_completed">flip completed</string>
+    <string name="cd_flip_card">カードの表裏をめくる</string>
+    <string name="cd_repeat_flip">最初から繰り返す</string>
+    <string name="cd_done">完了して戻る</string>
+    <string name="cd_col_red">赤</string>
+    <string name="cd_col_blue">青</string>
+    <string name="cd_col_yellow">黄色</string>
+    <string name="cd_col_gray">灰色</string>
+    <string name="cd_close">閉じる</string>
+    <string name="cd_folder">フォルダ</string>
 
 
 </resources>

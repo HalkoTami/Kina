@@ -26,7 +26,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_move_to_folder" />
+            android:src="@drawable/icon_move_to_folder"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:gravity="center"
@@ -53,7 +54,8 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
 
-            android:src="@drawable/icon_trash" />
+            android:src="@drawable/icon_trash"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:gravity="center"
