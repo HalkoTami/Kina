@@ -13,11 +13,10 @@ import androidx.fragment.app.activityViewModels
 import com.korokoro.kina.R
 import com.korokoro.kina.actions.DateTimeActions
 import com.korokoro.kina.actions.NavigationActions
-import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.AnkiFlipFragCompletedBinding
 import com.korokoro.kina.db.enumclass.ActivityStatus
 import com.korokoro.kina.ui.animation.Animation
-import com.korokoro.kina.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
 import com.korokoro.kina.ui.viewmodel.AnkiBaseViewModel
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import java.util.*

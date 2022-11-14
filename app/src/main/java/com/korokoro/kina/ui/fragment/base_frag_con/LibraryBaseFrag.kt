@@ -11,8 +11,8 @@ import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.LibraryFragBinding
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.customClasses.LibraryFragment
-import com.korokoro.kina.customClasses.MainFragment
+import com.korokoro.kina.customClasses.enumClasses.LibraryFragment
+import com.korokoro.kina.customClasses.enumClasses.MainFragment
 import com.korokoro.kina.ui.observer.CommonOb
 import com.korokoro.kina.ui.viewmodel.*
 

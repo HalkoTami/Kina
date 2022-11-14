@@ -17,7 +17,7 @@ import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.customClasses.LibraryFragment
+import com.korokoro.kina.customClasses.enumClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragChooseFileRVListAdapter
 import com.korokoro.kina.ui.listener.popUp.LibFragPopUpConfirmMoveToFileCL
 import com.korokoro.kina.ui.listener.topbar.LibFragTopBarChooseFileMoveToCL

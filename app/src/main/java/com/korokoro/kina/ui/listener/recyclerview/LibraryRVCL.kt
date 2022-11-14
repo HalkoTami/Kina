@@ -3,10 +3,7 @@ package com.korokoro.kina.ui.listener.recyclerview
 
 import android.view.MotionEvent
 import android.view.View
-import android.widget.ImageView
-import com.korokoro.kina.R
-import com.korokoro.kina.actions.makeToast
-import com.korokoro.kina.customClasses.ListAttributes
+import com.korokoro.kina.customClasses.enumClasses.ListAttributes
 import com.korokoro.kina.databinding.LibraryFragRvItemBaseBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File

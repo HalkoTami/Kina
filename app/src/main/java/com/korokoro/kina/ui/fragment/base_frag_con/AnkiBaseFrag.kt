@@ -7,25 +7,19 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
 import androidx.core.content.edit
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import com.korokoro.kina.R
-import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.AnkiFragBaseBinding
 import com.korokoro.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFragDirections
-import com.korokoro.kina.customClasses.MainFragment
+import com.korokoro.kina.customClasses.enumClasses.MainFragment
 import com.korokoro.kina.ui.viewmodel.*
 import com.korokoro.kina.customClasses.AnkiFilter
-import com.korokoro.kina.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
 import com.korokoro.kina.customClasses.AutoFlip
 
 

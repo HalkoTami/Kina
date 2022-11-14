@@ -1,30 +1,8 @@
 package com.korokoro.kina.actions
 
-import android.animation.AnimatorSet
-import android.animation.ValueAnimator
-import android.content.Context
-import android.view.View
-import android.view.ViewGroup.LayoutParams
-import android.view.ViewTreeObserver
-import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
-import androidx.core.view.children
-import androidx.core.view.get
-import androidx.core.view.size
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.RecyclerView
-import com.korokoro.kina.R
-import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.databinding.CallOnInstallBinding
-import com.korokoro.kina.databinding.TouchAreaBinding
-import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.ui.customViews.*
 import com.korokoro.kina.ui.viewmodel.*
-import kotlin.math.abs
 
 
 class MoveGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnInstallBinding){

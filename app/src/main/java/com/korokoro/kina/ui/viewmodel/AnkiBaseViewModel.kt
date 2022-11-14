@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.korokoro.kina.db.MyRoomRepository
-import com.korokoro.kina.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
 
 class AnkiBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _activeFragment = MutableLiveData<AnkiFragments>()

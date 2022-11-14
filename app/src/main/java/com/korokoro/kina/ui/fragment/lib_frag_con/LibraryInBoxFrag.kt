@@ -14,7 +14,7 @@ import com.korokoro.kina.*
 import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
-import com.korokoro.kina.customClasses.LibraryFragment
+import com.korokoro.kina.customClasses.enumClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.korokoro.kina.ui.listener.recyclerview.LibraryRVItemClickListener

@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.korokoro.kina.customClasses.*
+import com.korokoro.kina.customClasses.enumClasses.BorderAttributes
+import com.korokoro.kina.customClasses.enumClasses.MyHorizontalOrientation
+import com.korokoro.kina.customClasses.enumClasses.MyOrientation
+import com.korokoro.kina.customClasses.enumClasses.MyVerticalOrientation
 import kotlin.math.abs
 
 class ViewChangeActions {
@@ -28,25 +32,25 @@ class ViewChangeActions {
     }
     fun getSimpleBorderSet(standardView:View, orientation: MyOrientation, fit:Boolean):BorderSet{
         val borderSet = when(orientation){
-            MyOrientation.TOP -> BorderSet(bottomSideSet = ViewAndSide(standardView,MyOrientation.TOP),
-                leftSideSet = if(fit) ViewAndSide(standardView,MyOrientation.LEFT) else null,
-                rightSideSet = if(fit) ViewAndSide(standardView,MyOrientation.RIGHT) else null
+            MyOrientation.TOP -> BorderSet(bottomSideSet = ViewAndSide(standardView, MyOrientation.TOP),
+                leftSideSet = if(fit) ViewAndSide(standardView, MyOrientation.LEFT) else null,
+                rightSideSet = if(fit) ViewAndSide(standardView, MyOrientation.RIGHT) else null
             )
-            MyOrientation.LEFT -> BorderSet(rightSideSet = ViewAndSide(standardView,MyOrientation.LEFT),
-                topSideSet = if(fit) ViewAndSide(standardView,MyOrientation.TOP) else null,
-                bottomSideSet = if(fit) ViewAndSide(standardView,MyOrientation.BOTTOM) else null
+            MyOrientation.LEFT -> BorderSet(rightSideSet = ViewAndSide(standardView, MyOrientation.LEFT),
+                topSideSet = if(fit) ViewAndSide(standardView, MyOrientation.TOP) else null,
+                bottomSideSet = if(fit) ViewAndSide(standardView, MyOrientation.BOTTOM) else null
             )
-            MyOrientation.RIGHT -> BorderSet(leftSideSet = ViewAndSide(standardView,MyOrientation.RIGHT),
-                topSideSet = if(fit) ViewAndSide(standardView,MyOrientation.TOP) else null,
-                bottomSideSet = if(fit) ViewAndSide(standardView,MyOrientation.BOTTOM) else null)
-            MyOrientation.BOTTOM -> BorderSet(topSideSet = ViewAndSide(standardView,MyOrientation.BOTTOM),
-                leftSideSet = if(fit) ViewAndSide(standardView,MyOrientation.LEFT) else null,
-                rightSideSet = if(fit) ViewAndSide(standardView,MyOrientation.RIGHT) else null)
+            MyOrientation.RIGHT -> BorderSet(leftSideSet = ViewAndSide(standardView, MyOrientation.RIGHT),
+                topSideSet = if(fit) ViewAndSide(standardView, MyOrientation.TOP) else null,
+                bottomSideSet = if(fit) ViewAndSide(standardView, MyOrientation.BOTTOM) else null)
+            MyOrientation.BOTTOM -> BorderSet(topSideSet = ViewAndSide(standardView, MyOrientation.BOTTOM),
+                leftSideSet = if(fit) ViewAndSide(standardView, MyOrientation.LEFT) else null,
+                rightSideSet = if(fit) ViewAndSide(standardView, MyOrientation.RIGHT) else null)
             MyOrientation.MIDDLE -> BorderSet(
-                bottomSideSet = ViewAndSide(standardView,MyOrientation.BOTTOM),
-                leftSideSet = ViewAndSide(standardView,MyOrientation.LEFT),
-                rightSideSet = ViewAndSide(standardView,MyOrientation.RIGHT),
-                topSideSet = ViewAndSide(standardView,MyOrientation.TOP))
+                bottomSideSet = ViewAndSide(standardView, MyOrientation.BOTTOM),
+                leftSideSet = ViewAndSide(standardView, MyOrientation.LEFT),
+                rightSideSet = ViewAndSide(standardView, MyOrientation.RIGHT),
+                topSideSet = ViewAndSide(standardView, MyOrientation.TOP))
         }
         return borderSet
     }
@@ -86,9 +90,9 @@ class ViewChangeActions {
         return pos
     }
     fun calculatePositionInBorder(view: View,
-                                          borderPosition: RecPosition,
-                                          verticalOrientation: MyVerticalOrientation,
-                                          horizontalOrientation: MyHorizontalOrientation
+                                  borderPosition: RecPosition,
+                                  verticalOrientation: MyVerticalOrientation,
+                                  horizontalOrientation: MyHorizontalOrientation
     ):RecPosition{
         val subMiddleTop :Float
         val subMiddleBottom :Float
@@ -130,14 +134,18 @@ class ViewChangeActions {
         val right = (if(subMiddleRight<borderPosition.right)subMiddleRight else borderPosition.right)
         return RecPosition(left, subMiddleTop, right, subMiddleBottom)
     }
-    fun getBorderFromBorderSet(borderSet: BorderSet,borderSide:MyOrientation,parentView:View,activity: AppCompatActivity):Float{
+    fun getBorderFromBorderSet(borderSet: BorderSet, borderSide: MyOrientation, parentView:View, activity: AppCompatActivity):Float{
         val margin = borderSet.margin
         return when(borderSide){
-            MyOrientation.BOTTOM   -> getViewBorderPos(borderSet.bottomSideSet  ?: ViewAndSide(parentView,MyOrientation.BOTTOM),activity) - margin.bottomMargin
-            MyOrientation.TOP      -> getViewBorderPos(borderSet.topSideSet     ?: ViewAndSide(parentView,MyOrientation.TOP   ),activity) + margin.topMargin
-            MyOrientation.LEFT     -> getViewBorderPos(borderSet.leftSideSet    ?: ViewAndSide(parentView,MyOrientation.LEFT  ),activity) + margin.leftMargin
-            MyOrientation.RIGHT    -> getViewBorderPos(borderSet.rightSideSet   ?: ViewAndSide(parentView,MyOrientation.RIGHT ),activity) - margin.rightMargin
-            MyOrientation.MIDDLE   -> getViewBorderPos(ViewAndSide(parentView,MyOrientation.MIDDLE),activity)
+            MyOrientation.BOTTOM   -> getViewBorderPos(borderSet.bottomSideSet  ?: ViewAndSide(parentView,
+                MyOrientation.BOTTOM),activity) - margin.bottomMargin
+            MyOrientation.TOP      -> getViewBorderPos(borderSet.topSideSet     ?: ViewAndSide(parentView,
+                MyOrientation.TOP   ),activity) + margin.topMargin
+            MyOrientation.LEFT     -> getViewBorderPos(borderSet.leftSideSet    ?: ViewAndSide(parentView,
+                MyOrientation.LEFT  ),activity) + margin.leftMargin
+            MyOrientation.RIGHT    -> getViewBorderPos(borderSet.rightSideSet   ?: ViewAndSide(parentView,
+                MyOrientation.RIGHT ),activity) - margin.rightMargin
+            MyOrientation.MIDDLE   -> getViewBorderPos(ViewAndSide(parentView, MyOrientation.MIDDLE),activity)
         }
 
 
@@ -148,7 +156,7 @@ class ViewChangeActions {
             abs(recPosition.top - recPosition.bottom).toInt()
         )
     }
-    fun applyBorderAttributes(borderAttributes: BorderAttributes,view: View,borderRecPosition: RecPosition){
+    fun applyBorderAttributes(borderAttributes: BorderAttributes, view: View, borderRecPosition: RecPosition){
         val size = getSizeFromRecPos(borderRecPosition)
         val borderWidth = size.width
         val borderHeight = size.height
@@ -238,13 +246,14 @@ class ViewChangeActions {
         view.requestLayout()
 
     }
-    fun getOriSetByNextToPosition(movingViewPosition:MyOrientation,attributes: BorderAttributes):MyOrientationSetNew{
+    fun getOriSetByNextToPosition(movingViewPosition: MyOrientation, attributes: BorderAttributes):MyOrientationSetNew{
         return when(movingViewPosition){
             MyOrientation.BOTTOM-> MyOrientationSetNew(MyVerticalOrientation.TOP , MyHorizontalOrientation.MIDDLE,attributes )
             MyOrientation.LEFT -> MyOrientationSetNew( MyVerticalOrientation.MIDDLE, MyHorizontalOrientation.RIGHT,attributes)
             MyOrientation.RIGHT -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE , MyHorizontalOrientation.LEFT,attributes )
             MyOrientation.TOP -> MyOrientationSetNew(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE ,attributes)
-            else -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE,attributes)
+            else -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE,
+                MyHorizontalOrientation.MIDDLE,attributes)
         }
     }
 }

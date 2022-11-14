@@ -1,13 +1,10 @@
 package com.korokoro.kina.ui.viewmodel
 
-import android.content.SharedPreferences
-import android.provider.Settings.Global.putInt
-import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.korokoro.kina.customClasses.AnkiFilter
-import com.korokoro.kina.customClasses.AnkiOrder
+import com.korokoro.kina.customClasses.enumClasses.AnkiOrder
 import com.korokoro.kina.customClasses.AutoFlip
 
 class AnkiSettingPopUpViewModel : ViewModel() {

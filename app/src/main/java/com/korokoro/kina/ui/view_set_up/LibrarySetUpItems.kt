@@ -13,7 +13,6 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
-import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.dataclass.StringData
@@ -21,7 +20,7 @@ import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
-import com.korokoro.kina.customClasses.LibRVState
+import com.korokoro.kina.customClasses.enumClasses.LibRVState
 
 
 class LibrarySetUpItems{

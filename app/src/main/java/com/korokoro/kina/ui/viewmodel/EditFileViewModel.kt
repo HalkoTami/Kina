@@ -7,7 +7,7 @@ import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.customClasses.ColorPalletStatus
-import com.korokoro.kina.customClasses.EditingMode
+import com.korokoro.kina.customClasses.enumClasses.EditingMode
 import com.korokoro.kina.customClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 

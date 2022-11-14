@@ -13,16 +13,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.navArgs
 import com.korokoro.kina.R
 import com.korokoro.kina.databinding.CreateCardFragMainBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.customClasses.AnkiFragments
-import com.korokoro.kina.customClasses.MainFragment
-import com.korokoro.kina.customClasses.NeighbourCardSide
-import com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFragArgs
-import com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFragDirections
+import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
+import com.korokoro.kina.customClasses.enumClasses.MainFragment
+import com.korokoro.kina.customClasses.enumClasses.NeighbourCardSide
 import com.korokoro.kina.ui.view_set_up.GetCustomDrawables
 import com.korokoro.kina.ui.viewmodel.*
 

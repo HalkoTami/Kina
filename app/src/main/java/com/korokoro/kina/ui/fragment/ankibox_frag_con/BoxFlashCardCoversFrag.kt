@@ -8,11 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.databinding.FullRvBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.customClasses.AnkiBoxFragments
+import com.korokoro.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.korokoro.kina.ui.viewmodel.AnkiBoxViewModel
 

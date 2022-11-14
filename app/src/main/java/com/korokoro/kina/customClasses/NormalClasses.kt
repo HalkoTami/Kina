@@ -1,6 +1,7 @@
 package com.korokoro.kina.customClasses
 
 import android.view.View
+import com.korokoro.kina.customClasses.enumClasses.*
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus

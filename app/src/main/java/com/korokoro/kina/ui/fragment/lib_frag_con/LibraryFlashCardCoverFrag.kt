@@ -19,7 +19,7 @@ import com.korokoro.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.korokoro.kina.databinding.LibraryFragTopBarFileBinding
 import com.korokoro.kina.databinding.RvEmptyBinding
 import com.korokoro.kina.db.enumclass.ColorStatus
-import com.korokoro.kina.customClasses.LibraryFragment
+import com.korokoro.kina.customClasses.enumClasses.LibraryFragment
 import com.korokoro.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.korokoro.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.korokoro.kina.ui.listener.recyclerview.LibraryRVItemClickListener

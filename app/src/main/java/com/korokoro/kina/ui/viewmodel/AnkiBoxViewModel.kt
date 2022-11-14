@@ -7,7 +7,7 @@ import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.ActivityData
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.customClasses.AnkiBoxFragments
+import com.korokoro.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.korokoro.kina.customClasses.AnkiBoxTabData
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.fragment.ankibox_frag_con.BoxFavouriteFragDirections

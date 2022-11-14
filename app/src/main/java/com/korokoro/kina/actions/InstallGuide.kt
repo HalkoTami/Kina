@@ -10,6 +10,10 @@ import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import com.korokoro.kina.R
 import com.korokoro.kina.customClasses.*
+import com.korokoro.kina.customClasses.enumClasses.BorderAttributes
+import com.korokoro.kina.customClasses.enumClasses.MyHorizontalOrientation
+import com.korokoro.kina.customClasses.enumClasses.MyOrientation
+import com.korokoro.kina.customClasses.enumClasses.MyVerticalOrientation
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.TouchAreaBinding
 import com.korokoro.kina.ui.animation.Animation
@@ -152,7 +156,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
 
     }
-    private fun setMarginByNextToPosition(movingViewPosition:MyOrientation,margin: Int,borderSet: BorderSet):BorderSet{
+    private fun setMarginByNextToPosition(movingViewPosition: MyOrientation, margin: Int, borderSet: BorderSet):BorderSet{
         when(movingViewPosition){
             MyOrientation.BOTTOM->   borderSet.margin.topMargin = margin
             MyOrientation.LEFT ->    borderSet.margin.rightMargin = margin
@@ -163,16 +167,16 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         return borderSet
     }
     fun setArrow(arrowPosition: MyOrientation,
-                  view: View,
-                  globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>,
-                  margin:Int){
+                 view: View,
+                 globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>,
+                 margin:Int){
         appearAlphaAnimation(arrow,true).start()
 
          val getBorderSet = getSimplePosRelation(view,arrowPosition, true)
          val borderSetWithMargin = setMarginByNextToPosition(arrowPosition,margin,getBorderSet)
          val positionData = ViewAndPositionData(arrow,
              borderSetWithMargin,
-             ViewChangeActions().getOriSetByNextToPosition(arrowPosition,BorderAttributes.None))
+             ViewChangeActions().getOriSetByNextToPosition(arrowPosition, BorderAttributes.None))
 
         setPositionByMargin(positionData,globalLayoutSet)
          when(arrowPosition){
@@ -211,16 +215,18 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
         con.applyTo(onInstallBinding.root)
         saveBorderDataMap(a.touchView, BorderSet(
-            topSideSet = ViewAndSide(view,MyOrientation.TOP),
-            bottomSideSet = ViewAndSide(view,MyOrientation.BOTTOM),
-            leftSideSet = ViewAndSide(view,MyOrientation.LEFT),
-            rightSideSet = ViewAndSide(view,MyOrientation.RIGHT),
+            topSideSet = ViewAndSide(view, MyOrientation.TOP),
+            bottomSideSet = ViewAndSide(view, MyOrientation.BOTTOM),
+            leftSideSet = ViewAndSide(view, MyOrientation.LEFT),
+            rightSideSet = ViewAndSide(view, MyOrientation.RIGHT),
 
             ),borderDataMap
         )
         val positionData = ViewAndPositionData(a.touchView
-            ,getSimplePosRelation(view,MyOrientation.MIDDLE,true)
-            ,MyOrientationSetNew(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE,BorderAttributes.FillBorder))
+            ,getSimplePosRelation(view, MyOrientation.MIDDLE,true)
+            ,MyOrientationSetNew(MyVerticalOrientation.MIDDLE,
+                MyHorizontalOrientation.MIDDLE,
+                BorderAttributes.FillBorder))
         setPositionByMargin(
             positionData,
             globalLayoutSet = globalLayoutSet)

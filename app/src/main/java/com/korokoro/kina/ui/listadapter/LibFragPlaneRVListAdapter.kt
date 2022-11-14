@@ -7,14 +7,11 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
-import com.korokoro.kina.actions.makeToast
-import com.korokoro.kina.customClasses.LibRVState
+import com.korokoro.kina.customClasses.enumClasses.LibRVState
 import com.korokoro.kina.databinding.*
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.ui.listener.recyclerview.LibraryRVCL
-import com.korokoro.kina.ui.listener.recyclerview.LibraryRVCLNewCard
-import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.korokoro.kina.ui.view_set_up.LibraryAddListeners
 import com.korokoro.kina.ui.view_set_up.LibrarySetUpItems
 import com.korokoro.kina.ui.viewmodel.*

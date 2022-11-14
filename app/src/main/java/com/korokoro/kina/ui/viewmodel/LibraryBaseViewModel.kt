@@ -3,6 +3,10 @@ package com.korokoro.kina.ui.viewmodel
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.korokoro.kina.customClasses.*
+import com.korokoro.kina.customClasses.enumClasses.LibraryFragment
+import com.korokoro.kina.customClasses.enumClasses.LibRVState
+import com.korokoro.kina.customClasses.enumClasses.LibraryTopBarMode
+import com.korokoro.kina.customClasses.enumClasses.ListAttributes
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
 
@@ -244,7 +248,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         sortAndUpdateSelectedFiles()
 
     }
-    fun onClickRvSelect(listAttributes: ListAttributes,item: Any){
+    fun onClickRvSelect(listAttributes: ListAttributes, item: Any){
 
 
         when(item){

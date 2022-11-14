@@ -1,22 +1,17 @@
 package com.korokoro.kina.ui.fragment.flipFragCon
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.korokoro.kina.actions.hideKeyBoard
-import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.actions.showKeyBoard
 import com.korokoro.kina.databinding.AnkiFlipFragTypeAnswerStringFragBinding
 import com.korokoro.kina.db.dataclass.Card
-import com.korokoro.kina.customClasses.FlipFragments
-import com.korokoro.kina.customClasses.NeighbourCardSide
+import com.korokoro.kina.customClasses.enumClasses.FlipFragments
+import com.korokoro.kina.customClasses.enumClasses.NeighbourCardSide
 import com.korokoro.kina.ui.listener.KeyboardListener
 import com.korokoro.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.korokoro.kina.ui.viewmodel.FlipTypeAndCheckViewModel

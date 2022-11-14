@@ -2,7 +2,6 @@ package com.korokoro.kina.ui.viewmodel
 
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import com.korokoro.kina.actions.SortActions
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
@@ -11,11 +10,10 @@ import com.korokoro.kina.db.enumclass.CardStatus
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFragDirections
-import com.korokoro.kina.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
 import com.korokoro.kina.customClasses.ColorPalletStatus
-import com.korokoro.kina.customClasses.MainFragment
-import com.korokoro.kina.customClasses.NeighbourCardSide
-import kotlinx.coroutines.flow.Flow
+import com.korokoro.kina.customClasses.enumClasses.MainFragment
+import com.korokoro.kina.customClasses.enumClasses.NeighbourCardSide
 import kotlinx.coroutines.launch
 
 

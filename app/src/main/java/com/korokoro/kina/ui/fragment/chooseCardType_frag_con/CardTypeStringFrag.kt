@@ -15,7 +15,7 @@ import com.korokoro.kina.R
 import com.korokoro.kina.databinding.CreateCardFragStringFragBinding
 import com.korokoro.kina.db.dataclass.StringData
 import com.korokoro.kina.db.enumclass.CardStatus
-import com.korokoro.kina.customClasses.StringFragFocusedOn
+import com.korokoro.kina.customClasses.enumClasses.StringFragFocusedOn
 import com.korokoro.kina.ui.viewmodel.CreateCardViewModel
 import com.korokoro.kina.ui.viewmodel.CardTypeStringViewModel
 

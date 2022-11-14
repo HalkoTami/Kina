@@ -21,9 +21,9 @@ import com.korokoro.kina.databinding.MainActivityBinding
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
-import com.korokoro.kina.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
 import com.korokoro.kina.customClasses.ColorPalletStatus
-import com.korokoro.kina.customClasses.MainFragment
+import com.korokoro.kina.customClasses.enumClasses.MainFragment
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.HelpOptionsBinding
 import com.korokoro.kina.ui.listener.KeyboardListener

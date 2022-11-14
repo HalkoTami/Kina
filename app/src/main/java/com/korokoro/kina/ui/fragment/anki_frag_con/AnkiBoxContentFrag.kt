@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -14,13 +13,11 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.korokoro.kina.R
-import com.korokoro.kina.actions.changeViewVisibility
 import com.korokoro.kina.databinding.FragAnkiContentRvBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.korokoro.kina.ui.viewmodel.*
-import com.korokoro.kina.customClasses.AnkiBoxFragments
-import com.korokoro.kina.customClasses.AnkiFragments
+import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
 
 
 class AnkiBoxContentFrag  : Fragment() {
