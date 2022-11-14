@@ -23,14 +23,12 @@ class NavigationActions {
     }
     fun popMultipleBackStack(navCon: NavController,times:Int){
 
-        val destinationPos = navCon.backQueue.size-times-2
+        val destinationPos = navCon.backQueue.size-times-1
+        while ((destinationPos in 0 until  navCon.backQueue.size)&&
+            navCon.backQueue.size-1 != destinationPos){
+            navCon.popBackStack()
 
-        if(destinationPos in 0 .. navCon.backQueue.size){
-            val destination = navCon.backQueue[destinationPos]
-            val destinationSize = navCon.backQueue.indexOf(destination)
-            while (navCon.backQueue.size != destinationSize){
-                navCon.popBackStack()
-            }
         }
+
     }
 }

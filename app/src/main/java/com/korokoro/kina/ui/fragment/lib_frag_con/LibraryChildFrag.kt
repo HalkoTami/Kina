@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -136,7 +137,7 @@ class LibraryChildFrag :  Fragment(){
         }
         fun setUpLateInitVars(){
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
-            libNavCon =  libraryBaseViewModel.returnLibraryNavCon() ?:return
+            libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             recyclerView = binding.vocabCardRV
             mainNavCon = mainViewModel.returnMainActivityNavCon() ?:return
 
@@ -237,6 +238,7 @@ class LibraryChildFrag :  Fragment(){
 
         }
         libraryBaseViewModel.clearFinalList()
+        libraryBaseViewModel.setLibraryNavCon(libNavCon)
         libraryBaseViewModel.makeAllUnSwiped.observe(viewLifecycleOwner,allUnSwipedObserver)
         libraryBaseViewModel.multipleSelectMode.observe(viewLifecycleOwner,multiSelectModeObserver)
         libraryBaseViewModel.changeAllRVSelectedStatus.observe(viewLifecycleOwner,changeAllRVSelectedStatusObserver)
