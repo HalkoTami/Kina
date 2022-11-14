@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import com.korokoro.kina.R
@@ -17,43 +16,20 @@ import com.korokoro.kina.ui.animation.Animation
 
 
 class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnInstallBinding){
-    val arrow = onInstallBinding.imvFocusArrow
+    private val arrow = onInstallBinding.imvFocusArrow
     val character = onInstallBinding.imvCharacter
     val holeView = onInstallBinding.viewWithHole
     val textView = onInstallBinding.txvExplaino
     val conLaySpeakBubble = onInstallBinding.linLaySpeakBubble
-    val touchAreaTag = 1
+    private val touchAreaTag = 1
 
-
-
-    fun getPixelSize(dimenId:Int):Int{
+    private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
     }
-
-    fun saveBorderDataMap(view: View,set:BorderSet,borderDataMap:MutableMap<View,BorderSet>){
+    private fun saveBorderDataMap(view: View,set:BorderSet,borderDataMap:MutableMap<View,BorderSet>){
         if(borderDataMap[view]!=null) borderDataMap.remove(view)
         borderDataMap[view] = set
     }
-
-    fun alphaAnimatePos(data: ViewAndPositionData,globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>):AnimatorSet{
-        val view = data.view
-        val disappear = appearAlphaAnimation(view,false)
-        disappear.doOnEnd {
-            changeViewVisibility(view,false)
-            setPositionByMargin(data,globalLayoutSet)
-        }
-        val appear =  appearAlphaAnimation(view,true)
-        return AnimatorSet().apply {
-
-            playSequentially(disappear,appear)
-            duration= 500
-        }
-
-
-    }
-
-
-
     fun setPositionByMargin(positionData: ViewAndPositionData,
                             globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>, ){
         removeGlobalListener(globalLayoutSet)
@@ -66,8 +42,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         })
         view.requestLayout()
     }
-
-    fun removeGlobalListener(globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
+    private fun removeGlobalListener(globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
         globalLayoutSet.onEach {
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
         }
@@ -92,7 +67,6 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     fun getSimplePosRelation(standardView:View, orientation: MyOrientation, fit:Boolean):BorderSet{
         return ViewChangeActions().getSimpleBorderSet(standardView,orientation,fit)
     }
-
     fun setCharacterSize(dimenId: Int){
         character.apply {
             val sizeLarge = getPixelSize(dimenId)
@@ -115,30 +89,22 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
                 MyHorizontalOrientation.MIDDLE,
                 BorderAttributes.FillIfOutOfBorder)
         )
-        setPositionByMargin(characterPosData,globalLayoutSet,)
+        setPositionByMargin(characterPosData,globalLayoutSet)
         setCharacterSize(R.dimen.character_size_large)
         changeCharacterVisibility(true).start()
 
     }
-    fun setHoleMargin(int: Int){
-        holeView.holeMargin = int
-    }
-    fun setHoleRecRadius(int: Int){
-        holeView.recRadius = int.toFloat()
-    }
-     fun speakBubbleTextAnimation(): AnimatorSet {
+    fun speakBubbleTextAnimation(): AnimatorSet {
 
          val finalDuration:Long = 200
 
          val txvScaleAnim1 = ValueAnimator.ofFloat(0.7f,1.1f)
          val txvScaleAnim2 = ValueAnimator.ofFloat(1.1f,1f)
 
-         arrayOf(txvScaleAnim1,txvScaleAnim2).onEach {
-             it.addUpdateListener {
+         arrayOf(txvScaleAnim1,txvScaleAnim2).onEach { animator ->
+             animator.addUpdateListener {
                  val progressPer = it.animatedValue as Float
                  ViewChangeActions().setScale(conLaySpeakBubble,progressPer,progressPer)
-//                 ViewChangeActions().setScale(textView,progressPer,progressPer)
-
              }
          }
         val txvScaleAnimSet = AnimatorSet().apply {
@@ -156,8 +122,8 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
          val bottomTransAnim1 = ValueAnimator.ofFloat(1f,0.2f)
          val bottomTransAnim2 = ValueAnimator.ofFloat(0.4f,1.1f)
          val bottomTransAnim3 = ValueAnimator.ofFloat(1.1f,1f)
-         arrayOf(bottomTransAnim1,bottomTransAnim2,bottomTransAnim3).onEach {
-             it.addUpdateListener {
+         arrayOf(bottomTransAnim1,bottomTransAnim2,bottomTransAnim3).onEach { animator ->
+             animator.addUpdateListener {
                  ViewChangeActions().setScale(onInstallBinding.sbBottom,it.animatedValue as Float,1f)
                  onInstallBinding.sbBottom.pivotX = 0f
              }
@@ -174,7 +140,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
         return finalAnim
     }
-     fun setArrowDirection(direction: MyOrientation){
+    private fun setArrowDirection(direction: MyOrientation){
         arrow.rotation =
             when(direction){
                 MyOrientation.BOTTOM-> -450f
@@ -185,8 +151,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
 
     }
-
-    fun setMarginByNextToPosition(movingViewPosition:MyOrientation,margin: Int,borderSet: BorderSet):BorderSet{
+    private fun setMarginByNextToPosition(movingViewPosition:MyOrientation,margin: Int,borderSet: BorderSet):BorderSet{
         when(movingViewPosition){
             MyOrientation.BOTTOM->   borderSet.margin.topMargin = margin
             MyOrientation.LEFT ->    borderSet.margin.rightMargin = margin
@@ -196,7 +161,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         }
         return borderSet
     }
-     fun setArrow(arrowPosition: MyOrientation,
+    fun setArrow(arrowPosition: MyOrientation,
                   view: View,
                   globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>,
                   margin:Int){
@@ -223,10 +188,6 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
 
      }
 
-    private fun setHole(viewUnderHole:View){
-        holeView.viewUnderHole = viewUnderHole
-    }
-
     fun removeHole(){
         holeView.removeGlobalLayout()
         holeView.noHole = true
@@ -242,10 +203,10 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         val con = ConstraintSet()
         con.clone(onInstallBinding.root)
 //
-        con.connect(id, ConstraintSet.RIGHT ,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,)
-        con.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID,ConstraintSet.TOP,)
-        con.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,ConstraintSet.BOTTOM,)
-        con.connect(id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID,ConstraintSet.LEFT,)
+        con.connect(id, ConstraintSet.RIGHT ,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT)
+        con.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID,ConstraintSet.TOP)
+        con.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,ConstraintSet.BOTTOM)
+        con.connect(id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID,ConstraintSet.LEFT)
 
         con.applyTo(onInstallBinding.root)
         saveBorderDataMap(a.touchView, BorderSet(

@@ -14,12 +14,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.korokoro.kina.R
 import com.korokoro.kina.actions.*
 import com.korokoro.kina.application.RoomApplication
 import com.korokoro.kina.databinding.MainActivityBinding
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.db.enumclass.ActivityStatus
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.customClasses.AnkiFragments
@@ -27,7 +25,6 @@ import com.korokoro.kina.customClasses.ColorPalletStatus
 import com.korokoro.kina.customClasses.MainFragment
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.HelpOptionsBinding
-import com.korokoro.kina.ui.customViews.HoleShape
 import com.korokoro.kina.ui.listener.KeyboardListener
 import com.korokoro.kina.ui.listener.popUp.EditFilePopUpCL
 import com.korokoro.kina.ui.observer.LibraryOb
@@ -80,12 +77,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 "firstTimeGuide", Context.MODE_PRIVATE) ?: return
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
                 refreshInstallGuide()
-                CreateGuide(this,callOnInstallBinding,binding.frameLayCallOnInstall).createGuide(
-                    startOrder = 1,
-                    createCardViewModel,
+                CreateGuide(this,callOnInstallBinding,binding.frameLayCallOnInstall,createCardViewModel,
                     createFileViewModel,
                     libraryViewModel,
-                    mainActivityViewModel)
+                    mainActivityViewModel).callOnFirst()
             }
         }
         fun setMainActivityLateInitVars(){
@@ -243,7 +238,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                                 menuHowToDeleteItems -> DeleteGuide().deleteGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
                                 menuHowToCreateItems -> {
                                     refreshInstallGuide()
-                                    CreateGuide(this@MainActivity, callOnInstallBinding,binding.frameLayCallOnInstall).createGuide(startOrder = 1, createCardViewModel, createFileViewModel, libraryViewModel,mainActivityViewModel)
+                                    CreateGuide(this@MainActivity, callOnInstallBinding,
+                                        binding.frameLayCallOnInstall,
+                                        createCardViewModel,
+                                        createFileViewModel,
+                                        libraryViewModel,
+                                        mainActivityViewModel).callOnFirst()
                                 }
                                 menuHowToEditItems -> EditGuide().editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
                                 menuHowToMoveItems -> {
