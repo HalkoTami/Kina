@@ -1,8 +1,8 @@
 package com.korokoro.kina.actions
 
-import android.content.Context
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.korokoro.kina.customClasses.*
@@ -26,13 +26,7 @@ class ViewChangeActions {
     fun setAlpha(v: View, alpha:Float){
         v.alpha = alpha
     }
-    fun getScreenWidth(context:Context):Int{
-        return context.resources.displayMetrics.widthPixels
-    }
-    fun getScreenHeight(context:Context):Int{
-        return context.resources.displayMetrics.heightPixels
-    }
-    fun getSimpleBorderSet(standardView:View, orientation: MyOrientation, fit:Boolean, ):BorderSet{
+    fun getSimpleBorderSet(standardView:View, orientation: MyOrientation, fit:Boolean):BorderSet{
         val borderSet = when(orientation){
             MyOrientation.TOP -> BorderSet(bottomSideSet = ViewAndSide(standardView,MyOrientation.TOP),
                 leftSideSet = if(fit) ViewAndSide(standardView,MyOrientation.LEFT) else null,
@@ -56,40 +50,37 @@ class ViewChangeActions {
         }
         return borderSet
     }
-    fun getRecPos(view: View): RecPosition {
+    fun getRecPos(view: View, activity: AppCompatActivity): RecPosition {
         val a = IntArray(2)
         view.getLocationInWindow(a)
         val viewX = a[0].toFloat()
-        val viewY = a[1].toFloat() - getWindowDisplayHeightDiff(view.context.resources)
-        val left = viewX
-        val top = viewY
+        val viewY = a[1].toFloat() - getWindowDisplayHeightDiff(activity)
         val right = viewX + view.width
         val bottom = viewY + view.height
-        val pos = RecPosition(left = left,top=top,right, bottom)
-        return pos
+        return RecPosition(left = viewX, top = viewY, right, bottom)
     }
-    fun getCenterPos(view: View):ViewCenterPosition{
-        val recPos = getRecPos(view)
+    fun getCenterPos(view: View,activity: AppCompatActivity):ViewCenterPosition{
+        val recPos = getRecPos(view,activity)
         val horizontalCenter =  recPos.left + (recPos.right-recPos.left)/2
         val verticalCenter = recPos.top + (recPos.bottom - recPos.top)/2
         return ViewCenterPosition(horizontalCenter,verticalCenter)
     }
-    fun getCirclePos(view: View): CirclePosition {
-        val centerPos = getCenterPos(view)
-        val radius = if(view.width>view.height) view.width/2 else view.height/2
-        val pos = CirclePosition(x = centerPos.x, y = centerPos.y,radius.toFloat())
-        return pos
+    fun getCirclePos(view: View, activity: AppCompatActivity): CirclePosition {
+        val centerPos = getCenterPos(view, activity)
+        val radius = if (view.width > view.height) view.width / 2 else view.height / 2
+        return CirclePosition(x = centerPos.x, y = centerPos.y, radius.toFloat())
     }
-    fun getViewBorderPos(viewAndSide: ViewAndSide):Float{
+    fun getViewBorderPos(viewAndSide: ViewAndSide,activity: AppCompatActivity):Float{
         val view = viewAndSide.view
         val rotationBefore = view.rotation
+        val rec = getRecPos(view,activity)
         view.rotation = 0f
         val pos = when(viewAndSide.side){
-            MyOrientation.RIGHT -> getRecPos(view).right
-            MyOrientation.LEFT  -> getRecPos(view).left
-            MyOrientation.BOTTOM-> getRecPos(view).bottom
-            MyOrientation.TOP   -> getRecPos(view).top
-            MyOrientation.MIDDLE-> getCenterPos(view).x
+            MyOrientation.RIGHT -> rec.right
+            MyOrientation.LEFT  -> rec.left
+            MyOrientation.BOTTOM-> rec.bottom
+            MyOrientation.TOP   -> rec.top
+            MyOrientation.MIDDLE-> getCenterPos(view,activity).x
         }
         view.rotation = rotationBefore
         return pos
@@ -116,8 +107,6 @@ class ViewChangeActions {
                 subMiddleBottom = borderPosition.bottom
             }
         }
-        val top = subMiddleTop
-        val bottom = subMiddleBottom
 
 
         val horizontalCenter = borderPosition.left + (borderPosition.right-borderPosition.left)/2
@@ -139,21 +128,21 @@ class ViewChangeActions {
         }
         val left = (if(subMiddleLeft>borderPosition.left) subMiddleLeft else borderPosition.left)
         val right = (if(subMiddleRight<borderPosition.right)subMiddleRight else borderPosition.right)
-        return RecPosition(left,top, right, bottom)
+        return RecPosition(left, subMiddleTop, right, subMiddleBottom)
     }
-    fun getBorderFromBorderSet(borderSet: BorderSet,borderSide:MyOrientation,parentView:View):Float{
+    fun getBorderFromBorderSet(borderSet: BorderSet,borderSide:MyOrientation,parentView:View,activity: AppCompatActivity):Float{
         val margin = borderSet.margin
         return when(borderSide){
-            MyOrientation.BOTTOM   -> getViewBorderPos(borderSet.bottomSideSet  ?: ViewAndSide(parentView,MyOrientation.BOTTOM)) - margin.bottomMargin
-            MyOrientation.TOP      -> getViewBorderPos(borderSet.topSideSet     ?: ViewAndSide(parentView,MyOrientation.TOP   )) + margin.topMargin
-            MyOrientation.LEFT     -> getViewBorderPos(borderSet.leftSideSet    ?: ViewAndSide(parentView,MyOrientation.LEFT  )) + margin.leftMargin
-            MyOrientation.RIGHT    -> getViewBorderPos(borderSet.rightSideSet   ?: ViewAndSide(parentView,MyOrientation.RIGHT )) - margin.rightMargin
-            MyOrientation.MIDDLE   -> getViewBorderPos(ViewAndSide(parentView,MyOrientation.MIDDLE))
+            MyOrientation.BOTTOM   -> getViewBorderPos(borderSet.bottomSideSet  ?: ViewAndSide(parentView,MyOrientation.BOTTOM),activity) - margin.bottomMargin
+            MyOrientation.TOP      -> getViewBorderPos(borderSet.topSideSet     ?: ViewAndSide(parentView,MyOrientation.TOP   ),activity) + margin.topMargin
+            MyOrientation.LEFT     -> getViewBorderPos(borderSet.leftSideSet    ?: ViewAndSide(parentView,MyOrientation.LEFT  ),activity) + margin.leftMargin
+            MyOrientation.RIGHT    -> getViewBorderPos(borderSet.rightSideSet   ?: ViewAndSide(parentView,MyOrientation.RIGHT ),activity) - margin.rightMargin
+            MyOrientation.MIDDLE   -> getViewBorderPos(ViewAndSide(parentView,MyOrientation.MIDDLE),activity)
         }
 
 
     }
-    fun getSizeFromRecPos(recPosition: RecPosition):MySizeParams{
+    private fun getSizeFromRecPos(recPosition: RecPosition):MySizeParams{
         return MySizeParams(
             abs(recPosition.left-recPosition.right).toInt(),
             abs(recPosition.top - recPosition.bottom).toInt()
@@ -200,7 +189,8 @@ class ViewChangeActions {
     }
     fun setPositionByMargin(
         positionData: ViewAndPositionData,
-        constraintLayout: ConstraintLayout){
+        constraintLayout: ConstraintLayout,
+        activity: AppCompatActivity){
         val view = positionData.view
         val borderSet = positionData.borderSet
         view.viewTreeObserver.addOnGlobalLayoutListener(
@@ -208,10 +198,10 @@ class ViewChangeActions {
                 override fun onGlobalLayout() {
 
                     fun getBorder(borderSide: MyOrientation):Float{
-                        return getBorderFromBorderSet(borderSet,borderSide,constraintLayout)
+                        return getBorderFromBorderSet(borderSet,borderSide,constraintLayout,activity)
                     }
                     fun getConBorder(borderSide: MyOrientation):Float{
-                        return getViewBorderPos(ViewAndSide(constraintLayout,borderSide))
+                        return getViewBorderPos(ViewAndSide(constraintLayout,borderSide),activity)
                     }
                     val rotationBefore = view.rotation
                     view.rotation = 0f

@@ -7,14 +7,13 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver
-import androidx.core.animation.addListener
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.korokoro.kina.R
 import com.korokoro.kina.actions.ViewChangeActions
 import com.korokoro.kina.customClasses.CirclePosition
 import com.korokoro.kina.customClasses.RecPosition
-import kotlin.math.abs
 
 class HoleViewVer2 (
     context: Context,
@@ -24,10 +23,11 @@ class HoleViewVer2 (
     private var holePaint: Paint = Paint()
     private var bitmap: Bitmap? = null
     private var layer: Canvas? = null
+    private lateinit var activity: AppCompatActivity
     private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
 
     //position of hole
-    var recRadius:Float = 20f
+    private var recRadius:Float = 20f
         set(value){
             field = value
             this.invalidate()
@@ -37,7 +37,7 @@ class HoleViewVer2 (
             field = value
             this.invalidate()
         }
-    var holeMargin:Int = 20
+    private var holeMargin:Int = 20
         set(value){
             field = value
             this.invalidate()
@@ -47,6 +47,9 @@ class HoleViewVer2 (
         globalLayoutSet.onEach {
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
         }
+    }
+    fun initActivity(mainActivity: AppCompatActivity){
+        activity = mainActivity
     }
 
     var animate:Boolean = true
@@ -65,7 +68,7 @@ class HoleViewVer2 (
                     view.viewTreeObserver.addOnGlobalLayoutListener(
                         object :ViewTreeObserver.OnGlobalLayoutListener{
                             override fun onGlobalLayout() {
-                                val centerPos = ViewChangeActions().getCenterPos(view)
+                                val centerPos = ViewChangeActions().getCenterPos(view,activity )
                                 val startRecPos = if(beforeWasNoHole) RecPosition(
                                         top = centerPos.y,
                                         bottom = centerPos.y,
@@ -78,8 +81,8 @@ class HoleViewVer2 (
                                         r = 0f
                                     ) else circleHolePosition
                                 when(holeShape){
-                                    HoleShape.RECTANGLE -> animateRecHole(startRecPos,ViewChangeActions().getRecPos(view))
-                                    HoleShape.CIRCLE    -> animateCircleHole(startCirclePos,ViewChangeActions().getCirclePos(view))
+                                    HoleShape.RECTANGLE -> animateRecHole(startRecPos,getRecPos(view))
+                                    HoleShape.CIRCLE    -> animateCircleHole(startCirclePos,ViewChangeActions().getCirclePos(view,activity))
                                 }
                                 this@HoleViewVer2.invalidate()
                                 view.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -91,9 +94,9 @@ class HoleViewVer2 (
                         object :ViewTreeObserver.OnGlobalLayoutListener{
                             override fun onGlobalLayout() {
                                 globalLayoutSet[view] = this
-                                recHolePosition = ViewChangeActions().getRecPos(view)
-                                circleHolePosition = ViewChangeActions().getCirclePos(view)
-                                noHole = (view.visibility == View.GONE)||(view.visibility == INVISIBLE)
+                                recHolePosition = getRecPos(view)
+                                circleHolePosition = ViewChangeActions().getCirclePos(view,activity)
+                                noHole = (view.visibility == GONE)||(view.visibility == INVISIBLE)
                                 this@HoleViewVer2.invalidate()
                             }
                         }
@@ -177,7 +180,6 @@ class HoleViewVer2 (
 
     private var circleHolePosition: CirclePosition = CirclePosition(0.0f, 0.0f, 0.0f)
     private var recHolePosition: RecPosition = RecPosition(0.0f, 0.0f, 0.0f,0.0f)
-    private var holeAlpha:Int = 1
     set(value) {
         field = value
         this.invalidate()
@@ -188,7 +190,7 @@ class HoleViewVer2 (
             this.invalidate()
         }
     private fun getRecPos(view: View):RecPosition{
-        return ViewChangeActions().getRecPos(view)
+        return ViewChangeActions().getRecPos(view,activity)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -227,7 +229,7 @@ class HoleViewVer2 (
         this.alpha = 0.7f
         //configure background color
         val backgroundAlpha = 1
-        paint.color = ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.black), (255 * backgroundAlpha).toInt() )
+        paint.color = ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.black), (255 * backgroundAlpha) )
 
         //configure hole color & mode
         holePaint.color = ContextCompat.getColor(context, android.R.color.transparent)

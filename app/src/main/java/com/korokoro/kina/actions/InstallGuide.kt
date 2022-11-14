@@ -36,7 +36,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         val view = positionData.view
         view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
-                ViewChangeActions().setPositionByMargin(positionData,onInstallBinding.root)
+                ViewChangeActions().setPositionByMargin(positionData,onInstallBinding.root,activity)
                 globalLayoutSet[view] = this
             }
         })
@@ -80,6 +80,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             onInstallBinding.root.removeView(it)
         }
         changeMulVisibility(arrayOf(character,arrow,conLaySpeakBubble),false)
+        holeView.initActivity(activity)
         removeHole()
         val characterPosData = ViewAndPositionData(
             character,
