@@ -8,6 +8,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
@@ -49,14 +50,14 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var binding                  : MainActivityBinding
     private lateinit var callOnInstallBinding: CallOnInstallBinding
 
-    fun refreshInstallGuide(){
+    private fun refreshInstallGuide(){
         callOnInstallBinding = CallOnInstallBinding.inflate(layoutInflater)
         callOnInstallBinding.confirmEndGuideBinding.apply {
             arrayOf(btnCancelEnd,
                 btnCloseConfirmEnd,
                 btnCommitEnd).onEach {
-                it.setOnClickListener {
-                    when(it){
+                it.setOnClickListener { v->
+                    when(v){
                         btnCancelEnd,btnCloseConfirmEnd -> mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
                         btnCommitEnd                    -> mainActivityViewModel.onClickEndGuide()
                     }
@@ -113,7 +114,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 mainTopConstrainLayout.requestFocus()
                 mainTopConstrainLayout.viewTreeObserver.addOnGlobalLayoutListener(
                     object :KeyboardListener(mainTopConstrainLayout){
-                        var before = true
                         override fun onKeyBoardAppear() {
                             super.onKeyBoardAppear()
                             mainActivityViewModel.setBnvVisibility(false)
@@ -222,7 +222,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     if(libraryViewModel.returnParentRVItems().isEmpty()){
                         arrayOf(menuHowToDeleteItems,
                             menuHowToEditItems
-                        ).onEach { changeViewVisibility(it,false) }
+                        ).onEach {v-> changeViewVisibility(v,false) }
                     }
                 }
                 helpBinding.apply {
@@ -232,9 +232,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         menuHowToCreateItems,
                         menuHowToEditItems,
                         menuHowToMoveItems
-                    ).onEach {
-                        it.setOnClickListener {
-                            when(it){
+                    ).onEach { view ->
+                        view.setOnClickListener { v->
+                            when(v){
                                 menuHowToDeleteItems -> DeleteGuide().deleteGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
                                 menuHowToCreateItems -> {
                                     refreshInstallGuide()
@@ -319,8 +319,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val libraryParentFileObserver           = Observer<File?>{
             createCardViewModel.setParentFlashCardCover(it)
             createFileViewModel.setParentTokenFileParent(it)
-            createFileViewModel.getChildFilesByFileIdFromDB(it?.fileId).observe(this){
-                createFileViewModel.setParentFileSisters(it)
+            createFileViewModel.getChildFilesByFileIdFromDB(it?.fileId).observe(this){list->
+                createFileViewModel.setParentFileSisters(list)
             }
             createFileViewModel.parentFileParent(it?.parentFileId).observe(this@MainActivity,editFileParentFileObserver)
             createFileViewModel.lastInsertedFile.observe(this,lastInsertedFileObserver)
@@ -359,44 +359,45 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
     }
 
-    fun addSampleFlashCard(){
-        val lastId =    createFileViewModel.returnLastInsertedFile()?.fileId ?:0
-        createFileViewModel.lastInsertedFile
+
+
+
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(mainActivityViewModel.returnGuideVisibility())
+                    if(mainActivityViewModel.returnConfirmEndGuidePopUpVisible())
+                        mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
+                    else mainActivityViewModel.setConfirmEndGuidePopUpVisible(true)
+                else if (mainActivityViewModel.returnHelpOptionVisibility())
+                    mainActivityViewModel.setHelpOptionVisibility(false)
+                else if(createFileViewModel.returnBottomMenuVisible())
+                    createFileViewModel.setBottomMenuVisible(false)
+                else if(createFileViewModel.returnEditFilePopUpVisible())
+                    createFileViewModel.setEditFilePopUpVisible(false)
+                else if(deletePopUpViewModel.returnConfirmDeleteWithChildrenVisible())
+                    deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
+                else if(deletePopUpViewModel.returnConfirmDeleteVisible())
+                    deletePopUpViewModel.setConfirmDeleteVisible(false)
+                else if(libraryViewModel.returnMultiSelectMode()){
+                    if(libraryViewModel.returnMultiMenuVisibility())
+                        libraryViewModel.setMultiMenuVisibility(false)
+                    else libraryViewModel.setMultipleSelectMode(false)
+                }
+                else if(libraryViewModel.returnLeftSwipedItemExists())
+                    libraryViewModel.makeAllUnSwiped()
+                else if (searchViewModel.returnSearchModeActive())
+                    searchViewModel.setSearchModeActive(false)
+                else if(ankiBaseViewModel.returnSettingVisible())
+                    ankiBaseViewModel.setSettingVisible(false)
+                else if (mainActivityViewModel.returnHelpOptionVisibility())
+                    mainActivityViewModel.setHelpOptionVisibility(false)
+                else finish()
+            }
+        })
     }
-
-    override fun onBackPressed() {
-        if(mainActivityViewModel.returnGuideVisibility())
-            if(mainActivityViewModel.returnConfirmEndGuidePopUpVisible())
-                mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-             else mainActivityViewModel.setConfirmEndGuidePopUpVisible(true)
-        else if (mainActivityViewModel.returnHelpOptionVisibility())
-            mainActivityViewModel.setHelpOptionVisibility(false)
-        else if(createFileViewModel.returnBottomMenuVisible())
-            createFileViewModel.setBottomMenuVisible(false)
-        else if(createFileViewModel.returnEditFilePopUpVisible())
-            createFileViewModel.setEditFilePopUpVisible(false)
-        else if(deletePopUpViewModel.returnConfirmDeleteWithChildrenVisible())
-            deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
-        else if(deletePopUpViewModel.returnConfirmDeleteVisible())
-            deletePopUpViewModel.setConfirmDeleteVisible(false)
-        else if(libraryViewModel.returnMultiSelectMode()){
-            if(libraryViewModel.returnMultiMenuVisibility())
-                libraryViewModel.setMultiMenuVisibility(false)
-            else libraryViewModel.setMultipleSelectMode(false)
-        }
-        else if(libraryViewModel.returnLeftSwipedItemExists())
-            libraryViewModel.makeAllUnSwiped()
-        else if (searchViewModel.returnSearchModeActive())
-            searchViewModel.setSearchModeActive(false)
-        else if(ankiBaseViewModel.returnSettingVisible())
-            ankiBaseViewModel.setSettingVisible(false)
-        else if (mainActivityViewModel.returnHelpOptionVisibility())
-            mainActivityViewModel.setHelpOptionVisibility(false)
-        else super.onBackPressed()
-
-    }
-
-
     override fun onClick(v: View?) {
 
         binding.apply {
