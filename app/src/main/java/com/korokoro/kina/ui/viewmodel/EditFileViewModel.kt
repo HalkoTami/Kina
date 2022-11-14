@@ -6,9 +6,9 @@ import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.db.enumclass.FileStatus
-import com.korokoro.kina.customClasses.ColorPalletStatus
+import com.korokoro.kina.customClasses.normalClasses.ColorPalletStatus
 import com.korokoro.kina.customClasses.enumClasses.EditingMode
-import com.korokoro.kina.customClasses.MakeToastFromVM
+import com.korokoro.kina.customClasses.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {

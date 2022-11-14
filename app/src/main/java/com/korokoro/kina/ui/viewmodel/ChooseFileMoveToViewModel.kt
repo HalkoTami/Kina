@@ -6,7 +6,7 @@ import com.korokoro.kina.actions.SortActions
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
-import com.korokoro.kina.customClasses.MakeToastFromVM
+import com.korokoro.kina.customClasses.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() {

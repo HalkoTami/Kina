@@ -18,10 +18,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.korokoro.kina.actions.DateTimeActions
 import com.korokoro.kina.actions.changeViewVisibility
-import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.customClasses.enumClasses.AnimationAttributes
 import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
 import com.korokoro.kina.customClasses.enumClasses.NeighbourCardSide
+import com.korokoro.kina.customClasses.normalClasses.AutoFlip
+import com.korokoro.kina.customClasses.normalClasses.Progress
 import com.korokoro.kina.databinding.AnkiFlipFragBaseBinding
 import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.enumclass.ActivityStatus

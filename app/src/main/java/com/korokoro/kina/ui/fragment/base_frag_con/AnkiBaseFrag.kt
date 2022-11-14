@@ -18,9 +18,9 @@ import com.korokoro.kina.databinding.AnkiFragBaseBinding
 import com.korokoro.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFragDirections
 import com.korokoro.kina.customClasses.enumClasses.MainFragment
 import com.korokoro.kina.ui.viewmodel.*
-import com.korokoro.kina.customClasses.AnkiFilter
+import com.korokoro.kina.customClasses.normalClasses.AnkiFilter
 import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
-import com.korokoro.kina.customClasses.AutoFlip
+import com.korokoro.kina.customClasses.normalClasses.AutoFlip
 
 
 class AnkiBaseFrag  : Fragment(),View.OnClickListener {

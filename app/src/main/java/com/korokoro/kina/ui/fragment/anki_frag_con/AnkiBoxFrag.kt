@@ -17,8 +17,8 @@ import com.korokoro.kina.db.dataclass.Card
 import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.customClasses.enumClasses.AnkiBoxFragments
-import com.korokoro.kina.customClasses.AnkiBoxTabData
-import com.korokoro.kina.customClasses.AnkiFilter
+import com.korokoro.kina.customClasses.normalClasses.AnkiBoxTabData
+import com.korokoro.kina.customClasses.normalClasses.AnkiFilter
 import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
 import com.korokoro.kina.ui.observer.CommonOb
 import com.korokoro.kina.ui.view_set_up.AnkiBoxFragViewSetUp

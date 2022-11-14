@@ -12,8 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.korokoro.kina.R
 import com.korokoro.kina.actions.ViewChangeActions
-import com.korokoro.kina.customClasses.CirclePosition
-import com.korokoro.kina.customClasses.RecPosition
+import com.korokoro.kina.customClasses.normalClasses.CirclePosition
+import com.korokoro.kina.customClasses.normalClasses.RecPosition
 
 class HoleViewVer2 (
     context: Context,
@@ -189,7 +189,7 @@ class HoleViewVer2 (
             field = value
             this.invalidate()
         }
-    private fun getRecPos(view: View):RecPosition{
+    private fun getRecPos(view: View): RecPosition {
         return ViewChangeActions().getRecPos(view,activity)
     }
 

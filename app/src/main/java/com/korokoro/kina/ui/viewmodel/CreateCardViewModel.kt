@@ -11,7 +11,7 @@ import com.korokoro.kina.db.enumclass.ColorStatus
 import com.korokoro.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFragDirections
 import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
-import com.korokoro.kina.customClasses.ColorPalletStatus
+import com.korokoro.kina.customClasses.normalClasses.ColorPalletStatus
 import com.korokoro.kina.customClasses.enumClasses.MainFragment
 import com.korokoro.kina.customClasses.enumClasses.NeighbourCardSide
 import kotlinx.coroutines.launch

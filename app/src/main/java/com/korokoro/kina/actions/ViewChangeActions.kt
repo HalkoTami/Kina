@@ -5,11 +5,11 @@ import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.customClasses.enumClasses.BorderAttributes
 import com.korokoro.kina.customClasses.enumClasses.MyHorizontalOrientation
 import com.korokoro.kina.customClasses.enumClasses.MyOrientation
 import com.korokoro.kina.customClasses.enumClasses.MyVerticalOrientation
+import com.korokoro.kina.customClasses.normalClasses.*
 import kotlin.math.abs
 
 class ViewChangeActions {
@@ -30,7 +30,7 @@ class ViewChangeActions {
     fun setAlpha(v: View, alpha:Float){
         v.alpha = alpha
     }
-    fun getSimpleBorderSet(standardView:View, orientation: MyOrientation, fit:Boolean):BorderSet{
+    fun getSimpleBorderSet(standardView:View, orientation: MyOrientation, fit:Boolean): BorderSet {
         val borderSet = when(orientation){
             MyOrientation.TOP -> BorderSet(bottomSideSet = ViewAndSide(standardView, MyOrientation.TOP),
                 leftSideSet = if(fit) ViewAndSide(standardView, MyOrientation.LEFT) else null,
@@ -63,7 +63,7 @@ class ViewChangeActions {
         val bottom = viewY + view.height
         return RecPosition(left = viewX, top = viewY, right, bottom)
     }
-    fun getCenterPos(view: View,activity: AppCompatActivity):ViewCenterPosition{
+    fun getCenterPos(view: View,activity: AppCompatActivity): ViewCenterPosition {
         val recPos = getRecPos(view,activity)
         val horizontalCenter =  recPos.left + (recPos.right-recPos.left)/2
         val verticalCenter = recPos.top + (recPos.bottom - recPos.top)/2
@@ -74,7 +74,7 @@ class ViewChangeActions {
         val radius = if (view.width > view.height) view.width / 2 else view.height / 2
         return CirclePosition(x = centerPos.x, y = centerPos.y, radius.toFloat())
     }
-    fun getViewBorderPos(viewAndSide: ViewAndSide,activity: AppCompatActivity):Float{
+    fun getViewBorderPos(viewAndSide: ViewAndSide, activity: AppCompatActivity):Float{
         val view = viewAndSide.view
         val rotationBefore = view.rotation
         val rec = getRecPos(view,activity)
@@ -93,7 +93,7 @@ class ViewChangeActions {
                                   borderPosition: RecPosition,
                                   verticalOrientation: MyVerticalOrientation,
                                   horizontalOrientation: MyHorizontalOrientation
-    ):RecPosition{
+    ): RecPosition {
         val subMiddleTop :Float
         val subMiddleBottom :Float
         val verticalCenter = borderPosition.top + (borderPosition.bottom-borderPosition.top)/2
@@ -150,7 +150,7 @@ class ViewChangeActions {
 
 
     }
-    private fun getSizeFromRecPos(recPosition: RecPosition):MySizeParams{
+    private fun getSizeFromRecPos(recPosition: RecPosition): MySizeParams {
         return MySizeParams(
             abs(recPosition.left-recPosition.right).toInt(),
             abs(recPosition.top - recPosition.bottom).toInt()
@@ -174,7 +174,7 @@ class ViewChangeActions {
             BorderAttributes.None -> {}
         }
     }
-    fun getMarginFromRecPos(borderRecPos: RecPosition,viewRecPos: RecPosition):MyMargin{
+    fun getMarginFromRecPos(borderRecPos: RecPosition, viewRecPos: RecPosition): MyMargin {
         val marginTop    = (abs(borderRecPos.top   -viewRecPos.top   )).toInt()
         val marginBottom = (abs(borderRecPos.bottom-viewRecPos.bottom)).toInt()
         val marginStart  = (abs(borderRecPos.left  -viewRecPos.left  )).toInt()
@@ -184,7 +184,7 @@ class ViewChangeActions {
         rightMargin = marginEnd,
         bottomMargin = marginBottom)
     }
-    fun setMarginFromRecPosToConLay(view:View,margin: MyMargin,constraintLayout: ConstraintLayout){
+    fun setMarginFromRecPosToConLay(view:View, margin: MyMargin, constraintLayout: ConstraintLayout){
         val con = ConstraintSet()
         con.clone(constraintLayout)
 //
@@ -246,14 +246,28 @@ class ViewChangeActions {
         view.requestLayout()
 
     }
-    fun getOriSetByNextToPosition(movingViewPosition: MyOrientation, attributes: BorderAttributes):MyOrientationSetNew{
+    fun getOriSetByNextToPosition(movingViewPosition: MyOrientation, attributes: BorderAttributes): MyOrientationSet {
         return when(movingViewPosition){
-            MyOrientation.BOTTOM-> MyOrientationSetNew(MyVerticalOrientation.TOP , MyHorizontalOrientation.MIDDLE,attributes )
-            MyOrientation.LEFT -> MyOrientationSetNew( MyVerticalOrientation.MIDDLE, MyHorizontalOrientation.RIGHT,attributes)
-            MyOrientation.RIGHT -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE , MyHorizontalOrientation.LEFT,attributes )
-            MyOrientation.TOP -> MyOrientationSetNew(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE ,attributes)
-            else -> MyOrientationSetNew(MyVerticalOrientation.MIDDLE,
-                MyHorizontalOrientation.MIDDLE,attributes)
+            MyOrientation.BOTTOM-> MyOrientationSet(
+                MyVerticalOrientation.TOP,
+                MyHorizontalOrientation.MIDDLE,
+                attributes)
+            MyOrientation.LEFT -> MyOrientationSet(
+                MyVerticalOrientation.MIDDLE,
+                MyHorizontalOrientation.RIGHT,
+                attributes)
+            MyOrientation.RIGHT -> MyOrientationSet(
+                MyVerticalOrientation.MIDDLE,
+                MyHorizontalOrientation.LEFT,
+                attributes)
+            MyOrientation.TOP -> MyOrientationSet(
+                MyVerticalOrientation.BOTTOM,
+                MyHorizontalOrientation.MIDDLE,
+                attributes)
+            else -> MyOrientationSet(
+                MyVerticalOrientation.MIDDLE,
+                MyHorizontalOrientation.MIDDLE,
+                attributes)
         }
     }
 }

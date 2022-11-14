@@ -3,9 +3,9 @@ package com.korokoro.kina.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.korokoro.kina.customClasses.AnkiFilter
+import com.korokoro.kina.customClasses.normalClasses.AnkiFilter
 import com.korokoro.kina.customClasses.enumClasses.AnkiOrder
-import com.korokoro.kina.customClasses.AutoFlip
+import com.korokoro.kina.customClasses.normalClasses.AutoFlip
 
 class AnkiSettingPopUpViewModel : ViewModel() {
 

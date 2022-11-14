@@ -9,11 +9,14 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import com.korokoro.kina.R
-import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.customClasses.enumClasses.BorderAttributes
 import com.korokoro.kina.customClasses.enumClasses.MyHorizontalOrientation
 import com.korokoro.kina.customClasses.enumClasses.MyOrientation
 import com.korokoro.kina.customClasses.enumClasses.MyVerticalOrientation
+import com.korokoro.kina.customClasses.normalClasses.BorderSet
+import com.korokoro.kina.customClasses.normalClasses.MyOrientationSet
+import com.korokoro.kina.customClasses.normalClasses.ViewAndPositionData
+import com.korokoro.kina.customClasses.normalClasses.ViewAndSide
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.TouchAreaBinding
 import com.korokoro.kina.ui.animation.Animation
@@ -30,7 +33,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
     }
-    private fun saveBorderDataMap(view: View,set:BorderSet,borderDataMap:MutableMap<View,BorderSet>){
+    private fun saveBorderDataMap(view: View, set: BorderSet, borderDataMap:MutableMap<View, BorderSet>){
         if(borderDataMap[view]!=null) borderDataMap.remove(view)
         borderDataMap[view] = set
     }
@@ -68,7 +71,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     fun appearAlphaAnimation(view :View, visible:Boolean): ValueAnimator {
         return Animation().appearAlphaAnimation(view,visible,if(view == holeView)0.7f else 1f)
     }
-    fun getSimplePosRelation(standardView:View, orientation: MyOrientation, fit:Boolean):BorderSet{
+    fun getSimplePosRelation(standardView:View, orientation: MyOrientation, fit:Boolean): BorderSet {
         return ViewChangeActions().getSimpleBorderSet(standardView,orientation,fit)
     }
     fun setCharacterSize(dimenId: Int){
@@ -89,7 +92,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         val characterPosData = ViewAndPositionData(
             character,
             BorderSet(),
-            MyOrientationSetNew(
+            MyOrientationSet(
                 MyVerticalOrientation.MIDDLE,
                 MyHorizontalOrientation.MIDDLE,
                 BorderAttributes.FillIfOutOfBorder)
@@ -156,7 +159,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
 
     }
-    private fun setMarginByNextToPosition(movingViewPosition: MyOrientation, margin: Int, borderSet: BorderSet):BorderSet{
+    private fun setMarginByNextToPosition(movingViewPosition: MyOrientation, margin: Int, borderSet: BorderSet): BorderSet {
         when(movingViewPosition){
             MyOrientation.BOTTOM->   borderSet.margin.topMargin = margin
             MyOrientation.LEFT ->    borderSet.margin.rightMargin = margin
@@ -224,7 +227,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         )
         val positionData = ViewAndPositionData(a.touchView
             ,getSimplePosRelation(view, MyOrientation.MIDDLE,true)
-            ,MyOrientationSetNew(MyVerticalOrientation.MIDDLE,
+            , MyOrientationSet(MyVerticalOrientation.MIDDLE,
                 MyHorizontalOrientation.MIDDLE,
                 BorderAttributes.FillBorder))
         setPositionByMargin(

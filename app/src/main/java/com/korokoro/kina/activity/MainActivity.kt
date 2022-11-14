@@ -22,7 +22,7 @@ import com.korokoro.kina.db.dataclass.File
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.customClasses.enumClasses.AnkiFragments
-import com.korokoro.kina.customClasses.ColorPalletStatus
+import com.korokoro.kina.customClasses.normalClasses.ColorPalletStatus
 import com.korokoro.kina.customClasses.enumClasses.MainFragment
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.HelpOptionsBinding

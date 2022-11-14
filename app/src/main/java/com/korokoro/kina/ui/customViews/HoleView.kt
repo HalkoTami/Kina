@@ -7,8 +7,8 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.korokoro.kina.R
-import com.korokoro.kina.customClasses.CirclePosition
-import com.korokoro.kina.customClasses.RecPosition
+import com.korokoro.kina.customClasses.normalClasses.CirclePosition
+import com.korokoro.kina.customClasses.normalClasses.RecPosition
 
 
 enum class HoleShape{

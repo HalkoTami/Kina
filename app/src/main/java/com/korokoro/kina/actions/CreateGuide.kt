@@ -15,11 +15,14 @@ import androidx.core.view.size
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
-import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.customClasses.enumClasses.BorderAttributes
 import com.korokoro.kina.customClasses.enumClasses.MyHorizontalOrientation
 import com.korokoro.kina.customClasses.enumClasses.MyOrientation
 import com.korokoro.kina.customClasses.enumClasses.MyVerticalOrientation
+import com.korokoro.kina.customClasses.normalClasses.BorderSet
+import com.korokoro.kina.customClasses.normalClasses.MyOrientationSet
+import com.korokoro.kina.customClasses.normalClasses.ViewAndPositionData
+import com.korokoro.kina.customClasses.normalClasses.ViewAndSide
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.db.enumclass.FileStatus
 import com.korokoro.kina.ui.customViews.*
@@ -34,11 +37,11 @@ class CreateGuide(val activity:AppCompatActivity,
                   private val libraryViewModel:LibraryBaseViewModel,
                   private val mainViewModel: MainViewModel){
     val actions = InstallGuide(activity,onInstallBinding)
-    private val borderDataMap = mutableMapOf<View,BorderSet>()
+    private val borderDataMap = mutableMapOf<View, BorderSet>()
     private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
-    private var characterBorderSet:BorderSet = BorderSet()
-    private var characterOrientation:MyOrientationSetNew =
-        MyOrientationSetNew(MyVerticalOrientation.MIDDLE,
+    private var characterBorderSet: BorderSet = BorderSet()
+    private var characterOrientation: MyOrientationSet =
+        MyOrientationSet(MyVerticalOrientation.MIDDLE,
             MyHorizontalOrientation.MIDDLE,
             BorderAttributes.FillIfOutOfBorder)
         set(value) {
@@ -66,15 +69,15 @@ class CreateGuide(val activity:AppCompatActivity,
         actions.setPositionByMargin(data,globalLayoutSet)
     }
     private var freshCreated = true
-    private var textPosData:ViewAndSide = ViewAndSide(actions.character, MyOrientation.TOP)
+    private var textPosData: ViewAndSide = ViewAndSide(actions.character, MyOrientation.TOP)
     set(value) {
         field = value
         spbBorderSet = ViewChangeActions().getSimpleBorderSet(value.view,value.side,textFit)
         spbOrientation = ViewChangeActions().getOriSetByNextToPosition(value.side, BorderAttributes.FillIfOutOfBorder)
     }
-    private var spbBorderSet:BorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character,
+    private var spbBorderSet: BorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character,
         MyOrientation.TOP))
-    private var spbOrientation:MyOrientationSetNew = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,
+    private var spbOrientation: MyOrientationSet = MyOrientationSet(MyVerticalOrientation.BOTTOM,
         MyHorizontalOrientation.MIDDLE,
         BorderAttributes.FillIfOutOfBorder)
     private var textFit:Boolean = false
@@ -226,7 +229,7 @@ class CreateGuide(val activity:AppCompatActivity,
     private fun createFlashCard6(libraryRv:RecyclerView){
         createAnimateHole = true
         viewUnderHole = libraryRv[0]
-        characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
             MyHorizontalOrientation.LEFT)
         actions.setCharacterSize(R.dimen.character_size_middle)
         setCharacterPos()
@@ -237,7 +240,7 @@ class CreateGuide(val activity:AppCompatActivity,
 
         actions.changeCharacterVisibility(true).start()
         textPosData = ViewAndSide(actions.character, MyOrientation.RIGHT)
-        spbOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
+        spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
 
         setTextPos("おめでとう！単語帳が追加されたよ\n中身を見てみよう！").start()
 
@@ -302,7 +305,7 @@ class CreateGuide(val activity:AppCompatActivity,
         val edtCardBackTitle            =activity.findViewById<EditText>(R.id.edt_back_title)
         characterBorderSet = BorderSet(topSideSet = ViewAndSide(edtCardFrontTitle, MyOrientation.BOTTOM),
             bottomSideSet = ViewAndSide(edtCardBackTitle, MyOrientation.TOP) )
-        characterOrientation = MyOrientationSetNew(MyVerticalOrientation.TOP,
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,
             MyHorizontalOrientation.LEFT)
         setCharacterPos()
         textFit = false
@@ -312,12 +315,12 @@ class CreateGuide(val activity:AppCompatActivity,
     }
     private fun explainCreateCardFrag4(edtCardBackTitle:EditText){
         viewUnderHole = edtCardBackTitle
-        characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
             MyHorizontalOrientation.LEFT)
         setCharacterPos()
         spbBorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character, MyOrientation.BOTTOM)
             , leftSideSet = ViewAndSide(actions.character, MyOrientation.RIGHT))
-        spbOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
+        spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
         setTextPos("好みのようにカスタマイズしてね").start()
         goNextOnClickAnyWhere{explainCreateCardNavigation1()}
     }
@@ -326,7 +329,7 @@ class CreateGuide(val activity:AppCompatActivity,
         val linLayCreateCardNavigation  =activity.findViewById<ConstraintLayout>(R.id.lay_navigate_buttons)
         characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,
             MyOrientation.TOP))
-        characterOrientation = MyOrientationSetNew(MyVerticalOrientation.BOTTOM,
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
             MyHorizontalOrientation.MIDDLE)
         setTextPos("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
         viewUnderHole = linLayCreateCardNavigation
@@ -359,7 +362,7 @@ class CreateGuide(val activity:AppCompatActivity,
         actions.removeHole()
         actions.changeArrowVisibility(false).start()
         characterBorderSet = BorderSet()
-        characterOrientation = MyOrientationSetNew(MyVerticalOrientation.MIDDLE,
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,
             MyHorizontalOrientation.MIDDLE)
         setCharacterPos()
         textPosData = ViewAndSide(actions.character, MyOrientation.TOP)

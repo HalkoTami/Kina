@@ -3,10 +3,12 @@ package com.korokoro.kina.ui.viewmodel
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
-import com.korokoro.kina.customClasses.*
 import com.korokoro.kina.customClasses.enumClasses.AnimationAttributes
 import com.korokoro.kina.customClasses.enumClasses.FlipFragments
 import com.korokoro.kina.customClasses.enumClasses.NeighbourCardSide
+import com.korokoro.kina.customClasses.normalClasses.AnkiFilter
+import com.korokoro.kina.customClasses.normalClasses.CountFlip
+import com.korokoro.kina.customClasses.normalClasses.Progress
 import com.korokoro.kina.db.MyRoomRepository
 import com.korokoro.kina.db.dataclass.ActivityData
 import com.korokoro.kina.db.dataclass.Card
