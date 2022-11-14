@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.*
 import com.korokoro.kina.actions.changeViewIfRVEmpty
@@ -139,7 +140,19 @@ class LibraryHomeFrag : Fragment(){
         val homeRVItemsObserver = Observer<List<File>>{
             val sorted = it
             libraryBaseViewModel.setParentRVItems(sorted)
-            if( adapter.currentList.size == it.size) adapter.submitList(null)
+            val mainRV = binding.vocabCardRV
+            adapter = LibFragPlaneRVListAdapter(
+                stringCardViewModel  = cardTypeStringViewModel,
+                createCardViewModel  = createCardViewModel,
+                mainNavController = mainNavCon,
+                deletePopUpViewModel = deletePopUpViewModel,
+                createFileViewModel = editFileViewModel,
+                libraryViewModel = libraryBaseViewModel,
+            )
+            mainRV.adapter = adapter
+            mainRV.layoutManager = LinearLayoutManager(context)
+            mainRV.isNestedScrollingEnabled = true
+//            adapter.submitList(null)
             adapter.submitList(sorted)
             changeViewIfRVEmpty(it,binding.frameLayRvEmpty,emptyView)
         }

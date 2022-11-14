@@ -53,9 +53,12 @@ class LibrarySetUpItems{
 
     fun changeLibRVSelectBtnVisibility(rv: RecyclerView, visible: Boolean){
         rv.children.iterator().forEach { view ->
+
             view.findViewById<ImageView>(R.id.btn_select).apply {
                 visibility =if(visible) View.VISIBLE else View.GONE
             }
+            val parent = view.findViewById<ConstraintLayout>(R.id.lib_rv_base_container)
+            parent.tag = if(visible) LibRVState.Selectable else LibRVState.Plane
         }
     }
     fun changeLibRVAllSelectedState(rv: RecyclerView, selected:Boolean){
