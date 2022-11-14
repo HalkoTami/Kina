@@ -125,7 +125,6 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
 
                 }
                 searchViewModel.getCardsByWords(searchText).observe(viewLifecycleOwner){
-                    makeToast(requireActivity(),it.size.toString())
                     searchViewModel.setMatchedCards(it)
                     val a = mutableListOf<Any>()
                     a.addAll(searchViewModel.returnMatchedFiles())

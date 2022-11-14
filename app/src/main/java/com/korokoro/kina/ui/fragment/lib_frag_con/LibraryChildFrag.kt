@@ -138,6 +138,7 @@ class LibraryChildFrag :  Fragment(){
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
             libNavCon =  libraryBaseViewModel.returnLibraryNavCon() ?:return
             recyclerView = binding.vocabCardRV
+            mainNavCon = mainViewModel.returnMainActivityNavCon() ?:return
 
         }
         fun setUpView(){
@@ -217,22 +218,19 @@ class LibraryChildFrag :  Fragment(){
                 else -> return@Observer
             }
         }
-        fun setUpEachAncestor(linLay:LinearLayoutCompat,txv:TextView, imv:ImageView, file: File?){
+        fun setUpEachAncestor(linLay:LinearLayoutCompat,txv:TextView, imv:ImageView, file: File){
             val getDraw =  GetCustomDrawables(requireActivity())
-            if(file==null)linLay.visibility = View.GONE
-            else {
-                linLay.visibility = View.VISIBLE
-                txv.text = file.title
-                imv.setImageDrawable(getDraw.getFileIconByFile(file))
-            }
+            linLay.visibility = View.VISIBLE
+            txv.text = file.title
+            imv.setImageDrawable(getDraw.getFileIconByFile(file))
         }
         val parentFileAncestorsObserver = Observer<List<File>> {
             if(it.isEmpty().not()){
                 libraryBaseViewModel.setParentFileAncestorsFromDB(it)
                 editFileViewModel.filterBottomMenuByAncestors(it,it[0])
                 binding.ancestorsBinding.apply {
-                    if(it.size>2)setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,it[2])
-                    if(it.size>1)setUpEachAncestor(lineLayGPFile,txvGrandParentFileTitle,imvGrandParentFile,it[1])
+                    if(it.size>2)setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,it[2]) else changeViewVisibility(lineLayGGFile,false)
+                    if(it.size>1)setUpEachAncestor(lineLayGPFile,txvGrandParentFileTitle,imvGrandParentFile,it[1])  else changeViewVisibility(lineLayGPFile,false)
                     setUpEachAncestor(lineLayParentFile,txvParentFileTitle,imvParentFile,it[0])
                 }
             }
@@ -245,9 +243,9 @@ class LibraryChildFrag :  Fragment(){
         libraryBaseViewModel.allRVItemSelected.observe(viewLifecycleOwner,allItemSelectedObserver)
         libraryBaseViewModel.selectedItems.observe(viewLifecycleOwner,selectedItemObserver)
         libraryBaseViewModel.multiMenuVisibility.observe(viewLifecycleOwner,multiMenuVisibilityObserver)
-        libraryBaseViewModel.parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner,parentFileObserver)
-        libraryBaseViewModel.childFilesFromDB(args.folderId.single()).observe(viewLifecycleOwner,fileRVItemsObserver)
-        libraryBaseViewModel.parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner,parentFileAncestorsObserver)
+        libraryBaseViewModel.parentFileFromDB(args.fileId.single()).observe(viewLifecycleOwner,parentFileObserver)
+        libraryBaseViewModel.childFilesFromDB(args.fileId.single()).observe(viewLifecycleOwner,fileRVItemsObserver)
+        libraryBaseViewModel.parentFileAncestorsFromDB(args.fileId.single()).observe(viewLifecycleOwner,parentFileAncestorsObserver)
         searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
 
 
@@ -269,7 +267,7 @@ class LibraryChildFrag :  Fragment(){
                 binding.ancestorsBinding.lineLayGGFile ->2
                 else -> 0
             }
-            NavigationActions().popMultipleBackStack(mainNavCon, popAmount)
+            NavigationActions().popMultipleBackStack(libNavCon, popAmount)
         }
 
     }

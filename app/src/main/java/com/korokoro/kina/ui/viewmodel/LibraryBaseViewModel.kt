@@ -281,7 +281,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun openNextFile(item: File){
         val action =
         when(item.fileStatus){
-            FileStatus.FOLDER->     LibraryFolderFragDirections.openFolder(intArrayOf(item.fileId))
+            FileStatus.FOLDER->     LibraryFolderFragDirections.openFolder(LibraryFragment.Folder,
+                intArrayOf(item.fileId))
             FileStatus.FLASHCARD_COVER -> LibraryFlashCardCoverFragDirections.openFlashCardCover(intArrayOf(item.fileId))
             else -> return
         }

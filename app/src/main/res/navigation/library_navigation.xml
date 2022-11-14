@@ -15,11 +15,7 @@
             app:argType="com.korokoro.kina.customClasses.enumClasses.LibraryFragment"
             />
         <argument
-            android:name="folderId"
-            app:argType="integer[]"
-            />
-        <argument
-            android:name="flashCardCoverId"
+            android:name="fileId"
             app:argType="integer[]"
             />
 
@@ -80,7 +76,7 @@
 
     <action
         android:id="@+id/open_folder"
-        app:destination="@+id/fragLibraryFolder"
+        app:destination="@+id/fragLibraryChild"
         app:enterAnim="@anim/slide_in_right_anim"
         app:exitAnim="@anim/slide_out_left_anim"
         app:popEnterAnim="@anim/slide_in_left_anim"
