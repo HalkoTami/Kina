@@ -26,7 +26,7 @@ import com.korokoro.kina.ui.customViews.HoleShape
 
 
 class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstallBinding,val frameLay:FrameLayout){
-    private val arrow = onInstallBinding.imvFocusArrow
+    val arrow = onInstallBinding.imvFocusArrow
     val character = onInstallBinding.imvCharacter
     val holeView = onInstallBinding.viewWithHole
     val textView = onInstallBinding.txvExplaino
@@ -112,8 +112,9 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
     }
     fun makeTouchAreaGone(){
         onInstallBinding.root.children.iterator().forEach {
-            if(it.tag == 1) it.visibility = View.GONE
+            if(it.tag == touchAreaTag) it.visibility = View.GONE
         }
+
     }
     fun appearAlphaAnimation(view :View, visible:Boolean): ValueAnimator {
         return Animation().appearAlphaAnimation(view,visible,if(view == holeView)0.7f else 1f)
@@ -179,6 +180,22 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
 
      }
 
+    fun animateSpbPosDoOnEnd(string: String,doOnEnd: () -> Unit):ValueAnimator{
+        return changeSpeakBubbleVisibility(false).apply {
+            doOnEnd {
+                changeViewVisibility(conLaySpeakBubble,false)
+                textView.text = string
+                val posData = ViewAndPositionData(
+                    conLaySpeakBubble,
+                    borderSet = spbBorderSet ,
+                    orientation= spbOrientation)
+                setPositionByMargin(posData)
+                if(spbAppearOnEnd) speakBubbleTextAnimation(){doOnEnd()}.start()
+            }
+            duration = 100
+        }
+    }
+
     fun animateSpbPos(string: String):ValueAnimator{
 
         val anim = changeSpeakBubbleVisibility(false).apply {
@@ -190,7 +207,7 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
                     borderSet = spbBorderSet ,
                     orientation= spbOrientation)
                 setPositionByMargin(posData)
-                if(spbAppearOnEnd) speakBubbleTextAnimation().start()
+                if(spbAppearOnEnd) speakBubbleTextAnimation(){}.start()
             }
             duration = 100
         }
@@ -209,8 +226,8 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
     }
     fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
         onInstallBinding.root.setOnClickListener(null)
+        makeTouchAreaGone()
         copyViewInConLay(view).setOnClickListener {
-            makeTouchAreaGone()
             func()
         }
     }
@@ -250,7 +267,7 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
 
         return a.touchView
     }
-    private fun setArrowDirection(direction: MyOrientation){
+    fun setArrowDirection(direction: MyOrientation){
         arrow.rotation =
             when(direction){
                 MyOrientation.BOTTOM-> -450f
@@ -271,7 +288,7 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
         }
         return borderSet
     }
-    private fun speakBubbleTextAnimation(): AnimatorSet {
+    private fun speakBubbleTextAnimation(doOnEnd: () -> Unit): AnimatorSet {
 
         val finalDuration:Long = 200
 
@@ -313,6 +330,7 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
             playTogether(txvScaleAnimSet,bottomAnim1,bottomTransAnim,changeSpeakBubbleVisibility(true))
             txvScaleAnimSet.duration = finalDuration
             bottomTransAnim.duration = finalDuration
+            doOnEnd { doOnEnd() }
         }
 
         return finalAnim
@@ -325,7 +343,7 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
     }
-    private fun setPositionByMargin(positionData: ViewAndPositionData, ){
+    fun setPositionByMargin(positionData: ViewAndPositionData, ){
         removeGlobalListener(globalLayoutSet)
         val view = positionData.view
         view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
