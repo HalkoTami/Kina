@@ -40,17 +40,17 @@ class CreateGuide(val activity:MainActivity,
 
     val actions = InstallGuide(activity,onInstallBinding)
     private val borderDataMap = mutableMapOf<View, BorderSet>()
-    private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
-    private var characterBorderSet: BorderSet = BorderSet()
-    private var characterOrientation: MyOrientationSet =
-        MyOrientationSet(MyVerticalOrientation.MIDDLE,
-            MyHorizontalOrientation.MIDDLE,
-            BorderAttributes.FillIfOutOfBorder)
-        set(value) {
-            value.borderAttributes = BorderAttributes.FillIfOutOfBorder
-            field = value
-
-        }
+//    private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
+//    private var characterBorderSet: BorderSet = BorderSet()
+//    private var characterOrientation: MyOrientationSet =
+//        MyOrientationSet(MyVerticalOrientation.MIDDLE,
+//            MyHorizontalOrientation.MIDDLE,
+//            BorderAttributes.FillIfOutOfBorder)
+//        set(value) {
+//            value.borderAttributes = BorderAttributes.FillIfOutOfBorder
+//            field = value
+//
+//        }
 //    private var createHoleShape:HoleShape = HoleShape.CIRCLE
 //    private var createAnimateHole :Boolean = true
 //    private var viewUnderHole:View? = null
@@ -64,26 +64,26 @@ class CreateGuide(val activity:MainActivity,
 //
 //        }
     private fun setCharacterPos(){
-        characterOrientation.borderAttributes = BorderAttributes.FillIfOutOfBorder
-        setPos(ViewAndPositionData(actions.character,characterBorderSet,characterOrientation))
+        actions.characterOrientation.borderAttributes = BorderAttributes.FillIfOutOfBorder
+        setPos(ViewAndPositionData(actions.character,actions.characterBorderSet,actions.characterOrientation))
     }
     private fun setPos(data: ViewAndPositionData){
-        actions.setPositionByMargin(data,globalLayoutSet)
+        actions.setPositionByMargin(data,actions. globalLayoutSet)
     }
     private var freshCreated = true
-    private var textPosData: ViewAndSide = ViewAndSide(actions.character, MyOrientation.TOP)
-    set(value) {
-        field = value
-        spbBorderSet = ViewChangeActions().getSimpleBorderSet(value.view,value.side,textFit)
-        spbOrientation = ViewChangeActions().getOriSetByNextToPosition(value.side, BorderAttributes.FillIfOutOfBorder)
-    }
-    private var spbBorderSet: BorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character,
-        MyOrientation.TOP))
-    private var spbOrientation: MyOrientationSet = MyOrientationSet(MyVerticalOrientation.BOTTOM,
-        MyHorizontalOrientation.MIDDLE,
-        BorderAttributes.FillIfOutOfBorder)
-    private var textFit:Boolean = false
-    private var spbAppearOnEnd = true
+//    private var textPosData: ViewAndSide = ViewAndSide(actions.character, MyOrientation.TOP)
+//    set(value) {
+//        field = value
+//        spbBorderSet = ViewChangeActions().getSimpleBorderSet(value.view,value.side,textFit)
+//        spbOrientation = ViewChangeActions().getOriSetByNextToPosition(value.side, BorderAttributes.FillIfOutOfBorder)
+//    }
+//    private var spbBorderSet: BorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character,
+//        MyOrientation.TOP))
+//    private var spbOrientation: MyOrientationSet = MyOrientationSet(MyVerticalOrientation.BOTTOM,
+//        MyHorizontalOrientation.MIDDLE,
+//        BorderAttributes.FillIfOutOfBorder)
+//    private var textFit:Boolean = false
+//    private var spbAppearOnEnd = true
     private fun setTextPos(string: String):ValueAnimator{
 
         val anim = actions.changeSpeakBubbleVisibility(false).apply {
@@ -92,10 +92,10 @@ class CreateGuide(val activity:MainActivity,
                 actions.textView.text = string
                 val posData = ViewAndPositionData(
                     actions.conLaySpeakBubble,
-                    borderSet = spbBorderSet ,
-                    orientation= spbOrientation)
+                    borderSet = actions.spbBorderSet ,
+                    orientation=actions. spbOrientation)
                 setPos(posData)
-                if(spbAppearOnEnd) actions.speakBubbleTextAnimation().start()
+                if(actions.spbAppearOnEnd) actions.speakBubbleTextAnimation().start()
             }
             duration = 100
         }
@@ -105,10 +105,10 @@ class CreateGuide(val activity:MainActivity,
     }
     private val arrowMargin = 0
     private fun setArrow(arrowPosition: MyOrientation, view: View){
-        actions.setArrow(arrowPosition,view,globalLayoutSet,arrowMargin)
+        actions.setArrow(arrowPosition,view,actions.globalLayoutSet,arrowMargin)
     }
     private fun addTouchArea(view: View):View{
-        return actions.copyViewInConLay(view,borderDataMap,globalLayoutSet)
+        return actions.copyViewInConLay(view,borderDataMap,actions.globalLayoutSet)
     }
     private fun cloneView(view: View) {
         addTouchArea(view).setOnClickListener {
@@ -131,7 +131,7 @@ class CreateGuide(val activity:MainActivity,
         frameLay.removeAllViews()
         frameLay.addView(onInstallBinding.root)
 
-        actions.setUpFirstView(globalLayoutSet)
+        actions.setUpFirstView(actions.globalLayoutSet)
         setTextPos("やあ、僕はとさかくん").start()
         goNextOnClickAnyWhere { greeting2() }
     }
@@ -219,7 +219,7 @@ class CreateGuide(val activity:MainActivity,
     private fun createFlashCard6(libraryRv:RecyclerView){
         actions.createAnimateHole = true
         actions.viewUnderHole = libraryRv[0]
-        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
+        actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
             MyHorizontalOrientation.LEFT)
         actions.setCharacterSize(R.dimen.character_size_middle)
         setCharacterPos()
@@ -229,8 +229,8 @@ class CreateGuide(val activity:MainActivity,
     private fun checkInsideNewFlashCard1(libraryRv: RecyclerView){
 
         actions.changeCharacterVisibility(true).start()
-        textPosData = ViewAndSide(actions.character, MyOrientation.RIGHT)
-        spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
+        actions.textPosData = ViewAndSide(actions.character, MyOrientation.RIGHT)
+        actions.spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
 
         setTextPos("おめでとう！単語帳が追加されたよ\n中身を見てみよう！").start()
 
@@ -272,12 +272,12 @@ class CreateGuide(val activity:MainActivity,
     }
     private fun explainCreateCardFrag1(){
         val edtCardFrontContent         =activity.findViewById<EditText>(R.id.edt_front_content)
-        characterBorderSet = actions.getSimplePosRelation(edtCardFrontContent,
+        actions.characterBorderSet = actions.getSimplePosRelation(edtCardFrontContent,
             MyOrientation.TOP,false)
         setCharacterPos()
         actions.appearAlphaAnimation(actions.character,true).start()
-        textFit = true
-        textPosData = ViewAndSide(actions.character, MyOrientation.RIGHT)
+        actions.textFit = true
+        actions.textPosData = ViewAndSide(actions.character, MyOrientation.RIGHT)
         setTextPos("上半分は、カードの表" ).start()
         actions.createAnimateHole = true
         actions.viewUnderHole = edtCardFrontContent
@@ -293,33 +293,33 @@ class CreateGuide(val activity:MainActivity,
     private fun explainCreateCardFrag3(){
         val edtCardFrontTitle           =activity.findViewById<EditText>(R.id.edt_front_title)
         val edtCardBackTitle            =activity.findViewById<EditText>(R.id.edt_back_title)
-        characterBorderSet = BorderSet(topSideSet = ViewAndSide(edtCardFrontTitle, MyOrientation.BOTTOM),
+        actions.characterBorderSet = BorderSet(topSideSet = ViewAndSide(edtCardFrontTitle, MyOrientation.BOTTOM),
             bottomSideSet = ViewAndSide(edtCardBackTitle, MyOrientation.TOP) )
-        characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,
+        actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,
             MyHorizontalOrientation.LEFT)
         setCharacterPos()
-        textFit = false
+        actions.textFit = false
         actions.viewUnderHole = edtCardFrontTitle
         setTextPos("カードの裏表にタイトルを付けることもできるんだ！").start()
         goNextOnClickAnyWhere{explainCreateCardFrag4(edtCardBackTitle)}
     }
     private fun explainCreateCardFrag4(edtCardBackTitle:EditText){
         actions.viewUnderHole = edtCardBackTitle
-        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
+        actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
             MyHorizontalOrientation.LEFT)
         setCharacterPos()
-        spbBorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character, MyOrientation.BOTTOM)
+        actions.spbBorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character, MyOrientation.BOTTOM)
             , leftSideSet = ViewAndSide(actions.character, MyOrientation.RIGHT))
-        spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
+        actions.spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
         setTextPos("好みのようにカスタマイズしてね").start()
         goNextOnClickAnyWhere{explainCreateCardNavigation1()}
     }
     private fun explainCreateCardNavigation1(){
         val edtCardBackContent          =activity.findViewById<EditText>(R.id.edt_back_content)
         val linLayCreateCardNavigation  =activity.findViewById<ConstraintLayout>(R.id.lay_navigate_buttons)
-        characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,
+        actions.characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,
             MyOrientation.TOP))
-        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
+        actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
             MyHorizontalOrientation.MIDDLE)
         setTextPos("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
         actions.viewUnderHole = linLayCreateCardNavigation
@@ -351,11 +351,11 @@ class CreateGuide(val activity:MainActivity,
     private fun goodBye1(){
         actions.removeHole()
         actions.changeArrowVisibility(false).start()
-        characterBorderSet = BorderSet()
-        characterOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,
+        actions.characterBorderSet = BorderSet()
+        actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,
             MyHorizontalOrientation.MIDDLE)
         setCharacterPos()
-        textPosData = ViewAndSide(actions.character, MyOrientation.TOP)
+        actions.textPosData = ViewAndSide(actions.character, MyOrientation.TOP)
         setTextPos("これでガイドは終わりだよ").start()
         actions.appearAlphaAnimation(actions.character,true).start()
         goNextOnClickAnyWhere{goodBye2()}

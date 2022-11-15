@@ -29,6 +29,7 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     val holeView = onInstallBinding.viewWithHole
     val textView = onInstallBinding.txvExplaino
     val conLaySpeakBubble = onInstallBinding.linLaySpeakBubble
+    val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
     private val touchAreaTag = 1
     var createHoleShape: HoleShape = HoleShape.CIRCLE
     var createAnimateHole :Boolean = true
@@ -42,7 +43,29 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
             }
 
         }
+    var characterBorderSet: BorderSet = BorderSet()
+    var characterOrientation: MyOrientationSet =
+        MyOrientationSet(MyVerticalOrientation.MIDDLE,
+            MyHorizontalOrientation.MIDDLE,
+            BorderAttributes.FillIfOutOfBorder)
+        set(value) {
+            value.borderAttributes = BorderAttributes.FillIfOutOfBorder
+            field = value
 
+        }
+    var textPosData: ViewAndSide = ViewAndSide(character, MyOrientation.TOP)
+        set(value) {
+            field = value
+            spbBorderSet = ViewChangeActions().getSimpleBorderSet(value.view,value.side,textFit)
+            spbOrientation = ViewChangeActions().getOriSetByNextToPosition(value.side, BorderAttributes.FillIfOutOfBorder)
+        }
+    var spbBorderSet: BorderSet = BorderSet(bottomSideSet = ViewAndSide(character,
+        MyOrientation.TOP))
+    var spbOrientation: MyOrientationSet = MyOrientationSet(MyVerticalOrientation.BOTTOM,
+        MyHorizontalOrientation.MIDDLE,
+        BorderAttributes.FillIfOutOfBorder)
+    var textFit:Boolean = false
+    var spbAppearOnEnd = true
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
     }
