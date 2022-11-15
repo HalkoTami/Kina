@@ -158,6 +158,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         ) {
             override fun handleOnBackPressed() {
 
+
                 val a = mainNavCon.backQueue.size
                 if(a>0){
                     while( mainNavCon.backQueue[mainNavCon.backQueue.size-1].destination.label.toString()==getString(R.string.nav_label_main_create_card)){
@@ -167,10 +168,13 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
 
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,  // LifecycleOwner
-            callback
-        )
+        if(mainViewModel.returnGuideVisibility().not()){
+            requireActivity().onBackPressedDispatcher.addCallback(
+                this,  // LifecycleOwner
+                callback
+            )
+        }
+
     }
 
 

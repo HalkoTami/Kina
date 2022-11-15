@@ -359,40 +359,48 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
 
+    fun onBackPress():Boolean{
+        var actionDone = true
+        if(mainActivityViewModel.returnGuideVisibility())
+            if(mainActivityViewModel.returnConfirmEndGuidePopUpVisible())
+                mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
+            else mainActivityViewModel.setConfirmEndGuidePopUpVisible(true)
+        else if (mainActivityViewModel.returnHelpOptionVisibility())
+            mainActivityViewModel.setHelpOptionVisibility(false)
+        else if(createFileViewModel.returnBottomMenuVisible())
+            createFileViewModel.setBottomMenuVisible(false)
+        else if(createFileViewModel.returnEditFilePopUpVisible())
+            createFileViewModel.setEditFilePopUpVisible(false)
+        else if(deletePopUpViewModel.returnConfirmDeleteWithChildrenVisible())
+            deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
+        else if(deletePopUpViewModel.returnConfirmDeleteVisible())
+            deletePopUpViewModel.setConfirmDeleteVisible(false)
+        else if(libraryViewModel.returnMultiSelectMode()){
+            if(libraryViewModel.returnMultiMenuVisibility())
+                libraryViewModel.setMultiMenuVisibility(false)
+            else libraryViewModel.setMultipleSelectMode(false)
+        }
+        else if(libraryViewModel.returnLeftSwipedItemExists())
+            libraryViewModel.makeAllUnSwiped()
+        else if (searchViewModel.returnSearchModeActive())
+            searchViewModel.setSearchModeActive(false)
+        else if(ankiBaseViewModel.returnSettingVisible())
+            ankiBaseViewModel.setSettingVisible(false)
+        else if (mainActivityViewModel.returnHelpOptionVisibility())
+            mainActivityViewModel.setHelpOptionVisibility(false)
+        else actionDone = false
+        return actionDone
 
+    }
+
+    var a :OnBackPressedCallback? = null
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(mainActivityViewModel.returnGuideVisibility())
-                    if(mainActivityViewModel.returnConfirmEndGuidePopUpVisible())
-                        mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-                    else mainActivityViewModel.setConfirmEndGuidePopUpVisible(true)
-                else if (mainActivityViewModel.returnHelpOptionVisibility())
-                    mainActivityViewModel.setHelpOptionVisibility(false)
-                else if(createFileViewModel.returnBottomMenuVisible())
-                    createFileViewModel.setBottomMenuVisible(false)
-                else if(createFileViewModel.returnEditFilePopUpVisible())
-                    createFileViewModel.setEditFilePopUpVisible(false)
-                else if(deletePopUpViewModel.returnConfirmDeleteWithChildrenVisible())
-                    deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
-                else if(deletePopUpViewModel.returnConfirmDeleteVisible())
-                    deletePopUpViewModel.setConfirmDeleteVisible(false)
-                else if(libraryViewModel.returnMultiSelectMode()){
-                    if(libraryViewModel.returnMultiMenuVisibility())
-                        libraryViewModel.setMultiMenuVisibility(false)
-                    else libraryViewModel.setMultipleSelectMode(false)
-                }
-                else if(libraryViewModel.returnLeftSwipedItemExists())
-                    libraryViewModel.makeAllUnSwiped()
-                else if (searchViewModel.returnSearchModeActive())
-                    searchViewModel.setSearchModeActive(false)
-                else if(ankiBaseViewModel.returnSettingVisible())
-                    ankiBaseViewModel.setSettingVisible(false)
-                else if (mainActivityViewModel.returnHelpOptionVisibility())
-                    mainActivityViewModel.setHelpOptionVisibility(false)
-                else onBackPressedDispatcher.onBackPressed()
+                if(onBackPress()) return
+                else mainNavCon.popBackStack()
             }
         })
     }

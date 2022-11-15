@@ -51,18 +51,18 @@ class CreateGuide(val activity:MainActivity,
             field = value
 
         }
-    private var createHoleShape:HoleShape = HoleShape.CIRCLE
-    private var createAnimateHole :Boolean = true
-    private var viewUnderHole:View? = null
-        set(value) {
-            field = value
-            actions.holeView.apply {
-                holeShape = createHoleShape
-                animate = createAnimateHole
-                viewUnderHole = value
-            }
-
-        }
+//    private var createHoleShape:HoleShape = HoleShape.CIRCLE
+//    private var createAnimateHole :Boolean = true
+//    private var viewUnderHole:View? = null
+//        set(value) {
+//            field = value
+//            actions.holeView.apply {
+//                holeShape = createHoleShape
+//                animate = createAnimateHole
+//                viewUnderHole = value
+//            }
+//
+//        }
     private fun setCharacterPos(){
         characterOrientation.borderAttributes = BorderAttributes.FillIfOutOfBorder
         setPos(ViewAndPositionData(actions.character,characterBorderSet,characterOrientation))
@@ -151,14 +151,14 @@ class CreateGuide(val activity:MainActivity,
         val bnvBtnAdd=activity.findViewById<ImageView>(R.id.bnv_imv_add)
         actions.changeArrowVisibility(true).start()
         setArrow(MyOrientation.TOP,bnvBtnAdd)
-        viewUnderHole = bnvBtnAdd
+        actions.viewUnderHole = bnvBtnAdd
         goNextOnClickTouchArea(bnvBtnAdd){createFlashCard2()}
     }
     private fun createFlashCard2(){
         val createMenuImvFlashCard      =activity.findViewById<FrameLayout>(R.id.imvnewTangocho)
         setArrow(MyOrientation.TOP,createMenuImvFlashCard)
-        createAnimateHole = false
-        viewUnderHole = createMenuImvFlashCard
+        actions.createAnimateHole = false
+        actions.viewUnderHole = createMenuImvFlashCard
         activity.createFileViewModel.setBottomMenuVisible(true)
         goNextOnClickTouchArea(createMenuImvFlashCard){createFlashCard3()}
     }
@@ -178,8 +178,8 @@ class CreateGuide(val activity:MainActivity,
             doOnEnd {
                 goNextOnClickTouchArea(btnFinish){createFlashCard5(edtCreatingFileTitle)}
                 createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
-                createHoleShape = HoleShape.RECTANGLE
-                viewUnderHole = frameLayEditFile
+                actions.createHoleShape = HoleShape.RECTANGLE
+                actions.viewUnderHole = frameLayEditFile
                 addTouchArea(edtCreatingFileTitle)
                 addTouchArea(edtCreatingFileTitle).setOnClickListener {
                     showKeyBoard(edtCreatingFileTitle,activity)
@@ -217,8 +217,8 @@ class CreateGuide(val activity:MainActivity,
 
     }
     private fun createFlashCard6(libraryRv:RecyclerView){
-        createAnimateHole = true
-        viewUnderHole = libraryRv[0]
+        actions.createAnimateHole = true
+        actions.viewUnderHole = libraryRv[0]
         characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
             MyHorizontalOrientation.LEFT)
         actions.setCharacterSize(R.dimen.character_size_middle)
@@ -253,13 +253,13 @@ class CreateGuide(val activity:MainActivity,
         val bnvBtnAdd=activity.findViewById<ImageView>(R.id.bnv_imv_add)
         actions.appearAlphaAnimation(actions.character,false).start()
         actions.changeSpeakBubbleVisibility(false).start()
-        viewUnderHole = bnvBtnAdd
+        actions.viewUnderHole = bnvBtnAdd
         goNextOnClickTouchArea(bnvBtnAdd){makeNewCard2()}
     }
     private fun makeNewCard2(){
         val createMenuImvNewCard        =activity.findViewById<FrameLayout>(R.id.imvnewCard)
-        createAnimateHole = false
-        viewUnderHole = createMenuImvNewCard
+        actions.createAnimateHole = false
+        actions.viewUnderHole = createMenuImvNewCard
         createFileViewModel.setBottomMenuVisible(true)
         goNextOnClickTouchArea(createMenuImvNewCard){makeNewCard3()}
     }
@@ -279,14 +279,14 @@ class CreateGuide(val activity:MainActivity,
         textFit = true
         textPosData = ViewAndSide(actions.character, MyOrientation.RIGHT)
         setTextPos("上半分は、カードの表" ).start()
-        createAnimateHole = true
-        viewUnderHole = edtCardFrontContent
+        actions.createAnimateHole = true
+        actions.viewUnderHole = edtCardFrontContent
         goNextOnClickAnyWhere{explainCreateCardFrag2()}
     }
     private fun explainCreateCardFrag2(){
         val edtCardBackContent          =activity.findViewById<EditText>(R.id.edt_back_content)
         setTextPos("下半分は、カードの裏になっているよ" ).start()
-        viewUnderHole = edtCardBackContent
+        actions.viewUnderHole = edtCardBackContent
         goNextOnClickAnyWhere{explainCreateCardFrag3()}
 
     }
@@ -299,12 +299,12 @@ class CreateGuide(val activity:MainActivity,
             MyHorizontalOrientation.LEFT)
         setCharacterPos()
         textFit = false
-        viewUnderHole = edtCardFrontTitle
+        actions.viewUnderHole = edtCardFrontTitle
         setTextPos("カードの裏表にタイトルを付けることもできるんだ！").start()
         goNextOnClickAnyWhere{explainCreateCardFrag4(edtCardBackTitle)}
     }
     private fun explainCreateCardFrag4(edtCardBackTitle:EditText){
-        viewUnderHole = edtCardBackTitle
+        actions.viewUnderHole = edtCardBackTitle
         characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
             MyHorizontalOrientation.LEFT)
         setCharacterPos()
@@ -322,7 +322,7 @@ class CreateGuide(val activity:MainActivity,
         characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
             MyHorizontalOrientation.MIDDLE)
         setTextPos("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
-        viewUnderHole = linLayCreateCardNavigation
+        actions.viewUnderHole = linLayCreateCardNavigation
         goNextOnClickAnyWhere{explainCreateCardNavigation2()}
     }
     private fun explainCreateCardNavigation2(){

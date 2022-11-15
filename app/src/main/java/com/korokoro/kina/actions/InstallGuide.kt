@@ -20,6 +20,7 @@ import com.korokoro.kina.customClasses.normalClasses.ViewAndSide
 import com.korokoro.kina.databinding.CallOnInstallBinding
 import com.korokoro.kina.databinding.TouchAreaBinding
 import com.korokoro.kina.ui.animation.Animation
+import com.korokoro.kina.ui.customViews.HoleShape
 
 
 class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnInstallBinding){
@@ -29,6 +30,18 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
     val textView = onInstallBinding.txvExplaino
     val conLaySpeakBubble = onInstallBinding.linLaySpeakBubble
     private val touchAreaTag = 1
+    var createHoleShape: HoleShape = HoleShape.CIRCLE
+    var createAnimateHole :Boolean = true
+    var viewUnderHole:View? = null
+        set(value) {
+            field = value
+            holeView.apply {
+                holeShape = createHoleShape
+                animate = createAnimateHole
+                viewUnderHole = value
+            }
+
+        }
 
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
