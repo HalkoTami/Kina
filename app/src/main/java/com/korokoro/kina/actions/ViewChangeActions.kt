@@ -55,13 +55,17 @@ class ViewChangeActions {
         return borderSet
     }
     fun getRecPos(view: View, activity: AppCompatActivity): RecPosition {
+        val rotationBefore = view.rotation
+        view.rotation = 0f
         val a = IntArray(2)
         view.getLocationInWindow(a)
         val viewX = a[0].toFloat()
         val viewY = a[1].toFloat() - getWindowDisplayHeightDiff(activity)
         val right = viewX + view.width
         val bottom = viewY + view.height
-        return RecPosition(left = viewX, top = viewY, right, bottom)
+        val rec = RecPosition(left = viewX, top = viewY, right, bottom)
+        view.rotation = rotationBefore
+        return  rec
     }
     fun getCenterPos(view: View,activity: AppCompatActivity): ViewCenterPosition {
         val recPos = getRecPos(view,activity)
@@ -76,9 +80,8 @@ class ViewChangeActions {
     }
     fun getViewBorderPos(viewAndSide: ViewAndSide, activity: AppCompatActivity):Float{
         val view = viewAndSide.view
-        val rotationBefore = view.rotation
+
         val rec = getRecPos(view,activity)
-        view.rotation = 0f
         val pos = when(viewAndSide.side){
             MyOrientation.RIGHT -> rec.right
             MyOrientation.LEFT  -> rec.left
@@ -86,7 +89,6 @@ class ViewChangeActions {
             MyOrientation.TOP   -> rec.top
             MyOrientation.MIDDLE-> getCenterPos(view,activity).x
         }
-        view.rotation = rotationBefore
         return pos
     }
     fun calculatePositionInBorder(view: View,
@@ -204,15 +206,15 @@ class ViewChangeActions {
         view.viewTreeObserver.addOnGlobalLayoutListener(
             object :ViewTreeObserver.OnGlobalLayoutListener{
                 override fun onGlobalLayout() {
-
+                    val rotationBefore = view.rotation
+                    view.rotation = 0f
                     fun getBorder(borderSide: MyOrientation):Float{
                         return getBorderFromBorderSet(borderSet,borderSide,constraintLayout,activity)
                     }
                     fun getConBorder(borderSide: MyOrientation):Float{
                         return getViewBorderPos(ViewAndSide(constraintLayout,borderSide),activity)
                     }
-                    val rotationBefore = view.rotation
-                    view.rotation = 0f
+
 
                     val borderLeft = getBorder(MyOrientation.LEFT)
                     val borderTop = getBorder(MyOrientation.TOP)
