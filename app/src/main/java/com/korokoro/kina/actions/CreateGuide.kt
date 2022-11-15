@@ -15,6 +15,7 @@ import androidx.core.view.size
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
+import com.korokoro.kina.activity.MainActivity
 import com.korokoro.kina.customClasses.enumClasses.BorderAttributes
 import com.korokoro.kina.customClasses.enumClasses.MyHorizontalOrientation
 import com.korokoro.kina.customClasses.enumClasses.MyOrientation
@@ -29,13 +30,14 @@ import com.korokoro.kina.ui.customViews.*
 import com.korokoro.kina.ui.viewmodel.*
 
 
-class CreateGuide(val activity:AppCompatActivity,
-                  private val onInstallBinding: CallOnInstallBinding,
-                  private val frameLay:FrameLayout,
-                  private val createCardViewModel:CreateCardViewModel,
-                  private val createFileViewModel:EditFileViewModel,
-                  private val libraryViewModel:LibraryBaseViewModel,
-                  private val mainViewModel: MainViewModel){
+class CreateGuide(val activity:MainActivity,
+                  private val frameLay:FrameLayout, ){
+    private val onInstallBinding = activity.callOnInstallBinding
+    private val createFileViewModel = activity.createFileViewModel
+    private val mainViewModel = activity.mainActivityViewModel
+    private val libraryViewModel = activity.libraryViewModel
+    private val createCardViewModel = activity.createCardViewModel
+
     val actions = InstallGuide(activity,onInstallBinding)
     private val borderDataMap = mutableMapOf<View, BorderSet>()
     private val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
@@ -115,10 +117,7 @@ class CreateGuide(val activity:AppCompatActivity,
     }
 
     private fun goNextOnClickAnyWhere(func:()->Unit){
-        onInstallBinding.root.setOnClickListener {
-            actions.makeTouchAreaGone()
-            func()
-        }
+        actions.goNextOnClickAnyWhere { func() }
     }
     private fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
         onInstallBinding.root.setOnClickListener(null)
@@ -160,7 +159,7 @@ class CreateGuide(val activity:AppCompatActivity,
         setArrow(MyOrientation.TOP,createMenuImvFlashCard)
         createAnimateHole = false
         viewUnderHole = createMenuImvFlashCard
-        createFileViewModel.setBottomMenuVisible(true)
+        activity.createFileViewModel.setBottomMenuVisible(true)
         goNextOnClickTouchArea(createMenuImvFlashCard){createFlashCard3()}
     }
     private fun createFlashCard3(){
@@ -204,8 +203,6 @@ class CreateGuide(val activity:AppCompatActivity,
 
         }
         actions.removeHole()
-        val lastId = libraryRv.size
-        var newLastId:Int
         hideKeyBoard(edtCreatingFileTitle,activity)
         onInstallBinding.root.children.iterator().forEach {
             if(it.tag == 1)it.visibility = View.GONE
@@ -213,17 +210,10 @@ class CreateGuide(val activity:AppCompatActivity,
         actions.makeTouchAreaGone()
         actions.changeArrowVisibility(false).start()
         createFileViewModel.makeFileInGuide(title)
-        libraryRv.itemAnimator = object:DefaultItemAnimator(){
-            override fun onAnimationFinished(viewHolder: RecyclerView.ViewHolder) {
-                super.onAnimationFinished(viewHolder)
-                val rv = activity.findViewById<RecyclerView>(R.id.vocabCardRV)
-                newLastId = rv.size
-                if(lastId+1==newLastId){
-                    createFlashCard6(rv)
-                }
-
-            }
+        goNextOnClickAnyWhere {
+            createFlashCard6(libraryRv)
         }
+
 
     }
     private fun createFlashCard6(libraryRv:RecyclerView){

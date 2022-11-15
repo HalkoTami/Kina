@@ -295,9 +295,7 @@ class LibraryChildFrag :  Fragment(){
                     txvCancel -> searchViewModel.onClickCancel(edtLibrarySearch,requireActivity())
                 }
             }
-
         }
-
     }
 }
 

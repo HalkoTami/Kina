@@ -37,10 +37,14 @@ import com.korokoro.kina.ui.viewmodel.*
 class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var factory                 : ViewModelFactory
     private lateinit var mainNavCon              : NavController
-    private lateinit var mainActivityViewModel   : MainViewModel
-    private lateinit var createFileViewModel     : EditFileViewModel
-    private lateinit var createCardViewModel     : CreateCardViewModel
-    private lateinit var libraryViewModel        : LibraryBaseViewModel
+    private var _mainActivityViewModel   : MainViewModel? = null
+    val mainActivityViewModel get() = _mainActivityViewModel!!
+    private var _createFileViewModel   : EditFileViewModel? = null
+    val createFileViewModel get() = _createFileViewModel!!
+    private var _createCardViewModel   : CreateCardViewModel? = null
+    val createCardViewModel get() = _createCardViewModel!!
+    private var _libraryViewModel   : LibraryBaseViewModel? = null
+    val libraryViewModel get() = _libraryViewModel!!
     private lateinit var ankiFlipBaseViewModel   : AnkiFlipBaseViewModel
     private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
     private lateinit var deletePopUpViewModel    : DeletePopUpViewModel
@@ -48,10 +52,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var searchViewModel         : SearchViewModel
 
     private lateinit var binding                  : MainActivityBinding
-    private lateinit var callOnInstallBinding: CallOnInstallBinding
+    private var _callOnInstallBinding: CallOnInstallBinding? = null
+    val callOnInstallBinding get() = _callOnInstallBinding!!
 
     private fun refreshInstallGuide(){
-        callOnInstallBinding = CallOnInstallBinding.inflate(layoutInflater)
+        _callOnInstallBinding = CallOnInstallBinding.inflate(layoutInflater)
         callOnInstallBinding.confirmEndGuideBinding.apply {
             arrayOf(btnCancelEnd,
                 btnCloseConfirmEnd,
@@ -78,10 +83,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 "firstTimeGuide", Context.MODE_PRIVATE) ?: return
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
                 refreshInstallGuide()
-                CreateGuide(this,callOnInstallBinding,binding.frameLayCallOnInstall,createCardViewModel,
-                    createFileViewModel,
-                    libraryViewModel,
-                    mainActivityViewModel).callOnFirst()
+                CreateGuide(this,binding.frameLayCallOnInstall).callOnFirst()
             }
         }
         fun setMainActivityLateInitVars(){
@@ -89,10 +91,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             binding = MainActivityBinding.inflate(layoutInflater)
             val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
             factory               = ViewModelFactory((application as RoomApplication).repository)
-            mainActivityViewModel = ViewModelProvider(this)[MainViewModel::class.java]
-            createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
-            createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
-            libraryViewModel      = ViewModelProvider(this,factory)[LibraryBaseViewModel::class.java]
+            _mainActivityViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+            _createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
+            _createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
+            _libraryViewModel      = ViewModelProvider(this,factory)[LibraryBaseViewModel::class.java]
             ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
             ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
             chooseFileMoveToViewModel      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
@@ -238,12 +240,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                                 menuHowToDeleteItems -> DeleteGuide().deleteGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
                                 menuHowToCreateItems -> {
                                     refreshInstallGuide()
-                                    CreateGuide(this@MainActivity, callOnInstallBinding,
-                                        binding.frameLayCallOnInstall,
-                                        createCardViewModel,
-                                        createFileViewModel,
-                                        libraryViewModel,
-                                        mainActivityViewModel).callOnFirst()
+                                    CreateGuide(this@MainActivity,
+                                        binding.frameLayCallOnInstall).callOnFirst()
                                 }
                                 menuHowToEditItems -> EditGuide().editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
                                 menuHowToMoveItems -> {
@@ -394,7 +392,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     ankiBaseViewModel.setSettingVisible(false)
                 else if (mainActivityViewModel.returnHelpOptionVisibility())
                     mainActivityViewModel.setHelpOptionVisibility(false)
-                else finish()
+                else onBackPressedDispatcher.onBackPressed()
             }
         })
     }

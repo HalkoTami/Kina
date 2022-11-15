@@ -49,6 +49,12 @@ class InstallGuide(val activity:AppCompatActivity,val onInstallBinding: CallOnIn
         })
         view.requestLayout()
     }
+    fun goNextOnClickAnyWhere(func:()->Unit){
+        onInstallBinding.root.setOnClickListener {
+            makeTouchAreaGone()
+            func()
+        }
+    }
     private fun removeGlobalListener(globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
         globalLayoutSet.onEach {
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
