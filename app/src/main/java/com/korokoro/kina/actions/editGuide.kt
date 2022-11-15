@@ -174,6 +174,7 @@ class EditGuide(val activity:MainActivity,
     }
     private fun editFile4prt5(){
         actions.apply {
+
             changeArrowVisibility(false).start()
             val imvColPalRed                =activity.findViewById<ImageView>(R.id.imv_col_red)
             val imvColPalBlue               =activity.findViewById<ImageView>(R.id.imv_col_blue)
@@ -181,6 +182,9 @@ class EditGuide(val activity:MainActivity,
             val imvColPalGray               =activity.findViewById<ImageView>(R.id.imv_col_gray)
             val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
             val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
+            goNextOnClickTouchArea(btnFinish){
+                btnFinish.performClick()
+            }
             arrayOf(imvColPaYellow,imvColPalBlue,imvColPalRed,imvColPalGray).iterator().forEach {
                 cloneView(it)
             }
@@ -191,9 +195,7 @@ class EditGuide(val activity:MainActivity,
                 makeToast(btnFinish.context,"hello")
             }
 
-            goNextOnClickTouchArea(btnFinish){
-                btnFinish.performClick()
-            }
+
         }
     }
 
