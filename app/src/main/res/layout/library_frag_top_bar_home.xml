@@ -22,7 +22,7 @@
         />
 
 
-    <com.korokoro.kina.ui.customViews.ImvChangeAlphaOnDown
+    <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnDown
         android:id="@+id/imv_search_loupe"
         android:layout_width="wrap_content"
         android:paddingHorizontal="5dp"

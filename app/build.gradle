@@ -12,11 +12,11 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.korokoro.kina"
+        applicationId "com.koronnu.kina"
         minSdk 21
         targetSdk 33
         versionCode 4
-        versionName "1.0.0"
+        versionName "1.0.1"
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
@@ -49,7 +49,7 @@ android {
     dataBinding{
         true
     }
-    namespace 'com.korokoro.kina'
+    namespace 'com.koronnu.kina'
 
 }
 

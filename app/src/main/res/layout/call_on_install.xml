@@ -9,7 +9,7 @@
         >
 
 
-    <com.korokoro.kina.ui.customViews.HoleViewVer2
+    <com.koronnu.kina.ui.customViews.HoleViewVer2
         android:id="@+id/view_with_hole"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

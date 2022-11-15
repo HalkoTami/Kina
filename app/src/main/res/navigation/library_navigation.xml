@@ -5,24 +5,24 @@
     android:id="@+id/library_navigation"
     app:startDestination="@+id/fragLibraryHome">
 
-    <fragment
-        android:id="@+id/fragLibraryChild"
-        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryChildFrag"
-        android:label="library"
-        tools:layout="@layout/library_child_frag_with_mul_mode_base" >
-        <argument
-            android:name="fragType"
-            app:argType="com.korokoro.kina.customClasses.enumClasses.LibraryFragment"
-            />
-        <argument
-            android:name="fileId"
-            app:argType="integer[]"
-            />
+<!--    <fragment-->
+<!--        android:id="@+id/fragLibraryChild"-->
+<!--        android:name="com.koronnu.kina.ui.fragment.lib_frag_con.LibraryChildFrag"-->
+<!--        android:label="library"-->
+<!--        tools:layout="@layout/library_child_frag_with_mul_mode_base" >-->
+<!--        <argument-->
+<!--            android:name="fragType"-->
+<!--            app:argType="com.korokoro.kina.customClasses.enumClasses.LibraryFragment"-->
+<!--            />-->
+<!--        <argument-->
+<!--            android:name="fileId"-->
+<!--            app:argType="integer[]"-->
+<!--            />-->
 
-    </fragment>
+<!--    </fragment>-->
     <fragment
         android:id="@+id/fragLibraryHome"
-        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryHomeFrag"
+        android:name="com.koronnu.kina.ui.fragment.lib_frag_con.LibraryHomeFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragLibraryFolder"
-        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFolderFrag"
+        android:name="com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFolderFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
         <argument
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragLibraryFlashCardCover"
-        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFrag"
+        android:name="com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
         <argument
@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/fragLibraryInBox"
-        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryInBoxFrag"
+        android:name="com.koronnu.kina.ui.fragment.lib_frag_con.LibraryInBoxFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
@@ -62,7 +62,7 @@
 
     <fragment
         android:id="@+id/fragLibrarySelectFileMoveTo"
-        android:name="com.korokoro.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFrag"
+        android:name="com.koronnu.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
@@ -76,7 +76,7 @@
 
     <action
         android:id="@+id/open_folder"
-        app:destination="@+id/fragLibraryChild"
+        app:destination="@+id/fragLibraryFolder"
         app:enterAnim="@anim/slide_in_right_anim"
         app:exitAnim="@anim/slide_out_left_anim"
         app:popEnterAnim="@anim/slide_in_left_anim"
