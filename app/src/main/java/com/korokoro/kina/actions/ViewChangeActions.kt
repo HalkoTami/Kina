@@ -30,8 +30,8 @@ class ViewChangeActions {
     fun setAlpha(v: View, alpha:Float){
         v.alpha = alpha
     }
-    fun getSimpleBorderSet(standardView:View, orientation: MyOrientation, fit:Boolean): BorderSet {
-        val borderSet = when(orientation){
+    fun getSimpleBorderSet(standardView:View, movingViewPos: MyOrientation, fit:Boolean): BorderSet {
+        val borderSet = when(movingViewPos){
             MyOrientation.TOP -> BorderSet(bottomSideSet = ViewAndSide(standardView, MyOrientation.TOP),
                 leftSideSet = if(fit) ViewAndSide(standardView, MyOrientation.LEFT) else null,
                 rightSideSet = if(fit) ViewAndSide(standardView, MyOrientation.RIGHT) else null

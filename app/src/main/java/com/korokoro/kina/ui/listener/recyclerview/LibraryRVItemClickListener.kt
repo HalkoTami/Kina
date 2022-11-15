@@ -10,6 +10,7 @@ import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.korokoro.kina.R
+import com.korokoro.kina.actions.makeToast
 import com.korokoro.kina.customClasses.enumClasses.LibRVState
 import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
@@ -72,6 +73,11 @@ open class LibraryRVItemClickListener(val context: Context,
         return gestureScrollDetector.onTouchEvent(e)
     }
 
+
+    open fun doOnSwipeAppeared (){
+
+    }
+
     override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
         gestureScrollDetector.onTouchEvent(e)
         if(startPosition==null){
@@ -83,11 +89,11 @@ open class LibraryRVItemClickListener(val context: Context,
                 val conLay = view.findViewById<ConstraintLayout>(R.id.lib_rv_base_container) ?:return
                 if(conLay.tag== LibRVState.LeftSwiping){
                     if(lineLay.layoutParams.width <25){
-                        Animation().animateLibRVLeftSwipeLay(lineLay,false)
+                        Animation().animateLibRVLeftSwipeLay(lineLay,false){}
                         conLay.tag = LibRVState.Plane
                     }
                     else if (lineLay.layoutParams.width>=25){
-                        Animation().animateLibRVLeftSwipeLay(lineLay ,true)
+                        Animation().animateLibRVLeftSwipeLay(lineLay ,true){doOnSwipeAppeared()}
                         conLay.tag = LibRVState.LeftSwiped
                         libraryBaseViewModel.setLeftSwipedItemExists(true)
                     }

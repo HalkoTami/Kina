@@ -1,13 +1,143 @@
 package com.korokoro.kina.actions
 
-import com.korokoro.kina.ui.viewmodel.EditFileViewModel
-import com.korokoro.kina.ui.viewmodel.LibraryBaseViewModel
-import com.korokoro.kina.ui.viewmodel.MainViewModel
+import android.view.MotionEvent
+import android.view.View
+import android.widget.FrameLayout
+import androidx.core.view.children
+import androidx.core.view.get
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.RecyclerView
+import com.korokoro.kina.R
+import com.korokoro.kina.activity.MainActivity
+import com.korokoro.kina.customClasses.enumClasses.LibraryFragment
+import com.korokoro.kina.customClasses.enumClasses.MyHorizontalOrientation
+import com.korokoro.kina.customClasses.enumClasses.MyOrientation
+import com.korokoro.kina.customClasses.enumClasses.MyVerticalOrientation
+import com.korokoro.kina.customClasses.normalClasses.BorderSet
+import com.korokoro.kina.customClasses.normalClasses.MyOrientationSet
+import com.korokoro.kina.customClasses.normalClasses.ViewAndSide
+import com.korokoro.kina.ui.customViews.HoleShape
+import com.korokoro.kina.ui.listener.MyTouchListener
+import com.korokoro.kina.ui.listener.recyclerview.LibraryRVItemClickListener
 
-class EditGuide(){
-    fun editGuide(startOrder:Int, mainViewModel: MainViewModel,
-                  libraryViewModel: LibraryBaseViewModel,
-                  createFileViewModel: EditFileViewModel
+class EditGuide(val activity:MainActivity,
+                frameLay: FrameLayout,){
+    val actions = InstallGuide(activity,activity.callOnInstallBinding,frameLay)
+    fun greeting1(){
+        actions.apply {
+            setUpFirstView()
+            animateSpbPos("これから、\n単語帳を編集する方法を説明するよ").start()
+            goNextOnClickAnyWhere{explainBtn()}
+        }
+    }
+    private fun explainBtn(){
+        val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+        actions.apply {
+            animateAllViewsGone {
+                animateHole = true
+                holeShape = HoleShape.RECTANGLE
+                viewUnderHole = libraryRv[0]
+                characterBorderSet = getSimplePosRelation(libraryRv[0],MyOrientation.BOTTOM,false)
+                characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,MyHorizontalOrientation.LEFT)
+                characterSizeDimenId = R.dimen.character_size_middle
+                animateCharacterPos {
+                    spbBorderSet = BorderSet(leftSideSet = ViewAndSide(character,MyOrientation.RIGHT), topSideSet = ViewAndSide(libraryRv[0],MyOrientation.BOTTOM))
+                    spbOrientation = MyOrientationSet(MyVerticalOrientation.TOP,MyHorizontalOrientation.LEFT)
+                    animateSpbPos("このアイテムを見てみよう").start()
+                }.start()
+
+            }.start()
+            goNextOnClickAnyWhere {
+                explainBtn2(libraryRv)
+            }
+        }
+    }
+    private fun explainBtn2(recycler:RecyclerView){
+        actions.apply {
+            animateSpbPos("編集ボタンを表示するには、" +
+            "\nアイテムを横にスライドするよ").start()
+            val rvItemTLis = object :LibraryRVItemClickListener(recycler.context,activity.findViewById(R.id.frameLay_test),recycler,activity.libraryViewModel){
+                override fun doOnSwipeAppeared() {
+                    super.doOnSwipeAppeared()
+
+                }
+            }
+            copyViewInConLay(recycler[0]).setOnTouchListener(
+                object :MyTouchListener(recycler.context){
+                    override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
+                        super.onScrollLeft(distanceX, motionEvent)
+                            rvItemTLis.onScrollLeft(distanceX, motionEvent!!)
+                    }
+                    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                        v?.performClick()
+                        rvItemTLis.onTouchEvent(recycler,event ?:return false)
+                        return super.onTouch(v, event)
+                    }
+                }
+            )
+
+        }
+//        explainTextAnimation("編集ボタンを表示するには、" +
+//                "\nアイテムを横にスライドするよ", MyOrientation.BOTTOM,
+//            character).start()
+//        val area = addTouchArea(libraryRv)
+//        area.setOnTouchListener(
+//            object :MyTouchListener(libraryRv.context){
+//                override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
+//                    super.onScrollLeft(distanceX, motionEvent)
+//                    val started = libraryRv.findChildViewUnder(motionEvent!!.x,motionEvent.y)
+//                    if(started!=null&&libraryRv.indexOfChild(started)==0){
+//                        val lineLaySwipeShow = started.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return
+//                        started.apply {
+//                            if(started.tag== LibRVState.Plane){
+//                                lineLaySwipeShow.layoutParams.width = 1
+//                                lineLaySwipeShow.requestLayout()
+//                                lineLaySwipeShow.children.iterator().forEach {
+//                                    it.visibility = View.VISIBLE
+//                                }
+//                                lineLaySwipeShow.visibility = View.VISIBLE
+//                                started.tag = LibRVState.LeftSwiping
+//
+//                            }else if(started.tag== LibRVState.LeftSwiping) {
+//
+//                                lineLaySwipeShow.layoutParams.width = distanceX.toInt()/5 + 1
+//                                lineLaySwipeShow.requestLayout()
+//
+//                            }
+//
+//                        }
+//                    }
+//                }
+//                override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+//                    if((event?.actionMasked== MotionEvent.ACTION_UP||event?.actionMasked == MotionEvent.ACTION_CANCEL)){
+//                        val started = libraryRv[0]
+//                        val lineLaySwipeShow = started.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show) ?:return false
+//                        if(started.tag== LibRVState.LeftSwiping){
+//                            if(lineLaySwipeShow.layoutParams.width <25){
+//                                Animation().animateLibRVLeftSwipeLay(lineLaySwipeShow,false)
+//                                started.tag = LibRVState.Plane
+//                            }
+//                            else if (lineLaySwipeShow.layoutParams.width>=25){
+//                                Animation().animateLibRVLeftSwipeLay(lineLaySwipeShow ,true)
+//                                started.tag = LibRVState.LeftSwiped
+//                                libraryViewModel.setLeftSwipedItemExists(true)
+//                                area.visibility = View.GONE
+//                            }
+//
+//                        }
+//
+//                    }
+//                    return super.onTouch(v, event)
+//                }
+//            }
+//        )
+//        onInstallBinding.root.setOnClickListener{
+//            if(libraryViewModel.returnLeftSwipedItemExists())
+//                guideInOrder(order+1)
+//        }
+
+    }
+    fun editGuide(
     ){
 //        mainViewModel.setGuideVisibility(true)
 //        fun guideInOrder(order:Int){

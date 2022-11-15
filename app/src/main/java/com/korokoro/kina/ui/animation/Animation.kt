@@ -118,7 +118,7 @@ class Animation {
         }
 
     }
-    fun animateLibRVLeftSwipeLay(frameLayout: LinearLayoutCompat,visible:Boolean){
+    fun animateLibRVLeftSwipeLay(frameLayout: LinearLayoutCompat,visible:Boolean,doOnEnd: ()-> Unit){
         val disappearAnim = ValueAnimator.ofInt(frameLayout.width,1)
         disappearAnim.duration = frameLayout.width* 5.toLong()
         disappearAnim.addUpdateListener {
@@ -130,6 +130,7 @@ class Animation {
                 it.visibility = View.GONE
             }
             frameLayout.visibility = View.GONE
+            doOnEnd()
         }
 
         val appearAnim = ValueAnimator.ofInt(frameLayout.width,100)
@@ -140,6 +141,7 @@ class Animation {
         }
         appearAnim.doOnEnd {
             frameLayout.visibility = View.VISIBLE
+            doOnEnd()
         }
         if(!visible) disappearAnim.start()
         else appearAnim.start()

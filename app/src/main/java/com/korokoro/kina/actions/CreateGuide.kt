@@ -22,15 +22,14 @@ import com.korokoro.kina.ui.customViews.*
 
 
 class CreateGuide(val activity:MainActivity,
-                  private val frameLay:FrameLayout, ){
+                  frameLay:FrameLayout, ){
     private val onInstallBinding = activity.callOnInstallBinding
     private val createFileViewModel = activity.createFileViewModel
     private val mainViewModel = activity.mainActivityViewModel
     private val libraryViewModel = activity.libraryViewModel
     private val createCardViewModel = activity.createCardViewModel
 
-    val actions = InstallGuide(activity,onInstallBinding)
-    private var freshCreated = true
+    val actions = InstallGuide(activity,onInstallBinding,frameLay)
 
     private fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
         onInstallBinding.root.setOnClickListener(null)
@@ -42,31 +41,29 @@ class CreateGuide(val activity:MainActivity,
 
     private fun greeting1(){
         actions.apply {
-            frameLay.removeAllViews()
-            frameLay.addView(onInstallBinding.root)
 
-            actions.setUpFirstView(actions.globalLayoutSet)
-            setTextPos("やあ、僕はとさかくん").start()
+            setUpFirstView()
+            animateSpbPos("やあ、僕はとさかくん").start()
             goNextOnClickAnyWhere { greeting2() }
         }
 
     }
     private fun greeting2(){
         actions.apply {
-            setTextPos("これから、KiNaの使い方を説明するね").start()
+            animateSpbPos("これから、KiNaの使い方を説明するね").start()
             goNextOnClickAnyWhere{createFlashCard0()}
         }
 
     }
     private fun createFlashCard0(){
         actions.apply {
-            setTextPos("KiNaでは、フォルダと単語帳が作れるよ").start()
+            animateSpbPos("KiNaでは、フォルダと単語帳が作れるよ").start()
             goNextOnClickAnyWhere{createFlashCard1prt1()}
         }
     }
     private fun createFlashCard1prt1(){
         actions.apply {
-            setTextPos("ボタンをタッチして、\n単語帳を作ってみよう" ).start()
+            animateSpbPos("ボタンをタッチして、\n単語帳を作ってみよう" ).start()
             goNextOnClickAnyWhere{createFlashCard1prt2()}
         }
 
@@ -85,7 +82,7 @@ class CreateGuide(val activity:MainActivity,
         val createMenuImvFlashCard      =activity.findViewById<FrameLayout>(R.id.imvnewTangocho)
         actions.apply {
             setArrow(MyOrientation.TOP,createMenuImvFlashCard)
-            actions.createAnimateHole = false
+            actions.animateHole = false
             actions.viewUnderHole = createMenuImvFlashCard
             activity.createFileViewModel.setBottomMenuVisible(true)
             goNextOnClickTouchArea(createMenuImvFlashCard){createFlashCard3()}
@@ -109,7 +106,7 @@ class CreateGuide(val activity:MainActivity,
                 actions.apply {
                     goNextOnClickTouchArea(btnFinish){createFlashCard5(edtCreatingFileTitle)}
                     createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
-                    actions.createHoleShape = HoleShape.RECTANGLE
+                    actions.holeShape = HoleShape.RECTANGLE
                     actions.viewUnderHole = frameLayEditFile
                     copyViewInConLay(edtCreatingFileTitle)
                     copyViewInConLay(edtCreatingFileTitle).setOnClickListener {
@@ -154,11 +151,12 @@ class CreateGuide(val activity:MainActivity,
     }
     private fun createFlashCard6(libraryRv:RecyclerView){
         actions.apply {
-            actions.createAnimateHole = true
+            actions.animateHole = true
             actions.viewUnderHole = libraryRv[0]
             actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
                 MyHorizontalOrientation.LEFT)
-            actions.setCharacterSize(R.dimen.character_size_middle)
+            characterSizeDimenId = R.dimen.character_size_middle
+            setCharacterSize()
             setCharacterPos()
             goNextOnClickAnyWhere{checkInsideNewFlashCard1(libraryRv)}
         }
@@ -167,10 +165,10 @@ class CreateGuide(val activity:MainActivity,
 
         actions.apply {
             actions.changeCharacterVisibility(true).start()
-            actions.textPosData = ViewAndSide(actions.character, MyOrientation.RIGHT)
+            actions.spbPosData = ViewAndSide(actions.character, MyOrientation.RIGHT)
             actions.spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
 
-            setTextPos("おめでとう！単語帳が追加されたよ\n中身を見てみよう！").start()
+            animateSpbPos("おめでとう！単語帳が追加されたよ\n中身を見てみよう！").start()
         }
 
 
@@ -189,7 +187,7 @@ class CreateGuide(val activity:MainActivity,
     }
     private fun checkInsideNewFlashCard3(){
         actions.apply {
-            setTextPos("まだカードがないね\n早速作ってみよう",
+            animateSpbPos("まだカードがないね\n早速作ってみよう",
             ).start()
             goNextOnClickAnyWhere{makeNewCard1()}
         }
@@ -204,7 +202,7 @@ class CreateGuide(val activity:MainActivity,
     }
     private fun makeNewCard2(){
         val createMenuImvNewCard        =activity.findViewById<FrameLayout>(R.id.imvnewCard)
-        actions.createAnimateHole = false
+        actions.animateHole = false
         actions.viewUnderHole = createMenuImvNewCard
         createFileViewModel.setBottomMenuVisible(true)
         goNextOnClickTouchArea(createMenuImvNewCard){makeNewCard3()}
@@ -227,9 +225,9 @@ class CreateGuide(val activity:MainActivity,
             setCharacterPos()
             actions.appearAlphaAnimation(actions.character,true).start()
             actions.textFit = true
-            actions.textPosData = ViewAndSide(actions.character, MyOrientation.RIGHT)
-            setTextPos("上半分は、カードの表" ).start()
-            actions.createAnimateHole = true
+            actions.spbPosData = ViewAndSide(actions.character, MyOrientation.RIGHT)
+            animateSpbPos("上半分は、カードの表" ).start()
+            actions.animateHole = true
             actions.viewUnderHole = edtCardFrontContent
             goNextOnClickAnyWhere{explainCreateCardFrag2()}
         }
@@ -238,7 +236,7 @@ class CreateGuide(val activity:MainActivity,
     private fun explainCreateCardFrag2(){
         val edtCardBackContent          =activity.findViewById<EditText>(R.id.edt_back_content)
         actions.apply {
-            setTextPos("下半分は、カードの裏になっているよ" ).start()
+            animateSpbPos("下半分は、カードの裏になっているよ" ).start()
             actions.viewUnderHole = edtCardBackContent
             goNextOnClickAnyWhere{explainCreateCardFrag3()}
         }
@@ -254,7 +252,7 @@ class CreateGuide(val activity:MainActivity,
             setCharacterPos()
             actions.textFit = false
             actions.viewUnderHole = edtCardFrontTitle
-            setTextPos("カードの裏表にタイトルを付けることもできるんだ！").start()
+            animateSpbPos("カードの裏表にタイトルを付けることもできるんだ！").start()
             goNextOnClickAnyWhere{explainCreateCardFrag4(edtCardBackTitle)}
         }
 
@@ -268,7 +266,7 @@ class CreateGuide(val activity:MainActivity,
             actions.spbBorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character, MyOrientation.BOTTOM)
                 , leftSideSet = ViewAndSide(actions.character, MyOrientation.RIGHT))
             actions.spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
-            setTextPos("好みのようにカスタマイズしてね").start()
+            animateSpbPos("好みのようにカスタマイズしてね").start()
             goNextOnClickAnyWhere{explainCreateCardNavigation1()}
         }
 
@@ -281,7 +279,7 @@ class CreateGuide(val activity:MainActivity,
                 MyOrientation.TOP))
             actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
                 MyHorizontalOrientation.MIDDLE)
-            setTextPos("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
+            animateSpbPos("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
             actions.viewUnderHole = linLayCreateCardNavigation
             goNextOnClickAnyWhere{explainCreateCardNavigation2()}
         }
@@ -290,7 +288,7 @@ class CreateGuide(val activity:MainActivity,
     private fun explainCreateCardNavigation2(){
         val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
         actions.apply {
-            setTextPos("新しいカードを前に挿入するのはここ").start()
+            animateSpbPos("新しいカードを前に挿入するのはここ").start()
             setArrow(MyOrientation.TOP,createCardInsertNext)
             goNextOnClickAnyWhere{explainCreateCardNavigation3()}
         }
@@ -299,7 +297,7 @@ class CreateGuide(val activity:MainActivity,
     private fun explainCreateCardNavigation3(){
         val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
         actions.apply {
-            setTextPos("後ろに挿入するのはここ！").start()
+            animateSpbPos("後ろに挿入するのはここ！").start()
             setArrow(MyOrientation.TOP,createCardInsertPrevious)
             goNextOnClickAnyWhere{explainCreateCardNavigation4()}
         }
@@ -308,7 +306,7 @@ class CreateGuide(val activity:MainActivity,
     private fun explainCreateCardNavigation4(){
         val createCardNavFlipNext       =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_next)
         actions.apply {
-            setTextPos("矢印ボタンでカードを前後にめくってね！" ).start()
+            animateSpbPos("矢印ボタンでカードを前後にめくってね！" ).start()
             setArrow(MyOrientation.TOP, createCardNavFlipNext)
             goNextOnClickAnyWhere{explainCreateCardNavigation5()}
         }
@@ -329,8 +327,8 @@ class CreateGuide(val activity:MainActivity,
             actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,
                 MyHorizontalOrientation.MIDDLE)
             setCharacterPos()
-            actions.textPosData = ViewAndSide(actions.character, MyOrientation.TOP)
-            setTextPos("これでガイドは終わりだよ").start()
+            actions.spbPosData = ViewAndSide(actions.character, MyOrientation.TOP)
+            animateSpbPos("これでガイドは終わりだよ").start()
             actions.appearAlphaAnimation(actions.character,true).start()
             goNextOnClickAnyWhere{goodBye2()}
         }
@@ -338,7 +336,7 @@ class CreateGuide(val activity:MainActivity,
     }
     private fun goodBye2(){
         actions.apply {
-            setTextPos("KiNaを楽しんで！").start()
+            animateSpbPos("KiNaを楽しんで！").start()
             goNextOnClickAnyWhere{end()}
 
         }
@@ -353,9 +351,6 @@ class CreateGuide(val activity:MainActivity,
         editor.apply()
     }
     fun callOnFirst(){
-        mainViewModel.setGuideVisibility(true)
-        freshCreated = false
-        actions.makeTouchAreaGone()
         greeting1()
 
     }

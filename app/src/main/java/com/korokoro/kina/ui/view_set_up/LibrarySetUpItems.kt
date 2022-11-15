@@ -86,7 +86,7 @@ class LibrarySetUpItems{
             val parent = view.findViewById<ConstraintLayout>(R.id.lib_rv_base_container)
             if(parent.tag == LibRVState.LeftSwiped){
                 Animation().animateLibRVLeftSwipeLay(
-                    view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false)
+                    view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false,){}
             }
             view.findViewById<ImageView>(R.id.btn_select).visibility = View.GONE
             parent.tag = LibRVState.Plane

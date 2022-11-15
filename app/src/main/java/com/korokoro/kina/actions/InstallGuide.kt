@@ -4,7 +4,7 @@ import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.view.View
 import android.view.ViewTreeObserver
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -25,7 +25,7 @@ import com.korokoro.kina.ui.animation.Animation
 import com.korokoro.kina.ui.customViews.HoleShape
 
 
-class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstallBinding){
+class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstallBinding,val frameLay:FrameLayout){
     private val arrow = onInstallBinding.imvFocusArrow
     val character = onInstallBinding.imvCharacter
     val holeView = onInstallBinding.viewWithHole
@@ -33,14 +33,14 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
     val conLaySpeakBubble = onInstallBinding.linLaySpeakBubble
     val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
     private val touchAreaTag = 1
-    var createHoleShape: HoleShape = HoleShape.CIRCLE
-    var createAnimateHole :Boolean = true
+    var holeShape: HoleShape = HoleShape.CIRCLE
+    var animateHole :Boolean = true
     var viewUnderHole:View? = null
         set(value) {
             field = value
             holeView.apply {
-                holeShape = createHoleShape
-                animate = createAnimateHole
+                holeShape = this@InstallGuide.holeShape
+                animate = animateHole
                 viewUnderHole = value
             }
 
@@ -55,7 +55,7 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
             field = value
 
         }
-    var textPosData: ViewAndSide = ViewAndSide(character, MyOrientation.TOP)
+    var spbPosData: ViewAndSide = ViewAndSide(character, MyOrientation.TOP)
         set(value) {
             field = value
             spbBorderSet = ViewChangeActions().getSimpleBorderSet(value.view,value.side,textFit)
@@ -68,37 +68,37 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
         BorderAttributes.FillIfOutOfBorder)
     var textFit:Boolean = false
     var spbAppearOnEnd = true
-    private fun getPixelSize(dimenId:Int):Int{
-        return activity.resources.getDimensionPixelSize(dimenId)
-    }
-    private fun saveBorderDataMap(view: View, set: BorderSet, borderDataMap:MutableMap<View, BorderSet>){
-        if(borderDataMap[view]!=null) borderDataMap.remove(view)
-        borderDataMap[view] = set
-    }
-    fun setPositionByMargin(positionData: ViewAndPositionData, ){
-        removeGlobalListener(globalLayoutSet)
-        val view = positionData.view
-        view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
-            override fun onGlobalLayout() {
-                ViewChangeActions().setPositionByMargin(positionData,onInstallBinding.root,activity)
-                globalLayoutSet[view] = this
-            }
-        })
-        view.requestLayout()
-    }
+    private val arrowMargin = 10
+    private var freshCreated = true
     fun setCharacterPos(){
         characterOrientation.borderAttributes = BorderAttributes.FillIfOutOfBorder
+        setCharacterSize()
         setPositionByMargin(ViewAndPositionData(character,characterBorderSet,characterOrientation))
+    }
+    fun animateAllViewsGone(doOnEnd:()-> Unit):AnimatorSet{
+        return AnimatorSet().apply {
+            playTogether(changeCharacterVisibility(false),changeArrowVisibility(false),changeSpeakBubbleVisibility(false))
+            doOnEnd{
+                doOnEnd()
+            }
+        }
+    }
+    fun animateCharacterPos(doAfterPosChanged: () -> Unit):ValueAnimator{
+        return changeCharacterVisibility(false).apply {
+            doOnEnd {
+                setCharacterSize()
+                characterOrientation.borderAttributes = BorderAttributes.FillIfOutOfBorder
+                setPositionByMargin(ViewAndPositionData(character,characterBorderSet,characterOrientation))
+                doAfterPosChanged()
+                changeCharacterVisibility(true).start()
+            }
+        }
+
     }
     fun goNextOnClickAnyWhere(func:()->Unit){
         onInstallBinding.root.setOnClickListener {
             makeTouchAreaGone()
             func()
-        }
-    }
-    private fun removeGlobalListener(globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
-        globalLayoutSet.onEach {
-            it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
         }
     }
     fun changeSpeakBubbleVisibility(visible: Boolean):ValueAnimator{
@@ -121,15 +121,21 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
     fun getSimplePosRelation(standardView:View, orientation: MyOrientation, fit:Boolean): BorderSet {
         return ViewChangeActions().getSimpleBorderSet(standardView,orientation,fit)
     }
-    fun setCharacterSize(dimenId: Int){
+    var characterSizeDimenId:Int = R.dimen.character_size_large
+    fun setCharacterSize(){
         character.apply {
-            val sizeLarge = getPixelSize(dimenId)
+            val sizeLarge = getPixelSize(characterSizeDimenId)
             layoutParams.width = sizeLarge
             layoutParams.height = sizeLarge
             requestLayout()
         }
     }
-    fun setUpFirstView(globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
+    fun setUpFirstView(){
+        frameLay.removeAllViews()
+        frameLay.addView(onInstallBinding.root)
+        activity.mainActivityViewModel.setGuideVisibility(true)
+        freshCreated = false
+        makeTouchAreaGone()
         onInstallBinding.root.children.filter { it.id == touchAreaTag }.onEach {
             onInstallBinding.root.removeView(it)
         }
@@ -145,78 +151,10 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
                 BorderAttributes.FillIfOutOfBorder)
         )
         setPositionByMargin(characterPosData)
-        setCharacterSize(R.dimen.character_size_large)
+        setCharacterSize()
         changeCharacterVisibility(true).start()
 
     }
-    fun speakBubbleTextAnimation(): AnimatorSet {
-
-         val finalDuration:Long = 200
-
-         val txvScaleAnim1 = ValueAnimator.ofFloat(0.7f,1.1f)
-         val txvScaleAnim2 = ValueAnimator.ofFloat(1.1f,1f)
-
-         arrayOf(txvScaleAnim1,txvScaleAnim2).onEach { animator ->
-             animator.addUpdateListener {
-                 val progressPer = it.animatedValue as Float
-                 ViewChangeActions().setScale(conLaySpeakBubble,progressPer,progressPer)
-             }
-         }
-        val txvScaleAnimSet = AnimatorSet().apply {
-            playSequentially( txvScaleAnim1,txvScaleAnim2)
-            doOnStart {
-                ViewChangeActions().setScale(conLaySpeakBubble,0.7f,0.7f)
-//                ViewChangeActions().setScale(textView,0.7f,0.7f)
-
-            }
-            txvScaleAnim1.duration = finalDuration*0.7.toLong()
-            txvScaleAnim2.duration = finalDuration*0.3.toLong()
-        }
-         val bottomAnim1 = ValueAnimator.ofFloat(0f,1f)
-
-         val bottomTransAnim1 = ValueAnimator.ofFloat(1f,0.2f)
-         val bottomTransAnim2 = ValueAnimator.ofFloat(0.4f,1.1f)
-         val bottomTransAnim3 = ValueAnimator.ofFloat(1.1f,1f)
-         arrayOf(bottomTransAnim1,bottomTransAnim2,bottomTransAnim3).onEach { animator ->
-             animator.addUpdateListener {
-                 ViewChangeActions().setScale(onInstallBinding.sbBottom,it.animatedValue as Float,1f)
-                 onInstallBinding.sbBottom.pivotX = 0f
-             }
-         }
-
-         val bottomTransAnim = AnimatorSet().apply {
-             playSequentially( bottomTransAnim1,bottomTransAnim2,bottomTransAnim3)
-         }
-        val finalAnim = AnimatorSet().apply {
-            playTogether(txvScaleAnimSet,bottomAnim1,bottomTransAnim,changeSpeakBubbleVisibility(true))
-            txvScaleAnimSet.duration = finalDuration
-            bottomTransAnim.duration = finalDuration
-        }
-
-        return finalAnim
-    }
-    private fun setArrowDirection(direction: MyOrientation){
-        arrow.rotation =
-            when(direction){
-                MyOrientation.BOTTOM-> -450f
-                MyOrientation.LEFT -> 0f
-                MyOrientation.RIGHT -> 900f
-                MyOrientation.TOP -> 450f
-                else -> return
-            }
-
-    }
-    private fun setMarginByNextToPosition(movingViewPosition: MyOrientation, margin: Int, borderSet: BorderSet): BorderSet {
-        when(movingViewPosition){
-            MyOrientation.BOTTOM->   borderSet.margin.topMargin = margin
-            MyOrientation.LEFT ->    borderSet.margin.rightMargin = margin
-            MyOrientation.RIGHT ->   borderSet.margin.leftMargin = margin
-            MyOrientation.TOP ->     borderSet.margin.bottomMargin = margin
-            MyOrientation.MIDDLE -> {}
-        }
-        return borderSet
-    }
-    private val arrowMargin = 0
     fun setArrow(arrowPosition: MyOrientation,
                  view: View){
         appearAlphaAnimation(arrow,true).start()
@@ -241,7 +179,7 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
 
      }
 
-    fun setTextPos(string: String):ValueAnimator{
+    fun animateSpbPos(string: String):ValueAnimator{
 
         val anim = changeSpeakBubbleVisibility(false).apply {
             doOnEnd {
@@ -269,7 +207,6 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
             view.callOnClick()
         }
     }
-
     fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
         onInstallBinding.root.setOnClickListener(null)
         copyViewInConLay(view).setOnClickListener {
@@ -313,6 +250,91 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
 
         return a.touchView
     }
+    private fun setArrowDirection(direction: MyOrientation){
+        arrow.rotation =
+            when(direction){
+                MyOrientation.BOTTOM-> -450f
+                MyOrientation.LEFT -> 0f
+                MyOrientation.RIGHT -> 900f
+                MyOrientation.TOP -> 450f
+                else -> return
+            }
 
+    }
+    private fun setMarginByNextToPosition(movingViewPosition: MyOrientation, margin: Int, borderSet: BorderSet): BorderSet {
+        when(movingViewPosition){
+            MyOrientation.BOTTOM->   borderSet.margin.topMargin = margin
+            MyOrientation.LEFT ->    borderSet.margin.rightMargin = margin
+            MyOrientation.RIGHT ->   borderSet.margin.leftMargin = margin
+            MyOrientation.TOP ->     borderSet.margin.bottomMargin = margin
+            MyOrientation.MIDDLE -> {}
+        }
+        return borderSet
+    }
+    private fun speakBubbleTextAnimation(): AnimatorSet {
+
+        val finalDuration:Long = 200
+
+        val txvScaleAnim1 = ValueAnimator.ofFloat(0.7f,1.1f)
+        val txvScaleAnim2 = ValueAnimator.ofFloat(1.1f,1f)
+
+        arrayOf(txvScaleAnim1,txvScaleAnim2).onEach { animator ->
+            animator.addUpdateListener {
+                val progressPer = it.animatedValue as Float
+                ViewChangeActions().setScale(conLaySpeakBubble,progressPer,progressPer)
+            }
+        }
+        val txvScaleAnimSet = AnimatorSet().apply {
+            playSequentially( txvScaleAnim1,txvScaleAnim2)
+            doOnStart {
+                ViewChangeActions().setScale(conLaySpeakBubble,0.7f,0.7f)
+//                ViewChangeActions().setScale(textView,0.7f,0.7f)
+
+            }
+            txvScaleAnim1.duration = finalDuration*0.7.toLong()
+            txvScaleAnim2.duration = finalDuration*0.3.toLong()
+        }
+        val bottomAnim1 = ValueAnimator.ofFloat(0f,1f)
+
+        val bottomTransAnim1 = ValueAnimator.ofFloat(1f,0.2f)
+        val bottomTransAnim2 = ValueAnimator.ofFloat(0.4f,1.1f)
+        val bottomTransAnim3 = ValueAnimator.ofFloat(1.1f,1f)
+        arrayOf(bottomTransAnim1,bottomTransAnim2,bottomTransAnim3).onEach { animator ->
+            animator.addUpdateListener {
+                ViewChangeActions().setScale(onInstallBinding.sbBottom,it.animatedValue as Float,1f)
+                onInstallBinding.sbBottom.pivotX = 0f
+            }
+        }
+
+        val bottomTransAnim = AnimatorSet().apply {
+            playSequentially( bottomTransAnim1,bottomTransAnim2,bottomTransAnim3)
+        }
+        val finalAnim = AnimatorSet().apply {
+            playTogether(txvScaleAnimSet,bottomAnim1,bottomTransAnim,changeSpeakBubbleVisibility(true))
+            txvScaleAnimSet.duration = finalDuration
+            bottomTransAnim.duration = finalDuration
+        }
+
+        return finalAnim
+    }
+    private fun removeGlobalListener(globalLayoutSet: MutableMap<View, ViewTreeObserver.OnGlobalLayoutListener>){
+        globalLayoutSet.onEach {
+            it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
+        }
+    }
+    private fun getPixelSize(dimenId:Int):Int{
+        return activity.resources.getDimensionPixelSize(dimenId)
+    }
+    private fun setPositionByMargin(positionData: ViewAndPositionData, ){
+        removeGlobalListener(globalLayoutSet)
+        val view = positionData.view
+        view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
+            override fun onGlobalLayout() {
+                ViewChangeActions().setPositionByMargin(positionData,onInstallBinding.root,activity)
+                globalLayoutSet[view] = this
+            }
+        })
+        view.requestLayout()
+    }
 
 }
