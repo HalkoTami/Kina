@@ -25,6 +25,7 @@ class EditGuide(val activity:MainActivity,
     fun greeting1(){
         actions.apply {
             setUpFirstView()
+            activity.libraryViewModel.makeAllUnSwiped()
             animateSpbPos("これから、\n単語帳を編集する方法を説明するよ").start()
             goNextOnClickAnyWhere{explainBtn()}
         }
@@ -189,7 +190,7 @@ class EditGuide(val activity:MainActivity,
             makeHereTouchable(frameLayEditFile)
         }
     }
-    fun editFile6(){
+    private fun editFile6(){
         actions.apply {
             onInstallBinding.root.isEnabled = false
             animateAllViewsGone {
