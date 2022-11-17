@@ -17,7 +17,7 @@ import kotlin.math.absoluteValue
 
 class Animation {
 
-    fun appearAlphaAnimation(view :View, visible:Boolean,defaultAlpha:Float): ValueAnimator {
+    fun appearAlphaAnimation(view :View, visible:Boolean,defaultAlpha:Float,doOnEnd: () -> Unit): ValueAnimator {
 
         val appear =ValueAnimator.ofFloat(0f,defaultAlpha)
         val disappear = ValueAnimator.ofFloat(defaultAlpha,0f)
@@ -30,7 +30,12 @@ class Animation {
         appear.doOnStart {
             view.alpha = 0f
             changeViewVisibility(view,true)  }
-        disappear.doOnEnd {  changeViewVisibility(view,false)  }
+        appear.doOnEnd {
+            doOnEnd()
+        }
+        disappear.doOnEnd {  changeViewVisibility(view,false)
+        doOnEnd()
+        }
         return if(visible) appear else disappear
     }
 

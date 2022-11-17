@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 it.setOnClickListener { v->
                     when(v){
                         btnCancelEnd,btnCloseConfirmEnd -> mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-                        btnCommitEnd                    -> mainActivityViewModel.onClickEndGuide()
+                        btnCommitEnd                    -> mainActivityViewModel.onClickEndGuide(this@MainActivity)
                     }
                 }
             }
@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
                 refreshInstallGuide()
                 CreateGuide(this,binding.frameLayCallOnInstall).callOnFirst()
+
             }
         }
         fun setMainActivityLateInitVars(){

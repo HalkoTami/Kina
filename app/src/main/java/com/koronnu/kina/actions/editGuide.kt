@@ -10,6 +10,7 @@ import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.activity.MainActivity
+import com.koronnu.kina.customClasses.enumClasses.HoleShape
 import com.koronnu.kina.customClasses.enumClasses.MyHorizontalOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyVerticalOrientation
@@ -18,7 +19,6 @@ import com.koronnu.kina.customClasses.normalClasses.MyOrientationSet
 import com.koronnu.kina.customClasses.normalClasses.ViewAndPositionData
 import com.koronnu.kina.customClasses.normalClasses.ViewAndSide
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.ui.customViews.HoleShape
 import com.koronnu.kina.ui.listener.MyTouchListener
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
 
@@ -34,7 +34,9 @@ class EditGuide(val activity:MainActivity,
     }
     private fun explainBtn(){
         val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+
         actions.apply {
+            goNextOnClickAnyWhere {  }
             animateAllViewsGone {
                 animateHole = true
                 holeShape = HoleShape.RECTANGLE
@@ -43,16 +45,16 @@ class EditGuide(val activity:MainActivity,
                 characterBorderSet = getSimplePosRelation(libraryRv[0],MyOrientation.BOTTOM,false)
                 characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,MyHorizontalOrientation.LEFT)
                 characterSizeDimenId = R.dimen.character_size_middle
-                animateCharacterPos {
-                    spbBorderSet = getSimplePosRelation(character,MyOrientation.RIGHT,true)
-                    spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
-                    animateSpbPos("このアイテムを見てみよう").start()
+                animateCharacterPos({ spbBorderSet = getSimplePosRelation(character,MyOrientation.RIGHT,true)
+                        spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
+                        animateSpbPos("このアイテムを見てみよう").start()
+                }){ goNextOnClickAnyWhere {
+                        explainBtn2(libraryRv)
+                    }
                 }.start()
 
             }.start()
-            goNextOnClickAnyWhere {
-                explainBtn2(libraryRv)
-            }
+
         }
     }
     private fun explainBtn2(recycler:RecyclerView){
@@ -61,7 +63,7 @@ class EditGuide(val activity:MainActivity,
             setArrowDirection(MyOrientation.LEFT)
             setPositionByMargin(ViewAndPositionData(arrow,getSimplePosRelation(recycler[0],MyOrientation.MIDDLE,true),
                 MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)))
-            changeArrowVisibility(true).start()
+            changeArrowVisibility(true){}.start()
             val rvItemTLis = object :LibraryRVItemClickListener(recycler.context,activity.findViewById(R.id.frameLay_test),recycler,activity.libraryViewModel){
                 override fun doOnSwipeAppeared() {
                     super.doOnSwipeAppeared()
@@ -86,14 +88,15 @@ class EditGuide(val activity:MainActivity,
         }
     }
     private fun explainBtn3(){
+        val btnEditFile=activity.findViewById<ImageView>(R.id.btn_edit_whole)
         actions.apply {
             makeTouchAreaGone()
+            setArrow(MyOrientation.LEFT,btnEditFile)
             animateSpbPos("編集してみよう").start()
-            goNextOnClickAnyWhere{explainBtn4()}
+            goNextOnClickAnyWhere{explainBtn4(btnEditFile)}
         }
     }
-    private fun explainBtn4(){
-        val btnEditFile=activity.findViewById<ImageView>(R.id.btn_edit_whole)
+    private fun explainBtn4(btnEditFile:ImageView){
         actions.apply {
             viewUnderHole = btnEditFile
             setArrow(MyOrientation.LEFT,btnEditFile)
@@ -119,18 +122,17 @@ class EditGuide(val activity:MainActivity,
         actions.apply {
             characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayEditFile,MyOrientation.TOP))
             characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
-            animateCharacterPos {
+            animateCharacterPos ({
                 spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.LEFT)
                 animateSpbPosDoOnEnd("じゃじゃん！"){
                     goNextOnClickAnyWhere { editFile3() }
-                }.start()
-            }.start()
+                }.start()}){}.start()
         }
     }
     private fun editFile3(){
-//        val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
+        val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
         actions.apply {
-//            setArrow(MyOrientation.BOTTOM,edtCreatingFileTitle)
+            setArrow(MyOrientation.BOTTOM,edtCreatingFileTitle)
             animateSpbPos("タイトルを変えたり").start()
             goNextOnClickAnyWhere { editFile4prt1() }
         }
@@ -175,7 +177,7 @@ class EditGuide(val activity:MainActivity,
     private fun editFile4prt5(){
         actions.apply {
 
-            changeArrowVisibility(false).start()
+            changeArrowVisibility(false){}.start()
             val imvColPalRed                =activity.findViewById<ImageView>(R.id.imv_col_red)
             val imvColPalBlue               =activity.findViewById<ImageView>(R.id.imv_col_blue)
             val imvColPaYellow              =activity.findViewById<ImageView>(R.id.imv_col_yellow)
@@ -183,84 +185,22 @@ class EditGuide(val activity:MainActivity,
             val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
             val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
             goNextOnClickTouchArea(btnFinish){
+                hideKeyBoard(edtCreatingFileTitle,activity)
                 btnFinish.performClick()
+                editFile6()
             }
             arrayOf(imvColPaYellow,imvColPalBlue,imvColPalRed,imvColPalGray).iterator().forEach {
                 cloneView(it)
             }
-
             copyViewInConLay(edtCreatingFileTitle) .setOnClickListener{
                 edtCreatingFileTitle.requestFocus()
                 showKeyBoard(edtCreatingFileTitle,activity)
             }
-
-
         }
     }
-
-    fun editGuide(
-    ){
-//        mainViewModel.setGuideVisibility(true)
-//        fun guideInOrder(order:Int){
-//
-//            val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
-//
-//            val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
-//            onInstallBinding.root.children.iterator().forEach { if(it.tag == 1) it.visibility = View.GONE }
-//            fun goNextOnClickAnyWhere(){
-//                onInstallBinding.root.setOnClickListener {
-//                    guideInOrder(order+1)
-//                }
-//            }
-//            fun goNextOnClickTouchArea(touchArea: View) {
-//                onInstallBinding.root.setOnClickListener(null)
-//                addTouchArea(touchArea).setOnClickListener {
-//                    guideInOrder(order + 1)
-//                }
-//            }
-//
-//
-//
-//
-//
-
-
-
-
-//            fun editFile5(){
-//                addTouchArea(edtCreatingFileTitle).setOnClickListener {
-//                    edtCreatingFileTitle.requestFocus()
-//                    showKeyBoard(edtCreatingFileTitle,activity)
-//                }
-//                AnimatorSet().apply {
-//                    playTogether(appearAlphaAnimation(character,false),
-//                        appearAlphaAnimation(textView,false))
-//                    start()
-//                }
-//                setArrow(MyOrientation.BOTTOM,btnFinish)
-//                goNextOnClickTouchArea(btnFinish)
-//            }
-//            fun editFile6(){
-//                createFileViewModel.onClickFinish(edtCreatingFileTitle.text.toString())
-//                appearAlphaAnimation(holeView,false).start()
-//                hideKeyBoard(edtCreatingFileTitle,activity)
-//                mainViewModel.setGuideVisibility(false)
-//            }
-//
-//            when(order){
-//                0   -> greeting1()
-//                1   -> explainBtn()
-//                2   -> explainBtn2()
-//                3   -> explainBtn3()
-//                4   -> explainBtn4()
-//                5   -> editFile1()
-//                6   -> editFile2()
-//                7   -> editFile3()
-//                8   -> editFile4()
-//                9   -> editFile5()
-//                10  -> editFile6()
-//            }
-//        }
-//        guideInOrder(startOrder)
+    fun editFile6(){
+        actions.apply {
+            activity.mainActivityViewModel.setGuideVisibility(false)
+        }
     }
 }

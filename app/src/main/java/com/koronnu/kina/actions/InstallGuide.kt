@@ -77,21 +77,19 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
     }
     fun animateAllViewsGone(doOnEnd:()-> Unit):AnimatorSet{
         return AnimatorSet().apply {
-            playTogether(changeCharacterVisibility(false),changeArrowVisibility(false),changeSpeakBubbleVisibility(false))
+            playTogether(changeCharacterVisibility(false){},changeArrowVisibility(false){},changeSpeakBubbleVisibility(false){})
             doOnEnd{
                 doOnEnd()
             }
         }
     }
-    fun animateCharacterPos(doAfterPosChanged: () -> Unit):ValueAnimator{
-        return changeCharacterVisibility(false).apply {
-            doOnEnd {
-                setCharacterSize()
-                characterOrientation.borderAttributes = BorderAttributes.FillIfOutOfBorder
-                setPositionByMargin(ViewAndPositionData(character,characterBorderSet,characterOrientation))
-                doAfterPosChanged()
-                changeCharacterVisibility(true).start()
-            }
+    fun animateCharacterPos(doAfterPosChanged: () -> Unit,doOnEnd: () -> Unit):ValueAnimator{
+        return changeCharacterVisibility(false){
+            setCharacterSize()
+            characterOrientation.borderAttributes = BorderAttributes.FillIfOutOfBorder
+            setPositionByMargin(ViewAndPositionData(character,characterBorderSet,characterOrientation))
+            doAfterPosChanged()
+            changeCharacterVisibility(true){doOnEnd()}.start()
         }
 
     }
@@ -101,14 +99,17 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
             func()
         }
     }
-    fun changeSpeakBubbleVisibility(visible: Boolean):ValueAnimator{
-        return appearAlphaAnimation(conLaySpeakBubble,visible)
+    fun changeSpeakBubbleVisibility(visible: Boolean,doOnEnd: () -> Unit):ValueAnimator{
+        return appearAlphaAnimation(conLaySpeakBubble,visible){doOnEnd()}
     }
-    fun changeCharacterVisibility(visible: Boolean):ValueAnimator{
-        return appearAlphaAnimation(character,visible)
+    fun changeCharacterVisibility(visible: Boolean,doOnEnd: () -> Unit):ValueAnimator{
+        return appearAlphaAnimation(character,visible){doOnEnd()}
     }
-    fun changeArrowVisibility(visible: Boolean):ValueAnimator{
-        return appearAlphaAnimation(arrow,visible)
+    fun changeCharacterVisibilityOnEnd(visible: Boolean,doOnEnd: () -> Unit):ValueAnimator{
+        return appearAlphaAnimation(character,visible){doOnEnd()}
+    }
+    fun changeArrowVisibility(visible: Boolean,doOnEnd: () -> Unit):ValueAnimator{
+        return appearAlphaAnimation(arrow,visible){doOnEnd()}
     }
     fun makeTouchAreaGone(){
         onInstallBinding.root.children.iterator().forEach {
@@ -116,8 +117,10 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
         }
 
     }
-    fun appearAlphaAnimation(view :View, visible:Boolean): ValueAnimator {
-        return Animation().appearAlphaAnimation(view,visible,if(view == holeView)0.7f else 1f)
+    fun appearAlphaAnimation(view :View, visible:Boolean,doOnEnd: () -> Unit): ValueAnimator {
+        return Animation().appearAlphaAnimation(view,visible,if(view == holeView)0.7f else 1f){
+            doOnEnd()
+        }
     }
     fun getSimplePosRelation(standardView:View, orientation: MyOrientation, fit:Boolean): BorderSet {
         return ViewChangeActions().getSimpleBorderSet(standardView,orientation,fit)
@@ -153,63 +156,84 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
         )
         setPositionByMargin(characterPosData)
         setCharacterSize()
-        changeCharacterVisibility(true).start()
+        changeCharacterVisibility(true){}.start()
 
     }
     fun setArrow(arrowPosition: MyOrientation,
                  view: View){
-        appearAlphaAnimation(arrow,true).start()
-         val getBorderSet = getSimplePosRelation(view,arrowPosition, true)
-         val borderSetWithMargin = setMarginByNextToPosition(arrowPosition,arrowMargin,getBorderSet)
-         val positionData = ViewAndPositionData(arrow,
-             borderSetWithMargin,
-             ViewChangeActions().getOriSetByNextToPosition(arrowPosition, BorderAttributes.None))
+        val getBorderSet = getSimplePosRelation(view,arrowPosition, true)
+        val borderSetWithMargin = setMarginByNextToPosition(arrowPosition,arrowMargin,getBorderSet)
+        val positionData = ViewAndPositionData(arrow,
+            borderSetWithMargin,
+            ViewChangeActions().getOriSetByNextToPosition(arrowPosition, BorderAttributes.None))
 
         setPositionByMargin(positionData)
-         when(arrowPosition){
-             MyOrientation.BOTTOM-> setArrowDirection(MyOrientation.TOP)
-             MyOrientation.LEFT -> setArrowDirection(MyOrientation.RIGHT)
-             MyOrientation.RIGHT -> setArrowDirection(MyOrientation.LEFT)
-             MyOrientation.TOP -> setArrowDirection(MyOrientation.BOTTOM)
-             else ->  {
-                 makeTouchAreaGone()
-                 return
-             }
-         }
+        when(arrowPosition){
+            MyOrientation.BOTTOM-> setArrowDirection(MyOrientation.TOP)
+            MyOrientation.LEFT -> setArrowDirection(MyOrientation.RIGHT)
+            MyOrientation.RIGHT -> setArrowDirection(MyOrientation.LEFT)
+            MyOrientation.TOP -> setArrowDirection(MyOrientation.BOTTOM)
+            else ->  {}
+        }
+        changeArrowVisibility(true){}.start()
+    }
+    fun animateArrow(arrowPosition: MyOrientation,
+                 view: View){
+        changeArrowVisibility(false){
+            val getBorderSet = getSimplePosRelation(view,arrowPosition, true)
+            val borderSetWithMargin = setMarginByNextToPosition(arrowPosition,arrowMargin,getBorderSet)
+            val positionData = ViewAndPositionData(arrow,
+                borderSetWithMargin,
+                ViewChangeActions().getOriSetByNextToPosition(arrowPosition, BorderAttributes.None))
+
+            setPositionByMargin(positionData)
+            when(arrowPosition){
+                MyOrientation.BOTTOM-> setArrowDirection(MyOrientation.TOP)
+                MyOrientation.LEFT -> setArrowDirection(MyOrientation.RIGHT)
+                MyOrientation.RIGHT -> setArrowDirection(MyOrientation.LEFT)
+                MyOrientation.TOP -> setArrowDirection(MyOrientation.BOTTOM)
+                else ->  {}
+            }
+            changeArrowVisibility(true){}.start()
+        }.start()
+
 //         changeViewVisibility(arrow,true)
 
      }
 
     fun animateSpbPosDoOnEnd(string: String,doOnEnd: () -> Unit):ValueAnimator{
-        return changeSpeakBubbleVisibility(false).apply {
-            doOnEnd {
-                changeViewVisibility(conLaySpeakBubble,false)
-                textView.text = string
-                val posData = ViewAndPositionData(
-                    conLaySpeakBubble,
-                    borderSet = spbBorderSet ,
-                    orientation= spbOrientation)
-                setPositionByMargin(posData)
-                if(spbAppearOnEnd) speakBubbleTextAnimation(){doOnEnd()}.start()
-            }
-            duration = 100
+        return changeSpeakBubbleVisibility(false) {
+            changeViewVisibility(conLaySpeakBubble,false)
+            textView.text = string
+            val posData = ViewAndPositionData(
+                conLaySpeakBubble,
+                borderSet = spbBorderSet ,
+                orientation= spbOrientation)
+            setPositionByMargin(posData)
+            if(spbAppearOnEnd) speakBubbleTextAnimation(){doOnEnd()}.start()
         }
+    }
+    fun setSpbPos(string: String){
+        changeViewVisibility(conLaySpeakBubble,false)
+        textView.text = string
+        val posData = ViewAndPositionData(
+            conLaySpeakBubble,
+            borderSet = spbBorderSet ,
+            orientation= spbOrientation)
+        setPositionByMargin(posData)
     }
 
     fun animateSpbPos(string: String):ValueAnimator{
 
-        val anim = changeSpeakBubbleVisibility(false).apply {
-            doOnEnd {
-                changeViewVisibility(conLaySpeakBubble,false)
-                textView.text = string
-                val posData = ViewAndPositionData(
-                    conLaySpeakBubble,
-                    borderSet = spbBorderSet ,
-                    orientation= spbOrientation)
-                setPositionByMargin(posData)
-                if(spbAppearOnEnd) speakBubbleTextAnimation(){}.start()
-            }
-            duration = 100
+        val anim = changeSpeakBubbleVisibility(false){
+            changeViewVisibility(conLaySpeakBubble,false)
+            textView.text = string
+            val posData = ViewAndPositionData(
+                conLaySpeakBubble,
+                borderSet = spbBorderSet ,
+                orientation= spbOrientation)
+            setPositionByMargin(posData)
+            speakBubbleTextAnimation(){}.start()
         }
 
         return anim
@@ -226,8 +250,8 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
     }
     fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
         onInstallBinding.root.setOnClickListener(null)
-        makeTouchAreaGone()
         copyViewInConLay(view).setOnClickListener {
+            makeTouchAreaGone()
             func()
         }
     }
@@ -327,7 +351,7 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
             playSequentially( bottomTransAnim1,bottomTransAnim2,bottomTransAnim3)
         }
         val finalAnim = AnimatorSet().apply {
-            playTogether(txvScaleAnimSet,bottomAnim1,bottomTransAnim,changeSpeakBubbleVisibility(true))
+            playTogether(txvScaleAnimSet,bottomAnim1,bottomTransAnim,changeSpeakBubbleVisibility(true){})
             txvScaleAnimSet.duration = finalDuration
             bottomTransAnim.duration = finalDuration
             doOnEnd { doOnEnd() }

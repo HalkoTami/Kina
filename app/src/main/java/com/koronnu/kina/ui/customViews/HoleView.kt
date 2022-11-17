@@ -11,9 +11,7 @@ import com.koronnu.kina.customClasses.normalClasses.CirclePosition
 import com.koronnu.kina.customClasses.normalClasses.RecPosition
 
 
-enum class HoleShape{
-    CIRCLE,RECTANGLE
-}
+
 class HoleView (
     context: Context,
     attrs: AttributeSet): View(context, attrs) {
