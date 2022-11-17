@@ -11,10 +11,7 @@ import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import com.koronnu.kina.R
 import com.koronnu.kina.activity.MainActivity
-import com.koronnu.kina.customClasses.enumClasses.BorderAttributes
-import com.koronnu.kina.customClasses.enumClasses.MyHorizontalOrientation
-import com.koronnu.kina.customClasses.enumClasses.MyOrientation
-import com.koronnu.kina.customClasses.enumClasses.MyVerticalOrientation
+import com.koronnu.kina.customClasses.enumClasses.*
 import com.koronnu.kina.customClasses.normalClasses.BorderSet
 import com.koronnu.kina.customClasses.normalClasses.MyOrientationSet
 import com.koronnu.kina.customClasses.normalClasses.ViewAndPositionData
@@ -22,14 +19,13 @@ import com.koronnu.kina.customClasses.normalClasses.ViewAndSide
 import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.databinding.TouchAreaBinding
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.ui.customViews.HoleShape
 
 
 class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstallBinding,val frameLay:FrameLayout){
     val arrow = onInstallBinding.imvFocusArrow
     val character = onInstallBinding.imvCharacter
     val holeView = onInstallBinding.viewWithHole
-    val textView = onInstallBinding.txvExplaino
+    val textView = onInstallBinding.txvSpeakBubble
     val conLaySpeakBubble = onInstallBinding.linLaySpeakBubble
     val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
     private val touchAreaTag = 1
@@ -70,6 +66,27 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
     var spbAppearOnEnd = true
     private val arrowMargin = 10
     private var freshCreated = true
+
+    fun makeHereTouchable(view: View){
+        onInstallBinding.apply {
+            onInstallBinding.root.setOnClickListener(null)
+            onInstallBinding.root.isClickable = false
+            arrayOf(viewUnTouchableLeft,viewUnTouchableRight,viewUnTouchableBottom,viewUnTouchableTop).onEach {
+                it.isClickable = true
+            }
+            val oriSet = MyOrientationSet(borderAttributes = BorderAttributes.FillBorder)
+            setPositionByMargin(ViewAndPositionData(onInstallBinding.viewUnTouchableLeft,
+                getSimplePosRelation(view,MyOrientation.LEFT,false), oriSet))
+            setPositionByMargin(ViewAndPositionData(onInstallBinding.viewUnTouchableBottom,
+                getSimplePosRelation(view,MyOrientation.BOTTOM,false), oriSet))
+            setPositionByMargin(ViewAndPositionData(onInstallBinding.viewUnTouchableRight,
+                getSimplePosRelation(view,MyOrientation.RIGHT,false), oriSet))
+            setPositionByMargin(ViewAndPositionData(onInstallBinding.viewUnTouchableTop,
+                getSimplePosRelation(view,MyOrientation.TOP,false),oriSet))
+        }
+
+    }
+
     fun setCharacterPos(){
         characterOrientation.borderAttributes = BorderAttributes.FillIfOutOfBorder
         setCharacterSize()

@@ -279,6 +279,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val popUpEditFileVisibilityObserver  = Observer<Boolean>{
             Animation().animatePopUpAddFile(binding.frameLayEditFile,it)
             changeViewVisibility(binding.fragConViewCover,it||createFileViewModel.returnBottomMenuVisible())
+            if(it.not())  hideKeyBoard(binding.editFileBinding.edtFileTitle,this)
         }
         val popUpEditFileUIDataObserver        = Observer<EditFileViewModel.PopUpUI>{
             LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,this@MainActivity)

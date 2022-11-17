@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.ViewChangeActions
+import com.koronnu.kina.customClasses.enumClasses.HoleShape
 import com.koronnu.kina.customClasses.normalClasses.CirclePosition
 import com.koronnu.kina.customClasses.normalClasses.RecPosition
 
@@ -32,7 +33,7 @@ class HoleViewVer2 (
             field = value
             this.invalidate()
         }
-    var holeShape:HoleShape = HoleShape.CIRCLE
+    var holeShape: HoleShape = HoleShape.CIRCLE
         set(value){
             field = value
             this.invalidate()

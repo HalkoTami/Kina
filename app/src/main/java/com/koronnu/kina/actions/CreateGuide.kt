@@ -11,6 +11,7 @@ import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.activity.MainActivity
+import com.koronnu.kina.customClasses.enumClasses.HoleShape
 import com.koronnu.kina.customClasses.enumClasses.MyHorizontalOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyVerticalOrientation

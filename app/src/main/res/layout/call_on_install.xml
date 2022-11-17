@@ -6,7 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/conLay_guide"
+    tools:ignore="MissingConstraints"
         >
+    <View
+        style="@style/holeUnTouchableView"
+        android:id="@+id/view_unTouchable_top"
+        />
+    <View
+        style="@style/holeUnTouchableView"
+        android:id="@+id/view_unTouchable_left"
+        />
+    <View
+        style="@style/holeUnTouchableView"
+        android:id="@+id/view_unTouchable_bottom"
+        />
+    <View
+        style="@style/holeUnTouchableView"
+        android:id="@+id/view_unTouchable_right" />
 
 
     <com.koronnu.kina.ui.customViews.HoleViewVer2
@@ -20,14 +36,11 @@
         android:padding="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/ConstraintDefault"
         >
         <TextView
             style="@style/OnInstallTextView"
-            android:id="@+id/txv_explaino"
+            android:id="@+id/txv_speak_bubble"
             android:paddingHorizontal="10dp"
             android:paddingVertical="15dp"
             android:layout_width="wrap_content"
@@ -39,6 +52,7 @@
 
             />
         <View
+            app:constraintSet="@style/ConstraintDefault"
             android:id="@+id/sb_bottom"
             android:layout_width="0dp"
             app:layout_constraintWidth_percent="0.7"
@@ -48,7 +62,7 @@
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txv_explaino"
+            app:layout_constraintTop_toBottomOf="@id/txv_speak_bubble"
             app:layout_constraintEnd_toEndOf="parent"
             />
 
@@ -62,7 +76,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:visibility="gone"
-        android:src="@drawable/tosaka_standin"
+        android:src="@drawable/imv_character"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,5 +113,6 @@
             layout="@layout/anki_flip_popup_confirm_end"
             android:visibility="visible"/>
     </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

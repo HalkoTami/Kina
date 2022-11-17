@@ -63,7 +63,7 @@
         android:id="@+id/imv_character"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:src="@drawable/tosaka_standin"
+        android:src="@drawable/imv_character"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

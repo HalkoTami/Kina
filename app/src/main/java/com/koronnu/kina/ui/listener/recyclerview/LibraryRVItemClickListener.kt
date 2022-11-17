@@ -16,7 +16,7 @@ import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
 import kotlin.math.abs
 
 open class LibraryRVItemClickListener(val context: Context,
-                                 private val scrollView: NestedScrollView,
+                                 val scrollView: NestedScrollView,
                                  val recyclerView: RecyclerView,
                                  val libraryBaseViewModel: LibraryBaseViewModel) :RecyclerView.OnItemTouchListener{
     private val gestureScrollDetector = GestureDetector(context, ScrollDetector())

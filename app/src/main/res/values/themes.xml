@@ -289,6 +289,17 @@
         <item name="android:background">@drawable/rectangle_speak_bubble</item>
         <item name="android:gravity">center</item>
     </style>
+    <style name="ConstraintDefault">
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+    </style>
+    <style name="holeUnTouchableView" parent="ConstraintDefault">
+
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+    </style>
     <style name="PopUpFrameLayStyle">
         <item name="android:visibility">gone</item>
         <item name="android:background">@drawable/rectangle_green_stroke</item>

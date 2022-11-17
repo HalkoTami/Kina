@@ -5,5 +5,5 @@
         android:left="100dp"
         android:right="100dp"
 
-        android:drawable="@drawable/tosaka_standin"/>
+        android:drawable="@drawable/imv_character"/>
 </layer-list>

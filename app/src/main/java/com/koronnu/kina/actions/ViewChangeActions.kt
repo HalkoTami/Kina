@@ -91,6 +91,7 @@ class ViewChangeActions {
         }
         return pos
     }
+
     fun calculatePositionInBorder(view: View,
                                   borderPosition: RecPosition,
                                   verticalOrientation: MyVerticalOrientation,

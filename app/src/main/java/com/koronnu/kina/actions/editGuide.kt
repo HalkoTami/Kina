@@ -10,10 +10,7 @@ import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.activity.MainActivity
-import com.koronnu.kina.customClasses.enumClasses.HoleShape
-import com.koronnu.kina.customClasses.enumClasses.MyHorizontalOrientation
-import com.koronnu.kina.customClasses.enumClasses.MyOrientation
-import com.koronnu.kina.customClasses.enumClasses.MyVerticalOrientation
+import com.koronnu.kina.customClasses.enumClasses.*
 import com.koronnu.kina.customClasses.normalClasses.BorderSet
 import com.koronnu.kina.customClasses.normalClasses.MyOrientationSet
 import com.koronnu.kina.customClasses.normalClasses.ViewAndPositionData
@@ -48,7 +45,8 @@ class EditGuide(val activity:MainActivity,
                 animateCharacterPos({ spbBorderSet = getSimplePosRelation(character,MyOrientation.RIGHT,true)
                         spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
                         animateSpbPos("このアイテムを見てみよう").start()
-                }){ goNextOnClickAnyWhere {
+                }){
+                    goNextOnClickAnyWhere {
                         explainBtn2(libraryRv)
                     }
                 }.start()
@@ -64,11 +62,10 @@ class EditGuide(val activity:MainActivity,
             setPositionByMargin(ViewAndPositionData(arrow,getSimplePosRelation(recycler[0],MyOrientation.MIDDLE,true),
                 MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)))
             changeArrowVisibility(true){}.start()
-            val rvItemTLis = object :LibraryRVItemClickListener(recycler.context,activity.findViewById(R.id.frameLay_test),recycler,activity.libraryViewModel){
+            val rvItemTLis =  object :LibraryRVItemClickListener(recycler.context,activity.findViewById(R.id.frameLay_test),recycler,activity.libraryViewModel){
                 override fun doOnSwipeAppeared() {
                     super.doOnSwipeAppeared()
                     explainBtn3()
-
                 }
             }
             copyViewInConLay(recycler[0]).setOnTouchListener(
@@ -178,29 +175,38 @@ class EditGuide(val activity:MainActivity,
         actions.apply {
 
             changeArrowVisibility(false){}.start()
-            val imvColPalRed                =activity.findViewById<ImageView>(R.id.imv_col_red)
-            val imvColPalBlue               =activity.findViewById<ImageView>(R.id.imv_col_blue)
-            val imvColPaYellow              =activity.findViewById<ImageView>(R.id.imv_col_yellow)
-            val imvColPalGray               =activity.findViewById<ImageView>(R.id.imv_col_gray)
-            val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
+            val frameLayEditFile=activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
             val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
-            goNextOnClickTouchArea(btnFinish){
-                hideKeyBoard(edtCreatingFileTitle,activity)
+            val btnClose                    =activity.findViewById<ImageView>(R.id.btn_close)
+            copyViewInConLay(btnClose).setOnClickListener{
+                btnClose.performClick()
+                editFile6()
+            }
+            copyViewInConLay(btnFinish).setOnClickListener {
                 btnFinish.performClick()
                 editFile6()
             }
-            arrayOf(imvColPaYellow,imvColPalBlue,imvColPalRed,imvColPalGray).iterator().forEach {
-                cloneView(it)
-            }
-            copyViewInConLay(edtCreatingFileTitle) .setOnClickListener{
-                edtCreatingFileTitle.requestFocus()
-                showKeyBoard(edtCreatingFileTitle,activity)
-            }
+            makeHereTouchable(frameLayEditFile)
         }
     }
     fun editFile6(){
         actions.apply {
-            activity.mainActivityViewModel.setGuideVisibility(false)
+            onInstallBinding.root.isEnabled = false
+            animateAllViewsGone {
+                characterBorderSet = BorderSet()
+                characterOrientation = MyOrientationSet()
+                animateCharacterPos({
+                    spbPosData = ViewAndSide(character,MyOrientation.TOP)
+                    animateSpbPos("ガイドは以上だよ").start()
+                }){}.start()
+                onInstallBinding.root.isEnabled = true
+                goNextOnClickAnyWhere {
+                    appearAlphaAnimation(onInstallBinding.root,false){
+                        activity.mainActivityViewModel.setGuideVisibility(false)
+                    }.start()
+                    }
+            }.start()
+
         }
     }
 }
