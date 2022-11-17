@@ -100,7 +100,7 @@ class CreateGuide(val activity:MainActivity,
         AnimatorSet().apply {
             playTogether(
                 actions.appearAlphaAnimation(actions.character, false){},
-                actions.appearAlphaAnimation(actions.conLaySpeakBubble, false){}
+                actions.changeSpeakBubbleVisibility( false){}
             )
             doOnEnd {
                 actions.apply {

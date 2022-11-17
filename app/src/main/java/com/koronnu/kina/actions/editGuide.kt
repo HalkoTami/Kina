@@ -58,7 +58,7 @@ class EditGuide(val activity:MainActivity,
     }
     private fun explainBtn2(recycler:RecyclerView){
         actions.apply {
-            animateSpbPos("編集ボタンを表示するには、アイテムを横にスライドするよ").start()
+            animateSpbPos("編集ボタンを表示するには、\nアイテムを横にスライドするよ").start()
             setArrowDirection(MyOrientation.LEFT)
             setPositionByMargin(ViewAndPositionData(arrow,getSimplePosRelation(recycler[0],MyOrientation.MIDDLE,true),
                 MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)))
@@ -121,7 +121,7 @@ class EditGuide(val activity:MainActivity,
             characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayEditFile,MyOrientation.TOP))
             characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
             animateCharacterPos ({
-                spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.LEFT)
+                spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
                 animateSpbPosDoOnEnd("じゃじゃん！"){
                     goNextOnClickAnyWhere { editFile3() }
                 }.start()}){}.start()

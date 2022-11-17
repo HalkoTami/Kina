@@ -31,42 +31,34 @@
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linLay_speak_bubble"
-        android:padding="20dp"
+    <TextView
+        style="@style/OnInstallTextView"
+        android:id="@+id/txv_speak_bubble"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/ConstraintDefault"
-        >
-        <TextView
-            style="@style/OnInstallTextView"
-            android:id="@+id/txv_speak_bubble"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/sb_bottom"
-            app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
 
-            />
-        <View
-            app:constraintSet="@style/ConstraintDefault"
-            android:id="@+id/sb_bottom"
-            android:layout_width="0dp"
-            app:layout_constraintWidth_percent="0.7"
-            android:layout_height="10dp"
-            android:background="@drawable/rectangle_green_stroke"
-            android:backgroundTint="@color/black"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txv_speak_bubble"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+        />
+    <View
+        app:constraintSet="@style/ConstraintDefault"
+        android:id="@+id/sb_bottom"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/spb_bottom_rec_height"
+        android:background="@drawable/rectangle_green_stroke"
+        android:backgroundTint="@color/black"
+        android:layout_marginTop="@dimen/spb_bottom_rec_marginTop"
+        app:layout_constraintWidth_max="100dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintStart_toStartOf="@id/txv_speak_bubble"
+        app:layout_constraintTop_toBottomOf="@id/txv_speak_bubble"
+        app:layout_constraintEnd_toEndOf="@id/txv_speak_bubble"
+        />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

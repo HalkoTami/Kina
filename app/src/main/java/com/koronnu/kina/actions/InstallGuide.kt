@@ -2,6 +2,7 @@ package com.koronnu.kina.actions
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
+import android.app.ActionBar.LayoutParams
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
@@ -12,10 +13,7 @@ import androidx.core.view.children
 import com.koronnu.kina.R
 import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.*
-import com.koronnu.kina.customClasses.normalClasses.BorderSet
-import com.koronnu.kina.customClasses.normalClasses.MyOrientationSet
-import com.koronnu.kina.customClasses.normalClasses.ViewAndPositionData
-import com.koronnu.kina.customClasses.normalClasses.ViewAndSide
+import com.koronnu.kina.customClasses.normalClasses.*
 import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.databinding.TouchAreaBinding
 import com.koronnu.kina.ui.animation.Animation
@@ -26,7 +24,8 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
     val character = onInstallBinding.imvCharacter
     val holeView = onInstallBinding.viewWithHole
     val textView = onInstallBinding.txvSpeakBubble
-    val conLaySpeakBubble = onInstallBinding.linLaySpeakBubble
+//    val conLaySpeakBubble = onInstallBinding.linLaySpeakBubble
+    val bottom = onInstallBinding.sbBottom
     val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
     private val touchAreaTag = 1
     var holeShape: HoleShape = HoleShape.CIRCLE
@@ -116,8 +115,14 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
             func()
         }
     }
-    fun changeSpeakBubbleVisibility(visible: Boolean,doOnEnd: () -> Unit):ValueAnimator{
-        return appearAlphaAnimation(conLaySpeakBubble,visible){doOnEnd()}
+    fun changeSpeakBubbleVisibility(visible: Boolean,doOnEnd: () -> Unit):AnimatorSet{
+        return AnimatorSet().apply {
+            playTogether(appearAlphaAnimation(textView,visible){},
+                appearAlphaAnimation(bottom,visible){})
+            doOnEnd{
+                doOnEnd()
+            }
+        }
     }
     fun changeCharacterVisibility(visible: Boolean,doOnEnd: () -> Unit):ValueAnimator{
         return appearAlphaAnimation(character,visible){doOnEnd()}
@@ -160,7 +165,7 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
         onInstallBinding.root.children.filter { it.id == touchAreaTag }.onEach {
             onInstallBinding.root.removeView(it)
         }
-        changeMulVisibility(arrayOf(character,arrow,conLaySpeakBubble),false)
+        changeMulVisibility(arrayOf(character,arrow,textView,bottom),false)
         holeView.initActivity(activity)
         removeHole()
         val characterPosData = ViewAndPositionData(
@@ -218,35 +223,42 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
 
      }
 
-    fun animateSpbPosDoOnEnd(string: String,doOnEnd: () -> Unit):ValueAnimator{
+    fun animateSpbPosDoOnEnd(string: String,doOnEnd: () -> Unit):AnimatorSet{
         return changeSpeakBubbleVisibility(false) {
-            changeViewVisibility(conLaySpeakBubble,false)
+            changeMulVisibility(arrayOf(bottom,textView),false)
             textView.text = string
             val posData = ViewAndPositionData(
-                conLaySpeakBubble,
+                textView,
                 borderSet = spbBorderSet ,
                 orientation= spbOrientation)
             setPositionByMargin(posData)
             if(spbAppearOnEnd) speakBubbleTextAnimation(){doOnEnd()}.start()
         }
     }
-    fun setSpbPos(string: String){
-        changeViewVisibility(conLaySpeakBubble,false)
-        textView.text = string
-        val posData = ViewAndPositionData(
-            conLaySpeakBubble,
-            borderSet = spbBorderSet ,
-            orientation= spbOrientation)
-        setPositionByMargin(posData)
-    }
+//    fun setSpbPos(string: String){
+//        changeViewVisibility(conLaySpeakBubble,false)
+//        textView.text = string
+//        val posData = ViewAndPositionData(
+//            conLaySpeakBubble,
+//            borderSet = spbBorderSet ,
+//            orientation= spbOrientation)
+//        setPositionByMargin(posData)
+//    }
 
-    fun animateSpbPos(string: String):ValueAnimator{
+    fun animateSpbPos(string: String):AnimatorSet{
 
         val anim = changeSpeakBubbleVisibility(false){
-            changeViewVisibility(conLaySpeakBubble,false)
+            changeMulVisibility(arrayOf(textView,bottom),false)
             textView.text = string
+            textView.layoutParams.height = LayoutParams.WRAP_CONTENT
+            textView.layoutParams.width = LayoutParams.WRAP_CONTENT
+            textView.requestLayout()
+            val margin = getPixelSize(R.dimen.spbTextView_margin)
+            spbBorderSet.margin = MyMargin(
+                bottomMargin = getPixelSize(R.dimen.spb_bottom_rec_height)+getPixelSize(R.dimen.spb_bottom_rec_marginTop),
+                topMargin = margin, leftMargin = margin, rightMargin = margin)
             val posData = ViewAndPositionData(
-                conLaySpeakBubble,
+                textView,
                 borderSet = spbBorderSet ,
                 orientation= spbOrientation)
             setPositionByMargin(posData)
@@ -339,13 +351,13 @@ class InstallGuide(val activity:MainActivity,val onInstallBinding: CallOnInstall
         arrayOf(txvScaleAnim1,txvScaleAnim2).onEach { animator ->
             animator.addUpdateListener {
                 val progressPer = it.animatedValue as Float
-                ViewChangeActions().setScale(conLaySpeakBubble,progressPer,progressPer)
+                ViewChangeActions().setScale(textView,progressPer,progressPer)
             }
         }
         val txvScaleAnimSet = AnimatorSet().apply {
             playSequentially( txvScaleAnim1,txvScaleAnim2)
             doOnStart {
-                ViewChangeActions().setScale(conLaySpeakBubble,0.7f,0.7f)
+                ViewChangeActions().setScale(textView,0.7f,0.7f)
 //                ViewChangeActions().setScale(textView,0.7f,0.7f)
 
             }
