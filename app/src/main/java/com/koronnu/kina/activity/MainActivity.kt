@@ -52,24 +52,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var searchViewModel         : SearchViewModel
 
     private lateinit var binding                  : MainActivityBinding
-    private var _callOnInstallBinding: CallOnInstallBinding? = null
+    var _callOnInstallBinding: CallOnInstallBinding? = null
     val callOnInstallBinding get() = _callOnInstallBinding!!
 
-    private fun refreshInstallGuide(){
-        _callOnInstallBinding = CallOnInstallBinding.inflate(layoutInflater)
-        callOnInstallBinding.confirmEndGuideBinding.apply {
-            arrayOf(btnCancelEnd,
-                btnCloseConfirmEnd,
-                btnCommitEnd).onEach {
-                it.setOnClickListener { v->
-                    when(v){
-                        btnCancelEnd,btnCloseConfirmEnd -> mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-                        btnCommitEnd                    -> mainActivityViewModel.onClickEndGuide(this@MainActivity)
-                    }
-                }
-            }
-        }
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +68,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             val sharedPref = this.getSharedPreferences(
                 "firstTimeGuide", Context.MODE_PRIVATE) ?: return
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
-                refreshInstallGuide()
                 CreateGuide(this,binding.frameLayCallOnInstall).callOnFirst()
 
             }
@@ -90,6 +75,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         fun setMainActivityLateInitVars(){
 
             binding = MainActivityBinding.inflate(layoutInflater)
+            _callOnInstallBinding = CallOnInstallBinding.inflate(layoutInflater)
             val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
             factory               = ViewModelFactory((application as RoomApplication).repository)
             _mainActivityViewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -238,18 +224,15 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     ).onEach { view ->
                         view.setOnClickListener { v->
                             when(v){
-                                menuHowToDeleteItems -> DeleteGuide().deleteGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
+                                menuHowToDeleteItems -> DeleteGuide(this@MainActivity,binding.frameLayCallOnInstall).deleteGuide()
                                 menuHowToCreateItems -> {
-                                    refreshInstallGuide()
                                     CreateGuide(this@MainActivity,
                                         binding.frameLayCallOnInstall).callOnFirst()
                                 }
                                 menuHowToEditItems -> {
-                                    refreshInstallGuide()
                                     EditGuide(this@MainActivity,binding.frameLayCallOnInstall).greeting1()
                                 }
                                 menuHowToMoveItems -> {
-                                    refreshInstallGuide()
                                     MoveGuide(this@MainActivity,callOnInstallBinding).moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
                                 }
                             }

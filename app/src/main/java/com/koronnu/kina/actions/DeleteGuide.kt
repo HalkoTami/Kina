@@ -1,15 +1,31 @@
 package com.koronnu.kina.actions
 
+import android.widget.FrameLayout
+import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.ui.viewmodel.DeletePopUpViewModel
 import com.koronnu.kina.ui.viewmodel.EditFileViewModel
 import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
 import com.koronnu.kina.ui.viewmodel.MainViewModel
 
-class DeleteGuide(){
-    fun deleteGuide(startOrder: Int, mainViewModel: MainViewModel,
-                    libraryViewModel: LibraryBaseViewModel, editFileViewModel: EditFileViewModel,
-                    deletePopUpViewModel: DeletePopUpViewModel
-    ) {
+class DeleteGuide(activity: MainActivity,frameLayout: FrameLayout){
+    val actions = InstallGuide(activity,frameLayout)
+    fun greeting(){
+        actions.apply {
+
+        }
+
+//        if(mainViewModel.returnFragmentStatus()?.now!=MainFragment.Library){
+//            mainViewModel.changeFragment(MainFragment.Library)
+//        }
+//        if(libraryViewModel.returnLibraryFragment()!=LibraryFragment.Home){
+//            libraryViewModel.returnLibraryNavCon()?.navigate(LibraryHomeFragDirections.toLibHome())
+//        }
+//        removeHole()
+//        appearAlphaAnimation(character,true).start()
+//        explainTextAnimation("これから、\nアイテムを削除する方法を説明するよ", MyOrientation.TOP,character).start()
+//        goNextOnClickAnyWhere()
+    }
+    fun deleteGuide() {
 //        mainViewModel.setGuideVisibility(true)
 //        fun guideInOrder(order: Int) {
 //            onInstallBinding.root.children.iterator().forEach { if(it.tag == 1) it.visibility = View.GONE }

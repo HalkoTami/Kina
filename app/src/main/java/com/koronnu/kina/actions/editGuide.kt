@@ -21,10 +21,10 @@ import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
 
 class EditGuide(val activity:MainActivity,
                 frameLay: FrameLayout,){
-    val actions = InstallGuide(activity,activity.callOnInstallBinding,frameLay)
+    val actions = InstallGuide(activity,frameLay)
     fun greeting1(){
         actions.apply {
-            setUpFirstView()
+            callOnFirst()
             activity.libraryViewModel.makeAllUnSwiped()
             animateSpbPos("これから、\n単語帳を編集する方法を説明するよ").start()
             goNextOnClickAnyWhere{explainBtn()}
@@ -35,24 +35,22 @@ class EditGuide(val activity:MainActivity,
 
         actions.apply {
             goNextOnClickAnyWhere {  }
-            animateAllViewsGone {
+            allViewsGoneAnimDoOnEnd= {
                 animateHole = true
-                holeShape = HoleShape.RECTANGLE
-                viewUnderHole = libraryRv[0]
+                holeShapeInGuide = HoleShape.RECTANGLE
+                viewUnderSpotInGuide = libraryRv[0]
 
                 characterBorderSet = getSimplePosRelation(libraryRv[0],MyOrientation.BOTTOM,false)
                 characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,MyHorizontalOrientation.LEFT)
                 characterSizeDimenId = R.dimen.character_size_middle
-                animateCharacterPos({ spbBorderSet = getSimplePosRelation(character,MyOrientation.RIGHT,true)
-                        spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
-                        animateSpbPos("このアイテムを見てみよう").start()
-                }){
-                    goNextOnClickAnyWhere {
-                        explainBtn2(libraryRv)
-                    }
-                }.start()
-
-            }.start()
+                doAfterCharacterPosChanged = { spbBorderSet = getSimplePosRelation(character,MyOrientation.RIGHT,true)
+                    spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
+                    animateSpbPos("このアイテムを見てみよう").start()
+                }
+                characterPosChangeAnimDoOnEnd = { goNextOnClickAnyWhere { explainBtn2(libraryRv) }}
+                animateCharacterPos().start()
+            }
+            animateAllViewsGone().start()
 
         }
     }
@@ -62,7 +60,7 @@ class EditGuide(val activity:MainActivity,
             setArrowDirection(MyOrientation.LEFT)
             setPositionByMargin(ViewAndPositionData(arrow,getSimplePosRelation(recycler[0],MyOrientation.MIDDLE,true),
                 MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)))
-            changeArrowVisibility(true){}.start()
+            changeArrowVisibility(true).start()
             val rvItemTLis =  object :LibraryRVItemClickListener(recycler.context,activity.findViewById(R.id.frameLay_test),recycler,activity.libraryViewModel){
                 override fun doOnSwipeAppeared() {
                     super.doOnSwipeAppeared()
@@ -96,7 +94,7 @@ class EditGuide(val activity:MainActivity,
     }
     private fun explainBtn4(btnEditFile:ImageView){
         actions.apply {
-            viewUnderHole = btnEditFile
+            viewUnderSpotInGuide = btnEditFile
             setArrow(MyOrientation.LEFT,btnEditFile)
             goNextOnClickTouchArea(btnEditFile){
                 editFile1()}
@@ -105,27 +103,31 @@ class EditGuide(val activity:MainActivity,
     private fun editFile1(){
         val frameLayEditFile=activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
         actions.apply {
-            animateAllViewsGone {
-                onInstallBinding.root.setOnClickListener(null)
-                holeShape = HoleShape.RECTANGLE
+            allViewsGoneAnimDoOnEnd = {
+                guideParentConLay.setOnClickListener(null)
+                holeShapeInGuide = HoleShape.RECTANGLE
                 animateHole = false
-                viewUnderHole = frameLayEditFile
+                viewUnderSpotInGuide = frameLayEditFile
                 activity.createFileViewModel.onClickEditFileInRV(
                     activity.libraryViewModel.returnParentRVItems()[0] as File)
                 editFile2(frameLayEditFile)
-            }.start()
+            }
+            animateAllViewsGone().start()
         }
     }
     private fun editFile2(frameLayEditFile:FrameLayout){
         actions.apply {
             characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayEditFile,MyOrientation.TOP))
             characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
-            animateCharacterPos ({
+            characterPosChangeAnimDoOnEnd = {}
+            doAfterCharacterPosChanged = {
                 spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
-                animateSpbPosDoOnEnd("じゃじゃん！"){
-                    goNextOnClickAnyWhere { editFile3() }
-                }.start()}){}.start()
+                animateSpbPos("じゃじゃん！").start()
+            }
+            animateCharacterPos ().start()
+            goNextOnClickAnyWhere { editFile3() }
         }
+
     }
     private fun editFile3(){
         val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
@@ -175,7 +177,7 @@ class EditGuide(val activity:MainActivity,
     private fun editFile4prt5(){
         actions.apply {
 
-            changeArrowVisibility(false){}.start()
+            changeArrowVisibility(false).start()
             val frameLayEditFile=activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
             val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
             val btnClose                    =activity.findViewById<ImageView>(R.id.btn_close)
@@ -192,21 +194,24 @@ class EditGuide(val activity:MainActivity,
     }
     private fun editFile6(){
         actions.apply {
-            onInstallBinding.root.isEnabled = false
-            animateAllViewsGone {
+            guideParentConLay.isEnabled = false
+            allViewsGoneAnimDoOnEnd = {
                 characterBorderSet = BorderSet()
                 characterOrientation = MyOrientationSet()
-                animateCharacterPos({
-                    spbPosData = ViewAndSide(character,MyOrientation.TOP)
+                doAfterCharacterPosChanged = {
+                    spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
                     animateSpbPos("ガイドは以上だよ").start()
-                }){}.start()
-                onInstallBinding.root.isEnabled = true
+                }
+                animateCharacterPos().start()
+                guideParentConLay.isEnabled = true
                 goNextOnClickAnyWhere {
-                    appearAlphaAnimation(onInstallBinding.root,false){
+                    appearAlphaAnimDonOnEnd= {
                         activity.mainActivityViewModel.setGuideVisibility(false)
-                    }.start()
                     }
-            }.start()
+                    getAppearAlphaAnimation(guideParentConLay,false).start()
+                }
+            }
+            animateAllViewsGone().start()
 
         }
     }
