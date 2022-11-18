@@ -18,7 +18,7 @@
         android:id="@+id/txv_confirm_move"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="@integer/popUpText_width_percentage"
-        android:text="移動しますか？"
+        android:text="@string/confirm_move"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
         android:layout_margin="10dp"
         android:layout_height="wrap_content"
         app:layout_constraintHeight_percent="@integer/popUpButton_height_percentage"
-        android:text="移動する"
+        android:text="@string/commit_move"
         app:layout_constraintStart_toEndOf="@id/btn_cancel_move"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -45,7 +45,7 @@
 
         android:backgroundTint="@color/light_gray"
         app:layout_constraintHeight_percent="@integer/popUpButton_height_percentage"
-        android:text="キャンセル"
+        android:text="@string/cancel"
         app:layout_constraintEnd_toStartOf="@id/btn_commit_move"
         app:layout_constraintBottom_toBottomOf="@id/btn_commit_move"
         app:layout_constraintStart_toStartOf="parent"/>

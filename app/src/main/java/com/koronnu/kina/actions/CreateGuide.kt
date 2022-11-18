@@ -79,7 +79,7 @@ class CreateGuide(val activity:MainActivity,
 
     }
     private fun createFlashCard2(){
-        val createMenuImvFlashCard      =activity.findViewById<FrameLayout>(R.id.imvnewTangocho)
+        val createMenuImvFlashCard      =activity.findViewById<FrameLayout>(R.id.frameLay_new_flashcard)
         actions.apply {
             setArrow(MyOrientation.TOP,createMenuImvFlashCard)
             actions.animateHole = false
@@ -207,7 +207,7 @@ class CreateGuide(val activity:MainActivity,
         goNextOnClickTouchArea(bnvBtnAdd){makeNewCard2()}
     }
     private fun makeNewCard2(){
-        val createMenuImvNewCard        =activity.findViewById<FrameLayout>(R.id.imvnewCard)
+        val createMenuImvNewCard        =activity.findViewById<FrameLayout>(R.id.frameLay_new_card)
         actions.animateHole = false
         actions.viewUnderSpotInGuide = createMenuImvNewCard
         createFileViewModel.setBottomMenuVisible(true)

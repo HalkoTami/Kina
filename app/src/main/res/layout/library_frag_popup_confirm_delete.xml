@@ -31,7 +31,7 @@
         android:layout_marginBottom="10dp"
         android:layout_height="wrap_content"
         app:layout_constraintHeight_percent="@integer/popUpButton_height_percentage"
-        android:text="削除する"
+        android:text="@string/selected_item_option_delete"
         app:layout_constraintStart_toEndOf="@id/btn_cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -44,7 +44,7 @@
 
         android:backgroundTint="@color/light_gray"
         app:layout_constraintHeight_percent="@integer/popUpButton_height_percentage"
-        android:text="キャンセル"
+        android:text="@string/cancel"
         app:layout_constraintEnd_toStartOf="@id/btn_commit_delete_only_parent"
         app:layout_constraintBottom_toBottomOf="@id/btn_commit_delete_only_parent"
         app:layout_constraintStart_toStartOf="parent"/>

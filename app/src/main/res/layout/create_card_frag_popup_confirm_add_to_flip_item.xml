@@ -18,7 +18,6 @@
         android:id="@+id/txv_confirm_add_to_flip_item"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="@integer/popUpText_width_percentage"
-        android:text="新しいカードを\n暗記ボックスに追加しますか？"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +31,6 @@
         android:layout_margin="10dp"
         android:layout_height="wrap_content"
         app:layout_constraintHeight_percent="@integer/popUpButton_height_percentage"
-        android:text="追加"
         app:layout_constraintStart_toEndOf="@id/btn_not_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -45,7 +43,6 @@
 
         android:backgroundTint="@color/light_gray"
         app:layout_constraintHeight_percent="@integer/popUpButton_height_percentage"
-        android:text="追加せず保存"
         app:layout_constraintEnd_toStartOf="@id/btn_commit_add"
         app:layout_constraintBottom_toBottomOf="@id/btn_commit_add"
         app:layout_constraintStart_toStartOf="parent"/>

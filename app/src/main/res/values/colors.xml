@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources >
-    <color name="lightpurple">#CEBEDA</color>
+    <color name="light_purple">#CEBEDA</color>
     <color name="purple">#A68ABC</color>
-    <color name="darkpurple">#88689F</color>
-    <color name="mostdarkpurple">#6B4A83</color>
+    <color name="dark_purple">#88689F</color>
+    <color name="most_dark_purple">#6B4A83</color>
     <color name="white">#FFFFFF</color>
-    <color name="lightgray">#E8E8E8</color>
+    <color name="most_light_gray">#E8E8E8</color>
     <color name="gray">#FFC8C8C8</color>
     <color name="dark_gray">#7E7E7E</color>
     <color name="text_color_gray">#353535</color>

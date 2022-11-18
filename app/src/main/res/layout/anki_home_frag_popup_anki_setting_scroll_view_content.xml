@@ -24,7 +24,7 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="未暗記のカードのみ"/>
+            android:text="@string/only_not_remembered_cards"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
     <androidx.appcompat.widget.LinearLayoutCompat
         style="@style/SettingLineLayStyle"
@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:importantForAutofill="no"
                     tools:ignore="LabelFor"
-                    android:text="20"/>
+                    android:text="@string/default_auto_flip_seconds"/>
                 <TextView
                     style="@style/TxvUniformSmallStyle"
 

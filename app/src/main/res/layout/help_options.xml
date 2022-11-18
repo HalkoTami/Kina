@@ -23,19 +23,19 @@
         <TextView
             android:id="@+id/menu_how_to_create_items"
             style="@style/HelpOptionTxvStyle"
-            android:text="単語帳のつくり方" />
+            android:text="@string/guide_option_how_to_create_items" />
         <TextView
             android:id="@+id/menu_how_to_edit_items"
             style="@style/HelpOptionTxvStyle"
-            android:text="アイテムを編集する" />
+            android:text="@string/guide_option_how_to_edit_items" />
         <TextView
             android:id="@+id/menu_how_to_delete_items"
             style="@style/HelpOptionTxvStyle"
-            android:text="アイテムを削除する" />
+            android:text="@string/guide_option_how_to_delete_items" />
         <TextView
             android:id="@+id/menu_how_to_move_items"
             style="@style/HelpOptionTxvStyle"
-            android:text="アイテムの中身を移動する" />
+            android:text="@string/guide_option_how_to_move_items" />
     </androidx.appcompat.widget.LinearLayoutCompat>
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linLay_help_menu_anki"
@@ -50,13 +50,13 @@
         app:layout_constraintWidth_percent="0.8">
         <TextView
             style="@style/HelpOptionTxvStyle"
-            android:text="暗記する" />
+            android:text="@string/guide_option_how_to_practice" />
         <TextView
             style="@style/HelpOptionTxvStyle"
-            android:text="暗記方法をえらぶ" />
+            android:text="@string/guide_option_practice_setting" />
         <TextView
             style="@style/HelpOptionTxvStyle"
-            android:text="暗記中にカードを編集する" />
+            android:text="@string/guide_option_how_edit_items_during_practice" />
     </androidx.appcompat.widget.LinearLayoutCompat>
     <ImageView
         app:layout_constraintHorizontal_bias="0.5"

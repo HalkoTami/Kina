@@ -39,7 +39,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="暗記アイテムを一周したよ!"
+                android:text="@string/flip_round_completed_comment"
                 />
             <ImageView
                 android:layout_width="match_parent"
@@ -111,7 +111,7 @@
                         android:layout_weight="3"
                         android:gravity="center"
                         android:layout_height="match_parent"
-                        android:text="24"/>
+                        />
                     <TextView
                         style="@style/TxvUniformMiddleStyle"
                         android:layout_width="0dp"
@@ -119,7 +119,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_marginTop="3dp"
-                        android:text="枚中"/>
+                        android:text="@string/in_card_amount"/>
                         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -135,7 +135,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="暗記したカード"/>
+                    android:text="@string/flip_items"/>
 
 
 
@@ -172,7 +172,7 @@
                         android:layout_weight="3"
                         android:gravity="center"
                         android:layout_height="match_parent"
-                        android:text="24"/>
+                        />
                     <TextView
                         style="@style/TxvUniformMiddleStyle"
                         android:layout_width="0dp"
@@ -180,7 +180,8 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_marginTop="3dp"
-                        android:text="枚"/>
+                        android:text="@string/card_amount"
+                        />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -196,7 +197,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="新しく覚えたカード"/>
+                    android:text="@string/newly_remembered_card"/>
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -232,7 +233,7 @@
                         android:layout_weight="3"
                         android:gravity="center"
                         android:layout_height="match_parent"
-                        android:text="24"/>
+                        />
                     <TextView
                         style="@style/TxvUniformMiddleStyle"
                         android:layout_width="0dp"
@@ -240,7 +241,8 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_marginTop="3dp"
-                        android:text="min"/>
+                        android:text="@string/minutes_count"
+                        />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -256,7 +258,8 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="暗記した時間"/>
+                    android:text="@string/minutes_practiced"
+                    />
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>

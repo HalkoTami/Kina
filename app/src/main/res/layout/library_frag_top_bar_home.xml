@@ -24,12 +24,12 @@
 
 
     <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnDown
-        android:id="@+id/imv_search_loupe"
+        android:id="@+id/imv_search_loup"
         android:layout_width="wrap_content"
         android:paddingHorizontal="5dp"
         android:layout_marginEnd="5dp"
         android:layout_height="match_parent"
-        android:src="@drawable/icon_loupe"
+        android:src="@drawable/icon_search_loup"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout

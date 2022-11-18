@@ -140,7 +140,7 @@ class EditGuide(val activity:MainActivity,
     private fun editFile4prt1(){
         actions.apply {
             animateSpbPos("色で分けて整理してみてね").start()
-            val imvColPallet                =activity.findViewById<ImageView>(R.id.imv_icon_palet)
+            val imvColPallet                =activity.findViewById<ImageView>(R.id.imv_icon_pallet)
 
             setArrow(MyOrientation.BOTTOM,imvColPallet)
             goNextOnClickAnyWhere{editFile4prt2()}

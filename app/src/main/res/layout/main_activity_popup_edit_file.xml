@@ -44,11 +44,10 @@
 
             <TextView
                 android:layout_weight="1"
-                android:textSize="9sp"
+                android:textSize="11sp"
                 android:id="@+id/txv_file_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ファイルの名前xadd xxxx"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,7 +93,6 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:text="新しいファイルをつくる"
                 android:gravity="start|bottom"
                 android:layout_marginStart="10dp" />
 
@@ -121,7 +119,7 @@
             android:layout_height="wrap_content"
             android:textSize="17sp"
             android:gravity="center_vertical"
-            android:hint="タイトル"/>
+            android:hint="@string/create_file_edt_hint"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -167,7 +165,7 @@
             style="@style/PopUpButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="作成"
+            android:text="@string/commit_create"
             />
     </FrameLayout>
 

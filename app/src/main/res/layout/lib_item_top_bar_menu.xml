@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -34,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_weight="5"
             android:layout_height="wrap_content"
-            android:text="ファイルに移動"
+            android:text="@string/selected_item_option_move"
             android:textSize="15sp" />
 
 
@@ -62,7 +61,7 @@
             android:layout_width="0dp"
             android:layout_weight="5"
             android:layout_height="wrap_content"
-            android:text="すべて削除"
+            android:text="@string/selected_item_option_delete"
             android:textSize="15sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

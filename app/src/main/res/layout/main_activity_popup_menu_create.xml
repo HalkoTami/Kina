@@ -10,13 +10,13 @@
     android:paddingBottom="10dp">
 
         <FrameLayout
-            android:id="@+id/imvnewfolder"
+            android:id="@+id/frameLay_new_folder"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/imvnewTangocho"
+            app:layout_constraintEnd_toStartOf="@id/frameLay_new_flashcard"
             android:contentDescription="@string/cd_create_new_folder"
 
             >
@@ -38,14 +38,14 @@
 
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/imvnewTangocho"
+            android:id="@+id/frameLay_new_flashcard"
             android:layout_width="50dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_height="match_parent"
             android:src="@drawable/icon_tab_library"
-            app:layout_constraintStart_toEndOf="@id/imvnewfolder"
-            app:layout_constraintEnd_toStartOf="@id/imvnewCard"
+            app:layout_constraintStart_toEndOf="@id/frameLay_new_folder"
+            app:layout_constraintEnd_toStartOf="@id/frameLay_new_card"
             android:contentDescription="@string/cd_create_new_flashCard">
                 <ImageView
                     android:rotation="50"
@@ -63,9 +63,9 @@
                     tools:ignore="ContentDescription" />
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/imvnewCard"
+            android:id="@+id/frameLay_new_card"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imvnewTangocho"
+            app:layout_constraintStart_toEndOf="@id/frameLay_new_flashcard"
             android:layout_width="50dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="20dp"

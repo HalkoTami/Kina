@@ -111,6 +111,35 @@
     <string name="cd_create_new_flashCard">新しい単語帳を作成</string>
     <string name="cd_create_new_folder">新しいフォルダを作成</string>
     <string name="cd_create_new_card">新しいカードを作成</string>
+    <string name="side_back">裏</string>
+    <string name="your_answer">あなたの回答</string>
+    <string name="flip_round_completed_comment">暗記アイテムを一周したよ</string>
+    <string name="in_card_amount">枚中</string>
+    <string name="flip_items">暗記アイテム総数</string>
+    <string name="card_amount">枚</string>
+    <string name="newly_remembered_card">新しく覚えたカード</string>
+    <string name="minutes_count">min</string>
+    <string name="minutes_practiced">暗記した時間</string>
+    <string name="only_not_remembered_cards">未暗記のカードのみ</string>
+    <string name="default_auto_flip_seconds">20</string>
+    <string name="guide_option_how_to_create_items">アイテムのつくり方</string>
+    <string name="guide_option_how_to_edit_items">アイテムを編集する</string>
+    <string name="guide_option_how_to_delete_items">アイテムを削除する</string>
+    <string name="guide_option_how_to_move_items">アイテムを移動する</string>
+    <string name="guide_option_how_to_practice">カードを暗記する</string>
+    <string name="guide_option_practice_setting">暗記オプションを選ぶ</string>
+    <string name="guide_option_how_edit_items_during_practice">暗記中にアイテムを編集する</string>
+    <string name="selected_item_option_move">アイテムを移動する</string>
+    <string name="selected_item_option_delete">削除する</string>
+    <string name="cancel">キャンセル</string>
+    <string name="delete_option_include_children_confirm">中身もすべて削除しますか？</string>
+    <string name="confirm_move">移動しますか？</string>
+    <string name="commit_move">移動する</string>
+    <string name="tab_title_library">ライブラリ</string>
+    <string name="tab_title_anki">暗記する</string>
+    <string name="create_file_edt_hint">タイトル</string>
+    <string name="commit_create">作成</string>
+    <string name="library_empty_comment">まだ中身がないよ</string>
 
 
 </resources>

@@ -140,7 +140,7 @@
         android:orientation="vertical"
         android:padding="10dp">
         <TextView
-            android:text="裏"
+            android:text="@string/side_back"
             style="@style/CardTitleTxvCheckAnswerStyle"
             android:id="@+id/txv_title" />
         <TextView
@@ -170,7 +170,7 @@
         android:orientation="vertical"
         android:padding="10dp">
         <TextView
-            android:text="あなたの回答"
+            android:text="@string/your_answer"
             style="@style/CardTitleTxvCheckAnswerStyle" />
         <FrameLayout
             android:layout_width="match_parent"

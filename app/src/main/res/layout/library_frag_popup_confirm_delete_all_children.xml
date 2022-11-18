@@ -19,7 +19,7 @@
             android:padding="10dp"
             app:layout_constraintWidth_percent="@integer/popUpText_width_percentage"
             android:layout_height="0dp"
-            android:text="中身もすべて消去しますか？"
+            android:text="@string/delete_option_include_children_confirm"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,9 +53,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-
-
-                    android:text="10個"/>
+                    />
 
 
 
@@ -73,7 +71,6 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="heyhey"
                      />
 
 
@@ -91,7 +88,6 @@
                     android:id="@+id/txv_containing_card"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:text="hoyhoy"
                     android:layout_height="wrap_content"
                     />
             </androidx.appcompat.widget.LinearLayoutCompat>
