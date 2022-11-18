@@ -37,7 +37,7 @@
         android:layout_height="match_parent"
 
         android:src="@drawable/icon_close"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/cd_close" />
 
 
 

@@ -49,7 +49,7 @@
         app:layout_constraintBottom_toBottomOf="@id/btn_commit_delete_only_parent"
         app:layout_constraintStart_toStartOf="parent"/>
     <ImageView
-        android:contentDescription="TODO"
+        android:contentDescription="@string/cd_close"
         android:id="@+id/btn_close_confirm_delete_only_parent_popup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

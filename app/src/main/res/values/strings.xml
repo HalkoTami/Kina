@@ -99,6 +99,18 @@
     <string name="cd_col_gray">灰色</string>
     <string name="cd_close">閉じる</string>
     <string name="cd_folder">フォルダ</string>
+    <string name="cd_flip_to_other_side">カードの裏表を返す</string>
+    <string name="cd_open_anki_setting">暗記設定画面を開く</string>
+    <string name="cd_containing_flashcard">含まれた単語帳の数</string>
+    <string name="cd_containing_card">含まれたカードの数</string>
+    <string name="cd_inbox">インボックス</string>
+    <string name="cd_btn_guide">使い方ガイド</string>
+    <string name="cd_move_Inbox_card_to_flashCard">カードを単語帳へ移動</string>
+    <string name="cd_select_all">すべて選択</string>
+    <string name="cd_open_menu">メニューを開く</string>
+    <string name="cd_create_new_flashCard">新しい単語帳を作成</string>
+    <string name="cd_create_new_folder">新しいフォルダを作成</string>
+    <string name="cd_create_new_card">新しいカードを作成</string>
 
 
 </resources>

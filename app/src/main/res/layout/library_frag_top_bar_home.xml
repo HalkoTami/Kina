@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/TopBarLinLayStyle">
 
 
@@ -10,7 +11,7 @@
         android:layout_height="wrap_content"
 
         android:src="@drawable/icon_home"
-        android:contentDescription="TODO" />
+        tools:ignore="ContentDescription" />
 
     <TextView
         style="@style/TopBarTxvSizeNormalStyle"
@@ -48,7 +49,7 @@
 
             app:layout_constraintBottom_toBottomOf="parent"
             android:src="@drawable/icon_inbox"
-            android:contentDescription="TODO" />
+            android:contentDescription="@string/cd_inbox" />
 
         <TextView
             android:textSize="10sp"
@@ -75,7 +76,7 @@
         android:layout_height="20dp"
         android:src="@drawable/icon_help"
         android:id="@+id/btn_guide"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/cd_btn_guide" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

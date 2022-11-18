@@ -11,7 +11,7 @@
     android:layout_height="wrap_content"
 
     android:src="@drawable/icon_back"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/cd_btn_back" />
     <ImageView
         android:id="@+id/imv_file_type"
         android:layout_width="wrap_content"

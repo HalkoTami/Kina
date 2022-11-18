@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="5dp"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/cd_close" />
 
     <FrameLayout
         android:id="@+id/linearLayoutCompat"

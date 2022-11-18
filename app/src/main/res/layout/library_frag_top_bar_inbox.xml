@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:tools="http://schemas.android.com/tools"
     style="@style/TopBarLinLayStyle"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
 
         android:src="@drawable/icon_inbox"
-        android:contentDescription="TODO" />
+        tools:ignore="ContentDescription" />
 
     <TextView
         style="@style/TopBarTxvSizeNormalStyle"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:src="@drawable/icon_move_to_flashcard_cover"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/cd_move_Inbox_card_to_flashCard" />
 
     <ImageView
         android:id="@+id/imv_close_inbox"
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_close"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/cd_close" />
 
 
 

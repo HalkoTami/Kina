@@ -158,7 +158,7 @@
         android:src="@drawable/icon_flashcard_flat"
         android:alpha="0.3"
         android:layout_margin="10dp"
-        android:contentDescription="TODO"/>
+        android:contentDescription="@string/cd_flip_to_other_side"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         app:layout_constraintTop_toBottomOf="@id/lineLay_correct_answer"
