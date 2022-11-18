@@ -34,7 +34,7 @@ class CreateGuide(val activity:MainActivity,
 
     private fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
         onInstallBinding.root.setOnClickListener(null)
-        actions.copyViewInConLay(view).setOnClickListener {
+        actions.addViewToConLay(view).setOnClickListener {
             actions.makeTouchAreaGone()
             func()
         }
@@ -108,8 +108,8 @@ class CreateGuide(val activity:MainActivity,
                     createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
                     actions.holeShapeInGuide = HoleShape.RECTANGLE
                     actions.viewUnderSpotInGuide = frameLayEditFile
-                    copyViewInConLay(edtCreatingFileTitle)
-                    copyViewInConLay(edtCreatingFileTitle).setOnClickListener {
+                    addViewToConLay(edtCreatingFileTitle)
+                    addViewToConLay(edtCreatingFileTitle).setOnClickListener {
                         showKeyBoard(edtCreatingFileTitle,activity)
                     }
                     edtCreatingFileTitle.requestFocus()
@@ -139,7 +139,7 @@ class CreateGuide(val activity:MainActivity,
                 if(it.tag == 1)it.visibility = View.GONE
             }
             actions.makeTouchAreaGone()
-            actions.changeArrowVisibility(false).start()
+            actions.getArrowVisibilityAnim(false).start()
             createFileViewModel.makeFileInGuide(title)
             goNextOnClickAnyWhere {
                 createFlashCard6(libraryRv)
@@ -168,11 +168,11 @@ class CreateGuide(val activity:MainActivity,
                 MyHorizontalOrientation.LEFT)
             characterSizeDimenId = R.dimen.character_size_middle
             doAfterCharacterPosChanged = {
+                textFit = true
                 actions.spbPosSimple = ViewAndSide(actions.character, MyOrientation.RIGHT)
-                actions.spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
                 animateSpbPos("おめでとう！単語帳が追加されたよ\n中身を見てみよう！").start()
             }
-            animateCharacterPos().start()
+            getCharacterPosChangeAnim().start()
 
 
         }
@@ -328,7 +328,7 @@ class CreateGuide(val activity:MainActivity,
     private fun goodBye1(){
         actions.apply {
             actions.removeHole()
-            actions.changeArrowVisibility(false).start()
+            actions.getArrowVisibilityAnim(false).start()
             actions.characterBorderSet = BorderSet()
             actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,
                 MyHorizontalOrientation.MIDDLE)

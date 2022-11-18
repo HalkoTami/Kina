@@ -30,6 +30,23 @@ class ViewChangeActions {
     fun setAlpha(v: View, alpha:Float){
         v.alpha = alpha
     }
+    fun setSize(v:View,width:Int?,height:Int?){
+        if(width!=null) v.layoutParams.width = width
+        if(height!=null) v.layoutParams.height =height
+        v.requestLayout()
+    }
+    fun addViewToConLay(view: View,conLay:ConstraintLayout){
+        val id = view.id
+        conLay.addView(view)
+        val con = ConstraintSet()
+        con.clone(conLay)
+        con.connect(id, ConstraintSet.RIGHT ,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT)
+        con.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID,ConstraintSet.TOP)
+        con.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,ConstraintSet.BOTTOM)
+        con.connect(id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID,ConstraintSet.LEFT)
+
+        con.applyTo(conLay)
+    }
     fun getSimpleBorderSet(standardView:View, movingViewPos: MyOrientation, fit:Boolean): BorderSet {
         val borderSet = when(movingViewPos){
             MyOrientation.TOP -> BorderSet(bottomSideSet = ViewAndSide(standardView, MyOrientation.TOP),

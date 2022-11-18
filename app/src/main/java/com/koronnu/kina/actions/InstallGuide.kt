@@ -2,6 +2,7 @@ package com.koronnu.kina.actions
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
+import android.app.ActionBar.LayoutParams
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
@@ -69,7 +70,6 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
 
     private val arrowMargin:MyMargin = MyMargin(10,10,10,10)
 
-    private var freshCreated = true
 
     fun makeHereTouchable(view: View){
         callOnInstallBinding.apply {
@@ -94,29 +94,30 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         setCharacterSize()
         setPositionByMargin(ViewAndPositionData(character,characterBorderSet,characterOrientation))
     }
-    var allViewsGoneAnimDoOnEnd:()-> Unit = {}
+    var allConLayChildrenGoneAnimDoOnEnd:()-> Unit = {}
 
-    fun animateAllViewsGone():AnimatorSet{
+    fun getAllConLayChildrenGoneAnim():AnimatorSet{
         return AnimatorSet().apply {
-            playTogether(changeCharacterVisibility(false),changeArrowVisibility(false),getSpbVisibilityAnim(false))
+            playTogether(getCharacterVisibilityAnim(false),getArrowVisibilityAnim(false),getSpbVisibilityAnim(false))
             doOnEnd{
-                allViewsGoneAnimDoOnEnd()
+                allConLayChildrenGoneAnimDoOnEnd()
             }
         }
     }
     var characterPosChangeAnimDoOnEnd:()->Unit = {}
     var doAfterCharacterPosChanged:()->Unit = {}
-    fun animateCharacterPos():AnimatorSet{
+    fun getCharacterPosChangeAnim():AnimatorSet{
         return AnimatorSet().apply {
             characterVisibilityAnimDoOnEnd = {
                 setCharacterSize()
                 setCharacterPos()
                 doAfterCharacterPosChanged()
-                characterVisibilityAnimDoOnEnd ={}
+                doAfterCharacterPosChanged = {}
             }
-            playSequentially(changeCharacterVisibility(false),changeCharacterVisibility(true))
+            playSequentially(getCharacterVisibilityAnim(false),getCharacterVisibilityAnim(true))
             doOnEnd{
                 characterPosChangeAnimDoOnEnd()
+                characterPosChangeAnimDoOnEnd = {}
             }
         }
 
@@ -134,19 +135,20 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
                 getAppearAlphaAnimation(bottom,visible))
             doOnEnd{
                 spbVisibilityAnimDoOnEnd()
+                spbVisibilityAnimDoOnEnd = {}
             }
         }
     }
     var characterVisibilityAnimDoOnEnd:()->Unit = {}
     var arrowVisibilityAnimDoOnEnd:()->Unit = {}
-    private fun changeCharacterVisibility(visible: Boolean):ValueAnimator{
+    private fun getCharacterVisibilityAnim(visible: Boolean):ValueAnimator{
         appearAlphaAnimDonOnEnd = {
             characterVisibilityAnimDoOnEnd()
             characterVisibilityAnimDoOnEnd = {}
         }
         return getAppearAlphaAnimation(character,visible)
     }
-    fun changeArrowVisibility(visible: Boolean):ValueAnimator{
+    fun getArrowVisibilityAnim(visible: Boolean):ValueAnimator{
         appearAlphaAnimDonOnEnd = {
             arrowVisibilityAnimDoOnEnd()
             arrowVisibilityAnimDoOnEnd = {}
@@ -171,9 +173,9 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
     var characterSizeDimenId:Int = R.dimen.character_size_large
     private fun setCharacterSize(){
         character.apply {
-            val sizeLarge = getPixelSize(characterSizeDimenId)
-            layoutParams.width = sizeLarge
-            layoutParams.height = sizeLarge
+            val size = getPixelSize(characterSizeDimenId)
+            layoutParams.width = size
+            layoutParams.height = size
             requestLayout()
         }
     }
@@ -196,16 +198,14 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         refreshInstallGuide()
         frameLay.addView(callOnInstallBinding.root)
         activity.mainActivityViewModel.setGuideVisibility(true)
-        freshCreated = false
-        makeTouchAreaGone()
         changeMulVisibility(arrayOf(character,arrow,textView,bottom),false)
         holeView.initActivity(activity)
-        removeHole()
+        viewUnderSpotInGuide = null
         setCharacterPos()
         setCharacterSize()
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
 
-        changeCharacterVisibility(true).start()
+        getCharacterVisibilityAnim(true).start()
 
     }
     private fun getArrowDirectionFromArrowPos(arrowPosition: MyOrientation):MyOrientation{
@@ -229,25 +229,16 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         }
         setPositionByMargin(getArrowPositionData())
         setArrowDirection(getArrowDirectionFromArrowPos(arrowPosition))
-        changeArrowVisibility(true).start()
+        getArrowVisibilityAnim(true).start()
     }
-
-
-//    fun setSpbPos(string: String){
-//        changeViewVisibility(conLaySpeakBubble,false)
-//        textView.text = string
-//        val posData = ViewAndPositionData(
-//            conLaySpeakBubble,
-//            borderSet = spbBorderSet ,
-//            orientation= spbOrientation)
-//        setPositionByMargin(posData)
-//    }
 
     fun animateSpbPos(string: String):AnimatorSet{
         return AnimatorSet().apply {
             spbVisibilityAnimDoOnEnd = {
                 changeMulVisibility(arrayOf(bottom,textView),false)
                 textView.text = string
+                spbBorderSet.margin = MyMargin(bottomMargin = getPixelSize(R.dimen.spb_bottom_rec_marginTop)+getPixelSize(R.dimen.spb_bottom_rec_height))
+                ViewChangeActions().setSize(textView,LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT)
                 val posData = ViewAndPositionData(
                     textView,
                     borderSet = spbBorderSet ,
@@ -262,42 +253,25 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         holeView.noHole = true
     }
     fun cloneView(view: View) {
-        copyViewInConLay(view).setOnClickListener {
+        addViewToConLay(view).setOnClickListener {
             view.callOnClick()
         }
     }
     fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
         guideParentConLay.setOnClickListener(null)
-        copyViewInConLay(view).setOnClickListener {
+        addViewToConLay(view).setOnClickListener {
             makeTouchAreaGone()
             func()
         }
     }
-    fun copyViewInConLay(view:View):View{
+    fun addViewToConLay(view:View):View{
         guideParentConLay.setOnClickListener(null)
         val a = TouchAreaBinding.inflate(activity.layoutInflater)
         a.touchView.tag = 1
 
         val id = View.generateViewId()
         a.touchView.id = id
-        guideParentConLay.addView(a.touchView)
-        val con = ConstraintSet()
-        con.clone(guideParentConLay)
-//
-        con.connect(id, ConstraintSet.RIGHT ,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT)
-        con.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID,ConstraintSet.TOP)
-        con.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,ConstraintSet.BOTTOM)
-        con.connect(id, ConstraintSet.LEFT, ConstraintSet.PARENT_ID,ConstraintSet.LEFT)
-
-        con.applyTo(guideParentConLay)
-//        saveBorderDataMap(a.touchView, BorderSet(
-//            topSideSet = ViewAndSide(view, MyOrientation.TOP),
-//            bottomSideSet = ViewAndSide(view, MyOrientation.BOTTOM),
-//            leftSideSet = ViewAndSide(view, MyOrientation.LEFT),
-//            rightSideSet = ViewAndSide(view, MyOrientation.RIGHT),
-//
-//            ),borderDataMap
-//        )
+        ViewChangeActions().addViewToConLay(a.touchView,guideParentConLay)
         val positionData = ViewAndPositionData(a.touchView
             ,getSimplePosRelation(view, MyOrientation.MIDDLE,true)
             , MyOrientationSet(MyVerticalOrientation.MIDDLE,

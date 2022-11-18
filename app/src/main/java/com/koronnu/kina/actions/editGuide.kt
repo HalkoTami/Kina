@@ -35,7 +35,7 @@ class EditGuide(val activity:MainActivity,
 
         actions.apply {
             goNextOnClickAnyWhere {  }
-            allViewsGoneAnimDoOnEnd= {
+            allConLayChildrenGoneAnimDoOnEnd= {
                 animateHole = true
                 holeShapeInGuide = HoleShape.RECTANGLE
                 viewUnderSpotInGuide = libraryRv[0]
@@ -48,9 +48,9 @@ class EditGuide(val activity:MainActivity,
                     animateSpbPos("このアイテムを見てみよう").start()
                 }
                 characterPosChangeAnimDoOnEnd = { goNextOnClickAnyWhere { explainBtn2(libraryRv) }}
-                animateCharacterPos().start()
+                getCharacterPosChangeAnim().start()
             }
-            animateAllViewsGone().start()
+            getAllConLayChildrenGoneAnim().start()
 
         }
     }
@@ -60,14 +60,14 @@ class EditGuide(val activity:MainActivity,
             setArrowDirection(MyOrientation.LEFT)
             setPositionByMargin(ViewAndPositionData(arrow,getSimplePosRelation(recycler[0],MyOrientation.MIDDLE,true),
                 MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)))
-            changeArrowVisibility(true).start()
+            getArrowVisibilityAnim(true).start()
             val rvItemTLis =  object :LibraryRVItemClickListener(recycler.context,activity.findViewById(R.id.frameLay_test),recycler,activity.libraryViewModel){
                 override fun doOnSwipeAppeared() {
                     super.doOnSwipeAppeared()
                     explainBtn3()
                 }
             }
-            copyViewInConLay(recycler[0]).setOnTouchListener(
+            addViewToConLay(recycler[0]).setOnTouchListener(
                 object :MyTouchListener(recycler.context){
                     override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
                         super.onScrollLeft(distanceX, motionEvent)
@@ -103,7 +103,7 @@ class EditGuide(val activity:MainActivity,
     private fun editFile1(){
         val frameLayEditFile=activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
         actions.apply {
-            allViewsGoneAnimDoOnEnd = {
+            allConLayChildrenGoneAnimDoOnEnd = {
                 guideParentConLay.setOnClickListener(null)
                 holeShapeInGuide = HoleShape.RECTANGLE
                 animateHole = false
@@ -112,7 +112,7 @@ class EditGuide(val activity:MainActivity,
                     activity.libraryViewModel.returnParentRVItems()[0] as File)
                 editFile2(frameLayEditFile)
             }
-            animateAllViewsGone().start()
+            getAllConLayChildrenGoneAnim().start()
         }
     }
     private fun editFile2(frameLayEditFile:FrameLayout){
@@ -124,7 +124,7 @@ class EditGuide(val activity:MainActivity,
                 spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
                 animateSpbPos("じゃじゃん！").start()
             }
-            animateCharacterPos ().start()
+            getCharacterPosChangeAnim ().start()
             goNextOnClickAnyWhere { editFile3() }
         }
 
@@ -177,15 +177,15 @@ class EditGuide(val activity:MainActivity,
     private fun editFile4prt5(){
         actions.apply {
 
-            changeArrowVisibility(false).start()
+            getArrowVisibilityAnim(false).start()
             val frameLayEditFile=activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
             val btnFinish                   =activity.findViewById<Button>(R.id.btn_finish)
             val btnClose                    =activity.findViewById<ImageView>(R.id.btn_close)
-            copyViewInConLay(btnClose).setOnClickListener{
+            addViewToConLay(btnClose).setOnClickListener{
                 btnClose.performClick()
                 editFile6()
             }
-            copyViewInConLay(btnFinish).setOnClickListener {
+            addViewToConLay(btnFinish).setOnClickListener {
                 btnFinish.performClick()
                 editFile6()
             }
@@ -195,14 +195,14 @@ class EditGuide(val activity:MainActivity,
     private fun editFile6(){
         actions.apply {
             guideParentConLay.isEnabled = false
-            allViewsGoneAnimDoOnEnd = {
+            allConLayChildrenGoneAnimDoOnEnd = {
                 characterBorderSet = BorderSet()
                 characterOrientation = MyOrientationSet()
                 doAfterCharacterPosChanged = {
                     spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
                     animateSpbPos("ガイドは以上だよ").start()
                 }
-                animateCharacterPos().start()
+                getCharacterPosChangeAnim().start()
                 guideParentConLay.isEnabled = true
                 goNextOnClickAnyWhere {
                     appearAlphaAnimDonOnEnd= {
@@ -211,7 +211,7 @@ class EditGuide(val activity:MainActivity,
                     getAppearAlphaAnimation(guideParentConLay,false).start()
                 }
             }
-            animateAllViewsGone().start()
+            getAllConLayChildrenGoneAnim().start()
 
         }
     }
