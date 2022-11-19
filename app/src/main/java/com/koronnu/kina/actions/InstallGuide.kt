@@ -350,6 +350,9 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
     fun editGuide(){
         EditGuide(this).greeting1()
     }
+    fun deleteGuide(){
+        DeleteGuide(this).greeting()
+    }
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
     }

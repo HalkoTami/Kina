@@ -4,8 +4,7 @@ import android.widget.FrameLayout
 import com.koronnu.kina.R
 import com.koronnu.kina.activity.MainActivity
 
-class DeleteGuide(activity: MainActivity,frameLayout: FrameLayout){
-    val actions = InstallGuide(activity,frameLayout)
+class DeleteGuide(val actions: InstallGuide){
     fun greeting(){
         actions.apply {
             callOnFirst()
@@ -15,8 +14,11 @@ class DeleteGuide(activity: MainActivity,frameLayout: FrameLayout){
     }
     fun explainBtn(){
         actions.apply {
-
+            EditGuide(actions).focusOnFirstRvItem(){explainBtn2()}
         }
+    }
+    fun explainBtn2(){
+
     }
     fun deleteGuide() {
 //        mainViewModel.setGuideVisibility(true)

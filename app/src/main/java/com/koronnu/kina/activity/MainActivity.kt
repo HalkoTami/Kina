@@ -224,7 +224,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     ).onEach { view ->
                         view.setOnClickListener { v->
                             when(v){
-                                menuHowToDeleteItems -> DeleteGuide(this@MainActivity,binding.frameLayCallOnInstall).deleteGuide()
+                                menuHowToDeleteItems -> InstallGuide(this@MainActivity,binding.frameLayCallOnInstall).deleteGuide()
                                 menuHowToCreateItems -> {
                                     CreateGuide(this@MainActivity,
                                         binding.frameLayCallOnInstall).callOnFirst()

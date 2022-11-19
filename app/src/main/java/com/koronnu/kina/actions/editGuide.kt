@@ -27,7 +27,7 @@ class EditGuide(val actions: InstallGuide){
             goNextOnClickAnyWhere{explainBtn()}
         }
     }
-    private fun explainBtn(){
+    fun focusOnFirstRvItem(next:()->Unit){
         actions.apply {
             val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
             goNextOnClickAnyWhere {  }
@@ -43,12 +43,16 @@ class EditGuide(val actions: InstallGuide){
                     spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
                     getSpbPosAnim("このアイテムを見てみよう").start()
                 }
-                characterPosChangeAnimDoOnEnd = { goNextOnClickAnyWhere { explainBtn2(libraryRv) }}
+                characterPosChangeAnimDoOnEnd = { goNextOnClickAnyWhere { next() }}
                 getCharacterPosChangeAnim().start()
             }
             getAllConLayChildrenGoneAnim().start()
 
         }
+    }
+    private fun explainBtn(){
+        val libraryRv                   =actions.activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+        focusOnFirstRvItem { explainBtn2(libraryRv) }
     }
     private fun explainBtn2(recycler:RecyclerView){
         actions.apply {
