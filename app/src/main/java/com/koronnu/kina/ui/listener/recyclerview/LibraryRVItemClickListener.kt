@@ -10,13 +10,13 @@ import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-import com.koronnu.kina.customClasses.LibRVState
+import com.koronnu.kina.customClasses.enumClasses.LibRVState
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
 import kotlin.math.abs
 
 open class LibraryRVItemClickListener(val context: Context,
-                                 private val scrollView: NestedScrollView,
+                                 val scrollView: NestedScrollView,
                                  val recyclerView: RecyclerView,
                                  val libraryBaseViewModel: LibraryBaseViewModel) :RecyclerView.OnItemTouchListener{
     private val gestureScrollDetector = GestureDetector(context, ScrollDetector())
@@ -72,6 +72,11 @@ open class LibraryRVItemClickListener(val context: Context,
         return gestureScrollDetector.onTouchEvent(e)
     }
 
+
+    open fun doOnSwipeAppeared (){
+
+    }
+
     override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
         gestureScrollDetector.onTouchEvent(e)
         if(startPosition==null){
@@ -83,11 +88,11 @@ open class LibraryRVItemClickListener(val context: Context,
                 val conLay = view.findViewById<ConstraintLayout>(R.id.lib_rv_base_container) ?:return
                 if(conLay.tag== LibRVState.LeftSwiping){
                     if(lineLay.layoutParams.width <25){
-                        Animation().animateLibRVLeftSwipeLay(lineLay,false)
+                        Animation().animateLibRVLeftSwipeLay(lineLay,false){}
                         conLay.tag = LibRVState.Plane
                     }
                     else if (lineLay.layoutParams.width>=25){
-                        Animation().animateLibRVLeftSwipeLay(lineLay ,true)
+                        Animation().animateLibRVLeftSwipeLay(lineLay ,true){doOnSwipeAppeared()}
                         conLay.tag = LibRVState.LeftSwiped
                         libraryBaseViewModel.setLeftSwipedItemExists(true)
                     }

@@ -17,7 +17,7 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.customClasses.LibraryFragment
+import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.listadapter.LibFragChooseFileRVListAdapter
 import com.koronnu.kina.ui.listener.popUp.LibFragPopUpConfirmMoveToFileCL
 import com.koronnu.kina.ui.listener.topbar.LibFragTopBarChooseFileMoveToCL
@@ -119,7 +119,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             binding.confirmMoveToBinding.txvConfirmMove.text = it
         }
         val parentFileFromDBObserver = Observer<File> {
-            libraryBaseViewModel.setParentFileFromDB(it ?:return@Observer)
+            libraryBaseViewModel.setParentFile(it ?:return@Observer)
         }
         val movableFoldersObserver = Observer<Map<File,List<File>>>{
             if(flashcard.not()){

@@ -1,10 +1,12 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.*
 import androidx.navigation.NavController
+import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
 import com.koronnu.kina.ui.fragment.base_frag_con.LibraryBaseFragDirections
-import com.koronnu.kina.customClasses.MainFragment
+import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import kotlinx.coroutines.*
 
 
@@ -94,10 +96,15 @@ class MainViewModel:ViewModel(){
     fun returnConfirmEndGuidePopUpVisible ():Boolean{
         return _confirmEndGuidePopUpVisible.value ?:false
     }
-    fun onClickEndGuide(){
+    fun onClickEndGuide(activity:MainActivity){
         setConfirmEndGuidePopUpVisible(false)
         setGuideVisibility(false)
         setHelpOptionVisibility(false)
+        val sharedPref =  activity.getSharedPreferences(
+            "firstTimeGuide", Context.MODE_PRIVATE) ?: return
+        val editor = sharedPref.edit()
+        editor.putBoolean("firstTimeGuide", true)
+        editor.apply()
     }
 
     override fun onCleared() {

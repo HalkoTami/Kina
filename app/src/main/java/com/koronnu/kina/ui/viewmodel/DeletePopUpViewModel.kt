@@ -5,7 +5,7 @@ import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.customClasses.MakeToastFromVM
+import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel() {
@@ -16,6 +16,12 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
     }
 
     val toast :LiveData<MakeToastFromVM> = _toast
+
+    fun onCLickMultiMenuDelete(selectedItems:List<Any>){
+        if(selectedItems.isEmpty()) return
+        setDeletingItem(selectedItems.toMutableList())
+        setConfirmDeleteVisible(true)
+    }
 
     private fun deleteSingleFile(file: File, deleteChildren:Boolean){
         viewModelScope.launch {

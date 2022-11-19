@@ -79,6 +79,7 @@ open class MyTouchListener(context: Context) : View.OnTouchListener {
 
     var down:Boolean = false
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        v?.performClick()
         gestureDetector.onTouchEvent(event!!)
         return true
     }

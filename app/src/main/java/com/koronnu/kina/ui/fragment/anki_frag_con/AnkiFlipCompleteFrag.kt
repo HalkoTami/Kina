@@ -16,7 +16,7 @@ import com.koronnu.kina.actions.NavigationActions
 import com.koronnu.kina.databinding.AnkiFlipFragCompletedBinding
 import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.customClasses.AnkiFragments
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.ui.viewmodel.AnkiBaseViewModel
 import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import java.util.*
@@ -36,7 +36,7 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = AnkiFlipFragCompletedBinding.inflate(inflater, container, false)
-        Animation().appearAlphaAnimation(binding.root,true).start()
+        Animation().appearAlphaAnimation(binding.root,true,1f){}.start()
         flipRoundSharedPref = requireActivity().getSharedPreferences("flip_round",Context.MODE_PRIVATE)
 
         ankiFlipBaseViewModel.allActivityData.observe(viewLifecycleOwner){
@@ -72,22 +72,16 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
     }
 
     private fun onClickEndFlip(){
-        Animation().appearAlphaAnimation(binding.root,false).apply {
-            doOnEnd {
-                navigateToAnkiBox()
-            }
-            start()
-        }
+        Animation().appearAlphaAnimation(binding.root,false,1f) {
+            navigateToAnkiBox()
+        }.start()
     }
     private fun onClickStartAgain(){
         ankiFlipBaseViewModel.setParentPosition(0)
         ankiFlipBaseViewModel.setParentCard(null)
-        Animation().appearAlphaAnimation(binding.root,false).apply {
-            doOnEnd {
-                navigateToFlipStart()
-            }
-            start()
-        }
+        Animation().appearAlphaAnimation(binding.root,false,1f){
+            navigateToFlipStart()
+        }.start()
     }
 
     override fun onAttach(context: Context) {

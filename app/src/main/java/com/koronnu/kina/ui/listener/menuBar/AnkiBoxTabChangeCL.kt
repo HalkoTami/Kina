@@ -2,7 +2,7 @@ package com.koronnu.kina.ui.listener.menuBar
 
 import android.view.View
 import com.koronnu.kina.databinding.AnkiHomeFragBaseBinding
-import com.koronnu.kina.customClasses.AnkiBoxFragments
+import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
 
 class AnkiBoxTabChangeCL(private val ankiBoxFrag:AnkiHomeFragBaseBinding,

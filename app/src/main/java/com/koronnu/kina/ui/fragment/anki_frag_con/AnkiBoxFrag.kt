@@ -12,15 +12,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.AnkiHomeFragBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.customClasses.AnkiBoxFragments
-import com.koronnu.kina.customClasses.AnkiBoxTabData
-import com.koronnu.kina.customClasses.AnkiFilter
-import com.koronnu.kina.customClasses.AnkiFragments
+import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.customClasses.normalClasses.AnkiBoxTabData
+import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.ui.observer.CommonOb
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.viewmodel.*
@@ -118,13 +117,6 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
             viewSetUp.setUpAnkiBoxRing(it,binding.ringBinding)
             binding.btnStartAnki.text = if(it.isEmpty()) "カードを選ばず暗記" else "暗記開始"
         }
-        val allCardsObserver = Observer<List<Card>> {
-             arrayOf(
-                binding.btnStartAnki,binding.topBarBinding.btnSetting
-            ).onEach { view -> changeViewVisibility(view,
-                 it.isNotEmpty()
-             ) }
-        }
 
 
 
@@ -135,7 +127,6 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         ankiFlipBaseViewModel.setParentPosition(0)
         ankiFlipBaseViewModel.setParentCard(null)
         ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
-        ankiFlipBaseViewModel.getAllCardsFromDB.observe(viewLifecycleOwner,allCardsObserver)
         ankiBoxViewModel.setAnkiBoxNavCon(ankiBoxNavCon)
         ankiFlipBaseViewModel.setAnkiFlipItems(mutableListOf(), AnkiFilter())
         ankiBoxViewModel.toast.observe(viewLifecycleOwner,toastObserver)

@@ -11,7 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.databinding.FullRvBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.customClasses.AnkiBoxFragments
+import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
 

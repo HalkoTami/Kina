@@ -140,7 +140,7 @@
         android:orientation="vertical"
         android:padding="10dp">
         <TextView
-            android:text="裏"
+            android:text="@string/side_back"
             style="@style/CardTitleTxvCheckAnswerStyle"
             android:id="@+id/txv_title" />
         <TextView
@@ -157,7 +157,8 @@
         app:layout_constraintEnd_toEndOf="@id/lineLay_correct_answer"
         android:src="@drawable/icon_flashcard_flat"
         android:alpha="0.3"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:contentDescription="@string/cd_flip_to_other_side"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         app:layout_constraintTop_toBottomOf="@id/lineLay_correct_answer"
@@ -169,7 +170,7 @@
         android:orientation="vertical"
         android:padding="10dp">
         <TextView
-            android:text="あなたの回答"
+            android:text="@string/your_answer"
             style="@style/CardTitleTxvCheckAnswerStyle" />
         <FrameLayout
             android:layout_width="match_parent"

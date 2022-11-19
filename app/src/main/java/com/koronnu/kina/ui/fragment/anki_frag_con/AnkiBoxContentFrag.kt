@@ -17,7 +17,7 @@ import com.koronnu.kina.databinding.FragAnkiContentRvBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.viewmodel.*
-import com.koronnu.kina.customClasses.AnkiFragments
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 
 
 class AnkiBoxContentFrag  : Fragment() {

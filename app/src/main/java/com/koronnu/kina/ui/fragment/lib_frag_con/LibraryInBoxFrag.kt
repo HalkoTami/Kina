@@ -14,7 +14,7 @@ import com.koronnu.kina.*
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.customClasses.LibraryFragment
+import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener

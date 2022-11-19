@@ -16,11 +16,11 @@ import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
 import com.koronnu.kina.databinding.AnkiFragBaseBinding
 import com.koronnu.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFragDirections
-import com.koronnu.kina.customClasses.MainFragment
+import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.ui.viewmodel.*
-import com.koronnu.kina.customClasses.AnkiFilter
-import com.koronnu.kina.customClasses.AnkiFragments
-import com.koronnu.kina.customClasses.AutoFlip
+import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.customClasses.normalClasses.AutoFlip
 
 
 class AnkiBaseFrag  : Fragment(),View.OnClickListener {
@@ -124,7 +124,6 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
         ankiBackGroundCoverAddCL()
         ankiBaseViewModel. setAnkiBaseNavCon(myNavCon)
         ankiBaseViewModel.settingVisible.observe(viewLifecycleOwner,settingVisibilityObserver)
-
 
 
 

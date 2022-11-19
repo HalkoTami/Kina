@@ -3,7 +3,12 @@ package com.koronnu.kina.ui.viewmodel
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
-import com.koronnu.kina.customClasses.*
+import com.koronnu.kina.customClasses.enumClasses.AnimationAttributes
+import com.koronnu.kina.customClasses.enumClasses.FlipFragments
+import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
+import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
+import com.koronnu.kina.customClasses.normalClasses.CountFlip
+import com.koronnu.kina.customClasses.normalClasses.Progress
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
@@ -240,7 +245,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
             val flipToFront = (changeCard&&reverseMode)||(!changeCard&&reverseMode.not())
             val oldPosition = returnParentPosition()
             val newPosition = returnParentPosition() - 1
-            return if(checkPositionIsOnStartEdge(reverseMode)||returnFlipItems().size==0)
+            return if(checkPositionIsOnStartEdge(reverseMode))
                 null else {
                 when(typeAnswer){
                     true -> when(changeCard){
@@ -258,7 +263,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
                         }
                     }
                     false -> {
-                        val cardId = if(changeCard) returnFlipItems()[newPosition].id else returnParentCard()?.id ?:return null
+                        val cardId = if(changeCard) returnFlipItems()[newPosition].id else _parentCard.value!!.id
                         val action =
                             FlipStringFragDirections.toFlipString(
                             )

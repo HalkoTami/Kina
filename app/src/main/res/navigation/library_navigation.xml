@@ -5,6 +5,21 @@
     android:id="@+id/library_navigation"
     app:startDestination="@+id/fragLibraryHome">
 
+<!--    <fragment-->
+<!--        android:id="@+id/fragLibraryChild"-->
+<!--        android:name="com.koronnu.kina.ui.fragment.lib_frag_con.LibraryChildFrag"-->
+<!--        android:label="library"-->
+<!--        tools:layout="@layout/library_child_frag_with_mul_mode_base" >-->
+<!--        <argument-->
+<!--            android:name="fragType"-->
+<!--            app:argType="com.korokoro.kina.customClasses.enumClasses.LibraryFragment"-->
+<!--            />-->
+<!--        <argument-->
+<!--            android:name="fileId"-->
+<!--            app:argType="integer[]"-->
+<!--            />-->
+
+<!--    </fragment>-->
     <fragment
         android:id="@+id/fragLibraryHome"
         android:name="com.koronnu.kina.ui.fragment.lib_frag_con.LibraryHomeFrag"

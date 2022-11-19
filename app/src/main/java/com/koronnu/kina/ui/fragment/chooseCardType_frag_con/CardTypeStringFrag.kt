@@ -15,7 +15,7 @@ import com.koronnu.kina.R
 import com.koronnu.kina.databinding.CreateCardFragStringFragBinding
 import com.koronnu.kina.db.dataclass.StringData
 import com.koronnu.kina.db.enumclass.CardStatus
-import com.koronnu.kina.customClasses.StringFragFocusedOn
+import com.koronnu.kina.customClasses.enumClasses.StringFragFocusedOn
 import com.koronnu.kina.ui.viewmodel.CreateCardViewModel
 import com.koronnu.kina.ui.viewmodel.CardTypeStringViewModel
 

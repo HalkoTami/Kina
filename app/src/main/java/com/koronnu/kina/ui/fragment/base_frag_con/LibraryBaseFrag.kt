@@ -8,11 +8,10 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.databinding.LibraryFragBinding
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.customClasses.LibraryFragment
-import com.koronnu.kina.customClasses.MainFragment
+import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.ui.observer.CommonOb
 import com.koronnu.kina.ui.viewmodel.*
 
@@ -47,10 +46,10 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
                     onlyP.btnCloseConfirmDeleteOnlyParentPopup,
                     onlyP.btnCommitDeleteOnlyParent,
                     onlyP.btnCancel,
-                    deleteAllC.btnCloseConfirmDeleteOnlyParentPopup,
+                    deleteAllC.btnCloseConfirmDeleteChildrenPopup,
                     deleteAllC.btnDeleteAllChildren,
                     deleteAllC.deleteOnlyFile,
-                    deleteAllC.btnCancel,
+                    deleteAllC.btnCancelDeleteChildren,
                     binding.background
                 )   .onEach {
                     it.setOnClickListener(this)
@@ -125,7 +124,6 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
 
                 }
                 searchViewModel.getCardsByWords(searchText).observe(viewLifecycleOwner){
-                    makeToast(requireActivity(),it.size.toString())
                     searchViewModel.setMatchedCards(it)
                     val a = mutableListOf<Any>()
                     a.addAll(searchViewModel.returnMatchedFiles())
@@ -178,10 +176,10 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
 
             }
             onlyP.btnCancel -> deletePopUpViewModel.setConfirmDeleteVisible(false)
-            deleteAllC.btnCloseConfirmDeleteOnlyParentPopup -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
+            deleteAllC.btnCloseConfirmDeleteChildrenPopup -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
             deleteAllC.btnDeleteAllChildren -> deletePopUpViewModel.deleteFileWithChildren()
             deleteAllC.deleteOnlyFile -> deletePopUpViewModel.deleteOnlyFile()
-            deleteAllC.btnCancel -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
+            deleteAllC.btnCancelDeleteChildren -> deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
         }
     }
 

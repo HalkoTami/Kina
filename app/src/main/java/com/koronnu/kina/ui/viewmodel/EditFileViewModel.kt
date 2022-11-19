@@ -6,9 +6,9 @@ import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.customClasses.ColorPalletStatus
-import com.koronnu.kina.customClasses.EditingMode
-import com.koronnu.kina.customClasses.MakeToastFromVM
+import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
+import com.koronnu.kina.customClasses.enumClasses.EditingMode
+import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
@@ -318,10 +318,14 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         return _fileToEdit.value
     }
 
-    fun makeFilePos0(){
+    fun makeFileInGuide(title: String){
+        setEditFilePopUpVisible(false)
         val a = returnFileToCreate()?:return
-        a.fileBefore = 0
-        setFileToCreate(a)
+        a.fileBefore = null
+        val first = returnParentFileSisters().firstOrNull()
+        first?.fileBefore = (returnLastInsertedFileId()?:0) + 1
+        onClickFinish(title)
+        upDateFile(first ?:return)
     }
 
     fun onClickFinish(title:String){

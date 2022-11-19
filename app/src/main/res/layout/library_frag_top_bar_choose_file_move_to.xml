@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="10dp"
 
@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
 
         android:src="@drawable/icon_move_to_folder"
-        />
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/txv_choose_file_move_to"
@@ -24,8 +24,6 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
-
-        android:text="15個のアイテムの移動フォルダを選択"
         android:gravity="center_vertical"
 
         />
@@ -36,7 +34,7 @@
         android:layout_height="match_parent"
 
         android:src="@drawable/icon_close"
-        />
+        android:contentDescription="@string/cd_close" />
 
 
 

@@ -17,9 +17,9 @@ import com.koronnu.kina.R
 import com.koronnu.kina.databinding.CreateCardFragMainBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.customClasses.AnkiFragments
-import com.koronnu.kina.customClasses.MainFragment
-import com.koronnu.kina.customClasses.NeighbourCardSide
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.customClasses.enumClasses.MainFragment
+import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.viewmodel.*
 
@@ -158,6 +158,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         ) {
             override fun handleOnBackPressed() {
 
+
                 val a = mainNavCon.backQueue.size
                 if(a>0){
                     while( mainNavCon.backQueue[mainNavCon.backQueue.size-1].destination.label.toString()==getString(R.string.nav_label_main_create_card)){
@@ -167,10 +168,13 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
 
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,  // LifecycleOwner
-            callback
-        )
+        if(mainViewModel.returnGuideVisibility().not()){
+            requireActivity().onBackPressedDispatcher.addCallback(
+                this,  // LifecycleOwner
+                callback
+            )
+        }
+
     }
 
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/TopBarLinLayStyle">
 
 
@@ -10,7 +11,7 @@
         android:layout_height="wrap_content"
 
         android:src="@drawable/icon_home"
-        />
+        tools:ignore="ContentDescription" />
 
     <TextView
         style="@style/TopBarTxvSizeNormalStyle"
@@ -23,12 +24,12 @@
 
 
     <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnDown
-        android:id="@+id/imv_search_loupe"
+        android:id="@+id/imv_search_loup"
         android:layout_width="wrap_content"
         android:paddingHorizontal="5dp"
         android:layout_marginEnd="5dp"
         android:layout_height="match_parent"
-        android:src="@drawable/icon_loupe"
+        android:src="@drawable/icon_search_loup"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,7 +48,8 @@
             android:layout_height="wrap_content"
 
             app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/icon_inbox"/>
+            android:src="@drawable/icon_inbox"
+            android:contentDescription="@string/cd_inbox" />
 
         <TextView
             android:textSize="10sp"
@@ -69,6 +71,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/icon_help"
+        android:id="@+id/btn_guide"
+        android:contentDescription="@string/cd_btn_guide" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

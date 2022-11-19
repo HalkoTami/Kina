@@ -18,7 +18,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.actions.DateTimeActions
 import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.customClasses.*
+import com.koronnu.kina.customClasses.enumClasses.AnimationAttributes
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
+import com.koronnu.kina.customClasses.normalClasses.AutoFlip
+import com.koronnu.kina.customClasses.normalClasses.Progress
 import com.koronnu.kina.databinding.AnkiFlipFragBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.enumclass.ActivityStatus

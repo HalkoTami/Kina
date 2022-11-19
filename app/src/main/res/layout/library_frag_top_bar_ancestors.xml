@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_part"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
@@ -18,7 +18,8 @@
         <ImageView
             android:id="@+id/imv_g_grand_parent_file"
             style="@style/topBarAncestorsIconIMVStyle"
-            android:src="@drawable/icon_file" />
+            android:src="@drawable/icon_file"
+            tools:ignore="ContentDescription" />
         <TextView
             android:id="@+id/txv_g_grand_parent_file_title"
             style="@style/topBarAncestorsTxvStyle"
@@ -29,7 +30,8 @@
             android:id="@+id/imv_gg_to_gp"
             style="@style/topBarAncestorsIconIMVStyle"
             android:layout_width="15dp"
-            android:src="@drawable/icon_polygon" />
+            android:src="@drawable/icon_polygon"
+            tools:ignore="ContentDescription" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -43,7 +45,8 @@
         <ImageView
             android:id="@+id/imv_grand_parent_file"
             style="@style/topBarAncestorsIconIMVStyle"
-            android:src="@drawable/icon_file" />
+            android:src="@drawable/icon_file"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:maxWidth="70dp"
@@ -55,7 +58,8 @@
             android:id="@+id/imv_gp_to_p"
             style="@style/topBarAncestorsIconIMVStyle"
             android:layout_width="15dp"
-            android:src="@drawable/icon_polygon" />
+            android:src="@drawable/icon_polygon"
+            tools:ignore="ContentDescription" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -67,7 +71,8 @@
         <ImageView
             android:id="@+id/imv_parent_file"
             style="@style/topBarAncestorsIconIMVStyle"
-            android:src="@drawable/icon_flashcard_flat" />
+            android:src="@drawable/icon_flashcard_flat"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:maxWidth="200dp"
@@ -79,7 +84,8 @@
             android:id="@+id/imv_p_to_none"
             android:layout_width="15dp"
             style="@style/topBarAncestorsIconIMVStyle"
-            android:src="@drawable/icon_polygon" />
+            android:src="@drawable/icon_polygon"
+            tools:ignore="ContentDescription" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

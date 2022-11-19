@@ -16,10 +16,11 @@ import com.koronnu.kina.actions.changeViewVisibility
 import kotlin.math.absoluteValue
 
 class Animation {
-    fun appearAlphaAnimation(view :View, visible:Boolean): ValueAnimator {
 
-        val appear =ValueAnimator.ofFloat(0f,1f)
-        val disappear = ValueAnimator.ofFloat(1f,0f)
+    fun appearAlphaAnimation(view :View, visible:Boolean,defaultAlpha:Float,doOnEnd: () -> Unit): ValueAnimator {
+
+        val appear =ValueAnimator.ofFloat(0f,defaultAlpha)
+        val disappear = ValueAnimator.ofFloat(defaultAlpha,0f)
         arrayOf(appear,disappear).onEach { eachAnimator->
             eachAnimator.addUpdateListener { thisAnimator ->
                 ViewChangeActions().setAlpha(view, thisAnimator.animatedValue as Float)
@@ -29,7 +30,12 @@ class Animation {
         appear.doOnStart {
             view.alpha = 0f
             changeViewVisibility(view,true)  }
-        disappear.doOnEnd {  changeViewVisibility(view,false)  }
+        appear.doOnEnd {
+            doOnEnd()
+        }
+        disappear.doOnEnd {  changeViewVisibility(view,false)
+        doOnEnd()
+        }
         return if(visible) appear else disappear
     }
 
@@ -37,6 +43,9 @@ class Animation {
         val btmMenuAnimator = AnimatorSet().apply{
             val a = ObjectAnimator.ofFloat(frameBottomMenu, View.TRANSLATION_Y, 300f,0f)
             val b = ObjectAnimator.ofFloat(frameBottomMenu, View.ALPHA,0f,1f)
+            a.addUpdateListener {
+                frameBottomMenu.requestLayout()
+            }
             playTogether(a,b)
             duration = 200
         }
@@ -114,7 +123,7 @@ class Animation {
         }
 
     }
-    fun animateLibRVLeftSwipeLay(frameLayout: LinearLayoutCompat,visible:Boolean){
+    fun animateLibRVLeftSwipeLay(frameLayout: LinearLayoutCompat,visible:Boolean,doOnEnd: ()-> Unit){
         val disappearAnim = ValueAnimator.ofInt(frameLayout.width,1)
         disappearAnim.duration = frameLayout.width* 5.toLong()
         disappearAnim.addUpdateListener {
@@ -126,6 +135,7 @@ class Animation {
                 it.visibility = View.GONE
             }
             frameLayout.visibility = View.GONE
+            doOnEnd()
         }
 
         val appearAnim = ValueAnimator.ofInt(frameLayout.width,100)
@@ -136,6 +146,7 @@ class Animation {
         }
         appearAnim.doOnEnd {
             frameLayout.visibility = View.VISIBLE
+            doOnEnd()
         }
         if(!visible) disappearAnim.start()
         else appearAnim.start()

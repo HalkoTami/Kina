@@ -3,7 +3,7 @@ package com.koronnu.kina.ui.listener.recyclerview
 import android.view.View
 import com.koronnu.kina.databinding.LibraryFragRvItemCardStringBinding
 import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.customClasses.StringFragFocusedOn
+import com.koronnu.kina.customClasses.enumClasses.StringFragFocusedOn
 import com.koronnu.kina.ui.viewmodel.CreateCardViewModel
 import com.koronnu.kina.ui.viewmodel.CardTypeStringViewModel
 

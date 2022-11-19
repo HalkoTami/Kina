@@ -10,8 +10,8 @@ import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.actions.showKeyBoard
 import com.koronnu.kina.databinding.AnkiFlipFragTypeAnswerStringFragBinding
 import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.customClasses.FlipFragments
-import com.koronnu.kina.customClasses.NeighbourCardSide
+import com.koronnu.kina.customClasses.enumClasses.FlipFragments
+import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.ui.listener.KeyboardListener
 import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.viewmodel.FlipTypeAndCheckViewModel

@@ -19,7 +19,7 @@ import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.koronnu.kina.databinding.LibraryFragTopBarFileBinding
 import com.koronnu.kina.databinding.RvEmptyBinding
 import com.koronnu.kina.db.enumclass.ColorStatus
-import com.koronnu.kina.customClasses.LibraryFragment
+import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
@@ -85,7 +85,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
                 libraryBaseViewModel,
-                topBarBinding.imvSearchLoupe,
+                topBarBinding.imvSearchLoup,
                 deletePopUpViewModel,
                 searchViewModel,
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -136,7 +136,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
             setLibraryFragment(LibraryFragment.FlashCardCover)
             clearFinalList()
             parentFileFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
-                setParentFileFromDB(it)
+                setParentFile(it)
                 topBarBinding.txvFileTitle.text = it.title ?:"タイトルなし"
                 topBarBinding.imvFileType.setImageDrawable(
                     GetCustomDrawables(requireContext()).getFlashCardIconByCol(it?.colorStatus ?:ColorStatus.GRAY,)

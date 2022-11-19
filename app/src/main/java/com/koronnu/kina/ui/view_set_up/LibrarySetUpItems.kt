@@ -20,7 +20,7 @@ import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
-import com.koronnu.kina.customClasses.LibRVState
+import com.koronnu.kina.customClasses.enumClasses.LibRVState
 
 
 class LibrarySetUpItems{
@@ -52,9 +52,12 @@ class LibrarySetUpItems{
 
     fun changeLibRVSelectBtnVisibility(rv: RecyclerView, visible: Boolean){
         rv.children.iterator().forEach { view ->
+
             view.findViewById<ImageView>(R.id.btn_select).apply {
                 visibility =if(visible) View.VISIBLE else View.GONE
             }
+            val parent = view.findViewById<ConstraintLayout>(R.id.lib_rv_base_container)
+            parent.tag = if(visible) LibRVState.Selectable else LibRVState.Plane
         }
     }
     fun changeLibRVAllSelectedState(rv: RecyclerView, selected:Boolean){
@@ -83,7 +86,7 @@ class LibrarySetUpItems{
             val parent = view.findViewById<ConstraintLayout>(R.id.lib_rv_base_container)
             if(parent.tag == LibRVState.LeftSwiped){
                 Animation().animateLibRVLeftSwipeLay(
-                    view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false)
+                    view.findViewById<LinearLayoutCompat>(R.id.linLay_swipe_show),false,){}
             }
             view.findViewById<ImageView>(R.id.btn_select).visibility = View.GONE
             parent.tag = LibRVState.Plane

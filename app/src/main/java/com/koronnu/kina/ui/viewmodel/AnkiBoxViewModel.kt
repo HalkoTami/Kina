@@ -7,13 +7,13 @@ import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.customClasses.AnkiBoxFragments
-import com.koronnu.kina.customClasses.AnkiBoxTabData
+import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.customClasses.normalClasses.AnkiBoxTabData
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.fragment.ankibox_frag_con.BoxFavouriteFragDirections
 import com.koronnu.kina.ui.fragment.ankibox_frag_con.BoxFlashCardCoversFragDirections
 import com.koronnu.kina.ui.fragment.ankibox_frag_con.BoxLibraryItemsFragDirections
-import com.koronnu.kina.customClasses.MakeToastFromVM
+import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {

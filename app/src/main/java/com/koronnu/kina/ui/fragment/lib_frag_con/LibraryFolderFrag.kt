@@ -21,7 +21,7 @@ import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.ColorStatus
-import com.koronnu.kina.customClasses.LibraryFragment
+import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
@@ -88,7 +88,7 @@ class LibraryFolderFrag :  Fragment(){
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
                 libraryBaseViewModel,
-                topBarBinding.imvSearchLoupe,
+                topBarBinding.imvSearchLoup,
                 deletePopUpViewModel,
                 searchViewModel,
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -150,7 +150,7 @@ class LibraryFolderFrag :  Fragment(){
             clearFinalList()
             setLibraryFragment(LibraryFragment.Folder)
             parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner){
-                setParentFileFromDB(it)
+                setParentFile(it)
                 editFileViewModel.setParentTokenFileParent(it)
                 topBarBinding.apply {
                     txvFileTitle.text = it?.title ?:"タイトルなし"

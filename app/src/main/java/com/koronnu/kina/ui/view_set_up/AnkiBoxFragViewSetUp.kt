@@ -15,8 +15,8 @@ import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.ActivityStatus
-import com.koronnu.kina.customClasses.AnkiBoxFragments
-import com.koronnu.kina.customClasses.ParentFileAncestors
+import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.customClasses.normalClasses.ParentFileAncestors
 import com.koronnu.kina.ui.listadapter.AnkiBoxListAdapter
 import com.koronnu.kina.ui.listener.recyclerview.AnkiBoxFileRVCL
 import com.koronnu.kina.ui.listener.recyclerview.AnkiBoxRVStringCardCL

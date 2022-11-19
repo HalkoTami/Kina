@@ -3,7 +3,7 @@ package com.koronnu.kina.ui.listener.recyclerview
 import android.view.View
 import com.koronnu.kina.databinding.AnkiHomeFragRvItemFileBinding
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.customClasses.AnkiBoxFragments
+import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
 
 class AnkiBoxFileRVCL(val item: File,

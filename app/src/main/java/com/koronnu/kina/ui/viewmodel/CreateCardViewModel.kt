@@ -10,10 +10,10 @@ import com.koronnu.kina.db.enumclass.CardStatus
 import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.koronnu.kina.ui.fragment.createCard_frag_com.EditCardFragDirections
-import com.koronnu.kina.customClasses.AnkiFragments
-import com.koronnu.kina.customClasses.ColorPalletStatus
-import com.koronnu.kina.customClasses.MainFragment
-import com.koronnu.kina.customClasses.NeighbourCardSide
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
+import com.koronnu.kina.customClasses.enumClasses.MainFragment
+import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import kotlinx.coroutines.launch
 
 

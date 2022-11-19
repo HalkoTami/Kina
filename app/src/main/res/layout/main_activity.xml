@@ -80,6 +80,7 @@
             android:id="@+id/bnv_binding"
             layout="@layout/main_activity_bottom_navigation_bar" />
     </FrameLayout>
+
     <View
         style="@style/BackGroundViewStyle"
         android:id="@+id/frag_con_view_cover"
@@ -94,19 +95,14 @@
         app:layout_constraintEnd_toEndOf="@id/frame_bnv"
         app:layout_constraintBottom_toBottomOf="@id/frame_bnv"
         app:layout_constraintTop_toTopOf="@id/frame_bnv"/>
+
     <FrameLayout
         android:elevation="20dp"
         android:id="@+id/frameLay_call_on_install"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         >
-        <include android:id="@+id/help_option_binding"
-            layout="@layout/help_options"
-            android:visibility="gone"/>
-        <include android:id="@+id/guide_binding"
-            layout="@layout/call_on_install"
-            android:visibility="gone"/>
     </FrameLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,12 @@ package com.koronnu.kina.ui.viewmodel
 
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import com.koronnu.kina.customClasses.*
+import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.customClasses.enumClasses.LibRVState
+import com.koronnu.kina.customClasses.enumClasses.LibraryTopBarMode
+import com.koronnu.kina.customClasses.enumClasses.ListAttributes
+import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
+import com.koronnu.kina.customClasses.normalClasses.ParentFileAncestors
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 
@@ -47,13 +52,13 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
 //    今開いてるファイル
     fun  parentFileFromDB(int: Int?):LiveData<File> = repository.getFileByFileId(int).asLiveData()
-    fun setParentFileFromDB (file: File){
+    fun setParentFile (file: File?){
         _parentFile.value = file
         changeTopBarMode()
 
     }
-    private val _parentFile = MutableLiveData<File>()
-    val parentFile:LiveData<File> = _parentFile
+    private val _parentFile = MutableLiveData<File?>()
+    val parentFile:LiveData<File?> = _parentFile
     fun returnParentFile():File?{
         return _parentFile.value
     }
@@ -105,6 +110,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private val _selectedItems = MutableLiveData<List<Any>>()
     private fun setSelectedItems(list:List<Any>){
         _selectedItems.value = list
+        setAllRVSelected((list.size == returnParentRVItems().size))
     }
     fun clearSelectedItems(){
         setSelectedItems(mutableListOf())
@@ -138,7 +144,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
 
     val toast :LiveData<MakeToastFromVM> = _toast
-    fun updateLeftItems(parentCards:List<Card>){
+    private fun updateLeftCardItems(parentCards:List<Card>){
         val updateList = mutableListOf<Card>()
         val selectedList =  returnSelectedItems().filterIsInstance<Card>()
         fun checkIsSelected(card:Card):Boolean{
@@ -158,7 +164,27 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         getNextCard(null)
         setReorderedLeftItems(updateList)
     }
-    fun sortAndUpdateSelectedCards(){
+    private fun updateLeftFileItems(parentCards:List<File>){
+        val updateList = mutableListOf<File>()
+        val selectedList =  returnSelectedItems().filterIsInstance<File>()
+        fun checkIsSelected(file: File):Boolean{
+            return selectedList.map { it.fileId }.contains(file.fileId)
+        }
+        var lastUnselectedFile:File? = null
+        fun getNextFile(fileId: Int?){
+            val nextFile = parentCards.find { it.fileBefore == fileId } ?:return
+            if(checkIsSelected(nextFile).not()) {
+                val new = nextFile.copy()
+                new.fileBefore = lastUnselectedFile?.fileId
+                lastUnselectedFile = new
+                updateList.add(new)
+            }
+            getNextFile(nextFile.fileId)
+        }
+        getNextFile(null)
+        setReorderedLeftItems(updateList)
+    }
+    private fun sortAndUpdateSelectedCards(){
         val sorted = returnSelectedItems().sortedBy { returnParentRVItems().indexOf(it) }.filterIsInstance<Card>()
         val newUpdatedList = mutableListOf<Card>()
         sorted.onEach {
@@ -172,7 +198,21 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         }
         setSelectedItems(newUpdatedList)
     }
-    fun onClickRvSelectCard(item: Card,listAttributes: ListAttributes){
+    private fun sortAndUpdateSelectedFiles(){
+        val sorted = returnSelectedItems().sortedBy { returnParentRVItems().indexOf(it) }.filterIsInstance<File>()
+        val newUpdatedList = mutableListOf<File>()
+        sorted.onEach {
+            val newFile = it.copy()
+            val posBefore = sorted.indexOf(it)-1
+            newFile.fileBefore = if(posBefore <0) null else if (posBefore in 0..sorted.size) {
+                sorted[posBefore].fileId
+
+            } else throw IllegalArgumentException()
+            newUpdatedList.add(newFile)
+        }
+        setSelectedItems(newUpdatedList)
+    }
+    private fun onClickRvSelectCard(item: Card,listAttributes: ListAttributes){
         val list = returnSelectedItems().filterIsInstance<Card>()
         val parentList = returnParentRVItems().filterIsInstance<Card>()
         val mList = mutableListOf<Card>()
@@ -188,17 +228,34 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         }
 
         setSelectedItems(mList)
-        updateLeftItems(parentList)
+        updateLeftCardItems(parentList)
         sortAndUpdateSelectedCards()
 
     }
-    fun onClickRvSelect(listAttributes: ListAttributes,item: Any){
+    private fun onClickRvSelectFile(item: File,listAttributes: ListAttributes){
+        val list = returnSelectedItems().filterIsInstance<File>()
+        val parentList = returnParentRVItems().filterIsInstance<File>()
+        val mList = mutableListOf<File>()
+        mList.addAll(list)
+        when(listAttributes){
+            ListAttributes.Add ->{
+                mList.add(item)
+            }
+            ListAttributes.Remove -> {
+                mList.remove(item)
+            }
+        }
+        setSelectedItems(mList)
+        updateLeftFileItems(parentList)
+        sortAndUpdateSelectedFiles()
+
+    }
+    fun onClickRvSelect(listAttributes: ListAttributes, item: Any){
 
 
         when(item){
-            is Card -> {
-                onClickRvSelectCard(item,listAttributes)
-            }
+            is Card -> onClickRvSelectCard(item,listAttributes)
+            is File -> onClickRvSelectFile(item,listAttributes)
             else -> return
         }
     }
@@ -332,8 +389,19 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private val _changeAllRVSelectedStatus = MutableLiveData<Boolean>()
     fun changeAllRVSelectedStatus (selected:Boolean){
         _changeAllRVSelectedStatus.value = selected
-        if(selected) setSelectedItems(returnParentRVItems().toMutableList())
+        if(selected) {
+            setSelectedItems(returnParentRVItems().toMutableList())
+            setAllRVSelected(true)
+        }
         else setSelectedItems(mutableListOf())
+    }
+    private val _allRVItemSelected = MutableLiveData<Boolean>()
+    val allRVItemSelected:LiveData<Boolean> = _allRVItemSelected
+    fun setAllRVSelected (selected:Boolean){
+        _allRVItemSelected.value = selected
+    }
+    fun getAllRVItemSelected ():Boolean{
+        return _allRVItemSelected.value ?:false
     }
 
     val changeAllRVSelectedStatus:LiveData<Boolean> = _changeAllRVSelectedStatus

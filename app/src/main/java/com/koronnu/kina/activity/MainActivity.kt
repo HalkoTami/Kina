@@ -8,22 +8,24 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.koronnu.kina.actions.InstallGuide
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.actions.*
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.databinding.MainActivityBinding
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.customClasses.AnkiFragments
-import com.koronnu.kina.customClasses.ColorPalletStatus
-import com.koronnu.kina.customClasses.MainFragment
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
+import com.koronnu.kina.customClasses.enumClasses.MainFragment
+import com.koronnu.kina.databinding.CallOnInstallBinding
+import com.koronnu.kina.databinding.HelpOptionsBinding
 import com.koronnu.kina.ui.listener.KeyboardListener
 import com.koronnu.kina.ui.listener.popUp.EditFilePopUpCL
 import com.koronnu.kina.ui.observer.LibraryOb
@@ -35,10 +37,14 @@ import com.koronnu.kina.ui.viewmodel.*
 class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var factory                 : ViewModelFactory
     private lateinit var mainNavCon              : NavController
-    private lateinit var mainActivityViewModel   : MainViewModel
-    private lateinit var createFileViewModel     : EditFileViewModel
-    private lateinit var createCardViewModel     : CreateCardViewModel
-    private lateinit var libraryViewModel        : LibraryBaseViewModel
+    private var _mainActivityViewModel   : MainViewModel? = null
+    val mainActivityViewModel get() = _mainActivityViewModel!!
+    private var _createFileViewModel   : EditFileViewModel? = null
+    val createFileViewModel get() = _createFileViewModel!!
+    private var _createCardViewModel   : CreateCardViewModel? = null
+    val createCardViewModel get() = _createCardViewModel!!
+    private var _libraryViewModel   : LibraryBaseViewModel? = null
+    val libraryViewModel get() = _libraryViewModel!!
     private lateinit var ankiFlipBaseViewModel   : AnkiFlipBaseViewModel
     private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
     private lateinit var deletePopUpViewModel    : DeletePopUpViewModel
@@ -46,6 +52,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var searchViewModel         : SearchViewModel
 
     private lateinit var binding                  : MainActivityBinding
+    var _callOnInstallBinding: CallOnInstallBinding? = null
+    val callOnInstallBinding get() = _callOnInstallBinding!!
 
 
 
@@ -55,27 +63,25 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //      全部のデータを消したいとき
 //        applicationContext.deleteDatabase("my_database")
 //        ー－－－mainActivityのviewー－－－
+
         fun checkIfInstall(){
             val sharedPref = this.getSharedPreferences(
                 "firstTimeGuide", Context.MODE_PRIVATE) ?: return
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
-                InstallGuide(this,binding.guideBinding).createGuide(
-                    startOrder = 1,
-                    createCardViewModel,
-                    createFileViewModel,
-                    libraryViewModel,
-                    mainActivityViewModel)
+                CreateGuide(this,binding.frameLayCallOnInstall).callOnFirst()
+
             }
         }
         fun setMainActivityLateInitVars(){
 
             binding = MainActivityBinding.inflate(layoutInflater)
+            _callOnInstallBinding = CallOnInstallBinding.inflate(layoutInflater)
             val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
             factory               = ViewModelFactory((application as RoomApplication).repository)
-            mainActivityViewModel = ViewModelProvider(this)[MainViewModel::class.java]
-            createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
-            createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
-            libraryViewModel      = ViewModelProvider(this,factory)[LibraryBaseViewModel::class.java]
+            _mainActivityViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+            _createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
+            _createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
+            _libraryViewModel      = ViewModelProvider(this,factory)[LibraryBaseViewModel::class.java]
             ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
             ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
             chooseFileMoveToViewModel      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
@@ -97,7 +103,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 mainTopConstrainLayout.requestFocus()
                 mainTopConstrainLayout.viewTreeObserver.addOnGlobalLayoutListener(
                     object :KeyboardListener(mainTopConstrainLayout){
-                        var before = true
                         override fun onKeyBoardAppear() {
                             super.onKeyBoardAppear()
                             mainActivityViewModel.setBnvVisibility(false)
@@ -115,9 +120,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         fun addMainActivityClickListeners(){
             binding.apply {
                 arrayOf(
-                    bindingAddMenu.imvnewCard,
-                    bindingAddMenu.imvnewTangocho,
-                    bindingAddMenu.imvnewfolder,
+                    bindingAddMenu.frameLayNewCard,
+                    bindingAddMenu.frameLayNewFlashcard,
+                    bindingAddMenu.frameLayNewFolder,
                     bindingAddMenu.root,
                     fragConViewCover,
                     bnvCover,
@@ -132,28 +137,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 editFileBinding.apply {
                     colPaletBinding.apply {
                         arrayOf(
-                            imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,editFileBinding.root
+                            imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPallet,btnClose,btnFinish,editFileBinding.root
                         ).onEach {
                             it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,createFileViewModel)) }
                     }
-                }
-                guideBinding.confirmEndGuideBinding.apply {
-                    arrayOf(btnCancelEnd,
-                        btnCloseConfirmEnd,
-                    btnCommitEnd).onEach {
-                        it.setOnClickListener(this@MainActivity)
-                    }
-                }
-            }
-            binding.helpOptionBinding.apply {
-                arrayOf(
-                    root,
-                    menuHowToDeleteItems,
-                    menuHowToCreateItems,
-                    menuHowToEditItems,
-                    menuHowToMoveItems
-                    ).onEach {
-                        it.setOnClickListener(this@MainActivity)
                 }
             }
         }
@@ -190,24 +177,27 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
             ViewModelProvider(this,factory)[FlipTypeAndCheckViewModel::class.java]
         }
+
         setMainActivityLateInitVars()
         createAllViewModels()
         setUpMainActivityLayout()
         addMainActivityClickListeners()
         setContentView(binding.root)
-
+        checkIfInstall()
         val childFragmentStatusObserver      = Observer<MainViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
         }
         val confirmEndGuideObserver         = Observer<Boolean>{
-            changeViewVisibility(binding.guideBinding.frameLayConfirmEndGuidePopUp,it)
+            changeViewVisibility(callOnInstallBinding.frameLayConfirmEndGuidePopUp,it)
         }
 
         val helpOptionVisibilityObserver      = Observer<Boolean>{
             val frameLayHelp = binding.frameLayCallOnInstall
-            changeViewVisibility(frameLayHelp,mainActivityViewModel.checkIfFrameLayHelpIsVisible())
+            changeViewVisibility(frameLayHelp,it)
+
             fun setUpMenuMode(){
-                binding.helpOptionBinding.apply {
+                val helpBinding = HelpOptionsBinding.inflate(layoutInflater)
+                helpBinding.apply {
                     when(mainActivityViewModel.returnFragmentStatus()?.now){
                         MainFragment.Library -> {
                             changeViewVisibility(linLayHelpMenuLibrary,true)
@@ -221,23 +211,44 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     if(libraryViewModel.returnParentRVItems().isEmpty()){
                         arrayOf(menuHowToDeleteItems,
                             menuHowToEditItems
-                        ).onEach { changeViewVisibility(it,false) }
+                        ).onEach {v-> changeViewVisibility(v,false) }
                     }
                 }
+                helpBinding.apply {
+                    arrayOf(
+                        root,
+                        menuHowToDeleteItems,
+                        menuHowToCreateItems,
+                        menuHowToEditItems,
+                        menuHowToMoveItems
+                    ).onEach { view ->
+                        view.setOnClickListener { v->
+                            when(v){
+                                menuHowToDeleteItems -> DeleteGuide(this@MainActivity,binding.frameLayCallOnInstall).deleteGuide()
+                                menuHowToCreateItems -> {
+                                    CreateGuide(this@MainActivity,
+                                        binding.frameLayCallOnInstall).callOnFirst()
+                                }
+                                menuHowToEditItems -> {
+                                    EditGuide(this@MainActivity,binding.frameLayCallOnInstall).greeting1()
+                                }
+                                menuHowToMoveItems -> {
+                                    MoveGuide(this@MainActivity,callOnInstallBinding).moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
+                                }
+                            }
+                        }
+                    }
+                }
+                frameLayHelp.addView(helpBinding.root)
 
             }
-            setUpMenuMode()
-            if(it) {
-                changeViewVisibility(binding.helpOptionBinding.root,true)
-                changeViewVisibility(binding.guideBinding.root,false)
-            } else changeViewVisibility(binding.helpOptionBinding.root,false)
+            if(it) setUpMenuMode() else frameLayHelp.removeAllViews()
         }
         val guideVisibilityObserver      = Observer<Boolean>{
             changeViewVisibility(binding.frameLayCallOnInstall,mainActivityViewModel.checkIfFrameLayHelpIsVisible())
-            if(it) {
-                changeViewVisibility(binding.helpOptionBinding.root,false)
-                changeViewVisibility(binding.guideBinding.root,true)
-            } else changeViewVisibility(binding.guideBinding.root,false)
+            if(it.not()){
+              binding.frameLayCallOnInstall.removeAllViews()
+            }
         }
         val lastInsertedFileObserver      = Observer<File>{
             createFileViewModel.setLastInsertedFile(it)
@@ -251,6 +262,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val popUpEditFileVisibilityObserver  = Observer<Boolean>{
             Animation().animatePopUpAddFile(binding.frameLayEditFile,it)
             changeViewVisibility(binding.fragConViewCover,it||createFileViewModel.returnBottomMenuVisible())
+            if(it.not())  hideKeyBoard(binding.editFileBinding.edtFileTitle,this)
         }
         val popUpEditFileUIDataObserver        = Observer<EditFileViewModel.PopUpUI>{
             LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,this@MainActivity)
@@ -279,9 +291,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         val bottomMenuClickableStatusObserver = Observer<EditFileViewModel.BottomMenuClickable>{
             binding.bindingAddMenu.apply {
-                changeViewVisibility(imvnewfolder,it.createFile)
-                changeViewVisibility(imvnewTangocho,it.createFlashCardCover)
-                changeViewVisibility(imvnewCard,it.createCard)
+                changeViewVisibility(frameLayNewFolder,it.createFile)
+                changeViewVisibility(frameLayNewFlashcard,it.createFlashCardCover)
+                changeViewVisibility(frameLayNewCard,it.createCard)
             }
         }
         val parentFileParentObserver          = Observer<File>{
@@ -290,11 +302,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val editFileParentFileObserver           = Observer<File> {
             createFileViewModel.parentFileParent(it?.fileId).observe(this,parentFileParentObserver)
         }
-        val libraryParentFileObserver           = Observer<File>{
+        val libraryParentFileObserver           = Observer<File?>{
             createCardViewModel.setParentFlashCardCover(it)
             createFileViewModel.setParentTokenFileParent(it)
-            createFileViewModel.getChildFilesByFileIdFromDB(it.fileId).observe(this){
-                createFileViewModel.setParentFileSisters(it)
+            createFileViewModel.getChildFilesByFileIdFromDB(it?.fileId).observe(this){list->
+                createFileViewModel.setParentFileSisters(list)
             }
             createFileViewModel.parentFileParent(it?.parentFileId).observe(this@MainActivity,editFileParentFileObserver)
             createFileViewModel.lastInsertedFile.observe(this,lastInsertedFileObserver)
@@ -333,16 +345,14 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
     }
 
-    fun addSampleFlashCard(){
-        val lastId =    createFileViewModel.returnLastInsertedFile()?.fileId ?:0
-        createFileViewModel.lastInsertedFile
-    }
 
-    override fun onBackPressed() {
+
+    fun onBackPress():Boolean{
+        var actionDone = true
         if(mainActivityViewModel.returnGuideVisibility())
             if(mainActivityViewModel.returnConfirmEndGuidePopUpVisible())
                 mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-             else mainActivityViewModel.setConfirmEndGuidePopUpVisible(true)
+            else mainActivityViewModel.setConfirmEndGuidePopUpVisible(true)
         else if (mainActivityViewModel.returnHelpOptionVisibility())
             mainActivityViewModel.setHelpOptionVisibility(false)
         else if(createFileViewModel.returnBottomMenuVisible())
@@ -366,11 +376,22 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             ankiBaseViewModel.setSettingVisible(false)
         else if (mainActivityViewModel.returnHelpOptionVisibility())
             mainActivityViewModel.setHelpOptionVisibility(false)
-        else super.onBackPressed()
+        else actionDone = false
+        return actionDone
 
     }
 
+    var a :OnBackPressedCallback? = null
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(onBackPress()) return
+                else mainNavCon.popBackStack()
+            }
+        })
+    }
     override fun onClick(v: View?) {
 
         binding.apply {
@@ -383,27 +404,13 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         MainFragment.Anki)
                     bnvImvAdd                         -> createFileViewModel.setBottomMenuVisible(true)
                     fragConViewCover                  -> createFileViewModel.makeBothPopUpGone()
-                    imvnewCard                        -> createCardViewModel.onClickAddNewCardBottomBar()
-                    imvnewTangocho                    -> createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
-                    imvnewfolder                      -> createFileViewModel.onClickCreateFile(FileStatus.FOLDER)
+                    frameLayNewCard                        -> createCardViewModel.onClickAddNewCardBottomBar()
+                    frameLayNewFlashcard                    -> createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
+                    frameLayNewFolder                      -> createFileViewModel.onClickCreateFile(FileStatus.FOLDER)
                 }
             }
             }
-            guideBinding.confirmEndGuideBinding.apply {
-                when(v){
-                    btnCancelEnd,btnCloseConfirmEnd -> mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-                    btnCommitEnd                    -> mainActivityViewModel.onClickEndGuide()
-                }
-            }
-            helpOptionBinding.apply {
-                val guideClass = InstallGuide(this@MainActivity,guideBinding)
-                when(v){
-                    menuHowToDeleteItems -> guideClass.deleteGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,deletePopUpViewModel)
-                    menuHowToCreateItems -> guideClass.createGuide(startOrder = 1, createCardViewModel, createFileViewModel, libraryViewModel,mainActivityViewModel)
-                    menuHowToEditItems -> guideClass.editGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel)
-                    menuHowToMoveItems -> guideClass.moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
-                }
-            }
+
         }
 
     }

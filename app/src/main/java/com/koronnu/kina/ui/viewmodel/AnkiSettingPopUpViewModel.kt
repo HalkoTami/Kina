@@ -3,9 +3,9 @@ package com.koronnu.kina.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.koronnu.kina.customClasses.AnkiFilter
-import com.koronnu.kina.customClasses.AnkiOrder
-import com.koronnu.kina.customClasses.AutoFlip
+import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
+import com.koronnu.kina.customClasses.enumClasses.AnkiOrder
+import com.koronnu.kina.customClasses.normalClasses.AutoFlip
 
 class AnkiSettingPopUpViewModel : ViewModel() {
 

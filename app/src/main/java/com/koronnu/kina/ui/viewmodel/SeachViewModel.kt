@@ -1,9 +1,13 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.content.Context
+import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import com.koronnu.kina.actions.hideKeyBoard
+import com.koronnu.kina.actions.showKeyBoard
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
@@ -41,6 +45,15 @@ class SearchViewModel(private val repository: MyRoomRepository):ViewModel() {
     private val _searchModeActive = MutableLiveData<Boolean>()
     fun setSearchModeActive(boolean: Boolean){
         _searchModeActive.value = boolean
+    }
+    fun onClickSearchLoup(edtLibrarySearch:EditText,context: Context){
+        edtLibrarySearch.requestFocus()
+        showKeyBoard(edtLibrarySearch,context)
+        setSearchModeActive(true)
+    }
+    fun onClickCancel(edtLibrarySearch:EditText,context: Context){
+        hideKeyBoard(edtLibrarySearch,context)
+        setSearchModeActive(false)
     }
     fun returnSearchModeActive():Boolean{
         return _searchModeActive.value ?:false

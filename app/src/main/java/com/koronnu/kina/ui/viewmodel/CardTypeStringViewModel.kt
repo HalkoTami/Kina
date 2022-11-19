@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.StringData
-import com.koronnu.kina.customClasses.StringFragFocusedOn
+import com.koronnu.kina.customClasses.enumClasses.StringFragFocusedOn
 
 class CardTypeStringViewModel:ViewModel() {
     private val _parentCard = MutableLiveData<Card?>()

@@ -3,7 +3,7 @@ package com.koronnu.kina.ui.listener.recyclerview
 
 import android.view.MotionEvent
 import android.view.View
-import com.koronnu.kina.customClasses.ListAttributes
+import com.koronnu.kina.customClasses.enumClasses.ListAttributes
 import com.koronnu.kina.databinding.LibraryFragRvItemBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File

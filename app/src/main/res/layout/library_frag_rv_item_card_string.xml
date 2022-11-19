@@ -27,10 +27,10 @@
         />
 
     <TextView
-        android:autoSizeTextType="uniform"
+        app:autoSizeTextType="uniform"
         android:id="@+id/txv_front_title"
-        android:autoSizeMaxTextSize="13sp"
-        android:autoSizeMinTextSize="6sp"
+        app:autoSizeMaxTextSize="13sp"
+        app:autoSizeMinTextSize="6sp"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_margin="5dp"
@@ -54,9 +54,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:autoSizeTextType="uniform"
-        android:autoSizeMaxTextSize="13sp"
-        android:autoSizeMinTextSize="6sp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMaxTextSize="13sp"
+        app:autoSizeMinTextSize="6sp"
         android:id="@+id/txv_back_title"
         android:layout_width="wrap_content"
         android:layout_height="0dp"

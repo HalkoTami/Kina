@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/TopBarLinLayStyle">
 
@@ -23,13 +22,8 @@
         android:id="@+id/btn_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/icon_setting"/>
-    <ImageView
-        android:id="@+id/btn_guide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
+        android:src="@drawable/icon_setting"
+        android:contentDescription="@string/cd_open_anki_setting" />
 
 
 

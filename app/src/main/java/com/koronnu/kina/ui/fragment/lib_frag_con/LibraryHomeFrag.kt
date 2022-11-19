@@ -11,13 +11,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
 import com.koronnu.kina.actions.changeViewIfRVEmpty
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.customClasses.LibraryFragment
+import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
@@ -85,10 +86,13 @@ class LibraryHomeFrag : Fragment(){
         }
         fun addCL(){
             homeTopBarAddCL()
+            topBarBinding.btnGuide.setOnClickListener{
+                mainViewModel.setHelpOptionVisibility(true)
+            }
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
                 libraryBaseViewModel,
-                topBarBinding.imvSearchLoupe,
+                topBarBinding.imvSearchLoup,
                 deletePopUpViewModel,
                 searchViewModel,
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -134,7 +138,19 @@ class LibraryHomeFrag : Fragment(){
         val homeRVItemsObserver = Observer<List<File>>{
             val sorted = it
             libraryBaseViewModel.setParentRVItems(sorted)
-            if( adapter.currentList.size == it.size) adapter.submitList(null)
+            val mainRV = binding.vocabCardRV
+            adapter = LibFragPlaneRVListAdapter(
+                stringCardViewModel  = cardTypeStringViewModel,
+                createCardViewModel  = createCardViewModel,
+                mainNavController = mainNavCon,
+                deletePopUpViewModel = deletePopUpViewModel,
+                createFileViewModel = editFileViewModel,
+                libraryViewModel = libraryBaseViewModel,
+            )
+            mainRV.adapter = adapter
+            mainRV.layoutManager = LinearLayoutManager(context)
+            mainRV.isNestedScrollingEnabled = true
+//            adapter.submitList(null)
             adapter.submitList(sorted)
             changeViewIfRVEmpty(it,binding.frameLayRvEmpty,emptyView)
         }
@@ -149,6 +165,7 @@ class LibraryHomeFrag : Fragment(){
         searchViewModel.matchedItems.observe(viewLifecycleOwner){
             searchAdapter.submitList(it)
         }
+        libraryBaseViewModel.setParentFile(null)
         searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
         libraryBaseViewModel.apply {
             setLibraryFragment(LibraryFragment.Home)
