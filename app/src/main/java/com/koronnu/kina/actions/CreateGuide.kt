@@ -30,7 +30,7 @@ class CreateGuide(val activity:MainActivity,
     private val libraryViewModel = activity.libraryViewModel
     private val createCardViewModel = activity.createCardViewModel
 
-    val actions = InstallGuide(activity,frameLay)
+    private val actions = InstallGuide(activity,frameLay)
 
     private fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
         onInstallBinding.root.setOnClickListener(null)
@@ -47,7 +47,6 @@ class CreateGuide(val activity:MainActivity,
             animateSpbPos("やあ、僕はとさかくん").start()
             goNextOnClickAnyWhere { greeting2() }
         }
-
     }
     private fun greeting2(){
         actions.apply {

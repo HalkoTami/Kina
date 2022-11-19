@@ -100,6 +100,7 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
             playTogether(getCharacterVisibilityAnim(false),getArrowVisibilityAnim(false),getSpbVisibilityAnim(false))
             doOnEnd{
                 allConLayChildrenGoneAnimDoOnEnd()
+                allConLayChildrenGoneAnimDoOnEnd = {}
             }
         }
     }
