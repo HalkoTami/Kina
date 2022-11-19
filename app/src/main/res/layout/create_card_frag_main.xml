@@ -38,20 +38,19 @@
         android:layout_marginBottom="20dp"
         >
 
-        <com.korokoro.kina.ui.customViews.NavigateBtnCreateCard
+        <com.koronnu.kina.ui.customViews.NavigateBtnCreateCard
             android:contentDescription="@string/cd_create_card_move_next"
             android:id="@+id/btn_next"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:alpha="0.5"
             android:backgroundTint="@color/light_green"
             android:src="@drawable/nav_btn"
-            android:rotationY="180"
+            android:rotation="180"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_insert_next"
             app:layout_constraintStart_toEndOf="@id/btn_previous">
 
-        </com.korokoro.kina.ui.customViews.NavigateBtnCreateCard>
+        </com.koronnu.kina.ui.customViews.NavigateBtnCreateCard>
 
 
 
@@ -68,7 +67,7 @@
             />
 
 
-        <com.korokoro.kina.ui.customViews.NavigateBtnCreateCard
+        <com.koronnu.kina.ui.customViews.NavigateBtnCreateCard
             android:contentDescription="@string/cd_create_card_move_previous"
             android:id="@+id/btn_previous"
             android:layout_width="50dp"
@@ -84,7 +83,7 @@
             android:src="@drawable/nav_btn"
             >
 
-        </com.korokoro.kina.ui.customViews.NavigateBtnCreateCard>
+        </com.koronnu.kina.ui.customViews.NavigateBtnCreateCard>
 
 
         <ImageView

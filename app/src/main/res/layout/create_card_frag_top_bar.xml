@@ -4,20 +4,8 @@
     android:layout_width="match_parent"
     style="@style/TopBarLinLayStyle">
 
-    <ImageView
-        android:contentDescription="@string/cd_btn_save_and_back"
-        android:layout_width="15dp"
-        android:layout_height="match_parent"
-        android:src="@drawable/icon_polygon"
-        android:rotation="180"/>
-    <ImageView
-        android:contentDescription="@string/cd_btn_save_and_back"
-        android:id="@+id/imv_save_and_back"
-        android:layout_width="30dp"
-        android:padding="5dp"
 
-        android:layout_height="35dp"
-        android:src="@drawable/icon_save" />
+
     <ImageView
 
         android:layout_marginStart="10dp"
@@ -37,6 +25,7 @@
 
         android:textSize="20sp" >
     </TextView>
+
     <TextView
         style="@style/TopBarTxvSizeSmallStyle"
         android:layout_marginStart="5dp"
@@ -44,7 +33,14 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="bottom" />
+    <ImageView
+        android:contentDescription="@string/cd_btn_save_and_back"
+        android:id="@+id/imv_save_and_back"
+        android:layout_width="35dp"
+        android:padding="5dp"
 
+        android:layout_height="match_parent"
+        android:src="@drawable/icon_save" />
 
 
 

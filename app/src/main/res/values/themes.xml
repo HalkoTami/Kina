@@ -49,7 +49,7 @@
         <item name="android:src">@drawable/percentage_container</item>
     </style>
     <style name="SettingLineLayStyle">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:gravity">center_vertical</item>
@@ -118,6 +118,18 @@
         <item name="android:textColor">@color/text_color_gray</item>
 
     </style>
+    <style name="TxvStyleNoneSmall" parent="MyTextViewStyle">
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="TxvStyleNoneMiddle" parent="MyTextViewStyle">
+        <item name="android:textSize">15sp</item>
+    </style>
+    <style name="TxvStyleNonePreLarge" parent="MyTextViewStyle">
+        <item name="android:textSize">22sp</item>
+    </style>
+    <style name="TxvStyleNoneLarge" parent="MyTextViewStyle">
+        <item name="android:textSize">28sp</item>
+    </style>
     <style name="CardTitleTxvStyle" parent="CardTitleTxvCheckAnswerStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:minWidth">100dp</item>
@@ -175,7 +187,21 @@
         <item name="autoSizeMaxTextSize">22sp</item>
         <item name="autoSizeMinTextSize">3sp</item>
     </style>
+    <style name="TxvUniformLargeStyle" parent="TextViewUniformStyle">
+        <item name="autoSizeMaxTextSize">28sp</item>
+        <item name="autoSizeMinTextSize">3sp</item>
+    </style>
 
+    <style name="HelpOptionTxvStyle" parent="TxvUniformMiddleStyle">
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@drawable/rectangle_green_stroke</item>
+        <item name="android:backgroundTint">@color/most_dark_gray</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginBottom">10dp</item>
+
+    </style>
     <style name="StringCardContentTxv" >
         <item name="android:maxLines">3</item>
         <item name="autoSizeTextType">uniform</item>
@@ -189,11 +215,19 @@
         <item name="android:textColor">@color/text_color_gray</item>
 
     </style>
+    <style name="CompletedDotStyle">
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_width">10dp</item>
+        <item name="android:layout_height">10dp</item>
+        <item name="android:src">@drawable/circle</item>
+        <item name="tint">@color/light_brown</item>
+    </style>
 
     <style name="EnumTextviewStyle" parent="TxvUniformSmallStyle">
         <item name="android:maxLines">2</item>
         <item name="android:padding">3dp</item>
         <item name="android:gravity">center</item>
+
     </style>
     <style name="TopBarFrameLayStyle" >
         <item name="android:layout_height">@dimen/topBar_height</item>

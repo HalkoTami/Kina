@@ -24,6 +24,7 @@
             android:visibility="visible"/>
     </FrameLayout>
 
+
     <FrameLayout
         android:visibility="visible"
         android:id="@+id/frame_bottomMenu"
@@ -55,7 +56,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             app:defaultNavHost="true"
-            app:navGraph="@navigation/mobile_navigation"
+            app:navGraph="@navigation/main_navigation"
             android:id="@+id/frag_container_view"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
@@ -99,6 +100,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+        <include android:id="@+id/help_option_binding"
+            layout="@layout/help_options"
+            android:visibility="gone"/>
+        <include android:id="@+id/guide_binding"
+            layout="@layout/call_on_install"
+            android:visibility="gone"/>
     </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

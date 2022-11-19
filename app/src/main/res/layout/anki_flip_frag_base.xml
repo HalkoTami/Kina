@@ -102,7 +102,7 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    <com.korokoro.kina.ui.customViews.ImvChangeAlphaOnSelect
+    <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnSelect
         android:id="@+id/btn_remembered"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -110,16 +110,8 @@
         android:src="@drawable/selector_remembered"
         app:layout_constraintBottom_toBottomOf="@id/fragConView_flip"
         app:layout_constraintEnd_toEndOf="@id/fragConView_flip"/>
-    <com.korokoro.kina.ui.customViews.ImvChangeAlphaOnSelect
-        android:id="@+id/btn_setFlag"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/selector_flag"
-        app:layout_constraintBottom_toBottomOf="@id/btn_remembered"
-        app:layout_constraintEnd_toStartOf="@id/btn_remembered"
-        app:layout_constraintTop_toTopOf="@id/btn_remembered"
-        android:layout_marginEnd="10dp"/>
-    <com.korokoro.kina.ui.customViews.ImvChangeAlphaOnDown
+
+    <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnDown
         android:id="@+id/imv_edit_card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -142,7 +134,7 @@
         app:layout_constraintBottom_toTopOf="@id/linLay_flip_bottom"
         app:layout_constraintStart_toStartOf="parent"
         />
-    <com.korokoro.kina.ui.customViews.ImvChangeAlphaOnSelect
+    <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnSelect
         android:id="@+id/btn_stop_count"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.08"

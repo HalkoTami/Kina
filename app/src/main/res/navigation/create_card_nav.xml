@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/fragment_createCard_Base"
         tools:layout="@layout/create_card_frag_base"
-        android:name="com.korokoro.kina.ui.fragment.createCard_frag_com.EditCardFrag">
+        android:name="com.koronnu.kina.ui.fragment.createCard_frag_com.EditCardFrag">
         <argument
             android:name="parentFlashCardCoverId"
             app:argType="integer[]"
@@ -24,7 +24,7 @@
     <action
         android:id="@+id/flip_create_card"
         app:destination="@id/fragment_createCard_Base"
-        app:popUpTo="@navigation/mobile_navigation"
+        app:popUpTo="@navigation/main_navigation"
         app:popUpToInclusive="true"
         />
 

@@ -5,21 +5,32 @@
     android:id="@+id/anki_navigation"
     app:startDestination="@id/anki_box_frag">
     <fragment
-        android:name="com.korokoro.kina.ui.fragment.anki_frag_con.AnkiBoxFrag"
+        android:name="com.koronnu.kina.ui.fragment.anki_frag_con.AnkiBoxFrag"
         tools:layout="@layout/anki_home_frag_base"
+        android:label="@string/nav_label_anki_ankiBox"
         android:id="@+id/anki_box_frag"/>
     <fragment
-        android:name="com.korokoro.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFrag"
+        android:name="com.koronnu.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFrag"
         tools:layout="@layout/anki_flip_frag_base"
+        android:label="@string/nav_label_anki_flip"
         android:id="@+id/anki_flip_base_frag"/>
     <fragment
-        android:name="com.korokoro.kina.ui.fragment.anki_frag_con.AnkiBoxContentFrag"
+        android:name="com.koronnu.kina.ui.fragment.anki_frag_con.AnkiBoxContentFrag"
         tools:layout="@layout/full_rv"
+        android:label="@string/nav_label_anki_flip_item"
         android:id="@+id/flip_item_rv_frag"/>
+    <fragment
+        android:name="com.koronnu.kina.ui.fragment.anki_frag_con.AnkiFlipCompleteFrag"
+        android:label="@string/nav_label_anki_flip_completed"
+        android:id="@+id/flip_completed_frag"/>
+
+
     <action android:id="@+id/to_flip_frag"
         app:destination="@+id/anki_flip_base_frag"/>
     <action android:id="@+id/to_flip_item_rv_frag"
         app:destination="@+id/flip_item_rv_frag"/>
+    <action android:id="@+id/to_flip_completed_frag"
+        app:destination="@+id/flip_completed_frag"/>
 
 
 </navigation>

@@ -24,6 +24,11 @@
     <color name="most_dark_gray" >#616161</color>
     <color name="most_dark_green">#283731</color>
     <color name="orange">#FF4D14</color>
+    <color name="light_brown">#C5BA9A</color>
+    <color name="most_dark_brown">#231B04</color>
+    <color name="dark_brown">#684F0A</color>
+    <color name="button_before_press_light">#BFD8CF</color>
+    <color name="button_before_press_shadow_light">#7AB39D</color>
 
 
 </resources>
