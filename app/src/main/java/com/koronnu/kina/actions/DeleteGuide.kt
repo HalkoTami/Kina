@@ -1,29 +1,22 @@
 package com.koronnu.kina.actions
 
 import android.widget.FrameLayout
+import com.koronnu.kina.R
 import com.koronnu.kina.activity.MainActivity
-import com.koronnu.kina.ui.viewmodel.DeletePopUpViewModel
-import com.koronnu.kina.ui.viewmodel.EditFileViewModel
-import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
-import com.koronnu.kina.ui.viewmodel.MainViewModel
 
 class DeleteGuide(activity: MainActivity,frameLayout: FrameLayout){
     val actions = InstallGuide(activity,frameLayout)
     fun greeting(){
         actions.apply {
+            callOnFirst()
+            getSpbPosAnim(getString(R.string.guide_spb_delete_1)).start()
+            goNextOnClickAnyWhere{explainBtn()}
+        }
+    }
+    fun explainBtn(){
+        actions.apply {
 
         }
-
-//        if(mainViewModel.returnFragmentStatus()?.now!=MainFragment.Library){
-//            mainViewModel.changeFragment(MainFragment.Library)
-//        }
-//        if(libraryViewModel.returnLibraryFragment()!=LibraryFragment.Home){
-//            libraryViewModel.returnLibraryNavCon()?.navigate(LibraryHomeFragDirections.toLibHome())
-//        }
-//        removeHole()
-//        appearAlphaAnimation(character,true).start()
-//        explainTextAnimation("これから、\nアイテムを削除する方法を説明するよ", MyOrientation.TOP,character).start()
-//        goNextOnClickAnyWhere()
     }
     fun deleteGuide() {
 //        mainViewModel.setGuideVisibility(true)

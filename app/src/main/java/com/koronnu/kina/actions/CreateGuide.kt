@@ -44,26 +44,26 @@ class CreateGuide(val activity:MainActivity,
         actions.apply {
             onInstallBinding.root.isClickable = false
             callOnFirst()
-            animateSpbPos("やあ、僕はとさかくん").start()
+            getSpbPosAnim("やあ、僕はとさかくん").start()
             goNextOnClickAnyWhere { greeting2() }
         }
     }
     private fun greeting2(){
         actions.apply {
-            animateSpbPos("これから、KiNaの使い方を説明するね").start()
+            getSpbPosAnim("これから、KiNaの使い方を説明するね").start()
             goNextOnClickAnyWhere{createFlashCard0()}
         }
 
     }
     private fun createFlashCard0(){
         actions.apply {
-            animateSpbPos("KiNaでは、フォルダと単語帳が作れるよ").start()
+            getSpbPosAnim("KiNaでは、フォルダと単語帳が作れるよ").start()
             goNextOnClickAnyWhere{createFlashCard1prt1()}
         }
     }
     private fun createFlashCard1prt1(){
         actions.apply {
-            animateSpbPos("ボタンをタッチして、\n単語帳を作ってみよう" ).start()
+            getSpbPosAnim("ボタンをタッチして、\n単語帳を作ってみよう" ).start()
             goNextOnClickAnyWhere{createFlashCard1prt2()}
         }
 
@@ -169,7 +169,7 @@ class CreateGuide(val activity:MainActivity,
             doAfterCharacterPosChanged = {
                 textFit = true
                 actions.spbPosSimple = ViewAndSide(actions.character, MyOrientation.RIGHT)
-                animateSpbPos("おめでとう！単語帳が追加されたよ\n中身を見てみよう！").start()
+                getSpbPosAnim("おめでとう！単語帳が追加されたよ\n中身を見てみよう！").start()
             }
             getCharacterPosChangeAnim().start()
 
@@ -192,7 +192,7 @@ class CreateGuide(val activity:MainActivity,
     }
     private fun checkInsideNewFlashCard3(){
         actions.apply {
-            animateSpbPos("まだカードがないね\n早速作ってみよう",
+            getSpbPosAnim("まだカードがないね\n早速作ってみよう",
             ).start()
             goNextOnClickAnyWhere{makeNewCard1()}
         }
@@ -231,7 +231,7 @@ class CreateGuide(val activity:MainActivity,
             actions.getAppearAlphaAnimation(actions.character,true).start()
             actions.textFit = true
             actions.spbPosSimple = ViewAndSide(actions.character, MyOrientation.RIGHT)
-            animateSpbPos("上半分は、カードの表" ).start()
+            getSpbPosAnim("上半分は、カードの表" ).start()
             actions.animateHole = true
             actions.viewUnderSpotInGuide = edtCardFrontContent
             goNextOnClickAnyWhere{explainCreateCardFrag2()}
@@ -241,7 +241,7 @@ class CreateGuide(val activity:MainActivity,
     private fun explainCreateCardFrag2(){
         val edtCardBackContent          =activity.findViewById<EditText>(R.id.edt_back_content)
         actions.apply {
-            animateSpbPos("下半分は、カードの裏になっているよ" ).start()
+            getSpbPosAnim("下半分は、カードの裏になっているよ" ).start()
             actions.viewUnderSpotInGuide = edtCardBackContent
             goNextOnClickAnyWhere{explainCreateCardFrag3()}
         }
@@ -257,7 +257,7 @@ class CreateGuide(val activity:MainActivity,
             setCharacterPos()
             actions.textFit = false
             actions.viewUnderSpotInGuide = edtCardFrontTitle
-            animateSpbPos("カードの裏表にタイトルを付けることもできるんだ！").start()
+            getSpbPosAnim("カードの裏表にタイトルを付けることもできるんだ！").start()
             goNextOnClickAnyWhere{explainCreateCardFrag4(edtCardBackTitle)}
         }
 
@@ -271,7 +271,7 @@ class CreateGuide(val activity:MainActivity,
             actions.spbBorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character, MyOrientation.BOTTOM)
                 , leftSideSet = ViewAndSide(actions.character, MyOrientation.RIGHT))
             actions.spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
-            animateSpbPos("好みのようにカスタマイズしてね").start()
+            getSpbPosAnim("好みのようにカスタマイズしてね").start()
             goNextOnClickAnyWhere{explainCreateCardNavigation1()}
         }
 
@@ -284,7 +284,7 @@ class CreateGuide(val activity:MainActivity,
                 MyOrientation.TOP))
             actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
                 MyHorizontalOrientation.MIDDLE)
-            animateSpbPos("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
+            getSpbPosAnim("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
             actions.viewUnderSpotInGuide = linLayCreateCardNavigation
             goNextOnClickAnyWhere{explainCreateCardNavigation2()}
         }
@@ -293,7 +293,7 @@ class CreateGuide(val activity:MainActivity,
     private fun explainCreateCardNavigation2(){
         val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
         actions.apply {
-            animateSpbPos("新しいカードを前に挿入するのはここ").start()
+            getSpbPosAnim("新しいカードを前に挿入するのはここ").start()
             setArrow(MyOrientation.TOP,createCardInsertNext)
             goNextOnClickAnyWhere{explainCreateCardNavigation3()}
         }
@@ -302,7 +302,7 @@ class CreateGuide(val activity:MainActivity,
     private fun explainCreateCardNavigation3(){
         val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
         actions.apply {
-            animateSpbPos("後ろに挿入するのはここ！").start()
+            getSpbPosAnim("後ろに挿入するのはここ！").start()
             setArrow(MyOrientation.TOP,createCardInsertPrevious)
             goNextOnClickAnyWhere{explainCreateCardNavigation4()}
         }
@@ -311,7 +311,7 @@ class CreateGuide(val activity:MainActivity,
     private fun explainCreateCardNavigation4(){
         val createCardNavFlipNext       =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_next)
         actions.apply {
-            animateSpbPos("矢印ボタンでカードを前後にめくってね！" ).start()
+            getSpbPosAnim("矢印ボタンでカードを前後にめくってね！" ).start()
             setArrow(MyOrientation.TOP, createCardNavFlipNext)
             goNextOnClickAnyWhere{explainCreateCardNavigation5()}
         }
@@ -333,7 +333,7 @@ class CreateGuide(val activity:MainActivity,
                 MyHorizontalOrientation.MIDDLE)
             setCharacterPos()
             actions.spbPosSimple = ViewAndSide(actions.character, MyOrientation.TOP)
-            animateSpbPos("これでガイドは終わりだよ").start()
+            getSpbPosAnim("これでガイドは終わりだよ").start()
             actions.getAppearAlphaAnimation(actions.character,true).start()
             goNextOnClickAnyWhere{goodBye2()}
         }
@@ -341,7 +341,7 @@ class CreateGuide(val activity:MainActivity,
     }
     private fun goodBye2(){
         actions.apply {
-            animateSpbPos("KiNaを楽しんで！").start()
+            getSpbPosAnim("KiNaを楽しんで！").start()
             goNextOnClickAnyWhere{end()}
 
         }

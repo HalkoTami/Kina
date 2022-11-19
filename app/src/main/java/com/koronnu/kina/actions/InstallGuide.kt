@@ -232,7 +232,7 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         getArrowVisibilityAnim(true).start()
     }
 
-    fun animateSpbPos(string: String):AnimatorSet{
+    fun getSpbPosAnim(string: String):AnimatorSet{
         return AnimatorSet().apply {
             spbVisibilityAnimDoOnEnd = {
                 changeMulVisibility(arrayOf(bottom,textView),false)
@@ -347,6 +347,9 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
         }
     }
+    fun editGuide(){
+        EditGuide(this).greeting1()
+    }
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
     }
@@ -360,6 +363,9 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
             }
         })
         view.requestLayout()
+    }
+    fun getString(id:Int):String{
+        return activity.resources.getString(id)
     }
     private fun makeHole(){
         holeView.apply {

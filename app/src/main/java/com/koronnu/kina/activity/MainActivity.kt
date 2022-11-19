@@ -230,7 +230,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                                         binding.frameLayCallOnInstall).callOnFirst()
                                 }
                                 menuHowToEditItems -> {
-                                    EditGuide(this@MainActivity,binding.frameLayCallOnInstall).greeting1()
+                                   InstallGuide(this@MainActivity,binding.frameLayCallOnInstall).editGuide()
                                 }
                                 menuHowToMoveItems -> {
                                     MoveGuide(this@MainActivity,callOnInstallBinding).moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
