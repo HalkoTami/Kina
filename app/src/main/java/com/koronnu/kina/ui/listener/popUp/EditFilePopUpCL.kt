@@ -34,7 +34,7 @@ class EditFilePopUpCL(private val bindingEditFile:MainActivityPopupEditFileBindi
                         imvColGray -> onClickColorPallet(ColorStatus.GRAY)
                         imvColBlue -> onClickColorPallet(ColorStatus.BLUE)
                         imvColRed -> onClickColorPallet(ColorStatus.RED)
-                        imvIconPalet -> arrayOf(imvColYellow,
+                        imvIconPallet -> arrayOf(imvColYellow,
                             imvColGray,
                             imvColBlue,
                             imvColRed,).onEach { if(it.visibility==View.INVISIBLE)it.visibility = View.VISIBLE else it.visibility= View.INVISIBLE }

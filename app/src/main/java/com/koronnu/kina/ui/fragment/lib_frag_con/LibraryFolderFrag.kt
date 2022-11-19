@@ -88,7 +88,7 @@ class LibraryFolderFrag :  Fragment(){
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
                 libraryBaseViewModel,
-                topBarBinding.imvSearchLoupe,
+                topBarBinding.imvSearchLoup,
                 deletePopUpViewModel,
                 searchViewModel,
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

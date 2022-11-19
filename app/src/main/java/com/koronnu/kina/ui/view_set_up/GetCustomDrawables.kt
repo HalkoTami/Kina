@@ -21,7 +21,7 @@ GetCustomDrawables(val context: Context){
             FileStatus.FOLDER -> getFolderIconByCol(file.colorStatus)
             FileStatus.FLASHCARD_COVER -> getFlashCardIconByCol(file.colorStatus)
             FileStatus.ANKI_BOX_FAVOURITE -> getAnkiBoxFavouriteIconByCol(file.colorStatus)
-            else -> getDrawable(R.drawable.icon_eye_opened)
+            else -> getDrawable(R.drawable.imv_character)
         }
     }
     private fun getColorFromColStatus(colorStatus: ColorStatus): Int {

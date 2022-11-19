@@ -120,9 +120,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         fun addMainActivityClickListeners(){
             binding.apply {
                 arrayOf(
-                    bindingAddMenu.imvnewCard,
-                    bindingAddMenu.imvnewTangocho,
-                    bindingAddMenu.imvnewfolder,
+                    bindingAddMenu.frameLayNewCard,
+                    bindingAddMenu.frameLayNewFlashcard,
+                    bindingAddMenu.frameLayNewFolder,
                     bindingAddMenu.root,
                     fragConViewCover,
                     bnvCover,
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                 editFileBinding.apply {
                     colPaletBinding.apply {
                         arrayOf(
-                            imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPalet,btnClose,btnFinish,editFileBinding.root
+                            imvColBlue,imvColGray,imvColRed,imvColYellow,imvIconPallet,btnClose,btnFinish,editFileBinding.root
                         ).onEach {
                             it.setOnClickListener(EditFilePopUpCL(binding.editFileBinding,createFileViewModel)) }
                     }
@@ -291,9 +291,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         val bottomMenuClickableStatusObserver = Observer<EditFileViewModel.BottomMenuClickable>{
             binding.bindingAddMenu.apply {
-                changeViewVisibility(imvnewfolder,it.createFile)
-                changeViewVisibility(imvnewTangocho,it.createFlashCardCover)
-                changeViewVisibility(imvnewCard,it.createCard)
+                changeViewVisibility(frameLayNewFolder,it.createFile)
+                changeViewVisibility(frameLayNewFlashcard,it.createFlashCardCover)
+                changeViewVisibility(frameLayNewCard,it.createCard)
             }
         }
         val parentFileParentObserver          = Observer<File>{
@@ -404,9 +404,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                         MainFragment.Anki)
                     bnvImvAdd                         -> createFileViewModel.setBottomMenuVisible(true)
                     fragConViewCover                  -> createFileViewModel.makeBothPopUpGone()
-                    imvnewCard                        -> createCardViewModel.onClickAddNewCardBottomBar()
-                    imvnewTangocho                    -> createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
-                    imvnewfolder                      -> createFileViewModel.onClickCreateFile(FileStatus.FOLDER)
+                    frameLayNewCard                        -> createCardViewModel.onClickAddNewCardBottomBar()
+                    frameLayNewFlashcard                    -> createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
+                    frameLayNewFolder                      -> createFileViewModel.onClickCreateFile(FileStatus.FOLDER)
                 }
             }
             }
