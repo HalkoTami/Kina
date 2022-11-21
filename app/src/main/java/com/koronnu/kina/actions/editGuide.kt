@@ -47,14 +47,9 @@ class EditGuide(val actions: InstallGuide){
                 getCharacterPosChangeAnim().start()
             }
             getAllConLayChildrenGoneAnim().start()
-
         }
     }
-    private fun explainBtn(){
-        val libraryRv                   =actions.activity.findViewById<RecyclerView>(R.id.vocabCardRV)
-        focusOnFirstRvItem { explainBtn2(libraryRv) }
-    }
-    private fun explainBtn2(recycler:RecyclerView){
+    fun setRvItemSideScroll(recycler:RecyclerView,next: () -> Unit){
         actions.apply {
             getSpbPosAnim("編集ボタンを表示するには、\nアイテムを横にスライドするよ").start()
             setArrowDirection(MyOrientation.LEFT)
@@ -64,14 +59,14 @@ class EditGuide(val actions: InstallGuide){
             val rvItemTLis =  object :LibraryRVItemClickListener(recycler.context,activity.findViewById(R.id.frameLay_test),recycler,activity.libraryViewModel){
                 override fun doOnSwipeAppeared() {
                     super.doOnSwipeAppeared()
-                    explainBtn3()
+                    next()
                 }
             }
             addViewToConLay(recycler[0]).setOnTouchListener(
                 object :MyTouchListener(recycler.context){
                     override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
                         super.onScrollLeft(distanceX, motionEvent)
-                            rvItemTLis.onScrollLeft(distanceX, motionEvent!!)
+                        rvItemTLis.onScrollLeft(distanceX, motionEvent!!)
                     }
                     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                         v?.performClick()
@@ -82,6 +77,13 @@ class EditGuide(val actions: InstallGuide){
             )
 
         }
+    }
+    private fun explainBtn(){
+        val libraryRv                   =actions.activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+        focusOnFirstRvItem { explainBtn2(libraryRv) }
+    }
+    private fun explainBtn2(recycler:RecyclerView){
+        setRvItemSideScroll(recycler){explainBtn3()}
     }
     private fun explainBtn3(){
         actions.apply {

@@ -1,8 +1,10 @@
 package com.koronnu.kina.actions
 
-import android.widget.FrameLayout
+import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-import com.koronnu.kina.activity.MainActivity
+import com.koronnu.kina.customClasses.enumClasses.HoleShape
+import com.koronnu.kina.customClasses.enumClasses.MyOrientation
 
 class DeleteGuide(val actions: InstallGuide){
     fun greeting(){
@@ -12,13 +14,33 @@ class DeleteGuide(val actions: InstallGuide){
             goNextOnClickAnyWhere{explainBtn()}
         }
     }
-    fun explainBtn(){
+    private fun explainBtn(){
         actions.apply {
-            EditGuide(actions).focusOnFirstRvItem(){explainBtn2()}
+            EditGuide(actions).focusOnFirstRvItem{explainBtn2()}
         }
     }
-    fun explainBtn2(){
-
+    private fun explainBtn2(){
+        actions.apply {
+            val libraryRv=activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+            EditGuide(actions).setRvItemSideScroll(libraryRv){explainBtn3()}
+        }
+    }
+    private fun explainBtn3(){
+        actions.apply {
+            val btnDeleteFile=activity.findViewById<ImageView>(R.id.btn_delete)
+            holeShapeInGuide = HoleShape.CIRCLE
+            viewUnderSpotInGuide = btnDeleteFile
+            getSpbPosAnim(getString(R.string.guide_spb_delete_2)).start()
+            goNextOnClickAnyWhere{explainBtn4(btnDeleteFile)}
+        }
+    }
+    private fun explainBtn4(btnDeleteFile:ImageView){
+        actions.apply {
+            goNextOnClickTouchArea(btnDeleteFile){}
+            getSpbPosAnim("実際には削除しないので\n" +
+                    "一度押してみよう").start()
+            setArrow(MyOrientation.LEFT,btnDeleteFile)
+        }
     }
     fun deleteGuide() {
 //        mainViewModel.setGuideVisibility(true)

@@ -141,6 +141,7 @@
     <string name="commit_create">作成</string>
     <string name="library_empty_comment">まだ中身がないよ</string>
     <string name="guide_spb_delete_1">これから、\nアイテムを削除する方法を説明するよ</string>
+    <string name="guide_spb_delete_2">このボタンで、アイテムを削除できるよ</string>
 
 
 </resources>
