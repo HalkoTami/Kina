@@ -122,13 +122,7 @@
     <string name="minutes_practiced">暗記した時間</string>
     <string name="only_not_remembered_cards">未暗記のカードのみ</string>
     <string name="default_auto_flip_seconds">20</string>
-    <string name="guide_option_how_to_create_items">アイテムのつくり方</string>
-    <string name="guide_option_how_to_edit_items">アイテムを編集する</string>
-    <string name="guide_option_how_to_delete_items">アイテムを削除する</string>
-    <string name="guide_option_how_to_move_items">アイテムを移動する</string>
-    <string name="guide_option_how_to_practice">カードを暗記する</string>
-    <string name="guide_option_practice_setting">暗記オプションを選ぶ</string>
-    <string name="guide_option_how_edit_items_during_practice">暗記中にアイテムを編集する</string>
+
     <string name="selected_item_option_move">アイテムを移動する</string>
     <string name="selected_item_option_delete">削除する</string>
     <string name="cancel">キャンセル</string>
@@ -140,12 +134,36 @@
     <string name="create_file_edt_hint">タイトル</string>
     <string name="commit_create">作成</string>
     <string name="library_empty_comment">まだ中身がないよ</string>
+
+<!--guides-->
+    <!--    guide option menu titles-->
+    <string name="guide_option_how_to_create_items">アイテムのつくり方</string>
+    <string name="guide_option_how_to_edit_items">アイテムを編集する</string>
+    <string name="guide_option_how_to_delete_items">アイテムを削除する</string>
+    <string name="guide_option_how_to_move_items">アイテムを移動する</string>
+    <string name="guide_option_how_to_practice">カードを暗記する</string>
+    <string name="guide_option_practice_setting">暗記オプションを選ぶ</string>
+    <string name="guide_option_how_edit_items_during_practice">暗記中にアイテムを編集する</string>
+<!--    create guide-->
+<!--    delete guide-->
     <string name="guide_spb_delete_1">これから、\nアイテムを削除する方法を説明するよ</string>
-    <string name="guide_spb_delete_2">"実際には削除しないので\n一度押してみよう"</string>
-    <string name="guide_spb_delete_3">このボタンで、アイテムを削除できるよ</string>
-    <string name="guide_spb_delete_4">このボタンで、アイテムを削除できるよ</string>
-    <string name="guide_spb_delete_5">このボタンで、アイテムを削除できるよ</string>
-    <string name="guide_spb_delete_6">このボタンで、アイテムを削除できるよ</string>
+    <string name="guide_spb_delete_2">このアイテムを見てみよう</string>
+    <string name="guide_spb_delete_3">アイテムを横にスライドすると、編集ボタンが現れるよ</string>
+    <string name="guide_spb_delete_4">削除ボタンが現れたね</string>
+    <string name="guide_spb_delete_5">実際には消されないので、ボタンを押してみよう</string>
+    <string name="guide_spb_delete_6">削除前には、確認されるから、安心してね。</string>
+    <string name="guide_spb_delete_7">アイテムに中身があった場合は、中身を消すかも確認されるんだ</string>
+    <string name="guide_spb_delete_8">もしすべて削除したければ、削除する、を</string>
+    <string name="guide_spb_delete_9">そうでなければ、中身は残して削除することができるよ</string>
+    <string name="guide_spb_delete_10">単語帳の中身を残して削除する場合は、</string>
+    <string name="guide_spb_delete_11">インボックスの中に、カードの中身が移るよ</string>
+    <string name="guide_spb_delete_12">インボックスの中には、単語帳に属していないカードが入っているんだ</string>
+    <string name="guide_spb_delete_13">アイテムをまとめて削除したいときは</string>
+    <string name="guide_spb_delete_14">アイテムを長押ししてみて</string>
+    <string name="guide_spb_delete_15">複数選択できるようになるよ</string>
+    <string name="guide_spb_delete_16">選択出来たら、右上のメニューを開いて</string>
+    <string name="guide_spb_delete_17">削除するを選んでね</string>
+    <string name="guide_spb_delete_18">説明は以上だよ</string>
 
 
 </resources>
