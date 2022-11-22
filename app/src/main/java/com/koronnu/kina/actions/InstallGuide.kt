@@ -122,6 +122,12 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         }
 
     }
+    fun onClickGoNext(func: () -> Unit){
+        callOnInstallBinding.conLayGuideGoNext.setOnClickListener{
+            makeTouchAreaGone()
+            func()
+        }
+    }
     fun goNextOnClickAnyWhere(func:()->Unit){
         callOnInstallBinding.root.setOnClickListener {
             makeTouchAreaGone()
@@ -351,7 +357,7 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         EditGuide(this).greeting1()
     }
     fun deleteGuide(){
-        DeleteGuide(this).greeting()
+        DeleteGuide(this).guide1()
     }
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)

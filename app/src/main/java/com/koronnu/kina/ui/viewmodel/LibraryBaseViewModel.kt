@@ -427,6 +427,11 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         val a  = LibraryChooseFileMoveToFragDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))
        returnLibraryNavCon()?.navigate(a)
     }
+    private val _doOnSwipeEnd = MutableLiveData<()->Unit>()
+    fun setDoOnSwipeEnd(unit:()->Unit){
+        _doOnSwipeEnd.value = unit
+    }
+    val doOnSwipeEnd:()->Unit get() = _doOnSwipeEnd.value ?:{}
 
 
 //    －－－－－－－－

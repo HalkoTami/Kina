@@ -1,45 +1,54 @@
 package com.koronnu.kina.actions
 
 import android.widget.ImageView
+import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.customClasses.enumClasses.HoleShape
+import com.koronnu.kina.customClasses.enumClasses.MyHorizontalOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyOrientation
+import com.koronnu.kina.customClasses.enumClasses.MyVerticalOrientation
+import com.koronnu.kina.customClasses.normalClasses.BorderSet
+import com.koronnu.kina.customClasses.normalClasses.MyOrientationSet
+import com.koronnu.kina.customClasses.normalClasses.ViewAndSide
 
 class DeleteGuide(val actions: InstallGuide){
-    fun greeting(){
+    private val libraryRV get() = actions.activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+    fun guide1(){
         actions.apply {
             callOnFirst()
             getSpbPosAnim(getString(R.string.guide_spb_delete_1)).start()
-            goNextOnClickAnyWhere{explainBtn()}
+            onClickGoNext{guide2()}
         }
     }
-    private fun explainBtn(){
+    private fun guide2(){
         actions.apply {
-            EditGuide(actions).focusOnFirstRvItem{explainBtn2()}
+            characterBorderSet = BorderSet(topSideSet = ViewAndSide(libraryRV[0],MyOrientation.BOTTOM))
+            characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,MyHorizontalOrientation.LEFT)
+            spbPosSimple = ViewAndSide(character,MyOrientation.RIGHT)
+            doAfterCharacterPosChanged = {getSpbPosAnim(getString(R.string.guide_spb_delete_2)).start()}
+            getCharacterPosChangeAnim().start()
+            holeShapeInGuide = HoleShape.RECTANGLE
+            viewUnderSpotInGuide = libraryRV[0]
+            onClickGoNext{guide3()}
         }
     }
-    private fun explainBtn2(){
+    private fun guide3(){
         actions.apply {
-            val libraryRv=activity.findViewById<RecyclerView>(R.id.vocabCardRV)
-            EditGuide(actions).setRvItemSideScroll(libraryRv){explainBtn3()}
+            getSpbPosAnim(getString(R.string.guide_spb_delete_3))
+            makeHereTouchable(libraryRV[0])
+            activity.libraryViewModel
+
         }
     }
-    private fun explainBtn3(){
+    private fun guide4(){
         actions.apply {
-            val btnDeleteFile=activity.findViewById<ImageView>(R.id.btn_delete)
-            holeShapeInGuide = HoleShape.CIRCLE
-            viewUnderSpotInGuide = btnDeleteFile
-            getSpbPosAnim(getString(R.string.guide_spb_delete_2)).start()
-            goNextOnClickAnyWhere{explainBtn4(btnDeleteFile)}
+
         }
     }
-    private fun explainBtn4(btnDeleteFile:ImageView){
+    private fun guide5(btnDeleteFile:ImageView){
         actions.apply {
-            goNextOnClickTouchArea(btnDeleteFile){}
-            getSpbPosAnim("実際には削除しないので\n" +
-                    "一度押してみよう").start()
-            setArrow(MyOrientation.LEFT,btnDeleteFile)
+
         }
     }
     fun deleteGuide() {
