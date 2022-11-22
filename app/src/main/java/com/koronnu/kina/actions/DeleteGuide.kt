@@ -51,9 +51,13 @@ class DeleteGuide(val actions: InstallGuide){
     }
     private fun guide5(){
         actions.apply {
+            activity.deletePopUpViewModel.setDoOnPopUpVisibilityChanged(true){guide6()}
             getSpbPosAnim(getString(R.string.guide_spb_delete_5)).start()
             makeHereTouchable(btnDeleteFile)
         }
+    }
+    private fun guide6(){
+
     }
     fun deleteGuide() {
 //        mainViewModel.setGuideVisibility(true)

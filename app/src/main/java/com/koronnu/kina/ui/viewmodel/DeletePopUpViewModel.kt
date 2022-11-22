@@ -192,7 +192,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
 
     }
     private val _doOnPopUpVisibilityChanged = MutableLiveData<()->Unit>()
-    fun setDoOnDeletePopUpAppeared(onlyOnce:Boolean,unit:()->Unit){
+    fun setDoOnPopUpVisibilityChanged(onlyOnce:Boolean, unit:()->Unit){
         val unitBefore = doOnPopUpVisibilityChanged
         val finalUnit = if(onlyOnce){
             { unit()
