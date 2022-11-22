@@ -164,6 +164,7 @@
     <string name="guide_spb_delete_16">選択出来たら、右上のメニューを開いて</string>
     <string name="guide_spb_delete_17">削除するを選んでね</string>
     <string name="guide_spb_delete_18">説明は以上だよ</string>
+    <string name="guide_go_next">次へ</string>
 
 
 </resources>
