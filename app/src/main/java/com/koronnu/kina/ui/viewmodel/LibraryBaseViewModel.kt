@@ -428,10 +428,16 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
        returnLibraryNavCon()?.navigate(a)
     }
     private val _doOnSwipeEnd = MutableLiveData<()->Unit>()
-    fun setDoOnSwipeEnd(unit:()->Unit){
-        _doOnSwipeEnd.value = unit
+    fun setDoOnSwipeEnd(onlyOnce:Boolean,unit:()->Unit){
+        val unitBefore = _doOnSwipeEnd.value
+        val finalUnit = if(onlyOnce){
+            { unit()
+                _doOnSwipeEnd.value = unitBefore ?:{} }
+        } else unit
+        _doOnSwipeEnd.value = finalUnit
     }
     val doOnSwipeEnd:()->Unit get() = _doOnSwipeEnd.value ?:{}
+
 
 
 //    －－－－－－－－

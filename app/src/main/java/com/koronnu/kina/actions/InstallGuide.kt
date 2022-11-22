@@ -70,7 +70,7 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
     private val arrowMargin:MyMargin = MyMargin(10,10,10,10)
 
 
-    fun makeHereTouchable(view: View){
+    fun makeHereTouchable(view: View?){
         callOnInstallBinding.apply {
             guideParentConLay.setOnClickListener(null)
             root.isClickable = false
@@ -78,14 +78,18 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
                 it.isClickable = true
             }
             val oriSet = MyOrientationSet(borderAttributes = BorderAttributes.FillBorder)
-            setPositionByMargin(ViewAndPositionData(viewUnTouchableLeft,
-                getSimplePosRelation(view,MyOrientation.LEFT,false), oriSet))
-            setPositionByMargin(ViewAndPositionData(viewUnTouchableBottom,
-                getSimplePosRelation(view,MyOrientation.BOTTOM,false), oriSet))
-            setPositionByMargin(ViewAndPositionData(viewUnTouchableRight,
-                getSimplePosRelation(view,MyOrientation.RIGHT,false), oriSet))
-            setPositionByMargin(ViewAndPositionData(viewUnTouchableTop,
-                getSimplePosRelation(view,MyOrientation.TOP,false),oriSet))
+            if(view!=null){
+                setPositionByMargin(ViewAndPositionData(viewUnTouchableLeft,
+                    getSimplePosRelation(view,MyOrientation.LEFT,false), oriSet))
+                setPositionByMargin(ViewAndPositionData(viewUnTouchableBottom,
+                    getSimplePosRelation(view,MyOrientation.BOTTOM,false), oriSet))
+                setPositionByMargin(ViewAndPositionData(viewUnTouchableRight,
+                    getSimplePosRelation(view,MyOrientation.RIGHT,false), oriSet))
+                setPositionByMargin(ViewAndPositionData(viewUnTouchableTop,
+                    getSimplePosRelation(view,MyOrientation.TOP,false),oriSet))
+            } else setPositionByMargin(ViewAndPositionData(viewUnTouchableLeft,
+                BorderSet(),oriSet))
+
         }
     }
 

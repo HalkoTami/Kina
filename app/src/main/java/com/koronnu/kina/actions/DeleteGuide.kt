@@ -14,6 +14,8 @@ import com.koronnu.kina.customClasses.normalClasses.ViewAndSide
 
 class DeleteGuide(val actions: InstallGuide){
     private val libraryRV get() = actions.activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+    private val btnDeleteFile  get()=actions.activity.findViewById<ImageView>(R.id.btn_delete)
+
     fun guide1(){
         actions.apply {
             callOnFirst()
@@ -35,20 +37,22 @@ class DeleteGuide(val actions: InstallGuide){
     }
     private fun guide3(){
         actions.apply {
-            getSpbPosAnim(getString(R.string.guide_spb_delete_3))
+            getSpbPosAnim(getString(R.string.guide_spb_delete_3)).start()
             makeHereTouchable(libraryRV[0])
-            activity.libraryViewModel
-
+            activity.libraryViewModel.setDoOnSwipeEnd(true) { guide4() }
         }
     }
     private fun guide4(){
         actions.apply {
-
+            getSpbPosAnim(getString(R.string.guide_spb_delete_4)).start()
+            makeHereTouchable(null)
+            setArrow(MyOrientation.LEFT,btnDeleteFile)
         }
     }
-    private fun guide5(btnDeleteFile:ImageView){
+    private fun guide5(){
         actions.apply {
-
+            getSpbPosAnim(getString(R.string.guide_spb_delete_5)).start()
+            makeHereTouchable(btnDeleteFile)
         }
     }
     fun deleteGuide() {

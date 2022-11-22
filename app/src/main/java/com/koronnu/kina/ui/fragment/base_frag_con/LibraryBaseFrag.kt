@@ -65,6 +65,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
                 binding.frameLayConfirmDelete.visibility = if(it.visible) View.VISIBLE else View.GONE
                 txvConfirmDeleteOnlyParent.text = it.confirmText
                 mainViewModel.setBnvCoverVisible(deletePopUpViewModel.checkBackgroundVisible())
+                deletePopUpViewModel.doOnPopUpVisibilityChanged()
             }
         }
         val confirmDeleteWithChildrenViewObserver = Observer<DeletePopUpViewModel.ConfirmDeleteWithChildrenView>{
@@ -75,6 +76,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
                 txvContainingFlashcard.text = it.containingFlashCardCover.toString()
                 txvContainingCard.text = it.containingCards.toString()
                 mainViewModel.setBnvCoverVisible(deletePopUpViewModel.checkBackgroundVisible())
+                deletePopUpViewModel.doOnPopUpVisibilityChanged()
             }
         }
         val deletingItemObserver = Observer<List<Any>> { list->
