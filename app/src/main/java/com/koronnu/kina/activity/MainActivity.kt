@@ -349,7 +349,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
 
-    fun onBackPress():Boolean{
+    fun onBackPress(){
         var actionDone = true
         if(mainActivityViewModel.returnGuideVisibility())
             if(mainActivityViewModel.returnConfirmEndGuidePopUpVisible())
@@ -378,8 +378,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             ankiBaseViewModel.setSettingVisible(false)
         else if (mainActivityViewModel.returnHelpOptionVisibility())
             mainActivityViewModel.setHelpOptionVisibility(false)
-        else actionDone = false
-        return actionDone
+        else if (mainActivityViewModel.returnFragmentStatus()?.now==MainFragment.Library)
+            libraryViewModel.returnLibraryNavCon()?.popBackStack()
 
     }
 
@@ -389,8 +389,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         super.onAttachedToWindow()
         onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(onBackPress()) return
-                else mainNavCon.popBackStack()
+                onBackPress()
             }
         })
     }

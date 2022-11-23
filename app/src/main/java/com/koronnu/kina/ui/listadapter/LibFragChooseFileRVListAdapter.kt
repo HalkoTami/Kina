@@ -80,7 +80,8 @@ class LibFragChooseFileRVListAdapter(
                             )
                         )
                     }
-                    arrayOf(btnSelect,txvMove).onEach { changeViewVisibility(it,true) }
+                    val movingItemAlreadyInRvItem = chooseFileMoveToViewModel.getMovingItemsParentFileId == item.fileId
+                    arrayOf(btnSelect,txvMove).onEach { changeViewVisibility(it, movingItemAlreadyInRvItem.not()) }
                 }
             }
            setUpViewFirst()
@@ -89,9 +90,8 @@ class LibFragChooseFileRVListAdapter(
             val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
             viewSetUp.setUpRVFileBinding(fileBinding,item,context)
             binding.contentBindingFrame.addView(fileBinding.root)
-            setLeftContent()
             addCL()
-
+                setLeftContent()
         }
 
         }

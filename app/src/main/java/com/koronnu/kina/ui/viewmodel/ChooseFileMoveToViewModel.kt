@@ -56,6 +56,11 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     fun returnMovingItems():List<Any>{
         return _movingItems.value ?: mutableListOf()
     }
+    private val _movingItemsParentFileId = MutableLiveData<Int?>()
+    fun setMovingItemsParentFileId(fileId:Int?){
+        _movingItemsParentFileId.value = fileId
+    }
+    val getMovingItemsParentFileId get() = _movingItemsParentFileId.value
     private val _movingItemSistersUpdateNeeded = MutableLiveData<List<Any>>()
     fun setMovingItemSistersUpdateNeeded(list:List<Any>){
         _movingItemSistersUpdateNeeded.value = list

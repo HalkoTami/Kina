@@ -59,6 +59,11 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun returnLibraryNavCon(): NavController?{
         return _libraryNavCon.value
     }
+    private val _selectedItemParent  = MutableLiveData<File?>()
+    fun setSelectedItemParent(parentFile: File?){
+        _selectedItemParent.value = parentFile
+    }
+    val getSelectedItemParent = _selectedItemParent.value
 
 //    Fragment作成時に毎回呼び出す
     fun onCreate(){
