@@ -107,6 +107,11 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         setParentRVItems(mutableListOf())
     }
 //    selected Items
+    private val _upDateSelectedItems = MutableLiveData<List<Any>>()
+    private fun setUpdatedSelectedItems(list:List<Any>){
+        _upDateSelectedItems.value = list
+    }
+    val getUpdatedSelectedItems get() = _upDateSelectedItems.value ?: mutableListOf()
     private val _selectedItems = MutableLiveData<List<Any>>()
     private fun setSelectedItems(list:List<Any>){
         _selectedItems.value = list
@@ -196,7 +201,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
             } else throw IllegalArgumentException()
             newUpdatedList.add(newCard)
         }
-        setSelectedItems(newUpdatedList)
+        setUpdatedSelectedItems(newUpdatedList)
     }
     private fun sortAndUpdateSelectedFiles(){
         val sorted = returnSelectedItems().sortedBy { returnParentRVItems().indexOf(it) }.filterIsInstance<File>()
@@ -210,7 +215,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
             } else throw IllegalArgumentException()
             newUpdatedList.add(newFile)
         }
-        setSelectedItems(newUpdatedList)
+        setUpdatedSelectedItems(newUpdatedList)
     }
     private fun onClickRvSelectCard(item: Card,listAttributes: ListAttributes){
         val list = returnSelectedItems().filterIsInstance<Card>()
