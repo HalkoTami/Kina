@@ -103,7 +103,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             filtered.onEach { a.add(it.id) }
             return a.toList()
         }
-        val movingItems = libraryBaseViewModel.returnSelectedItems()
+        val movingItems = libraryBaseViewModel.getUpdatedSelectedItems
         val movingItemSisters = libraryBaseViewModel.getReorderedLeftItems()
         val movingFileIdsList = getMovingFileIdsList(movingItems)
         val movingCardIdsList = getMovingCardIdsList(movingItems)

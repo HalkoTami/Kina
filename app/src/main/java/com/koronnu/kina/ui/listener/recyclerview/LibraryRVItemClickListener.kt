@@ -92,7 +92,7 @@ open class LibraryRVItemClickListener(val context: Context,
                         conLay.tag = LibRVState.Plane
                     }
                     else if (lineLay.layoutParams.width>=25){
-                        Animation().animateLibRVLeftSwipeLay(lineLay ,true){doOnSwipeAppeared()}
+                        Animation().animateLibRVLeftSwipeLay(lineLay ,true){libraryBaseViewModel.doOnSwipeEnd()}
                         conLay.tag = LibRVState.LeftSwiped
                         libraryBaseViewModel.setLeftSwipedItemExists(true)
                     }

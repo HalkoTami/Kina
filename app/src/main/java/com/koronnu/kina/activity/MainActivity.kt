@@ -45,9 +45,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     val createCardViewModel get() = _createCardViewModel!!
     private var _libraryViewModel   : LibraryBaseViewModel? = null
     val libraryViewModel get() = _libraryViewModel!!
+    private var _deletePopUpViewModel   : DeletePopUpViewModel? = null
+    val deletePopUpViewModel get() = _deletePopUpViewModel!!
+
     private lateinit var ankiFlipBaseViewModel   : AnkiFlipBaseViewModel
     private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
-    private lateinit var deletePopUpViewModel    : DeletePopUpViewModel
     private lateinit var chooseFileMoveToViewModel : ChooseFileMoveToViewModel
     private lateinit var searchViewModel         : SearchViewModel
 
@@ -85,7 +87,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
             ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
             chooseFileMoveToViewModel      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
-            deletePopUpViewModel  = ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
+            _deletePopUpViewModel  = ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
             searchViewModel       = ViewModelProvider(this,factory)[SearchViewModel::class.java]
             mainNavCon            =   navHostFragment.navController
 
@@ -224,13 +226,13 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     ).onEach { view ->
                         view.setOnClickListener { v->
                             when(v){
-                                menuHowToDeleteItems -> DeleteGuide(this@MainActivity,binding.frameLayCallOnInstall).deleteGuide()
+                                menuHowToDeleteItems -> InstallGuide(this@MainActivity,binding.frameLayCallOnInstall).deleteGuide()
                                 menuHowToCreateItems -> {
                                     CreateGuide(this@MainActivity,
                                         binding.frameLayCallOnInstall).callOnFirst()
                                 }
                                 menuHowToEditItems -> {
-                                    EditGuide(this@MainActivity,binding.frameLayCallOnInstall).greeting1()
+                                   InstallGuide(this@MainActivity,binding.frameLayCallOnInstall).editGuide()
                                 }
                                 menuHowToMoveItems -> {
                                     MoveGuide(this@MainActivity,callOnInstallBinding).moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)

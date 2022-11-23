@@ -9,7 +9,6 @@ import android.widget.ImageView
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.*
 import com.koronnu.kina.customClasses.normalClasses.BorderSet
 import com.koronnu.kina.customClasses.normalClasses.MyOrientationSet
@@ -19,21 +18,18 @@ import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.ui.listener.MyTouchListener
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
 
-class EditGuide(val activity:MainActivity,
-                frameLay: FrameLayout,){
-    val actions = InstallGuide(activity,frameLay)
+class EditGuide(val actions: InstallGuide){
     fun greeting1(){
         actions.apply {
             callOnFirst()
             activity.libraryViewModel.makeAllUnSwiped()
-            animateSpbPos("これから、\n単語帳を編集する方法を説明するよ").start()
+            getSpbPosAnim("これから、\n単語帳を編集する方法を説明するよ").start()
             goNextOnClickAnyWhere{explainBtn()}
         }
     }
-    private fun explainBtn(){
-        val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
-
+    fun focusOnFirstRvItem(next:()->Unit){
         actions.apply {
+            val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
             goNextOnClickAnyWhere {  }
             allConLayChildrenGoneAnimDoOnEnd= {
                 animateHole = true
@@ -45,18 +41,17 @@ class EditGuide(val activity:MainActivity,
                 characterSizeDimenId = R.dimen.character_size_middle
                 doAfterCharacterPosChanged = { spbBorderSet = getSimplePosRelation(character,MyOrientation.RIGHT,true)
                     spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
-                    animateSpbPos("このアイテムを見てみよう").start()
+                    getSpbPosAnim("このアイテムを見てみよう").start()
                 }
-                characterPosChangeAnimDoOnEnd = { goNextOnClickAnyWhere { explainBtn2(libraryRv) }}
+                characterPosChangeAnimDoOnEnd = { goNextOnClickAnyWhere { next() }}
                 getCharacterPosChangeAnim().start()
             }
             getAllConLayChildrenGoneAnim().start()
-
         }
     }
-    private fun explainBtn2(recycler:RecyclerView){
+    fun setRvItemSideScroll(recycler:RecyclerView,next: () -> Unit){
         actions.apply {
-            animateSpbPos("編集ボタンを表示するには、\nアイテムを横にスライドするよ").start()
+            getSpbPosAnim("編集ボタンを表示するには、\nアイテムを横にスライドするよ").start()
             setArrowDirection(MyOrientation.LEFT)
             setPositionByMargin(ViewAndPositionData(arrow,getSimplePosRelation(recycler[0],MyOrientation.MIDDLE,true),
                 MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)))
@@ -64,14 +59,14 @@ class EditGuide(val activity:MainActivity,
             val rvItemTLis =  object :LibraryRVItemClickListener(recycler.context,activity.findViewById(R.id.frameLay_test),recycler,activity.libraryViewModel){
                 override fun doOnSwipeAppeared() {
                     super.doOnSwipeAppeared()
-                    explainBtn3()
+                    next()
                 }
             }
             addViewToConLay(recycler[0]).setOnTouchListener(
                 object :MyTouchListener(recycler.context){
                     override fun onScrollLeft(distanceX: Float, motionEvent: MotionEvent?) {
                         super.onScrollLeft(distanceX, motionEvent)
-                            rvItemTLis.onScrollLeft(distanceX, motionEvent!!)
+                        rvItemTLis.onScrollLeft(distanceX, motionEvent!!)
                     }
                     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                         v?.performClick()
@@ -83,12 +78,19 @@ class EditGuide(val activity:MainActivity,
 
         }
     }
+    private fun explainBtn(){
+        val libraryRv                   =actions.activity.findViewById<RecyclerView>(R.id.vocabCardRV)
+        focusOnFirstRvItem { explainBtn2(libraryRv) }
+    }
+    private fun explainBtn2(recycler:RecyclerView){
+        setRvItemSideScroll(recycler){explainBtn3()}
+    }
     private fun explainBtn3(){
-        val btnEditFile=activity.findViewById<ImageView>(R.id.btn_edit_whole)
         actions.apply {
+            val btnEditFile=activity.findViewById<ImageView>(R.id.btn_edit_whole)
             makeTouchAreaGone()
             setArrow(MyOrientation.LEFT,btnEditFile)
-            animateSpbPos("編集してみよう").start()
+            getSpbPosAnim("編集してみよう").start()
             goNextOnClickAnyWhere{explainBtn4(btnEditFile)}
         }
     }
@@ -101,8 +103,8 @@ class EditGuide(val activity:MainActivity,
         }
     }
     private fun editFile1(){
-        val frameLayEditFile=activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
         actions.apply {
+            val frameLayEditFile=activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
             allConLayChildrenGoneAnimDoOnEnd = {
                 guideParentConLay.setOnClickListener(null)
                 holeShapeInGuide = HoleShape.RECTANGLE
@@ -122,7 +124,7 @@ class EditGuide(val activity:MainActivity,
             characterPosChangeAnimDoOnEnd = {}
             doAfterCharacterPosChanged = {
                 spbOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,MyHorizontalOrientation.MIDDLE)
-                animateSpbPos("じゃじゃん！").start()
+                getSpbPosAnim("じゃじゃん！").start()
             }
             getCharacterPosChangeAnim ().start()
             goNextOnClickAnyWhere { editFile3() }
@@ -130,16 +132,16 @@ class EditGuide(val activity:MainActivity,
 
     }
     private fun editFile3(){
-        val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
         actions.apply {
+            val edtCreatingFileTitle        =activity.findViewById<EditText>(R.id.edt_file_title)
             setArrow(MyOrientation.BOTTOM,edtCreatingFileTitle)
-            animateSpbPos("タイトルを変えたり").start()
+            getSpbPosAnim("タイトルを変えたり").start()
             goNextOnClickAnyWhere { editFile4prt1() }
         }
     }
     private fun editFile4prt1(){
         actions.apply {
-            animateSpbPos("色で分けて整理してみてね").start()
+            getSpbPosAnim("色で分けて整理してみてね").start()
             val imvColPallet                =activity.findViewById<ImageView>(R.id.imv_icon_pallet)
 
             setArrow(MyOrientation.BOTTOM,imvColPallet)
@@ -200,7 +202,7 @@ class EditGuide(val activity:MainActivity,
                 characterOrientation = MyOrientationSet()
                 doAfterCharacterPosChanged = {
                     spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
-                    animateSpbPos("ガイドは以上だよ").start()
+                    getSpbPosAnim("ガイドは以上だよ").start()
                 }
                 getCharacterPosChangeAnim().start()
                 guideParentConLay.isEnabled = true
