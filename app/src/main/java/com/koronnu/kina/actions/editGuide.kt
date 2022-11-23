@@ -18,7 +18,7 @@ import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.ui.listener.MyTouchListener
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
 
-class EditGuide(val actions: InstallGuide){
+class EditGuide(val actions: GuideActions){
     fun greeting1(){
         actions.apply {
             callOnFirst()

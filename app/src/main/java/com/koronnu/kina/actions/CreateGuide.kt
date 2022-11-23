@@ -30,7 +30,7 @@ class CreateGuide(val activity:MainActivity,
     private val libraryViewModel = activity.libraryViewModel
     private val createCardViewModel = activity.createCardViewModel
 
-    private val actions = InstallGuide(activity,frameLay)
+    private val actions = GuideActions(activity,frameLay)
 
     private fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
         onInstallBinding.root.setOnClickListener(null)

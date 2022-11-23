@@ -226,13 +226,13 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
                     ).onEach { view ->
                         view.setOnClickListener { v->
                             when(v){
-                                menuHowToDeleteItems -> InstallGuide(this@MainActivity,binding.frameLayCallOnInstall).deleteGuide()
+                                menuHowToDeleteItems -> GuideActions(this@MainActivity,binding.frameLayCallOnInstall).deleteGuide()
                                 menuHowToCreateItems -> {
                                     CreateGuide(this@MainActivity,
                                         binding.frameLayCallOnInstall).callOnFirst()
                                 }
                                 menuHowToEditItems -> {
-                                   InstallGuide(this@MainActivity,binding.frameLayCallOnInstall).editGuide()
+                                   GuideActions(this@MainActivity,binding.frameLayCallOnInstall).editGuide()
                                 }
                                 menuHowToMoveItems -> {
                                     MoveGuide(this@MainActivity,callOnInstallBinding).moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)

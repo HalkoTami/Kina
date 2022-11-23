@@ -16,7 +16,7 @@ import com.koronnu.kina.customClasses.normalClasses.BorderSet
 import com.koronnu.kina.customClasses.normalClasses.MyOrientationSet
 import com.koronnu.kina.customClasses.normalClasses.ViewAndSide
 
-class DeleteGuide(val actions: InstallGuide){
+class DeleteGuide(val actions: GuideActions){
     private val libraryRV get() = actions.activity.findViewById<RecyclerView>(R.id.vocabCardRV)
     private val btnDeleteFile  get()=actions.activity.findViewById<ImageView>(R.id.btn_delete)
     private val frameLayConfirmDelete   get()=actions.activity.findViewById<FrameLayout>(R.id.frameLay_confirm_delete)

@@ -8,7 +8,6 @@ import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -23,7 +22,7 @@ import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.ui.customViews.HoleViewVer2
 
 
-class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
+class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
     private var _callOnInstallBinding : CallOnInstallBinding? =null
     private val callOnInstallBinding get() = _callOnInstallBinding!!
 
