@@ -31,6 +31,16 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
     val parentFragment:LiveData<LibraryFragment> = _parentFragment
 
+    private val _onlySwipeActive= MutableLiveData<Boolean>()
+    fun setOnlySwipeActive(boolean: Boolean){
+        _onlySwipeActive.value = boolean
+    }
+    val getOnlySwipeActive get() = _onlySwipeActive.value ?:false
+    private val _onlyLongClickActive= MutableLiveData<Boolean>()
+    fun setOnlyLongClickActive(boolean: Boolean){
+        _onlyLongClickActive.value = boolean
+    }
+    val getOnlyLongClickActive get() = _onlyLongClickActive.value ?:false
 //    －－－－初期設定－－－－
 
     private val _libraryNavCon = MutableLiveData<NavController>()

@@ -27,7 +27,8 @@ class LibraryRVCL(val item: Any,
         rvBinding.apply {
             when(v){
                 contentBindingFrame -> {
-                    if(libraryViewModel.returnLeftSwipedItemExists()==true) libraryViewModel.makeAllUnSwiped()
+                    if(libraryViewModel.getOnlySwipeActive||libraryViewModel.getOnlyLongClickActive) return
+                    else if(libraryViewModel.returnLeftSwipedItemExists()) libraryViewModel.makeAllUnSwiped()
                     else if(libraryViewModel.returnMultiSelectMode()){
                         libraryViewModel.onClickRvSelect(
                             if(btnSelect.isSelected) ListAttributes.Remove else ListAttributes.Add,item)
@@ -68,6 +69,7 @@ class LibraryRVCL(val item: Any,
 
     override fun onLongClick(motionEvent: MotionEvent?) {
         super.onLongClick(motionEvent)
+        if(libraryViewModel.getOnlySwipeActive) return
         rvBinding.btnSelect.isSelected = true
         libraryViewModel.setMultipleSelectMode(true)
         libraryViewModel.onClickRvSelect(ListAttributes.Add,item)
