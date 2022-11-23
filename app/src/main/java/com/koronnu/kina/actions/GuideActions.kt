@@ -426,12 +426,23 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
             _conLayGoNext = conLayGuideGoNext
         }
     }
+    fun onClickBtnCommitEndGuide(){
+        actionsBeforeEndGuideList.onEach {
+            it()
+        }
+        getAppearAlphaAnimation(guideParentConLay,false).start()
+        appearAlphaAnimDonOnEnd = {
+            activity.libraryViewModel.setMultipleSelectMode(false)
+            activity.mainActivityViewModel.setGuideVisibility(false)
+        }
+    }
+    val actionsBeforeEndGuideList: MutableList<()->Unit> = mutableListOf()
     inner class GuideEndPopUpCL:View.OnClickListener{
         override fun onClick(v: View?) {
             callOnInstallBinding.confirmEndGuideBinding.apply {
                 when(v){
                     btnCancelEnd,btnCloseConfirmEnd -> activity.mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-                    btnCommitEnd                    -> activity.mainActivityViewModel.onClickEndGuide(activity)
+                    btnCommitEnd                    -> onClickBtnCommitEndGuide()
                 }
             }
         }

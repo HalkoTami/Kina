@@ -58,17 +58,22 @@ class DeleteGuide(val actions: GuideActions){
     private fun guide3(){
         actions.apply {
             getSpbPosAnim(getString(R.string.guide_spb_delete_3)).start()
-            activity.libraryViewModel.setOnlySwipeActive(true)
+            activity.libraryViewModel.apply {
+                setOnlySwipeActive(true)
+                actionsBeforeEndGuideList.add{activity.libraryViewModel.setOnlySwipeActive(false)}
+            }
             makeHereTouchable(libraryRV[0])
             activity.libraryViewModel.setDoOnSwipeEnd(true) {
                 activity.libraryViewModel.setOnlySwipeActive(false)
                 guide4() }
+            actionsBeforeEndGuideList.add { activity.libraryViewModel.setDoOnSwipeEnd(false){} }
             changeViewVisibility(conLayGoNext,false)
         }
     }
     private fun guide4(){
         actions.apply {
             changeViewVisibility(conLayGoNext,true)
+            actionsBeforeEndGuideList.add{activity.libraryViewModel.makeAllUnSwiped()}
             getSpbPosAnim(getString(R.string.guide_spb_delete_4)).start()
             makeHereTouchable(null)
             onClickGoNext { guide5() }
@@ -89,6 +94,7 @@ class DeleteGuide(val actions: GuideActions){
     }
     private fun  guide6prt1(){
         actions.apply {
+            actionsBeforeEndGuideList.add{activity.deletePopUpViewModel.setConfirmDeleteVisible(false)}
             changeViewVisibility(conLayGoNext,true)
             allConLayChildrenGoneAnimDoOnEnd = {
                 makeHereTouchable(null)
@@ -130,6 +136,7 @@ class DeleteGuide(val actions: GuideActions){
                 getCharacterPosChangeAnim().start()
             }
             activity.deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(true)
+            actionsBeforeEndGuideList.add { activity.deletePopUpViewModel.setConfirmDeleteVisible(false) }
         }
     }
     private fun guide9(){
@@ -197,11 +204,13 @@ class DeleteGuide(val actions: GuideActions){
                 spbPosSimple = ViewAndSide(character,MyOrientation.RIGHT)
                 getSpbPosAnim(getString(R.string.guide_spb_delete_14)).start()
             }
-            spbPosAnimDoOnEnd = {onClickGoNext {
-                activity.libraryViewModel.setMultipleSelectMode(true)
-                guide16() }}
+            spbPosAnimDoOnEnd = {makeHereTouchable(libraryRV[0])
+                activity.libraryViewModel.setDoAfterLongClick(true){guide16()}
+                actionsBeforeEndGuideList.add { activity.libraryViewModel.setDoAfterLongClick(false){} }
+            }
             activity.libraryViewModel.setOnlyLongClickActive(true)
-            makeHereTouchable(libraryRV[0])
+            actionsBeforeEndGuideList.add { activity.libraryViewModel.setOnlyLongClickActive(false) }
+
             getCharacterPosChangeAnim().start()
 
         }
@@ -238,6 +247,7 @@ class DeleteGuide(val actions: GuideActions){
     private fun guide19(){
         actions.apply {
             activity.libraryViewModel.setMultiMenuVisibility(true)
+            actionsBeforeEndGuideList.add{activity.libraryViewModel.setMultiMenuVisibility(false)}
             viewUnderSpotInGuide = frameLayMultiModeMenu
             getSpbPosAnim(getString(R.string.guide_spb_delete_17)).start()
             spbPosAnimDoOnEnd = {onClickGoNext { guide20() }}

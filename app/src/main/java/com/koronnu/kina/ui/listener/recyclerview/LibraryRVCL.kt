@@ -73,6 +73,7 @@ class LibraryRVCL(val item: Any,
         rvBinding.btnSelect.isSelected = true
         libraryViewModel.setMultipleSelectMode(true)
         libraryViewModel.onClickRvSelect(ListAttributes.Add,item)
+        libraryViewModel.getDoAfterLongClick()
     }
 
 }

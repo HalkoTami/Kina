@@ -41,6 +41,15 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         _onlyLongClickActive.value = boolean
     }
     val getOnlyLongClickActive get() = _onlyLongClickActive.value ?:false
+    private val _doAfterLongClick= MutableLiveData<()->Unit>()
+    fun setDoAfterLongClick(onlyOnce: Boolean, func:()->Unit){
+        val finalFunc = if(onlyOnce){ {
+            func()
+            _doAfterLongClick.value = {} }
+        } else func
+        _doAfterLongClick.value = finalFunc
+    }
+    val getDoAfterLongClick get() = _doAfterLongClick.value ?:{}
 //    －－－－初期設定－－－－
 
     private val _libraryNavCon = MutableLiveData<NavController>()
