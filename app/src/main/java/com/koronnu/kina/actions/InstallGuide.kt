@@ -8,6 +8,7 @@ import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -31,6 +32,9 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
 
     private var _arrow :ImageView? = null
     val arrow get() = _arrow!!
+
+    private var _conLayGoNext :ConstraintLayout? = null
+    val conLayGoNext get() = _conLayGoNext!!
 
     private var _character:ImageView? = null
     val character get() = _character!!
@@ -64,6 +68,10 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         }
 
     var spbBorderSet: BorderSet = BorderSet()
+        set(value) {
+            field = value
+            addSpbMargin()
+        }
     var spbOrientation: MyOrientationSet = MyOrientationSet(verticalOrientation =  MyVerticalOrientation.BOTTOM)
     var textFit:Boolean = false
 
@@ -113,7 +121,6 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
     fun getCharacterPosChangeAnim():AnimatorSet{
         return AnimatorSet().apply {
             characterVisibilityAnimDoOnEnd = {
-                setCharacterSize()
                 setCharacterPos()
                 doAfterCharacterPosChanged()
                 doAfterCharacterPosChanged = {}
@@ -186,7 +193,6 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
             val size = getPixelSize(characterSizeDimenId)
             layoutParams.width = size
             layoutParams.height = size
-            requestLayout()
         }
     }
     private fun setConfirmEndGuideCL(){
@@ -212,7 +218,6 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         holeView.initActivity(activity)
         viewUnderSpotInGuide = null
         setCharacterPos()
-        setCharacterSize()
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
 
         getCharacterVisibilityAnim(true).start()
@@ -247,7 +252,6 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
             spbVisibilityAnimDoOnEnd = {
                 changeMulVisibility(arrayOf(bottom,textView),false)
                 textView.text = string
-                spbBorderSet.margin = MyMargin(bottomMargin = getPixelSize(R.dimen.spb_bottom_rec_marginTop)+getPixelSize(R.dimen.spb_bottom_rec_height))
                 ViewChangeActions().setSize(textView,LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT)
                 val posData = ViewAndPositionData(
                     textView,
@@ -395,6 +399,14 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         spbBorderSet = ViewChangeActions().getSimpleBorderSet(value.view,value.side,textFit)
         spbOrientation = ViewChangeActions().getOriSetByNextToPosition(value.side, BorderAttributes.FillIfOutOfBorder)
     }
+    private fun addSpbMargin(){
+        val spbMargin = getPixelSize(R.dimen.whole_spb_margin)
+        spbBorderSet.margin = MyMargin(
+            bottomMargin = getPixelSize(R.dimen.spb_bottom_rec_marginTop)+getPixelSize(R.dimen.spb_bottom_rec_height)+spbMargin,
+            topMargin = spbMargin,
+            leftMargin = spbMargin,
+            rightMargin = spbMargin)
+    }
     private fun setLateInitVars(){
         callOnInstallBinding.apply {
             _arrow = imvFocusArrow
@@ -403,6 +415,7 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
             _textView = txvSpeakBubble
             _bottom = sbBottom
             _guideParentConLay = root
+            _conLayGoNext = conLayGuideGoNext
         }
     }
     inner class GuideEndPopUpCL:View.OnClickListener{

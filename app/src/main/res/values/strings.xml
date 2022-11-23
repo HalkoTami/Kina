@@ -151,7 +151,8 @@
     <string name="guide_spb_delete_3">アイテムを横にスライドすると、編集ボタンが現れるよ</string>
     <string name="guide_spb_delete_4">削除ボタンが現れたね</string>
     <string name="guide_spb_delete_5">実際には消されないので、ボタンを押してみよう</string>
-    <string name="guide_spb_delete_6">削除前には、確認されるから、安心してね。</string>
+    <string name="guide_spb_delete_6prt1">確認画面が出てくるよ</string>
+    <string name="guide_spb_delete_6prt2">削除前には、こうして確認されるから、安心してね。</string>
     <string name="guide_spb_delete_7">アイテムに中身があった場合は、中身を消すかも確認されるんだ</string>
     <string name="guide_spb_delete_8">もしすべて削除したければ、削除する、を</string>
     <string name="guide_spb_delete_9">そうでなければ、中身は残して削除することができるよ</string>
@@ -161,7 +162,8 @@
     <string name="guide_spb_delete_13">アイテムをまとめて削除したいときは</string>
     <string name="guide_spb_delete_14">アイテムを長押ししてみて</string>
     <string name="guide_spb_delete_15">複数選択できるようになるよ</string>
-    <string name="guide_spb_delete_16">選択出来たら、右上のメニューを開いて</string>
+    <string name="guide_spb_delete_16prt1">選択出来たら、</string>
+    <string name="guide_spb_delete_16prt2">右上のメニューを開いて</string>
     <string name="guide_spb_delete_17">削除するを選んでね</string>
     <string name="guide_spb_delete_18">説明は以上だよ</string>
     <string name="guide_go_next">次へ</string>

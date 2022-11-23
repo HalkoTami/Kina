@@ -19,6 +19,7 @@
     <dimen name="character_size_middle">150dp</dimen>
     <dimen name="character_size_small">50dp</dimen>
     <dimen name="spb_bottom_rec_marginTop">10dp</dimen>
+    <dimen name="whole_spb_margin">5dp</dimen>
     <dimen name="spb_bottom_rec_height">10dp</dimen>
     <dimen name="spbTextView_margin">5dp</dimen>
 
