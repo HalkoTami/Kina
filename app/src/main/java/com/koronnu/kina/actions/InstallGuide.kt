@@ -137,6 +137,7 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         callOnInstallBinding.conLayGuideGoNext.setOnClickListener{
             makeTouchAreaGone()
             func()
+            it.setOnClickListener(null)
         }
     }
     fun goNextOnClickAnyWhere(func:()->Unit){
@@ -246,19 +247,27 @@ class InstallGuide(val activity:MainActivity,private val frameLay:FrameLayout){
         setArrowDirection(getArrowDirectionFromArrowPos(arrowPosition))
         getArrowVisibilityAnim(true).start()
     }
+    var spbPosAnimDoOnEnd :()->Unit = {}
 
+    fun setSpbPos(){
+        ViewChangeActions().setSize(textView,LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT)
+        val posData = ViewAndPositionData(
+            textView,
+            borderSet = spbBorderSet ,
+            orientation= spbOrientation)
+        setPositionByMargin(posData)
+    }
     fun getSpbPosAnim(string: String):AnimatorSet{
         return AnimatorSet().apply {
             spbVisibilityAnimDoOnEnd = {
                 changeMulVisibility(arrayOf(bottom,textView),false)
                 textView.text = string
-                ViewChangeActions().setSize(textView,LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT)
-                val posData = ViewAndPositionData(
-                    textView,
-                    borderSet = spbBorderSet ,
-                    orientation= spbOrientation)
-                setPositionByMargin(posData) }
+                setSpbPos() }
             playSequentially(getSpbVisibilityAnim(false),speakBubbleTextAnimation())
+            doOnEnd {
+                spbPosAnimDoOnEnd()
+                spbPosAnimDoOnEnd = {}
+            }
         }
 
     }

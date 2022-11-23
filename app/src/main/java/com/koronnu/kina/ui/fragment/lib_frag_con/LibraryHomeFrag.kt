@@ -119,6 +119,7 @@ class LibraryHomeFrag : Fragment(){
                     topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                     LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
                     if(it.not()) changeViewVisibility(binding.frameLayMultiModeMenu,false)
+
                 }
                 changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)

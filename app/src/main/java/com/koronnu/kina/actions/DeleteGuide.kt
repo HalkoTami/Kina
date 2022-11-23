@@ -42,6 +42,7 @@ class DeleteGuide(val actions: InstallGuide){
             characterBorderSet = BorderSet(topSideSet = ViewAndSide(libraryRV[0],MyOrientation.BOTTOM))
             characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,MyHorizontalOrientation.LEFT)
             textFit = true
+            characterPosChangeAnimDoOnEnd = {onClickGoNext{guide3()}}
             doAfterCharacterPosChanged = {
                 spbPosSimple = ViewAndSide(character,MyOrientation.RIGHT)
                 getSpbPosAnim(getString(R.string.guide_spb_delete_2)).start()}
@@ -52,14 +53,16 @@ class DeleteGuide(val actions: InstallGuide){
             getAllConLayChildrenGoneAnim().start()
             holeShapeInGuide = HoleShape.RECTANGLE
             viewUnderSpotInGuide = libraryRV[0]
-            onClickGoNext{guide3()}
         }
     }
     private fun guide3(){
         actions.apply {
             getSpbPosAnim(getString(R.string.guide_spb_delete_3)).start()
+            activity.libraryViewModel.setOnlySwipeActive(true)
             makeHereTouchable(libraryRV[0])
-            activity.libraryViewModel.setDoOnSwipeEnd(true) { guide4() }
+            activity.libraryViewModel.setDoOnSwipeEnd(true) {
+                activity.libraryViewModel.setOnlySwipeActive(false)
+                guide4() }
             changeViewVisibility(conLayGoNext,false)
         }
     }
@@ -102,14 +105,16 @@ class DeleteGuide(val actions: InstallGuide){
     }
     private fun guide6prt2(){
         actions.apply {
+            spbPosAnimDoOnEnd = {onClickGoNext{guide7()}}
             getSpbPosAnim(getString(R.string.guide_spb_delete_6prt2)).start()
-            onClickGoNext{guide7()}
+
         }
     }
     private fun guide7(){
         actions.apply {
+            spbPosAnimDoOnEnd = { onClickGoNext{guide8()}}
             getSpbPosAnim(getString(R.string.guide_spb_delete_7)).start()
-            onClickGoNext{guide8()}
+
         }
     }
     private fun guide8(){
@@ -117,26 +122,28 @@ class DeleteGuide(val actions: InstallGuide){
 
             activity.deletePopUpViewModel.setDoOnPopUpVisibilityChanged(true){
                 viewUnderSpotInGuide = frameLayConfirmDeleteWithChildren
-                getSpbVisibilityAnim(false).start()
                 characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayConfirmDeleteWithChildren,MyOrientation.TOP))
-                getCharacterPosChangeAnim()
+                doAfterCharacterPosChanged = {setSpbPos()}
+                characterPosChangeAnimDoOnEnd = {
+                    onClickGoNext { guide9() }
+                }
+                getCharacterPosChangeAnim().start()
             }
             activity.deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(true)
-            onClickGoNext { guide9() }
         }
     }
     private fun guide9(){
         actions.apply {
+            spbPosAnimDoOnEnd ={onClickGoNext { guide10() }}
             getSpbPosAnim(getString(R.string.guide_spb_delete_8)).start()
             setArrow(MyOrientation.BOTTOM,btnCommitDeleteWithChildren)
-            onClickGoNext { guide10() }
         }
     }
     private fun guide10(){
         actions.apply {
+            spbPosAnimDoOnEnd = {onClickGoNext { guide11() }}
             getSpbPosAnim(getString(R.string.guide_spb_delete_9)).start()
             setArrow (MyOrientation.BOTTOM, btnDeleteOnlyParent)
-            onClickGoNext { guide11() }
         }
     }
     private fun guide11(){
@@ -150,31 +157,31 @@ class DeleteGuide(val actions: InstallGuide){
             doAfterCharacterPosChanged = {
                 textFit = false
                 spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
+                spbPosAnimDoOnEnd = {onClickGoNext { guide12() }}
                 getSpbPosAnim(getString(R.string.guide_spb_delete_10)).start()
             }
             getCharacterPosChangeAnim().start()
-            onClickGoNext { guide12() }
         }
     }
     private fun guide12(){
         actions.apply {
+            spbPosAnimDoOnEnd = {onClickGoNext { guide13() }}
             getSpbPosAnim(getString(R.string.guide_spb_delete_11)).start()
             viewUnderSpotInGuide = frameLayInBox
             setArrow(MyOrientation.BOTTOM,frameLayInBox)
-            onClickGoNext { guide13() }
         }
     }
     private fun guide13(){
         actions.apply {
+            spbPosAnimDoOnEnd ={onClickGoNext { guide14() } }
             getSpbPosAnim(getString(R.string.guide_spb_delete_12)).start()
-            onClickGoNext { guide14() }
         }
     }
     private fun guide14(){
         actions.apply {
+            spbPosAnimDoOnEnd = {onClickGoNext { guide15() }}
             arrowVisibilityAnimDoOnEnd = {
                 getSpbPosAnim(getString(R.string.guide_spb_delete_13)).start()
-                onClickGoNext { guide15() }
             }
             getArrowVisibilityAnim(false).start()
         }
@@ -190,11 +197,13 @@ class DeleteGuide(val actions: InstallGuide){
                 spbPosSimple = ViewAndSide(character,MyOrientation.RIGHT)
                 getSpbPosAnim(getString(R.string.guide_spb_delete_14)).start()
             }
+            spbPosAnimDoOnEnd = {onClickGoNext {
+                activity.libraryViewModel.setMultipleSelectMode(true)
+                guide16() }}
+            activity.libraryViewModel.setOnlyLongClickActive(true)
             makeHereTouchable(libraryRV[0])
             getCharacterPosChangeAnim().start()
-            onClickGoNext {
-                activity.libraryViewModel.setMultipleSelectMode(true)
-                guide16() }
+
         }
     }
     private fun guide16(){
@@ -205,15 +214,16 @@ class DeleteGuide(val actions: InstallGuide){
                 spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
                 getSpbPosAnim(getString(R.string.guide_spb_delete_15)).start()
             }
+            spbPosAnimDoOnEnd = {onClickGoNext { guide17() }}
             getCharacterPosChangeAnim().start()
             makeHereTouchable(libraryRV[0])
-            onClickGoNext { guide17() }
+
         }
     }
     private fun guide17(){
         actions.apply {
+            spbPosAnimDoOnEnd = {onClickGoNext { guide18() }}
             getSpbPosAnim(getString(R.string.guide_spb_delete_16prt1)).start()
-            onClickGoNext { guide18() }
         }
     }
     private fun guide18(){
@@ -221,8 +231,8 @@ class DeleteGuide(val actions: InstallGuide){
             viewUnderSpotInGuide = imvMultiModeMenu
             setArrow(MyOrientation.BOTTOM,imvMultiModeMenu)
             getSpbPosAnim(getString(R.string.guide_spb_delete_16prt2)).start()
+            spbPosAnimDoOnEnd = {onClickGoNext { guide19() }}
             makeHereTouchable(imvMultiModeMenu)
-            onClickGoNext { guide19() }
         }
     }
     private fun guide19(){
@@ -230,8 +240,8 @@ class DeleteGuide(val actions: InstallGuide){
             activity.libraryViewModel.setMultiMenuVisibility(true)
             viewUnderSpotInGuide = frameLayMultiModeMenu
             getSpbPosAnim(getString(R.string.guide_spb_delete_17)).start()
+            spbPosAnimDoOnEnd = {onClickGoNext { guide20() }}
             setArrow(MyOrientation.LEFT,lineLayMenuDelete)
-            onClickGoNext { guide20() }
         }
     }
     private fun guide20(){
@@ -245,12 +255,20 @@ class DeleteGuide(val actions: InstallGuide){
                     spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
                     getSpbPosAnim(getString(R.string.guide_spb_delete_18)).start()
                 }
+                spbPosAnimDoOnEnd = { onClickGoNext{guide21()}  }
                 getCharacterPosChangeAnim().start()
             }
             getAllConLayChildrenGoneAnim().start()
-            onClickGoNext {
+
+        }
+    }
+    private fun guide21(){
+        actions.apply {
+            getAppearAlphaAnimation(guideParentConLay,false).start()
+            appearAlphaAnimDonOnEnd = {
                 activity.libraryViewModel.setMultipleSelectMode(false)
-                activity.mainActivityViewModel.setGuideVisibility(false) }
+                activity.mainActivityViewModel.setGuideVisibility(false)
+            }
         }
     }
     fun deleteGuide() {
