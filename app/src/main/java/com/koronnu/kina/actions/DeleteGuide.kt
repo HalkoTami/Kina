@@ -1,6 +1,9 @@
 package com.koronnu.kina.actions
 
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
@@ -15,7 +18,14 @@ import com.koronnu.kina.customClasses.normalClasses.ViewAndSide
 class DeleteGuide(val actions: InstallGuide){
     private val libraryRV get() = actions.activity.findViewById<RecyclerView>(R.id.vocabCardRV)
     private val btnDeleteFile  get()=actions.activity.findViewById<ImageView>(R.id.btn_delete)
-
+    private val frameLayConfirmDelete   get()=actions.activity.findViewById<FrameLayout>(R.id.frameLay_confirm_delete)
+    private val frameLayConfirmDeleteWithChildren  get() = actions.activity.findViewById<FrameLayout>(R.id.frameLay_confirm_delete_with_children)
+    private val btnCommitDeleteWithChildren get() = actions.activity.findViewById<Button>(R.id.btn_delete_all_children)
+    private val btnDeleteOnlyParent get() = actions.activity.findViewById<Button>(R.id.btn_delete_all_children)
+    private val imvMultiModeMenu   get() =actions.activity.findViewById<ImageView>(R.id.imv_change_menu_visibility)
+    private val frameLayInBox    get()   =actions.activity.findViewById<FrameLayout>(R.id.frameLay_inBox)
+    private val frameLayMultiModeMenu     get()  =actions.activity.findViewById<FrameLayout>(R.id.frameLay_multi_mode_menu)
+    private val lineLayMenuDelete get() = actions.activity.findViewById<LinearLayoutCompat>(R.id.linLay_delete_selected_items)
     fun guide1(){
         actions.apply {
             callOnFirst()
@@ -57,7 +67,141 @@ class DeleteGuide(val actions: InstallGuide){
         }
     }
     private fun guide6(){
-
+        actions.apply {
+            makeHereTouchable(null)
+            viewUnderSpotInGuide = frameLayConfirmDelete
+            characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayConfirmDelete,MyOrientation.TOP))
+            doAfterCharacterPosChanged={getSpbPosAnim(getString(R.string.guide_spb_delete_6)).start()}
+            getCharacterPosChangeAnim().start()
+            onClickGoNext{guide7()}
+        }
+    }
+    private fun guide7(){
+        actions.apply {
+            getSpbPosAnim(getString(R.string.guide_spb_delete_7)).start()
+            onClickGoNext{guide8()}
+        }
+    }
+    private fun guide8(){
+        actions.apply {
+            viewUnderSpotInGuide = frameLayConfirmDeleteWithChildren
+            activity.deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(true)
+            onClickGoNext { guide9() }
+        }
+    }
+    private fun guide9(){
+        actions.apply {
+            getSpbPosAnim(getString(R.string.guide_spb_delete_8)).start()
+            setArrow(MyOrientation.BOTTOM,btnCommitDeleteWithChildren)
+            onClickGoNext { guide10() }
+        }
+    }
+    private fun guide10(){
+        actions.apply {
+            getSpbPosAnim(getString(R.string.guide_spb_delete_9)).start()
+            setArrow (MyOrientation.BOTTOM, btnDeleteOnlyParent)
+            onClickGoNext { guide11() }
+        }
+    }
+    private fun guide11(){
+        actions.apply {
+            activity.deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
+            removeHole()
+            characterBorderSet = BorderSet()
+            characterOrientation = MyOrientationSet()
+            doAfterCharacterPosChanged = {
+                spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
+                getSpbPosAnim(getString(R.string.guide_spb_delete_10)).start()
+            }
+            getCharacterPosChangeAnim().start()
+            onClickGoNext { guide12() }
+        }
+    }
+    private fun guide12(){
+        actions.apply {
+            getSpbPosAnim(getString(R.string.guide_spb_delete_11)).start()
+            viewUnderSpotInGuide = frameLayInBox
+            setArrow(MyOrientation.BOTTOM,frameLayInBox)
+            onClickGoNext { guide13() }
+        }
+    }
+    private fun guide13(){
+        actions.apply {
+            getSpbPosAnim(getString(R.string.guide_spb_delete_12)).start()
+            onClickGoNext { guide14() }
+        }
+    }
+    private fun guide14(){
+        actions.apply {
+            arrowVisibilityAnimDoOnEnd = {
+                getSpbPosAnim(getString(R.string.guide_spb_delete_13)).start()
+                onClickGoNext { guide15() }
+            }
+            getArrowVisibilityAnim(false).start()
+        }
+    }
+    private fun guide15(){
+        actions.apply {
+            viewUnderSpotInGuide = libraryRV[0]
+            characterBorderSet = BorderSet(topSideSet = ViewAndSide(libraryRV[0],MyOrientation.BOTTOM))
+            characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,MyHorizontalOrientation.LEFT)
+            doAfterCharacterPosChanged = {
+                spbPosSimple = ViewAndSide(character,MyOrientation.RIGHT)
+                getSpbPosAnim(getString(R.string.guide_spb_delete_14)).start()
+            }
+            getCharacterPosChangeAnim().start()
+            onClickGoNext { guide16() }
+        }
+    }
+    private fun guide16(){
+        actions.apply {
+            characterOrientation = MyOrientationSet()
+            characterPosChangeAnimDoOnEnd = {
+                getSpbPosAnim(getString(R.string.guide_spb_delete_15)).start()
+            }
+            getCharacterPosChangeAnim().start()
+            setArrow(MyOrientation.BOTTOM,libraryRV[0])
+            makeHereTouchable(libraryRV[0])
+            onClickGoNext { guide17() }
+        }
+    }
+    private fun guide17(){
+        actions.apply {
+            getSpbPosAnim(getString(R.string.guide_spb_delete_16)).start()
+            onClickGoNext { guide18() }
+        }
+    }
+    private fun guide18(){
+        actions.apply {
+            viewUnderSpotInGuide = imvMultiModeMenu
+            setArrow(MyOrientation.BOTTOM,imvMultiModeMenu)
+            makeHereTouchable(imvMultiModeMenu)
+            onClickGoNext { guide19() }
+        }
+    }
+    private fun guide19(){
+        actions.apply {
+            activity.libraryViewModel.setMultiMenuVisibility(true)
+            viewUnderSpotInGuide = frameLayMultiModeMenu
+            getSpbPosAnim(getString(R.string.guide_spb_delete_17))
+            setArrow(MyOrientation.LEFT,lineLayMenuDelete)
+            onClickGoNext { guide20() }
+        }
+    }
+    private fun guide20(){
+        actions.apply {
+            activity.libraryViewModel.setMultiMenuVisibility(false)
+            allConLayChildrenGoneAnimDoOnEnd = {
+                characterBorderSet = BorderSet()
+                characterOrientation = MyOrientationSet()
+                doAfterCharacterPosChanged = {
+                    spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
+                    getSpbPosAnim(getString(R.string.guide_spb_delete_18)).start()
+                }
+            }
+            getAllConLayChildrenGoneAnim().start()
+            onClickGoNext { activity.mainActivityViewModel.setGuideVisibility(false) }
+        }
     }
     fun deleteGuide() {
 //        mainViewModel.setGuideVisibility(true)
@@ -70,9 +214,7 @@ class DeleteGuide(val actions: InstallGuide){
 //            val frameLayConfirmDelete       =activity.findViewById<FrameLayout>(R.id.frameLay_confirm_delete)
 //            val frameLayConfirmDeleteWithChildren       =activity.findViewById<FrameLayout>(R.id.frameLay_confirm_delete_with_children)
 //            val txvContainingCardAmount       =activity.findViewById<TextView>(R.id.txv_containing_card)
-//            val frameLayInBox       =activity.findViewById<ConstraintLayout>(R.id.frameLay_inBox)
 //            val txvInBoxCardAmount       =activity.findViewById<TextView>(R.id.txv_inBox_card_amount)
-//            val imvMultiModeMenu           =activity.findViewById<ImageView>(R.id.imv_change_menu_visibility)
 //            val frameLayMultiModeMenu       =activity.findViewById<FrameLayout>(R.id.frameLay_multi_mode_menu)
 //
 //            fun goNextOnClickAnyWhere(){
