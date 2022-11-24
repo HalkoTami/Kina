@@ -17,10 +17,13 @@ GetCustomDrawables(val context: Context){
         return AppCompatResources.getDrawable(context,id)!!
     }
     fun getFileIconByFile(file: File):Drawable{
-        return when(file.fileStatus){
-            FileStatus.FOLDER -> getFolderIconByCol(file.colorStatus)
-            FileStatus.FLASHCARD_COVER -> getFlashCardIconByCol(file.colorStatus)
-            FileStatus.ANKI_BOX_FAVOURITE -> getAnkiBoxFavouriteIconByCol(file.colorStatus)
+        return getFileIconByFileStatusAndColStatus(file.fileStatus,file.colorStatus)
+    }
+    fun getFileIconByFileStatusAndColStatus(fileStatus: FileStatus,colorStatus: ColorStatus):Drawable{
+        return when(fileStatus){
+            FileStatus.FOLDER -> getFolderIconByCol(colorStatus)
+            FileStatus.FLASHCARD_COVER -> getFlashCardIconByCol(colorStatus)
+            FileStatus.ANKI_BOX_FAVOURITE -> getAnkiBoxFavouriteIconByCol(colorStatus)
             else -> getDrawable(R.drawable.imv_character)
         }
     }

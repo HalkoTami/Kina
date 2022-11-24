@@ -8,6 +8,9 @@ import com.koronnu.kina.customClasses.enumClasses.LibraryTopBarMode
 import com.koronnu.kina.customClasses.enumClasses.ListAttributes
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import com.koronnu.kina.customClasses.normalClasses.ParentFileAncestors
+import com.koronnu.kina.databinding.LibItemTopBarMenuBinding
+import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
+import com.koronnu.kina.databinding.LibraryFragTopBarMultiselectModeBinding
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 
@@ -22,11 +25,36 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     /**
      *
      */
+    private val _childFragBinding= MutableLiveData<LibraryChildFragWithMulModeBaseBinding>()
+    fun setChildFragBinding(childFragBinding: LibraryChildFragWithMulModeBaseBinding){
+        _childFragBinding.value = childFragBinding
+        doAfterSetChildFragBinding()
+    }
+    private fun doAfterSetChildFragBinding(){
+        setMultiModeTopBarBinding(getChildFragBinding.topBarMultiselectBinding)
+        setMultiModeMenuBinding(getChildFragBinding.multiSelectMenuBinding)
+    }
+    private val getChildFragBinding get() = _childFragBinding.value!!
+    private val _multiModeMenuBinding= MutableLiveData<LibItemTopBarMenuBinding>()
+    private fun setMultiModeMenuBinding(multiModeMenuBinding: LibItemTopBarMenuBinding){
+        _multiModeMenuBinding.value = multiModeMenuBinding
+    }
+    val getMultiModeMenuBinding get() = _multiModeMenuBinding.value!!
+    private val _multiModeTopBarBinding= MutableLiveData<LibraryFragTopBarMultiselectModeBinding>()
+    private fun setMultiModeTopBarBinding(multiModeTopBarBinding: LibraryFragTopBarMultiselectModeBinding){
+        _multiModeTopBarBinding.value = multiModeTopBarBinding
+    }
+    val getMultiModeTopBarBinding get() = _multiModeTopBarBinding.value!!
     private val _chooseFileMoveToViewModel= MutableLiveData<ChooseFileMoveToViewModel>()
     fun setChooseFileMoveToViewModel(chooseFileMoveToViewModel: ChooseFileMoveToViewModel){
         _chooseFileMoveToViewModel.value = chooseFileMoveToViewModel
     }
-    val getChooseFileMoveToViewModel get() = _chooseFileMoveToViewModel.value!!
+    private val getChooseFileMoveToViewModel get() = _chooseFileMoveToViewModel.value!!
+    private val _deletePopUpViewModel= MutableLiveData<DeletePopUpViewModel>()
+    fun setDeletePopUpViewModel(deletePopUpViewModel: DeletePopUpViewModel){
+        _deletePopUpViewModel.value = deletePopUpViewModel
+    }
+    private val getDeletePopUpViewModel get() = _deletePopUpViewModel.value!!
     private val _parentFragment= MutableLiveData<LibraryFragment>()
     fun setLibraryFragment(fragment: LibraryFragment){
         _parentFragment.value = fragment
@@ -139,6 +167,10 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private val _upDateSelectedItems = MutableLiveData<List<Any>>()
     private fun setUpdatedSelectedItems(list:List<Any>){
         _upDateSelectedItems.value = list
+        doAfterSetUpdatedSelectedItems()
+    }
+    private fun doAfterSetUpdatedSelectedItems(){
+        getChooseFileMoveToViewModel.setMovingItems(getUpdatedSelectedItems)
     }
     val getUpdatedSelectedItems get() = _upDateSelectedItems.value ?: mutableListOf()
     private val _selectedItems = MutableLiveData<List<Any>>()
@@ -454,6 +486,16 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
 //    －－－－－－－－
 //    －－－－ファイル移動－－－－
+    fun onClickImvChangeMultiMenuVisibility(){
+        setMultiMenuVisibility(returnMultiMenuVisibility().not())
+    }
+    fun onClickCloseMultiMode(){
+        setMultipleSelectMode(false)
+    }
+    fun onClickMultiMenuMakeAllSelected(){
+        if(getAllRVItemSelected().not())
+            changeAllRVSelectedStatus(true)
+    }
     fun onClickMoveInBoxCardToFlashCard(){
         setMultipleSelectMode(true)
     }
@@ -464,7 +506,12 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
             else -> throw IllegalArgumentException()
         }
         getChooseFileMoveToViewModel.setMovableFileStatus(movableFileStatus)
+        getChooseFileMoveToViewModel.setMovingItemsParentFileId(returnParentFile()?.fileId)
         openChooseFileMoveTo(null)
+    }
+    fun onClickMultiMenuDeleteSelectedItems(){
+        getDeletePopUpViewModel.setDeletingItem(returnSelectedItems().toMutableList())
+        getDeletePopUpViewModel.setConfirmDeleteVisible(true)
     }
     fun openChooseFileMoveTo(file:File?){
         val a  = LibraryChooseFileMoveToFragDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))
