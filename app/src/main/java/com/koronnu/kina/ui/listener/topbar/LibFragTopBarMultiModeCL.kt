@@ -5,6 +5,7 @@ import android.widget.FrameLayout
 import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.databinding.LibItemTopBarMenuBinding
 import com.koronnu.kina.databinding.LibraryFragTopBarMultiselectModeBinding
+import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.viewmodel.DeletePopUpViewModel
 import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
 
@@ -30,9 +31,7 @@ class LibFragTopBarMultiModeCL(
                 }
                 multi.imvChangeMenuVisibility -> libVM.setMultiMenuVisibility(libVM.returnMultiMenuVisibility().not())
 
-                menuBinding.linLayMoveSelectedItems -> {
-                    libVM.openChooseFileMoveTo(null)
-                }
+                menuBinding.linLayMoveSelectedItems -> libVM.onClickMultiMenuMoveSelectedItemToFile()
                 menuBinding.linLayDeleteSelectedItems -> if(notSelected) makeToast(v.context,"todo")
                 else {
                     deletePopUpViewModel.setDeletingItem(libVM.returnSelectedItems().toMutableList())

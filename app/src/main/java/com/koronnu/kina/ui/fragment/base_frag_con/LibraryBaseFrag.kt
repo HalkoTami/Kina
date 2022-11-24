@@ -143,7 +143,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         libraryBaseViewModel.setLibraryNavCon(libNavCon)
         mainViewModel.setChildFragmentStatus(MainFragment.Library)
         mainViewModel.setBnvVisibility(true)
-
+        libraryBaseViewModel.setChooseFileMoveToViewModel(chooseFileMoveToViewModel)
 
         libraryBaseViewModel.reorderedLeftItems.observe(viewLifecycleOwner,reorderedLeftItemsObserver)
         libraryBaseViewModel.parentFragment.observe(viewLifecycleOwner,libraryFragObserver)

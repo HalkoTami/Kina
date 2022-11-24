@@ -22,6 +22,11 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     /**
      *
      */
+    private val _chooseFileMoveToViewModel= MutableLiveData<ChooseFileMoveToViewModel>()
+    fun setChooseFileMoveToViewModel(chooseFileMoveToViewModel: ChooseFileMoveToViewModel){
+        _chooseFileMoveToViewModel.value = chooseFileMoveToViewModel
+    }
+    val getChooseFileMoveToViewModel get() = _chooseFileMoveToViewModel.value!!
     private val _parentFragment= MutableLiveData<LibraryFragment>()
     fun setLibraryFragment(fragment: LibraryFragment){
         _parentFragment.value = fragment
@@ -451,6 +456,15 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 //    －－－－ファイル移動－－－－
     fun onClickMoveInBoxCardToFlashCard(){
         setMultipleSelectMode(true)
+    }
+    fun onClickMultiMenuMoveSelectedItemToFile(){
+        val movableFileStatus = when(returnLibraryFragment()){
+            LibraryFragment.Home,LibraryFragment.Folder-> FileStatus.FOLDER
+            LibraryFragment.InBox,LibraryFragment.FlashCardCover -> FileStatus.FLASHCARD_COVER
+            else -> throw IllegalArgumentException()
+        }
+        getChooseFileMoveToViewModel.setMovableFileStatus(movableFileStatus)
+        openChooseFileMoveTo(null)
     }
     fun openChooseFileMoveTo(file:File?){
         val a  = LibraryChooseFileMoveToFragDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))

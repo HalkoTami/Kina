@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
@@ -161,6 +162,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         setUpView(flashcard,movingItems)
         addCL()
 
+        makeToast(requireActivity(),chooseFileMoveToViewModel.getMovableFileStatus.toString())
         chooseFileMoveToViewModel.setMovingItems(movingItems)
         chooseFileMoveToViewModel.setMovingItemsParentFileId(movingItemsParent)
         chooseFileMoveToViewModel.popUpVisible.observe(viewLifecycleOwner,popUpVisibleObserver)

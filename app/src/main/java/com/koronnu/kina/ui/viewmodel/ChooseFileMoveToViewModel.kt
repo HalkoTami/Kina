@@ -7,6 +7,7 @@ import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
+import com.koronnu.kina.db.enumclass.FileStatus
 import kotlinx.coroutines.launch
 
 class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() {
@@ -61,6 +62,11 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
         _movingItemsParentFileId.value = fileId
     }
     val getMovingItemsParentFileId get() = _movingItemsParentFileId.value
+    private val _movableFileStatus = MutableLiveData<FileStatus>()
+    fun setMovableFileStatus(fileStatus: FileStatus){
+        _movableFileStatus.value = fileStatus
+    }
+    val getMovableFileStatus get() = _movableFileStatus.value!!
     private val _movingItemSistersUpdateNeeded = MutableLiveData<List<Any>>()
     fun setMovingItemSistersUpdateNeeded(list:List<Any>){
         _movingItemSistersUpdateNeeded.value = list
