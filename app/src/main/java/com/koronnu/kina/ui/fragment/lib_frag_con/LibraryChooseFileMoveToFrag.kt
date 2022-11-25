@@ -149,9 +149,9 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         chooseFileMoveToViewModel.popUpVisible.observe(viewLifecycleOwner,popUpVisibleObserver)
         chooseFileMoveToViewModel.popUpText.observe(viewLifecycleOwner,popUpTextObserver)
         chooseFileMoveToViewModel.getMovableFiles(args.fileId?.single()).observe(viewLifecycleOwner,parentRVItemsObserver)
-        chooseFileMoveToViewModel.collectMovingFileData.observe(viewLifecycleOwner){
-            TODO()
-        }
+//        chooseFileMoveToViewModel.collectMovingFileData.observe(viewLifecycleOwner){
+//            TODO()
+//        }
 
 //        if(movingCardIdsList.isEmpty().not())
 //            chooseFileMoveToViewModel.getFilesMovableFlashCards(movingCardIdsList).observe(viewLifecycleOwner,movableFlashCardsObserver)

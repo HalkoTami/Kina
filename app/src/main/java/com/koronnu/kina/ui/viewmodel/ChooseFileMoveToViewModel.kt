@@ -149,10 +149,10 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     }
 
     fun onClickRvBtnMove(item:File,){
+        setFileMoveTo(item)
         setPopUpText("選択中のアイテムを${item.title}へ移動しますか？")
         setUpActionsBeforeCollectData()
         setCollectMovingFileData(Count.Start)
-        setFileMoveTo(item)
 
     }
     fun openChooseFileMoveTo(){
@@ -161,6 +161,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
 
 
     fun moveSelectedItemToFile(navController: NavController){
+        setCollectMovingFileData(Count.Start)
         val item = getFileMoveTo
         val change = returnMovingItems()
         val updatedSisters = getMovingItemSistersUpdateNeeded().filterIsInstance<Card>()
