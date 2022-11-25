@@ -1,6 +1,5 @@
 package com.koronnu.kina.ui.viewmodel
 
-import androidx.compose.ui.graphics.vector.EmptyPath
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.koronnu.kina.customClasses.enumClasses.Count
@@ -10,26 +9,32 @@ import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import com.koronnu.kina.db.enumclass.FileStatus
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() {
 
-
-
-    fun getMovableFiles(fileId: Int?):LiveData<List<File>>{
-        val childFilesList = repository.getFileDataByParentFileId(fileId)
-        val withoutFlashCardSelectedItemAreIn =
-            childFilesList.filter { it.filter { it.fileId!=getMovingItemsParentFileId } == it }
-        val withoutSelectedFiles =
-            childFilesList.filter {  it.filter { returnMovingItems().filterIsInstance<File>().map { it.fileId }.contains(it.fileId).not() }==it }
-        return when(getMovableFileStatus){
-            FileStatus.FLASHCARD_COVER-> withoutFlashCardSelectedItemAreIn.asLiveData()
-            FileStatus.FOLDER -> withoutSelectedFiles.asLiveData()
-            else -> throw IllegalArgumentException()
-        }
-
-
+    private val _libraryViewModel = MutableLiveData<LibraryBaseViewModel>()
+    private fun setLibraryBaseViewModel(libraryBaseViewModel: LibraryBaseViewModel){
+        _libraryViewModel.value = libraryBaseViewModel
     }
+    val getLibraryViewModel get() = _libraryViewModel.value!!
+
+
+    fun getMovableFiles(fileId: Int?):LiveData<List<File>> =
+        repository.getFileDataByParentFileId(fileId).map {
+            when(getMovableFileStatus) {
+                FileStatus.FLASHCARD_COVER -> it.filter { it.fileId!=getMovingItemsParentFileId && it.fileStatus == FileStatus.FLASHCARD_COVER }
+                FileStatus.FOLDER -> it.filter { (returnMovingItems().filterIsInstance<File>().map { it.fileId }.contains(it.fileId).not()) &&
+                it.fileStatus == FileStatus.FOLDER}
+                else -> throw IllegalArgumentException()
+            } }.asLiveData()
+
+
+
+
+
+
 
     fun checkRvItemMoveBtnVisible(item: File):Boolean{
         val movingFilesNotInInRvItem = getMovingItemsParentFileId != item.fileId
@@ -85,20 +90,31 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
         return _movingItemSistersUpdateNeeded.value ?: mutableListOf()
     }
     class FileMoveToData(
-        var calledList:Int = 0,
         var file: File,
         val fileChildLastId:Int?
     )
-    private val _fileMoveTo = MutableLiveData<FileMoveToData>()
-    private fun setFileMoveTo(fileMoveToData: FileMoveToData){
-        _fileMoveTo.value = fileMoveToData
-        if(fileMoveToData.calledList==2) setCollectMovingFileData(Count.End){}
+    private val fileMoveToChildrenObserver = Observer<List<File>> {
+        setFileMoveToData(FileMoveToData(getFileMoveTo,it.lastOrNull()?.fileId))
+        setCollectMovingFileData(Count.End)
+    }
+    private val _fileMoveToData = MutableLiveData<FileMoveToData>()
+    private fun setFileMoveToData(fileMoveToData: FileMoveToData){
+        _fileMoveToData.value = fileMoveToData
+    }
+    private val getFileMoveToData get() = _fileMoveToData.value!!
+    private val _fileMoveTo = MutableLiveData<File>()
+    private fun setFileMoveTo(file: File){
+        _fileMoveTo.value = file
     }
     private val getFileMoveTo get() = _fileMoveTo.value!!
+    private var doAfterDataCollected :()-> Unit = {}
     private val _collectMovingFileData = MutableLiveData<Count>()
-    private fun setCollectMovingFileData(count: Count,doOnCompleted:()->Unit){
+    private fun setCollectMovingFileData(count: Count){
         _collectMovingFileData.value = count
-        if(count==Count.End) doOnCompleted()
+        when(count){
+          Count.Start -> collectChildrenData()
+          Count.End -> doAfterDataCollected()
+        }
     }
     val collectMovingFileData:LiveData<Count> = _collectMovingFileData
 
@@ -109,12 +125,34 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     private fun getLastCardIdInFlashCardMoveTo():Int?{
         return _lastCardIdInFlashCardMoveTo.value
     }
+    private var fileMoveToChildrenFiles:LiveData<List<File>>? = null
+    fun collectChildrenData(){
+        fileMoveToChildrenFiles = getMovableFiles(getFileMoveTo.fileId)
+        fileMoveToChildrenFiles!!.observeForever(fileMoveToChildrenObserver)
+    }
+
+    private fun doAfterFileMoveToDataCollected(){
+        setPopUpVisible(true)
+    }
+    private fun doAfterItemsMovedToFile(){
+        setPopUpVisible(false)
+        makeToastFromVM("${getFileMoveTo.title}へ移動しました")
+        getLibraryViewModel.returnLibraryNavCon()?.popBackStack()
+        fileMoveToChildrenFiles!!.removeObserver(fileMoveToChildrenObserver)
+        doAfterDataCollected = { }
+    }
+    private fun setUpActionsBeforeCollectData(){
+        doAfterDataCollected = {
+            doAfterFileMoveToDataCollected()
+            doAfterDataCollected = { doAfterItemsMovedToFile() }
+        }
+    }
 
     fun onClickRvBtnMove(item:File,){
         setPopUpText("選択中のアイテムを${item.title}へ移動しますか？")
-        setCollectMovingFileData(Count.Start){
-            setPopUpVisible(true)
-        }
+        setUpActionsBeforeCollectData()
+        setCollectMovingFileData(Count.Start)
+        setFileMoveTo(item)
 
     }
     fun openChooseFileMoveTo(){
@@ -123,10 +161,10 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
 
 
     fun moveSelectedItemToFile(navController: NavController){
-        val item = getFileMoveTo.file
+        val item = getFileMoveTo
         val change = returnMovingItems()
         val updatedSisters = getMovingItemSistersUpdateNeeded().filterIsInstance<Card>()
-        val lastId = getFileMoveTo.fileChildLastId
+        val lastId = getFileMoveToData.fileChildLastId
 
         val changeCards = change.filterIsInstance<Card>()
         updatedSisters.onEach {
@@ -139,9 +177,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
         }
 
 
-        makeToastFromVM("${item.title}へ移動しました")
-        setPopUpVisible(false)
-        navController.popBackStack()
+
 
     }
     private fun update(any:Any){
@@ -149,5 +185,12 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
             repository.update(any)
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        fileMoveToChildrenFiles?.removeObserver(fileMoveToChildrenObserver)
+    }
+
+
 
 }
