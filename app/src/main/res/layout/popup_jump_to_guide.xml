@@ -1,39 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--TODO add     tools:ignore="MissingConstraints"
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:ignore="MissingConstraints"
     >
-    <androidx.constraintlayout.widget.ConstraintLayout
-        style="@style/ConstraintDefault"
+    <ImageView
+        android:contentDescription="@string/cd_close"
+        android:id="@+id/imv_popUpJumpToGuide_close"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/conLay_popUpJumpToGuide_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/icon_close_ver2"
+        app:layout_constraintHeight_max="30dp"
+        app:layout_constraintWidth_max="30dp"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintVertical_bias="1"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/conLay_popUpJumpToGuide_content"
+        android:layout_width="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="match_parent"
         app:layout_constraintWidth_percent="0.8"
         app:layout_constraintHorizontal_bias="1"
         tools:ignore="ContentDescription"
+        android:background="@drawable/background_popup_jump_to_guide"
         android:padding="10dp"
          >
         <ImageView
-            style="@style/ConstraintDefault"
-            app:layout_constraintHorizontal_bias="0"
+            android:id="@+id/imv_popUpJumpToGuide_icon_question"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_max="20dp"
+            app:layout_constraintWidth_max="20dp"
+            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0"
-            app:layout_constraintWidth_percent="0.2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_help"
-            tools:ignore="ContentDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/imv_popUpJumpToGuide_character_head"
+            android:src="@drawable/icon_question_mark"
             />
+
         <ImageView
-            style="@style/ConstraintDefault"
-            app:layout_constraintHorizontal_bias="0.1"
-            app:layout_constraintWidth_percent="0.2"
+            android:id="@+id/imv_popUpJumpToGuide_character_head"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/icon_character_head"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/imv_popUpJumpToGuide_icon_question"
+            app:layout_constraintHeight_max="20dp"
+            app:layout_constraintWidth_max="20dp"
+            app:layout_constraintHeight_percent="0.5"
+            app:layout_constraintStart_toStartOf="@id/imv_popUpJumpToGuide_icon_question"
+            app:layout_constraintWidth_percent="0.2" />
+        <ImageView
+            android:id="@+id/imv_popUpJumpToGuide_doublePolygon"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_help"
-            tools:ignore="ContentDescription"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/icon_double_polygon"
+            app:layout_constraintHeight_percent="0.2"
+            app:layout_constraintWidth_percent="0.3"
+            app:layout_constraintHeight_max="15dp"
+            app:layout_constraintWidth_max="20dp"
             />
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_popUpJumpToGuide_imvQuestionIconAndImvCharacterHeard_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:constraint_referenced_ids="imv_popUpJumpToGuide_character_head,imv_popUpJumpToGuide_icon_question"
+            app:barrierDirection="right"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            style="@style/TxvUniformSmallStyle"
+            android:maxLines="3"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toEndOf="@id/barrier_popUpJumpToGuide_imvQuestionIconAndImvCharacterHeard_right"
+            app:layout_constraintBottom_toTopOf="@id/imv_popUpJumpToGuide_doublePolygon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
