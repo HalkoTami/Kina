@@ -10,7 +10,7 @@ class ViewModelFactory(private val repository: MyRoomRepository  ) : ViewModelPr
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val a = when{
-            modelClass.isAssignableFrom(LibraryBaseViewModel::class.java)-> LibraryBaseViewModel(repository)
+            modelClass.isAssignableFrom(LibraryBaseViewModel::class.java)-> LibraryBaseViewModel(repository,PopUpJumpToGuideViewModel())
             modelClass.isAssignableFrom(EditFileViewModel::class.java)-> EditFileViewModel(repository)
             modelClass.isAssignableFrom(CreateCardViewModel::class.java)-> CreateCardViewModel(repository)
             modelClass.isAssignableFrom(SearchViewModel::class.java) -> SearchViewModel(repository)

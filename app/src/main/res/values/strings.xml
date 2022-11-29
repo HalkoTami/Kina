@@ -167,6 +167,8 @@
     <string name="guide_spb_delete_17">削除するを選んでね</string>
     <string name="guide_spb_delete_18">説明は以上だよ</string>
     <string name="guide_go_next">次へ</string>
+    <string name="sp_checkFirstTimeOpened">CheckFirstTimeOpened</string>
+    <string name="sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened">sp_checkFirstTimeOpened_inBoxFirstTimeOpened</string>
 
 
 </resources>

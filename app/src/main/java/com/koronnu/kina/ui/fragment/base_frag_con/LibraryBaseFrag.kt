@@ -136,7 +136,6 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
             }
         }
 
-
         setLateInitVars()
         addClickListeners()
 
@@ -145,6 +144,12 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         mainViewModel.setBnvVisibility(true)
         libraryBaseViewModel.setChooseFileMoveToViewModel(chooseFileMoveToViewModel)
         libraryBaseViewModel.setDeletePopUpViewModel(deletePopUpViewModel)
+        libraryBaseViewModel.popUpJumpToGuideViewModel.popUpVisible.observe(viewLifecycleOwner,
+            libraryBaseViewModel.popUpJumpToGuideViewModel.getPopUpVisibilityObserver(
+                libraryBaseViewModel
+            )
+            )
+
 
         libraryBaseViewModel.reorderedLeftItems.observe(viewLifecycleOwner,reorderedLeftItemsObserver)
         libraryBaseViewModel.parentFragment.observe(viewLifecycleOwner,libraryFragObserver)

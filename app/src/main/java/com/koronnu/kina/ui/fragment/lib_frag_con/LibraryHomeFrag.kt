@@ -59,7 +59,6 @@ class LibraryHomeFrag : Fragment(){
             topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
-            libraryBaseViewModel.setChildFragBinding(binding)
             recyclerView = binding.vocabCardRV
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
@@ -186,6 +185,10 @@ class LibraryHomeFrag : Fragment(){
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        libraryBaseViewModel.setChildFragBinding(binding)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

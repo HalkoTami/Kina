@@ -78,6 +78,7 @@
             app:barrierDirection="right"/>
 
         <TextView
+            android:id="@+id/txv_popUpJumpToGuide"
             android:layout_width="0dp"
             android:layout_height="0dp"
             style="@style/TxvUniformSmallStyle"

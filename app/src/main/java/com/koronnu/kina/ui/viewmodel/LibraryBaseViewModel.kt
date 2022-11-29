@@ -21,10 +21,13 @@ import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFragDirect
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFolderFragDirections
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
 import kotlinx.coroutines.cancel
-class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
+class LibraryBaseViewModel(private val repository: MyRoomRepository,
+                           val popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel) : ViewModel() {
     /**
      *
      */
+
+
 
 
     private val _childFragBinding= MutableLiveData<LibraryChildFragWithMulModeBaseBinding>()
@@ -32,11 +35,14 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         _childFragBinding.value = childFragBinding
         doAfterSetChildFragBinding()
     }
+    val childFragBinding :LiveData<LibraryChildFragWithMulModeBaseBinding> = _childFragBinding
+
+
     private fun doAfterSetChildFragBinding(){
         setMultiModeTopBarBinding(getChildFragBinding.topBarMultiselectBinding)
         setMultiModeMenuBinding(getChildFragBinding.multiSelectMenuBinding)
     }
-    private val getChildFragBinding get() = _childFragBinding.value!!
+     val getChildFragBinding get() = _childFragBinding.value!!
     private val _multiModeMenuBinding= MutableLiveData<LibItemTopBarMenuBinding>()
     private fun setMultiModeMenuBinding(multiModeMenuBinding: LibItemTopBarMenuBinding){
         _multiModeMenuBinding.value = multiModeMenuBinding
@@ -61,6 +67,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setLibraryFragment(fragment: LibraryFragment){
         _parentFragment.value = fragment
     }
+
     fun returnLibraryFragment(): LibraryFragment?{
         return _parentFragment.value
     }

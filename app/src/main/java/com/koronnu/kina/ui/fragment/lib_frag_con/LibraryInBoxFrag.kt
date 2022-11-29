@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -12,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
 import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
@@ -146,6 +148,7 @@ class LibraryInBoxFrag  : Fragment(){
             val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
             childCardsFromDB(null).observe(viewLifecycleOwner) {
 
+                showGuidePopUpIfNeeded(jumpToGuidePopUpShouldShown(it))
                 val sorted = it
                 setParentRVItems(sorted?: mutableListOf())
                 adapter.submitList(sorted)
@@ -174,15 +177,56 @@ class LibraryInBoxFrag  : Fragment(){
             }
 
 
+
         }
 //        LibrarySetUpFragment(libraryViewModel, deletePopUpViewModel).setUpFragLibInBox(binding,myNavCon,requireActivity())
         return binding.root
+    }
+    private fun showGuidePopUpIfNeeded(shouldShown:Boolean){
+        if(!shouldShown) return
+        libraryBaseViewModel.popUpJumpToGuideViewModel.apply {
+            setPopUpTextId(R.string.cancel)
+            setPopUpVisible(true)
+        }
+        saveInBoxWIthContentFirstTimeOpened()
+
+    }
+    private fun saveInBoxWIthContentFirstTimeOpened(){
+        val spTitleString = requireActivity().getString(R.string.sp_checkFirstTimeOpened)
+        val spBoolKey = requireActivity().getString(R.string.sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened)
+        val sharedPrefCheckFirstTime = requireActivity().getSharedPreferences(spTitleString, Context.MODE_PRIVATE)
+        sharedPrefCheckFirstTime.edit() {
+            putBoolean(spBoolKey,false)
+            commit()
+        }
+    }
+
+    private fun getInBoxWIthContentFirstTimeOpened():Boolean{
+        val spTitleString = requireActivity().getString(R.string.sp_checkFirstTimeOpened)
+        val spBoolKey = requireActivity().getString(R.string.sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened)
+        val sharedPrefCheckFirstTime = requireActivity().getSharedPreferences(spTitleString, Context.MODE_PRIVATE)
+        return  sharedPrefCheckFirstTime.getBoolean(spBoolKey, true)
+    }
+    private fun jumpToGuidePopUpShouldShown(inBoxCardList:List<Card>?):Boolean{
+        val inBoxContentNotEmpty = inBoxCardList.isNullOrEmpty().not()
+        if(!inBoxContentNotEmpty) return false
+
+        val spTitleString = requireActivity().getString(R.string.sp_checkFirstTimeOpened)
+        val spBoolKey = requireActivity().getString(R.string.sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened)
+        val sharedPrefCheckFirstTime = requireActivity().getSharedPreferences(spTitleString, Context.MODE_PRIVATE)
+        val inBoxWIthContentFirstTimeOpened =  sharedPrefCheckFirstTime.getBoolean(spBoolKey, true)
+
+        if(!getInBoxWIthContentFirstTimeOpened()) return false
+
+        return true
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
         libraryBaseViewModel.setModeInBox(false)
+        libraryBaseViewModel.popUpJumpToGuideViewModel.setPopUpVisible(false)
+
         _binding = null
     }
 
