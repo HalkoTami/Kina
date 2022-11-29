@@ -25,6 +25,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     /**
      *
      */
+
+
     private val _childFragBinding= MutableLiveData<LibraryChildFragWithMulModeBaseBinding>()
     fun setChildFragBinding(childFragBinding: LibraryChildFragWithMulModeBaseBinding){
         _childFragBinding.value = childFragBinding
