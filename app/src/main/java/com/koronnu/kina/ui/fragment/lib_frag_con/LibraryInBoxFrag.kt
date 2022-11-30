@@ -210,12 +210,6 @@ class LibraryInBoxFrag  : Fragment(){
     private fun jumpToGuidePopUpShouldShown(inBoxCardList:List<Card>?):Boolean{
         val inBoxContentNotEmpty = inBoxCardList.isNullOrEmpty().not()
         if(!inBoxContentNotEmpty) return false
-
-        val spTitleString = requireActivity().getString(R.string.sp_checkFirstTimeOpened)
-        val spBoolKey = requireActivity().getString(R.string.sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened)
-        val sharedPrefCheckFirstTime = requireActivity().getSharedPreferences(spTitleString, Context.MODE_PRIVATE)
-        val inBoxWIthContentFirstTimeOpened =  sharedPrefCheckFirstTime.getBoolean(spBoolKey, true)
-
         if(!getInBoxWIthContentFirstTimeOpened()) return false
 
         return true

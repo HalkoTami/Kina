@@ -21,15 +21,22 @@ import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFragDirect
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFolderFragDirections
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
 import kotlinx.coroutines.cancel
-class LibraryBaseViewModel(private val repository: MyRoomRepository,
-                           val popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel) : ViewModel() {
+class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
     /**
      *
      */
 
 
 
+    private lateinit var popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel
 
+    fun setLateInitVars(popUpJumpToGuideVM: PopUpJumpToGuideViewModel){
+        popUpJumpToGuideViewModel = popUpJumpToGuideVM
+    }
+
+    fun observeLiveDataInFragment(lifecycleOwner: LifecycleOwner){
+        popUpJumpToGuideViewModel.observePopUpVisibility(lifecycleOwner)
+    }
     private val _childFragBinding= MutableLiveData<LibraryChildFragWithMulModeBaseBinding>()
     fun setChildFragBinding(childFragBinding: LibraryChildFragWithMulModeBaseBinding){
         _childFragBinding.value = childFragBinding

@@ -144,12 +144,8 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         mainViewModel.setBnvVisibility(true)
         libraryBaseViewModel.setChooseFileMoveToViewModel(chooseFileMoveToViewModel)
         libraryBaseViewModel.setDeletePopUpViewModel(deletePopUpViewModel)
-        libraryBaseViewModel.popUpJumpToGuideViewModel.popUpVisible.observe(viewLifecycleOwner,
-            libraryBaseViewModel.popUpJumpToGuideViewModel.getPopUpVisibilityObserver(
-                libraryBaseViewModel
-            )
-            )
 
+        libraryBaseViewModel.observeLiveDataInFragment(viewLifecycleOwner)
 
         libraryBaseViewModel.reorderedLeftItems.observe(viewLifecycleOwner,reorderedLeftItemsObserver)
         libraryBaseViewModel.parentFragment.observe(viewLifecycleOwner,libraryFragObserver)

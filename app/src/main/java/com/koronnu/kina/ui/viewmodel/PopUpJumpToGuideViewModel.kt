@@ -8,6 +8,7 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.animation.doOnEnd
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -19,6 +20,10 @@ import com.koronnu.kina.ui.animation.Animation
 class PopUpJumpToGuideViewModel():ViewModel() {
 
 
+    private lateinit var libraryBaseViewModel:LibraryBaseViewModel
+    fun setLateInitVars(libraryBaseVM: LibraryBaseViewModel){
+        libraryBaseViewModel = libraryBaseVM
+    }
 
 
 
@@ -32,7 +37,7 @@ class PopUpJumpToGuideViewModel():ViewModel() {
     fun setPopUpTextId(int: Int){
         _popUpTextId = int
     }
-    fun getPopUpVisibilityObserver(libraryBaseViewModel: LibraryBaseViewModel) = Observer<Boolean>{ visible->
+    private val popUpVisibilityObserver = Observer<Boolean>{ visible->
         val popUpTextView = libraryBaseViewModel.getChildFragBinding.bindingPopupJumpToGuide.txvPopUpJumpToGuide
         val frameLayout = libraryBaseViewModel.getChildFragBinding.frameLayLibraryChildFragBaseJumpToGuidePopup
         val context = popUpTextView.context
@@ -55,6 +60,9 @@ class PopUpJumpToGuideViewModel():ViewModel() {
             start()
         }
 
+    }
+    fun observePopUpVisibility(lifecycleOwner: LifecycleOwner){
+        popUpVisible.observe(lifecycleOwner,popUpVisibilityObserver)
     }
 
 
