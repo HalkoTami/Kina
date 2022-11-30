@@ -35,7 +35,7 @@ class LibraryInBoxFragViewModel(repository: MyRoomRepository,
         libraryBaseViewModel.setParentRVItems(it)
         if(!jumpToGuideHowToMoveItemsPopUpShouldShown(it)) return@Observer
         popUpJumpToGuideViewModel.apply {
-            setPopUpTextId(R.string.cancel)
+            setPopUpTextId(R.string.guide_option_how_to_move_items)
             setPopUpVisible(true)
         }
         saveInBoxWIthContentFirstTimeOpened()

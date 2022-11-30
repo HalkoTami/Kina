@@ -38,8 +38,7 @@ import com.koronnu.kina.ui.viewmodel.*
 class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var factory                 : ViewModelFactory
     private lateinit var mainNavCon              : NavController
-    private var _mainActivityViewModel   : MainViewModel? = null
-    val mainActivityViewModel get() = _mainActivityViewModel!!
+
     private var _createFileViewModel   : EditFileViewModel? = null
     val createFileViewModel get() = _createFileViewModel!!
     private var _createCardViewModel   : CreateCardViewModel? = null
@@ -48,6 +47,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     val libraryViewModel   : LibraryBaseViewModel by viewModels {
         val popUpJumpToGuideViewModel = ViewModelProvider(this)[PopUpJumpToGuideViewModel::class.java]
         LibraryBaseViewModel.getViewModel(popUpJumpToGuideViewModel)
+    }
+    val mainActivityViewModel :MainViewModel by viewModels {
+        val guideOptionMenuViewModel = ViewModelProvider(this)[GuideOptionMenuViewModel::class.java]
+        MainViewModel.getViewModel(guideOptionMenuViewModel,libraryViewModel,layoutInflater)
     }
     private var _deletePopUpViewModel   : DeletePopUpViewModel? = null
     val deletePopUpViewModel get() = _deletePopUpViewModel!!
@@ -84,7 +87,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             _callOnInstallBinding = CallOnInstallBinding.inflate(layoutInflater)
             val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
             factory               = ViewModelFactory((application as RoomApplication).repository)
-            _mainActivityViewModel = ViewModelProvider(this)[MainViewModel::class.java]
             _createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
             _createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
             ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
@@ -322,6 +324,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 //        ー－－－mainActivityのviewModel 読み取りー－－－
         mainActivityViewModel.setMainActivityNavCon(mainNavCon)
+        mainActivityViewModel.setMainActivityBinding(binding)
+        mainActivityViewModel.observeLiveDataFromMainActivity(this)
         mainActivityViewModel.childFragmentStatus   .observe(this@MainActivity,childFragmentStatusObserver)
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
         mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)

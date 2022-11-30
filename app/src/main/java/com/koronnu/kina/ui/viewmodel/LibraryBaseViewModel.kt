@@ -28,6 +28,10 @@ import com.koronnu.kina.ui.listener.libraryBaseFragment.PopUpJumpToGuideCL
 import kotlinx.coroutines.cancel
 class LibraryBaseViewModel(private val repository: MyRoomRepository,
                            val popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel) : ViewModel() {
+
+    private lateinit var _guideOptionMenuViewModel: GuideOptionMenuViewModel
+    val guideOptionMenuViewModel get() = _guideOptionMenuViewModel
+
     /**
      *
      */

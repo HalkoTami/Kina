@@ -86,9 +86,7 @@ class LibraryHomeFrag : Fragment(){
         }
         fun addCL(){
             homeTopBarAddCL()
-            topBarBinding.btnGuide.setOnClickListener{
-                mainViewModel.setHelpOptionVisibility(true)
-            }
+
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
                 libraryBaseViewModel,

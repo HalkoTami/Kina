@@ -1,11 +1,8 @@
 package com.koronnu.kina.ui.viewmodel
 
 import android.animation.ValueAnimator
-import android.view.View
 import androidx.lifecycle.*
 import com.koronnu.kina.actions.makeToast
-import com.koronnu.kina.actions.setClickListeners
-import com.koronnu.kina.databinding.PopupJumpToGuideBinding
 import com.koronnu.kina.ui.animation.Animation
 
 class PopUpJumpToGuideViewModel:ViewModel() {
@@ -14,15 +11,6 @@ class PopUpJumpToGuideViewModel:ViewModel() {
     private lateinit var libraryBaseViewModel:LibraryBaseViewModel
     fun setLateInitVars(libraryBaseVM: LibraryBaseViewModel){
         libraryBaseViewModel = libraryBaseVM
-    }
-
-    fun onClickImvPopUpJumpToGuideClose(){
-        TODO()
-    }
-
-
-    fun onClickConLayPopUpJumpToGuideContent(){
-        TODO()
     }
 
 
@@ -62,6 +50,15 @@ class PopUpJumpToGuideViewModel:ViewModel() {
     }
     fun observePopUpVisibility(lifecycleOwner: LifecycleOwner){
         popUpVisible.observe(lifecycleOwner,popUpVisibilityObserver)
+    }
+
+    fun onClickImvPopUpJumpToGuideClose(){
+        setPopUpVisible(false)
+    }
+
+
+    fun onClickConLayPopUpJumpToGuideContent(){
+        TODO()
     }
 
 

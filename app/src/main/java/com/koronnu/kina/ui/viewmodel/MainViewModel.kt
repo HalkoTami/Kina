@@ -1,19 +1,46 @@
 package com.koronnu.kina.ui.viewmodel
 
 import android.content.Context
+import android.view.LayoutInflater
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
 import com.koronnu.kina.ui.fragment.base_frag_con.LibraryBaseFragDirections
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
+import com.koronnu.kina.databinding.MainActivityBinding
 import kotlinx.coroutines.*
 
 
 
-class MainViewModel:ViewModel(){
+class MainViewModel():ViewModel(){
 
+    lateinit var guideOptionMenuViewModel: GuideOptionMenuViewModel
+    companion object {
+        fun getViewModel(guideOptionMenuViewModel: GuideOptionMenuViewModel,
+                         libraryBaseViewModel: LibraryBaseViewModel,
+                         layoutInflater: LayoutInflater): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val viewModel = MainViewModel()
+                viewModel.setLateInitVars(guideOptionMenuViewModel)
+                guideOptionMenuViewModel.setLateInitVars(viewModel,libraryBaseViewModel,layoutInflater)
+                return viewModel as T
+            }
+        }
+    }
+    fun setLateInitVars(guideOptionMenuVM: GuideOptionMenuViewModel){
+        guideOptionMenuViewModel = guideOptionMenuVM
+    }
 
+    fun observeLiveDataFromMainActivity(lifecycleOwner: LifecycleOwner){
+        guideOptionMenuViewModel.observeLiveDataInGuideOptionViewModel(lifecycleOwner)
+    }
+    private var _mainActivityBinding:MainActivityBinding? = null
+    fun setMainActivityBinding(mainActivityBinding: MainActivityBinding){
+       _mainActivityBinding =  mainActivityBinding
+    }
+    val mainActivityBinding get() = _mainActivityBinding!!
 
 
     class MainActivityChildFragmentStatus(
