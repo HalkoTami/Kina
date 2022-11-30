@@ -15,27 +15,12 @@ class PopUpJumpToGuideViewModel:ViewModel() {
     fun setLateInitVars(libraryBaseVM: LibraryBaseViewModel){
         libraryBaseViewModel = libraryBaseVM
     }
-    class PopUpJumpToGuideCL(libraryBaseVM: LibraryBaseViewModel): View.OnClickListener{
-        val binding = libraryBaseVM.getChildFragBinding.bindingPopupJumpToGuide
-        val popUpJumpToGuideViewModel = libraryBaseVM.popUpJumpToGuideViewModel
-        override fun onClick(v: View?) {
-            binding.apply {
-                when(v){
-                    binding.conLayPopUpJumpToGuideContent->  popUpJumpToGuideViewModel.onClickConLayPopUpJumpToGuideContent()
-                    binding.imvPopUpJumpToGuideClose -> popUpJumpToGuideViewModel.onClickImvPopUpJumpToGuideClose()
-                }
-            }
-        }
-    }
+
     fun onClickImvPopUpJumpToGuideClose(){
         TODO()
     }
 
-    fun setPopUpJumpToGuideClickListeners(){
-        libraryBaseViewModel.getChildFragBinding.bindingPopupJumpToGuide.apply {
-             setClickListeners(arrayOf(imvPopUpJumpToGuideClose,conLayPopUpJumpToGuideContent),PopUpJumpToGuideViewModel())
-        }
-    }
+
     fun onClickConLayPopUpJumpToGuideContent(){
         TODO()
     }

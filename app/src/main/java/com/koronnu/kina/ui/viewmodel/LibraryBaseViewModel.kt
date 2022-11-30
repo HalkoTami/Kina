@@ -1,8 +1,10 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.view.View
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
+import com.koronnu.kina.actions.setClickListeners
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.customClasses.enumClasses.LibRVState
@@ -22,6 +24,7 @@ import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFragDire
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFragDirections
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFolderFragDirections
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
+import com.koronnu.kina.ui.listener.libraryBaseFragment.PopUpJumpToGuideCL
 import kotlinx.coroutines.cancel
 class LibraryBaseViewModel(private val repository: MyRoomRepository,
                            val popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel) : ViewModel() {
@@ -40,11 +43,25 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository,
         }
     }
 
-
+    private val getPopUpJumpToGuideBindingClickableViews:Array<View> get() {
+        val binding = getChildFragBinding.bindingPopupJumpToGuide
+        return arrayOf(binding.imvPopUpJumpToGuideClose,
+            binding.conLayPopUpJumpToGuideContent)
+    }
+    private fun setPopUpJumpToGuideCL(){
+        setClickListeners(getPopUpJumpToGuideBindingClickableViews,PopUpJumpToGuideCL(this))
+    }
+    private fun setChildFragBindingClickListeners(){
+        setPopUpJumpToGuideCL()
+    }
+    private val childFragBindingObserver = Observer<LibraryChildFragWithMulModeBaseBinding> {
+        setChildFragBindingClickListeners()
+    }
 
 
     fun observeLiveDataInFragment(lifecycleOwner: LifecycleOwner){
         popUpJumpToGuideViewModel.observePopUpVisibility(lifecycleOwner)
+        childFragBinding.observe(lifecycleOwner,childFragBindingObserver)
     }
     private val _childFragBinding= MutableLiveData<LibraryChildFragWithMulModeBaseBinding>()
     fun setChildFragBinding(childFragBinding: LibraryChildFragWithMulModeBaseBinding){
