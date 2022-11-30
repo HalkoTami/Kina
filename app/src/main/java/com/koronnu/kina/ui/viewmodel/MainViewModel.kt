@@ -13,6 +13,9 @@ import kotlinx.coroutines.*
 
 class MainViewModel:ViewModel(){
 
+
+
+
     class MainActivityChildFragmentStatus(
         var now: MainFragment,
         var before: MainFragment?

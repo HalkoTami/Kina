@@ -10,7 +10,7 @@ class ViewModelFactory(private val repository: MyRoomRepository  ) : ViewModelPr
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val finalViewModel = when{
-            modelClass.isAssignableFrom(LibraryBaseViewModel::class.java)-> getLibraryBaseViewModel()
+//            modelClass.isAssignableFrom(LibraryBaseViewModel::class.java)-> LibraryBaseViewModel(repository)
             modelClass.isAssignableFrom(EditFileViewModel::class.java)-> EditFileViewModel(repository)
             modelClass.isAssignableFrom(CreateCardViewModel::class.java)-> CreateCardViewModel(repository)
             modelClass.isAssignableFrom(SearchViewModel::class.java) -> SearchViewModel(repository)
@@ -27,11 +27,6 @@ class ViewModelFactory(private val repository: MyRoomRepository  ) : ViewModelPr
 
     }
 
-    private fun getLibraryBaseViewModel()= LibraryBaseViewModel(repository).apply{
-        val popUpJumpToGuideViewModel=PopUpJumpToGuideViewModel().apply{
-            setLateInitVars(this)
-        }
-        setLateInitVars(popUpJumpToGuideViewModel)
-    }
+
 
 }

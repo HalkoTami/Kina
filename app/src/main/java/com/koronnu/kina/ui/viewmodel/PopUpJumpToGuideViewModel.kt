@@ -8,23 +8,21 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.animation.doOnEnd
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.ui.animation.Animation
 
-class PopUpJumpToGuideViewModel():ViewModel() {
+class PopUpJumpToGuideViewModel:ViewModel() {
 
 
     private lateinit var libraryBaseViewModel:LibraryBaseViewModel
     fun setLateInitVars(libraryBaseVM: LibraryBaseViewModel){
         libraryBaseViewModel = libraryBaseVM
     }
-
 
 
     private val _popUpVisible = MutableLiveData<Boolean>()

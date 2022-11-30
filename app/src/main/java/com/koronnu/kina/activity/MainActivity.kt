@@ -9,6 +9,7 @@ import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
@@ -43,8 +44,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     val createFileViewModel get() = _createFileViewModel!!
     private var _createCardViewModel   : CreateCardViewModel? = null
     val createCardViewModel get() = _createCardViewModel!!
-    private var _libraryViewModel   : LibraryBaseViewModel? = null
-    val libraryViewModel get() = _libraryViewModel!!
+
+    val libraryViewModel   : LibraryBaseViewModel by viewModels {
+        val popUpJumpToGuideViewModel = ViewModelProvider(this)[PopUpJumpToGuideViewModel::class.java]
+        LibraryBaseViewModel.getViewModel(popUpJumpToGuideViewModel)
+    }
     private var _deletePopUpViewModel   : DeletePopUpViewModel? = null
     val deletePopUpViewModel get() = _deletePopUpViewModel!!
 
@@ -83,7 +87,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             _mainActivityViewModel = ViewModelProvider(this)[MainViewModel::class.java]
             _createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
             _createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
-            _libraryViewModel      = ViewModelProvider(this,factory)[LibraryBaseViewModel::class.java]
             ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
             ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
             chooseFileMoveToViewModel      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]

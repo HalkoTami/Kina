@@ -1,7 +1,9 @@
 package com.koronnu.kina.ui.viewmodel
 
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
+import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.customClasses.enumClasses.LibRVState
 import com.koronnu.kina.customClasses.enumClasses.LibraryTopBarMode
@@ -21,18 +23,25 @@ import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFragDirect
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFolderFragDirections
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
 import kotlinx.coroutines.cancel
-class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
+class LibraryBaseViewModel(private val repository: MyRoomRepository,
+                           val popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel) : ViewModel() {
     /**
      *
      */
-
-
-
-    private lateinit var popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel
-
-    fun setLateInitVars(popUpJumpToGuideVM: PopUpJumpToGuideViewModel){
-        popUpJumpToGuideViewModel = popUpJumpToGuideVM
+    companion object{
+        fun getViewModel(popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
+                val finalViewModel = LibraryBaseViewModel(application.repository,popUpJumpToGuideViewModel)
+                popUpJumpToGuideViewModel.setLateInitVars(finalViewModel)
+                return finalViewModel as T
+            }
+        }
     }
+
+
+
 
     fun observeLiveDataInFragment(lifecycleOwner: LifecycleOwner){
         popUpJumpToGuideViewModel.observePopUpVisibility(lifecycleOwner)
