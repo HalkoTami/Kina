@@ -1,19 +1,11 @@
 package com.koronnu.kina.ui.viewmodel
 
-import android.animation.Animator
-import android.animation.AnimatorInflater
-import android.animation.AnimatorSet
 import android.animation.ValueAnimator
-import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
-import android.widget.TextView
-import androidx.core.animation.doOnEnd
+import android.view.View
 import androidx.lifecycle.*
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.koronnu.kina.R
 import com.koronnu.kina.actions.makeToast
+import com.koronnu.kina.actions.setClickListeners
+import com.koronnu.kina.databinding.PopupJumpToGuideBinding
 import com.koronnu.kina.ui.animation.Animation
 
 class PopUpJumpToGuideViewModel:ViewModel() {
@@ -23,13 +15,37 @@ class PopUpJumpToGuideViewModel:ViewModel() {
     fun setLateInitVars(libraryBaseVM: LibraryBaseViewModel){
         libraryBaseViewModel = libraryBaseVM
     }
+    class PopUpJumpToGuideCL(libraryBaseVM: LibraryBaseViewModel): View.OnClickListener{
+        val binding = libraryBaseVM.getChildFragBinding.bindingPopupJumpToGuide
+        val popUpJumpToGuideViewModel = libraryBaseVM.popUpJumpToGuideViewModel
+        override fun onClick(v: View?) {
+            binding.apply {
+                when(v){
+                    binding.conLayPopUpJumpToGuideContent->  popUpJumpToGuideViewModel.onClickConLayPopUpJumpToGuideContent()
+                    binding.imvPopUpJumpToGuideClose -> popUpJumpToGuideViewModel.onClickImvPopUpJumpToGuideClose()
+                }
+            }
+        }
+    }
+    fun onClickImvPopUpJumpToGuideClose(){
+        TODO()
+    }
+
+    fun setPopUpJumpToGuideClickListeners(){
+        libraryBaseViewModel.getChildFragBinding.bindingPopupJumpToGuide.apply {
+             setClickListeners(arrayOf(imvPopUpJumpToGuideClose,conLayPopUpJumpToGuideContent),PopUpJumpToGuideViewModel())
+        }
+    }
+    fun onClickConLayPopUpJumpToGuideContent(){
+        TODO()
+    }
 
 
     private val _popUpVisible = MutableLiveData<Boolean>()
     fun setPopUpVisible(visible:Boolean){
         _popUpVisible.value = visible
     }
-    val popUpVisible :LiveData<Boolean> = _popUpVisible
+    private val popUpVisible :LiveData<Boolean> = _popUpVisible
     private var _popUpTextId:Int? = null
     private val popUpTextId get() = _popUpTextId!!
     fun setPopUpTextId(int: Int){
