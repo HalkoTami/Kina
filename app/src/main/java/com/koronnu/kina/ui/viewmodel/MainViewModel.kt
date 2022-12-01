@@ -14,34 +14,47 @@ import kotlinx.coroutines.*
 
 
 
-class MainViewModel(
-    val guideViewModel: GuideViewModel,
-    val libraryBaseViewModel: LibraryBaseViewModel,
-    val guideOptionMenuViewModel: GuideOptionMenuViewModel,
-    val layoutInflater: LayoutInflater,
-    val guideActions: GuideActions
-
-):ViewModel(){
+class MainViewModel(val layoutInflater: LayoutInflater,
+                    val guideActions: GuideActions):ViewModel(){
+    lateinit var guideViewModel: GuideViewModel
+    lateinit var libraryBaseViewModel: LibraryBaseViewModel
+    lateinit var guideOptionMenuViewModel: GuideOptionMenuViewModel
+    lateinit var editFileViewModel: EditFileViewModel
+    lateinit var deletePopUpViewModel: DeletePopUpViewModel
+    lateinit var ankiBaseViewModel: AnkiBaseViewModel
+    lateinit var popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel
     companion object {
-        fun getViewModel(guideOptionMenuViewModel: GuideOptionMenuViewModel,
-                         libraryBaseViewModel: LibraryBaseViewModel,
-                         guideViewModel: GuideViewModel,
+        fun getViewModel(viewModelStoreOwner: ViewModelStoreOwner,
                          layoutInflater: LayoutInflater,
                          guideActions: GuideActions): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val viewModel = MainViewModel(guideViewModel,libraryBaseViewModel,guideOptionMenuViewModel,layoutInflater,guideActions)
-                viewModel.setChildViewModelLateInitVars()
-                return viewModel as T
+                val mainModel = MainViewModel(layoutInflater,guideActions)
+                val guideViewModel = getViewModelProviderWithFactory(GuideViewModel.getViewModelFactory(mainModel))[GuideViewModel::class.java]
+                val guideOptionMenuViewModel = getViewModelProviderWithFactory(GuideOptionMenuViewModel.getViewModelFactory(mainModel))[GuideOptionMenuViewModel::class.java]
+                val editFileViewModel = getViewModelProviderWithFactory(EditFileViewModel.Factory)[EditFileViewModel::class.java]
+                val deletePopUpViewModel = getViewModelProviderWithFactory(DeletePopUpViewModel.Factory)[DeletePopUpViewModel::class.java]
+                val ankiBaseViewModel = getViewModelProviderWithFactory(AnkiBaseViewModel.Factory)[AnkiBaseViewModel::class.java]
+                val popUpJumpToGuideViewModel = getViewModelProviderWithFactory(PopUpJumpToGuideViewModel.getViewModelFactory(mainModel))[PopUpJumpToGuideViewModel::class.java]
+                mainModel.guideViewModel = guideViewModel
+                mainModel.guideOptionMenuViewModel = guideOptionMenuViewModel
+                mainModel.editFileViewModel = editFileViewModel
+                mainModel.deletePopUpViewModel = deletePopUpViewModel
+                mainModel.ankiBaseViewModel = ankiBaseViewModel
+                mainModel.popUpJumpToGuideViewModel = popUpJumpToGuideViewModel
+                val libraryBaseViewModel = getViewModelProviderWithFactory(LibraryBaseViewModel.getFactory(mainModel,viewModelStoreOwner))[LibraryBaseViewModel::class.java]
+                mainModel.libraryBaseViewModel = libraryBaseViewModel
+                return mainModel as T
             }
+            fun getViewModelProviderWithFactory(factory: ViewModelProvider.Factory):ViewModelProvider{
+                return ViewModelProvider(viewModelStoreOwner,factory)
+            }
+
         }
 
+
     }
-    fun setChildViewModelLateInitVars(){
-        guideViewModel.setLateInitVars(this)
-        guideOptionMenuViewModel.setLateInitVars(this)
-        libraryBaseViewModel.setLateInitVars(this)
-    }
+
 
     fun observeLiveDataFromMainActivity(lifecycleOwner: LifecycleOwner){
         guideOptionMenuViewModel.observeLiveDataInGuideOptionViewModel(lifecycleOwner)
@@ -153,8 +166,15 @@ class MainViewModel(
         viewModelScope.cancel()
     }
 
-
-
+    fun doOnBackPress():Boolean {
+        if(!guideViewModel.doOnBackPress()
+            &&!guideOptionMenuViewModel.doOnBackPress()
+            &&!editFileViewModel.doOnBackPress()
+            &&!deletePopUpViewModel.doOnBackPress()
+            &&!libraryBaseViewModel.doOnBackPress()
+            &&!ankiBaseViewModel.doOnBackPress()) return false
+        return true
+    }
 
 
 }

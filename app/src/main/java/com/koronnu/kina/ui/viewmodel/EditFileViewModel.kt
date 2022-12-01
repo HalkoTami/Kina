@@ -1,6 +1,10 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.text.Spannable.Factory
 import androidx.lifecycle.*
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.CreationExtras
+import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
@@ -12,6 +16,17 @@ import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
+
+    companion object{
+        val Factory : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val application = checkNotNull(extras[APPLICATION_KEY]) as RoomApplication
+                val repository = application.repository
+                return EditFileViewModel(repository) as T
+            }
+        }
+    }
 
     fun getChildFilesByFileIdFromDB(fileId: Int?) = repository.getFileDataByParentFileId(fileId).asLiveData()
     private val _toast = MutableLiveData<MakeToastFromVM>()
@@ -139,7 +154,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             }
         }
     }
-    fun returnBottomMenuVisible():Boolean{
+    fun getBottomMenuVisible():Boolean{
         return _bottomMenuVisible.value ?:false
     }
 
@@ -377,8 +392,12 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
         }
     }
 
-
-
+    fun doOnBackPress(): Boolean {
+        if(!getBottomMenuVisible()&&!returnEditFilePopUpVisible()) return false
+        if(returnEditFilePopUpVisible()) setEditFilePopUpVisible(false)
+        if(getBottomMenuVisible()) setBottomMenuVisible(false)
+        return true
+    }
 
 
     private val _text = MutableLiveData<String>().apply {

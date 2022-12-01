@@ -27,7 +27,6 @@ import com.koronnu.kina.customClasses.enumClasses.Guides
 import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.CallOnInstallBinding
-import com.koronnu.kina.databinding.HelpOptionsBinding
 import com.koronnu.kina.ui.listener.KeyboardListener
 import com.koronnu.kina.ui.listener.popUp.EditFilePopUpCL
 import com.koronnu.kina.ui.observer.LibraryOb
@@ -45,27 +44,18 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private var _createCardViewModel   : CreateCardViewModel? = null
     val createCardViewModel get() = _createCardViewModel!!
 
-    val libraryViewModel   : LibraryBaseViewModel by viewModels {
-        val popUpJumpToGuideViewModel = ViewModelProvider(this)[PopUpJumpToGuideViewModel::class.java]
-        LibraryBaseViewModel.getViewModel(popUpJumpToGuideViewModel)
-    }
-    val mainActivityViewModel :MainViewModel by viewModels {
-        val guideOptionMenuViewModel = ViewModelProvider(this)[GuideOptionMenuViewModel::class.java]
-        val guideViewModel = ViewModelProvider(this)[GuideViewModel::class.java]
-        MainViewModel.getViewModel(guideOptionMenuViewModel,libraryViewModel,guideViewModel,layoutInflater,
-            GuideActions(this))
-    }
+    val mainActivityViewModel :MainViewModel by viewModels { MainViewModel.getViewModel(this,layoutInflater,GuideActions(this)) }
+
     private var _deletePopUpViewModel   : DeletePopUpViewModel? = null
     val deletePopUpViewModel get() = _deletePopUpViewModel!!
 
+    lateinit var libraryViewModel :LibraryBaseViewModel
     private lateinit var ankiFlipBaseViewModel   : AnkiFlipBaseViewModel
     private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
     private lateinit var chooseFileMoveToViewModel : ChooseFileMoveToViewModel
     private lateinit var searchViewModel         : SearchViewModel
 
     private lateinit var binding                  : MainActivityBinding
-    var _callOnInstallBinding: CallOnInstallBinding? = null
-    val callOnInstallBinding get() = _callOnInstallBinding!!
 
 
 
@@ -87,10 +77,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         fun setMainActivityLateInitVars(){
 
             binding = MainActivityBinding.inflate(layoutInflater)
-            _callOnInstallBinding = CallOnInstallBinding.inflate(layoutInflater)
             val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
             factory               = ViewModelFactory((application as RoomApplication).repository)
             _createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
+            libraryViewModel        =ViewModelProvider(this,LibraryBaseViewModel.getFactory(mainActivityViewModel,this))[LibraryBaseViewModel::class.java]
             _createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
             ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
             ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
@@ -197,9 +187,9 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val childFragmentStatusObserver      = Observer<MainViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
         }
-        val confirmEndGuideObserver         = Observer<Boolean>{
-            changeViewVisibility(callOnInstallBinding.frameLayConfirmEndGuidePopUp,it)
-        }
+//        val confirmEndGuideObserver         = Observer<Boolean>{
+//            changeViewVisibility(callOnInstallBinding.frameLayConfirmEndGuidePopUp,it)
+//        }
 
 //        val helpOptionVisibilityObserver      = Observer<Boolean>{
 //            val frameLayHelp = binding.frameLayCallOnInstall
@@ -271,7 +261,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         val popUpEditFileVisibilityObserver  = Observer<Boolean>{
             Animation().animatePopUpAddFile(binding.frameLayEditFile,it)
-            changeViewVisibility(binding.fragConViewCover,it||createFileViewModel.returnBottomMenuVisible())
+            changeViewVisibility(binding.fragConViewCover,it||createFileViewModel.getBottomMenuVisible())
             if(it.not())  hideKeyBoard(binding.editFileBinding.edtFileTitle,this)
         }
         val popUpEditFileUIDataObserver        = Observer<EditFileViewModel.PopUpUI>{
@@ -335,7 +325,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)
 //        mainActivityViewModel.helpOptionVisibility  .observe(this,helpOptionVisibilityObserver)
         mainActivityViewModel.guideVisibility       .observe(this,guideVisibilityObserver)
-        mainActivityViewModel.confirmEndGuidePopUpVisible.observe(this,confirmEndGuideObserver)
+//        mainActivityViewModel.confirmEndGuidePopUpVisible.observe(this,confirmEndGuideObserver)
 //        ー－－－CreateFileViewModelの読み取りー－－－
         createFileViewModel.apply{
             onCreate()
@@ -365,7 +355,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         if(!mainActivityViewModel.guideViewModel.doOnBackPress()){}
         else if (mainActivityViewModel.returnHelpOptionVisibility())
             mainActivityViewModel.setHelpOptionVisibility(false)
-        else if(createFileViewModel.returnBottomMenuVisible())
+        else if(createFileViewModel.getBottomMenuVisible())
             createFileViewModel.setBottomMenuVisible(false)
         else if(createFileViewModel.returnEditFilePopUpVisible())
             createFileViewModel.setEditFilePopUpVisible(false)
@@ -397,7 +387,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         super.onAttachedToWindow()
         onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                onBackPress()
+                if(!mainActivityViewModel.doOnBackPress()) this@MainActivity.finish()
             }
         })
     }

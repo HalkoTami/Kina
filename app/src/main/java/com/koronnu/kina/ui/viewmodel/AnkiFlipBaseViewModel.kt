@@ -1,8 +1,10 @@
 package com.koronnu.kina.ui.viewmodel
 
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.AnimationAttributes
 import com.koronnu.kina.customClasses.enumClasses.FlipFragments
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
@@ -23,7 +25,16 @@ import java.util.*
 
 class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
 
-
+    companion object{
+        fun getViewModel(typeAndCheckViewModel: FlipTypeAndCheckViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
+                val repository = application.repository
+                return AnkiFlipBaseViewModel(repository) as T
+            }
+        }
+    }
     val allActivityData:LiveData<List<ActivityData>> = repository.allActivity.asLiveData()
     private val _flipLeavedTimeInSec = MutableLiveData<Int>()
     private fun setFlipLeavedTimeInSec(timeInSec:Int){

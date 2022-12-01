@@ -16,7 +16,7 @@ class ViewModelFactory(private val repository: MyRoomRepository  ) : ViewModelPr
             modelClass.isAssignableFrom(SearchViewModel::class.java) -> SearchViewModel(repository)
             modelClass.isAssignableFrom(CardTypeStringViewModel::class.java) -> CardTypeStringViewModel()
             modelClass.isAssignableFrom(AnkiBoxViewModel::class.java) -> AnkiBoxViewModel(repository)
-            modelClass.isAssignableFrom(AnkiBaseViewModel::class.java) -> AnkiBaseViewModel(repository)
+            modelClass.isAssignableFrom(AnkiBaseViewModel::class.java) -> AnkiBaseViewModel()
             modelClass.isAssignableFrom(AnkiFlipBaseViewModel::class.java) -> AnkiFlipBaseViewModel(repository)
             modelClass.isAssignableFrom(FlipTypeAndCheckViewModel::class.java) -> FlipTypeAndCheckViewModel(repository)
             modelClass.isAssignableFrom(DeletePopUpViewModel::class.java) -> DeletePopUpViewModel(repository)

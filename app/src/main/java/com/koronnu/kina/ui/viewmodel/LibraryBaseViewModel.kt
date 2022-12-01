@@ -6,10 +6,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
 import com.koronnu.kina.actions.setClickListeners
 import com.koronnu.kina.application.RoomApplication
-import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
-import com.koronnu.kina.customClasses.enumClasses.LibRVState
-import com.koronnu.kina.customClasses.enumClasses.LibraryTopBarMode
-import com.koronnu.kina.customClasses.enumClasses.ListAttributes
+import com.koronnu.kina.customClasses.enumClasses.*
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import com.koronnu.kina.customClasses.normalClasses.ParentFileAncestors
 import com.koronnu.kina.databinding.LibItemTopBarMenuBinding
@@ -26,41 +23,37 @@ import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFolderFragDirections
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
 import com.koronnu.kina.ui.listener.libraryBaseFragment.PopUpJumpToGuideCL
 import kotlinx.coroutines.cancel
-class LibraryBaseViewModel(private val repository: MyRoomRepository,
-                           val popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel) : ViewModel() {
+class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
-    private lateinit var _guideOptionMenuViewModel: GuideOptionMenuViewModel
-    val guideOptionMenuViewModel get() = _guideOptionMenuViewModel
-    fun setLateInitVars(mainViewModel: MainViewModel){
-        _guideOptionMenuViewModel = mainViewModel.guideOptionMenuViewModel
-    }
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var searchViewModel:SearchViewModel
+    private lateinit var popUpJumpToGuideViewModel:PopUpJumpToGuideViewModel
+    val guideOptionMenuViewModel get() = mainViewModel.guideOptionMenuViewModel
 
     /**
      *
      */
     companion object{
-        fun getViewModel(popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+        fun getFactory(mainViewModel: MainViewModel,
+                       viewModelStoreOwner: ViewModelStoreOwner): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
-                val finalViewModel = LibraryBaseViewModel(application.repository,popUpJumpToGuideViewModel)
-                popUpJumpToGuideViewModel.setLateInitVars(finalViewModel)
-                return finalViewModel as T
+                val repository = application.repository
+                val libraryBaseViewModel = LibraryBaseViewModel(repository)
+                val searchViewModel = ViewModelProvider(viewModelStoreOwner,SearchViewModel.Factory)[SearchViewModel::class.java]
+                libraryBaseViewModel.mainViewModel = mainViewModel
+                libraryBaseViewModel.popUpJumpToGuideViewModel = mainViewModel.popUpJumpToGuideViewModel
+                libraryBaseViewModel.searchViewModel = searchViewModel
+                return libraryBaseViewModel as T
             }
         }
     }
 
 
-    private val getPopUpJumpToGuideBindingClickableViews:Array<View> get() {
-        val binding = getChildFragBinding.bindingPopupJumpToGuide
-        return arrayOf(binding.imvPopUpJumpToGuideClose,
-            binding.conLayPopUpJumpToGuideContent)
-    }
-    private fun setPopUpJumpToGuideCL(){
-        setClickListeners(getPopUpJumpToGuideBindingClickableViews,PopUpJumpToGuideCL(this))
-    }
+
     private fun setChildFragBindingClickListeners(){
-        setPopUpJumpToGuideCL()
+//        setPopUpJumpToGuideCL()
     }
     private val childFragBindingObserver = Observer<LibraryChildFragWithMulModeBaseBinding> {
         setChildFragBindingClickListeners()
@@ -586,6 +579,32 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository,
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
+    }
+
+    fun doOnBackPress(): Boolean {
+        val isActive = mainViewModel.returnFragmentStatus()?.now == MainFragment.Library
+        if(!isActive) return false
+        val isHomeFragment = (returnLibraryFragment()==LibraryFragment.Home)
+        if(isHomeFragment
+            &&!searchViewModel.doOnBackPress()
+            &&!returnMultiSelectMode()
+            &&!returnMultiMenuVisibility()
+            &&!returnLeftSwipedItemExists()) return false
+        if(returnLeftSwipedItemExists()) {
+            makeAllUnSwiped()
+            return true
+        }
+        if(returnMultiSelectMode()){
+            if(returnMultiMenuVisibility())
+                setMultiMenuVisibility(false)
+            else setMultipleSelectMode(false)
+            return true
+        }
+        if(!isHomeFragment){
+            returnLibraryNavCon()?.popBackStack()
+            return true
+        }
+        return true
     }
 
 }

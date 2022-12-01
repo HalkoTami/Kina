@@ -6,22 +6,29 @@ import androidx.lifecycle.*
 import com.koronnu.kina.actions.GuideActions
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.actions.setClickListeners
-import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.Guides
 import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.ui.listener.GuideBindingCL
 
 class GuideViewModel : ViewModel(){
-    lateinit var libraryBaseViewModel: LibraryBaseViewModel
+    companion object{
+        fun getViewModelFactory(mainVM: MainViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val viewModel = GuideViewModel()
+                viewModel.mainViewModel = mainVM
+                return viewModel as T
+            }
+
+        }
+    }
+
+    val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel
     lateinit var mainViewModel: MainViewModel
     val layoutInflater: LayoutInflater get() = mainViewModel.layoutInflater
     val guideActions: GuideActions get() = mainViewModel.guideActions
 
 
-    fun setLateInitVars(mainVM: MainViewModel){
-        mainViewModel = mainVM
-        libraryBaseViewModel = mainVM.libraryBaseViewModel
-    }
 
     private val _guideVisibility = MutableLiveData<Boolean>().apply {
         this.value = false

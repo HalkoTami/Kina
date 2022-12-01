@@ -1,6 +1,8 @@
 package com.koronnu.kina.ui.viewmodel
 
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.CreationExtras
+import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
@@ -9,6 +11,18 @@ import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel() {
+
+    companion object{
+        val Factory : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
+                val repository = application.repository
+                return DeletePopUpViewModel(repository) as T
+            }
+        }
+    }
+
     private val _toast = MutableLiveData<MakeToastFromVM>()
     private fun makeToastFromVM(string: String){
         _toast.value = MakeToastFromVM(string,true)
@@ -200,6 +214,15 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         } else unit
         _doOnPopUpVisibilityChanged.value = finalUnit
     }
+
+    fun doOnBackPress(): Boolean {
+        if(!returnConfirmDeleteVisible()
+            &&!returnConfirmDeleteWithChildrenVisible()) return false
+        if(returnConfirmDeleteVisible()) setConfirmDeleteVisible(false)
+        if(returnConfirmDeleteWithChildrenVisible()) setConfirmDeleteWithChildrenVisible(false)
+        return true
+    }
+
     val doOnPopUpVisibilityChanged:()->Unit get() = _doOnPopUpVisibilityChanged.value ?:{}
 
 

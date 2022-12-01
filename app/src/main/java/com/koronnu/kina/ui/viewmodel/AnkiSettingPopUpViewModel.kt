@@ -3,12 +3,23 @@ package com.koronnu.kina.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
+import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
 import com.koronnu.kina.customClasses.enumClasses.AnkiOrder
 import com.koronnu.kina.customClasses.normalClasses.AutoFlip
 
 class AnkiSettingPopUpViewModel : ViewModel() {
 
+    companion object{
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return AnkiSettingPopUpViewModel() as T
+            }
+        }
+    }
 
 
     private val _ankiOrder = MutableLiveData<AnkiOrder>()
