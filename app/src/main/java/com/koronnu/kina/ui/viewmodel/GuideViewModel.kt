@@ -18,6 +18,7 @@ class GuideViewModel : ViewModel(){
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 val viewModel = GuideViewModel()
                 viewModel.mainViewModel = mainVM
+                viewModel.layoutInflater = mainVM.layoutInflater
                 return viewModel as T
             }
 
@@ -26,12 +27,12 @@ class GuideViewModel : ViewModel(){
 
     val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel
     lateinit var mainViewModel: MainViewModel
-    val layoutInflater: LayoutInflater get() = mainViewModel.layoutInflater
+    lateinit var layoutInflater: LayoutInflater
 
 
 
     private val _guideVisibility = MutableLiveData<Boolean>().apply {
-        this.value = false
+        value = false
     }
     fun setGuideVisibility(visible:Boolean){
         _guideVisibility.value = visible
@@ -40,7 +41,7 @@ class GuideViewModel : ViewModel(){
     private val guideVisibility :LiveData<Boolean> = _guideVisibility
 
     private val _popUpConfirmEndGuideVisibility = MutableLiveData<Boolean>().apply {
-        this.value = false
+        value = false
     }
     private fun setPopUpConfirmEndGuideVisibility(visible:Boolean){
         _popUpConfirmEndGuideVisibility.value = visible
@@ -48,6 +49,7 @@ class GuideViewModel : ViewModel(){
     private val getPopUpConfirmEndGuideVisibility get() =_popUpConfirmEndGuideVisibility.value!!
     private val popUpConfirmEndGuideVisibility:LiveData<Boolean> = _popUpConfirmEndGuideVisibility
     private val popUpConfirmEndGuideVisibilityObserver = Observer<Boolean>{
+//        if(!getGuideVisibility) setGuideVisibility(true)
         changeViewVisibility(getGuideBinding.frameLayConfirmEndGuidePopUp,it)
     }
 
@@ -58,7 +60,7 @@ class GuideViewModel : ViewModel(){
     private val guideBinding:LiveData<CallOnInstallBinding> = _guideBinding
 
 
-    val getGuideBinding get() = _guideBinding.value!!
+    val getGuideBinding get() = _guideBinding.value ?: CallOnInstallBinding.inflate(layoutInflater)
     private val guideBindingObserver = Observer<CallOnInstallBinding>{
         setGuideBindingCL()
     }
@@ -81,9 +83,9 @@ class GuideViewModel : ViewModel(){
         frameLay.addView(newBinding.root)
     }
     fun observeGuideViewModelLiveData(lifecycleOwner: LifecycleOwner){
-        guideVisibility.observe(lifecycleOwner,guideVisibilityObserver)
         guideBinding.observe(lifecycleOwner,guideBindingObserver)
         popUpConfirmEndGuideVisibility.observe(lifecycleOwner,popUpConfirmEndGuideVisibilityObserver)
+        guideVisibility.observe(lifecycleOwner,guideVisibilityObserver)
     }
 
     fun startGuide(guides: Guides,guideActions: GuideActions){
@@ -106,6 +108,7 @@ class GuideViewModel : ViewModel(){
 
 
     }
+    var actionsBeforeEndGuideList: MutableList<()->Unit> = mutableListOf()
     fun doOnBackPress():Boolean{
         if(!getGuideVisibility) return false
         setPopUpConfirmEndGuideVisibility(getPopUpConfirmEndGuideVisibility.not())
@@ -121,6 +124,10 @@ class GuideViewModel : ViewModel(){
     }
 
     fun onClickBtnCommitEnd() {
+        actionsBeforeEndGuideList.onEach {
+            it()
+        }
+        actionsBeforeEndGuideList = mutableListOf()
         setGuideVisibility(false)
     }
 

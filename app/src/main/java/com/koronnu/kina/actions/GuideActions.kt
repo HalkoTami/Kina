@@ -27,10 +27,10 @@ class GuideActions(val activity:MainActivity,){
     val callOnInstallBinding get() = activity.mainActivityViewModel.guideViewModel.getGuideBinding
 
 
-    val guideParentConLay get() = callOnInstallBinding.root
+    val guideParentConLay  get() =  callOnInstallBinding.root
     val arrow             get() = callOnInstallBinding.imvFocusArrow
     val conLayGoNext      get() = callOnInstallBinding.conLayGuideGoNext
-    val character         get() = callOnInstallBinding.imvCharacter
+    val character         get() =  callOnInstallBinding.imvCharacter
     val holeView          get() = callOnInstallBinding.viewWithHole
     val textView          get() = callOnInstallBinding.txvSpeakBubble
     val bottom            get() = callOnInstallBinding.sbBottom
@@ -411,7 +411,7 @@ class GuideActions(val activity:MainActivity,){
             leftMargin = spbMargin,
             rightMargin = spbMargin)
     }
-//    private fun setLateInitVars(){
+    private fun setLateInitVars(){
 //        callOnInstallBinding = activity.mainActivityViewModel.guideViewModel.getGuideBinding
 //        callOnInstallBinding.apply {
 //            guideParentConLay = root
@@ -422,7 +422,7 @@ class GuideActions(val activity:MainActivity,){
 //            textView          = txvSpeakBubble
 //            bottom            = sbBottom
 //        }
-//    }
+    }
     fun onClickBtnCommitEndGuide(){
         actionsBeforeEndGuideList.onEach {
             it()
@@ -433,7 +433,7 @@ class GuideActions(val activity:MainActivity,){
             activity.mainActivityViewModel.setGuideVisibility(false)
         }
     }
-    val actionsBeforeEndGuideList: MutableList<()->Unit> = mutableListOf()
+    val actionsBeforeEndGuideList: MutableList<()->Unit> get() = activity.mainActivityViewModel.guideViewModel.actionsBeforeEndGuideList
 //    inner class GuideEndPopUpCL:View.OnClickListener{
 //        override fun onClick(v: View?) {
 //            callOnInstallBinding.confirmEndGuideBinding.apply {

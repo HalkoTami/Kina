@@ -14,10 +14,11 @@
     >
     <TextView
         style="@style/PopUpTextView"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:id="@+id/txv_confirm_move"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="@integer/popUpText_width_percentage"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:textColor="@color/text_color_gray"
         android:text="終了しますか？"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
