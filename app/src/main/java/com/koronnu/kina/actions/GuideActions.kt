@@ -22,31 +22,17 @@ import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.ui.customViews.HoleViewVer2
 
 
-class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
-    private var _callOnInstallBinding : CallOnInstallBinding? =null
-    private val callOnInstallBinding get() = _callOnInstallBinding!!
+class GuideActions(val activity:MainActivity,){
+    val callOnInstallBinding get() = activity.mainActivityViewModel.guideViewModel.getGuideBinding
 
-    private var _guideParentConLay:ConstraintLayout? = null
-    val guideParentConLay get() = _guideParentConLay!!
 
-    private var _arrow :ImageView? = null
-    val arrow get() = _arrow!!
-
-    private var _conLayGoNext :ConstraintLayout? = null
-    val conLayGoNext get() = _conLayGoNext!!
-
-    private var _character:ImageView? = null
-    val character get() = _character!!
-
-    private var _holeView :HoleViewVer2? = null
-    val holeView get() = _holeView!!
-
-    private var _textView:TextView? = null
-    val textView get() = _textView!!
-
-    private var _bottom:View? = null
-    val bottom get() = _bottom!!
-
+    val guideParentConLay get() = callOnInstallBinding.root
+    val arrow             get() = callOnInstallBinding.imvFocusArrow
+    val conLayGoNext      get() = callOnInstallBinding.conLayGuideGoNext
+    val character         get() = callOnInstallBinding.imvCharacter
+    val holeView          get() = callOnInstallBinding.viewWithHole
+    val textView          get() = callOnInstallBinding.txvSpeakBubble
+    val bottom            get() = callOnInstallBinding.sbBottom
     val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
     private val touchAreaTag = 1
 
@@ -203,16 +189,16 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
                 btnCommitEnd),GuideEndPopUpCL())
         }
     }
-    private fun refreshInstallGuide(){
-        activity._callOnInstallBinding = CallOnInstallBinding.inflate(activity.layoutInflater)
-        _callOnInstallBinding = activity.callOnInstallBinding
-        setLateInitVars()
-        setConfirmEndGuideCL()
-    }
+//    private fun refreshInstallGuide(){
+//        activity._callOnInstallBinding = CallOnInstallBinding.inflate(activity.layoutInflater)
+//        _callOnInstallBinding = activity.callOnInstallBinding
+//        setLateInitVars()
+//        setConfirmEndGuideCL()
+//    }
     fun callOnFirst(){
-        frameLay.removeAllViews()
-        refreshInstallGuide()
-        frameLay.addView(callOnInstallBinding.root)
+//         frameLay.removeAllViews()
+//        refreshInstallGuide()
+//        frameLay.addView(callOnInstallBinding.root)
         activity.mainActivityViewModel.setGuideVisibility(true)
         changeMulVisibility(arrayOf(character,arrow,textView,bottom),false)
         holeView.initActivity(activity)
@@ -369,11 +355,17 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
         }
     }
+    fun createGuide(){
+        CreateGuide(this).callOnFirst()
+    }
     fun editGuide(){
         EditGuide(this).greeting1()
     }
     fun deleteGuide(){
         DeleteGuide(this).guide1()
+    }
+    fun moveGuide(){
+        MoveGuide(this).start()
     }
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
@@ -415,17 +407,17 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
             leftMargin = spbMargin,
             rightMargin = spbMargin)
     }
-    private fun setLateInitVars(){
-        callOnInstallBinding.apply {
-            _arrow = imvFocusArrow
-            _character = imvCharacter
-            _holeView = viewWithHole
-            _textView = txvSpeakBubble
-            _bottom = sbBottom
-            _guideParentConLay = root
-            _conLayGoNext = conLayGuideGoNext
-        }
-    }
+//    private fun setLateInitVars(){
+//        callOnInstallBinding.apply {
+//            _arrow = imvFocusArrow
+//            _character = imvCharacter
+//            _holeView = viewWithHole
+//            _textView = txvSpeakBubble
+//            _bottom = sbBottom
+//            _guideParentConLay = root
+//            _conLayGoNext = conLayGuideGoNext
+//        }
+//    }
     fun onClickBtnCommitEndGuide(){
         actionsBeforeEndGuideList.onEach {
             it()

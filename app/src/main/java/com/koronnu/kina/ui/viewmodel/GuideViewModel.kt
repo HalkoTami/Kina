@@ -2,13 +2,12 @@ package com.koronnu.kina.ui.viewmodel
 
 import android.view.LayoutInflater
 import android.view.View
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.koronnu.kina.actions.GuideActions
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.actions.setClickListeners
+import com.koronnu.kina.activity.MainActivity
+import com.koronnu.kina.customClasses.enumClasses.Guides
 import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.ui.listener.GuideBindingCL
 
@@ -16,22 +15,30 @@ class GuideViewModel : ViewModel(){
     lateinit var libraryBaseViewModel: LibraryBaseViewModel
     lateinit var mainViewModel: MainViewModel
     val layoutInflater: LayoutInflater get() = mainViewModel.layoutInflater
+    val guideActions: GuideActions get() = mainViewModel.guideActions
+
 
     fun setLateInitVars(mainVM: MainViewModel){
         mainViewModel = mainVM
         libraryBaseViewModel = mainVM.libraryBaseViewModel
     }
 
-    private val _guideVisibility = MutableLiveData<Boolean>()
-    private fun setGuideVisibility(visible:Boolean){
+    private val _guideVisibility = MutableLiveData<Boolean>().apply {
+        this.value = false
+    }
+    fun setGuideVisibility(visible:Boolean){
         _guideVisibility.value = visible
     }
+    val getGuideVisibility get() = _guideVisibility.value!!
     private val guideVisibility :LiveData<Boolean> = _guideVisibility
 
-    private val _popUpConfirmEndGuideVisibility = MutableLiveData<Boolean>()
+    private val _popUpConfirmEndGuideVisibility = MutableLiveData<Boolean>().apply {
+        this.value = false
+    }
     private fun setPopUpConfirmEndGuideVisibility(visible:Boolean){
         _popUpConfirmEndGuideVisibility.value = visible
     }
+    private val getPopUpConfirmEndGuideVisibility get() =_popUpConfirmEndGuideVisibility.value!!
     private val popUpConfirmEndGuideVisibility:LiveData<Boolean> = _popUpConfirmEndGuideVisibility
     private val popUpConfirmEndGuideVisibilityObserver = Observer<Boolean>{
         changeViewVisibility(getGuideBinding.frameLayConfirmEndGuidePopUp,it)
@@ -44,7 +51,7 @@ class GuideViewModel : ViewModel(){
     private val guideBinding:LiveData<CallOnInstallBinding> = _guideBinding
 
 
-    val getGuideBinding = _guideBinding.value!!
+    val getGuideBinding get() = _guideBinding.value!!
     private val guideBindingObserver = Observer<CallOnInstallBinding>{
         setGuideBindingCL()
     }
@@ -72,8 +79,27 @@ class GuideViewModel : ViewModel(){
         popUpConfirmEndGuideVisibility.observe(lifecycleOwner,popUpConfirmEndGuideVisibilityObserver)
     }
 
-    fun startCreateGuide(){
+    fun startGuide(guides: Guides){
+        val observer = object:Observer<CallOnInstallBinding> {
+            override fun onChanged(t: CallOnInstallBinding?) {
+                when(guides){
+                    Guides.MoveItems -> guideActions.moveGuide()
+                    Guides.EditItems -> guideActions.editGuide()
+                    Guides.CreateItems -> guideActions.createGuide()
+                    Guides.DeleteItems -> guideActions.deleteGuide()
+                }
+                guideBinding.removeObserver(this)
+            }
+        }
+        guideBinding.observeForever(observer)
+        setGuideVisibility(true)
 
+
+    }
+    fun doOnBackPress():Boolean{
+        if(!getGuideVisibility) return false
+        setPopUpConfirmEndGuideVisibility(getPopUpConfirmEndGuideVisibility.not())
+        return true
     }
 
     fun onClickBtnCloseConfirmEnd() {

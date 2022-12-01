@@ -31,6 +31,9 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository,
 
     private lateinit var _guideOptionMenuViewModel: GuideOptionMenuViewModel
     val guideOptionMenuViewModel get() = _guideOptionMenuViewModel
+    fun setLateInitVars(mainViewModel: MainViewModel){
+        _guideOptionMenuViewModel = mainViewModel.guideOptionMenuViewModel
+    }
 
     /**
      *
@@ -46,6 +49,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository,
             }
         }
     }
+
 
     private val getPopUpJumpToGuideBindingClickableViews:Array<View> get() {
         val binding = getChildFragBinding.bindingPopupJumpToGuide

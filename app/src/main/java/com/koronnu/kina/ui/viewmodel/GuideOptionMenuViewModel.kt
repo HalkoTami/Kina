@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.koronnu.kina.actions.*
+import com.koronnu.kina.customClasses.enumClasses.Guides
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.HelpOptionsBinding
 import com.koronnu.kina.ui.listener.GuideOptionBindingCL
@@ -16,6 +17,7 @@ import com.koronnu.kina.ui.listener.GuideOptionBindingCL
 class GuideOptionMenuViewModel:ViewModel(){
     private lateinit var mainViewModel: MainViewModel
     private lateinit var libraryBaseViewModel: LibraryBaseViewModel
+    private lateinit var guideViewModel: GuideViewModel
     fun setLateInitVars(mainVM:MainViewModel){
         mainViewModel = mainVM
         libraryBaseViewModel = mainVM.libraryBaseViewModel
@@ -77,17 +79,10 @@ class GuideOptionMenuViewModel:ViewModel(){
         val hasItemInFirstRow = (libraryBaseViewModel.getChildFragBinding.vocabCardRV.size>0)
         return isInLibraryFragment()&&hasItemInFirstRow
     }
-    fun onClickMenuHowToCreateItems(){
-        TODO()
-    }
-    fun onClickMenuHowToDeleteItems(){
-        TODO()
-    }
-    fun onClickMenuHowToMoveItems(){
-        TODO()
-    }
-    fun onClickMenuHowToEditItems(){
-        TODO()
+    fun onClickGuideMenu(guide:Guides){
+        setGuideOptionMenuVisible(false)
+        guideViewModel.startGuide(guide)
+
     }
 
     fun onclickBtnGuide() {

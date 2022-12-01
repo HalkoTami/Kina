@@ -23,6 +23,7 @@ import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.customClasses.enumClasses.Guides
 import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.CallOnInstallBinding
@@ -51,7 +52,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     val mainActivityViewModel :MainViewModel by viewModels {
         val guideOptionMenuViewModel = ViewModelProvider(this)[GuideOptionMenuViewModel::class.java]
         val guideViewModel = ViewModelProvider(this)[GuideViewModel::class.java]
-        MainViewModel.getViewModel(guideOptionMenuViewModel,libraryViewModel,guideViewModel)
+        MainViewModel.getViewModel(guideOptionMenuViewModel,libraryViewModel,guideViewModel,layoutInflater,
+            GuideActions(this))
     }
     private var _deletePopUpViewModel   : DeletePopUpViewModel? = null
     val deletePopUpViewModel get() = _deletePopUpViewModel!!
@@ -78,7 +80,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             val sharedPref = this.getSharedPreferences(
                 "firstTimeGuide", Context.MODE_PRIVATE) ?: return
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
-                CreateGuide(this,binding.frameLayCallOnInstall).callOnFirst()
+                mainActivityViewModel.guideViewModel.startGuide(Guides.CreateItems)
 
             }
         }
@@ -326,7 +328,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //        ー－－－mainActivityのviewModel 読み取りー－－－
         mainActivityViewModel.setMainActivityNavCon(mainNavCon)
         mainActivityViewModel.setMainActivityBinding(binding)
-        mainActivityViewModel.setLayoutInflater(layoutInflater)
+//        mainActivityViewModel.setLayoutInflater(layoutInflater)
         mainActivityViewModel.observeLiveDataFromMainActivity(this)
         mainActivityViewModel.childFragmentStatus   .observe(this@MainActivity,childFragmentStatusObserver)
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
@@ -360,10 +362,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
     fun onBackPress(){
         var actionDone = true
-        if(mainActivityViewModel.returnGuideVisibility())
-            if(mainActivityViewModel.returnConfirmEndGuidePopUpVisible())
-                mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-            else mainActivityViewModel.setConfirmEndGuidePopUpVisible(true)
+        if(!mainActivityViewModel.guideViewModel.doOnBackPress()){}
         else if (mainActivityViewModel.returnHelpOptionVisibility())
             mainActivityViewModel.setHelpOptionVisibility(false)
         else if(createFileViewModel.returnBottomMenuVisible())

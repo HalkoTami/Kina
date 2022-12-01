@@ -5,7 +5,10 @@ import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.ui.viewmodel.*
 
 
-class MoveGuide(val activity:AppCompatActivity, val onInstallBinding: CallOnInstallBinding){
+class MoveGuide(val actions: GuideActions){
+    fun start(){
+
+    }
     fun moveGuide(startOrder: Int,mainViewModel: MainViewModel,
                   libraryViewModel:LibraryBaseViewModel,editFileViewModel: EditFileViewModel,
                   moveToViewModel: ChooseFileMoveToViewModel,

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import androidx.lifecycle.*
 import androidx.navigation.NavController
+import com.koronnu.kina.actions.GuideActions
 import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
 import com.koronnu.kina.ui.fragment.base_frag_con.LibraryBaseFragDirections
@@ -16,21 +17,20 @@ import kotlinx.coroutines.*
 class MainViewModel(
     val guideViewModel: GuideViewModel,
     val libraryBaseViewModel: LibraryBaseViewModel,
-    val guideOptionMenuViewModel: GuideOptionMenuViewModel
-):ViewModel(){
+    val guideOptionMenuViewModel: GuideOptionMenuViewModel,
+    val layoutInflater: LayoutInflater,
+    val guideActions: GuideActions
 
-    private  var _layoutInflater: LayoutInflater? = null
-    fun setLayoutInflater(layoutInflater: LayoutInflater){
-        _layoutInflater = layoutInflater
-    }
-    val layoutInflater get() = _layoutInflater!!
+):ViewModel(){
     companion object {
         fun getViewModel(guideOptionMenuViewModel: GuideOptionMenuViewModel,
                          libraryBaseViewModel: LibraryBaseViewModel,
-                         guideViewModel: GuideViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+                         guideViewModel: GuideViewModel,
+                         layoutInflater: LayoutInflater,
+                         guideActions: GuideActions): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val viewModel = MainViewModel(guideViewModel,libraryBaseViewModel,guideOptionMenuViewModel)
+                val viewModel = MainViewModel(guideViewModel,libraryBaseViewModel,guideOptionMenuViewModel,layoutInflater,guideActions)
                 viewModel.setChildViewModelLateInitVars()
                 return viewModel as T
             }
@@ -40,6 +40,7 @@ class MainViewModel(
     fun setChildViewModelLateInitVars(){
         guideViewModel.setLateInitVars(this)
         guideOptionMenuViewModel.setLateInitVars(this)
+        libraryBaseViewModel.setLateInitVars(this)
     }
 
     fun observeLiveDataFromMainActivity(lifecycleOwner: LifecycleOwner){
