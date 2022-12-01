@@ -5,9 +5,11 @@ import android.view.View
 import androidx.core.view.size
 import androidx.lifecycle.*
 import com.koronnu.kina.actions.*
+import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.Guides
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.HelpOptionsBinding
+import com.koronnu.kina.ui.listener.GuideBindingCL
 import com.koronnu.kina.ui.listener.GuideOptionBindingCL
 
 class GuideOptionMenuViewModel:ViewModel(){
@@ -18,6 +20,7 @@ class GuideOptionMenuViewModel:ViewModel(){
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 val viewModel = GuideOptionMenuViewModel()
                 viewModel.mainViewModel = mainVM
+
                 return viewModel as T
             }
         }
@@ -44,9 +47,9 @@ class GuideOptionMenuViewModel:ViewModel(){
             frameLay.addView(newBinding.root)
         }
     }
-    fun observeLiveDataInGuideOptionViewModel(lifecycleOwner: LifecycleOwner){
+    fun observeLiveDataInGuideOptionViewModel(lifecycleOwner: LifecycleOwner,activity: MainActivity){
         guideOptionMenuVisible.observe(lifecycleOwner,guideMenuVisibilityObserver)
-        guideOptionMenuBinding.observe(lifecycleOwner,guideOptionMenuBindingObserver)
+        guideOptionMenuBinding.observe(lifecycleOwner,getGuideOptionMenuBindingObserver(activity))
     }
     private val _guideOptionMenuBinding = MutableLiveData<HelpOptionsBinding>()
     private fun setGuideOptionMenuBinding(binding:HelpOptionsBinding){
@@ -54,8 +57,8 @@ class GuideOptionMenuViewModel:ViewModel(){
     }
     val getGuideOptionMenuBinding get() = _guideOptionMenuBinding.value!!
     private val guideOptionMenuBinding :LiveData<HelpOptionsBinding> = _guideOptionMenuBinding
-    private val guideOptionMenuBindingObserver = Observer<HelpOptionsBinding> {
-        addGuideOptionMenuBindingCL()
+    private fun getGuideOptionMenuBindingObserver(activity: MainActivity) = Observer<HelpOptionsBinding> {
+        addGuideOptionMenuBindingCL(activity)
         filterEachMenuVisibility()
     }
     private val guideOptionMenuBindingClickableViews:Array<View> get() {
@@ -68,8 +71,8 @@ class GuideOptionMenuViewModel:ViewModel(){
             binding.menuHowToMoveItems
         )
     }
-    private fun addGuideOptionMenuBindingCL(){
-        setClickListeners(guideOptionMenuBindingClickableViews, GuideOptionBindingCL(this))
+    private fun addGuideOptionMenuBindingCL(activity: MainActivity){
+        setClickListeners(guideOptionMenuBindingClickableViews, GuideOptionBindingCL(activity))
     }
     private fun filterEachMenuVisibility(){
         getGuideOptionMenuBinding.apply {
@@ -86,9 +89,10 @@ class GuideOptionMenuViewModel:ViewModel(){
         val hasItemInFirstRow = (libraryBaseViewModel.getChildFragBinding.vocabCardRV.size>0)
         return isInLibraryFragment()&&hasItemInFirstRow
     }
-    fun onClickGuideMenu(guide:Guides){
+    fun onClickGuideMenu(guide:Guides,activity: MainActivity){
         setGuideOptionMenuVisible(false)
-        guideViewModel.startGuide(guide)
+
+        guideViewModel.startGuide(guide, GuideActions(activity))
 
     }
 

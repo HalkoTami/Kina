@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import com.koronnu.kina.actions.GuideActions
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.actions.setClickListeners
+import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.Guides
 import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.ui.listener.GuideBindingCL
@@ -26,7 +27,6 @@ class GuideViewModel : ViewModel(){
     val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel
     lateinit var mainViewModel: MainViewModel
     val layoutInflater: LayoutInflater get() = mainViewModel.layoutInflater
-    val guideActions: GuideActions get() = mainViewModel.guideActions
 
 
 
@@ -86,7 +86,8 @@ class GuideViewModel : ViewModel(){
         popUpConfirmEndGuideVisibility.observe(lifecycleOwner,popUpConfirmEndGuideVisibilityObserver)
     }
 
-    fun startGuide(guides: Guides){
+    fun startGuide(guides: Guides,guideActions: GuideActions){
+        var remove:()->Unit ={}
         val observer = object:Observer<CallOnInstallBinding> {
             override fun onChanged(t: CallOnInstallBinding?) {
                 when(guides){
@@ -95,11 +96,13 @@ class GuideViewModel : ViewModel(){
                     Guides.CreateItems -> guideActions.createGuide()
                     Guides.DeleteItems -> guideActions.deleteGuide()
                 }
-//                guideBinding.removeObserver(this)
+                remove = {guideBinding.removeObserver(this)}
+
             }
         }
         guideBinding.observeForever(observer)
         setGuideVisibility(true)
+        remove()
 
 
     }

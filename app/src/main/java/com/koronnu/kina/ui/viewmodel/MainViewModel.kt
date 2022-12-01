@@ -10,12 +10,12 @@ import com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
 import com.koronnu.kina.ui.fragment.base_frag_con.LibraryBaseFragDirections
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.MainActivityBinding
+import com.koronnu.kina.ui.listener.GuideOptionBindingCL
 import kotlinx.coroutines.*
 
 
 
-class MainViewModel(val layoutInflater: LayoutInflater,
-                    val guideActions: GuideActions):ViewModel(){
+class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
     lateinit var guideViewModel: GuideViewModel
     lateinit var libraryBaseViewModel: LibraryBaseViewModel
     lateinit var guideOptionMenuViewModel: GuideOptionMenuViewModel
@@ -24,12 +24,10 @@ class MainViewModel(val layoutInflater: LayoutInflater,
     lateinit var ankiBaseViewModel: AnkiBaseViewModel
     lateinit var popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel
     companion object {
-        fun getViewModel(viewModelStoreOwner: ViewModelStoreOwner,
-                         layoutInflater: LayoutInflater,
-                         guideActions: GuideActions): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+        fun getViewModel(mainActivity: MainActivity): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val mainModel = MainViewModel(layoutInflater,guideActions)
+                val mainModel = MainViewModel(mainActivity.layoutInflater)
                 val guideViewModel = getViewModelProviderWithFactory(GuideViewModel.getViewModelFactory(mainModel))[GuideViewModel::class.java]
                 val guideOptionMenuViewModel = getViewModelProviderWithFactory(GuideOptionMenuViewModel.getViewModelFactory(mainModel))[GuideOptionMenuViewModel::class.java]
                 val editFileViewModel = getViewModelProviderWithFactory(EditFileViewModel.Factory)[EditFileViewModel::class.java]
@@ -42,12 +40,12 @@ class MainViewModel(val layoutInflater: LayoutInflater,
                 mainModel.deletePopUpViewModel = deletePopUpViewModel
                 mainModel.ankiBaseViewModel = ankiBaseViewModel
                 mainModel.popUpJumpToGuideViewModel = popUpJumpToGuideViewModel
-                val libraryBaseViewModel = getViewModelProviderWithFactory(LibraryBaseViewModel.getFactory(mainModel,viewModelStoreOwner))[LibraryBaseViewModel::class.java]
+                val libraryBaseViewModel = getViewModelProviderWithFactory(LibraryBaseViewModel.getFactory(mainModel,mainActivity))[LibraryBaseViewModel::class.java]
                 mainModel.libraryBaseViewModel = libraryBaseViewModel
                 return mainModel as T
             }
             fun getViewModelProviderWithFactory(factory: ViewModelProvider.Factory):ViewModelProvider{
-                return ViewModelProvider(viewModelStoreOwner,factory)
+                return ViewModelProvider(mainActivity,factory)
             }
 
         }
@@ -56,8 +54,8 @@ class MainViewModel(val layoutInflater: LayoutInflater,
     }
 
 
-    fun observeLiveDataFromMainActivity(lifecycleOwner: LifecycleOwner){
-        guideOptionMenuViewModel.observeLiveDataInGuideOptionViewModel(lifecycleOwner)
+    fun observeLiveDataFromMainActivity(lifecycleOwner: LifecycleOwner,activity: MainActivity){
+        guideOptionMenuViewModel.observeLiveDataInGuideOptionViewModel(lifecycleOwner,activity)
         guideViewModel.observeGuideViewModelLiveData(lifecycleOwner)
     }
     private var _mainActivityBinding:MainActivityBinding? = null

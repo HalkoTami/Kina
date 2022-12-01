@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     private var _createCardViewModel   : CreateCardViewModel? = null
     val createCardViewModel get() = _createCardViewModel!!
 
-    val mainActivityViewModel :MainViewModel by viewModels { MainViewModel.getViewModel(this,layoutInflater,GuideActions(this)) }
+    val mainActivityViewModel :MainViewModel by viewModels { MainViewModel.getViewModel(this) }
 
     private var _deletePopUpViewModel   : DeletePopUpViewModel? = null
     val deletePopUpViewModel get() = _deletePopUpViewModel!!
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             val sharedPref = this.getSharedPreferences(
                 "firstTimeGuide", Context.MODE_PRIVATE) ?: return
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
-                mainActivityViewModel.guideViewModel.startGuide(Guides.CreateItems)
+                mainActivityViewModel.guideViewModel.startGuide(Guides.CreateItems,GuideActions(this))
 
             }
         }
@@ -319,7 +319,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         mainActivityViewModel.setMainActivityNavCon(mainNavCon)
         mainActivityViewModel.setMainActivityBinding(binding)
 //        mainActivityViewModel.setLayoutInflater(layoutInflater)
-        mainActivityViewModel.observeLiveDataFromMainActivity(this)
+        mainActivityViewModel.observeLiveDataFromMainActivity(this,this)
         mainActivityViewModel.childFragmentStatus   .observe(this@MainActivity,childFragmentStatusObserver)
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
         mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)

@@ -69,7 +69,7 @@ class CreateGuide(val actions: GuideActions ){
     }
     private fun createFlashCard1prt2(){
         actions.apply {
-            val bnvBtnAdd=activity.findViewById<ImageView>(R.id.bnv_imv_add)
+            val bnvBtnAdd=mainViewModel.mainActivityBinding.bnvBinding.bnvImvAdd
             setArrow(MyOrientation.TOP,bnvBtnAdd)
             actions.viewUnderSpotInGuide = bnvBtnAdd
             goNextOnClickTouchArea(bnvBtnAdd){createFlashCard2()}
@@ -78,7 +78,7 @@ class CreateGuide(val actions: GuideActions ){
     }
     private fun createFlashCard2(){
         actions.apply {
-            val createMenuImvFlashCard      =activity.findViewById<FrameLayout>(R.id.frameLay_new_flashcard)
+            val createMenuImvFlashCard      =mainViewModel.mainActivityBinding.bindingAddMenu.frameLayNewFlashcard
             setArrow(MyOrientation.TOP,createMenuImvFlashCard)
             actions.animateHole = false
             actions.viewUnderSpotInGuide = createMenuImvFlashCard
