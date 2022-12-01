@@ -13,28 +13,38 @@ import kotlinx.coroutines.*
 
 
 
-class MainViewModel():ViewModel(){
+class MainViewModel(
+    val guideViewModel: GuideViewModel,
+    val libraryBaseViewModel: LibraryBaseViewModel,
+    val guideOptionMenuViewModel: GuideOptionMenuViewModel
+):ViewModel(){
 
-    lateinit var guideOptionMenuViewModel: GuideOptionMenuViewModel
+    private  var _layoutInflater: LayoutInflater? = null
+    fun setLayoutInflater(layoutInflater: LayoutInflater){
+        _layoutInflater = layoutInflater
+    }
+    val layoutInflater get() = _layoutInflater!!
     companion object {
         fun getViewModel(guideOptionMenuViewModel: GuideOptionMenuViewModel,
                          libraryBaseViewModel: LibraryBaseViewModel,
-                         layoutInflater: LayoutInflater): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+                         guideViewModel: GuideViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val viewModel = MainViewModel()
-                viewModel.setLateInitVars(guideOptionMenuViewModel)
-                guideOptionMenuViewModel.setLateInitVars(viewModel,libraryBaseViewModel,layoutInflater)
+                val viewModel = MainViewModel(guideViewModel,libraryBaseViewModel,guideOptionMenuViewModel)
+                viewModel.setChildViewModelLateInitVars()
                 return viewModel as T
             }
         }
+
     }
-    fun setLateInitVars(guideOptionMenuVM: GuideOptionMenuViewModel){
-        guideOptionMenuViewModel = guideOptionMenuVM
+    fun setChildViewModelLateInitVars(){
+        guideViewModel.setLateInitVars(this)
+        guideOptionMenuViewModel.setLateInitVars(this)
     }
 
     fun observeLiveDataFromMainActivity(lifecycleOwner: LifecycleOwner){
         guideOptionMenuViewModel.observeLiveDataInGuideOptionViewModel(lifecycleOwner)
+        guideViewModel.observeGuideViewModelLiveData(lifecycleOwner)
     }
     private var _mainActivityBinding:MainActivityBinding? = null
     fun setMainActivityBinding(mainActivityBinding: MainActivityBinding){

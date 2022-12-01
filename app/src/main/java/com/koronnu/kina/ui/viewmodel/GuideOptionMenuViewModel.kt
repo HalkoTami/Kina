@@ -16,13 +16,9 @@ import com.koronnu.kina.ui.listener.GuideOptionBindingCL
 class GuideOptionMenuViewModel:ViewModel(){
     private lateinit var mainViewModel: MainViewModel
     private lateinit var libraryBaseViewModel: LibraryBaseViewModel
-    private lateinit var layoutInflater: LayoutInflater
-    fun setLateInitVars(mainVM:MainViewModel,
-                        libraryBaseVM: LibraryBaseViewModel,
-                        inflater: LayoutInflater){
+    fun setLateInitVars(mainVM:MainViewModel){
         mainViewModel = mainVM
-        libraryBaseViewModel = libraryBaseVM
-        layoutInflater = inflater
+        libraryBaseViewModel = mainVM.libraryBaseViewModel
     }
     private val _guideOptionMenuVisible = MutableLiveData<Boolean>()
     private fun setGuideOptionMenuVisible(visible:Boolean){
@@ -34,7 +30,7 @@ class GuideOptionMenuViewModel:ViewModel(){
         frameLay.removeAllViews()
         changeViewVisibility(frameLay,it)
         if(it){
-            val newBinding = HelpOptionsBinding.inflate(layoutInflater)
+            val newBinding = HelpOptionsBinding.inflate(mainViewModel.layoutInflater)
             setGuideOptionMenuBinding(newBinding)
             frameLay.addView(newBinding.root)
         }
