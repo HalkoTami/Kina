@@ -387,7 +387,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         super.onAttachedToWindow()
         onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(!mainActivityViewModel.doOnBackPress()) this@MainActivity.finish()
+                if(!mainActivityViewModel.doOnBackPress()) mainNavCon.popBackStack()
             }
         })
     }

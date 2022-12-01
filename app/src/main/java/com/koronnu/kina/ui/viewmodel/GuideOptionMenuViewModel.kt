@@ -37,8 +37,8 @@ class GuideOptionMenuViewModel:ViewModel(){
     private val guideMenuVisibilityObserver = Observer<Boolean>{
         val frameLay = mainViewModel.mainActivityBinding.frameLayCallOnInstall
         frameLay.removeAllViews()
-        changeViewVisibility(frameLay,it)
         if(it){
+            changeViewVisibility(frameLay,true)
             val newBinding = HelpOptionsBinding.inflate(mainViewModel.layoutInflater)
             setGuideOptionMenuBinding(newBinding)
             frameLay.addView(newBinding.root)

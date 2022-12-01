@@ -13,17 +13,20 @@ import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 
 class AnkiBaseViewModel() : ViewModel() {
+    lateinit var mainViewModel: MainViewModel
 
     companion object{
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+        fun getFactory(mainViewModel: MainViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return AnkiBaseViewModel() as T
+                val ankiBaseViewModel = AnkiBaseViewModel()
+                ankiBaseViewModel.mainViewModel = mainViewModel
+                return ankiBaseViewModel as T
             }
         }
     }
 
-    lateinit var mainViewModel: MainViewModel
+
 
     private val _activeFragment = MutableLiveData<AnkiFragments>()
     fun setActiveFragment (ankiFragments: AnkiFragments){

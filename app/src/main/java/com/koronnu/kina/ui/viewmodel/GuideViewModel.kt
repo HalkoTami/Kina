@@ -78,7 +78,7 @@ class GuideViewModel : ViewModel(){
         if(!it) return@Observer
         val newBinding = CallOnInstallBinding.inflate(mainViewModel.layoutInflater)
         setGuideBinding(newBinding)
-        frameLay.addView(getGuideBinding.root)
+        frameLay.addView(newBinding.root)
     }
     fun observeGuideViewModelLiveData(lifecycleOwner: LifecycleOwner){
         guideVisibility.observe(lifecycleOwner,guideVisibilityObserver)
@@ -95,7 +95,7 @@ class GuideViewModel : ViewModel(){
                     Guides.CreateItems -> guideActions.createGuide()
                     Guides.DeleteItems -> guideActions.deleteGuide()
                 }
-                guideBinding.removeObserver(this)
+//                guideBinding.removeObserver(this)
             }
         }
         guideBinding.observeForever(observer)

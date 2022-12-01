@@ -23,6 +23,7 @@ import com.koronnu.kina.ui.customViews.HoleViewVer2
 
 
 class GuideActions(val activity:MainActivity,){
+
     val callOnInstallBinding get() = activity.mainActivityViewModel.guideViewModel.getGuideBinding
 
 
@@ -33,6 +34,7 @@ class GuideActions(val activity:MainActivity,){
     val holeView          get() = callOnInstallBinding.viewWithHole
     val textView          get() = callOnInstallBinding.txvSpeakBubble
     val bottom            get() = callOnInstallBinding.sbBottom
+
     val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
     private val touchAreaTag = 1
 
@@ -181,14 +183,14 @@ class GuideActions(val activity:MainActivity,){
             layoutParams.height = size
         }
     }
-    private fun setConfirmEndGuideCL(){
-        callOnInstallBinding.confirmEndGuideBinding.apply {
-            setClickListeners(arrayOf(
-                btnCancelEnd,
-                btnCloseConfirmEnd,
-                btnCommitEnd),GuideEndPopUpCL())
-        }
-    }
+//    private fun setConfirmEndGuideCL(){
+//        callOnInstallBinding.confirmEndGuideBinding.apply {
+//            setClickListeners(arrayOf(
+//                btnCancelEnd,
+//                btnCloseConfirmEnd,
+//                btnCommitEnd),GuideEndPopUpCL())
+//        }
+//    }
 //    private fun refreshInstallGuide(){
 //        activity._callOnInstallBinding = CallOnInstallBinding.inflate(activity.layoutInflater)
 //        _callOnInstallBinding = activity.callOnInstallBinding
@@ -199,7 +201,8 @@ class GuideActions(val activity:MainActivity,){
 //         frameLay.removeAllViews()
 //        refreshInstallGuide()
 //        frameLay.addView(callOnInstallBinding.root)
-        activity.mainActivityViewModel.setGuideVisibility(true)
+//        activity.mainActivityViewModel.setGuideVisibility(true)
+//        setLateInitVars()
         changeMulVisibility(arrayOf(character,arrow,textView,bottom),false)
         holeView.initActivity(activity)
         viewUnderSpotInGuide = null
@@ -356,6 +359,7 @@ class GuideActions(val activity:MainActivity,){
         }
     }
     fun createGuide(){
+//        setLateInitVars()
         CreateGuide(this).callOnFirst()
     }
     fun editGuide(){
@@ -408,14 +412,15 @@ class GuideActions(val activity:MainActivity,){
             rightMargin = spbMargin)
     }
 //    private fun setLateInitVars(){
+//        callOnInstallBinding = activity.mainActivityViewModel.guideViewModel.getGuideBinding
 //        callOnInstallBinding.apply {
-//            _arrow = imvFocusArrow
-//            _character = imvCharacter
-//            _holeView = viewWithHole
-//            _textView = txvSpeakBubble
-//            _bottom = sbBottom
-//            _guideParentConLay = root
-//            _conLayGoNext = conLayGuideGoNext
+//            guideParentConLay = root
+//            arrow             = imvFocusArrow
+//            conLayGoNext      = conLayGuideGoNext
+//            character         = imvCharacter
+//            holeView          = viewWithHole
+//            textView          = txvSpeakBubble
+//            bottom            = sbBottom
 //        }
 //    }
     fun onClickBtnCommitEndGuide(){
@@ -429,15 +434,15 @@ class GuideActions(val activity:MainActivity,){
         }
     }
     val actionsBeforeEndGuideList: MutableList<()->Unit> = mutableListOf()
-    inner class GuideEndPopUpCL:View.OnClickListener{
-        override fun onClick(v: View?) {
-            callOnInstallBinding.confirmEndGuideBinding.apply {
-                when(v){
-                    btnCancelEnd,btnCloseConfirmEnd -> activity.mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-                    btnCommitEnd                    -> onClickBtnCommitEndGuide()
-                }
-            }
-        }
-    }
+//    inner class GuideEndPopUpCL:View.OnClickListener{
+//        override fun onClick(v: View?) {
+//            callOnInstallBinding.confirmEndGuideBinding.apply {
+//                when(v){
+//                    btnCancelEnd,btnCloseConfirmEnd -> activity.mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
+//                    btnCommitEnd                    -> onClickBtnCommitEndGuide()
+//                }
+//            }
+//        }
+//    }
 
 }
