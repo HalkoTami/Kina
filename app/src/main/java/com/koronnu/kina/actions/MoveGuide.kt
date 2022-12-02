@@ -5,6 +5,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import com.koronnu.kina.R
+import com.koronnu.kina.customClasses.enumClasses.HoleShape
 import com.koronnu.kina.customClasses.enumClasses.MyHorizontalOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyVerticalOrientation
@@ -12,6 +13,9 @@ import com.koronnu.kina.customClasses.normalClasses.BorderSet
 import com.koronnu.kina.customClasses.normalClasses.MyOrientationSet
 import com.koronnu.kina.customClasses.normalClasses.ViewAndSide
 import com.koronnu.kina.databinding.CallOnInstallBinding
+import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.viewmodel.*
 
 
@@ -31,11 +35,29 @@ class MoveGuide(val actions: GuideActions){
     private val frameLayMoveToThisItem  get() = libRvFirstItem.findViewById<FrameLayout>(R.id.rv_base_frameLay_left)
     private val frameLayConfirmMove     get() = libraryBaseBinding.frameLayConfirmMove
     private val frameLayBnv             get() = mainActivityBinding.frameBnv
+    private val stringFlashCard         get() = actions.activity.getString(R.string.flashcard)
+    private val stringFolder            get() = actions.activity.getString(R.string.folder)
+    private val stringCard              get() = actions.activity.getString(R.string.card)
+    private val linLayMenuMoveItem      get() = libraryBaseBinding.multiSelectMenuBinding.linLayMoveSelectedItems
 
     private fun makeRvOnlyLongClickActive() =  libraryViewModel.setOnlyLongClickActive(true)
     private fun deActivateRvOnlyLongClickActive () = libraryViewModel.setOnlyLongClickActive(false)
     private fun unEnableImvCloseEditFilePopUp() {btnCloseEditFilePopUp.isEnabled = false}
     private fun EnableImvCloseEditFilePopUp()   {btnCloseEditFilePopUp.isEnabled = true}
+    private fun getRvFirstItemTypeAsString():String{
+        val rvItem = libraryViewModel.returnParentRVItems()
+        val rvFiles = rvItem.filterIsInstance<File>()
+        val rvCards = rvItem.filterIsInstance<Card>()
+        return if(rvFiles.isNotEmpty())
+            when(rvFiles[0].fileStatus){
+                FileStatus.FLASHCARD_COVER -> stringFlashCard
+                FileStatus.FOLDER           -> stringFlashCard
+                else ->""
+            }
+        else if(rvCards.isEmpty().not()){
+            stringCard
+        } else ""
+    }
 
     private fun setCharacterPosInCenter  () {
         actions.characterBorderSet = BorderSet()
@@ -63,85 +85,119 @@ class MoveGuide(val actions: GuideActions){
         topSideSet = ViewAndSide(frameLayMultiMenu,MyOrientation.BOTTOM))
         actions.spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.MIDDLE)
     }
-    private fun animateCharacterAndSpbPos(stringId:Int, characterPos:()->Unit,spbPos:()->Unit){
+    private fun goNextWhenLongClicked(next:()->Unit){
+        actions.actionsBeforeEndGuideList.add { libraryViewModel.setDoAfterLongClick(false) {} }
+        libraryViewModel.setDoAfterLongClick(true,next)
+    }
+    private fun animateCharacterAndSpbPos(stringId:Int, characterPos:()->Unit,spbPos:()->Unit,doOnEnd:()->Unit){
         actions.apply {
-            actions.conLayGoNext.isEnabled = false
+//            actions.conLayGoNext.isEnabled = false
             characterPos()
             doAfterCharacterPosChanged = {
                 spbPos()
                 getSpbPosAnim(actions.getString(stringId)).start()
             }
-            characterPosChangeAnimDoOnEnd ={actions.conLayGoNext.isEnabled = true}
+            characterPosChangeAnimDoOnEnd ={doOnEnd()}
             getCharacterPosChangeAnim().start()
         }
     }
-    private fun guide1(){
+    private fun animateSpbNoChange(stringId: Int,doOnEnd: () -> Unit){
+        actions.spbPosAnimDoOnEnd = {doOnEnd()}
+        actions.getSpbPosAnim(actions.getString(stringId)).start()
+    }
+    fun guide1(){
         actions.apply {
-            onClickGoNext{guide2()}
-            animateCharacterAndSpbPos(R.string.guide_spb_move_1,{setCharacterPosInCenter()},{setSpbPosAboveCharacter()})
+            animateCharacterAndSpbPos(R.string.guide_spb_move_1,
+                {setCharacterPosInCenter()},
+                {setSpbPosAboveCharacter()},
+                {onClickGoNext{guide2()}})
         }
     }
     private fun guide2(){
         actions.apply {
-            onClickGoNext{guide3()}
+            animateCharacterAndSpbPos(R.string.guide_spb_move_2,
+                {setCharacterTopLeftUnderRvFirstItem()},
+                {setSpbPosRightNextToCharacter()},
+                {onClickGoNext { guide3() }})
+            holeShapeInGuide = HoleShape.RECTANGLE
+            viewUnderSpotInGuide = libRvFirstItem
         }
     }
     private fun guide3(){
         actions.apply {
-            onClickGoNext{guide4()}
-
+            spbPosAnimDoOnEnd = { onClickGoNext { guide4() } }
+            getSpbPosAnim(activity.getString(R.string.guide_spb_move_3,getRvFirstItemTypeAsString())).start()
         }
     }
     private fun guide4(){
         actions.apply {
-            onClickGoNext{guide5()}
-
+            actionsBeforeEndGuideList.add { libraryViewModel.setOnlySwipeActive(false) }
+            libraryViewModel.setOnlyLongClickActive(true)
+            makeHereTouchable(libRvFirstItem)
+            animateSpbNoChange(R.string.guide_spb_move_4)
+            {goNextWhenLongClicked{guide5()}}
         }
     }
     private fun guide5(){
         actions.apply {
-            onClickGoNext{guide6()}
-
+            makeHereTouchable(null)
+            libraryViewModel.setOnlyLongClickActive(false)
+            animateSpbNoChange(R.string.guide_spb_move_5)
+            {onClickGoNext{guide6()}}
         }
     }private fun guide6(){
         actions.apply {
-            onClickGoNext{guide7()}
-
+            goNextOnClickTouchArea(imvOpenMultiModeMenu){guide7()}
+            viewUnderSpotInGuide = imvOpenMultiModeMenu
+            animateCharacterAndSpbPos(R.string.guide_spb_move_6,
+                {setCharacterBottomLeftAboveBnv()},
+                {setSpbPosAboveCharacterUnderMenuFrameLay()},
+                {  })
         }
     }
     private fun guide7(){
         actions.apply {
-            onClickGoNext{guide8()}
-
+            viewUnderSpotInGuide = frameLayMultiMenu
+            libraryViewModel.setMultiMenuVisibility(true)
+            goNextOnClickTouchArea(linLayMenuMoveItem){guide8()}
+            setArrow(MyOrientation.LEFT,linLayMenuMoveItem)
         }
     }
     private fun guide8(){
         actions.apply {
-            onClickGoNext{guide9()}
+            linLayMenuMoveItem.performClick()
+            animateCharacterAndSpbPos(R.string.guide_spb_move_7,
+                {setCharacterPosInCenter()},
+                {setSpbPosAboveCharacter()},
+                {onClickGoNext { guide9() }})
 
         }
     }
     private fun guide9(){
         actions.apply {
-            onClickGoNext{guide3()}
+            animateSpbNoChange(R.string.guide_spb_move_8)
+            {onClickGoNext { guide10() }}
 
         }
     }
     private fun guide10(){
         actions.apply {
-            onClickGoNext{guide3()}
+            animateSpbNoChange(R.string.guide_spb_move_9)
+            {onClickGoNext{guide11()}}
 
         }
     }
     private fun guide11(){
         actions.apply {
-            onClickGoNext{guide3()}
+            animateSpbNoChange(R.string.guide_spb_move_10a)
+            {onClickGoNext{guide12()}}
 
         }
     }
     private fun guide12(){
         actions.apply {
-            onClickGoNext{guide3()}
+            animateSpbNoChange(R.string.guide_spb_move_10b)
+            {}
 
         }
     }

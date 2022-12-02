@@ -26,6 +26,7 @@ class GuideViewModel : ViewModel(){
     }
 
     val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel
+    val guideOptionMenuViewModel get() = mainViewModel.guideOptionMenuViewModel
     lateinit var mainViewModel: MainViewModel
     lateinit var layoutInflater: LayoutInflater
 
@@ -89,23 +90,8 @@ class GuideViewModel : ViewModel(){
     }
 
     fun startGuide(guides: Guides,guideActions: GuideActions){
-        var remove:()->Unit ={}
-        val observer = object:Observer<CallOnInstallBinding> {
-            override fun onChanged(t: CallOnInstallBinding?) {
-                when(guides){
-                    Guides.MoveItems -> guideActions.moveGuide()
-                    Guides.EditItems -> guideActions.editGuide()
-                    Guides.CreateItems -> guideActions.createGuide()
-                    Guides.DeleteItems -> guideActions.deleteGuide()
-                }
-                remove = {guideBinding.removeObserver(this)}
-
-            }
-        }
-        guideBinding.observeForever(observer)
         setGuideVisibility(true)
-        remove()
-
+        guideActions.callOnFirst(guides)
 
     }
     var actionsBeforeEndGuideList: MutableList<()->Unit> = mutableListOf()

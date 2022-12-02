@@ -4,6 +4,7 @@ import android.view.View
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
+import com.google.errorprone.annotations.Var
 import com.koronnu.kina.actions.setClickListeners
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.*
@@ -560,16 +561,18 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         val a  = LibraryChooseFileMoveToFragDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))
        returnLibraryNavCon()?.navigate(a)
     }
-    private val _doOnSwipeEnd = MutableLiveData<()->Unit>()
+    private var _doOnSwipeEnd :()->Unit = {}
+
     fun setDoOnSwipeEnd(onlyOnce:Boolean,unit:()->Unit){
-        val unitBefore = _doOnSwipeEnd.value
+        val unitBefore = _doOnSwipeEnd
         val finalUnit = if(onlyOnce){
             { unit()
-                _doOnSwipeEnd.value = unitBefore ?:{} }
+                _doOnSwipeEnd= unitBefore  }
         } else unit
-        _doOnSwipeEnd.value = finalUnit
+        _doOnSwipeEnd = finalUnit
     }
-    val doOnSwipeEnd:()->Unit get() = _doOnSwipeEnd.value ?:{}
+    val doOnSwipeEnd:()->Unit get() = _doOnSwipeEnd
+
 
 
 

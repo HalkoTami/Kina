@@ -40,9 +40,7 @@ class CreateGuide(val actions: GuideActions ){
 
     private fun greeting1(){
         actions.apply {
-            callOnFirst()
             onInstallBinding.root.isClickable = false
-            callOnFirst()
             getSpbPosAnim("やあ、僕はとさかくん").start()
             goNextOnClickAnyWhere { greeting2() }
         }

@@ -29,7 +29,6 @@ class DeleteGuide(val actions: GuideActions){
     private val lineLayMenuDelete get() = actions.activity.findViewById<LinearLayoutCompat>(R.id.linLay_delete_selected_items)
     fun guide1(){
         actions.apply {
-            callOnFirst()
             makeHereTouchable(null)
             getSpbPosAnim(getString(R.string.guide_spb_delete_1)).start()
             onClickGoNext{guide2()}

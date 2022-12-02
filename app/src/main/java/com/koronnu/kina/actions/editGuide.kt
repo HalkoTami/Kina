@@ -21,7 +21,6 @@ import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
 class EditGuide(val actions: GuideActions){
     fun greeting1(){
         actions.apply {
-            callOnFirst()
             activity.libraryViewModel.makeAllUnSwiped()
             getSpbPosAnim("これから、\n単語帳を編集する方法を説明するよ").start()
             goNextOnClickAnyWhere{explainBtn()}

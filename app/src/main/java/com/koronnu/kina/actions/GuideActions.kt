@@ -121,7 +121,7 @@ class GuideActions(val activity:MainActivity,){
 
     }
     fun onClickGoNext(func: () -> Unit){
-        callOnInstallBinding.conLayGuideGoNext.setOnClickListener{
+        conLayGoNext.setOnClickListener{
             makeTouchAreaGone()
             func()
             it.setOnClickListener(null)
@@ -183,26 +183,8 @@ class GuideActions(val activity:MainActivity,){
             layoutParams.height = size
         }
     }
-//    private fun setConfirmEndGuideCL(){
-//        callOnInstallBinding.confirmEndGuideBinding.apply {
-//            setClickListeners(arrayOf(
-//                btnCancelEnd,
-//                btnCloseConfirmEnd,
-//                btnCommitEnd),GuideEndPopUpCL())
-//        }
-//    }
-//    private fun refreshInstallGuide(){
-//        activity._callOnInstallBinding = CallOnInstallBinding.inflate(activity.layoutInflater)
-//        _callOnInstallBinding = activity.callOnInstallBinding
-//        setLateInitVars()
-//        setConfirmEndGuideCL()
-//    }
-    fun callOnFirst(){
-//         frameLay.removeAllViews()
-//        refreshInstallGuide()
-//        frameLay.addView(callOnInstallBinding.root)
-//        activity.mainActivityViewModel.setGuideVisibility(true)
-//        setLateInitVars()
+    fun callOnFirst(guide: Guides){
+        makeHereTouchable(null)
         changeMulVisibility(arrayOf(character,arrow,textView,bottom),false)
         holeView.initActivity(activity)
         viewUnderSpotInGuide = null
@@ -210,7 +192,12 @@ class GuideActions(val activity:MainActivity,){
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
 
         getCharacterVisibilityAnim(true).start()
-
+        when(guide){
+            Guides.CreateItems  ->CreateGuide(this).callOnFirst()
+            Guides.MoveItems    ->MoveGuide(this).guide1()
+            Guides.EditItems    ->EditGuide(this).greeting1()
+            Guides.DeleteItems  ->DeleteGuide(this).guide1()
+        }
     }
     private fun getArrowDirectionFromArrowPos(arrowPosition: MyOrientation):MyOrientation{
         return when(arrowPosition){
@@ -357,19 +344,6 @@ class GuideActions(val activity:MainActivity,){
         globalLayoutSet.onEach {
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
         }
-    }
-    fun createGuide(){
-//        setLateInitVars()
-        CreateGuide(this).callOnFirst()
-    }
-    fun editGuide(){
-        EditGuide(this).greeting1()
-    }
-    fun deleteGuide(){
-        DeleteGuide(this).guide1()
-    }
-    fun moveGuide(){
-        MoveGuide(this).start()
     }
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
