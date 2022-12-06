@@ -334,7 +334,6 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
     fun makeFileInGuide(title: String){
-        setEditFilePopUpVisible(false)
         val a = returnFileToCreate()?:return
         a.fileBefore = null
         val first = returnParentFileSisters().firstOrNull()

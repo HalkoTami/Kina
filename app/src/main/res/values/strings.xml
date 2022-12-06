@@ -196,6 +196,17 @@
     <string name="guide_popUp_confirm_create_movable_File">移動先を作成しますか</string>
     <string name="guide_spb_create_1">KiNaでは、フォルダと単語帳が作れるよ</string>
     <string name="guide_spb_create_2">ボタンをタッチして、\n単語帳を作ってみよう</string>
+    <string name="guide_spb_create_3">おめでとう！単語帳が追加されたよ\n中身を見てみよう！</string>
+    <string name="guide_spb_create_4">まだカードがないね\n早速作ってみよう</string>
+    <string name="guide_spb_create_5">上半分は、カードの表</string>
+    <string name="guide_spb_create_6">下半分は、カードの裏になっているよ</string>
+    <string name="guide_spb_create_7">カードの裏表にタイトルを付けることもできるんだ！</string>
+    <string name="guide_spb_create_8">好みのようにカスタマイズしてね</string>
+    <string name="guide_spb_create_9">カードをめくるには、\n下のナビゲーションボタンを使うよ</string>
+    <string name="guide_spb_create_10">新しいカードを前に挿入するのはここ</string>
+    <string name="guide_spb_create_11">後ろに挿入するのはここ！</string>
+    <string name="guide_spb_create_12">矢印ボタンでカードを前後にめくってね！</string>
+    <string name="guide_spb_create_13">これでガイドは終わりだよ</string>
 
 
 </resources>

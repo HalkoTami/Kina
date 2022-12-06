@@ -4,10 +4,9 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.children
 import androidx.core.view.get
-import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
+import com.koronnu.kina.customClasses.enumClasses.HoleShape
 import com.koronnu.kina.customClasses.enumClasses.MyHorizontalOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyVerticalOrientation
@@ -18,20 +17,20 @@ import com.koronnu.kina.ui.customViews.*
 
 
 class CreateGuide(val actions: GuideActions ){
-    private val onInstallBinding = actions.callOnInstallBinding
-    private val createFileViewModel = actions.activity.createFileViewModel
-    private val mainViewModel = actions.activity.mainActivityViewModel
-    private val libraryViewModel = actions.activity.libraryViewModel
-    private val createCardViewModel = actions.activity.createCardViewModel
-
-
-    private fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
-        onInstallBinding.root.setOnClickListener(null)
-        actions.addViewToConLay(view).setOnClickListener {
-            actions.makeTouchAreaGone()
-            func()
-        }
-    }
+//    private val onInstallBinding = actions.callOnInstallBinding
+//    private val createFileViewModel = actions.activity.createFileViewModel
+//    private val mainViewModel = actions.activity.mainActivityViewModel
+//    private val libraryViewModel = actions.activity.libraryViewModel
+//
+//
+//
+//    private fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
+//        onInstallBinding.root.setOnClickListener(null)
+//        actions.addViewToConLay(view).setOnClickListener {
+//            actions.makeTouchAreaGone()
+//            func()
+//        }
+//    }
 
 //    private fun guide1(){
 //        actions.apply {
@@ -46,7 +45,7 @@ class CreateGuide(val actions: GuideActions ){
 //        }
 //
 //    }
-    private fun guide1(){
+    fun guide1(){
         actions.apply {
             animateCharacterAndSpbPos(R.string.guide_spb_create_1,
                 {setCharacterPosInCenter()},
@@ -81,254 +80,197 @@ class CreateGuide(val actions: GuideActions ){
     }
     private fun guide5(){
         actions.apply{
-            makeEditFileVisible()
+            makeEditFileVisible(frameLayCreateFlashCard)
+            val editText = activity.findViewById<EditText>(R.id.edt_file_title)
+            addViewToConLay(btnCloseEditFilePopUp).setOnClickListener(null)
+            goNextOnClickTouchArea(btnCreateFile) {
+                goNextAfterNewFileCreated {
+                    viewUnderSpotInGuide = null
+                    guide6() }
+                createFileViewModel.makeFileInGuide(editText.text.toString())
+            }
+            setArrow(MyOrientation.BOTTOM,btnCreateFile)
+            holeShapeInGuide = HoleShape.RECTANGLE
+            viewUnderSpotInGuide = frameLayEditFile
+            getAllConLayChildrenGoneAnim().start()
             makeHereTouchable(frameLayEditFile)
-            goNextAfterNewFileCreated { guide6() }
 
         }
     }
-
 
 
     private fun guide6(){
         actions.apply {
-            val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
-            val title = edtCreatingFileTitle.text.toString()
-            if(title == "") {
-                makeToast(activity,"タイトルが必要です")
-
-            }
-            actions.removeHole()
-            hideKeyBoard(edtCreatingFileTitle,activity)
-            onInstallBinding.root.children.iterator().forEach {
-                if(it.tag == 1)it.visibility = View.GONE
-            }
-            actions.makeTouchAreaGone()
-            actions.getArrowVisibilityAnim(false).start()
-            createFileViewModel.makeFileInGuide(title)
-            goNextOnClickAnyWhere {
-                createFlashCard6(libraryRv)
-            }
-        }
-
-
-
-    }
-    private fun createFlashCard6(libraryRv:RecyclerView){
-        actions.apply {
-            actions.animateHole = true
-            actions.viewUnderSpotInGuide = libraryRv[0]
-//            actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
-//                MyHorizontalOrientation.LEFT)
-//            characterSizeDimenId = R.dimen.character_size_middle
-//            setCharacterSize()
-//            setCharacterPos()
-            goNextOnClickAnyWhere{checkInsideNewFlashCard1(libraryRv)}
+            animateHole = true
+            viewUnderSpotInGuide = libRvFirstItem
+            makeHereTouchable(null)
+            onClickGoNext{guide7()}
         }
     }
-    private fun checkInsideNewFlashCard1(libraryRv: RecyclerView){
+    private fun guide7(){
 
         actions.apply {
-            actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
-                MyHorizontalOrientation.LEFT)
-            characterSizeDimenId = R.dimen.character_size_middle
-            doAfterCharacterPosChanged = {
-                textFit = true
-                actions.spbPosSimple = ViewAndSide(actions.character, MyOrientation.RIGHT)
-                getSpbPosAnim("おめでとう！単語帳が追加されたよ\n中身を見てみよう！").start()
-            }
-            getCharacterPosChangeAnim().start()
-
-
+            animateCharacterAndSpbPos(R.string.guide_spb_create_3,
+                {setCharacterBottomLeftAboveBnv()},
+                {setSpbPosRightNextToCharacter()},
+                {setArrow(MyOrientation.BOTTOM,libRvFirstItem)
+                    onClickGoNext{guide8()}})
+            goNextOnClickTouchArea(libRvFirstItem){guide8()}
         }
-
-
-        goNextOnClickTouchArea(libraryRv[0]){checkInsideNewFlashCard2()}
     }
-    private fun checkInsideNewFlashCard2(){
+    private fun guide8(){
         actions.apply {
-            actions.getSpbVisibilityAnim(false).start()
-            actions.makeTouchAreaGone()
-            actions.removeHole()
-            changeViewVisibility(actions.holeView,true)
+            viewUnderSpotInGuide = null
             libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
-            goNextOnClickAnyWhere{checkInsideNewFlashCard3()}
+            arrowVisibilityAnimDoOnEnd= { onClickGoNext{guide9()}}
+            getArrowVisibilityAnim(false).start()
         }
 
     }
-    private fun checkInsideNewFlashCard3(){
+    private fun guide9(){
         actions.apply {
-            getSpbPosAnim("まだカードがないね\n早速作ってみよう",
-            ).start()
-            goNextOnClickAnyWhere{makeNewCard1()}
+            animateSpbNoChange(R.string.guide_spb_create_4)
+            {onClickGoNext{guide10()}}
         }
 
     }
-    private fun makeNewCard1(){
-        actions.apply{ val bnvBtnAdd = activity.findViewById<ImageView>(R.id.bnv_imv_add)
-            actions.getAppearAlphaAnimation(actions.character, false).start()
-            actions.getSpbVisibilityAnim(false).start()
-            actions.viewUnderSpotInGuide = bnvBtnAdd
-            goNextOnClickTouchArea(bnvBtnAdd) { makeNewCard2() }
+    private fun guide10(){
+        actions.apply{
+            allConLayChildrenGoneAnimDoOnEnd = {
+                actions.viewUnderSpotInGuide = imvBnvBtnAdd
+                goNextOnClickTouchArea(imvBnvBtnAdd) { guide11() }
+            }
+            getAllConLayChildrenGoneAnim().start()
         }
     }
-    private fun makeNewCard2(){
+    private fun guide11(){
         actions.apply {
-            val createMenuImvNewCard        =activity.findViewById<FrameLayout>(R.id.frameLay_new_card)
             actions.animateHole = false
-            actions.viewUnderSpotInGuide = createMenuImvNewCard
-            createFileViewModel.setBottomMenuVisible(true)
-            goNextOnClickTouchArea(createMenuImvNewCard){makeNewCard3()}
+            actions.viewUnderSpotInGuide = frameLayCreateCard
+            makeBottomMenuVisible()
+            goNextOnClickTouchArea(frameLayCreateCard){guide12()}
         }
 
     }
-    private fun makeNewCard3(){
+    private fun guide12(){
         actions.apply {
-            createFileViewModel.setBottomMenuVisible(false)
-            actions.makeTouchAreaGone()
-            actions.removeHole()
+            viewUnderSpotInGuide = null
             createCardViewModel.onClickAddNewCardBottomBar()
-            goNextOnClickAnyWhere{explainCreateCardFrag1()}
+            onClickGoNext{guide13()}
         }
 
     }
-    private fun explainCreateCardFrag1(){
+    private fun guide13(){
         actions.apply {
             val edtCardFrontContent         =activity.findViewById<EditText>(R.id.edt_front_content)
-            actions.characterBorderSet = actions.getSimplePosRelation(edtCardFrontContent,
-                MyOrientation.TOP,false)
-            setCharacterPos()
-            actions.getAppearAlphaAnimation(actions.character,true).start()
-            actions.textFit = true
-            actions.spbPosSimple = ViewAndSide(actions.character, MyOrientation.RIGHT)
-            getSpbPosAnim("上半分は、カードの表" ).start()
             actions.animateHole = true
             actions.viewUnderSpotInGuide = edtCardFrontContent
-            goNextOnClickAnyWhere{explainCreateCardFrag2()}
+            animateCharacterAndSpbPos(R.string.guide_spb_create_5,
+                {characterBorderSet = actions.getSimplePosRelation(edtCardFrontContent,
+                    MyOrientation.TOP,false)},
+                {setSpbPosRightNextToCharacter()},
+                {onClickGoNext{guide14()}})
         }
 
     }
-    private fun explainCreateCardFrag2(){
+    private fun guide14(){
         actions.apply {
             val edtCardBackContent          =activity.findViewById<EditText>(R.id.edt_back_content)
-            getSpbPosAnim("下半分は、カードの裏になっているよ" ).start()
-            actions.viewUnderSpotInGuide = edtCardBackContent
-            goNextOnClickAnyWhere{explainCreateCardFrag3()}
+            animateSpbNoChange(R.string.guide_spb_create_6)
+            {onClickGoNext{guide15()}}
+            viewUnderSpotInGuide = edtCardBackContent
         }
     }
-    private fun explainCreateCardFrag3(){
+    private fun guide15(){
         actions.apply {
             val edtCardFrontTitle           =activity.findViewById<EditText>(R.id.edt_front_title)
             val edtCardBackTitle            =activity.findViewById<EditText>(R.id.edt_back_title)
-            actions.characterBorderSet = BorderSet(topSideSet = ViewAndSide(edtCardFrontTitle, MyOrientation.BOTTOM),
-                bottomSideSet = ViewAndSide(edtCardBackTitle, MyOrientation.TOP) )
-            actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,
-                MyHorizontalOrientation.LEFT)
-            setCharacterPos()
-            actions.textFit = false
-            actions.viewUnderSpotInGuide = edtCardFrontTitle
-            getSpbPosAnim("カードの裏表にタイトルを付けることもできるんだ！").start()
-            goNextOnClickAnyWhere{explainCreateCardFrag4(edtCardBackTitle)}
+            viewUnderSpotInGuide = edtCardFrontTitle
+            animateCharacterAndSpbPos(R.string.guide_spb_create_7,
+                {characterBorderSet = BorderSet(topSideSet = ViewAndSide(edtCardFrontTitle, MyOrientation.BOTTOM),
+                    bottomSideSet = ViewAndSide(edtCardBackTitle, MyOrientation.TOP) )
+                    characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,
+                        MyHorizontalOrientation.LEFT)},
+                {},{onClickGoNext{guide17()}})
         }
 
     }
-    private fun explainCreateCardFrag4(edtCardBackTitle:EditText){
+    private fun guide17(){
         actions.apply {
-            actions.viewUnderSpotInGuide = edtCardBackTitle
-            actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
-                MyHorizontalOrientation.LEFT)
-            setCharacterPos()
-            actions.spbBorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character, MyOrientation.BOTTOM)
-                , leftSideSet = ViewAndSide(actions.character, MyOrientation.RIGHT))
-            actions.spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)
-            getSpbPosAnim("好みのようにカスタマイズしてね").start()
-            goNextOnClickAnyWhere{explainCreateCardNavigation1()}
+            val edtCardBackTitle            =activity.findViewById<EditText>(R.id.edt_back_title)
+            viewUnderSpotInGuide = edtCardBackTitle
+            animateCharacterAndSpbPos(R.string.guide_spb_create_8,
+                {characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
+                    MyHorizontalOrientation.LEFT)},
+                {spbBorderSet = BorderSet(bottomSideSet = ViewAndSide(actions.character, MyOrientation.BOTTOM)
+                    , leftSideSet = ViewAndSide(actions.character, MyOrientation.RIGHT))
+                    spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM, MyHorizontalOrientation.MIDDLE)},
+                { onClickGoNext{guide18()}}
+            )
         }
 
     }
-    private fun explainCreateCardNavigation1(){
+    private fun guide18(){
         actions.apply {
             val edtCardBackContent          =activity.findViewById<EditText>(R.id.edt_back_content)
             val linLayCreateCardNavigation  =activity.findViewById<ConstraintLayout>(R.id.lay_navigate_buttons)
-            actions.characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,
-                MyOrientation.TOP))
-            actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
-                MyHorizontalOrientation.MIDDLE)
-            getSpbPosAnim("カードをめくるには、\n下のナビゲーションボタンを使うよ" ).start()
             actions.viewUnderSpotInGuide = linLayCreateCardNavigation
-            goNextOnClickAnyWhere{explainCreateCardNavigation2()}
+            animateCharacterAndSpbPos(R.string.guide_spb_create_9,
+                { characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,
+                    MyOrientation.TOP))
+                    characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,
+                        MyHorizontalOrientation.MIDDLE)},
+                {setSpbPosAboveCharacter()},
+                {onClickGoNext{guide19()}})
+
         }
 
     }
-    private fun explainCreateCardNavigation2(){
+    private fun guide19(){
         actions.apply {
             val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
-            getSpbPosAnim("新しいカードを前に挿入するのはここ").start()
+            animateSpbNoChange(R.string.guide_spb_create_10)
+            {onClickGoNext {guide20()  }}
             setArrow(MyOrientation.TOP,createCardInsertNext)
-            goNextOnClickAnyWhere{explainCreateCardNavigation3()}
         }
 
     }
-    private fun explainCreateCardNavigation3(){
+    private fun guide20(){
         actions.apply {
             val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
-            getSpbPosAnim("後ろに挿入するのはここ！").start()
+            animateSpbNoChange(R.string.guide_spb_create_11)
+            {onClickGoNext{guide21()}}
             setArrow(MyOrientation.TOP,createCardInsertPrevious)
-            goNextOnClickAnyWhere{explainCreateCardNavigation4()}
         }
 
     }
-    private fun explainCreateCardNavigation4(){
+    private fun guide21(){
         actions.apply {
             val createCardNavFlipNext       =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_next)
-            getSpbPosAnim("矢印ボタンでカードを前後にめくってね！" ).start()
             setArrow(MyOrientation.TOP, createCardNavFlipNext)
-            goNextOnClickAnyWhere{explainCreateCardNavigation5()}
+            animateSpbNoChange(R.string.guide_spb_create_12 )
+            { onClickGoNext { guide22() }}
+
         }
     }
-    private fun explainCreateCardNavigation5(){
+    private fun guide22(){
         actions.apply {
             val createCardNavFlipPrevious   =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_previous)
+            arrowVisibilityAnimDoOnEnd = { onClickGoNext { guide23() } }
             setArrow(MyOrientation.TOP, createCardNavFlipPrevious)
-            goNextOnClickAnyWhere{goodBye1()}
+
         }
 
     }
-    private fun goodBye1(){
+    private fun guide23(){
         actions.apply {
             actions.removeHole()
             actions.getArrowVisibilityAnim(false).start()
-            actions.characterBorderSet = BorderSet()
-            actions.characterOrientation = MyOrientationSet(MyVerticalOrientation.MIDDLE,
-                MyHorizontalOrientation.MIDDLE)
-            setCharacterPos()
-            actions.spbPosSimple = ViewAndSide(actions.character, MyOrientation.TOP)
-            getSpbPosAnim("これでガイドは終わりだよ").start()
-            actions.getAppearAlphaAnimation(actions.character,true).start()
-            goNextOnClickAnyWhere{goodBye2()}
+            animateCharacterAndSpbPos(R.string.guide_spb_create_13,
+                {setCharacterPosInCenter()},
+                {setSpbPosAboveCharacter()},
+                {onClickGoNext { guideViewModel.endGuide() }})
         }
-
-    }
-    private fun goodBye2(){
-        actions.apply {
-            getSpbPosAnim("KiNaを楽しんで！").start()
-            goNextOnClickAnyWhere{end()}
-
-        }
-
-    }
-    private fun end(){
-        actions.apply {
-            mainViewModel.setGuideVisibility(false)
-            val sharedPref =  activity.getSharedPreferences(
-                "firstTimeGuide", Context.MODE_PRIVATE) ?: return
-            val editor = sharedPref.edit()
-            editor.putBoolean("firstTimeGuide", true)
-            editor.apply()
-        }
-    }
-    fun callOnFirst(){
-        this.guide1()
 
     }
 }

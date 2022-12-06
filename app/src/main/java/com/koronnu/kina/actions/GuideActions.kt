@@ -28,6 +28,7 @@ class GuideActions(val activity:MainActivity,){
     val moveToViewModel  = libraryViewModel.chooseFileMoveToViewModel
     val createFileViewModel = activity.mainActivityViewModel.editFileViewModel
     val guideViewModel = activity.mainActivityViewModel.guideViewModel
+    val createCardViewModel = activity.createCardViewModel
 
     val guideParentConLay  get() =  callOnInstallBinding.root
     val arrow             get() = callOnInstallBinding.imvFocusArrow
@@ -45,6 +46,7 @@ class GuideActions(val activity:MainActivity,){
     val imvBnvBtnAdd            get() = mainActivityBinding.bnvBinding.bnvImvAdd
     val frameLayCreateFlashCard get() = mainActivityBinding.bindingAddMenu.frameLayNewFlashcard
     val frameLayCreateFolder    get() = mainActivityBinding.bindingAddMenu.frameLayNewFolder
+    val frameLayCreateCard      get() = mainActivityBinding.bindingAddMenu.frameLayNewCard
     val frameLayEditFile        get() = mainActivityBinding.frameLayEditFile
     val btnCloseEditFilePopUp   get() = mainActivityBinding.editFileBinding.btnClose
     val btnCreateFile           get() = mainActivityBinding.editFileBinding.btnFinish
@@ -66,8 +68,8 @@ class GuideActions(val activity:MainActivity,){
             createFileViewModel.setBottomMenuVisible(false)
         }
     }
-    fun makeEditFileVisible() {
-        createFileViewModel.setEditFilePopUpVisible(true)
+    fun makeEditFileVisible(onClickFrameLay:FrameLayout) {
+        onClickFrameLay.performClick()
         actionsBeforeEndGuideList.add{
             createFileViewModel.setEditFilePopUpVisible(false)
         }
@@ -77,6 +79,7 @@ class GuideActions(val activity:MainActivity,){
         createFileViewModel.setDoAfterNewFileCreated {
             next()
             createFileViewModel.setDoAfterNewFileCreated {  }
+        }
     }
 
     fun getCreatingMenuItemFrameLay():View{
@@ -327,7 +330,7 @@ class GuideActions(val activity:MainActivity,){
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
 
         when(guide){
-            Guides.CreateItems  ->CreateGuide(this).callOnFirst()
+            Guides.CreateItems  ->CreateGuide(this).guide1()
             Guides.MoveItems    ->MoveGuide(this).guide1()
             Guides.EditItems    ->EditGuide(this).greeting1()
             Guides.DeleteItems  ->DeleteGuide(this).guide1()
