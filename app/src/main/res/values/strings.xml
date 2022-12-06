@@ -194,6 +194,8 @@
     <string name="guide_popUp_confirm_end">終了しますか？</string>
     <string name="commit_end">終了する</string>
     <string name="guide_popUp_confirm_create_movable_File">移動先を作成しますか</string>
+    <string name="guide_spb_create_1">KiNaでは、フォルダと単語帳が作れるよ</string>
+    <string name="guide_spb_create_2">ボタンをタッチして、\n単語帳を作ってみよう</string>
 
 
 </resources>

@@ -1,24 +1,19 @@
 package com.koronnu.kina.actions
 
-import android.animation.AnimatorSet
 import android.content.Context
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.animation.doOnEnd
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-import com.koronnu.kina.activity.MainActivity
-import com.koronnu.kina.customClasses.enumClasses.HoleShape
 import com.koronnu.kina.customClasses.enumClasses.MyHorizontalOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyOrientation
 import com.koronnu.kina.customClasses.enumClasses.MyVerticalOrientation
 import com.koronnu.kina.customClasses.normalClasses.BorderSet
 import com.koronnu.kina.customClasses.normalClasses.MyOrientationSet
 import com.koronnu.kina.customClasses.normalClasses.ViewAndSide
-import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.customViews.*
 
 
@@ -38,92 +33,64 @@ class CreateGuide(val actions: GuideActions ){
         }
     }
 
-    private fun greeting1(){
+//    private fun guide1(){
+//        actions.apply {
+//            getSpbPosAnim("やあ、僕はとさかくん").start()
+//            goNextOnClickAnyWhere { greeting2() }
+//        }
+//    }
+//    private fun greeting2(){
+//        actions.apply {
+//            getSpbPosAnim("これから、KiNaの使い方を説明するね").start()
+//            goNextOnClickAnyWhere{ this@CreateGuide.guide1() }
+//        }
+//
+//    }
+    private fun guide1(){
         actions.apply {
-            onInstallBinding.root.isClickable = false
-            getSpbPosAnim("やあ、僕はとさかくん").start()
-            goNextOnClickAnyWhere { greeting2() }
+            animateCharacterAndSpbPos(R.string.guide_spb_create_1,
+                {setCharacterPosInCenter()},
+                {setSpbPosAboveCharacter()},
+                {onClickGoNext { guide2() }})
         }
     }
-    private fun greeting2(){
+    private fun guide2(){
         actions.apply {
-            getSpbPosAnim("これから、KiNaの使い方を説明するね").start()
-            goNextOnClickAnyWhere{createFlashCard0()}
-        }
-
-    }
-    private fun createFlashCard0(){
-        actions.apply {
-            getSpbPosAnim("KiNaでは、フォルダと単語帳が作れるよ").start()
-            goNextOnClickAnyWhere{createFlashCard1prt1()}
-        }
-    }
-    private fun createFlashCard1prt1(){
-        actions.apply {
-            getSpbPosAnim("ボタンをタッチして、\n単語帳を作ってみよう" ).start()
-            goNextOnClickAnyWhere{createFlashCard1prt2()}
-        }
-
-    }
-    private fun createFlashCard1prt2(){
-        actions.apply {
-            val bnvBtnAdd=mainViewModel.mainActivityBinding.bnvBinding.bnvImvAdd
-            setArrow(MyOrientation.TOP,bnvBtnAdd)
-            actions.viewUnderSpotInGuide = bnvBtnAdd
-            goNextOnClickTouchArea(bnvBtnAdd){createFlashCard2()}
+            animateSpbNoChange(R.string.guide_spb_create_2)
+            {onClickGoNext{guide3()}}
         }
 
     }
-    private fun createFlashCard2(){
+    private fun guide3(){
         actions.apply {
-            val createMenuImvFlashCard      =mainViewModel.mainActivityBinding.bindingAddMenu.frameLayNewFlashcard
-            setArrow(MyOrientation.TOP,createMenuImvFlashCard)
-            actions.animateHole = false
-            actions.viewUnderSpotInGuide = createMenuImvFlashCard
-            activity.createFileViewModel.setBottomMenuVisible(true)
-            goNextOnClickTouchArea(createMenuImvFlashCard){createFlashCard3()}
+            setArrow(MyOrientation.TOP,imvBnvBtnAdd)
+            viewUnderSpotInGuide = imvBnvBtnAdd
+            goNextOnClickTouchArea(imvBnvBtnAdd){guide4()}
         }
 
     }
-    private fun createFlashCard3(){
+    private fun guide4(){
+        actions.apply {
+            setArrow(MyOrientation.TOP,frameLayCreateFlashCard)
+            animateHole = false
+            viewUnderSpotInGuide = frameLayCreateFlashCard
+            makeBottomMenuVisible()
+            goNextOnClickTouchArea(frameLayCreateFlashCard){guide5()}
+        }
+
+    }
+    private fun guide5(){
         actions.apply{
-            val btnFinish = activity.findViewById<Button>(R.id.btn_finish)
-            val frameLayEditFile = activity.findViewById<FrameLayout>(R.id.frameLay_edit_file)
-            val edtCreatingFileTitle = activity.findViewById<EditText>(R.id.edt_file_title)
-            val imvColPalRed = activity.findViewById<ImageView>(R.id.imv_col_red)
-            val imvColPalBlue = activity.findViewById<ImageView>(R.id.imv_col_blue)
-            val imvColPaYellow = activity.findViewById<ImageView>(R.id.imv_col_yellow)
-            val imvColPalGray = activity.findViewById<ImageView>(R.id.imv_col_gray)
-            AnimatorSet().apply {
-                playTogether(
-                    actions.getAppearAlphaAnimation(actions.character, false),
-                    actions.getSpbVisibilityAnim(false)
-                )
-                doOnEnd {
-                    actions.apply {
-                        goNextOnClickTouchArea(btnFinish) { createFlashCard5(edtCreatingFileTitle) }
-                        createFileViewModel.onClickCreateFile(FileStatus.FLASHCARD_COVER)
-                        actions.holeShapeInGuide = HoleShape.RECTANGLE
-                        actions.viewUnderSpotInGuide = frameLayEditFile
-                        addViewToConLay(edtCreatingFileTitle)
-                        addViewToConLay(edtCreatingFileTitle).setOnClickListener {
-                            showKeyBoard(edtCreatingFileTitle, activity)
-                        }
-                        edtCreatingFileTitle.requestFocus()
-                        showKeyBoard(edtCreatingFileTitle, activity)
-                        setArrow(MyOrientation.BOTTOM, btnFinish)
-                        arrayOf(imvColPalRed, imvColPalBlue, imvColPalGray, imvColPaYellow).onEach {
-                            cloneView(it)
-                        }
-                    }
-                }
+            makeEditFileVisible()
+            makeHereTouchable(frameLayEditFile)
+            goNextAfterNewFileCreated { guide6() }
 
-                start()
-            }
         }
     }
 
-    private fun createFlashCard5(edtCreatingFileTitle:EditText){
+
+
+    private fun guide6(){
         actions.apply {
             val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
             val title = edtCreatingFileTitle.text.toString()
@@ -361,7 +328,7 @@ class CreateGuide(val actions: GuideActions ){
         }
     }
     fun callOnFirst(){
-        greeting1()
+        this.guide1()
 
     }
 }

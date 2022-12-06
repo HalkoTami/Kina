@@ -6,26 +6,28 @@ import android.app.ActionBar.LayoutParams
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
+import androidx.core.view.get
 import com.koronnu.kina.R
 import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.*
 import com.koronnu.kina.customClasses.normalClasses.*
-import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.databinding.TouchAreaBinding
+import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.ui.customViews.HoleViewVer2
 
 
 class GuideActions(val activity:MainActivity,){
 
     val callOnInstallBinding get() = activity.mainActivityViewModel.guideViewModel.getGuideBinding
-
+    val libraryViewModel = activity.mainActivityViewModel.libraryBaseViewModel
+    val moveToViewModel  = libraryViewModel.chooseFileMoveToViewModel
+    val createFileViewModel = activity.mainActivityViewModel.editFileViewModel
+    val guideViewModel = activity.mainActivityViewModel.guideViewModel
 
     val guideParentConLay  get() =  callOnInstallBinding.root
     val arrow             get() = callOnInstallBinding.imvFocusArrow
@@ -34,6 +36,138 @@ class GuideActions(val activity:MainActivity,){
     val holeView          get() = callOnInstallBinding.viewWithHole
     val textView          get() = callOnInstallBinding.txvSpeakBubble
     val bottom            get() = callOnInstallBinding.sbBottom
+    val libraryBaseBinding      get() = activity.mainActivityViewModel.libraryBaseViewModel.getChildFragBinding
+    val mainActivityBinding     get() = activity.mainActivityViewModel.mainActivityBinding
+    val libraryRv               get() = libraryBaseBinding.vocabCardRV
+    val libRvFirstItem          get() = libraryRv[0]
+    val imvOpenMultiModeMenu    get() = libraryBaseBinding.topBarMultiselectBinding.imvChangeMenuVisibility
+    val frameLayMultiMenu       get() = libraryBaseBinding.frameLayMultiModeMenu
+    val imvBnvBtnAdd            get() = mainActivityBinding.bnvBinding.bnvImvAdd
+    val frameLayCreateFlashCard get() = mainActivityBinding.bindingAddMenu.frameLayNewFlashcard
+    val frameLayCreateFolder    get() = mainActivityBinding.bindingAddMenu.frameLayNewFolder
+    val frameLayEditFile        get() = mainActivityBinding.frameLayEditFile
+    val btnCloseEditFilePopUp   get() = mainActivityBinding.editFileBinding.btnClose
+    val btnCreateFile           get() = mainActivityBinding.editFileBinding.btnFinish
+    val frameLayMoveToThisItem  get() = libraryRv.findViewById<FrameLayout>(R.id.rv_base_frameLay_left)
+    val frameLayConfirmMove     get() = libraryBaseBinding.frameLayConfirmMove
+    val frameLayBnv             get() = mainActivityBinding.frameBnv
+    val stringFlashCard         get() = activity.getString(R.string.flashcard)
+    val stringFolder            get() = activity.getString(R.string.folder)
+    val stringCard              get() = activity.getString(R.string.card)
+    val linLayMenuMoveItem      get() = libraryBaseBinding.multiSelectMenuBinding.linLayMoveSelectedItems
+    val btnCommitMove           get() = libraryBaseBinding.confirmMoveToBinding.btnCommitMove
+    val selectedItemAsString    get() = getListFirstItemAsString(moveToViewModel.returnMovingItems())
+    val movableItemAsString     get() = getMovableItemTypeAsString(selectedItemAsString)
+    val notMovableItemAsString  get() = getNotMovableItemTypeAsString(selectedItemAsString)
+
+    fun makeBottomMenuVisible(){
+        createFileViewModel.setBottomMenuVisible(true)
+        actionsBeforeEndGuideList.add{
+            createFileViewModel.setBottomMenuVisible(false)
+        }
+    }
+    fun makeEditFileVisible() {
+        createFileViewModel.setEditFilePopUpVisible(true)
+        actionsBeforeEndGuideList.add{
+            createFileViewModel.setEditFilePopUpVisible(false)
+        }
+    }
+    fun goNextAfterNewFileCreated(next: () -> Unit){
+        actionsBeforeEndGuideList.add{createFileViewModel.setDoAfterNewFileCreated{}}
+        createFileViewModel.setDoAfterNewFileCreated {
+            next()
+            createFileViewModel.setDoAfterNewFileCreated {  }
+    }
+
+    fun getCreatingMenuItemFrameLay():View{
+        return when(moveToViewModel.getMovableFileStatus){
+            FileStatus.FLASHCARD_COVER -> frameLayCreateFlashCard
+            FileStatus.FOLDER   -> frameLayCreateFolder
+            else -> imvBnvBtnAdd
+        }
+    }
+    fun getListFirstItemAsString(list: List<Any>):String{
+        val rvFiles = list.filterIsInstance<File>()
+        val rvCards = list.filterIsInstance<Card>()
+        return if(rvFiles.isNotEmpty())
+            when(rvFiles[0].fileStatus){
+                FileStatus.FLASHCARD_COVER -> stringFlashCard
+                FileStatus.FOLDER           -> stringFlashCard
+                else ->""
+            }
+        else if(rvCards.isEmpty().not()){
+            stringCard
+        } else ""
+    }
+    fun getMovableItemTypeAsString(string: String):String{
+        return when (string){
+            stringFlashCard,stringFolder -> stringFolder
+            stringCard  -> stringFlashCard
+            else -> ""
+        }
+    }
+    fun getNotMovableItemTypeAsString(string: String):String{
+        return when (string){
+            stringFlashCard,stringFolder -> stringFlashCard
+            stringCard  -> stringFolder
+            else -> ""
+        }
+    }
+
+
+    fun setCharacterPosInCenter  () {
+        characterSizeDimenId = R.dimen.character_size_large
+        characterBorderSet = BorderSet()
+        characterOrientation = MyOrientationSet()
+    }
+    fun setCharacterTopLeftUnderRvFirstItem(){
+        characterSizeDimenId = R.dimen.character_size_middle
+        characterBorderSet = BorderSet(topSideSet = ViewAndSide(libRvFirstItem,MyOrientation.BOTTOM))
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,MyHorizontalOrientation.LEFT)
+    }
+    fun setCharacterBottomLeftAboveBnv(){
+        characterSizeDimenId = R.dimen.character_size_middle
+        characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayBnv,MyOrientation.TOP))
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
+    }
+    fun setCharacterBottomLeftAboveConfirmMovePopUp(){
+        characterSizeDimenId = R.dimen.character_size_middle
+        characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayConfirmMove,MyOrientation.TOP))
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
+    }
+    fun setSpbPosRightNextToCharacter(){
+        textFit = true
+        spbPosSimple = ViewAndSide(character,MyOrientation.RIGHT)
+    }
+    fun setSpbPosAboveCharacter(){
+        textFit = false
+        spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
+    }
+    fun setSpbPosAboveCharacterUnderMenuFrameLay(){
+        textFit = false
+        spbBorderSet = BorderSet(bottomSideSet = ViewAndSide(character,MyOrientation.TOP),
+            topSideSet = ViewAndSide(frameLayMultiMenu,MyOrientation.BOTTOM))
+        spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.MIDDLE)
+    }
+    fun goNextWhenLongClicked(next:()->Unit){
+        actionsBeforeEndGuideList.add { libraryViewModel.setDoAfterLongClick(false) {} }
+        libraryViewModel.setDoAfterLongClick(true,next)
+    }
+    fun animateCharacterAndSpbPos(stringId:Int, characterPos:()->Unit,spbPos:()->Unit,doOnEnd:()->Unit){
+        characterPos()
+        doAfterCharacterPosChanged = {
+            spbPos()
+            getSpbPosAnim(getString(stringId)).start()
+        }
+        characterPosChangeAnimDoOnEnd ={doOnEnd()}
+        getCharacterPosChangeAnim().start()
+
+
+    }
+    fun animateSpbNoChange(stringId: Int,doOnEnd: () -> Unit){
+        spbPosAnimDoOnEnd = {doOnEnd()}
+        getSpbPosAnim(getString(stringId)).start()
+    }
 
     val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
     private val touchAreaTag = 1
@@ -89,6 +223,7 @@ class GuideActions(val activity:MainActivity,){
     }
 
     fun setCharacterPos(){
+        changeViewVisibility(character,false)
         setCharacterSize()
         setPositionByMargin(ViewAndPositionData(character,characterBorderSet,characterOrientation))
     }
@@ -191,7 +326,6 @@ class GuideActions(val activity:MainActivity,){
         setCharacterPos()
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
 
-        getCharacterVisibilityAnim(true).start()
         when(guide){
             Guides.CreateItems  ->CreateGuide(this).callOnFirst()
             Guides.MoveItems    ->MoveGuide(this).guide1()
