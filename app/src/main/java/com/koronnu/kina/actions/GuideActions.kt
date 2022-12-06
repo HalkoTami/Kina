@@ -256,14 +256,14 @@ class GuideActions(val activity:MainActivity,){
         }
     }
     fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
-        guideParentConLay.setOnClickListener(null)
+//        guideParentConLay.setOnClickListener(null)
         addViewToConLay(view).setOnClickListener {
             makeTouchAreaGone()
             func()
         }
     }
     fun addViewToConLay(view:View):View{
-        guideParentConLay.setOnClickListener(null)
+//        guideParentConLay.setOnClickListener(null)
         val a = TouchAreaBinding.inflate(activity.layoutInflater)
         a.touchView.tag = 1
 

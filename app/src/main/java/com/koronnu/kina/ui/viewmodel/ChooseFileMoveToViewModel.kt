@@ -1,18 +1,31 @@
 package com.koronnu.kina.ui.viewmodel
 
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
+import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.Count
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import com.koronnu.kina.db.enumclass.FileStatus
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() {
+
+    companion object{
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
+                val repository = application.repository
+                return ChooseFileMoveToViewModel(repository) as T
+            }
+
+        }
+    }
 
     private val _libraryViewModel = MutableLiveData<LibraryBaseViewModel>()
     private fun setLibraryBaseViewModel(libraryBaseViewModel: LibraryBaseViewModel){
@@ -21,7 +34,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     val getLibraryViewModel get() = _libraryViewModel.value!!
 
 
-    fun getMovableFiles(fileId: Int?):LiveData<List<File>> =
+    fun getFilteredFiles(fileId: Int?):LiveData<List<File>> =
         repository.getFileDataByParentFileId(fileId).map {
             when(getMovableFileStatus) {
                 FileStatus.FLASHCARD_COVER -> it.filter { it.fileId!=getMovingItemsParentFileId && it.fileStatus == FileStatus.FLASHCARD_COVER }
@@ -30,7 +43,11 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
                 else -> throw IllegalArgumentException()
             } }.asLiveData()
 
-
+    private val _movableFiles = MutableLiveData<List<File>>()
+    fun setMovableFiles(filteredFiles:List<File>){
+        _movableFiles.value = filteredFiles.filter { checkRvItemMoveBtnVisible(it) }
+    }
+    val getMovableFiles get() = _movableFiles.value
 
 
 
@@ -127,7 +144,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     }
     private var fileMoveToChildrenFiles:LiveData<List<File>>? = null
     fun collectChildrenData(){
-        fileMoveToChildrenFiles = getMovableFiles(getFileMoveTo.fileId)
+        fileMoveToChildrenFiles = getFilteredFiles(getFileMoveTo.fileId)
         fileMoveToChildrenFiles!!.observeForever(fileMoveToChildrenObserver)
     }
 

@@ -29,6 +29,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private lateinit var mainViewModel: MainViewModel
     private lateinit var searchViewModel:SearchViewModel
     private lateinit var popUpJumpToGuideViewModel:PopUpJumpToGuideViewModel
+    private lateinit var moveToViewModel :ChooseFileMoveToViewModel
+    val chooseFileMoveToViewModel get() = moveToViewModel
     val guideOptionMenuViewModel get() = mainViewModel.guideOptionMenuViewModel
 
     /**
@@ -43,9 +45,11 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
                 val repository = application.repository
                 val libraryBaseViewModel = LibraryBaseViewModel(repository)
                 val searchViewModel = ViewModelProvider(viewModelStoreOwner,SearchViewModel.Factory)[SearchViewModel::class.java]
+                val moveToViewModel = ViewModelProvider(viewModelStoreOwner,ChooseFileMoveToViewModel.Factory)[ChooseFileMoveToViewModel::class.java]
                 libraryBaseViewModel.mainViewModel = mainViewModel
                 libraryBaseViewModel.popUpJumpToGuideViewModel = mainViewModel.popUpJumpToGuideViewModel
                 libraryBaseViewModel.searchViewModel = searchViewModel
+                libraryBaseViewModel.moveToViewModel = moveToViewModel
                 return libraryBaseViewModel as T
             }
         }

@@ -28,7 +28,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 val mainModel = MainViewModel(mainActivity.layoutInflater)
-                val guideViewModel = getViewModelProviderWithFactory(GuideViewModel.getViewModelFactory(mainModel))[GuideViewModel::class.java]
+                val guideViewModel = getViewModelProviderWithFactory(GuideViewModel.getViewModelFactory(mainModel,mainActivity.resources))[GuideViewModel::class.java]
                 val guideOptionMenuViewModel = getViewModelProviderWithFactory(GuideOptionMenuViewModel.getViewModelFactory(mainModel))[GuideOptionMenuViewModel::class.java]
                 val editFileViewModel = getViewModelProviderWithFactory(EditFileViewModel.Factory)[EditFileViewModel::class.java]
                 val deletePopUpViewModel = getViewModelProviderWithFactory(DeletePopUpViewModel.Factory)[DeletePopUpViewModel::class.java]

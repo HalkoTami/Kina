@@ -372,7 +372,14 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             else -> return
         }
         setEditFilePopUpVisible(false)
+        doAfterNewFileCreated()
     }
+    private var _doAfterNewFileCreated:()->Unit = {}
+    fun setDoAfterNewFileCreated(func:()->Unit){
+        _doAfterNewFileCreated = func
+    }
+    private val doAfterNewFileCreated get() = _doAfterNewFileCreated
+
     private fun addCardsToFavouriteAnkiBox(list:List<Card>,lastInsertedFileId:Int,favFile:File){
         viewModelScope.launch {
             repository.saveCardsToFavouriteAnkiBox(list,lastInsertedFileId,favFile)

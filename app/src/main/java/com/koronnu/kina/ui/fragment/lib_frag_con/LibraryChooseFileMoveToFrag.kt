@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.actions.makeToast
-import com.koronnu.kina.customClasses.enumClasses.Count
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
@@ -126,6 +125,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         val parentRVItemsObserver = Observer<List<File>>{
             makeToast(requireActivity(),it.size.toString())
             adapter.submitList(it)
+            chooseFileMoveToViewModel.setMovableFiles(it)
 //            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
         }
         val parentFileAncestorsObserver = Observer<List<File>> {
@@ -148,7 +148,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
 //        chooseFileMoveToViewModel.setMovingItemsParentFileId(movingItemsParent)
         chooseFileMoveToViewModel.popUpVisible.observe(viewLifecycleOwner,popUpVisibleObserver)
         chooseFileMoveToViewModel.popUpText.observe(viewLifecycleOwner,popUpTextObserver)
-        chooseFileMoveToViewModel.getMovableFiles(args.fileId?.single()).observe(viewLifecycleOwner,parentRVItemsObserver)
+        chooseFileMoveToViewModel.getFilteredFiles(args.fileId?.single()).observe(viewLifecycleOwner,parentRVItemsObserver)
 //        chooseFileMoveToViewModel.collectMovingFileData.observe(viewLifecycleOwner){
 //            TODO()
 //        }

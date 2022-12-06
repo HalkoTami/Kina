@@ -178,19 +178,22 @@
     <string name="guide_spb_move_5">選択されたね。</string>
     <string name="guide_spb_move_6">右上のメニューを開こう</string>
     <string name="guide_spb_move_7">移動先を選べるよ</string>
-    <string name="guide_spb_move_8">%1$sは、%1$sの中へ移動はできないよ</string>
-    <string name="guide_spb_move_9">移動先には、（単語帳/フォルダ）を選んでね</string>
+    <string name="guide_spb_move_8">%1$sは、%2$sの中へ移動はできないよ</string>
+    <string name="guide_spb_move_9">移動先には、%1$sを選んでね</string>
     <string name="guide_spb_move_10a">まだ移動先がないみたいだね</string>
     <string name="guide_spb_move_10b">移動先を作成しますか？</string>
     <string name="guide_spb_move_10c">早速作ってみよう</string>
     <string name="guide_spb_move_10d">ここをタッチしてね</string>
     <string name="guide_spb_move_10e">追加されたよ！</string>
     <string name="guide_spb_move_11">移動するには、左のボタンをタッチしてね</string>
-    <string name="guide_spb_move_12">試しにこの（単語帳/フォルダ）へ移動してみよう</string>
+    <string name="guide_spb_move_12">タッチすると、確認画面が現れるよ</string>
     <string name="guide_spb_move_13">移動したい場合はここをタッチしてね。</string>
     <string name="guide_spb_move_14">ガイドは以上だよ</string>
     <string name="sp_checkFirstTimeOpened">CheckFirstTimeOpened</string>
     <string name="sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened">sp_checkFirstTimeOpened_inBoxFirstTimeOpened</string>
+    <string name="guide_popUp_confirm_end">終了しますか？</string>
+    <string name="commit_end">終了する</string>
+    <string name="guide_popUp_confirm_create_movable_File">移動先を作成しますか</string>
 
 
 </resources>

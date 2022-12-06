@@ -10,7 +10,7 @@ class GuideBindingCL(private val guideViewModel: GuideViewModel): View.OnClickLi
         when(v){
             confirmEndBinding.btnCloseConfirmEnd ->  guideViewModel.onClickBtnCloseConfirmEnd()
             confirmEndBinding.btnCancelEnd       ->  guideViewModel.onClickBtnCancelEnd()
-            confirmEndBinding.btnCommitEnd       ->  guideViewModel.onClickBtnCommitEnd()
+            confirmEndBinding.btnCommit      ->  guideViewModel.onClickBtnCommitEnd()
         }
     }
 }
