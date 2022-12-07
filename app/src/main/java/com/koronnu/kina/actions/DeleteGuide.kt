@@ -32,6 +32,7 @@ class DeleteGuide(val actions: GuideActions){
             makeHereTouchable(null)
             getSpbPosAnim(getString(R.string.guide_spb_delete_1)).start()
             onClickGoNext{guide2()}
+//            hello
         }
     }
     private fun guide2(){
