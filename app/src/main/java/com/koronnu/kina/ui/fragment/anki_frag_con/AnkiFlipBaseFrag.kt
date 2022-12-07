@@ -78,7 +78,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                         btnAddCard,
                         btnStopCount,
                         confirmEndBinding.btnCloseConfirmEnd,
-                        confirmEndBinding.btnCommitEnd,
+                        confirmEndBinding.btnCommit,
                         confirmEndBinding.btnCancelEnd,
                         frameLayConfirmEnd).onEach {
                         it.setOnClickListener(
@@ -339,7 +339,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                             ?.navigate(EditCardBaseFragDirections.openCreateCard())
                     }
                     confirmEndBinding.btnCancelEnd, confirmEndBinding.btnCloseConfirmEnd-> changeViewVisibility(binding.frameLayConfirmEnd,false)
-                    confirmEndBinding.btnCommitEnd -> {
+                    confirmEndBinding.btnCommit -> {
                         ankiNavCon.popBackStack()
                         ankiFlipBaseViewModel.saveFlipActionStatus(ActivityStatus.FLIP_ROUND_ENDED)
                     }

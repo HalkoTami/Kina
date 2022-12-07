@@ -2,6 +2,8 @@
 <View xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="1dp"
     android:layout_height="1dp"
-    android:id="@+id/touch_view">
+    android:id="@+id/touch_view"
+    android:background="@color/red"
+    >
 
 </View>

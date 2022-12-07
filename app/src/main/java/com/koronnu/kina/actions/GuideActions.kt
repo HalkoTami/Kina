@@ -5,47 +5,229 @@ import android.animation.ValueAnimator
 import android.app.ActionBar.LayoutParams
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
+import androidx.core.view.get
 import com.koronnu.kina.R
 import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.*
 import com.koronnu.kina.customClasses.normalClasses.*
-import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.databinding.TouchAreaBinding
+import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.ui.customViews.HoleViewVer2
+import com.koronnu.kina.ui.customViews.NavigateBtnCreateCard
 
 
-class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
-    private var _callOnInstallBinding : CallOnInstallBinding? =null
-    private val callOnInstallBinding get() = _callOnInstallBinding!!
+class GuideActions(val activity:MainActivity,){
 
-    private var _guideParentConLay:ConstraintLayout? = null
-    val guideParentConLay get() = _guideParentConLay!!
+    val callOnInstallBinding get() = activity.mainActivityViewModel.guideViewModel.getGuideBinding
+    val libraryViewModel = activity.mainActivityViewModel.libraryBaseViewModel
+    val mainViewModel = activity.mainActivityViewModel
+    val moveToViewModel  = libraryViewModel.chooseFileMoveToViewModel
+    val createFileViewModel = activity.mainActivityViewModel.editFileViewModel
+    val guideViewModel = activity.mainActivityViewModel.guideViewModel
+    val createCardViewModel = activity.createCardViewModel
+    val deletePopUpViewModel = activity.deletePopUpViewModel
+    val createCardStringCardBinding get() = createCardViewModel.createCardFragStringFragBinding
+    val createCardFragMainBinding   get() = createCardViewModel.createCardFragMainBinding
+    val edtCardFrontTitle           get() = createCardStringCardBinding.edtFrontTitle
+    val edtCardBackTitle            get() = createCardStringCardBinding.edtBackTitle
+    val edtCardBackContent          get() = createCardStringCardBinding.edtBackContent
+    val edtCardFrontContent         get() = createCardStringCardBinding.edtFrontContent
+    val linLayCreateCardNavigation  get() = createCardFragMainBinding.layNavigateButtons
+    val createCardInsertNext        get() = createCardFragMainBinding.btnInsertNext
+    val createCardInsertPrevious    get() = createCardFragMainBinding.btnInsertPrevious
+    val createCardNavFlipNext       get() = createCardFragMainBinding.btnNext
+    val createCardNavFlipPrevious   get() = createCardFragMainBinding.btnPrevious
+    val editText                    get() = mainActivityBinding.editFileBinding.edtFileTitle
+    val guideParentConLay           get() =  callOnInstallBinding.root
+    val arrow                       get() = callOnInstallBinding.imvFocusArrow
+    val conLayGoNext                get() = callOnInstallBinding.conLayGuideGoNext
+    val character                   get() =  callOnInstallBinding.imvCharacter
+    val holeView                    get() = callOnInstallBinding.viewWithHole
+    val textView                    get() = callOnInstallBinding.txvSpeakBubble
+    val bottom                      get() = callOnInstallBinding.sbBottom
+    val libraryBaseBinding          get() = activity.mainActivityViewModel.libraryBaseViewModel.getChildFragBinding
+    val mainActivityBinding         get() = activity.mainActivityViewModel.mainActivityBinding
+    val libraryRv                   get() = libraryBaseBinding.vocabCardRV
+    val libRvFirstItem              get() = libraryRv[0]
+    val imvOpenMultiModeMenu        get() = libraryBaseBinding.topBarMultiselectBinding.imvChangeMenuVisibility
+    val frameLayMultiMenu           get() = libraryBaseBinding.frameLayMultiModeMenu
+    val imvBnvBtnAdd                get() = mainActivityBinding.bnvBinding.bnvImvAdd
+    val frameLayCreateFlashCard     get() = mainActivityBinding.bindingAddMenu.frameLayNewFlashcard
+    val frameLayCreateFolder        get() = mainActivityBinding.bindingAddMenu.frameLayNewFolder
+    val frameLayCreateCard          get() = mainActivityBinding.bindingAddMenu.frameLayNewCard
+    val frameLayEditFile            get() = mainActivityBinding.frameLayEditFile
+    val btnCloseEditFilePopUp       get() = mainActivityBinding.editFileBinding.btnClose
+    val btnCreateFile               get() = mainActivityBinding.editFileBinding.btnFinish
+    val frameLayMoveToThisItem      get() = libraryRv.findViewById<FrameLayout>(R.id.rv_base_frameLay_left)
+    val frameLayConfirmMove         get() = libraryBaseBinding.frameLayConfirmMove
+    val frameLayBnv                 get() = mainActivityBinding.frameBnv
+    val stringFlashCard             get() = activity.getString(R.string.flashcard)
+    val stringFolder                get() = activity.getString(R.string.folder)
+    val stringCard                  get() = activity.getString(R.string.card)
+    val linLayMenuMoveItem          get() = libraryBaseBinding.multiSelectMenuBinding.linLayMoveSelectedItems
+    val btnCommitMove               get() = libraryBaseBinding.confirmMoveToBinding.btnCommitMove
+    val selectedItemAsString        get() = getListFirstItemAsString(moveToViewModel.returnMovingItems())
+    val movableItemAsString         get() = getMovableItemTypeAsString(selectedItemAsString)
+    val notMovableItemAsString      get() = getNotMovableItemTypeAsString(selectedItemAsString)
 
-    private var _arrow :ImageView? = null
-    val arrow get() = _arrow!!
+    fun makeBottomMenuVisible(){
+        createFileViewModel.setBottomMenuVisible(true)
+        actionsBeforeEndGuideList.add{
+            createFileViewModel.setBottomMenuVisible(false)
+        }
+    }
+    fun makeEditFileVisible(onClickFrameLay:FrameLayout) {
+        onClickFrameLay.performClick()
+        actionsBeforeEndGuideList.add{
+            createFileViewModel.setEditFilePopUpVisible(false)
+        }
+    }
+    fun goNextAfterNewFileCreated(next: () -> Unit){
+        actionsBeforeEndGuideList.add{createFileViewModel.setDoAfterNewFileCreated{}}
+        createFileViewModel.setDoAfterNewFileCreated {
+            next()
+            createFileViewModel.setDoAfterNewFileCreated {  }
+        }
+    }
 
-    private var _conLayGoNext :ConstraintLayout? = null
-    val conLayGoNext get() = _conLayGoNext!!
+    fun getCreatingMenuItemFrameLay():View{
+        return when(moveToViewModel.getMovableFileStatus){
+            FileStatus.FLASHCARD_COVER -> frameLayCreateFlashCard
+            FileStatus.FOLDER   -> frameLayCreateFolder
+            else -> imvBnvBtnAdd
+        }
+    }
+    fun getListFirstItemAsString(list: List<Any>):String{
+        val rvFiles = list.filterIsInstance<File>()
+        val rvCards = list.filterIsInstance<Card>()
+        return if(rvFiles.isNotEmpty())
+            when(rvFiles[0].fileStatus){
+                FileStatus.FLASHCARD_COVER -> stringFlashCard
+                FileStatus.FOLDER           -> stringFlashCard
+                else ->""
+            }
+        else if(rvCards.isEmpty().not()){
+            stringCard
+        } else ""
+    }
+    fun getMovableItemTypeAsString(string: String):String{
+        return when (string){
+            stringFlashCard,stringFolder -> stringFolder
+            stringCard  -> stringFlashCard
+            else -> ""
+        }
+    }
+    fun getNotMovableItemTypeAsString(string: String):String{
+        return when (string){
+            stringFlashCard,stringFolder -> stringFlashCard
+            stringCard  -> stringFolder
+            else -> ""
+        }
+    }
 
-    private var _character:ImageView? = null
-    val character get() = _character!!
 
-    private var _holeView :HoleViewVer2? = null
-    val holeView get() = _holeView!!
+    fun setCharacterPosInCenter  () {
+        characterSizeDimenId = R.dimen.character_size_large
+        characterBorderSet = BorderSet()
+        characterOrientation = MyOrientationSet()
+    }
+    fun setCharacterTopLeftUnderRvFirstItem(){
+        characterSizeDimenId = R.dimen.character_size_middle
+        characterBorderSet = BorderSet(topSideSet = ViewAndSide(libRvFirstItem,MyOrientation.BOTTOM))
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.TOP,MyHorizontalOrientation.LEFT)
+    }
+    fun setCharacterBottomLeftAboveBnv(){
+        characterSizeDimenId = R.dimen.character_size_middle
+        characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayBnv,MyOrientation.TOP))
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
+    }
+    fun setCharacterBottomLeftAboveConfirmMovePopUp(){
+        characterSizeDimenId = R.dimen.character_size_middle
+        characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayConfirmMove,MyOrientation.TOP))
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
+    }
+    fun setSpbPosRightNextToCharacter(){
+        textFit = true
+        spbPosSimple = ViewAndSide(character,MyOrientation.RIGHT)
+    }
+    fun setSpbPosAboveCharacter(){
+        textFit = false
+        spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
+    }
+    fun setSpbPosAboveCharacterUnderMenuFrameLay(){
+        textFit = false
+        spbBorderSet = BorderSet(bottomSideSet = ViewAndSide(character,MyOrientation.TOP),
+            topSideSet = ViewAndSide(frameLayMultiMenu,MyOrientation.BOTTOM))
+        spbOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.MIDDLE)
+    }
+    fun goNextWhenLongClicked(next:()->Unit){
+        actionsBeforeEndGuideList.add { libraryViewModel.setDoAfterLongClick(false) {} }
+        libraryViewModel.setDoAfterLongClick(true){
+            actionsBeforeEndGuideList.add { libraryViewModel.setMultipleSelectMode(false) }
+            next()
+        }
+    }
+    fun goNextWhenSwiped(next:()->Unit){
+        actionsBeforeEndGuideList.add { libraryViewModel.setDoOnSwipeEnd(false) {} }
+        libraryViewModel.setDoOnSwipeEnd(true, )
+        { actionsBeforeEndGuideList.add { libraryViewModel.makeAllUnSwiped() }
+            next()}
+    }
+    fun goNextWhenDeletePopUpVisible(next: () -> Unit){
+        actionsBeforeEndGuideList.add{deletePopUpViewModel.setDoOnPopUpVisibilityChanged(false){} }
+        deletePopUpViewModel.setDoOnPopUpVisibilityChanged(true)
+        {   actionsBeforeEndGuideList.add { deletePopUpViewModel.setConfirmDeleteVisible(false) }
+            next()}
+    }
+    fun goNextWhenDeletePopUpWithChildrenVisible(next: () -> Unit){
+        actionsBeforeEndGuideList.add{deletePopUpViewModel.setDoOnPopUpVisibilityChanged(false){} }
+        deletePopUpViewModel.setDoOnPopUpVisibilityChanged(true)
+        {   actionsBeforeEndGuideList.add { deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false) }
+            next()}
+    }
+    fun makeOnlySwipeActive(){
+        actionsBeforeEndGuideList.add{libraryViewModel.setOnlySwipeActive(false)}
+        libraryViewModel.setOnlySwipeActive(true)
+    }
+    fun makeOnlyLongClickActive(){
+        actionsBeforeEndGuideList.add{libraryViewModel.setOnlyLongClickActive(false)}
+        libraryViewModel.setOnlyLongClickActive(true)
+    }
+    fun animateCharacterAndSpbPos(stringId:Int, characterPos:()->Unit,spbPos:()->Unit,doOnEnd:()->Unit){
+        characterPos()
+        doAfterCharacterPosChanged = {
+            spbPos()
+            getSpbPosAnim(getString(stringId)).start()
+        }
+        characterPosChangeAnimDoOnEnd ={doOnEnd()}
+        getCharacterPosChangeAnim().start()
 
-    private var _textView:TextView? = null
-    val textView get() = _textView!!
 
-    private var _bottom:View? = null
-    val bottom get() = _bottom!!
+    }
+    fun animateSpbNoChange(stringId: Int,doOnEnd: () -> Unit){
+        spbPosAnimDoOnEnd = {doOnEnd()}
+        getSpbPosAnim(getString(stringId)).start()
+    }
+    fun animateCharacterMiddleSpbTop(stringId: Int,doOnEnd: () -> Unit){
+        animateCharacterAndSpbPos(stringId,
+            {setCharacterPosInCenter()},
+            {setSpbPosAboveCharacter()},
+            {doOnEnd()})
+    }
+    fun animateCharacterRvBottomSpbRight(stringId: Int,doOnEnd: () -> Unit){
+        animateCharacterAndSpbPos(stringId,
+            {setCharacterTopLeftUnderRvFirstItem()},
+            {setSpbPosRightNextToCharacter()},
+            {doOnEnd()})
+    }
 
     val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
     private val touchAreaTag = 1
@@ -101,6 +283,7 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
     }
 
     fun setCharacterPos(){
+        changeViewVisibility(character,false)
         setCharacterSize()
         setPositionByMargin(ViewAndPositionData(character,characterBorderSet,characterOrientation))
     }
@@ -133,7 +316,7 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
 
     }
     fun onClickGoNext(func: () -> Unit){
-        callOnInstallBinding.conLayGuideGoNext.setOnClickListener{
+        conLayGoNext.setOnClickListener{
             makeTouchAreaGone()
             func()
             it.setOnClickListener(null)
@@ -195,33 +378,20 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
             layoutParams.height = size
         }
     }
-    private fun setConfirmEndGuideCL(){
-        callOnInstallBinding.confirmEndGuideBinding.apply {
-            setClickListeners(arrayOf(
-                btnCancelEnd,
-                btnCloseConfirmEnd,
-                btnCommitEnd),GuideEndPopUpCL())
-        }
-    }
-    private fun refreshInstallGuide(){
-        activity._callOnInstallBinding = CallOnInstallBinding.inflate(activity.layoutInflater)
-        _callOnInstallBinding = activity.callOnInstallBinding
-        setLateInitVars()
-        setConfirmEndGuideCL()
-    }
-    fun callOnFirst(){
-        frameLay.removeAllViews()
-        refreshInstallGuide()
-        frameLay.addView(callOnInstallBinding.root)
-        activity.mainActivityViewModel.setGuideVisibility(true)
+    fun callOnFirst(guide: Guides){
+        makeHereTouchable(null)
         changeMulVisibility(arrayOf(character,arrow,textView,bottom),false)
         holeView.initActivity(activity)
         viewUnderSpotInGuide = null
         setCharacterPos()
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
 
-        getCharacterVisibilityAnim(true).start()
-
+        when(guide){
+            Guides.CreateItems  ->CreateGuide(this).guide1()
+            Guides.MoveItems    ->MoveGuide(this).guide1()
+            Guides.EditItems    ->EditGuide(this).greeting1()
+            Guides.DeleteItems  ->DeleteGuide(this).guide1()
+        }
     }
     private fun getArrowDirectionFromArrowPos(arrowPosition: MyOrientation):MyOrientation{
         return when(arrowPosition){
@@ -280,14 +450,14 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
         }
     }
     fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
-        guideParentConLay.setOnClickListener(null)
+//        guideParentConLay.setOnClickListener(null)
         addViewToConLay(view).setOnClickListener {
             makeTouchAreaGone()
             func()
         }
     }
     fun addViewToConLay(view:View):View{
-        guideParentConLay.setOnClickListener(null)
+//        guideParentConLay.setOnClickListener(null)
         val a = TouchAreaBinding.inflate(activity.layoutInflater)
         a.touchView.tag = 1
 
@@ -369,12 +539,6 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
             it.key.viewTreeObserver.removeOnGlobalLayoutListener(it.value)
         }
     }
-    fun editGuide(){
-        EditGuide(this).greeting1()
-    }
-    fun deleteGuide(){
-        DeleteGuide(this).guide1()
-    }
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
     }
@@ -416,15 +580,16 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
             rightMargin = spbMargin)
     }
     private fun setLateInitVars(){
-        callOnInstallBinding.apply {
-            _arrow = imvFocusArrow
-            _character = imvCharacter
-            _holeView = viewWithHole
-            _textView = txvSpeakBubble
-            _bottom = sbBottom
-            _guideParentConLay = root
-            _conLayGoNext = conLayGuideGoNext
-        }
+//        callOnInstallBinding = activity.mainActivityViewModel.guideViewModel.getGuideBinding
+//        callOnInstallBinding.apply {
+//            guideParentConLay = root
+//            arrow             = imvFocusArrow
+//            conLayGoNext      = conLayGuideGoNext
+//            character         = imvCharacter
+//            holeView          = viewWithHole
+//            textView          = txvSpeakBubble
+//            bottom            = sbBottom
+//        }
     }
     fun onClickBtnCommitEndGuide(){
         actionsBeforeEndGuideList.onEach {
@@ -436,16 +601,16 @@ class GuideActions(val activity:MainActivity, private val frameLay:FrameLayout){
             activity.mainActivityViewModel.setGuideVisibility(false)
         }
     }
-    val actionsBeforeEndGuideList: MutableList<()->Unit> = mutableListOf()
-    inner class GuideEndPopUpCL:View.OnClickListener{
-        override fun onClick(v: View?) {
-            callOnInstallBinding.confirmEndGuideBinding.apply {
-                when(v){
-                    btnCancelEnd,btnCloseConfirmEnd -> activity.mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-                    btnCommitEnd                    -> onClickBtnCommitEndGuide()
-                }
-            }
-        }
-    }
+    val actionsBeforeEndGuideList: MutableList<()->Unit> get() = activity.mainActivityViewModel.guideViewModel.actionsBeforeEndGuideList
+//    inner class GuideEndPopUpCL:View.OnClickListener{
+//        override fun onClick(v: View?) {
+//            callOnInstallBinding.confirmEndGuideBinding.apply {
+//                when(v){
+//                    btnCancelEnd,btnCloseConfirmEnd -> activity.mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
+//                    btnCommitEnd                    -> onClickBtnCommitEndGuide()
+//                }
+//            }
+//        }
+//    }
 
 }

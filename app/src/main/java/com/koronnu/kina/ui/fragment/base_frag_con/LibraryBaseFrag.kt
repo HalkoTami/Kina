@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -136,13 +137,15 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
             }
         }
 
-
         setLateInitVars()
         addClickListeners()
 
         libraryBaseViewModel.setLibraryNavCon(libNavCon)
         mainViewModel.setChildFragmentStatus(MainFragment.Library)
         mainViewModel.setBnvVisibility(true)
+        libraryBaseViewModel.setChooseFileMoveToViewModel(chooseFileMoveToViewModel)
+        libraryBaseViewModel.setDeletePopUpViewModel(deletePopUpViewModel)
+        libraryBaseViewModel.observeLiveDataInFragment(viewLifecycleOwner)
 
         libraryBaseViewModel.reorderedLeftItems.observe(viewLifecycleOwner,reorderedLeftItemsObserver)
         libraryBaseViewModel.parentFragment.observe(viewLifecycleOwner,libraryFragObserver)

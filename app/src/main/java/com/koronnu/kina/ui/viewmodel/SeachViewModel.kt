@@ -2,17 +2,28 @@ package com.koronnu.kina.ui.viewmodel
 
 import android.content.Context
 import android.widget.EditText
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.koronnu.kina.actions.hideKeyBoard
 import com.koronnu.kina.actions.showKeyBoard
+import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 
 class SearchViewModel(private val repository: MyRoomRepository):ViewModel() {
+
+    companion object{
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
+                val repository = application.repository
+                return SearchViewModel(repository) as T
+            }
+
+        }
+    }
     fun getCardsByWords(search:String): LiveData<List<Card>> = repository.searchCardsByWords(search).asLiveData()
     fun getFilesByWords(search:String): LiveData<List<File>> = repository.searchFilesByWords(search).asLiveData()
     private val _matchedCards = MutableLiveData<List<Card>>()
@@ -58,6 +69,13 @@ class SearchViewModel(private val repository: MyRoomRepository):ViewModel() {
     fun returnSearchModeActive():Boolean{
         return _searchModeActive.value ?:false
     }
+
+    fun doOnBackPress(): Boolean {
+        if(!returnSearchModeActive()) return false
+        setSearchModeActive(false)
+        return true
+    }
+
     val searchModeActive:LiveData<Boolean> = _searchModeActive
 
 

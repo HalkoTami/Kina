@@ -17,6 +17,27 @@ import kotlin.math.absoluteValue
 
 class Animation {
 
+    fun slideInRightAnim(view: View,):ValueAnimator{
+        val start = 1000f
+        val end = 0f
+        return ValueAnimator.ofFloat(start,end).apply {
+            addUpdateListener {
+                view.translationX = it.animatedValue as Float
+            }
+            doOnStart { changeViewVisibility(view,true) }
+        }
+    }
+    fun slideOutRightAnim(view: View):ValueAnimator{
+        val start = 0f
+        val end = 1000f
+        return ValueAnimator.ofFloat(start,end).apply {
+            addUpdateListener {
+                view.translationX = it.animatedValue as Float
+            }
+            doOnEnd { changeViewVisibility(view,false) }
+        }
+    }
+
     fun appearAlphaAnimation(view :View, visible:Boolean,defaultAlpha:Float,doOnEnd: () -> Unit): ValueAnimator {
 
         val appear =ValueAnimator.ofFloat(0f,defaultAlpha)

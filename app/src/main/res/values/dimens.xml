@@ -22,5 +22,16 @@
     <dimen name="whole_spb_margin">5dp</dimen>
     <dimen name="spb_bottom_rec_height">10dp</dimen>
     <dimen name="spbTextView_margin">5dp</dimen>
+    <dimen name="background_PopupJumpToGuide_rectangle_radius">15dp</dimen>
+    <dimen name="background_PopupJumpToGuide_question_icon_width">10dp</dimen>
+    <dimen name="background_PopupJumpToGuide_question_icon_height">@dimen/background_PopupJumpToGuide_question_icon_width</dimen>
+    <dimen name="background_PopupJumpToGuide_questionIconAndCharacterHead_widthDiff">4dp</dimen>
+    <dimen name="background_PopupJumpToGuide_character_head_width">14dp</dimen>
+    <dimen name="background_PopupJumpToGuide_character_head_height">@dimen/background_PopupJumpToGuide_character_head_width</dimen>
+    <dimen name="background_PopupJumpToGuide_rectangle_padding">5dp</dimen>
+    <dimen name="background_PopupJumpToGuide_character_paddingLeft">@dimen/background_PopupJumpToGuide_rectangle_padding</dimen>
+    <dimen name="background_PopupJumpToGuide_questionIcon_paddingLeft"> </dimen>
+
+
 
 </resources>

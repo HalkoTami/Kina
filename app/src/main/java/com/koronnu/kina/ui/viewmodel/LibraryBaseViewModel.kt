@@ -1,13 +1,18 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.view.View
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
-import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
-import com.koronnu.kina.customClasses.enumClasses.LibRVState
-import com.koronnu.kina.customClasses.enumClasses.LibraryTopBarMode
-import com.koronnu.kina.customClasses.enumClasses.ListAttributes
+import com.google.errorprone.annotations.Var
+import com.koronnu.kina.actions.setClickListeners
+import com.koronnu.kina.application.RoomApplication
+import com.koronnu.kina.customClasses.enumClasses.*
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import com.koronnu.kina.customClasses.normalClasses.ParentFileAncestors
+import com.koronnu.kina.databinding.LibItemTopBarMenuBinding
+import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
+import com.koronnu.kina.databinding.LibraryFragTopBarMultiselectModeBinding
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 
@@ -17,15 +22,91 @@ import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFragDire
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFragDirections
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFolderFragDirections
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
+import com.koronnu.kina.ui.listener.libraryBaseFragment.PopUpJumpToGuideCL
 import kotlinx.coroutines.cancel
 class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
+
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var searchViewModel:SearchViewModel
+    private lateinit var popUpJumpToGuideViewModel:PopUpJumpToGuideViewModel
+    private lateinit var moveToViewModel :ChooseFileMoveToViewModel
+    val chooseFileMoveToViewModel get() = moveToViewModel
+    val guideOptionMenuViewModel get() = mainViewModel.guideOptionMenuViewModel
+
     /**
      *
      */
+    companion object{
+        fun getFactory(mainViewModel: MainViewModel,
+                       viewModelStoreOwner: ViewModelStoreOwner): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
+                val repository = application.repository
+                val libraryBaseViewModel = LibraryBaseViewModel(repository)
+                val searchViewModel = ViewModelProvider(viewModelStoreOwner,SearchViewModel.Factory)[SearchViewModel::class.java]
+                val moveToViewModel = ViewModelProvider(viewModelStoreOwner,ChooseFileMoveToViewModel.Factory)[ChooseFileMoveToViewModel::class.java]
+                libraryBaseViewModel.mainViewModel = mainViewModel
+                libraryBaseViewModel.popUpJumpToGuideViewModel = mainViewModel.popUpJumpToGuideViewModel
+                libraryBaseViewModel.searchViewModel = searchViewModel
+                libraryBaseViewModel.moveToViewModel = moveToViewModel
+                return libraryBaseViewModel as T
+            }
+        }
+    }
+
+
+
+    private fun setChildFragBindingClickListeners(){
+//        setPopUpJumpToGuideCL()
+    }
+    private val childFragBindingObserver = Observer<LibraryChildFragWithMulModeBaseBinding> {
+        setChildFragBindingClickListeners()
+    }
+
+
+    fun observeLiveDataInFragment(lifecycleOwner: LifecycleOwner){
+        popUpJumpToGuideViewModel.observePopUpVisibility(lifecycleOwner)
+        childFragBinding.observe(lifecycleOwner,childFragBindingObserver)
+    }
+    private val _childFragBinding= MutableLiveData<LibraryChildFragWithMulModeBaseBinding>()
+    fun setChildFragBinding(childFragBinding: LibraryChildFragWithMulModeBaseBinding){
+        _childFragBinding.value = childFragBinding
+        doAfterSetChildFragBinding()
+    }
+    val childFragBinding :LiveData<LibraryChildFragWithMulModeBaseBinding> = _childFragBinding
+
+
+    private fun doAfterSetChildFragBinding(){
+        setMultiModeTopBarBinding(getChildFragBinding.topBarMultiselectBinding)
+        setMultiModeMenuBinding(getChildFragBinding.multiSelectMenuBinding)
+    }
+     val getChildFragBinding get() = _childFragBinding.value!!
+    private val _multiModeMenuBinding= MutableLiveData<LibItemTopBarMenuBinding>()
+    private fun setMultiModeMenuBinding(multiModeMenuBinding: LibItemTopBarMenuBinding){
+        _multiModeMenuBinding.value = multiModeMenuBinding
+    }
+    val getMultiModeMenuBinding get() = _multiModeMenuBinding.value!!
+    private val _multiModeTopBarBinding= MutableLiveData<LibraryFragTopBarMultiselectModeBinding>()
+    private fun setMultiModeTopBarBinding(multiModeTopBarBinding: LibraryFragTopBarMultiselectModeBinding){
+        _multiModeTopBarBinding.value = multiModeTopBarBinding
+    }
+    val getMultiModeTopBarBinding get() = _multiModeTopBarBinding.value!!
+    private val _chooseFileMoveToViewModel= MutableLiveData<ChooseFileMoveToViewModel>()
+    fun setChooseFileMoveToViewModel(chooseFileMoveToViewModel: ChooseFileMoveToViewModel){
+        _chooseFileMoveToViewModel.value = chooseFileMoveToViewModel
+    }
+    private val getChooseFileMoveToViewModel get() = _chooseFileMoveToViewModel.value!!
+    private val _deletePopUpViewModel= MutableLiveData<DeletePopUpViewModel>()
+    fun setDeletePopUpViewModel(deletePopUpViewModel: DeletePopUpViewModel){
+        _deletePopUpViewModel.value = deletePopUpViewModel
+    }
+    private val getDeletePopUpViewModel get() = _deletePopUpViewModel.value!!
     private val _parentFragment= MutableLiveData<LibraryFragment>()
     fun setLibraryFragment(fragment: LibraryFragment){
         _parentFragment.value = fragment
     }
+
     fun returnLibraryFragment(): LibraryFragment?{
         return _parentFragment.value
     }
@@ -59,6 +140,11 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun returnLibraryNavCon(): NavController?{
         return _libraryNavCon.value
     }
+    private val _selectedItemParent  = MutableLiveData<File?>()
+    fun setSelectedItemParent(parentFile: File?){
+        _selectedItemParent.value = parentFile
+    }
+    val getSelectedItemParent = _selectedItemParent.value
 
 //    Fragment作成時に毎回呼び出す
     fun onCreate(){
@@ -129,6 +215,10 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private val _upDateSelectedItems = MutableLiveData<List<Any>>()
     private fun setUpdatedSelectedItems(list:List<Any>){
         _upDateSelectedItems.value = list
+        doAfterSetUpdatedSelectedItems()
+    }
+    private fun doAfterSetUpdatedSelectedItems(){
+        getChooseFileMoveToViewModel.setMovingItems(getUpdatedSelectedItems)
     }
     val getUpdatedSelectedItems get() = _upDateSelectedItems.value ?: mutableListOf()
     private val _selectedItems = MutableLiveData<List<Any>>()
@@ -444,23 +534,49 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
 //    －－－－－－－－
 //    －－－－ファイル移動－－－－
+    fun onClickImvChangeMultiMenuVisibility(){
+        setMultiMenuVisibility(returnMultiMenuVisibility().not())
+    }
+    fun onClickCloseMultiMode(){
+        setMultipleSelectMode(false)
+    }
+    fun onClickMultiMenuMakeAllSelected(){
+        if(getAllRVItemSelected().not())
+            changeAllRVSelectedStatus(true)
+    }
     fun onClickMoveInBoxCardToFlashCard(){
         setMultipleSelectMode(true)
+    }
+    fun onClickMultiMenuMoveSelectedItemToFile(){
+        val movableFileStatus = when(returnLibraryFragment()){
+            LibraryFragment.Home,LibraryFragment.Folder-> FileStatus.FOLDER
+            LibraryFragment.InBox,LibraryFragment.FlashCardCover -> FileStatus.FLASHCARD_COVER
+            else -> throw IllegalArgumentException()
+        }
+        getChooseFileMoveToViewModel.setMovableFileStatus(movableFileStatus)
+        getChooseFileMoveToViewModel.setMovingItemsParentFileId(returnParentFile()?.fileId)
+        openChooseFileMoveTo(null)
+    }
+    fun onClickMultiMenuDeleteSelectedItems(){
+        getDeletePopUpViewModel.setDeletingItem(returnSelectedItems().toMutableList())
+        getDeletePopUpViewModel.setConfirmDeleteVisible(true)
     }
     fun openChooseFileMoveTo(file:File?){
         val a  = LibraryChooseFileMoveToFragDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))
        returnLibraryNavCon()?.navigate(a)
     }
-    private val _doOnSwipeEnd = MutableLiveData<()->Unit>()
+    private var _doOnSwipeEnd :()->Unit = {}
+
     fun setDoOnSwipeEnd(onlyOnce:Boolean,unit:()->Unit){
-        val unitBefore = _doOnSwipeEnd.value
+        val unitBefore = _doOnSwipeEnd
         val finalUnit = if(onlyOnce){
             { unit()
-                _doOnSwipeEnd.value = unitBefore ?:{} }
+                _doOnSwipeEnd= unitBefore  }
         } else unit
-        _doOnSwipeEnd.value = finalUnit
+        _doOnSwipeEnd = finalUnit
     }
-    val doOnSwipeEnd:()->Unit get() = _doOnSwipeEnd.value ?:{}
+    val doOnSwipeEnd:()->Unit get() = _doOnSwipeEnd
+
 
 
 
@@ -470,6 +586,32 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
+    }
+
+    fun doOnBackPress(): Boolean {
+        val isActive = mainViewModel.returnFragmentStatus()?.now == MainFragment.Library
+        if(!isActive) return false
+        val isHomeFragment = (returnLibraryFragment()==LibraryFragment.Home)
+        if(isHomeFragment
+            &&!searchViewModel.doOnBackPress()
+            &&!returnMultiSelectMode()
+            &&!returnMultiMenuVisibility()
+            &&!returnLeftSwipedItemExists()) return false
+        if(returnLeftSwipedItemExists()) {
+            makeAllUnSwiped()
+            return true
+        }
+        if(returnMultiSelectMode()){
+            if(returnMultiMenuVisibility())
+                setMultiMenuVisibility(false)
+            else setMultipleSelectMode(false)
+            return true
+        }
+        if(!isHomeFragment){
+            returnLibraryNavCon()?.popBackStack()
+            return true
+        }
+        return true
     }
 
 }

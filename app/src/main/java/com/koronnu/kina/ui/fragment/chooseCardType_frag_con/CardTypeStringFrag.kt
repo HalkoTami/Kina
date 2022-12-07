@@ -35,7 +35,7 @@ class CardTypeStringFrag : Fragment() {
     ): View {
         _binding = CreateCardFragStringFragBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
+        createCardViewModel.setCreateCardStringBinding(binding)
         createCardViewModel.setCardStatus(CardStatus.STRING)
         binding.apply {
             binding.edtFrontTitle.visibility = View.VISIBLE

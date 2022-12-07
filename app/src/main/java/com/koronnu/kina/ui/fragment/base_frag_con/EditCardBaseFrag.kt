@@ -51,6 +51,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             _binding =  CreateCardFragMainBinding.inflate(inflater, container, false)
             val a = childFragmentManager.findFragmentById(binding.createCardFragCon.id) as NavHostFragment
             cardNavCon = a.navController
+            createCardViewModel.setCreateCardBaseBinding(binding)
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
         }
         fun addClickListeners(){
