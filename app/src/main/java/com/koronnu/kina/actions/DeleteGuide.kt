@@ -172,8 +172,8 @@ class DeleteGuide(val actions: GuideActions){
     private fun guide16(){
         actions.apply {
             animateCharacterAndSpbPos(R.string.guide_spb_delete_15,
-                {characterOrientation = MyOrientationSet() },
-                {setSpbPosAboveCharacter()},
+                {setCharacterPosInCenter() },
+                {setSpbPosAboveCharacterUnderMenuFrameLay()},
                 {onClickGoNext { guide17() }})
         }
     }
@@ -189,7 +189,7 @@ class DeleteGuide(val actions: GuideActions){
             setArrow(MyOrientation.BOTTOM,imvMultiModeMenu)
             animateSpbNoChange(R.string.guide_spb_delete_16prt2)
             {onClickGoNext { guide19() }}
-            makeHereTouchable(imvMultiModeMenu)
+            goNextOnClickTouchArea(imvMultiModeMenu){guide19()}
         }
     }
     private fun guide19(){
@@ -205,6 +205,7 @@ class DeleteGuide(val actions: GuideActions){
     private fun guide20(){
         actions.apply {
             activity.libraryViewModel.setMultiMenuVisibility(false)
+            getArrowVisibilityAnim(false).start()
             removeHole()
             animateCharacterMiddleSpbTop(R.string.guide_spb_delete_18)
             { onClickGoNext{guide21()}  }

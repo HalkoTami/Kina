@@ -8,7 +8,6 @@ import android.view.ViewTreeObserver
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
@@ -29,52 +28,55 @@ class GuideActions(val activity:MainActivity,){
 
     val callOnInstallBinding get() = activity.mainActivityViewModel.guideViewModel.getGuideBinding
     val libraryViewModel = activity.mainActivityViewModel.libraryBaseViewModel
+    val mainViewModel = activity.mainActivityViewModel
     val moveToViewModel  = libraryViewModel.chooseFileMoveToViewModel
     val createFileViewModel = activity.mainActivityViewModel.editFileViewModel
     val guideViewModel = activity.mainActivityViewModel.guideViewModel
     val createCardViewModel = activity.createCardViewModel
     val deletePopUpViewModel = activity.deletePopUpViewModel
-    val edtCardFrontTitle       get() =activity.findViewById<EditText>(R.id.edt_front_title)
-    val edtCardBackTitle        get() =activity.findViewById<EditText>(R.id.edt_back_title)
-    val edtCardBackContent      get() =activity.findViewById<EditText>(R.id.edt_back_content)
-    val edtCardFrontContent     get() = activity.findViewById<EditText>(R.id.edt_front_content)
-    val linLayCreateCardNavigation get() =  activity.findViewById<ConstraintLayout>(R.id.lay_navigate_buttons)
-    val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
-    val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
-    val createCardNavFlipNext       =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_next)
-    val createCardNavFlipPrevious   =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_previous)
-    val editText                get() =  activity.findViewById<EditText>(R.id.edt_file_title)
-    val guideParentConLay       get() =  callOnInstallBinding.root
-    val arrow                   get() = callOnInstallBinding.imvFocusArrow
-    val conLayGoNext            get() = callOnInstallBinding.conLayGuideGoNext
-    val character               get() =  callOnInstallBinding.imvCharacter
-    val holeView                get() = callOnInstallBinding.viewWithHole
-    val textView                get() = callOnInstallBinding.txvSpeakBubble
-    val bottom                  get() = callOnInstallBinding.sbBottom
-    val libraryBaseBinding      get() = activity.mainActivityViewModel.libraryBaseViewModel.getChildFragBinding
-    val mainActivityBinding     get() = activity.mainActivityViewModel.mainActivityBinding
-    val libraryRv               get() = libraryBaseBinding.vocabCardRV
-    val libRvFirstItem          get() = libraryRv[0]
-    val imvOpenMultiModeMenu    get() = libraryBaseBinding.topBarMultiselectBinding.imvChangeMenuVisibility
-    val frameLayMultiMenu       get() = libraryBaseBinding.frameLayMultiModeMenu
-    val imvBnvBtnAdd            get() = mainActivityBinding.bnvBinding.bnvImvAdd
-    val frameLayCreateFlashCard get() = mainActivityBinding.bindingAddMenu.frameLayNewFlashcard
-    val frameLayCreateFolder    get() = mainActivityBinding.bindingAddMenu.frameLayNewFolder
-    val frameLayCreateCard      get() = mainActivityBinding.bindingAddMenu.frameLayNewCard
-    val frameLayEditFile        get() = mainActivityBinding.frameLayEditFile
-    val btnCloseEditFilePopUp   get() = mainActivityBinding.editFileBinding.btnClose
-    val btnCreateFile           get() = mainActivityBinding.editFileBinding.btnFinish
-    val frameLayMoveToThisItem  get() = libraryRv.findViewById<FrameLayout>(R.id.rv_base_frameLay_left)
-    val frameLayConfirmMove     get() = libraryBaseBinding.frameLayConfirmMove
-    val frameLayBnv             get() = mainActivityBinding.frameBnv
-    val stringFlashCard         get() = activity.getString(R.string.flashcard)
-    val stringFolder            get() = activity.getString(R.string.folder)
-    val stringCard              get() = activity.getString(R.string.card)
-    val linLayMenuMoveItem      get() = libraryBaseBinding.multiSelectMenuBinding.linLayMoveSelectedItems
-    val btnCommitMove           get() = libraryBaseBinding.confirmMoveToBinding.btnCommitMove
-    val selectedItemAsString    get() = getListFirstItemAsString(moveToViewModel.returnMovingItems())
-    val movableItemAsString     get() = getMovableItemTypeAsString(selectedItemAsString)
-    val notMovableItemAsString  get() = getNotMovableItemTypeAsString(selectedItemAsString)
+    val createCardStringCardBinding get() = createCardViewModel.createCardFragStringFragBinding
+    val createCardFragMainBinding   get() = createCardViewModel.createCardFragMainBinding
+    val edtCardFrontTitle           get() = createCardStringCardBinding.edtFrontTitle
+    val edtCardBackTitle            get() = createCardStringCardBinding.edtBackTitle
+    val edtCardBackContent          get() = createCardStringCardBinding.edtBackContent
+    val edtCardFrontContent         get() = createCardStringCardBinding.edtFrontContent
+    val linLayCreateCardNavigation  get() = createCardFragMainBinding.layNavigateButtons
+    val createCardInsertNext        get() = createCardFragMainBinding.btnInsertNext
+    val createCardInsertPrevious    get() = createCardFragMainBinding.btnInsertPrevious
+    val createCardNavFlipNext       get() = createCardFragMainBinding.btnNext
+    val createCardNavFlipPrevious   get() = createCardFragMainBinding.btnPrevious
+    val editText                    get() = mainActivityBinding.editFileBinding.edtFileTitle
+    val guideParentConLay           get() =  callOnInstallBinding.root
+    val arrow                       get() = callOnInstallBinding.imvFocusArrow
+    val conLayGoNext                get() = callOnInstallBinding.conLayGuideGoNext
+    val character                   get() =  callOnInstallBinding.imvCharacter
+    val holeView                    get() = callOnInstallBinding.viewWithHole
+    val textView                    get() = callOnInstallBinding.txvSpeakBubble
+    val bottom                      get() = callOnInstallBinding.sbBottom
+    val libraryBaseBinding          get() = activity.mainActivityViewModel.libraryBaseViewModel.getChildFragBinding
+    val mainActivityBinding         get() = activity.mainActivityViewModel.mainActivityBinding
+    val libraryRv                   get() = libraryBaseBinding.vocabCardRV
+    val libRvFirstItem              get() = libraryRv[0]
+    val imvOpenMultiModeMenu        get() = libraryBaseBinding.topBarMultiselectBinding.imvChangeMenuVisibility
+    val frameLayMultiMenu           get() = libraryBaseBinding.frameLayMultiModeMenu
+    val imvBnvBtnAdd                get() = mainActivityBinding.bnvBinding.bnvImvAdd
+    val frameLayCreateFlashCard     get() = mainActivityBinding.bindingAddMenu.frameLayNewFlashcard
+    val frameLayCreateFolder        get() = mainActivityBinding.bindingAddMenu.frameLayNewFolder
+    val frameLayCreateCard          get() = mainActivityBinding.bindingAddMenu.frameLayNewCard
+    val frameLayEditFile            get() = mainActivityBinding.frameLayEditFile
+    val btnCloseEditFilePopUp       get() = mainActivityBinding.editFileBinding.btnClose
+    val btnCreateFile               get() = mainActivityBinding.editFileBinding.btnFinish
+    val frameLayMoveToThisItem      get() = libraryRv.findViewById<FrameLayout>(R.id.rv_base_frameLay_left)
+    val frameLayConfirmMove         get() = libraryBaseBinding.frameLayConfirmMove
+    val frameLayBnv                 get() = mainActivityBinding.frameBnv
+    val stringFlashCard             get() = activity.getString(R.string.flashcard)
+    val stringFolder                get() = activity.getString(R.string.folder)
+    val stringCard                  get() = activity.getString(R.string.card)
+    val linLayMenuMoveItem          get() = libraryBaseBinding.multiSelectMenuBinding.linLayMoveSelectedItems
+    val btnCommitMove               get() = libraryBaseBinding.confirmMoveToBinding.btnCommitMove
+    val selectedItemAsString        get() = getListFirstItemAsString(moveToViewModel.returnMovingItems())
+    val movableItemAsString         get() = getMovableItemTypeAsString(selectedItemAsString)
+    val notMovableItemAsString      get() = getNotMovableItemTypeAsString(selectedItemAsString)
 
     fun makeBottomMenuVisible(){
         createFileViewModel.setBottomMenuVisible(true)

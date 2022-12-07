@@ -88,6 +88,7 @@ class CreateGuide(val actions: GuideActions ){
         actions.apply {
             viewUnderSpotInGuide = null
             libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
+            actionsBeforeEndGuideList.add { libraryViewModel.returnLibraryNavCon()?.popBackStack() }
             arrowVisibilityAnimDoOnEnd= { onClickGoNext{guide9()}}
             getArrowVisibilityAnim(false).start()
         }
@@ -122,6 +123,7 @@ class CreateGuide(val actions: GuideActions ){
         actions.apply {
             viewUnderSpotInGuide = null
             createCardViewModel.onClickAddNewCardBottomBar()
+            actionsBeforeEndGuideList.add { mainViewModel.returnMainActivityNavCon()?.popBackStack() }
             onClickGoNext{guide13()}
         }
 

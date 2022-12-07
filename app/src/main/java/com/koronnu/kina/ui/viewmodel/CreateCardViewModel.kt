@@ -14,6 +14,8 @@ import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
+import com.koronnu.kina.databinding.CreateCardFragMainBinding
+import com.koronnu.kina.databinding.CreateCardFragStringFragBinding
 import kotlinx.coroutines.launch
 
 
@@ -21,6 +23,16 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
 
 
+    private var _createCardStringBinding :CreateCardFragStringFragBinding? = null
+    fun setCreateCardStringBinding(createCardFragStringFragBinding: CreateCardFragStringFragBinding){
+        _createCardStringBinding = createCardFragStringFragBinding
+    }
+    val createCardFragStringFragBinding:CreateCardFragStringFragBinding get() = _createCardStringBinding!!
+    private var _createCardMainBinding :CreateCardFragMainBinding? = null
+    fun setCreateCardBaseBinding(createCardFragMainBinding: CreateCardFragMainBinding){
+        _createCardMainBinding = createCardFragMainBinding
+    }
+    val createCardFragMainBinding:CreateCardFragMainBinding get() = _createCardMainBinding!!
 
     private val _mainActivityNavCon = MutableLiveData<NavController>()
     fun setMainActivityNavCon(navController: NavController){
