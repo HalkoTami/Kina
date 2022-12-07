@@ -4,5 +4,4 @@
     android:layout_height="1dp"
     android:id="@+id/touch_view"
     >
-
 </View>

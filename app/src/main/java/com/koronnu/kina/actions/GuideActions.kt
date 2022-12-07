@@ -5,10 +5,8 @@ import android.animation.ValueAnimator
 import android.app.ActionBar.LayoutParams
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -25,9 +23,9 @@ import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
 
 
-class GuideActions(val activity:MainActivity,){
+class GuideActions(val activity:MainActivity){
 
-    val callOnInstallBinding get() = activity.mainActivityViewModel.guideViewModel.getGuideBinding
+    private val callOnInstallBinding get() = activity.mainActivityViewModel.guideViewModel.getGuideBinding
     val libraryViewModel = activity.mainActivityViewModel.libraryBaseViewModel
     val mainViewModel = activity.mainActivityViewModel
     val moveToViewModel  = libraryViewModel.chooseFileMoveToViewModel
@@ -35,15 +33,15 @@ class GuideActions(val activity:MainActivity,){
     val guideViewModel = activity.mainActivityViewModel.guideViewModel
     val createCardViewModel = activity.createCardViewModel
     val deletePopUpViewModel = activity.deletePopUpViewModel
-    val btnDeleteFile                     get() = libRvFirstItem.findViewById<ImageView>(R.id.btn_delete)
+    val btnDeleteFile                     get() = libRvFirstItem.findViewById<ImageView>(R.id.btn_delete)!!
     val frameLayConfirmDelete             get() =libraryBaseBinding.frameLayConfirmDelete
     val frameLayConfirmDeleteWithChildren get() = libraryBaseBinding.frameLayConfirmDeleteWithChildren
     val btnCommitDeleteWithChildren       get() = libraryBaseBinding.confirmDeleteChildrenPopUpBinding.btnDeleteAllChildren
     val btnDeleteOnlyParent               get() = libraryBaseBinding.confirmDeleteChildrenPopUpBinding.deleteOnlyFile
-    val frameLayInBox                     get() = activity.findViewById<ConstraintLayout>(R.id.frameLay_inBox)
+    val frameLayInBox                     get() = activity.findViewById<ConstraintLayout>(R.id.frameLay_inBox)!!
     val lineLayMenuDelete                 get() = libraryChildBinding.multiSelectMenuBinding.linLayDeleteSelectedItems
-    val createCardStringCardBinding get() = createCardViewModel.createCardFragStringFragBinding
-    val createCardFragMainBinding   get() = createCardViewModel.createCardFragMainBinding
+    private val createCardStringCardBinding get() = createCardViewModel.createCardFragStringFragBinding
+    private val createCardFragMainBinding   get() = createCardViewModel.createCardFragMainBinding
     val edtCardFrontTitle           get() = createCardStringCardBinding.edtFrontTitle
     val edtCardBackTitle            get() = createCardStringCardBinding.edtBackTitle
     val edtCardBackContent          get() = createCardStringCardBinding.edtBackContent
@@ -58,29 +56,29 @@ class GuideActions(val activity:MainActivity,){
     val arrow                       get() = callOnInstallBinding.imvFocusArrow
     val conLayGoNext                get() = callOnInstallBinding.conLayGuideGoNext
     val character                   get() =  callOnInstallBinding.imvCharacter
-    val holeView                    get() = callOnInstallBinding.viewWithHole
+    private val holeView                    get() = callOnInstallBinding.viewWithHole
     val textView                    get() = callOnInstallBinding.txvSpeakBubble
     val bottom                      get() = callOnInstallBinding.sbBottom
-    val libraryChildBinding         get() = activity.mainActivityViewModel.libraryBaseViewModel.getChildFragBinding
-    val libraryBaseBinding          get() = libraryViewModel.libraryFragBinding
-    val mainActivityBinding         get() = activity.mainActivityViewModel.mainActivityBinding
+    private val libraryChildBinding         get() = activity.mainActivityViewModel.libraryBaseViewModel.getChildFragBinding
+    private val libraryBaseBinding          get() = libraryViewModel.libraryFragBinding
+    private val mainActivityBinding         get() = activity.mainActivityViewModel.mainActivityBinding
     val libraryRv                   get() = libraryChildBinding.vocabCardRV
     val libRvFirstItem              get() = libraryRv[0]
     val imvOpenMultiModeMenu        get() = libraryChildBinding.topBarMultiselectBinding.imvChangeMenuVisibility
     val frameLayMultiMenu           get() = libraryChildBinding.frameLayMultiModeMenu
     val imvBnvBtnAdd                get() = mainActivityBinding.bnvBinding.bnvImvAdd
     val frameLayCreateFlashCard     get() = mainActivityBinding.bindingAddMenu.frameLayNewFlashcard
-    val frameLayCreateFolder        get() = mainActivityBinding.bindingAddMenu.frameLayNewFolder
+    private val frameLayCreateFolder        get() = mainActivityBinding.bindingAddMenu.frameLayNewFolder
     val frameLayCreateCard          get() = mainActivityBinding.bindingAddMenu.frameLayNewCard
     val frameLayEditFile            get() = mainActivityBinding.frameLayEditFile
     val btnCloseEditFilePopUp       get() = mainActivityBinding.editFileBinding.btnClose
     val btnCreateFile               get() = mainActivityBinding.editFileBinding.btnFinish
-    val frameLayMoveToThisItem      get() = libraryRv.findViewById<FrameLayout>(R.id.rv_base_frameLay_left)
+    val frameLayMoveToThisItem      get() = libraryRv.findViewById<FrameLayout>(R.id.rv_base_frameLay_left)!!
     val frameLayConfirmMove         get() = libraryChildBinding.frameLayConfirmMove
-    val frameLayBnv                 get() = mainActivityBinding.frameBnv
-    val stringFlashCard             get() = activity.getString(R.string.flashcard)
-    val stringFolder                get() = activity.getString(R.string.folder)
-    val stringCard                  get() = activity.getString(R.string.card)
+    private val frameLayBnv                 get() = mainActivityBinding.frameBnv
+    private val stringFlashCard             get() = activity.getString(R.string.flashcard)
+    private val stringFolder                get() = activity.getString(R.string.folder)
+    private val stringCard                  get() = activity.getString(R.string.card)
     val linLayMenuMoveItem          get() = libraryChildBinding.multiSelectMenuBinding.linLayMoveSelectedItems
     val btnCommitMove               get() = libraryChildBinding.confirmMoveToBinding.btnCommitMove
     val selectedItemAsString        get() = getListFirstItemAsString(moveToViewModel.returnMovingItems())
@@ -127,14 +125,14 @@ class GuideActions(val activity:MainActivity,){
             stringCard
         } else ""
     }
-    fun getMovableItemTypeAsString(string: String):String{
+    private fun getMovableItemTypeAsString(string: String):String{
         return when (string){
             stringFlashCard,stringFolder -> stringFolder
             stringCard  -> stringFlashCard
             else -> ""
         }
     }
-    fun getNotMovableItemTypeAsString(string: String):String{
+    private fun getNotMovableItemTypeAsString(string: String):String{
         return when (string){
             stringFlashCard,stringFolder -> stringFlashCard
             stringCard  -> stringFolder
@@ -186,7 +184,7 @@ class GuideActions(val activity:MainActivity,){
     }
     fun goNextWhenSwiped(next:()->Unit){
         actionsBeforeEndGuideList.add { libraryViewModel.setDoOnSwipeEnd(false) {} }
-        libraryViewModel.setDoOnSwipeEnd(true, )
+        libraryViewModel.setDoOnSwipeEnd(true)
         { actionsBeforeEndGuideList.add { libraryViewModel.makeAllUnSwiped() }
             next()}
     }
@@ -263,7 +261,7 @@ class GuideActions(val activity:MainActivity,){
             addSpbMargin()
         }
     var spbOrientation: MyOrientationSet = MyOrientationSet(verticalOrientation =  MyVerticalOrientation.BOTTOM)
-    var textFit:Boolean = false
+    private var textFit:Boolean = false
 
     private val arrowMargin:MyMargin = MyMargin(10,10,10,10)
 
@@ -291,7 +289,7 @@ class GuideActions(val activity:MainActivity,){
         }
     }
 
-    fun setCharacterPos(){
+    private fun setCharacterPos(){
         changeViewVisibility(character,false)
         setCharacterSize()
         setPositionByMargin(ViewAndPositionData(character,characterBorderSet,characterOrientation))
@@ -338,7 +336,7 @@ class GuideActions(val activity:MainActivity,){
         }
     }
     var spbVisibilityAnimDoOnEnd:()-> Unit = {}
-    fun getSpbVisibilityAnim(visible: Boolean):AnimatorSet{
+    private fun getSpbVisibilityAnim(visible: Boolean):AnimatorSet{
         return AnimatorSet().apply {
             playTogether(getAppearAlphaAnimation(textView,visible),
                 getAppearAlphaAnimation(bottom,visible))
@@ -455,11 +453,7 @@ class GuideActions(val activity:MainActivity,){
         holeView.removeGlobalLayout()
         holeView.noHole = true
     }
-    fun cloneView(view: View) {
-        addViewToConLay(view).setOnClickListener {
-            view.callOnClick()
-        }
-    }
+
     fun goNextOnClickTouchArea(view: View, func: () -> Unit) {
 //        guideParentConLay.setOnClickListener(null)
         addViewToConLay(view).setOnClickListener {
@@ -590,38 +584,9 @@ class GuideActions(val activity:MainActivity,){
             leftMargin = spbMargin,
             rightMargin = spbMargin)
     }
-    private fun setLateInitVars(){
-//        callOnInstallBinding = activity.mainActivityViewModel.guideViewModel.getGuideBinding
-//        callOnInstallBinding.apply {
-//            guideParentConLay = root
-//            arrow             = imvFocusArrow
-//            conLayGoNext      = conLayGuideGoNext
-//            character         = imvCharacter
-//            holeView          = viewWithHole
-//            textView          = txvSpeakBubble
-//            bottom            = sbBottom
-//        }
-    }
-    fun onClickBtnCommitEndGuide(){
-        actionsBeforeEndGuideList.onEach {
-            it()
-        }
-        getAppearAlphaAnimation(guideParentConLay,false).start()
-        appearAlphaAnimDonOnEnd = {
-            activity.libraryViewModel.setMultipleSelectMode(false)
-            activity.mainActivityViewModel.setGuideVisibility(false)
-        }
-    }
+
+
     val actionsBeforeEndGuideList: MutableList<()->Unit> get() = activity.mainActivityViewModel.guideViewModel.actionsBeforeEndGuideList
-//    inner class GuideEndPopUpCL:View.OnClickListener{
-//        override fun onClick(v: View?) {
-//            callOnInstallBinding.confirmEndGuideBinding.apply {
-//                when(v){
-//                    btnCancelEnd,btnCloseConfirmEnd -> activity.mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-//                    btnCommitEnd                    -> onClickBtnCommitEndGuide()
-//                }
-//            }
-//        }
-//    }
+
 
 }

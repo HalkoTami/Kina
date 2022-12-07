@@ -26,7 +26,7 @@ class EditGuide(val actions: GuideActions){
             goNextOnClickAnyWhere{explainBtn()}
         }
     }
-    fun focusOnFirstRvItem(next:()->Unit){
+    private fun focusOnFirstRvItem(next:()->Unit){
         actions.apply {
             val libraryRv                   =activity.findViewById<RecyclerView>(R.id.vocabCardRV)
             goNextOnClickAnyWhere {  }
@@ -48,7 +48,7 @@ class EditGuide(val actions: GuideActions){
             getAllConLayChildrenGoneAnim().start()
         }
     }
-    fun setRvItemSideScroll(recycler:RecyclerView,next: () -> Unit){
+    private fun setRvItemSideScroll(recycler:RecyclerView,next: () -> Unit){
         actions.apply {
             getSpbPosAnim("編集ボタンを表示するには、\nアイテムを横にスライドするよ").start()
             setArrowDirection(MyOrientation.LEFT)

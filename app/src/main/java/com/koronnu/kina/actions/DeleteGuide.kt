@@ -1,12 +1,5 @@
 package com.koronnu.kina.actions
 
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ImageView
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.get
-import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.customClasses.enumClasses.HoleShape
 import com.koronnu.kina.customClasses.enumClasses.MyHorizontalOrientation
