@@ -38,11 +38,7 @@ class LibraryInBoxFrag  : Fragment(){
     private lateinit var adapter:LibFragPlaneRVListAdapter
     private lateinit var searchAdapter:LibFragSearchRVListAdapter
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
-    private val  libraryInBoxFragViewModel:LibraryInBoxFragViewModel by activityViewModels{
-        val popUpJumpToGuideViewModel :PopUpJumpToGuideViewModel by activityViewModels()
-        val libraryBaseViewModel :LibraryBaseViewModel by activityViewModels()
-        val repository = (requireActivity().application as RoomApplication).repository
-        LibraryInBoxFragViewModel.getViewModel(repository,libraryBaseViewModel,popUpJumpToGuideViewModel,requireActivity()) }
+    private val  libraryInBoxFragViewModel:LibraryInBoxFragViewModel by activityViewModels()
     private val searchViewModel:SearchViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()

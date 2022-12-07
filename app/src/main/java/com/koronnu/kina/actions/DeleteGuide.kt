@@ -17,16 +17,6 @@ import com.koronnu.kina.customClasses.normalClasses.MyOrientationSet
 import com.koronnu.kina.customClasses.normalClasses.ViewAndSide
 
 class DeleteGuide(val actions: GuideActions){
-    private val libraryRV get() = actions.activity.findViewById<RecyclerView>(R.id.vocabCardRV)
-    private val btnDeleteFile  get()=actions.activity.findViewById<ImageView>(R.id.btn_delete)
-    private val frameLayConfirmDelete   get()=actions.activity.findViewById<FrameLayout>(R.id.frameLay_confirm_delete)
-    private val frameLayConfirmDeleteWithChildren  get() = actions.activity.findViewById<FrameLayout>(R.id.frameLay_confirm_delete_with_children)
-    private val btnCommitDeleteWithChildren get() = actions.activity.findViewById<Button>(R.id.btn_delete_all_children)
-    private val btnDeleteOnlyParent get() = actions.activity.findViewById<Button>(R.id.delete_only_file)
-    private val imvMultiModeMenu   get() =actions.activity.findViewById<ImageView>(R.id.imv_change_menu_visibility)
-    private val frameLayInBox    get()   =actions.activity.findViewById<ConstraintLayout>(R.id.frameLay_inBox)
-    private val frameLayMultiModeMenu     get()  =actions.activity.findViewById<FrameLayout>(R.id.frameLay_multi_mode_menu)
-    private val lineLayMenuDelete get() = actions.activity.findViewById<LinearLayoutCompat>(R.id.linLay_delete_selected_items)
     fun guide1(){
         actions.apply {
             animateCharacterMiddleSpbTop(R.string.guide_spb_delete_1)
@@ -50,7 +40,7 @@ class DeleteGuide(val actions: GuideActions){
             {}
             makeOnlySwipeActive()
             goNextWhenSwiped { guide4() }
-            makeHereTouchable(libraryRV[0])
+            makeHereTouchable(libRvFirstItem)
             changeViewVisibility(conLayGoNext,false)
         }
     }
@@ -172,7 +162,7 @@ class DeleteGuide(val actions: GuideActions){
     private fun guide16(){
         actions.apply {
             animateCharacterAndSpbPos(R.string.guide_spb_delete_15,
-                {setCharacterPosInCenter() },
+                {setCharacterBottomLeftAboveBnv() },
                 {setSpbPosAboveCharacterUnderMenuFrameLay()},
                 {onClickGoNext { guide17() }})
         }
@@ -185,18 +175,18 @@ class DeleteGuide(val actions: GuideActions){
     }
     private fun guide18(){
         actions.apply {
-            viewUnderSpotInGuide = imvMultiModeMenu
-            setArrow(MyOrientation.BOTTOM,imvMultiModeMenu)
+            viewUnderSpotInGuide = imvOpenMultiModeMenu
+            setArrow(MyOrientation.BOTTOM,imvOpenMultiModeMenu)
             animateSpbNoChange(R.string.guide_spb_delete_16prt2)
             {onClickGoNext { guide19() }}
-            goNextOnClickTouchArea(imvMultiModeMenu){guide19()}
+            goNextOnClickTouchArea(imvOpenMultiModeMenu){guide19()}
         }
     }
     private fun guide19(){
         actions.apply {
             activity.libraryViewModel.setMultiMenuVisibility(true)
             actionsBeforeEndGuideList.add{activity.libraryViewModel.setMultiMenuVisibility(false)}
-            viewUnderSpotInGuide = frameLayMultiModeMenu
+            viewUnderSpotInGuide = frameLayMultiMenu
             animateSpbNoChange(R.string.guide_spb_delete_17)
             {onClickGoNext { guide20() }}
             setArrow(MyOrientation.LEFT,lineLayMenuDelete)

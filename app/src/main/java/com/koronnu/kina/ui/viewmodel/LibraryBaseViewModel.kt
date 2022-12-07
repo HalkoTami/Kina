@@ -1,5 +1,6 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.content.Context
 import android.view.View
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -12,6 +13,7 @@ import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import com.koronnu.kina.customClasses.normalClasses.ParentFileAncestors
 import com.koronnu.kina.databinding.LibItemTopBarMenuBinding
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
+import com.koronnu.kina.databinding.LibraryFragBinding
 import com.koronnu.kina.databinding.LibraryFragTopBarMultiselectModeBinding
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
@@ -30,6 +32,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private lateinit var searchViewModel:SearchViewModel
     private lateinit var popUpJumpToGuideViewModel:PopUpJumpToGuideViewModel
     private lateinit var moveToViewModel :ChooseFileMoveToViewModel
+    private lateinit var _libraryInBoxFragViewModel:LibraryInBoxFragViewModel
+    val libraryInBoxFragViewModel get() = _libraryInBoxFragViewModel
     val chooseFileMoveToViewModel get() = moveToViewModel
     val guideOptionMenuViewModel get() = mainViewModel.guideOptionMenuViewModel
 
@@ -38,7 +42,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
      */
     companion object{
         fun getFactory(mainViewModel: MainViewModel,
-                       viewModelStoreOwner: ViewModelStoreOwner): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+                       viewModelStoreOwner: ViewModelStoreOwner,
+                       context: Context): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
@@ -46,10 +51,13 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
                 val libraryBaseViewModel = LibraryBaseViewModel(repository)
                 val searchViewModel = ViewModelProvider(viewModelStoreOwner,SearchViewModel.Factory)[SearchViewModel::class.java]
                 val moveToViewModel = ViewModelProvider(viewModelStoreOwner,ChooseFileMoveToViewModel.Factory)[ChooseFileMoveToViewModel::class.java]
+                val inBoxFragViewModel = ViewModelProvider(viewModelStoreOwner,LibraryInBoxFragViewModel.getFactory(libraryBaseViewModel,
+                    mainViewModel.popUpJumpToGuideViewModel,context))[LibraryInBoxFragViewModel::class.java]
                 libraryBaseViewModel.mainViewModel = mainViewModel
                 libraryBaseViewModel.popUpJumpToGuideViewModel = mainViewModel.popUpJumpToGuideViewModel
                 libraryBaseViewModel.searchViewModel = searchViewModel
                 libraryBaseViewModel.moveToViewModel = moveToViewModel
+                libraryBaseViewModel._libraryInBoxFragViewModel = inBoxFragViewModel
                 return libraryBaseViewModel as T
             }
         }
@@ -74,7 +82,13 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         _childFragBinding.value = childFragBinding
         doAfterSetChildFragBinding()
     }
-    val childFragBinding :LiveData<LibraryChildFragWithMulModeBaseBinding> = _childFragBinding
+    private val childFragBinding :LiveData<LibraryChildFragWithMulModeBaseBinding> = _childFragBinding
+
+    private var _libraryBaseBinding:LibraryFragBinding? = null
+    fun setLibraryBaseBinding(libraryFragBinding: LibraryFragBinding){
+        _libraryBaseBinding = libraryFragBinding
+    }
+    val libraryFragBinding get() = _libraryBaseBinding!!
 
 
     private fun doAfterSetChildFragBinding(){

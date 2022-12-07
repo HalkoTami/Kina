@@ -40,7 +40,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
                 mainModel.deletePopUpViewModel = deletePopUpViewModel
                 mainModel.ankiBaseViewModel = ankiBaseViewModel
                 mainModel.popUpJumpToGuideViewModel = popUpJumpToGuideViewModel
-                val libraryBaseViewModel = getViewModelProviderWithFactory(LibraryBaseViewModel.getFactory(mainModel,mainActivity))[LibraryBaseViewModel::class.java]
+                val libraryBaseViewModel = getViewModelProviderWithFactory(LibraryBaseViewModel.getFactory(mainModel,mainActivity,mainActivity.baseContext))[LibraryBaseViewModel::class.java]
                 mainModel.libraryBaseViewModel = libraryBaseViewModel
                 return mainModel as T
             }

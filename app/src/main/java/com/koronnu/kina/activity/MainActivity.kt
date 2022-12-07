@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
             factory               = ViewModelFactory((application as RoomApplication).repository)
             _createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
-            libraryViewModel        =ViewModelProvider(this,LibraryBaseViewModel.getFactory(mainActivityViewModel,this))[LibraryBaseViewModel::class.java]
+            libraryViewModel        =ViewModelProvider(this,LibraryBaseViewModel.getFactory(mainActivityViewModel,this,this.baseContext))[LibraryBaseViewModel::class.java]
             _createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
             ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
             ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
@@ -183,7 +183,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         setUpMainActivityLayout()
         addMainActivityClickListeners()
         setContentView(binding.root)
-        checkIfInstall()
+//        checkIfInstall()
         val childFragmentStatusObserver      = Observer<MainViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
         }

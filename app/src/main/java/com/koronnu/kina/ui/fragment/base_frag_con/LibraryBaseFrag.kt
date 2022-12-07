@@ -140,6 +140,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
         setLateInitVars()
         addClickListeners()
 
+        libraryBaseViewModel.setLibraryBaseBinding(binding)
         libraryBaseViewModel.setLibraryNavCon(libNavCon)
         mainViewModel.setChildFragmentStatus(MainFragment.Library)
         mainViewModel.setBnvVisibility(true)

@@ -5,9 +5,11 @@ import android.animation.ValueAnimator
 import android.app.ActionBar.LayoutParams
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.EditText
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
@@ -21,7 +23,6 @@ import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.ui.customViews.NavigateBtnCreateCard
 
 
 class GuideActions(val activity:MainActivity,){
@@ -34,6 +35,13 @@ class GuideActions(val activity:MainActivity,){
     val guideViewModel = activity.mainActivityViewModel.guideViewModel
     val createCardViewModel = activity.createCardViewModel
     val deletePopUpViewModel = activity.deletePopUpViewModel
+    val btnDeleteFile                     get() = libRvFirstItem.findViewById<ImageView>(R.id.btn_delete)
+    val frameLayConfirmDelete             get() =libraryBaseBinding.frameLayConfirmDelete
+    val frameLayConfirmDeleteWithChildren get() = libraryBaseBinding.frameLayConfirmDeleteWithChildren
+    val btnCommitDeleteWithChildren       get() = libraryBaseBinding.confirmDeleteChildrenPopUpBinding.btnDeleteAllChildren
+    val btnDeleteOnlyParent               get() = libraryBaseBinding.confirmDeleteChildrenPopUpBinding.deleteOnlyFile
+    val frameLayInBox                     get() = activity.findViewById<ConstraintLayout>(R.id.frameLay_inBox)
+    val lineLayMenuDelete                 get() = libraryChildBinding.multiSelectMenuBinding.linLayDeleteSelectedItems
     val createCardStringCardBinding get() = createCardViewModel.createCardFragStringFragBinding
     val createCardFragMainBinding   get() = createCardViewModel.createCardFragMainBinding
     val edtCardFrontTitle           get() = createCardStringCardBinding.edtFrontTitle
@@ -53,12 +61,13 @@ class GuideActions(val activity:MainActivity,){
     val holeView                    get() = callOnInstallBinding.viewWithHole
     val textView                    get() = callOnInstallBinding.txvSpeakBubble
     val bottom                      get() = callOnInstallBinding.sbBottom
-    val libraryBaseBinding          get() = activity.mainActivityViewModel.libraryBaseViewModel.getChildFragBinding
+    val libraryChildBinding         get() = activity.mainActivityViewModel.libraryBaseViewModel.getChildFragBinding
+    val libraryBaseBinding          get() = libraryViewModel.libraryFragBinding
     val mainActivityBinding         get() = activity.mainActivityViewModel.mainActivityBinding
-    val libraryRv                   get() = libraryBaseBinding.vocabCardRV
+    val libraryRv                   get() = libraryChildBinding.vocabCardRV
     val libRvFirstItem              get() = libraryRv[0]
-    val imvOpenMultiModeMenu        get() = libraryBaseBinding.topBarMultiselectBinding.imvChangeMenuVisibility
-    val frameLayMultiMenu           get() = libraryBaseBinding.frameLayMultiModeMenu
+    val imvOpenMultiModeMenu        get() = libraryChildBinding.topBarMultiselectBinding.imvChangeMenuVisibility
+    val frameLayMultiMenu           get() = libraryChildBinding.frameLayMultiModeMenu
     val imvBnvBtnAdd                get() = mainActivityBinding.bnvBinding.bnvImvAdd
     val frameLayCreateFlashCard     get() = mainActivityBinding.bindingAddMenu.frameLayNewFlashcard
     val frameLayCreateFolder        get() = mainActivityBinding.bindingAddMenu.frameLayNewFolder
@@ -67,13 +76,13 @@ class GuideActions(val activity:MainActivity,){
     val btnCloseEditFilePopUp       get() = mainActivityBinding.editFileBinding.btnClose
     val btnCreateFile               get() = mainActivityBinding.editFileBinding.btnFinish
     val frameLayMoveToThisItem      get() = libraryRv.findViewById<FrameLayout>(R.id.rv_base_frameLay_left)
-    val frameLayConfirmMove         get() = libraryBaseBinding.frameLayConfirmMove
+    val frameLayConfirmMove         get() = libraryChildBinding.frameLayConfirmMove
     val frameLayBnv                 get() = mainActivityBinding.frameBnv
     val stringFlashCard             get() = activity.getString(R.string.flashcard)
     val stringFolder                get() = activity.getString(R.string.folder)
     val stringCard                  get() = activity.getString(R.string.card)
-    val linLayMenuMoveItem          get() = libraryBaseBinding.multiSelectMenuBinding.linLayMoveSelectedItems
-    val btnCommitMove               get() = libraryBaseBinding.confirmMoveToBinding.btnCommitMove
+    val linLayMenuMoveItem          get() = libraryChildBinding.multiSelectMenuBinding.linLayMoveSelectedItems
+    val btnCommitMove               get() = libraryChildBinding.confirmMoveToBinding.btnCommitMove
     val selectedItemAsString        get() = getListFirstItemAsString(moveToViewModel.returnMovingItems())
     val movableItemAsString         get() = getMovableItemTypeAsString(selectedItemAsString)
     val notMovableItemAsString      get() = getNotMovableItemTypeAsString(selectedItemAsString)
@@ -385,6 +394,8 @@ class GuideActions(val activity:MainActivity,){
         viewUnderSpotInGuide = null
         setCharacterPos()
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
+        libraryViewModel.setMultipleSelectMode(false)
+        libraryViewModel.makeAllUnSwiped()
 
         when(guide){
             Guides.CreateItems  ->CreateGuide(this).guide1()
