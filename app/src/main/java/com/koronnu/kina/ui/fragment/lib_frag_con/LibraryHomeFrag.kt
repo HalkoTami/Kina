@@ -82,13 +82,12 @@ class LibraryHomeFrag : Fragment(){
         fun homeTopBarAddCL(){
             arrayOf(
                 topBarBinding.frameLayInBox,
+                topBarBinding.btnGuide
             ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(topBarBinding, libraryBaseViewModel)) }
         }
         fun addCL(){
             homeTopBarAddCL()
-            topBarBinding.btnGuide.setOnClickListener{
-                mainViewModel.setHelpOptionVisibility(true)
-            }
+
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
                 libraryBaseViewModel,
@@ -185,6 +184,10 @@ class LibraryHomeFrag : Fragment(){
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        libraryBaseViewModel.setChildFragBinding(binding)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

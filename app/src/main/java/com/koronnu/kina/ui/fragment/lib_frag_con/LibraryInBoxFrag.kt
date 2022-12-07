@@ -4,14 +4,18 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
 import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.actions.makeToast
+import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
@@ -33,10 +37,16 @@ class LibraryInBoxFrag  : Fragment(){
     private lateinit var mainNavCon:NavController
     private lateinit var adapter:LibFragPlaneRVListAdapter
     private lateinit var searchAdapter:LibFragSearchRVListAdapter
+    private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
+    private val  libraryInBoxFragViewModel:LibraryInBoxFragViewModel by activityViewModels{
+        val popUpJumpToGuideViewModel :PopUpJumpToGuideViewModel by activityViewModels()
+        val libraryBaseViewModel :LibraryBaseViewModel by activityViewModels()
+        val repository = (requireActivity().application as RoomApplication).repository
+        LibraryInBoxFragViewModel.getViewModel(repository,libraryBaseViewModel,popUpJumpToGuideViewModel,requireActivity()) }
     private val searchViewModel:SearchViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
-    private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
+
     private val cardTypeStringViewModel: CardTypeStringViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
@@ -53,6 +63,7 @@ class LibraryInBoxFrag  : Fragment(){
             topBarBinding = LibraryFragTopBarInboxBinding.inflate(inflater,container,false)
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
+            libraryBaseViewModel.setChildFragBinding(binding)
             recyclerView = binding.vocabCardRV
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
@@ -136,7 +147,7 @@ class LibraryInBoxFrag  : Fragment(){
         observeMultiMode()
         val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
         searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
-
+        libraryInBoxFragViewModel.observeLiveDataInInboxFrag(viewLifecycleOwner,requireActivity())
         editFileViewModel.filterBottomMenuOnlyCard()
         libraryBaseViewModel.apply {
             setModeInBox(true)
@@ -146,7 +157,7 @@ class LibraryInBoxFrag  : Fragment(){
             childCardsFromDB(null).observe(viewLifecycleOwner) {
 
                 val sorted = it
-                setParentRVItems(sorted?: mutableListOf())
+//                setParentRVItems(sorted?: mutableListOf())
                 adapter.submitList(sorted)
                 if(it.isNullOrEmpty()){
                     binding.frameLayRvEmpty.addView(emptyView)
@@ -173,6 +184,7 @@ class LibraryInBoxFrag  : Fragment(){
             }
 
 
+
         }
 //        LibrarySetUpFragment(libraryViewModel, deletePopUpViewModel).setUpFragLibInBox(binding,myNavCon,requireActivity())
         return binding.root
@@ -182,6 +194,8 @@ class LibraryInBoxFrag  : Fragment(){
     override fun onDestroyView() {
         super.onDestroyView()
         libraryBaseViewModel.setModeInBox(false)
+        libraryInBoxFragViewModel.doOnDestroy()
+
         _binding = null
     }
 

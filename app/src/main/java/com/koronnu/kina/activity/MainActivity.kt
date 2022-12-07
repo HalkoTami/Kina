@@ -9,6 +9,7 @@ import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
@@ -22,10 +23,10 @@ import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.customClasses.enumClasses.Guides
 import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.CallOnInstallBinding
-import com.koronnu.kina.databinding.HelpOptionsBinding
 import com.koronnu.kina.ui.listener.KeyboardListener
 import com.koronnu.kina.ui.listener.popUp.EditFilePopUpCL
 import com.koronnu.kina.ui.observer.LibraryOb
@@ -37,25 +38,24 @@ import com.koronnu.kina.ui.viewmodel.*
 class MainActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var factory                 : ViewModelFactory
     private lateinit var mainNavCon              : NavController
-    private var _mainActivityViewModel   : MainViewModel? = null
-    val mainActivityViewModel get() = _mainActivityViewModel!!
+
     private var _createFileViewModel   : EditFileViewModel? = null
     val createFileViewModel get() = _createFileViewModel!!
     private var _createCardViewModel   : CreateCardViewModel? = null
     val createCardViewModel get() = _createCardViewModel!!
-    private var _libraryViewModel   : LibraryBaseViewModel? = null
-    val libraryViewModel get() = _libraryViewModel!!
+
+    val mainActivityViewModel :MainViewModel by viewModels { MainViewModel.getViewModel(this) }
+
     private var _deletePopUpViewModel   : DeletePopUpViewModel? = null
     val deletePopUpViewModel get() = _deletePopUpViewModel!!
 
+    lateinit var libraryViewModel :LibraryBaseViewModel
     private lateinit var ankiFlipBaseViewModel   : AnkiFlipBaseViewModel
     private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
     private lateinit var chooseFileMoveToViewModel : ChooseFileMoveToViewModel
     private lateinit var searchViewModel         : SearchViewModel
 
     private lateinit var binding                  : MainActivityBinding
-    var _callOnInstallBinding: CallOnInstallBinding? = null
-    val callOnInstallBinding get() = _callOnInstallBinding!!
 
 
 
@@ -70,20 +70,18 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             val sharedPref = this.getSharedPreferences(
                 "firstTimeGuide", Context.MODE_PRIVATE) ?: return
             if (!sharedPref.getBoolean("firstTimeGuide", false)) {
-                CreateGuide(this,binding.frameLayCallOnInstall).callOnFirst()
+                mainActivityViewModel.guideViewModel.startGuide(Guides.CreateItems,GuideActions(this))
 
             }
         }
         fun setMainActivityLateInitVars(){
 
             binding = MainActivityBinding.inflate(layoutInflater)
-            _callOnInstallBinding = CallOnInstallBinding.inflate(layoutInflater)
             val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
             factory               = ViewModelFactory((application as RoomApplication).repository)
-            _mainActivityViewModel = ViewModelProvider(this)[MainViewModel::class.java]
             _createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
+            libraryViewModel        =ViewModelProvider(this,LibraryBaseViewModel.getFactory(mainActivityViewModel,this))[LibraryBaseViewModel::class.java]
             _createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
-            _libraryViewModel      = ViewModelProvider(this,factory)[LibraryBaseViewModel::class.java]
             ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
             ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
             chooseFileMoveToViewModel      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
@@ -189,63 +187,63 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val childFragmentStatusObserver      = Observer<MainViewModel.MainActivityChildFragmentStatus>{
             changeTabView(it.before,it.now)
         }
-        val confirmEndGuideObserver         = Observer<Boolean>{
-            changeViewVisibility(callOnInstallBinding.frameLayConfirmEndGuidePopUp,it)
-        }
+//        val confirmEndGuideObserver         = Observer<Boolean>{
+//            changeViewVisibility(callOnInstallBinding.frameLayConfirmEndGuidePopUp,it)
+//        }
 
-        val helpOptionVisibilityObserver      = Observer<Boolean>{
-            val frameLayHelp = binding.frameLayCallOnInstall
-            changeViewVisibility(frameLayHelp,it)
-
-            fun setUpMenuMode(){
-                val helpBinding = HelpOptionsBinding.inflate(layoutInflater)
-                helpBinding.apply {
-                    when(mainActivityViewModel.returnFragmentStatus()?.now){
-                        MainFragment.Library -> {
-                            changeViewVisibility(linLayHelpMenuLibrary,true)
-                            changeViewVisibility(linLayHelpMenuAnki,false)
-                        }
-                        else -> {
-                            changeViewVisibility(linLayHelpMenuLibrary,false)
-                            changeViewVisibility(linLayHelpMenuAnki,true)
-                        }
-                    }
-                    if(libraryViewModel.returnParentRVItems().isEmpty()){
-                        arrayOf(menuHowToDeleteItems,
-                            menuHowToEditItems
-                        ).onEach {v-> changeViewVisibility(v,false) }
-                    }
-                }
-                helpBinding.apply {
-                    arrayOf(
-                        root,
-                        menuHowToDeleteItems,
-                        menuHowToCreateItems,
-                        menuHowToEditItems,
-                        menuHowToMoveItems
-                    ).onEach { view ->
-                        view.setOnClickListener { v->
-                            when(v){
-                                menuHowToDeleteItems -> GuideActions(this@MainActivity,binding.frameLayCallOnInstall).deleteGuide()
-                                menuHowToCreateItems -> {
-                                    CreateGuide(this@MainActivity,
-                                        binding.frameLayCallOnInstall).callOnFirst()
-                                }
-                                menuHowToEditItems -> {
-                                   GuideActions(this@MainActivity,binding.frameLayCallOnInstall).editGuide()
-                                }
-                                menuHowToMoveItems -> {
-                                    MoveGuide(this@MainActivity,callOnInstallBinding).moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
-                                }
-                            }
-                        }
-                    }
-                }
-                frameLayHelp.addView(helpBinding.root)
-
-            }
-            if(it) setUpMenuMode() else frameLayHelp.removeAllViews()
-        }
+//        val helpOptionVisibilityObserver      = Observer<Boolean>{
+//            val frameLayHelp = binding.frameLayCallOnInstall
+//            changeViewVisibility(frameLayHelp,it)
+//
+//            fun setUpMenuMode(){
+//                val helpBinding = HelpOptionsBinding.inflate(layoutInflater)
+//                helpBinding.apply {
+//                    when(mainActivityViewModel.returnFragmentStatus()?.now){
+//                        MainFragment.Library -> {
+//                            changeViewVisibility(linLayHelpMenuLibrary,true)
+//                            changeViewVisibility(linLayHelpMenuAnki,false)
+//                        }
+//                        else -> {
+//                            changeViewVisibility(linLayHelpMenuLibrary,false)
+//                            changeViewVisibility(linLayHelpMenuAnki,true)
+//                        }
+//                    }
+//                    if(libraryViewModel.returnParentRVItems().isEmpty()){
+//                        arrayOf(menuHowToDeleteItems,
+//                            menuHowToEditItems
+//                        ).onEach {v-> changeViewVisibility(v,false) }
+//                    }
+//                }
+//                helpBinding.apply {
+//                    arrayOf(
+//                        root,
+//                        menuHowToDeleteItems,
+//                        menuHowToCreateItems,
+//                        menuHowToEditItems,
+//                        menuHowToMoveItems
+//                    ).onEach { view ->
+//                        view.setOnClickListener { v->
+//                            when(v){
+//                                menuHowToDeleteItems -> GuideActions(this@MainActivity,binding.frameLayCallOnInstall).deleteGuide()
+//                                menuHowToCreateItems -> {
+//                                    CreateGuide(this@MainActivity,
+//                                        binding.frameLayCallOnInstall).callOnFirst()
+//                                }
+//                                menuHowToEditItems -> {
+//                                   GuideActions(this@MainActivity,binding.frameLayCallOnInstall).editGuide()
+//                                }
+//                                menuHowToMoveItems -> {
+//                                    MoveGuide(this@MainActivity,callOnInstallBinding).moveGuide(0,mainActivityViewModel,libraryViewModel,createFileViewModel,chooseFileMoveToViewModel,createCardViewModel)
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                frameLayHelp.addView(helpBinding.root)
+//
+//            }
+//            if(it) setUpMenuMode() else frameLayHelp.removeAllViews()
+//        }
         val guideVisibilityObserver      = Observer<Boolean>{
             changeViewVisibility(binding.frameLayCallOnInstall,mainActivityViewModel.checkIfFrameLayHelpIsVisible())
             if(it.not()){
@@ -263,7 +261,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         val popUpEditFileVisibilityObserver  = Observer<Boolean>{
             Animation().animatePopUpAddFile(binding.frameLayEditFile,it)
-            changeViewVisibility(binding.fragConViewCover,it||createFileViewModel.returnBottomMenuVisible())
+            changeViewVisibility(binding.fragConViewCover,it||createFileViewModel.getBottomMenuVisible())
             if(it.not())  hideKeyBoard(binding.editFileBinding.edtFileTitle,this)
         }
         val popUpEditFileUIDataObserver        = Observer<EditFileViewModel.PopUpUI>{
@@ -319,12 +317,15 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 //        ー－－－mainActivityのviewModel 読み取りー－－－
         mainActivityViewModel.setMainActivityNavCon(mainNavCon)
+        mainActivityViewModel.setMainActivityBinding(binding)
+//        mainActivityViewModel.setLayoutInflater(layoutInflater)
+        mainActivityViewModel.observeLiveDataFromMainActivity(this,this)
         mainActivityViewModel.childFragmentStatus   .observe(this@MainActivity,childFragmentStatusObserver)
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
         mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)
-        mainActivityViewModel.helpOptionVisibility  .observe(this,helpOptionVisibilityObserver)
+//        mainActivityViewModel.helpOptionVisibility  .observe(this,helpOptionVisibilityObserver)
         mainActivityViewModel.guideVisibility       .observe(this,guideVisibilityObserver)
-        mainActivityViewModel.confirmEndGuidePopUpVisible.observe(this,confirmEndGuideObserver)
+//        mainActivityViewModel.confirmEndGuidePopUpVisible.observe(this,confirmEndGuideObserver)
 //        ー－－－CreateFileViewModelの読み取りー－－－
         createFileViewModel.apply{
             onCreate()
@@ -349,15 +350,12 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
 
-    fun onBackPress():Boolean{
+    fun onBackPress(){
         var actionDone = true
-        if(mainActivityViewModel.returnGuideVisibility())
-            if(mainActivityViewModel.returnConfirmEndGuidePopUpVisible())
-                mainActivityViewModel.setConfirmEndGuidePopUpVisible(false)
-            else mainActivityViewModel.setConfirmEndGuidePopUpVisible(true)
+        if(!mainActivityViewModel.guideViewModel.doOnBackPress()){}
         else if (mainActivityViewModel.returnHelpOptionVisibility())
             mainActivityViewModel.setHelpOptionVisibility(false)
-        else if(createFileViewModel.returnBottomMenuVisible())
+        else if(createFileViewModel.getBottomMenuVisible())
             createFileViewModel.setBottomMenuVisible(false)
         else if(createFileViewModel.returnEditFilePopUpVisible())
             createFileViewModel.setEditFilePopUpVisible(false)
@@ -378,8 +376,8 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             ankiBaseViewModel.setSettingVisible(false)
         else if (mainActivityViewModel.returnHelpOptionVisibility())
             mainActivityViewModel.setHelpOptionVisibility(false)
-        else actionDone = false
-        return actionDone
+        else if (mainActivityViewModel.returnFragmentStatus()?.now==MainFragment.Library)
+            libraryViewModel.returnLibraryNavCon()?.popBackStack()
 
     }
 
@@ -389,8 +387,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         super.onAttachedToWindow()
         onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(onBackPress()) return
-                else mainNavCon.popBackStack()
+                if(!mainActivityViewModel.doOnBackPress()) mainNavCon.popBackStack()
             }
         })
     }

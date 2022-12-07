@@ -27,24 +27,6 @@ abstract class FileDao: BaseDao<File> {
 
 
     @Query("select * from tbl_file a " +
-            "JOIN tbl_file e ON e.parentFileId = a.fileId " +
-            "where NOT a.deleted AND  " +
-            "a.fileStatus = :fileStatusFolderAsInt  " +
-            "and a.fileId not in (  " +
-            "WITH  generation AS ( " +
-            "select * from tbl_file b where b.fileId in (:movingFileIds)  " +
-            "UNION ALL " +
-            "SELECT c.* from tbl_file c Inner JOIN generation g ON g.parentFileId = c.fileId ) " +
-            "SELECT fileId FROM generation d " +
-            " ) " +
-            "and ((a.parentFileId is :parentFileId " +
-            "or a.fileId in ( " +
-            "select fileId from tbl_file c where c.parentFileId in ( " +
-            "select parentFileId from tbl_file d where d.fileId in (:movingFileIds) ) ) )" +
-            "and a.fileId not in (:movingFileIds) )")
-    abstract fun getFoldersMovableTo(movingFileIds: List<Int>, parentFileId: Int?, fileStatusFolderAsInt:Int): Flow<Map<File,List<File>>>
-
-    @Query("select * from tbl_file a " +
             "JOIN tbl_card d ON d.belongingFlashCardCoverId = a.fileId " +
             "where NOT a.deleted AND  " +
             "a.fileStatus = :fileStatusFlashCardAsInt and " +

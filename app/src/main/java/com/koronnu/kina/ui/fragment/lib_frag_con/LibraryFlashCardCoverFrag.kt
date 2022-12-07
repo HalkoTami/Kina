@@ -59,6 +59,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
             topBarBinding = LibraryFragTopBarFileBinding.inflate(inflater,container,false)
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
+            libraryBaseViewModel.setChildFragBinding(binding)
             recyclerView = binding.vocabCardRV
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
             adapter =  LibFragPlaneRVListAdapter(

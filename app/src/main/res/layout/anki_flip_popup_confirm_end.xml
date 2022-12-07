@@ -14,19 +14,20 @@
     >
     <TextView
         style="@style/PopUpTextView"
-        android:layout_height="0dp"
-        android:id="@+id/txv_confirm_move"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="@integer/popUpText_width_percentage"
-        android:text="終了しますか？"
+        android:layout_height="wrap_content"
+        android:id="@+id/txv_confirm"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:textColor="@color/text_color_gray"
+        android:text="@string/guide_popUp_confirm_end"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_commit_end"/>
+        app:layout_constraintBottom_toTopOf="@id/btn_commit"/>
 
     <Button
         style="@style/PopUpButton"
-        android:id="@+id/btn_commit_end"
+        android:id="@+id/btn_commit"
         android:layout_width="wrap_content"
         app:layout_constraintWidth_percent="0.3"
         android:layout_margin="10dp"
@@ -46,8 +47,8 @@
         android:backgroundTint="@color/light_gray"
         app:layout_constraintHeight_percent="@integer/popUpButton_height_percentage"
         android:text="キャンセル"
-        app:layout_constraintEnd_toStartOf="@id/btn_commit_end"
-        app:layout_constraintBottom_toBottomOf="@id/btn_commit_end"
+        app:layout_constraintEnd_toStartOf="@id/btn_commit"
+        app:layout_constraintBottom_toBottomOf="@id/btn_commit"
         app:layout_constraintStart_toStartOf="parent"/>
     <ImageView
         android:id="@+id/btn_close_confirm_end"

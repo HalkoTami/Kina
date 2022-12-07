@@ -1,20 +1,20 @@
 package com.koronnu.kina.ui.listadapter
 
-import android.content.Context
 import android.view.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
+import com.koronnu.kina.actions.changeMulVisibility
 import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.actions.setClickListeners
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVChooseFileMoveToCL
-import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
+import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.viewmodel.ChooseFileMoveToViewModel
-import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
 
 
 /**
@@ -23,48 +23,39 @@ import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
 
 
 class LibFragChooseFileRVListAdapter(
-    private val context: Context,
-    private val chooseFileMoveToViewModel: ChooseFileMoveToViewModel,
-    private val libraryViewModel: LibraryBaseViewModel) :
-    ListAdapter<File, LibFragChooseFileRVListAdapter.LibFragChooseFileViewHolder>(FileDiffCallback) {
+    private val chooseFileMoveToViewModel: ChooseFileMoveToViewModel, ) :
+    ListAdapter<File, LibFragChooseFileRVListAdapter.LibFragChooseFileViewHolder>(FileDiffCallBack) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibFragChooseFileViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return LibFragChooseFileViewHolder(LibraryFragRvItemBaseBinding.inflate(layoutInflater, parent, false),context)
+        return LibFragChooseFileViewHolder(LibraryFragRvItemBaseBinding.inflate(layoutInflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: LibFragChooseFileViewHolder, position: Int) {
-        holder.bind(getItem(position),chooseFileMoveToViewModel,libraryViewModel)
+        holder.bind(getItem(position),chooseFileMoveToViewModel)
     }
 
-    class LibFragChooseFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
+    class LibFragChooseFileViewHolder (private val binding: LibraryFragRvItemBaseBinding) :
         RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: File,
                  chooseFileMoveToViewModel: ChooseFileMoveToViewModel,
-                 libraryViewModel: LibraryBaseViewModel
         ){
-            fun addCL(){ binding.apply {
-                arrayOf(
-                    libRvBaseContainer,
-                    rvBaseFrameLayLeft,
-                ).onEach { it.setOnClickListener(
-                    LibraryRVChooseFileMoveToCL(
-                        item,
-                        libraryViewModel,
-                        binding,
-                        chooseFileMoveToViewModel
-                    )
-                )
+            val context = binding.root.context
+            val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
+            fun addCL(){
+                binding.apply {
+                    val clickListener = LibraryRVChooseFileMoveToCL(item, binding, chooseFileMoveToViewModel)
+                    val clickableItems = arrayOf(
+                        contentBindingFrame as View,
+                        rvBaseFrameLayLeft)
+                    setClickListeners(clickableItems,clickListener)
                 }
-            }
             }
             fun setUpViewFirst(){
                 binding.apply {
                     contentBindingFrame.removeAllViews()
-                    arrayOf(btnDelete,btnEditWhole,btnAddNewCard).onEach {
-                        changeViewVisibility(it,false)
-                    }
+                    changeMulVisibility(arrayOf(btnDelete,btnEditWhole,btnAddNewCard),false)
                 }
             }
             fun setLeftContent(){
@@ -80,29 +71,32 @@ class LibFragChooseFileRVListAdapter(
                             )
                         )
                     }
-                    arrayOf(btnSelect,txvMove).onEach { changeViewVisibility(it,true) }
+                    arrayOf(btnSelect,txvMove).onEach { changeViewVisibility(it, chooseFileMoveToViewModel.checkRvItemMoveBtnVisible(item)) }
+                }
+            }
+            fun setUpFileContent(){
+                fileBinding.apply {
+                    txvFileTitle.text = item.title
+                    imvFileType.setImageDrawable(GetCustomDrawables(context).getFileIconByFileStatusAndColStatus(item.fileStatus,item.colorStatus))
                 }
             }
            setUpViewFirst()
 //            親レイアウトのclick listener
-            val viewSetUp = LibrarySetUpItems()
-            val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-            viewSetUp.setUpRVFileBinding(fileBinding,item,context)
             binding.contentBindingFrame.addView(fileBinding.root)
-            setLeftContent()
             addCL()
-
+            setLeftContent()
+            setUpFileContent()
         }
 
         }
     }
-object FileDiffCallback : DiffUtil.ItemCallback<File>() {
+object FileDiffCallBack : DiffUtil.ItemCallback<File>() {
     override fun areItemsTheSame(oldItem: File, newItem: File): Boolean {
         return oldItem.fileId == newItem.fileId
     }
 
     override fun areContentsTheSame(oldItem: File, newItem: File): Boolean {
-        return oldItem ==newItem
+        return newItem == oldItem
     }
 
 }

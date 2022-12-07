@@ -45,8 +45,6 @@ class MyRoomRepository(
 //    files
     fun getFileByFileId                        (fileId:Int?)                :Flow<File>         = fileDao.getFileByFileId(fileId)
     fun getFileAndChildrenCards                (fileId:Int?)                :Flow<Map<File,List<Card>>> = fileDao.getFileChildrenCards(fileId)
-    fun getFoldersMovableTo                    (movingFilesId:List<Int>
-                                                ,parentFileId:Int?)         :Flow<Map<File,List<File>>> = fileDao.getFoldersMovableTo(movingFilesId, parentFileId,1)
     fun getFileDataByParentFileId              (parentFileId:Int?)          :Flow<List<File>>           = fileDao.myGetFileByParentFileId(parentFileId)
     fun getLibraryItemsWithDescendantCards     (parentFileId:Int?)          :Flow<List<File>>           = fileDao.getLibraryItemsWithDescendantCards(parentFileId)
     fun getAnkiBoxRVDescendantsFolders         (fileId:Int)                 :Flow<List<File>>           = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFolderAsInt)
@@ -60,6 +58,7 @@ class MyRoomRepository(
 //    activity
     fun getCardActivity                        (cardId:Int)                 :Flow<List<ActivityData>>       = activityDataDao.getActivityDataByCard(cardId)
     val allActivity                                                         :Flow<List<ActivityData>>       = activityDataDao.getAllActivityData()
+
 
     suspend fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {
         fileDao.upDateChildFilesOfDeletedFile(deletedFileId,newParentFileId)
