@@ -5,7 +5,10 @@ import android.animation.ValueAnimator
 import android.app.ActionBar.LayoutParams
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
@@ -19,6 +22,7 @@ import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
+import com.koronnu.kina.ui.customViews.NavigateBtnCreateCard
 
 
 class GuideActions(val activity:MainActivity,){
@@ -29,14 +33,24 @@ class GuideActions(val activity:MainActivity,){
     val createFileViewModel = activity.mainActivityViewModel.editFileViewModel
     val guideViewModel = activity.mainActivityViewModel.guideViewModel
     val createCardViewModel = activity.createCardViewModel
-
-    val guideParentConLay  get() =  callOnInstallBinding.root
-    val arrow             get() = callOnInstallBinding.imvFocusArrow
-    val conLayGoNext      get() = callOnInstallBinding.conLayGuideGoNext
-    val character         get() =  callOnInstallBinding.imvCharacter
-    val holeView          get() = callOnInstallBinding.viewWithHole
-    val textView          get() = callOnInstallBinding.txvSpeakBubble
-    val bottom            get() = callOnInstallBinding.sbBottom
+    val deletePopUpViewModel = activity.deletePopUpViewModel
+    val edtCardFrontTitle       get() =activity.findViewById<EditText>(R.id.edt_front_title)
+    val edtCardBackTitle        get() =activity.findViewById<EditText>(R.id.edt_back_title)
+    val edtCardBackContent      get() =activity.findViewById<EditText>(R.id.edt_back_content)
+    val edtCardFrontContent     get() = activity.findViewById<EditText>(R.id.edt_front_content)
+    val linLayCreateCardNavigation get() =  activity.findViewById<ConstraintLayout>(R.id.lay_navigate_buttons)
+    val createCardInsertNext        =activity.findViewById<ImageView>(R.id.btn_insert_next)
+    val createCardInsertPrevious    =activity.findViewById<ImageView>(R.id.btn_insert_previous)
+    val createCardNavFlipNext       =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_next)
+    val createCardNavFlipPrevious   =activity.findViewById<NavigateBtnCreateCard>(R.id.btn_previous)
+    val editText                get() =  activity.findViewById<EditText>(R.id.edt_file_title)
+    val guideParentConLay       get() =  callOnInstallBinding.root
+    val arrow                   get() = callOnInstallBinding.imvFocusArrow
+    val conLayGoNext            get() = callOnInstallBinding.conLayGuideGoNext
+    val character               get() =  callOnInstallBinding.imvCharacter
+    val holeView                get() = callOnInstallBinding.viewWithHole
+    val textView                get() = callOnInstallBinding.txvSpeakBubble
+    val bottom                  get() = callOnInstallBinding.sbBottom
     val libraryBaseBinding      get() = activity.mainActivityViewModel.libraryBaseViewModel.getChildFragBinding
     val mainActivityBinding     get() = activity.mainActivityViewModel.mainActivityBinding
     val libraryRv               get() = libraryBaseBinding.vocabCardRV
@@ -154,7 +168,36 @@ class GuideActions(val activity:MainActivity,){
     }
     fun goNextWhenLongClicked(next:()->Unit){
         actionsBeforeEndGuideList.add { libraryViewModel.setDoAfterLongClick(false) {} }
-        libraryViewModel.setDoAfterLongClick(true,next)
+        libraryViewModel.setDoAfterLongClick(true){
+            actionsBeforeEndGuideList.add { libraryViewModel.setMultipleSelectMode(false) }
+            next()
+        }
+    }
+    fun goNextWhenSwiped(next:()->Unit){
+        actionsBeforeEndGuideList.add { libraryViewModel.setDoOnSwipeEnd(false) {} }
+        libraryViewModel.setDoOnSwipeEnd(true, )
+        { actionsBeforeEndGuideList.add { libraryViewModel.makeAllUnSwiped() }
+            next()}
+    }
+    fun goNextWhenDeletePopUpVisible(next: () -> Unit){
+        actionsBeforeEndGuideList.add{deletePopUpViewModel.setDoOnPopUpVisibilityChanged(false){} }
+        deletePopUpViewModel.setDoOnPopUpVisibilityChanged(true)
+        {   actionsBeforeEndGuideList.add { deletePopUpViewModel.setConfirmDeleteVisible(false) }
+            next()}
+    }
+    fun goNextWhenDeletePopUpWithChildrenVisible(next: () -> Unit){
+        actionsBeforeEndGuideList.add{deletePopUpViewModel.setDoOnPopUpVisibilityChanged(false){} }
+        deletePopUpViewModel.setDoOnPopUpVisibilityChanged(true)
+        {   actionsBeforeEndGuideList.add { deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false) }
+            next()}
+    }
+    fun makeOnlySwipeActive(){
+        actionsBeforeEndGuideList.add{libraryViewModel.setOnlySwipeActive(false)}
+        libraryViewModel.setOnlySwipeActive(true)
+    }
+    fun makeOnlyLongClickActive(){
+        actionsBeforeEndGuideList.add{libraryViewModel.setOnlyLongClickActive(false)}
+        libraryViewModel.setOnlyLongClickActive(true)
     }
     fun animateCharacterAndSpbPos(stringId:Int, characterPos:()->Unit,spbPos:()->Unit,doOnEnd:()->Unit){
         characterPos()
@@ -170,6 +213,18 @@ class GuideActions(val activity:MainActivity,){
     fun animateSpbNoChange(stringId: Int,doOnEnd: () -> Unit){
         spbPosAnimDoOnEnd = {doOnEnd()}
         getSpbPosAnim(getString(stringId)).start()
+    }
+    fun animateCharacterMiddleSpbTop(stringId: Int,doOnEnd: () -> Unit){
+        animateCharacterAndSpbPos(stringId,
+            {setCharacterPosInCenter()},
+            {setSpbPosAboveCharacter()},
+            {doOnEnd()})
+    }
+    fun animateCharacterRvBottomSpbRight(stringId: Int,doOnEnd: () -> Unit){
+        animateCharacterAndSpbPos(stringId,
+            {setCharacterTopLeftUnderRvFirstItem()},
+            {setSpbPosRightNextToCharacter()},
+            {doOnEnd()})
     }
 
     val globalLayoutSet = mutableMapOf<View, ViewTreeObserver.OnGlobalLayoutListener>()
