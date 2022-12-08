@@ -35,8 +35,8 @@ class MoveGuide(val actions: GuideActions){
     }
     private fun guide4(){
         actions.apply {
-            actionsBeforeEndGuideList.add { libraryViewModel.setOnlySwipeActive(false) }
-            libraryViewModel.setOnlyLongClickActive(true)
+            makeOnlyLongClickActive()
+            animateConLayGoNextVisibility(false)
             makeHereTouchable(libRvFirstItem)
             animateSpbNoChange(R.string.guide_spb_move_4)
             {goNextWhenLongClicked{guide5()}}

@@ -40,6 +40,7 @@ open class LibraryRVItemClickListener(val context: Context,
     private var startPosition : MotionEvent? = null
     private var swipingDistance:Float = 1f
     fun onScrollLeft(distanceX:Float, startEvent:MotionEvent){
+        if(libraryBaseViewModel.getOnlyLongClickActive) return
         scrollView.requestDisallowInterceptTouchEvent(true)
         startPosition = startEvent
         swipingDistance = distanceX

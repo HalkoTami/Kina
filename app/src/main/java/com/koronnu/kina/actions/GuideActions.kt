@@ -2,6 +2,7 @@ package com.koronnu.kina.actions
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.app.ActionBar.LayoutParams
 import android.view.View
 import android.view.ViewTreeObserver
@@ -12,6 +13,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import androidx.core.view.get
+import androidx.core.widget.NestedScrollView
 import com.koronnu.kina.R
 import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.*
@@ -389,6 +391,13 @@ class GuideActions(val activity:MainActivity){
             layoutParams.height = size
         }
     }
+    @SuppressLint("ClickableViewAccessibility")
+    private fun changeLibraryScrollviewAbility(enabled:Boolean){
+        libraryChildBinding.frameLayTest.setOnScrollChangeListener(
+            if(enabled) null
+            else NestedScrollView.OnScrollChangeListener { v, _, _, _, _ -> v.scrollTo(0,0) })
+
+    }
     fun callOnFirst(guide: Guides){
         makeHereTouchable(null)
         changeMulVisibility(arrayOf(character,arrow,textView,bottom),false)
@@ -397,6 +406,8 @@ class GuideActions(val activity:MainActivity){
         setCharacterPos()
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
         libraryViewModel.makeAllUnSwiped()
+        changeLibraryScrollviewAbility(false)
+        actionsBeforeEndGuideList.add{changeLibraryScrollviewAbility(true)}
 
         when(guide){
             Guides.CreateItems  ->CreateGuide(this).guide1()
