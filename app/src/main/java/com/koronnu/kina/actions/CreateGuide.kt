@@ -54,7 +54,7 @@ class CreateGuide(val actions: GuideActions ){
                 goNextAfterNewFileCreated {
                     viewUnderSpotInGuide = null
                     guide6() }
-                createFileViewModel.makeFileInGuide(editText.text.toString())
+                createFileViewModel.makeFileInGuide(edtEditFileTitle.text.toString())
             }
             setArrow(MyOrientation.BOTTOM,btnCreateFile)
             holeShapeInGuide = HoleShape.RECTANGLE

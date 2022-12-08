@@ -36,6 +36,7 @@ class GuideActions(val activity:MainActivity){
     val createCardViewModel = activity.createCardViewModel
     val deletePopUpViewModel = activity.deletePopUpViewModel
     val btnDeleteFile                     get() = libRvFirstItem.findViewById<ImageView>(R.id.btn_delete)!!
+    val btnEditFile                       get() = libRvFirstItem.findViewById<ImageView>(R.id.btn_edit_whole)!!
     val frameLayConfirmDelete             get() =libraryBaseBinding.frameLayConfirmDelete
     val frameLayConfirmDeleteWithChildren get() = libraryBaseBinding.frameLayConfirmDeleteWithChildren
     val btnCommitDeleteWithChildren       get() = libraryBaseBinding.confirmDeleteChildrenPopUpBinding.btnDeleteAllChildren
@@ -53,7 +54,12 @@ class GuideActions(val activity:MainActivity){
     val createCardInsertPrevious    get() = createCardFragMainBinding.btnInsertPrevious
     val createCardNavFlipNext       get() = createCardFragMainBinding.btnNext
     val createCardNavFlipPrevious   get() = createCardFragMainBinding.btnPrevious
-    val editText                    get() = mainActivityBinding.editFileBinding.edtFileTitle
+    val edtEditFileTitle                    get() = mainActivityBinding.editFileBinding.edtFileTitle
+    private val editFileBinding     get() = mainActivityBinding.editFileBinding
+    val imvColPallet                get() = editFileBinding.colPaletBinding.imvIconPallet
+    val imvColPalledRed             get() = editFileBinding.colPaletBinding.imvColRed
+    val imvColPalledBlue            get() = editFileBinding.colPaletBinding.imvColBlue
+    val imvColPalledYellow          get() = editFileBinding.colPaletBinding.imvColYellow
     val guideParentConLay           get() =  callOnInstallBinding.root
     val arrow                       get() = callOnInstallBinding.imvFocusArrow
     val conLayGoNext                get() = callOnInstallBinding.conLayGuideGoNext
@@ -87,6 +93,12 @@ class GuideActions(val activity:MainActivity){
     val movableItemAsString         get() = getMovableItemTypeAsString(selectedItemAsString)
     val notMovableItemAsString      get() = getNotMovableItemTypeAsString(selectedItemAsString)
 
+    fun animateCharacterBottomLeftAboveViewSpbRightNext(stringId: Int,view: View,doOnEnd: () -> Unit){
+        animateCharacterAndSpbPos(stringId,
+            {setCharacterBottomLeftAboveView(view)},
+            {setSpbPosRightNextToCharacter()},
+            {doOnEnd()})
+    }
     fun makeBottomMenuVisible(){
         createFileViewModel.setBottomMenuVisible(true)
         actionsBeforeEndGuideList.add{
@@ -157,6 +169,11 @@ class GuideActions(val activity:MainActivity){
     fun setCharacterBottomLeftAboveBnv(){
         characterSizeDimenId = R.dimen.character_size_middle
         characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayBnv,MyOrientation.TOP))
+        characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
+    }
+    fun setCharacterBottomLeftAboveView(view: View){
+        characterSizeDimenId = R.dimen.character_size_middle
+        characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(view,MyOrientation.TOP))
         characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
     }
     fun setCharacterBottomLeftAboveConfirmMovePopUp(){
@@ -333,12 +350,6 @@ class GuideActions(val activity:MainActivity){
             it.setOnClickListener(null)
         }
     }
-    fun goNextOnClickAnyWhere(func:()->Unit){
-        callOnInstallBinding.root.setOnClickListener {
-            makeTouchAreaGone()
-            func()
-        }
-    }
     var spbVisibilityAnimDoOnEnd:()-> Unit = {}
     private fun getSpbVisibilityAnim(visible: Boolean):AnimatorSet{
         return AnimatorSet().apply {
@@ -413,7 +424,7 @@ class GuideActions(val activity:MainActivity){
         when(guide){
             Guides.CreateItems  ->CreateGuide(this).guide1()
             Guides.MoveItems    ->MoveGuide(this).guide1()
-            Guides.EditItems    ->EditGuide(this).greeting1()
+            Guides.EditItems    ->EditGuide(this).guide1()
             Guides.DeleteItems  ->DeleteGuide(this).guide1()
         }
     }

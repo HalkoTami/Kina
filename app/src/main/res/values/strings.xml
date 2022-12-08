@@ -207,6 +207,14 @@
     <string name="guide_spb_create_11">後ろに挿入するのはここ！</string>
     <string name="guide_spb_create_12">矢印ボタンでカードを前後にめくってね！</string>
     <string name="guide_spb_create_13">これでガイドは終わりだよ</string>
+    <string name="guide_spb_edit_1">これから、\n単語帳を編集する方法を説明するよ</string>
+    <string name="guide_spb_edit_2">このアイテムを見てみよう</string>
+    <string name="guide_spb_edit_3">編集ボタンを表示するには、\nアイテムを横にスライドするよ</string>
+    <string name="guide_spb_edit_4">編集してみよう</string>
+    <string name="guide_spb_edit_5">じゃじゃん！</string>
+    <string name="guide_spb_edit_6">タイトルを変えたり</string>
+    <string name="guide_spb_edit_7">色で分けて整理してみてね</string>
+    <string name="guide_spb_end">ガイドは以上だよ</string>
 
 
 </resources>
