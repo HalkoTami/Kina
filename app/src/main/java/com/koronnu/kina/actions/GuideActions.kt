@@ -26,7 +26,7 @@ import com.koronnu.kina.ui.animation.Animation
 class GuideActions(val activity:MainActivity){
 
     private val callOnInstallBinding get() = activity.mainActivityViewModel.guideViewModel.getGuideBinding
-    val libraryViewModel = activity.mainActivityViewModel.libraryBaseViewModel
+    val libraryViewModel get() = activity.mainActivityViewModel.libraryBaseViewModel
     val mainViewModel = activity.mainActivityViewModel
     val moveToViewModel  = libraryViewModel.chooseFileMoveToViewModel
     val createFileViewModel = activity.mainActivityViewModel.editFileViewModel
@@ -392,7 +392,6 @@ class GuideActions(val activity:MainActivity){
         viewUnderSpotInGuide = null
         setCharacterPos()
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
-        libraryViewModel.setMultipleSelectMode(false)
         libraryViewModel.makeAllUnSwiped()
 
         when(guide){
