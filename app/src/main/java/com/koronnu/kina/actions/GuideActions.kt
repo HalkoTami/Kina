@@ -105,6 +105,7 @@ class GuideActions(val activity:MainActivity){
         }
     }
 
+
     fun getCreatingMenuItemFrameLay():View{
         return when(moveToViewModel.getMovableFileStatus){
             FileStatus.FLASHCARD_COVER -> frameLayCreateFlashCard
@@ -373,6 +374,9 @@ class GuideActions(val activity:MainActivity){
             appearAlphaAnimDonOnEnd()
             appearAlphaAnimDonOnEnd = {}
         }
+    }
+    fun animateConLayGoNextVisibility(visible: Boolean){
+        getAppearAlphaAnimation(conLayGoNext,visible).start()
     }
     fun getSimplePosRelation(standardView:View, orientation: MyOrientation, fit:Boolean): BorderSet {
         return ViewChangeActions().getSimpleBorderSet(standardView,orientation,fit)

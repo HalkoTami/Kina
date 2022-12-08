@@ -29,6 +29,7 @@ class CreateGuide(val actions: GuideActions ){
     }
     private fun guide3(){
         actions.apply {
+            animateConLayGoNextVisibility(false)
             setArrow(MyOrientation.TOP,imvBnvBtnAdd)
             viewUnderSpotInGuide = imvBnvBtnAdd
             goNextOnClickTouchArea(imvBnvBtnAdd){guide4()}
@@ -70,7 +71,7 @@ class CreateGuide(val actions: GuideActions ){
             animateHole = true
             viewUnderSpotInGuide = libRvFirstItem
             makeHereTouchable(null)
-            onClickGoNext{guide7()}
+            guide7()
         }
     }
     private fun guide7(){
@@ -79,13 +80,14 @@ class CreateGuide(val actions: GuideActions ){
             animateCharacterAndSpbPos(R.string.guide_spb_create_3,
                 {setCharacterBottomLeftAboveBnv()},
                 {setSpbPosRightNextToCharacter()},
-                {setArrow(MyOrientation.BOTTOM,libRvFirstItem)
-                    onClickGoNext{guide8()}})
-            goNextOnClickTouchArea(libRvFirstItem){guide8()}
+                {arrowVisibilityAnimDoOnEnd = { goNextOnClickTouchArea(libRvFirstItem) { guide8() } }
+                    setArrow(MyOrientation.BOTTOM,libRvFirstItem) })
+
         }
     }
     private fun guide8(){
         actions.apply {
+            animateConLayGoNextVisibility(true)
             viewUnderSpotInGuide = null
             libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
             actionsBeforeEndGuideList.add { libraryViewModel.returnLibraryNavCon()?.popBackStack() }
@@ -103,6 +105,7 @@ class CreateGuide(val actions: GuideActions ){
     }
     private fun guide10(){
         actions.apply{
+            animateConLayGoNextVisibility(false)
             allConLayChildrenGoneAnimDoOnEnd = {
                 actions.viewUnderSpotInGuide = imvBnvBtnAdd
                 goNextOnClickTouchArea(imvBnvBtnAdd) { guide11() }
@@ -121,6 +124,7 @@ class CreateGuide(val actions: GuideActions ){
     }
     private fun guide12(){
         actions.apply {
+            animateConLayGoNextVisibility(true)
             viewUnderSpotInGuide = null
             createCardViewModel.onClickAddNewCardBottomBar()
             actionsBeforeEndGuideList.add { mainViewModel.returnMainActivityNavCon()?.popBackStack() }
