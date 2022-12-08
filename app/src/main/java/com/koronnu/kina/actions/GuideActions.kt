@@ -326,6 +326,7 @@ class GuideActions(val activity:MainActivity){
 
     }
     fun onClickGoNext(func: () -> Unit){
+        if(conLayGoNext.visibility!=View.VISIBLE) animateConLayGoNextVisibility(true)
         conLayGoNext.setOnClickListener{
             makeTouchAreaGone()
             func()

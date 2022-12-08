@@ -44,6 +44,7 @@ class MoveGuide(val actions: GuideActions){
     }
     private fun guide5(){
         actions.apply {
+            animateConLayGoNextVisibility(true)
             makeHereTouchable(null)
             actionsBeforeEndGuideList.add{libraryViewModel.setMultipleSelectMode(false)}
             libraryViewModel.setOnlyLongClickActive(false)
@@ -52,6 +53,7 @@ class MoveGuide(val actions: GuideActions){
         }
     }private fun guide6(){
         actions.apply {
+            animateConLayGoNextVisibility(false)
             goNextOnClickTouchArea(imvOpenMultiModeMenu){guide7()}
             setArrow(MyOrientation.BOTTOM,imvOpenMultiModeMenu)
             viewUnderSpotInGuide = imvOpenMultiModeMenu
@@ -108,6 +110,7 @@ class MoveGuide(val actions: GuideActions){
     }
     private fun guide12(){
         actions.apply {
+            animateConLayGoNextVisibility(false)
             guideViewModel.setPopUpContentCreateMovableFile{
                 guide13()
             }
@@ -121,7 +124,6 @@ class MoveGuide(val actions: GuideActions){
     }
     private fun guide14(){
         actions.apply {
-            animateHole = false
             viewUnderSpotInGuide = imvBnvBtnAdd
             animateCharacterAndSpbPos(R.string.guide_spb_move_10d,
                 {setCharacterPosInCenter()},
@@ -134,6 +136,7 @@ class MoveGuide(val actions: GuideActions){
     private fun guide15(){
         actions.apply {
             allConLayChildrenGoneAnimDoOnEnd = {
+                animateHole = false
                 viewUnderSpotInGuide = getCreatingMenuItemFrameLay()
                 setArrow(MyOrientation.TOP,getCreatingMenuItemFrameLay())
                 goNextOnClickTouchArea(getCreatingMenuItemFrameLay())
