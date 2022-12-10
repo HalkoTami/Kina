@@ -8,7 +8,6 @@ import com.koronnu.kina.R
 import com.koronnu.kina.actions.GuideActions
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.actions.setClickListeners
-import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.Guides
 import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.ui.listener.GuideBindingCL
@@ -30,7 +29,6 @@ class GuideViewModel : ViewModel(){
     }
 
     val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel
-    val guideOptionMenuViewModel get() = mainViewModel.guideOptionMenuViewModel
     lateinit var mainViewModel: MainViewModel
     lateinit var layoutInflater: LayoutInflater
     lateinit var resources: Resources
@@ -41,10 +39,10 @@ class GuideViewModel : ViewModel(){
     private val _guideVisibility = MutableLiveData<Boolean>().apply {
         value = false
     }
-    fun setGuideVisibility(visible:Boolean){
+    private fun setGuideVisibility(visible:Boolean){
         _guideVisibility.value = visible
     }
-    val getGuideVisibility get() = _guideVisibility.value!!
+    private val getGuideVisibility get() = _guideVisibility.value!!
     private val guideVisibility :LiveData<Boolean> = _guideVisibility
 
     private val _popUpConfirmEndGuideVisibility = MutableLiveData<Boolean>().apply {
@@ -103,6 +101,7 @@ class GuideViewModel : ViewModel(){
             it()
         }
         actionsBeforeEndGuideList = mutableListOf()
+        setPopUpConfirmEndGuideVisibility(false)
         setGuideVisibility(false)
     }
 
