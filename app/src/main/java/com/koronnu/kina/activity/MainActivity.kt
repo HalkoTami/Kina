@@ -1,9 +1,8 @@
 package com.koronnu.kina.activity
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.*
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
@@ -16,17 +15,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.koronnu.kina.actions.*
+import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.actions.hideKeyBoard
 import com.koronnu.kina.application.RoomApplication
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.customClasses.enumClasses.MainFragment
+import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
 import com.koronnu.kina.databinding.MainActivityBinding
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
-import com.koronnu.kina.customClasses.enumClasses.Guides
-import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
-import com.koronnu.kina.customClasses.enumClasses.MainFragment
-import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.ui.listener.KeyboardListener
 import com.koronnu.kina.ui.listener.popUp.EditFilePopUpCL
 import com.koronnu.kina.ui.observer.LibraryOb
@@ -66,14 +64,14 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //        applicationContext.deleteDatabase("my_database")
 //        ー－－－mainActivityのviewー－－－
 
-        fun checkIfInstall(){
-            val sharedPref = this.getSharedPreferences(
-                "firstTimeGuide", Context.MODE_PRIVATE) ?: return
-            if (!sharedPref.getBoolean("firstTimeGuide", false)) {
-                mainActivityViewModel.guideViewModel.startGuide(Guides.CreateItems,GuideActions(this))
-
-            }
-        }
+//        fun checkIfInstall(){
+//            val sharedPref = this.getSharedPreferences(
+//                "firstTimeGuide", Context.MODE_PRIVATE) ?: return
+//            if (!sharedPref.getBoolean("firstTimeGuide", false)) {
+//                mainActivityViewModel.guideViewModel.startGuide(Guides.CreateItems,GuideActions(this))
+//
+//            }
+//        }
         fun setMainActivityLateInitVars(){
 
             binding = MainActivityBinding.inflate(layoutInflater)
@@ -244,12 +242,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 //            }
 //            if(it) setUpMenuMode() else frameLayHelp.removeAllViews()
 //        }
-        val guideVisibilityObserver      = Observer<Boolean>{
-            changeViewVisibility(binding.frameLayCallOnInstall,mainActivityViewModel.checkIfFrameLayHelpIsVisible())
-            if(it.not()){
-              binding.frameLayCallOnInstall.removeAllViews()
-            }
-        }
         val lastInsertedFileObserver      = Observer<File>{
             createFileViewModel.setLastInsertedFile(it)
         }
@@ -324,7 +316,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
         mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)
 //        mainActivityViewModel.helpOptionVisibility  .observe(this,helpOptionVisibilityObserver)
-        mainActivityViewModel.guideVisibility       .observe(this,guideVisibilityObserver)
+//        mainActivityViewModel.guideVisibility       .observe(this,guideVisibilityObserver)
 //        mainActivityViewModel.confirmEndGuidePopUpVisible.observe(this,confirmEndGuideObserver)
 //        ー－－－CreateFileViewModelの読み取りー－－－
         createFileViewModel.apply{
@@ -350,44 +342,11 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
 
 
-    fun onBackPress(){
-        var actionDone = true
-        if(!mainActivityViewModel.guideViewModel.doOnBackPress()){}
-        else if (mainActivityViewModel.returnHelpOptionVisibility())
-            mainActivityViewModel.setHelpOptionVisibility(false)
-        else if(createFileViewModel.getBottomMenuVisible())
-            createFileViewModel.setBottomMenuVisible(false)
-        else if(createFileViewModel.returnEditFilePopUpVisible())
-            createFileViewModel.setEditFilePopUpVisible(false)
-        else if(deletePopUpViewModel.returnConfirmDeleteWithChildrenVisible())
-            deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
-        else if(deletePopUpViewModel.returnConfirmDeleteVisible())
-            deletePopUpViewModel.setConfirmDeleteVisible(false)
-        else if(libraryViewModel.returnMultiSelectMode()){
-            if(libraryViewModel.returnMultiMenuVisibility())
-                libraryViewModel.setMultiMenuVisibility(false)
-            else libraryViewModel.setMultipleSelectMode(false)
-        }
-        else if(libraryViewModel.returnLeftSwipedItemExists())
-            libraryViewModel.makeAllUnSwiped()
-        else if (searchViewModel.returnSearchModeActive())
-            searchViewModel.setSearchModeActive(false)
-        else if(ankiBaseViewModel.returnSettingVisible())
-            ankiBaseViewModel.setSettingVisible(false)
-        else if (mainActivityViewModel.returnHelpOptionVisibility())
-            mainActivityViewModel.setHelpOptionVisibility(false)
-        else if (mainActivityViewModel.returnFragmentStatus()?.now==MainFragment.Library)
-            libraryViewModel.returnLibraryNavCon()?.popBackStack()
-
-    }
-
-    var a :OnBackPressedCallback? = null
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(!mainActivityViewModel.doOnBackPress()) mainNavCon.popBackStack()
+                mainActivityViewModel.doOnBackPress()
             }
         })
     }
