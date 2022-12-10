@@ -127,13 +127,13 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
     }
 
     fun doOnBackPress() {
-        if((!guideOptionMenuViewModel.doOnBackPress()
-            &&!guideViewModel.doOnBackPress())
-            ||!createCardViewModel.doOnBackPress()
-            ||!editFileViewModel.doOnBackPress()
-            ||!deletePopUpViewModel.doOnBackPress()
-            ||!libraryBaseViewModel.doOnBackPress()
-            ||!ankiBaseViewModel.doOnBackPress()) return
+        if(guideOptionMenuViewModel.doOnBackPress()
+            ||guideViewModel.doOnBackPress()
+            ||createCardViewModel.doOnBackPress()
+            ||editFileViewModel.doOnBackPress()
+            ||deletePopUpViewModel.doOnBackPress()
+            ||libraryBaseViewModel.doOnBackPress()
+            ||ankiBaseViewModel.doOnBackPress()) return
         returnMainActivityNavCon()?.popBackStack()
 
     }
