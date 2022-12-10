@@ -29,18 +29,17 @@ class DeleteGuide(val actions: GuideActions){
     }
     private fun guide3(){
         actions.apply {
+            animateConLayGoNextVisibility(false)
             animateSpbNoChange(R.string.guide_spb_delete_3)
             {}
             makeOnlySwipeActive()
             goNextWhenSwiped { guide4() }
             makeHereTouchable(libRvFirstItem)
-            changeViewVisibility(conLayGoNext,false)
         }
     }
     private fun guide4(){
         actions.apply {
             libraryViewModel.setOnlySwipeActive(false)
-            changeViewVisibility(conLayGoNext,true)
             animateSpbNoChange(R.string.guide_spb_delete_4)
             {onClickGoNext { guide5() } }
             makeHereTouchable(null)
@@ -48,6 +47,7 @@ class DeleteGuide(val actions: GuideActions){
     }
     private fun guide5(){
         actions.apply {
+            animateConLayGoNextVisibility(false)
             changeViewVisibility(conLayGoNext,false)
             setArrow(MyOrientation.LEFT,btnDeleteFile)
             goNextWhenDeletePopUpVisible{guide6prt1()}
@@ -61,7 +61,6 @@ class DeleteGuide(val actions: GuideActions){
         actions.apply {
             libraryViewModel.makeAllUnSwiped()
             getArrowVisibilityAnim(false).start()
-            changeViewVisibility(conLayGoNext,true)
             viewUnderSpotInGuide = frameLayConfirmDelete
             animateCharacterAndSpbPos(R.string.guide_spb_delete_6prt1,
                 {characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayConfirmDelete,MyOrientation.TOP))
@@ -143,6 +142,7 @@ class DeleteGuide(val actions: GuideActions){
     }
     private fun guide15(){
         actions.apply {
+            animateConLayGoNextVisibility(false)
             viewUnderSpotInGuide = libRvFirstItem
             setArrow(MyOrientation.BOTTOM,libRvFirstItem)
             animateCharacterRvBottomSpbRight(R.string.guide_spb_delete_14)
