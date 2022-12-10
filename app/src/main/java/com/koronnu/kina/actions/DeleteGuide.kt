@@ -37,6 +37,7 @@ class DeleteGuide(val actions: GuideActions){
             makeHereTouchable(libRvFirstItem)
         }
     }
+//    hello
     private fun guide4(){
         actions.apply {
             libraryViewModel.setOnlySwipeActive(false)
