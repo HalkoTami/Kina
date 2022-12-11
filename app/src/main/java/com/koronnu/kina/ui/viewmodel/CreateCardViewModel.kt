@@ -1,7 +1,9 @@
 package com.koronnu.kina.ui.viewmodel
 
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
+import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
@@ -10,9 +12,6 @@ import com.koronnu.kina.db.enumclass.CardStatus
 import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.koronnu.kina.ui.fragment.createCard_frag_com.EditCardFragDirections
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
-import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
-import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.databinding.CreateCardFragMainBinding
 import com.koronnu.kina.databinding.CreateCardFragStringFragBinding
@@ -21,6 +20,21 @@ import kotlinx.coroutines.launch
 
 class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel(){
 
+    lateinit var mainViewModel: MainViewModel
+
+
+    companion object{
+        fun getFactory(mainViewModel: MainViewModel) : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
+                val repository = application.repository
+                val createCardViewModel = CreateCardViewModel(repository)
+                createCardViewModel.mainViewModel = mainViewModel
+                return createCardViewModel as T
+            }
+        }
+    }
 
 
     private var _createCardStringBinding :CreateCardFragStringFragBinding? = null
@@ -49,12 +63,11 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun getFileAndChildrenCards(fileId:Int?): LiveData<Map<File, List<Card>>> = repository.getFileAndChildrenCards(fileId).asLiveData()
     val cardsWithoutCardsFlashCard:LiveData<List<Card>?> =  this.repository.getCardDataByFileIdSorted(null).asLiveData()
 
-    fun getParentFlashCardCover(fileId:Int?):LiveData<File?> = repository.getFileByFileId(fileId).asLiveData()
     private val _parentFlashCardCover = MutableLiveData<File?>()
     fun setParentFlashCardCover(file: File?){
         _parentFlashCardCover.value = file
     }
-    fun onClickEditCardFromRV(card: Card,){
+    fun onClickEditCardFromRV(card: Card){
         setStartingCardId(card.id)
         returnMainActivityNavCon()?.navigate(EditCardBaseFragDirections.openCreateCard())
 
@@ -80,7 +93,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     fun getSisterCards(fileId: Int?):LiveData<List<Card>> = repository.getCardDataByFileId(fileId).asLiveData()
     private val _sisterCards = MutableLiveData<List<Card>>()
-    fun sortCards(list: List<Card>):List<Card>{
+    private fun sortCards(list: List<Card>):List<Card>{
         val sorted = mutableListOf<Card>()
         fun getNextCard(cardBefore: Card?){
             val nextList = list.filter { it.cardBefore == cardBefore?.id }
@@ -135,33 +148,11 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private fun setSaveCard(boolean: Boolean){
         _saveCard.value = boolean
     }
-    private val _confirmFlipItemPopUpVisible = MutableLiveData<Boolean>()
-    val confirmFlipItemPopUpVisible :LiveData<Boolean> = _confirmFlipItemPopUpVisible
-    fun setConfirmFlipItemPopUpVisible(boolean: Boolean){
-        _confirmFlipItemPopUpVisible.value = boolean
-    }
 
 
-    private val _cardColor = MutableLiveData<ColorPalletStatus>()
-    val cardColor: LiveData<ColorPalletStatus> = _cardColor
-    fun setCardColor(colorStatus: ColorStatus){
-        val previous = _cardColor.value?.colNow
-        if(previous == colorStatus){
-            return
-        } else{
-            val newStatus = ColorPalletStatus(colorStatus,previous)
-            _cardColor.value = newStatus
-        }
-    }
 
-    private val _colPalletVisibility = MutableLiveData<Boolean>()
-    val colPalletVisibility: LiveData<Boolean> = _colPalletVisibility
-    private fun setColPalletVisibility(boolean: Boolean){
-        _colPalletVisibility.value = boolean
-    }
-    fun changeColPalletVisibility(){
-        setColPalletVisibility( _colPalletVisibility.value?.not() ?:false)
-    }
+
+
     private val _stringData = MutableLiveData<StringData?>()
     val stringData :LiveData<StringData?> =_stringData
     private fun saveEmptyCard(position:Int?,parentFlashCardCoverId:Int?){
@@ -179,12 +170,11 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         )
         insert(newCard)
     }
-    fun upDateCard(stringData: StringData,card: Card){
-        val upDating = card
-        upDating.stringData = stringData
-        update(upDating)
+    fun upDateCard(stringData: StringData,card: Card) {
+        card.stringData = stringData
+        update(card)
     }
-    fun upDateCardBefore(card:Card,newCardBefore:Int){
+    private fun upDateCardBefore(card:Card, newCardBefore:Int){
         card.cardBefore = newCardBefore
         update(card)
     }
@@ -201,14 +191,9 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     }
 
 //    navigation
-    fun checkMakePopUpVisible(mainFragmentStatus: MainViewModel.MainActivityChildFragmentStatus, ankiActiveFrag: AnkiFragments){
-    if(mainFragmentStatus.before== MainFragment.Anki&&
-        ankiActiveFrag == AnkiFragments.Flip){
-        setConfirmFlipItemPopUpVisible(true)
-    }
-    }
 
-    fun onClickBtnInsert(side: NeighbourCardSide,){
+
+    fun onClickBtnInsert(side: NeighbourCardSide){
         setOpenEditCard(true)
         fun insertToNext(){
             val nextCard = returnSisterCards().find { it.cardBefore == returnParentCard()?.id }
@@ -259,10 +244,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
        }
     }
 
-    fun onClickRVAddNewCard(item:Card,mainNavCon:NavController){
-        setOpenEditCard(true)
-        saveEmptyCard(item.cardBefore ?:0+ 1,item.belongingFlashCardCoverId,)
-    }
+
     fun onClickAddNewCardBottomBar(){
         returnMainActivityNavCon()?.navigate(
             EditCardBaseFragDirections.openCreateCard())
@@ -298,6 +280,9 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         navController.popBackStack()
         navController.navigate(action)
 
+    }
+    fun doOnBackPress():Boolean{
+        return false
     }
 
 

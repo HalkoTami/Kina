@@ -38,7 +38,7 @@ class HoleViewVer2 (
             field = value
             this.invalidate()
         }
-    private var holeMargin:Int = 20
+    var holeMargin:Int = 20
         set(value){
             field = value
             this.invalidate()

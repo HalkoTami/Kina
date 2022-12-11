@@ -1,21 +1,19 @@
 package com.koronnu.kina.ui.viewmodel
 
-import android.content.Context
 import android.view.LayoutInflater
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import com.koronnu.kina.actions.GuideActions
 import com.koronnu.kina.activity.MainActivity
-import com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
-import com.koronnu.kina.ui.fragment.base_frag_con.LibraryBaseFragDirections
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.MainActivityBinding
-import com.koronnu.kina.ui.listener.GuideOptionBindingCL
+import com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
+import com.koronnu.kina.ui.fragment.base_frag_con.LibraryBaseFragDirections
 import kotlinx.coroutines.*
 
 
-
 class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
+
+//    vars init onCreate
     lateinit var guideViewModel: GuideViewModel
     lateinit var libraryBaseViewModel: LibraryBaseViewModel
     lateinit var guideOptionMenuViewModel: GuideOptionMenuViewModel
@@ -23,6 +21,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
     lateinit var deletePopUpViewModel: DeletePopUpViewModel
     lateinit var ankiBaseViewModel: AnkiBaseViewModel
     lateinit var popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel
+    lateinit var createCardViewModel: CreateCardViewModel
     companion object {
         fun getViewModel(mainActivity: MainActivity): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -34,12 +33,14 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
                 val deletePopUpViewModel = getViewModelProviderWithFactory(DeletePopUpViewModel.Factory)[DeletePopUpViewModel::class.java]
                 val ankiBaseViewModel = getViewModelProviderWithFactory(AnkiBaseViewModel.getFactory(mainModel))[AnkiBaseViewModel::class.java]
                 val popUpJumpToGuideViewModel = getViewModelProviderWithFactory(PopUpJumpToGuideViewModel.getViewModelFactory(mainModel))[PopUpJumpToGuideViewModel::class.java]
+                val createCardViewModel = getViewModelProviderWithFactory(CreateCardViewModel.getFactory(mainModel))[CreateCardViewModel::class.java]
                 mainModel.guideViewModel = guideViewModel
                 mainModel.guideOptionMenuViewModel = guideOptionMenuViewModel
                 mainModel.editFileViewModel = editFileViewModel
                 mainModel.deletePopUpViewModel = deletePopUpViewModel
                 mainModel.ankiBaseViewModel = ankiBaseViewModel
                 mainModel.popUpJumpToGuideViewModel = popUpJumpToGuideViewModel
+                mainModel.createCardViewModel   = createCardViewModel
                 val libraryBaseViewModel = getViewModelProviderWithFactory(LibraryBaseViewModel.getFactory(mainModel,mainActivity,mainActivity.baseContext))[LibraryBaseViewModel::class.java]
                 mainModel.libraryBaseViewModel = libraryBaseViewModel
                 return mainModel as T
@@ -111,52 +112,13 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
     fun setBnvVisibility(boolean: Boolean){
         _bnvVisibility.value = boolean
     }
-    fun returnBnvVisibility():Boolean?{
-        return _bnvVisibility.value
-    }
-    private val _helpOptionVisibility = MutableLiveData<Boolean>()
-    val helpOptionVisibility:LiveData<Boolean> = _helpOptionVisibility
-    fun setHelpOptionVisibility(boolean: Boolean){
-        _helpOptionVisibility.value = boolean
-    }
-    fun returnHelpOptionVisibility():Boolean{
-        return _helpOptionVisibility.value ?:false
-    }
-    private val _guideVisibility = MutableLiveData<Boolean>()
-    val guideVisibility:LiveData<Boolean> = _guideVisibility
-    fun setGuideVisibility(boolean: Boolean){
-        _guideVisibility.value = boolean
-    }
-    fun returnGuideVisibility():Boolean{
-        return _guideVisibility.value ?:false
-    }
-    fun checkIfFrameLayHelpIsVisible():Boolean{
-        return returnGuideVisibility()||returnHelpOptionVisibility()
-    }
+
+
     private val _bnvCoverVisible = MutableLiveData<Boolean>()
     val bnvCoverVisible:LiveData<Boolean> = _bnvCoverVisible
 
     fun setBnvCoverVisible (boolean: Boolean){
         _bnvCoverVisible.value = boolean
-    }
-    private val _confirmEndGuidePopUpVisible = MutableLiveData<Boolean>()
-    val confirmEndGuidePopUpVisible:LiveData<Boolean> = _confirmEndGuidePopUpVisible
-
-    fun setConfirmEndGuidePopUpVisible (boolean: Boolean){
-        _confirmEndGuidePopUpVisible.value = boolean
-    }
-    fun returnConfirmEndGuidePopUpVisible ():Boolean{
-        return _confirmEndGuidePopUpVisible.value ?:false
-    }
-    fun onClickEndGuide(activity:MainActivity){
-        setConfirmEndGuidePopUpVisible(false)
-        setGuideVisibility(false)
-        setHelpOptionVisibility(false)
-        val sharedPref =  activity.getSharedPreferences(
-            "firstTimeGuide", Context.MODE_PRIVATE) ?: return
-        val editor = sharedPref.edit()
-        editor.putBoolean("firstTimeGuide", true)
-        editor.apply()
     }
 
     override fun onCleared() {
@@ -164,14 +126,16 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
         viewModelScope.cancel()
     }
 
-    fun doOnBackPress():Boolean {
-        if(!guideViewModel.doOnBackPress()
-            &&!guideOptionMenuViewModel.doOnBackPress()
-            &&!editFileViewModel.doOnBackPress()
-            &&!deletePopUpViewModel.doOnBackPress()
-            &&!libraryBaseViewModel.doOnBackPress()
-            &&!ankiBaseViewModel.doOnBackPress()) return false
-        return true
+    fun doOnBackPress() {
+        if(guideOptionMenuViewModel.doOnBackPress()
+            ||guideViewModel.doOnBackPress()
+            ||createCardViewModel.doOnBackPress()
+            ||editFileViewModel.doOnBackPress()
+            ||deletePopUpViewModel.doOnBackPress()
+            ||libraryBaseViewModel.doOnBackPress()
+            ||ankiBaseViewModel.doOnBackPress()) return
+        returnMainActivityNavCon()?.popBackStack()
+
     }
 
 

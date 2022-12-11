@@ -61,7 +61,7 @@ class GuideActions(val activity:MainActivity){
     val imvColPalledBlue            get() = editFileBinding.colPaletBinding.imvColBlue
     val imvColPalledYellow          get() = editFileBinding.colPaletBinding.imvColYellow
     val guideParentConLay           get() =  callOnInstallBinding.root
-    val arrow                       get() = callOnInstallBinding.imvFocusArrow
+    private val arrow                       get() = callOnInstallBinding.imvFocusArrow
     val conLayGoNext                get() = callOnInstallBinding.conLayGuideGoNext
     val character                   get() =  callOnInstallBinding.imvCharacter
     private val holeView                    get() = callOnInstallBinding.viewWithHole
@@ -99,6 +99,13 @@ class GuideActions(val activity:MainActivity){
             {setSpbPosRightNextToCharacter()},
             {doOnEnd()})
     }
+    fun setConLayGoNextLeftToNavButtons(){
+        val borderSet = getSimplePosRelation(linLayCreateCardNavigation,MyOrientation.LEFT,true)
+        borderSet.margin.rightMargin = getPixelSize(R.dimen.guide_holeView_margin)*2
+        val orientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.RIGHT)
+        val data = ViewAndPositionData(conLayGoNext, borderSet,orientation)
+        setPositionByMargin(data)
+    }
     fun makeBottomMenuVisible(){
         createFileViewModel.setBottomMenuVisible(true)
         actionsBeforeEndGuideList.add{
@@ -116,6 +123,13 @@ class GuideActions(val activity:MainActivity){
         createFileViewModel.setDoAfterNewFileCreated {
             next()
             createFileViewModel.setDoAfterNewFileCreated {  }
+        }
+    }
+    fun doAfterMoveToRvAttached(next: () -> Unit){
+        actionsBeforeEndGuideList.add{moveToViewModel.clearDoAfterRvAttached()}
+        moveToViewModel.setDoAfterRvAttached {
+            next()
+            moveToViewModel.clearDoAfterRvAttached()
         }
     }
 
@@ -171,7 +185,7 @@ class GuideActions(val activity:MainActivity){
         characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayBnv,MyOrientation.TOP))
         characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
     }
-    fun setCharacterBottomLeftAboveView(view: View){
+    private fun setCharacterBottomLeftAboveView(view: View){
         characterSizeDimenId = R.dimen.character_size_middle
         characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(view,MyOrientation.TOP))
         characterOrientation = MyOrientationSet(MyVerticalOrientation.BOTTOM,MyHorizontalOrientation.LEFT)
@@ -269,7 +283,7 @@ class GuideActions(val activity:MainActivity){
 
     var characterBorderSet: BorderSet = BorderSet()
     var characterOrientation: MyOrientationSet = MyOrientationSet()
-    var spbPosSimple: ViewAndSide? = null
+    private var spbPosSimple: ViewAndSide? = null
         set(value) {
             field = value
             doOnSpbPosSimpleSet()
@@ -377,7 +391,7 @@ class GuideActions(val activity:MainActivity){
         }
         return getAppearAlphaAnimation(arrow,visible)
     }
-    fun makeTouchAreaGone(){
+    private fun makeTouchAreaGone(){
         guideParentConLay.children.iterator().forEach {
             if(it.tag == touchAreaTag) it.visibility = View.GONE
         }
@@ -395,7 +409,7 @@ class GuideActions(val activity:MainActivity){
     fun getSimplePosRelation(standardView:View, orientation: MyOrientation, fit:Boolean): BorderSet {
         return ViewChangeActions().getSimpleBorderSet(standardView,orientation,fit)
     }
-    var characterSizeDimenId:Int = R.dimen.character_size_large
+    private var characterSizeDimenId:Int = R.dimen.character_size_large
     private fun setCharacterSize(){
         character.apply {
             val size = getPixelSize(characterSizeDimenId)
@@ -419,6 +433,8 @@ class GuideActions(val activity:MainActivity){
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
         libraryViewModel.makeAllUnSwiped()
         changeLibraryScrollviewAbility(false)
+        scrollToTop()
+
         actionsBeforeEndGuideList.add{changeLibraryScrollviewAbility(true)}
 
         when(guide){
@@ -428,6 +444,11 @@ class GuideActions(val activity:MainActivity){
             Guides.DeleteItems  ->DeleteGuide(this).guide1()
         }
     }
+
+    private fun scrollToTop() {
+        libraryChildBinding.frameLayTest.scrollTo(0,0)
+    }
+
     private fun getArrowDirectionFromArrowPos(arrowPosition: MyOrientation):MyOrientation{
         return when(arrowPosition){
             MyOrientation.BOTTOM-> MyOrientation.TOP
@@ -506,7 +527,7 @@ class GuideActions(val activity:MainActivity){
 
         return a.touchView
     }
-    fun setArrowDirection(direction: MyOrientation){
+    private fun setArrowDirection(direction: MyOrientation){
         arrow.rotation =
             when(direction){
                 MyOrientation.BOTTOM-> -450f
@@ -573,7 +594,7 @@ class GuideActions(val activity:MainActivity){
     private fun getPixelSize(dimenId:Int):Int{
         return activity.resources.getDimensionPixelSize(dimenId)
     }
-    fun setPositionByMargin(positionData: ViewAndPositionData){
+    private fun setPositionByMargin(positionData: ViewAndPositionData){
         removeGlobalListener(globalLayoutSet)
         val view = positionData.view
         view.viewTreeObserver.addOnGlobalLayoutListener(object :ViewTreeObserver.OnGlobalLayoutListener{
@@ -589,6 +610,7 @@ class GuideActions(val activity:MainActivity){
     }
     private fun makeHole(){
         holeView.apply {
+            holeMargin = getPixelSize(R.dimen.guide_holeView_margin)
             holeShape = holeShapeInGuide
             animate = animateHole
             viewUnderHole = viewUnderSpotInGuide

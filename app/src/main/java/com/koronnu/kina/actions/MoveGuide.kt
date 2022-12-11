@@ -1,7 +1,6 @@
 package com.koronnu.kina.actions
 
 
-import androidx.core.view.size
 import com.koronnu.kina.R
 import com.koronnu.kina.customClasses.enumClasses.HoleShape
 import com.koronnu.kina.customClasses.enumClasses.MyOrientation
@@ -10,6 +9,7 @@ class MoveGuide(val actions: GuideActions){
 
     fun guide1(){
         actions.apply {
+            guideViewModel.setPopUpContentEndGuide()
             animateCharacterAndSpbPos(R.string.guide_spb_move_1,
                 {setCharacterPosInCenter()},
                 {setSpbPosAboveCharacter()},
@@ -76,11 +76,13 @@ class MoveGuide(val actions: GuideActions){
         actions.apply {
             linLayMenuMoveItem.performClick()
             actionsBeforeEndGuideList.add{libraryViewModel.returnLibraryNavCon()?.popBackStack()}
-            viewUnderSpotInGuide= if(libraryRv.size==0) null else libRvFirstItem
             animateCharacterAndSpbPos(R.string.guide_spb_move_7,
                 {setCharacterPosInCenter()},
                 {setSpbPosAboveCharacter()},
                 {onClickGoNext { guide9() }})
+            doAfterMoveToRvAttached()
+            { viewUnderSpotInGuide=  libRvFirstItem }
+            viewUnderSpotInGuide = null
 
         }
     }
@@ -104,22 +106,20 @@ class MoveGuide(val actions: GuideActions){
             animateCharacterAndSpbPos(R.string.guide_spb_move_10a,
                 {setCharacterBottomLeftAboveBnv()},
                 {setSpbPosAboveCharacter()},
-                {onClickGoNext { guide12() }})
+                {conLayGoNext.setOnClickListener{guide12()}})
 
         }
     }
     private fun guide12(){
         actions.apply {
-            animateConLayGoNextVisibility(false)
-            guideViewModel.setPopUpContentCreateMovableFile{
-                guide13()
-            }
+            guideViewModel.setPopUpContentCreateMovableFile()
+            { guide13() }
             guideViewModel.setPopUpConfirmEndGuideVisibility(true)
         }
     }
     private fun guide13(){
         actions.apply {
-            animateSpbNoChange(R.string.guide_spb_move_10c ){ guide14() }
+            animateSpbNoChange(R.string.guide_spb_move_10c ){ onClickGoNext{guide14()}  }
         }
     }
     private fun guide14(){
@@ -156,17 +156,17 @@ class MoveGuide(val actions: GuideActions){
             makeHereTouchable(frameLayEditFile)
             setArrow(MyOrientation.BOTTOM,btnCreateFile)
             addViewToConLay(btnCloseEditFilePopUp).setOnClickListener(null)
-            actionsBeforeEndGuideList.add{createFileViewModel.setDoAfterNewFileCreated{}}
-            createFileViewModel.setDoAfterNewFileCreated {
-                guide17()
-            createFileViewModel.setDoAfterNewFileCreated {  }}
+            goNextAfterNewFileCreated { guide17() }
 
         }
     }
     private fun guide17(){
         actions.apply {
+            makeHereTouchable(null)
             animateHole = true
-            viewUnderSpotInGuide = libraryRv
+            doAfterMoveToRvAttached {
+                viewUnderSpotInGuide = libRvFirstItem
+            }
             getArrowVisibilityAnim(false).start()
             animateCharacterAndSpbPos(R.string.guide_spb_move_10e,
                 {setCharacterBottomLeftAboveBnv()},
