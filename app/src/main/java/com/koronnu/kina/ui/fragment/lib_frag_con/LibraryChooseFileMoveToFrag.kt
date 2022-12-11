@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
@@ -77,7 +76,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             fun topBarAddCL(){
                 arrayOf(
                     topBarBinding.imvCloseChooseFileMoveTo
-                ).onEach { it.setOnClickListener( LibFragTopBarChooseFileMoveToCL(topBarBinding,libraryBaseViewModel,)) }
+                ).onEach { it.setOnClickListener( LibFragTopBarChooseFileMoveToCL(topBarBinding,libraryBaseViewModel)) }
             }
             fun confirmMoveToFilePopUpAddCL(){
                 val popUp = binding.confirmMoveToBinding
@@ -123,7 +122,6 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
 //
 //        }
         val parentRVItemsObserver = Observer<List<File>>{
-            makeToast(requireActivity(),it.size.toString())
             adapter.submitList(it)
             chooseFileMoveToViewModel.setMovableFiles(it)
 //            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
@@ -143,9 +141,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
         setUpView(flashcard,chooseFileMoveToViewModel.returnMovingItems())
         addCL()
 
-        makeToast(requireActivity(),chooseFileMoveToViewModel.getMovableFileStatus.toString())
-//        chooseFileMoveToViewModel.setMovingItems(movingItems)
-//        chooseFileMoveToViewModel.setMovingItemsParentFileId(movingItemsParent)
+
         chooseFileMoveToViewModel.popUpVisible.observe(viewLifecycleOwner,popUpVisibleObserver)
         chooseFileMoveToViewModel.popUpText.observe(viewLifecycleOwner,popUpTextObserver)
         chooseFileMoveToViewModel.getFilteredFiles(args.fileId?.single()).observe(viewLifecycleOwner,parentRVItemsObserver)
