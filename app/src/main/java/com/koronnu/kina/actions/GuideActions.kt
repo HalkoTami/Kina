@@ -426,6 +426,8 @@ class GuideActions(val activity:MainActivity){
         spbPosSimple = ViewAndSide(character,MyOrientation.TOP)
         libraryViewModel.makeAllUnSwiped()
         changeLibraryScrollviewAbility(false)
+        scrollToTop()
+
         actionsBeforeEndGuideList.add{changeLibraryScrollviewAbility(true)}
 
         when(guide){
@@ -435,6 +437,11 @@ class GuideActions(val activity:MainActivity){
             Guides.DeleteItems  ->DeleteGuide(this).guide1()
         }
     }
+
+    private fun scrollToTop() {
+        libraryChildBinding.frameLayTest.scrollTo(0,0)
+    }
+
     private fun getArrowDirectionFromArrowPos(arrowPosition: MyOrientation):MyOrientation{
         return when(arrowPosition){
             MyOrientation.BOTTOM-> MyOrientation.TOP

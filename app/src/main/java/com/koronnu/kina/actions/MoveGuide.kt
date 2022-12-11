@@ -165,6 +165,7 @@ class MoveGuide(val actions: GuideActions){
     }
     private fun guide17(){
         actions.apply {
+            makeHereTouchable(null)
             animateHole = true
             viewUnderSpotInGuide = libraryRv
             getArrowVisibilityAnim(false).start()
