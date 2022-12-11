@@ -169,8 +169,8 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
         setCollectMovingFileData(Count.Start)
 
     }
-    fun openChooseFileMoveTo(){
-        TODO()
+    fun onClickChooseFileMoveToRvBaseContainer(file: File){
+        libraryViewModel.openChooseFileMoveTo(file)
     }
 
 

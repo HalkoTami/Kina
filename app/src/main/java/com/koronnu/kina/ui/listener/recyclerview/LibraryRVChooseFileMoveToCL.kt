@@ -12,7 +12,7 @@ class LibraryRVChooseFileMoveToCL(val item: File,
     override fun onClick(p0: View?) {
         rvBinding.apply {
             when(p0){
-                libRvBaseContainer  -> chooseFileMoveToViewModel.openChooseFileMoveTo()
+                libRvBaseContainer  -> chooseFileMoveToViewModel.onClickChooseFileMoveToRvBaseContainer(item)
                 rvBaseFrameLayLeft  -> chooseFileMoveToViewModel.onClickRvBtnMove(item)
             }
         }

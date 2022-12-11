@@ -1,12 +1,9 @@
 package com.koronnu.kina.ui.viewmodel
 
 import android.content.Context
-import android.view.View
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
-import com.google.errorprone.annotations.Var
-import com.koronnu.kina.actions.setClickListeners
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.*
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
@@ -24,7 +21,6 @@ import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFragDire
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFragDirections
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFolderFragDirections
 import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
-import com.koronnu.kina.ui.listener.libraryBaseFragment.PopUpJumpToGuideCL
 import kotlinx.coroutines.cancel
 class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
@@ -33,7 +29,6 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private lateinit var popUpJumpToGuideViewModel:PopUpJumpToGuideViewModel
     private lateinit var moveToViewModel :ChooseFileMoveToViewModel
     private lateinit var _libraryInBoxFragViewModel:LibraryInBoxFragViewModel
-    val libraryInBoxFragViewModel get() = _libraryInBoxFragViewModel
     val chooseFileMoveToViewModel get() = moveToViewModel
     val guideOptionMenuViewModel get() = mainViewModel.guideOptionMenuViewModel
 
@@ -50,7 +45,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
                 val repository = application.repository
                 val libraryBaseViewModel = LibraryBaseViewModel(repository)
                 val searchViewModel = ViewModelProvider(viewModelStoreOwner,SearchViewModel.Factory)[SearchViewModel::class.java]
-                val moveToViewModel = ViewModelProvider(viewModelStoreOwner,ChooseFileMoveToViewModel.Factory)[ChooseFileMoveToViewModel::class.java]
+                val moveToViewModel = ViewModelProvider(viewModelStoreOwner,ChooseFileMoveToViewModel.getFactory(libraryBaseViewModel))[ChooseFileMoveToViewModel::class.java]
                 val inBoxFragViewModel = ViewModelProvider(viewModelStoreOwner,LibraryInBoxFragViewModel.getFactory(libraryBaseViewModel,
                     mainViewModel.popUpJumpToGuideViewModel,context))[LibraryInBoxFragViewModel::class.java]
                 libraryBaseViewModel.mainViewModel = mainViewModel
@@ -121,7 +116,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         _parentFragment.value = fragment
     }
 
-    fun returnLibraryFragment(): LibraryFragment?{
+    private fun returnLibraryFragment(): LibraryFragment?{
         return _parentFragment.value
     }
     val parentFragment:LiveData<LibraryFragment> = _parentFragment
@@ -154,13 +149,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun returnLibraryNavCon(): NavController?{
         return _libraryNavCon.value
     }
-    private val _selectedItemParent  = MutableLiveData<File?>()
-    fun setSelectedItemParent(parentFile: File?){
-        _selectedItemParent.value = parentFile
-    }
-    val getSelectedItemParent = _selectedItemParent.value
 
-//    Fragment作成時に毎回呼び出す
+    //    Fragment作成時に毎回呼び出す
     fun onCreate(){
         clearSelectedItems()
     }
@@ -234,7 +224,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private fun doAfterSetUpdatedSelectedItems(){
         getChooseFileMoveToViewModel.setMovingItems(getUpdatedSelectedItems)
     }
-    val getUpdatedSelectedItems get() = _upDateSelectedItems.value ?: mutableListOf()
+    private val getUpdatedSelectedItems get() = _upDateSelectedItems.value ?: mutableListOf()
     private val _selectedItems = MutableLiveData<List<Any>>()
     private fun setSelectedItems(list:List<Any>){
         _selectedItems.value = list
@@ -243,7 +233,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun clearSelectedItems(){
         setSelectedItems(mutableListOf())
     }
-    fun returnSelectedItems():List<Any>{
+    private fun returnSelectedItems():List<Any>{
         return _selectedItems.value ?: mutableListOf()
     }
 
@@ -253,7 +243,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private fun setReorderedLeftItems(list:List<Any>){
         _reorderedLeftItems.value = list
     }
-    fun getReorderedLeftItems():List<Any>{
+    private fun getReorderedLeftItems():List<Any>{
         return _reorderedLeftItems.value ?: mutableListOf()
     }
     fun filterReorderedItemsForUpdate():List<Any>{
@@ -266,10 +256,6 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
 
     private val _toast = MutableLiveData<MakeToastFromVM>()
-    private fun makeToastFromVM(string: String){
-        _toast.value = MakeToastFromVM(string,true)
-        _toast.value = MakeToastFromVM("",false)
-    }
 
     val toast :LiveData<MakeToastFromVM> = _toast
     private fun updateLeftCardItems(parentCards:List<Card>){
@@ -431,12 +417,9 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun setMultiMenuVisibility (boolean: Boolean){
         _multiMenuVisibility.value = boolean
     }
-    fun returnMultiMenuVisibility():Boolean{
+    private fun returnMultiMenuVisibility():Boolean{
         return _multiMenuVisibility.value ?:false
     }
-    class RvCover(
-        var visible:Boolean
-    )
 
 
     private val _chooseFileMoveToMode = MutableLiveData<Boolean>()
@@ -497,16 +480,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
 
 
-    fun checkViewReset():Boolean{
-        if(_multipleSelectMode.value == true){
-            setMultipleSelectMode(false)
-            return true
-        }
-        return false
-    }
-
-
-//    －－－－－－－－
+    //    －－－－－－－－
 //    －－－－recyclerView States－－－－
     private val _makeAllUnSwiped = MutableLiveData<Boolean>()
     fun makeAllUnSwiped (){
@@ -515,7 +489,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
     val makeAllUnSwiped:LiveData<Boolean> = _makeAllUnSwiped
     private val _changeAllRVSelectedStatus = MutableLiveData<Boolean>()
-    fun changeAllRVSelectedStatus (selected:Boolean){
+    private fun changeAllRVSelectedStatus (selected:Boolean){
         _changeAllRVSelectedStatus.value = selected
         if(selected) {
             setSelectedItems(returnParentRVItems().toMutableList())
@@ -524,11 +498,10 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         else setSelectedItems(mutableListOf())
     }
     private val _allRVItemSelected = MutableLiveData<Boolean>()
-    val allRVItemSelected:LiveData<Boolean> = _allRVItemSelected
-    fun setAllRVSelected (selected:Boolean){
+    private fun setAllRVSelected (selected:Boolean){
         _allRVItemSelected.value = selected
     }
-    fun getAllRVItemSelected ():Boolean{
+    private fun getAllRVItemSelected ():Boolean{
         return _allRVItemSelected.value ?:false
     }
 
@@ -539,7 +512,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         _leftSwipedItemExists.value = boolean
 
     }
-    val leftSwipedItemExists:LiveData<Boolean> = _leftSwipedItemExists
+
     fun returnLeftSwipedItemExists ():Boolean{
         return  _leftSwipedItemExists.value ?:false
     }
