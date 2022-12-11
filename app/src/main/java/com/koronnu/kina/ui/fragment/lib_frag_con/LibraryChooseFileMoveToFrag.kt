@@ -122,8 +122,8 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
 //
 //        }
         val parentRVItemsObserver = Observer<List<File>>{
-            adapter.submitList(it)
             chooseFileMoveToViewModel.setMovableFiles(it)
+            adapter.submitList(it)
 //            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
         }
         val parentFileAncestorsObserver = Observer<List<File>> {

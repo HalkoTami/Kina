@@ -1,7 +1,6 @@
 package com.koronnu.kina.actions
 
 
-import androidx.core.view.size
 import com.koronnu.kina.R
 import com.koronnu.kina.customClasses.enumClasses.HoleShape
 import com.koronnu.kina.customClasses.enumClasses.MyOrientation
@@ -77,11 +76,13 @@ class MoveGuide(val actions: GuideActions){
         actions.apply {
             linLayMenuMoveItem.performClick()
             actionsBeforeEndGuideList.add{libraryViewModel.returnLibraryNavCon()?.popBackStack()}
-            viewUnderSpotInGuide= if(libraryRv.size==0) null else libRvFirstItem
             animateCharacterAndSpbPos(R.string.guide_spb_move_7,
                 {setCharacterPosInCenter()},
                 {setSpbPosAboveCharacter()},
                 {onClickGoNext { guide9() }})
+            doAfterListSubmittedToRV()
+            { viewUnderSpotInGuide=  libRvFirstItem }
+            viewUnderSpotInGuide = null
 
         }
     }
@@ -155,10 +156,7 @@ class MoveGuide(val actions: GuideActions){
             makeHereTouchable(frameLayEditFile)
             setArrow(MyOrientation.BOTTOM,btnCreateFile)
             addViewToConLay(btnCloseEditFilePopUp).setOnClickListener(null)
-            actionsBeforeEndGuideList.add{createFileViewModel.setDoAfterNewFileCreated{}}
-            createFileViewModel.setDoAfterNewFileCreated {
-                guide17()
-            createFileViewModel.setDoAfterNewFileCreated {  }}
+            goNextAfterNewFileCreated { guide17() }
 
         }
     }
@@ -166,7 +164,7 @@ class MoveGuide(val actions: GuideActions){
         actions.apply {
             makeHereTouchable(null)
             animateHole = true
-            viewUnderSpotInGuide = libraryRv
+            viewUnderSpotInGuide = libRvFirstItem
             getArrowVisibilityAnim(false).start()
             animateCharacterAndSpbPos(R.string.guide_spb_move_10e,
                 {setCharacterBottomLeftAboveBnv()},

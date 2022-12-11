@@ -35,6 +35,12 @@ class LibFragChooseFileRVListAdapter(
         holder.bind(getItem(position),chooseFileMoveToViewModel)
     }
 
+    override fun onViewAttachedToWindow(holder: LibFragChooseFileViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        chooseFileMoveToViewModel.doAfterRVAttached()
+    }
+
+
     class LibFragChooseFileViewHolder (private val binding: LibraryFragRvItemBaseBinding) :
         RecyclerView.ViewHolder(binding.root){
 
@@ -89,7 +95,10 @@ class LibFragChooseFileRVListAdapter(
         }
 
         }
+
     }
+
+
 object FileDiffCallBack : DiffUtil.ItemCallback<File>() {
     override fun areItemsTheSame(oldItem: File, newItem: File): Boolean {
         return oldItem.fileId == newItem.fileId
