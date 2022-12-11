@@ -80,7 +80,7 @@ class MoveGuide(val actions: GuideActions){
                 {setCharacterPosInCenter()},
                 {setSpbPosAboveCharacter()},
                 {onClickGoNext { guide9() }})
-            doAfterListSubmittedToRV()
+            doAfterMoveToRvAttached()
             { viewUnderSpotInGuide=  libRvFirstItem }
             viewUnderSpotInGuide = null
 
@@ -164,7 +164,9 @@ class MoveGuide(val actions: GuideActions){
         actions.apply {
             makeHereTouchable(null)
             animateHole = true
-            viewUnderSpotInGuide = libRvFirstItem
+            doAfterMoveToRvAttached {
+                viewUnderSpotInGuide = libRvFirstItem
+            }
             getArrowVisibilityAnim(false).start()
             animateCharacterAndSpbPos(R.string.guide_spb_move_10e,
                 {setCharacterBottomLeftAboveBnv()},

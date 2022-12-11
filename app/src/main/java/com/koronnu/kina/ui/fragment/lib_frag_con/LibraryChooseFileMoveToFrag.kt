@@ -85,7 +85,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
                     popUp.btnCommitMove,
                     popUp.btnCloseConfirmMove
                 )   .onEach {
-                    it.setOnClickListener(LibFragPopUpConfirmMoveToFileCL(popUp, chooseFileMoveToViewModel,libNavCon))
+                    it.setOnClickListener(LibFragPopUpConfirmMoveToFileCL(popUp, chooseFileMoveToViewModel))
                 }
             }
             topBarAddCL()

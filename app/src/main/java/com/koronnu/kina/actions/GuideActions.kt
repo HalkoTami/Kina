@@ -125,7 +125,7 @@ class GuideActions(val activity:MainActivity){
             createFileViewModel.setDoAfterNewFileCreated {  }
         }
     }
-    fun doAfterListSubmittedToRV(next: () -> Unit){
+    fun doAfterMoveToRvAttached(next: () -> Unit){
         actionsBeforeEndGuideList.add{moveToViewModel.clearDoAfterRvAttached()}
         moveToViewModel.setDoAfterRvAttached {
             next()
