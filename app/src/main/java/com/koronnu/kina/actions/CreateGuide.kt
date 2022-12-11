@@ -179,6 +179,7 @@ class CreateGuide(val actions: GuideActions ){
     }
     private fun guide18(){
         actions.apply {
+            setConLayGoNextLeftToNavButtons()
             actions.viewUnderSpotInGuide = linLayCreateCardNavigation
             animateCharacterAndSpbPos(R.string.guide_spb_create_9,
                 { characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(edtCardBackContent,
