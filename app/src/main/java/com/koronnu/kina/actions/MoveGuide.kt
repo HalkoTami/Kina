@@ -10,6 +10,7 @@ class MoveGuide(val actions: GuideActions){
 
     fun guide1(){
         actions.apply {
+            guideViewModel.setPopUpContentEndGuide()
             animateCharacterAndSpbPos(R.string.guide_spb_move_1,
                 {setCharacterPosInCenter()},
                 {setSpbPosAboveCharacter()},
@@ -104,22 +105,20 @@ class MoveGuide(val actions: GuideActions){
             animateCharacterAndSpbPos(R.string.guide_spb_move_10a,
                 {setCharacterBottomLeftAboveBnv()},
                 {setSpbPosAboveCharacter()},
-                {onClickGoNext { guide12() }})
+                {conLayGoNext.setOnClickListener{guide12()}})
 
         }
     }
     private fun guide12(){
         actions.apply {
-            animateConLayGoNextVisibility(false)
-            guideViewModel.setPopUpContentCreateMovableFile{
-                guide13()
-            }
+            guideViewModel.setPopUpContentCreateMovableFile()
+            { guide13() }
             guideViewModel.setPopUpConfirmEndGuideVisibility(true)
         }
     }
     private fun guide13(){
         actions.apply {
-            animateSpbNoChange(R.string.guide_spb_move_10c ){ guide14() }
+            animateSpbNoChange(R.string.guide_spb_move_10c ){ onClickGoNext{guide14()}  }
         }
     }
     private fun guide14(){
