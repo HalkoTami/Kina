@@ -113,7 +113,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
             deletePopUpViewModel.setDeletingItemsSistersUpdateNeeded(updateNeeded)
         }
         searchViewModel.searchingText.observe(viewLifecycleOwner){ searchText ->
-            if(searchText == "")  {
+            if(searchText.isBlank())  {
                 requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             }
             else{

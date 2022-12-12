@@ -27,7 +27,7 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
     private val ankiBaseViewModel: AnkiBaseViewModel by activityViewModels()
     private val ankiFlipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
     private lateinit var flipRoundSharedPref: SharedPreferences
-
+    private val getResources = requireActivity().resources
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +37,7 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = AnkiFlipFragCompletedBinding.inflate(inflater, container, false)
         Animation().appearAlphaAnimation(binding.root,true,1f){}.start()
-        flipRoundSharedPref = requireActivity().getSharedPreferences("flip_round",Context.MODE_PRIVATE)
+        flipRoundSharedPref = requireActivity().getSharedPreferences(getResources.getString(R.string.sp_title_flipRound),Context.MODE_PRIVATE)
 
         ankiFlipBaseViewModel.allActivityData.observe(viewLifecycleOwner){
             val dTA = DateTimeActions()

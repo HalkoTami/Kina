@@ -309,5 +309,5 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <string name="tag_color_pallet_circle">colorPalletCircle</string>
+    <string name="tag_color_pallet_circle" translatable="false">colorPalletCircle</string>
 </resources>

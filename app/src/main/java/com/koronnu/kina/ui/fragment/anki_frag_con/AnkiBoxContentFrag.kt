@@ -39,11 +39,11 @@ class AnkiBoxContentFrag  : Fragment() {
         val fragmentBefore = ankiBaseViewModel.returnActiveFragment()
         val viewSetUp = AnkiBoxFragViewSetUp()
         fun getTopBarTitle(fragmentBefore: AnkiFragments):String{
-            return when(fragmentBefore){
-                AnkiFragments.AnkiBox -> "暗記ボックスアイテム"
-                AnkiFragments.Flip -> "暗記中のアイテム"
-                else -> ""
-            }
+            return requireActivity().resources.getString(when(fragmentBefore){
+                AnkiFragments.AnkiBox ->R.string.ankiBoxContentFrag_topBarTitle_ankiBoxContent
+                AnkiFragments.Flip ->R.string.ankiBoxContentFrag_topBarTitle_parentFlipItem
+                else -> R.string.item
+            })
         }
         fun getTopBarDrawable(fragmentBefore: AnkiFragments):Drawable{
             val id =   when(fragmentBefore){
@@ -61,7 +61,7 @@ class AnkiBoxContentFrag  : Fragment() {
             }
         }
         fun setUpTopBar(){
-            val amountText = "${getParentTokenList(fragmentBefore).size}枚"
+            val amountText = requireActivity().resources.getString(R.string.cardAmountText,getParentTokenList(fragmentBefore).size)
             binding.txvTopBarTitle.text = getTopBarTitle(fragmentBefore)
             binding.txvTopBarCardAmount.text = amountText
             binding.imvFlipOrAnkiBox.setImageDrawable(getTopBarDrawable(fragmentBefore))

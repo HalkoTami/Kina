@@ -3,6 +3,7 @@ package com.koronnu.kina.ui.fragment.anki_frag_con
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.koronnu.kina.R
 import com.koronnu.kina.actions.DateTimeActions
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.customClasses.enumClasses.AnimationAttributes
@@ -42,6 +44,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
     private val flipTypeAndCheckViewModel: FlipTypeAndCheckViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
+    private val getResources = requireActivity().resources
     private val binding get() = _binding!!
     private lateinit var ankiNavCon:NavController
     private lateinit var flipNavCon:NavController
@@ -98,7 +101,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             val frag = childFragmentManager.findFragmentById(binding.fragConViewFlip.id) as NavHostFragment
             flipNavCon = frag.navController
             ankiNavCon= ankiBaseViewModel.returnAnkiBaseNavCon() ?:return
-            flipRoundSharedPref = requireActivity().getSharedPreferences("flip_round",Context.MODE_PRIVATE)
+            flipRoundSharedPref = requireActivity().getSharedPreferences(getResources.getString(R.string.sp_title_flipRound),Context.MODE_PRIVATE)
         }
 
         var start = true
@@ -143,7 +146,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                     ankiFlipBaseViewModel.updateFlipped(it)
                 }
                 if(flipItems.contains(it)){
-                    binding.topBinding.txvCardPosition.text ="${flipItems.indexOf(it)+1}/${flipItems.size}"
+                    binding.topBinding.txvCardPosition.text =requireActivity().resources.getString(R.string.flipProgress,flipItems.indexOf(it)+1,flipItems.size)
                 }
                 binding.btnRemembered.isSelected =  it.remembered
                 cardBefore = it

@@ -40,10 +40,10 @@ class CardTypeStringFrag : Fragment() {
         binding.apply {
             binding.edtFrontTitle.visibility = View.VISIBLE
 //            ヒント
-            edtFrontTitle.hint = "表のタイトル"
-            edtFrontContent.hint = "表"
-            edtBackTitle.hint = "裏のタイトル"
-            edtBackContent.hint = "裏"
+            edtFrontTitle.hint = resources.getString(R.string.create_string_card_edt_front_title_hint)
+            edtFrontContent.hint = resources.getString(R.string.create_string_card_edtFrontContent_hint)
+            edtBackTitle.hint = resources.getString(R.string.create_string_card_edt_back_title_hint)
+            edtBackContent.hint =  resources.getString(R.string.create_string_card_edtBackContent_hint)
 
             fun setTextAndSelection(editText: EditText,string: String){
                 editText.text = SpannableStringBuilder(string)
@@ -53,10 +53,10 @@ class CardTypeStringFrag : Fragment() {
 //                表示
                 parentCard.observe(viewLifecycleOwner){
                     val stringData = it?.stringData
-                    setTextAndSelection(edtFrontContent,stringData?.frontText ?: "")
-                    setTextAndSelection(edtBackContent,stringData?.backText ?: "")
-                    setTextAndSelection(edtFrontTitle,stringData?.frontTitle ?: "表")
-                    setTextAndSelection(edtBackTitle,stringData?.backTitle ?: "裏")
+                    setTextAndSelection(edtFrontContent,stringData?.frontText ?: String())
+                    setTextAndSelection(edtBackContent,stringData?.backText ?: String())
+                    setTextAndSelection(edtFrontTitle,stringData?.frontTitle ?: resources.getString(R.string.edtFrontTitle_default))
+                    setTextAndSelection(edtBackTitle,stringData?.backTitle ?: resources.getString(R.string.edtBackTitle_default))
                 }
 
 
@@ -103,10 +103,10 @@ class CardTypeStringFrag : Fragment() {
         val backText =   binding.edtBackContent.text.toString()
         val backTitle =  binding.edtBackTitle.text.toString()
         val newStringData = StringData(
-            frontTitle = if(frontTitle=="表") null else frontTitle,
+            frontTitle = if(frontTitle==resources.getString(R.string.edtFrontTitle_default)) null else frontTitle,
             frontText =  frontText,
             backText =   backText,
-            backTitle =  if(backTitle=="裏") null else backTitle
+            backTitle =  if(backTitle==resources.getString(R.string.edtBackTitle_default)) null else backTitle
         )
         createCardViewModel.upDateCard(newStringData,stringCardViewModel.returnParentCard() ?:createCardViewModel.returnParentCard() ?:return)
 

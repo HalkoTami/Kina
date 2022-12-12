@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
+import com.koronnu.kina.R
 import com.koronnu.kina.actions.showKeyBoard
 import com.koronnu.kina.databinding.AnkiFlipFragTypeAnswerStringFragBinding
 import com.koronnu.kina.db.dataclass.Card
@@ -83,7 +84,8 @@ class FlipStringTypeAnswerFrag  : Fragment() {
         }
         val cardFromDBObserver = Observer<Card>{
             flipBaseViewModel.setParentCard(it)
-            binding.txvFlipTitle.text = if(args.answerIsBack)it.stringData?.frontTitle ?:"表" else it.stringData?.backTitle ?:"裏"
+            binding.txvFlipTitle.text = if(args.answerIsBack)it.stringData?.frontTitle ?:resources.getString(
+                R.string.edtFrontTitle_default) else it.stringData?.backTitle ?:resources.getString(R.string.edtBackTitle_default)
             binding.txvContent.text = if(args.answerIsBack)it.stringData?.frontText else it.stringData?.backText
         }
         setUpViewStart()

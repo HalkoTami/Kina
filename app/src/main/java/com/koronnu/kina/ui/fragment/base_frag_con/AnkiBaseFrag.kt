@@ -30,6 +30,7 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
     private val ankiBaseViewModel : AnkiBaseViewModel by activityViewModels()
     private lateinit var ankiSettingSharedPref:SharedPreferences
+    private val getResources = requireActivity().resources
 
     private val binding get() = _binding!!
 
@@ -106,7 +107,7 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
         _binding =  AnkiFragBaseBinding.inflate(inflater, container, false)
         val a = childFragmentManager.findFragmentById(binding.ankiFragContainerView.id) as NavHostFragment
         val myNavCon = a.navController
-        ankiSettingSharedPref = requireActivity().getSharedPreferences("anki_setting",Context.MODE_PRIVATE)
+        ankiSettingSharedPref = requireActivity().getSharedPreferences(getResources.getString(R.string.sp_title_ankiSetting),Context.MODE_PRIVATE)
         val settingVisibilityObserver = Observer<Boolean>{ settingVisible ->
             saveAutoFlipSec()
             arrayOf(binding.frameLayAnkiSetting,binding.viewAnkiFragConCover).onEach {
@@ -173,7 +174,7 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
     }
     private fun getAutoFlipSec():Int{
         val text = binding.bindingSetting.bindingSettingContent.edtAutoFlipSeconds.text.toString()
-        return if(text=="") AutoFlip().seconds
+        return if(text.isBlank()) AutoFlip().seconds
         else text.toInt()
     }
     private fun saveAutoFlipSec(){

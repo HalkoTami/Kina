@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.koronnu.kina.R
 import com.koronnu.kina.databinding.AnkiHomeFragBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
@@ -115,7 +116,8 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
             binding.btnAddToFavouriteAnkiBox.isSelected = checkFavouriteExistsList.contains(it)
             editFileViewModel.setAnkiBoxCards(it)
             viewSetUp.setUpAnkiBoxRing(it,binding.ringBinding)
-            binding.btnStartAnki.text = if(it.isEmpty()) "カードを選ばず暗記" else "暗記開始"
+            binding.btnStartAnki.text =
+                requireActivity().resources.getString(if(it.isEmpty()) R.string.btnStartAnki_withoutSelect else R.string.btnStartAnki_deafult)
         }
 
 

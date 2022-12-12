@@ -48,7 +48,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
                 if(answerRight) R.drawable.icon_correct else R.drawable.icon_missed)!!
         }
         fun getSpeakBubbleContent(answerRight:Boolean):String{
-            return if(answerRight) "正解！" else "残念..."
+            return resources.getString(if(answerRight) R.string.flipCheckAnswerStringFragBin_spbContent_correct else R.string.flipCheckAnswerStringFragBin_spbContent_wrong)
         }
         fun setResultContent(answerCorrect:Boolean){
             binding.imvResultInRow.setImageDrawable(getResultIcon(answerCorrect))
@@ -95,11 +95,11 @@ class FlipStringCheckAnswerFrag  : Fragment() {
                 binding.btnFlip.isSelected = binding.btnFlip.isSelected.not()
                 if(binding.btnFlip.isSelected){
                     binding.btnFlip.alpha = 1f
-                    binding.txvTitle.text = if(args.answerIsBack)data?.frontTitle ?:"表" else data?.backTitle ?:"裏"
+                    binding.txvTitle.text = if(args.answerIsBack)data?.frontTitle ?:resources.getString(R.string.edtFrontTitle_default) else data?.backTitle ?:resources.getString(R.string.edtBackTitle_default)
                     binding.txvCorrectAnswer.text = if(args.answerIsBack)data?.frontText else data?.backText
                 } else {
                     binding.btnFlip.alpha = 0.5f
-                    binding.txvTitle.text = if(args.answerIsBack)data?.backTitle ?:"答え" else data?.frontTitle ?:"答え"
+                    binding.txvTitle.text = (if(args.answerIsBack)data?.backTitle  else data?.frontTitle )?:resources.getString(R.string.answer)
                     binding.txvCorrectAnswer.text = if(args.answerIsBack)data?.backText else data?.frontText
                 }
 
@@ -109,7 +109,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
         val root: View = binding.root
         val cardFromDBObserver = Observer<Card>{
             ankiFlipBaseViewModel.setParentCard(it)
-            binding.txvTitle.text = if(args.answerIsBack)it.stringData?.backTitle ?:"答え" else it.stringData?.frontTitle ?:"答え"
+            binding.txvTitle.text = (if(args.answerIsBack)it.stringData?.backTitle  else it.stringData?.frontTitle) ?:resources.getString(R.string.answer)
             binding.txvCorrectAnswer.text = if(args.answerIsBack)it.stringData?.backText else it.stringData?.frontText
         }
         val typedAnswersObserver = Observer<MutableMap<Int,String>> {
@@ -125,12 +125,13 @@ class FlipStringCheckAnswerFrag  : Fragment() {
                     ActivityStatus.RIGHT_FRONT_CONTENT_TYPED).contains(it.activityStatus)  }
                 if(results.isEmpty()) return@Observer
                 setResultContent(getAnswerCorrect(results.last().activityStatus))
-                binding.txvResultInRow.text  = getResultsInRow(it).toString() +"連続"+(if(getAnswerCorrect(results.last().activityStatus)) "正解" else "不正解") +"中"
+                binding.txvResultInRow.text  = resources.getString(R.string.txvResultInRow,getResultsInRow(it),
+                    if(getAnswerCorrect(results.last().activityStatus)) resources.getString(R.string.answer_correct) else resources.getString(R.string.answer_incorrect))
                 val correct = getAnswerCorrectTimes(args.answerIsBack,results)
                 val challenged = getChallengedTimes(args.answerIsBack,results)
                 binding.progressbarAnswerCorrect.progress =
                     (correct/challenged.toDouble()*100).toInt()
-                binding.txvProgressAnswerCorrect.text = "正答率:${(correct/challenged.toDouble()*100).toInt()}%"
+                binding.txvProgressAnswerCorrect.text = resources.getString(R.string.answerCorrectInRowPercentage,(correct/challenged.toDouble()*100).toInt())
             }
         }
         addCL()

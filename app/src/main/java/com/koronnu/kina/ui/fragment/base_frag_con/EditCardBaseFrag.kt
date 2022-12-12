@@ -32,6 +32,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
     private val stringCardViewModel : CardTypeStringViewModel by activityViewModels()
     private val libraryViewModel: LibraryBaseViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
+    private val getResources = requireActivity().resources
 
     private lateinit var mainNavCon:NavController
     private lateinit var cardNavCon:NavController
@@ -80,8 +81,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             val nextCard = createCardViewModel.getNeighbourCardId(NeighbourCardSide.NEXT)
             val sisterCards = createCardViewModel.returnSisterCards()
             binding.apply {
-                val text =
-                    (sisterCards.indexOf(parentCard) + 1).toString() + "/" + sisterCards.size.toString()
+                val text = getResources.getString(R.string.editCardProgress,(sisterCards.indexOf(parentCard) + 1),sisterCards.size)
                 binding.createCardTopBarBinding.txvPosition.text = text
                 setAlphaByClickable(nextCard != null, binding.btnNext)
                 setAlphaByClickable(previousCard != null, binding.btnPrevious)
@@ -91,7 +91,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         val sisterCardObserver = Observer<List<Card>?> {
             val parentCard = createCardViewModel.returnParentCard()
             if (parentCard != null) {
-                val text = "${it.indexOf(parentCard) + 1}/${it.size}"
+                val text = getResources.getString(R.string.editCardProgress,(it.indexOf(parentCard) + 1),it.size)
                 binding.createCardTopBarBinding.txvPosition.text =
                     text
 
@@ -113,7 +113,6 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
                     } else GetCustomDrawables(requireActivity()).getDrawable(R.drawable.icon_inbox)
 
                 )
-//                txvEditingFileTitle.text = it?.title ?:"InBox"
             }
         }
         val parentFlashCardCoverId = when (mainViewModel.returnFragmentStatus()?.now) {

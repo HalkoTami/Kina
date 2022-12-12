@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
+import com.koronnu.kina.R
 import com.koronnu.kina.databinding.AnkiFlipFragLookStringFragBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.customClasses.enumClasses.Count
@@ -43,11 +44,11 @@ class FlipStringFrag  : Fragment() {
             binding.apply {
                 when(front) {
                     true ->{
-                        txvTitle.text = data?.frontTitle ?:"表"
+                        txvTitle.text = data?.frontTitle ?:resources.getString(R.string.edtFrontTitle_default)
                         txvContent.text = data?.frontText
                     }
                     false  -> {
-                        txvTitle.text =data?.backTitle ?:"裏"
+                        txvTitle.text =data?.backTitle ?:resources.getString(R.string.edtBackTitle_default)
                         txvContent.text = data?.backText
                     }
                 }
