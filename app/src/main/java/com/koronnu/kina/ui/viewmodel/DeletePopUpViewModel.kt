@@ -1,7 +1,9 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.content.res.Resources
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.koronnu.kina.R
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
@@ -10,7 +12,8 @@ import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
-class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel() {
+class DeletePopUpViewModel(private val repository: MyRoomRepository,
+                           private val resources: Resources) : ViewModel() {
 
     companion object{
         val Factory : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
@@ -18,7 +21,8 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
                 val repository = application.repository
-                return DeletePopUpViewModel(repository) as T
+                val resources = application.resources
+                return DeletePopUpViewModel(repository,resources) as T
             }
         }
     }
@@ -26,7 +30,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
     private val _toast = MutableLiveData<MakeToastFromVM>()
     private fun makeToastFromVM(string: String){
         _toast.value = MakeToastFromVM(string,true)
-        _toast.value = MakeToastFromVM("",false)
+        _toast.value = MakeToastFromVM(String(),false)
     }
 
     val toast :LiveData<MakeToastFromVM> = _toast
@@ -52,9 +56,9 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         file.onEach { deleteSingleFile(it,deleteChildren) }
         if(file.size == 1) {
             val single = file.single()
-            if(deleteChildren) makeToastFromVM("${single.title}と中身を削除しました")
-            else  makeToastFromVM("${single.title}を削除しました")
-        } else makeToastFromVM("選択中のアイテムを削除しました")
+            if(deleteChildren) makeToastFromVM(resources.getString(R.string.toast_afterFileDeleted_single_withContent,single.title))
+            else  makeToastFromVM(resources.getString(R.string.toast_afterFileDeleted_single_withoutContent,single.title))
+        } else makeToastFromVM(resources.getString(R.string.toast_afterFileDeleted_multiple))
     }
     private fun deleteCards(cards: List<Card> ){
         val updateNeeded = getDeletingItemsSistersUpdateNeeded()
@@ -62,7 +66,7 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
             repository.deleteMultiple(cards)
             repository.updateMultiple(updateNeeded)
         }
-        makeToastFromVM("${cards.size}枚のカードを削除しました")
+        makeToastFromVM(resources.getString(R.string.toast_afterCardDeleted,cards.size))
     }
     fun getAllDescendantsByFileId(fileIdList: List<Int>): LiveData<List<File>> = repository.getAllDescendantsFilesByMultipleFileId(fileIdList).asLiveData()
     fun getCardsByMultipleFileId(fileIdList: List<Int>): LiveData<List<Card>> = repository.getAllDescendantsCardsByMultipleFileId(fileIdList).asLiveData()
@@ -105,8 +109,8 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         val a = returnConfirmDeleteView()
         val single = deletingItems.size == 1
         val singleItem = if(single)returnDeletingItems().single() else null
-        a.confirmText = if(single && singleItem is File) "${singleItem.title}を削除しますか？"
-        else "選択中のアイテムを削除しますか？"
+        a.confirmText = if(single && singleItem is File) resources.getString(R.string.confirmDeleteBin_confirmDelete_single,singleItem.title)
+        else resources.getString(R.string.confirmDeleteBin_confirmDelete_multiple)
         setConfirmDeleteView(a)
     }
 
@@ -114,8 +118,8 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
         val a = returnConfirmDeleteWithChildrenView()
         val single = deletingItems.size == 1
         val singleItem = if(single)returnDeletingItems().single() else null
-        a.confirmText = if(single && singleItem is File) "${singleItem.title}の中身をすべて削除しますか？"
-        else "中身をすべて削除しますか？"
+        a.confirmText = if(single && singleItem is File) resources.getString(R.string.confirmDeleteWithContentBin_confirmDelete_single,singleItem.title)
+        else resources.getString(R.string.confirmDeleteWithContentBin_confirmDelete_multiple)
         setConfirmDeleteWithChildrenView(a)
     }
 
@@ -152,11 +156,11 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository) : ViewModel
 
     class ConfirmDeleteView(
         var visible:Boolean = false,
-        var confirmText:String = ""
+        var confirmText:String = String()
     )
     class ConfirmDeleteWithChildrenView(
         var visible:Boolean = false,
-        var confirmText:String = "",
+        var confirmText:String = String(),
         var containingCards:Int = 0,
         var containingFlashCardCover:Int = 0,
         var containingFolder:Int = 0,

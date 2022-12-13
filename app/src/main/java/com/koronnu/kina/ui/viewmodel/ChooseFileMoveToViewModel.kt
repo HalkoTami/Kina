@@ -1,7 +1,9 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.content.res.Resources
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.koronnu.kina.R
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.Count
 import com.koronnu.kina.db.MyRoomRepository
@@ -12,7 +14,8 @@ import com.koronnu.kina.db.enumclass.FileStatus
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() {
+class ChooseFileMoveToViewModel(val repository: MyRoomRepository,
+                                val resources: Resources) : ViewModel() {
 
     companion object{
         fun getFactory(libraryBaseViewModel: LibraryBaseViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
@@ -20,7 +23,8 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
                 val repository = application.repository
-                val chooseFileMoveToViewModel = ChooseFileMoveToViewModel(repository)
+                val resources = application.resources
+                val chooseFileMoveToViewModel = ChooseFileMoveToViewModel(repository,resources)
                 chooseFileMoveToViewModel.libraryViewModel = libraryBaseViewModel
                 return chooseFileMoveToViewModel as T
             }
@@ -28,6 +32,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
         }
     }
     private lateinit var libraryViewModel: LibraryBaseViewModel
+
 
 
 
@@ -71,7 +76,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     private val _toast = MutableLiveData<MakeToastFromVM>()
     private fun makeToastFromVM(string: String){
         _toast.value = MakeToastFromVM(string,true)
-        _toast.value = MakeToastFromVM("",false)
+        _toast.value = MakeToastFromVM(String(),false)
     }
 
     val toast :LiveData<MakeToastFromVM> = _toast
@@ -150,7 +155,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
     }
     private fun doAfterItemsMovedToFile(){
         setPopUpVisible(false)
-        makeToastFromVM("${getFileMoveTo.title}へ移動しました")
+        makeToastFromVM( resources.getString(R.string.toast_AfteritemMovedtoFile,getFileMoveTo.title))
         libraryViewModel.returnLibraryNavCon()?.popBackStack()
         fileMoveToChildrenFiles!!.removeObserver(fileMoveToChildrenObserver)
         doAfterDataCollected = { }
@@ -164,7 +169,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository) : ViewModel() 
 
     fun onClickRvBtnMove(item: File){
         setFileMoveTo(item)
-        setPopUpText("選択中のアイテムを${item.title}へ移動しますか？")
+        setPopUpText(resources.getString(R.string.popUpConfirmMoveBin_confirmMove,item.title))
         setUpActionsBeforeCollectData()
         setCollectMovingFileData(Count.Start)
 

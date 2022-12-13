@@ -1,9 +1,12 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.content.res.Resources
+import android.text.Spannable.Factory
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import com.koronnu.kina.R
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.AnimationAttributes
 import com.koronnu.kina.customClasses.enumClasses.FlipFragments
@@ -23,15 +26,17 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
+class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
+                            val resources: Resources) : ViewModel() {
 
     companion object{
-        fun getViewModel(typeAndCheckViewModel: FlipTypeAndCheckViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+        val  Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
                 val repository = application.repository
-                return AnkiFlipBaseViewModel(repository) as T
+                val resources = application.resources
+                return AnkiFlipBaseViewModel(repository,resources) as T
             }
         }
     }
@@ -327,7 +332,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
         }
     }
     fun saveFlipActionStatus(activityStatus: ActivityStatus){
-        val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPAN)
+        val formatter = SimpleDateFormat(resources.getString(R.string.activityData_dateFormat), Locale.JAPAN)
         val a = ActivityData(id = 0,
             activityStatus =
             activityStatus,
@@ -342,7 +347,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository) : ViewModel() {
         }
     }
     fun updateLookedTime(card:Card,opened:Boolean){
-        val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPAN)
+        val formatter = SimpleDateFormat(resources.getString(R.string.activityData_dateFormat), Locale.JAPAN)
         val a = ActivityData(0,card.id,DBTable.TABLE_CARD,
             if(opened) ActivityStatus.CARD_OPENED else ActivityStatus.CARD_CLOSED,formatter.format(Date()).toString())
         viewModelScope.launch {

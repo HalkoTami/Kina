@@ -114,11 +114,12 @@ class LibrarySetUpItems{
         stringBinding: LibraryFragRvItemCardStringBinding,
         stringData: StringData?
     ){
+        val resources = stringBinding.root.resources
         stringBinding.apply {
-            stringBinding.txvFrontTitle.text = stringData?.frontTitle ?:"表"
-            stringBinding.txvFrontText.text = stringData?.frontText ?:""
-            stringBinding.txvBackTitle.text = stringData?.backTitle ?:"裏"
-            stringBinding.txvBackText.text = stringData?.backText ?:""
+            stringBinding.txvFrontTitle.text = stringData?.frontTitle ?:resources.getString(R.string.edtFrontTitle_default)
+            stringBinding.txvFrontText.text = stringData?.frontText ?:String()
+            stringBinding.txvBackTitle.text = stringData?.backTitle ?:resources.getString(R.string.edtBackTitle_default)
+            stringBinding.txvBackText.text = stringData?.backText ?:String()
         }
 
     }

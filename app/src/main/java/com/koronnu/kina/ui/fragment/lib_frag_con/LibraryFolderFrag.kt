@@ -121,7 +121,7 @@ class LibraryFolderFrag :  Fragment(){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
                 }
                 selectedItems.observe(viewLifecycleOwner){
-                    binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+                    binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
                 }
                 multiMenuVisibility.observe(viewLifecycleOwner,LibraryOb()
                     .multiMenuVisibilityObserver(binding))
@@ -154,7 +154,7 @@ class LibraryFolderFrag :  Fragment(){
                 setParentFile(it)
                 editFileViewModel.setParentTokenFileParent(it)
                 topBarBinding.apply {
-                    txvFileTitle.text = it?.title ?:"タイトルなし"
+                    txvFileTitle.text = it?.title ?:resources.getString(R.string.no_title)
                     imvFileType.setImageDrawable(
                         GetCustomDrawables(requireActivity()).getFolderIconByCol(it?.colorStatus ?:ColorStatus.GRAY,)
                     )
@@ -195,7 +195,7 @@ class LibraryFolderFrag :  Fragment(){
                 commonViewSetUp.changeLibRVAllSelectedState(recyclerView,it)
             }
             selectedItems.observe(viewLifecycleOwner){
-                binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+                binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
             }
 
             }

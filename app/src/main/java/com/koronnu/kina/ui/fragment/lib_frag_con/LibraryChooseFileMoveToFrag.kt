@@ -67,9 +67,9 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
                     if(flashcard) R.drawable.icon_move_to_flashcard_cover else R.drawable.icon_move_to_folder
                 )
             )
-            topBarBinding.txvChooseFileMoveTo.text = 
-                if(flashcard) "${movingItems.size} 個のアイテムを単語帳に移動" else
-                    "${movingItems.size}個のアイテムをフォルダに移動"
+            topBarBinding.txvChooseFileMoveTo.text =
+                resources.getString(R.string.chooseFileMoveToTopBarBin_topText,movingItems.size,
+                    resources.getString(if(flashcard) R.string.flashcard else R.string.folder) )
         }
 
         fun addCL(){

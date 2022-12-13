@@ -1,9 +1,10 @@
 package com.koronnu.kina.ui.viewmodel
 
-import android.text.Spannable.Factory
+import android.content.res.Resources
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.koronnu.kina.R
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
@@ -15,7 +16,8 @@ import com.koronnu.kina.customClasses.enumClasses.EditingMode
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
-class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
+class EditFileViewModel(val repository: MyRoomRepository,
+                        val resources: Resources) : ViewModel() {
 
     companion object{
         val Factory : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
@@ -23,7 +25,8 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = checkNotNull(extras[APPLICATION_KEY]) as RoomApplication
                 val repository = application.repository
-                return EditFileViewModel(repository) as T
+                val resources = application.resources
+                return EditFileViewModel(repository,resources) as T
             }
         }
     }
@@ -32,7 +35,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _toast = MutableLiveData<MakeToastFromVM>()
     private fun makeToastFromVM(string: String){
         _toast.value = MakeToastFromVM(string,true)
-        _toast.value = MakeToastFromVM("",false)
+        _toast.value = MakeToastFromVM(String(),false)
     }
 
     val toast :LiveData<MakeToastFromVM> = _toast
@@ -222,36 +225,36 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     private fun makeFilePopUp(tokenFileParent: File?,tokenFile:File, mode: EditingMode){
         fun getLeftTopText():String{
-            return if(tokenFileParent!=null) "${tokenFileParent.title} " else "Home"
+            return tokenFileParent?.title ?: resources.getString(R.string.title_home)
         }
         fun getHintTxvText():String{
             return when(mode){
-                EditingMode.New -> when(tokenFile.fileStatus){
-                    FileStatus.FOLDER -> "新しいフォルダを作る"
-                    FileStatus.ANKI_BOX_FAVOURITE -> "お気に入りに登録する"
-                    FileStatus.FLASHCARD_COVER -> "新しい単語帳を作る"
-                    else -> ""
-                }
-                EditingMode.Edit -> tokenFile.title + "を編集する"
+                EditingMode.New -> resources.getString(when(tokenFile.fileStatus){
+                    FileStatus.FOLDER ->  R.string.editFilePopUpBin_HintTxv_createNewFolder
+                    FileStatus.ANKI_BOX_FAVOURITE ->R.string.editFilePopUpBin_HintTxv_createNewAnkiBoxfavourite
+                    FileStatus.FLASHCARD_COVER -> R.string.editFilePopUpBin_HintTxv_createNewFlashCard
+                    else  -> throw IllegalArgumentException()
+                })
+                EditingMode.Edit -> resources.getString(R.string.editFilePopUpBin_HintTxv_edit,tokenFile.title)
             }
         }
         fun getTitleEdtHint():String{
-            return when(mode){
-                EditingMode.Edit -> "タイトルを編集"
-                EditingMode.New ->  "タイトル"
-            }
+            return resources.getString(when(mode){
+                EditingMode.Edit -> R.string.editFilePopUpBin_edtFileTitleHint_edit
+                EditingMode.New -> R.string.editFilePopUpBin_edtFileTitleHint_create
+            })
         }
         fun getTitleEdtText():String{
             return when(mode){
                 EditingMode.Edit -> tokenFile.title.toString()
-                EditingMode.New ->  ""
+                EditingMode.New -> String()
             }
         }
         fun getFinishBtnText():String{
-            return when(mode){
-                EditingMode.Edit -> "更新"
-                EditingMode.New -> "作成"
-            }
+            return resources.getString(when(mode){
+                EditingMode.Edit -> R.string.editFilePopUpBin_btnFinish_update
+                EditingMode.New -> R.string.editFilePopUpBin_btnFinish_create
+            })
         }
         val a = PopUpUI(
             txvLeftTopText = getLeftTopText(),
@@ -351,6 +354,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
                 newFile.colorStatus = color
                 if(newFile.fileStatus==FileStatus.ANKI_BOX_FAVOURITE){
                     val cardList = returnAnkiBoxCards()
+//                    TODO toastじゃなくてexceptionにする
                     if(cardList == null) makeToastFromVM("anki box card not set")
                     else if(cardList.isEmpty()) makeToastFromVM("anki box card empty")
                     addCardsToFavouriteAnkiBox(cardList ?:return,returnLastInsertedFileId() ?:0,newFile)
@@ -360,6 +364,7 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
             EditingMode.Edit -> {
                 val editingFile = returnFileToEdit()
                 if(editingFile==null){
+                    //                    TODO toastじゃなくてexceptionにする
                     makeToastFromVM("file to edit なし")
                     return
                 }else{
@@ -406,8 +411,4 @@ class EditFileViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
 
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is planner Fragment"
-    }
-    val text: LiveData<String> = _text
 }

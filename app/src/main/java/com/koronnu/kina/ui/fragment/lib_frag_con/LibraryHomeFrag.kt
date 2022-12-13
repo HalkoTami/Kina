@@ -124,7 +124,7 @@ class LibraryHomeFrag : Fragment(){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
                 }
                 selectedItems.observe(viewLifecycleOwner){
-                    binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+                    binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
                 }
                 multiMenuVisibility
                     .observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))

@@ -31,7 +31,8 @@ import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.*
 
 
-class LibraryFlashCardCoverFrag  : Fragment(){
+class
+LibraryFlashCardCoverFrag  : Fragment(){
     private val args: LibraryFlashCardCoverFragArgs by navArgs()
 
     private lateinit var libNavCon:NavController
@@ -116,7 +117,8 @@ class LibraryFlashCardCoverFrag  : Fragment(){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
                 }
                 selectedItems.observe(viewLifecycleOwner){
-                    binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+                    binding.topBarMultiselectBinding.txvSelectingStatus.text =
+                        resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
                 }
                 multiMenuVisibility
                     .observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))
@@ -138,7 +140,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
             clearFinalList()
             parentFileFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
                 setParentFile(it)
-                topBarBinding.txvFileTitle.text = it.title ?:"タイトルなし"
+                topBarBinding.txvFileTitle.text = it.title ?:resources.getString(R.string.no_title)
                 topBarBinding.imvFileType.setImageDrawable(
                     GetCustomDrawables(requireContext()).getFlashCardIconByCol(it?.colorStatus ?:ColorStatus.GRAY,)
                 )
@@ -195,7 +197,7 @@ class LibraryFlashCardCoverFrag  : Fragment(){
                 }
             }
             selectedItems.observe(viewLifecycleOwner){
-                binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+                binding.topBarMultiselectBinding.txvSelectingStatus.text = resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
             }
         }
         return binding.root

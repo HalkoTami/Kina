@@ -1,6 +1,10 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.content.res.Resources
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.CreationExtras
+import com.koronnu.kina.R
+import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
@@ -10,8 +14,20 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FlipTypeAndCheckViewModel(val repository: MyRoomRepository) : ViewModel() {
+class FlipTypeAndCheckViewModel(val repository: MyRoomRepository,
+                                val resources: Resources) : ViewModel() {
 
+    companion object{
+        val Factory : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
+                val repository = application.repository
+                val resources = application.resources
+                return FlipTypeAndCheckViewModel(repository,resources) as T
+            }
+        }
+    }
     fun getActivityData(cardId: Int):LiveData<List<ActivityData>> = repository.getCardActivity(cardId).asLiveData()
 
    private val _keyBoardVisible = MutableLiveData<Boolean>()
@@ -39,7 +55,7 @@ class FlipTypeAndCheckViewModel(val repository: MyRoomRepository) : ViewModel() 
     }
     private fun getAnswer(cardId: Int):String{
         val b = returnTypedAnswers()
-        return b[cardId] ?:""
+        return b[cardId] ?:String()
     }
 
     fun checkAnswer(card:Card,answerIsBack:Boolean){
@@ -54,7 +70,7 @@ class FlipTypeAndCheckViewModel(val repository: MyRoomRepository) : ViewModel() 
             else ActivityStatus.WRONG_BACK_CONTENT_TYPED
         }
         viewModelScope.launch {
-            val a =SimpleDateFormat("dd/M/yyyy hh:mm:ss",Locale.JAPAN)
+            val a =SimpleDateFormat(resources.getString(R.string.activityData_dateFormat),Locale.JAPAN)
             val datetime = a.format(Date())
             repository.insert(ActivityData(0,
                 activityTokenId = card.id,

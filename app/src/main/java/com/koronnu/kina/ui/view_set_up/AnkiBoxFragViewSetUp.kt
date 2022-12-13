@@ -2,6 +2,7 @@ package com.koronnu.kina.ui.view_set_up
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.res.Resources
 import android.view.View
 import android.widget.ImageView
 import androidx.core.animation.doOnEnd
@@ -9,6 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.koronnu.kina.R
 
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.ActivityData
@@ -28,11 +30,8 @@ class AnkiBoxFragViewSetUp() {
 
 
 
-    fun setUpOrder(stringBinding: LibraryFragRvItemCardStringBinding,card:Card){
-        stringBinding.txvFrontTitle.text = "order ${card.cardBefore}"
-        stringBinding.txvBackTitle.text = "id ${card.id}"
-    }
     fun setUpRVCard(cardBinding: AnkiHomeFragRvItemCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxViewModel){
+        val resources = cardBinding.root.context.resources
         LibrarySetUpItems().setUpRVStringCardBinding(cardBinding.stringContentBinding,card.stringData)
         cardBinding.stringContentBinding.apply {
             arrayOf(btnEdtFront,btnEdtBack).onEach { it.visibility= View.GONE }
@@ -41,10 +40,11 @@ class AnkiBoxFragViewSetUp() {
             arrayOf(cardBinding.checkboxAnkiRv,).onEach { it.setOnClickListener(AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
         }
         fun getStringByRemembered(remembered:Boolean):String{
-            return if(remembered)"暗記済み" else "未暗記"
+            return resources.getString(if(remembered) R.string.remembered else R.string.not_remembered)
         }
-        fun getStringByLastLooked(lastLooked:ActivityData?):String{
-            return "めくった最終日　" + (lastLooked?.dateTime ?: "記録なし")
+        fun getStringByLastLooked(lastLooked:ActivityData?,):String{
+
+            return resources.getString(R.string.lastLookedDate,lastLooked?.dateTime ?:resources.getString(R.string.no_data))
         }
         setOnCL()
         ankiBoxVM.ankiBoxItems.observe(lifecycleOwner){
@@ -184,11 +184,12 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         view.translationY =dy
     }
     fun setUpAnkiBoxRing(list: MutableList<Card>,binding: ProgressBarRememberedRingBinding){
+        val resources = binding.root.resources
         val rememberedPercentage = getRememberedPercentage(list)
         val rememberedCardsSize = list.filter { it.remembered == true }.size
         binding.apply {
             binding.imvRememberedEndIcon.visibility = View.VISIBLE
-            txvInsideRing.text = "$rememberedCardsSize/${list.size}"
+            txvInsideRing.text = resources.getString(R.string.remembered_progress,rememberedCardsSize,list.size)
 
         }
         val progressRingWidth = binding.ringProgressBar.layoutParams.width

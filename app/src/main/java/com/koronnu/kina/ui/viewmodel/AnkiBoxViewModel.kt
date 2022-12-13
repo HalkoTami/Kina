@@ -37,9 +37,6 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun getAnkiBoxRVDescendantsFolders(fileId:Int): LiveData<List<File>> = repository.getAnkiBoxRVDescendantsFolders(fileId).asLiveData()
     fun getAnkiBoxRVDescendantsFlashCards(fileId:Int): LiveData<List<File>> = repository.getAnkiBoxRVDescendantsFlashCards(fileId).asLiveData()
     fun ankiBoxFileAncestorsFromDB(int: Int?):LiveData<List<File>> = repository.getAllAncestorsByFileId(int).asLiveData()
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is Anki Fragment"
-    }
     val allFlashCardCoverFromDB: LiveData<List<File>> = repository.allFlashCardCoverContainsCard.asLiveData()
     val allFavouriteAnkiBoxFromDB: LiveData<List<File>> = repository.allFavouriteAnkiBox.asLiveData()
 
@@ -76,7 +73,7 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _toast = MutableLiveData<MakeToastFromVM>()
     private fun makeToastFromVM(string: String){
         _toast.value = MakeToastFromVM(string,true)
-        _toast.value = MakeToastFromVM("",false)
+        _toast.value = MakeToastFromVM(String(),false)
     }
 
     val toast :LiveData<MakeToastFromVM> = _toast
@@ -143,8 +140,6 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
         }
         navigateWithBackstack(action)
     }
-
-    val text: LiveData<String> = _text
 
     private val _ankiBoxFileIds = MutableLiveData<MutableList<Int>>()
     fun addToAnkiBoxFileIds(list: List<Int>){

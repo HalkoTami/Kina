@@ -17,7 +17,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.actions.hideKeyBoard
-import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
@@ -34,7 +33,6 @@ import com.koronnu.kina.ui.viewmodel.*
 
 
 class MainActivity : AppCompatActivity(),View.OnClickListener {
-    private lateinit var factory                 : ViewModelFactory
     private lateinit var mainNavCon              : NavController
 
     private var _createFileViewModel   : EditFileViewModel? = null
@@ -76,15 +74,14 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
             binding = MainActivityBinding.inflate(layoutInflater)
             val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
-            factory               = ViewModelFactory((application as RoomApplication).repository)
-            _createFileViewModel   = ViewModelProvider(this,factory)[EditFileViewModel::class.java]
+            _createFileViewModel   = ViewModelProvider(this,EditFileViewModel.Factory)[EditFileViewModel::class.java]
             libraryViewModel        =ViewModelProvider(this,LibraryBaseViewModel.getFactory(mainActivityViewModel,this,this.baseContext))[LibraryBaseViewModel::class.java]
-            _createCardViewModel   = ViewModelProvider(this,factory)[CreateCardViewModel::class.java]
-            ankiFlipBaseViewModel =  ViewModelProvider(this,factory)[AnkiFlipBaseViewModel::class.java]
-            ankiBaseViewModel     = ViewModelProvider(this,factory)[AnkiBaseViewModel::class.java]
-            chooseFileMoveToViewModel      = ViewModelProvider(this,factory)[ChooseFileMoveToViewModel::class.java]
-            _deletePopUpViewModel  = ViewModelProvider(this,factory)[DeletePopUpViewModel::class.java]
-            searchViewModel       = ViewModelProvider(this,factory)[SearchViewModel::class.java]
+            _createCardViewModel   = ViewModelProvider(this,CreateCardViewModel.getFactory(mainActivityViewModel))[CreateCardViewModel::class.java]
+            ankiFlipBaseViewModel =  ViewModelProvider(this,AnkiFlipBaseViewModel.Factory)[AnkiFlipBaseViewModel::class.java]
+            ankiBaseViewModel     = ViewModelProvider(this,AnkiFlipBaseViewModel.Factory)[AnkiBaseViewModel::class.java]
+            chooseFileMoveToViewModel      = ViewModelProvider(this,ChooseFileMoveToViewModel.getFactory(libraryViewModel))[ChooseFileMoveToViewModel::class.java]
+            _deletePopUpViewModel  = ViewModelProvider(this,DeletePopUpViewModel.Factory)[DeletePopUpViewModel::class.java]
+            searchViewModel       = ViewModelProvider(this,SearchViewModel.Factory)[SearchViewModel::class.java]
             mainNavCon            =   navHostFragment.navController
 
 
@@ -170,10 +167,10 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
         }
         fun createAllViewModels(){
-            ViewModelProvider(this,factory)[CardTypeStringViewModel::class.java]
-            ViewModelProvider(this,factory)[AnkiBoxViewModel::class.java]
+            ViewModelProvider(this)[CardTypeStringViewModel::class.java]
+            ViewModelProvider(this,AnkiBoxViewModel.Factory)[AnkiBoxViewModel::class.java]
             ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
-            ViewModelProvider(this,factory)[FlipTypeAndCheckViewModel::class.java]
+            ViewModelProvider(this,FlipTypeAndCheckViewModel.Factory)[FlipTypeAndCheckViewModel::class.java]
         }
 
         setMainActivityLateInitVars()

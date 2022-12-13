@@ -58,14 +58,15 @@ class LibraryAddListeners(){
 
 
         binding.bindingSearch.edtLibrarySearch.addTextChangedListener {
-            if(it.toString()!=""){
+            if(it.toString().isBlank()){
+                searchViewModel.setSearchText(String())
+                binding.mainFrameLayout.visibility= View.VISIBLE
+                binding.frameLaySearchRv.visibility = View.GONE
+
+            } else {
                 binding.mainFrameLayout.visibility = View.GONE
                 binding.frameLaySearchRv.visibility = View.VISIBLE
                 searchViewModel.setSearchText(it.toString())
-            } else {
-                searchViewModel.setSearchText("")
-                binding.mainFrameLayout.visibility= View.VISIBLE
-                binding.frameLaySearchRv.visibility = View.GONE
             }
         }
 

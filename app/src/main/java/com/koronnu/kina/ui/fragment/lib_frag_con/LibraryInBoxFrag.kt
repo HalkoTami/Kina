@@ -123,7 +123,7 @@ class LibraryInBoxFrag  : Fragment(){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
                 }
                 selectedItems.observe(viewLifecycleOwner){
-                    binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+                    binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
                 }
                 multiMenuVisibility
                     .observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))
@@ -132,9 +132,8 @@ class LibraryInBoxFrag  : Fragment(){
 
         }
         fun setTopBarText(list: List<Card>?){
-            topBarBinding.txvInboxStatus.text =
-                if(list.isNullOrEmpty().not()) "${list!!.size}個の単語帳に未追加のアイテム" else
-                    "InBox"
+            topBarBinding.txvInboxStatus.text =if(list.isNullOrEmpty()) resources.getString( R.string.txvInBoxStatus_empty) else resources.getString(R.string.txvInBoxStatus_notEmpty,list.size)
+
         }
         setUpLateInitVars()
         setUpView()
@@ -176,7 +175,7 @@ class LibraryInBoxFrag  : Fragment(){
                 if(it) commonViewSetUp.makeLibRVUnSwiped(recyclerView)
             }
             selectedItems.observe(viewLifecycleOwner){
-                binding.topBarMultiselectBinding.txvSelectingStatus.text = "${it.size}個　選択中"
+                binding.topBarMultiselectBinding.txvSelectingStatus.text = resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
             }
 
 
