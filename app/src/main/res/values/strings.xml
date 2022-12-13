@@ -83,13 +83,13 @@
     <string name="s_p_anki_setting_auto_flip_seconds" translatable="false">s_p_anki_setting_auto_flip_seconds</string>
     <string name="s_p_anki_setting_type_answer" translatable="false">s_p_anki_setting_type_answer</string>
 
-    <string name="nav_label_main_tab_anki">暗記タブ</string>
-    <string name="nav_label_main_tab_library">ライブラリタブ</string>
-    <string name="nav_label_main_create_card">カード作成</string>
-    <string name="nav_label_anki_ankiBox">暗記ボックス</string>
-    <string name="nav_label_anki_flip_item">flip item</string>
-    <string name="nav_label_anki_flip">flip mode</string>
-    <string name="nav_label_anki_flip_completed">flip completed</string>
+    <string name="nav_label_main_tab_anki" translatable="false">暗記タブ</string>
+    <string name="nav_label_main_tab_library" translatable="false">ライブラリタブ</string>
+    <string name="nav_label_main_create_card" translatable="false">カード作成</string>
+    <string name="nav_label_anki_ankiBox" translatable="false">暗記ボックス</string>
+    <string name="nav_label_anki_flip_item" translatable="false">flip item</string>
+    <string name="nav_label_anki_flip" translatable="false">flip mode</string>
+    <string name="nav_label_anki_flip_completed" translatable="false">flip completed</string>
     <string name="cd_flip_card">カードの表裏をめくる</string>
     <string name="cd_repeat_flip">最初から繰り返す</string>
     <string name="cd_done">完了して戻る</string>
@@ -189,8 +189,8 @@
     <string name="guide_spb_move_12">タッチすると、確認画面が現れるよ</string>
     <string name="guide_spb_move_13">移動したい場合はここをタッチしてね。</string>
     <string name="guide_spb_move_14">ガイドは以上だよ</string>
-    <string name="sp_checkFirstTimeOpened">CheckFirstTimeOpened</string>
-    <string name="sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened">sp_checkFirstTimeOpened_inBoxFirstTimeOpened</string>
+    <string name="sp_checkFirstTimeOpened" translatable="false">CheckFirstTimeOpened</string>
+    <string name="sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened" translatable="false">sp_checkFirstTimeOpened_inBoxFirstTimeOpened</string>
     <string name="guide_popUp_confirm_end">終了しますか？</string>
     <string name="commit_end">終了する</string>
     <string name="guide_popUp_confirm_create_movable_File">移動先を作成しますか</string>
@@ -249,7 +249,7 @@
     <string name="remembered_progress">%1$d/%2$d</string>
     <string name="toast_AfteritemMovedtoFile">%1$sへ移動しました</string>
     <string name="popUpConfirmMoveBin_confirmMove">洗濯中のアイテムを%1$sへ移動しますか？</string>
-    <string name="toast_afterFileDeleted_single_withContent"><%1$sと中身を削除しました</string>
+    <string name="toast_afterFileDeleted_single_withContent">%1$sと中身を削除しました</string>
     <string name="toast_afterFileDeleted_single_withoutContent">%1$sを削除しました</string>
     <string name="toast_afterFileDeleted_multiple">選択中のアイテムを削除しました</string>
     <string name="toast_afterCardDeleted">%1$d枚のカードを削除しました</string>
