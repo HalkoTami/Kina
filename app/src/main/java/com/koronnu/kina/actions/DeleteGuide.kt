@@ -18,11 +18,9 @@ class DeleteGuide(val actions: GuideActions){
     }
     private fun guide2(){
         actions.apply {
-            allConLayChildrenGoneAnimDoOnEnd = {
-                animateCharacterRvBottomSpbRight(R.string.guide_spb_delete_2)
-                {onClickGoNext{guide3()}}
-            }
-            getAllConLayChildrenGoneAnim().start()
+            getAllConLayChildrenGoneAnim()
+            { animateCharacterRvBottomSpbRight(R.string.guide_spb_delete_2)
+                {onClickGoNext{guide3()}} }.start()
             holeShapeInGuide = HoleShape.RECTANGLE
             viewUnderSpotInGuide = libRvFirstItem
         }
@@ -49,7 +47,7 @@ class DeleteGuide(val actions: GuideActions){
         actions.apply {
             animateConLayGoNextVisibility(false)
             changeViewVisibility(conLayGoNext,false)
-            setArrow(MyOrientation.LEFT,btnDeleteFile)
+            setArrow(MyOrientation.LEFT,btnDeleteFile){}
             goNextWhenDeletePopUpVisible{guide6prt1()}
             animateSpbNoChange(R.string.guide_spb_delete_5){}
             viewUnderSpotInGuide = btnDeleteFile
@@ -60,7 +58,7 @@ class DeleteGuide(val actions: GuideActions){
     private fun  guide6prt1(){
         actions.apply {
             libraryViewModel.makeAllUnSwiped()
-            getArrowVisibilityAnim(false).start()
+            getArrowVisibilityAnim(false){}.start()
             viewUnderSpotInGuide = frameLayConfirmDelete
             animateCharacterAndSpbPos(R.string.guide_spb_delete_6prt1,
                 {characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayConfirmDelete,MyOrientation.TOP))
@@ -84,11 +82,9 @@ class DeleteGuide(val actions: GuideActions){
     private fun guide8(){
         actions.apply {
             goNextWhenDeletePopUpWithChildrenVisible {
-                viewUnderSpotInGuide = frameLayConfirmDeleteWithChildren
-                characterBorderSet = BorderSet(bottomSideSet = ViewAndSide(frameLayConfirmDeleteWithChildren,MyOrientation.TOP))
-                doAfterCharacterPosChanged = {setSpbPos()}
-                characterPosChangeAnimDoOnEnd = { onClickGoNext { guide9() } }
-                getCharacterPosChangeAnim().start()
+                animateCharacterBottomLeftAboveViewSpbRightNext(R.string.guide_spb_delete_7,
+                frameLayConfirmDeleteWithChildren)
+                {onClickGoNext { guide9() }}
             }
             activity.deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(true)
         }
@@ -97,21 +93,21 @@ class DeleteGuide(val actions: GuideActions){
         actions.apply {
             animateSpbNoChange(R.string.guide_spb_delete_8)
             {onClickGoNext { guide10() }}
-            setArrow(MyOrientation.BOTTOM,btnCommitDeleteWithChildren)
+            setArrow(MyOrientation.BOTTOM,btnCommitDeleteWithChildren){}
         }
     }
     private fun guide10(){
         actions.apply {
             animateSpbNoChange(R.string.guide_spb_delete_9)
             {onClickGoNext { guide11() }}
-            setArrow (MyOrientation.BOTTOM, btnDeleteOnlyParent)
+            setArrow (MyOrientation.BOTTOM, btnDeleteOnlyParent){}
         }
     }
     private fun guide11(){
         actions.apply {
             activity.deletePopUpViewModel.setConfirmDeleteWithChildrenVisible(false)
             activity.deletePopUpViewModel.setConfirmDeleteVisible(false)
-            getArrowVisibilityAnim(false).start()
+            getArrowVisibilityAnim(false){}.start()
             removeHole()
             animateCharacterMiddleSpbTop(R.string.guide_spb_delete_10)
             {onClickGoNext { guide12() }}
@@ -122,7 +118,7 @@ class DeleteGuide(val actions: GuideActions){
             animateSpbNoChange(R.string.guide_spb_delete_11)
             {onClickGoNext { guide13() }}
             viewUnderSpotInGuide = frameLayInBox
-            setArrow(MyOrientation.BOTTOM,frameLayInBox)
+            setArrow(MyOrientation.BOTTOM,frameLayInBox){}
         }
     }
     private fun guide13(){
@@ -133,18 +129,17 @@ class DeleteGuide(val actions: GuideActions){
     }
     private fun guide14(){
         actions.apply {
-            arrowVisibilityAnimDoOnEnd = {
-                animateSpbNoChange(R.string.guide_spb_delete_13)
-                {onClickGoNext { guide15() }}
-            }
-            getArrowVisibilityAnim(false).start()
+            getArrowVisibilityAnim(false)
+            { animateSpbNoChange(R.string.guide_spb_delete_13)
+                {onClickGoNext { guide15() }} }
+                .start()
         }
     }
     private fun guide15(){
         actions.apply {
             animateConLayGoNextVisibility(false)
             viewUnderSpotInGuide = libRvFirstItem
-            setArrow(MyOrientation.BOTTOM,libRvFirstItem)
+            setArrow(MyOrientation.BOTTOM,libRvFirstItem){}
             animateCharacterRvBottomSpbRight(R.string.guide_spb_delete_14)
             {   makeHereTouchable(libRvFirstItem)
                 makeOnlyLongClickActive()
@@ -169,7 +164,7 @@ class DeleteGuide(val actions: GuideActions){
     private fun guide18(){
         actions.apply {
             viewUnderSpotInGuide = imvOpenMultiModeMenu
-            setArrow(MyOrientation.BOTTOM,imvOpenMultiModeMenu)
+            setArrow(MyOrientation.BOTTOM,imvOpenMultiModeMenu){}
             animateSpbNoChange(R.string.guide_spb_delete_16prt2)
             {onClickGoNext { guide19() }}
             goNextOnClickTouchArea(imvOpenMultiModeMenu){guide19()}
@@ -182,13 +177,13 @@ class DeleteGuide(val actions: GuideActions){
             viewUnderSpotInGuide = frameLayMultiMenu
             animateSpbNoChange(R.string.guide_spb_delete_17)
             {onClickGoNext { guide20() }}
-            setArrow(MyOrientation.LEFT,lineLayMenuDelete)
+            setArrow(MyOrientation.LEFT,lineLayMenuDelete){}
         }
     }
     private fun guide20(){
         actions.apply {
             activity.libraryViewModel.setMultiMenuVisibility(false)
-            getArrowVisibilityAnim(false).start()
+            getArrowVisibilityAnim(false){}.start()
             removeHole()
             animateCharacterMiddleSpbTop(R.string.guide_spb_delete_18)
             { onClickGoNext{guide21()}  }
@@ -196,10 +191,9 @@ class DeleteGuide(val actions: GuideActions){
     }
     private fun guide21(){
         actions.apply {
-            getAppearAlphaAnimation(guideParentConLay,false).start()
-            appearAlphaAnimDonOnEnd = {
-                guideViewModel.endGuide()
-            }
+            getAppearAlphaAnimation(guideParentConLay,false)
+            { guideViewModel.endGuide() }
+                .start()
         }
     }
 }

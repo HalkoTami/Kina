@@ -30,7 +30,7 @@ class CreateGuide(val actions: GuideActions ){
     private fun guide3(){
         actions.apply {
             animateConLayGoNextVisibility(false)
-            setArrow(MyOrientation.TOP,imvBnvBtnAdd)
+            setArrow(MyOrientation.TOP,imvBnvBtnAdd){}
             viewUnderSpotInGuide = imvBnvBtnAdd
             goNextOnClickTouchArea(imvBnvBtnAdd){guide4()}
         }
@@ -38,7 +38,7 @@ class CreateGuide(val actions: GuideActions ){
     }
     private fun guide4(){
         actions.apply {
-            setArrow(MyOrientation.TOP,frameLayCreateFlashCard)
+            setArrow(MyOrientation.TOP,frameLayCreateFlashCard){}
             animateHole = false
             viewUnderSpotInGuide = frameLayCreateFlashCard
             makeBottomMenuVisible()
@@ -56,10 +56,10 @@ class CreateGuide(val actions: GuideActions ){
                     guide6() }
                 createFileViewModel.makeFileInGuide(edtEditFileTitle.text.toString())
             }
-            setArrow(MyOrientation.BOTTOM,btnCreateFile)
+            setArrow(MyOrientation.BOTTOM,btnCreateFile){}
             holeShapeInGuide = HoleShape.RECTANGLE
             viewUnderSpotInGuide = frameLayEditFile
-            getAllConLayChildrenGoneAnim().start()
+            getAllConLayChildrenGoneAnim{}.start()
             makeHereTouchable(frameLayEditFile)
 
         }
@@ -80,8 +80,8 @@ class CreateGuide(val actions: GuideActions ){
             animateCharacterAndSpbPos(R.string.guide_spb_create_3,
                 {setCharacterBottomLeftAboveBnv()},
                 {setSpbPosRightNextToCharacter()},
-                {arrowVisibilityAnimDoOnEnd = { goNextOnClickTouchArea(libRvFirstItem) { guide8() } }
-                    setArrow(MyOrientation.BOTTOM,libRvFirstItem) })
+                { setArrow(MyOrientation.BOTTOM,libRvFirstItem)
+                    { goNextOnClickTouchArea(libRvFirstItem) { guide8() } } })
 
         }
     }
@@ -91,8 +91,7 @@ class CreateGuide(val actions: GuideActions ){
             viewUnderSpotInGuide = null
             libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
             actionsBeforeEndGuideList.add { libraryViewModel.returnLibraryNavCon()?.popBackStack() }
-            arrowVisibilityAnimDoOnEnd= { onClickGoNext{guide9()}}
-            getArrowVisibilityAnim(false).start()
+            getArrowVisibilityAnim(false){ onClickGoNext{guide9()}}.start()
         }
 
     }
@@ -106,11 +105,9 @@ class CreateGuide(val actions: GuideActions ){
     private fun guide10(){
         actions.apply{
             animateConLayGoNextVisibility(false)
-            allConLayChildrenGoneAnimDoOnEnd = {
-                actions.viewUnderSpotInGuide = imvBnvBtnAdd
-                goNextOnClickTouchArea(imvBnvBtnAdd) { guide11() }
-            }
-            getAllConLayChildrenGoneAnim().start()
+            getAllConLayChildrenGoneAnim()
+            { actions.viewUnderSpotInGuide = imvBnvBtnAdd
+                goNextOnClickTouchArea(imvBnvBtnAdd) { guide11() } }.start()
         }
     }
     private fun guide11(){
@@ -196,7 +193,7 @@ class CreateGuide(val actions: GuideActions ){
         actions.apply {
             animateSpbNoChange(R.string.guide_spb_create_10)
             {onClickGoNext {guide20()  }}
-            setArrow(MyOrientation.TOP,createCardInsertNext)
+            setArrow(MyOrientation.TOP,createCardInsertNext){}
         }
 
     }
@@ -204,13 +201,13 @@ class CreateGuide(val actions: GuideActions ){
         actions.apply {
             animateSpbNoChange(R.string.guide_spb_create_11)
             {onClickGoNext{guide21()}}
-            setArrow(MyOrientation.TOP,createCardInsertPrevious)
+            setArrow(MyOrientation.TOP,createCardInsertPrevious){}
         }
 
     }
     private fun guide21(){
         actions.apply {
-            setArrow(MyOrientation.TOP, createCardNavFlipNext)
+            setArrow(MyOrientation.TOP, createCardNavFlipNext){}
             animateSpbNoChange(R.string.guide_spb_create_12 )
             { onClickGoNext { guide22() }}
 
@@ -218,8 +215,7 @@ class CreateGuide(val actions: GuideActions ){
     }
     private fun guide22(){
         actions.apply {
-            arrowVisibilityAnimDoOnEnd = { onClickGoNext { guide23() } }
-            setArrow(MyOrientation.TOP, createCardNavFlipPrevious)
+            setArrow(MyOrientation.TOP, createCardNavFlipPrevious){ onClickGoNext { guide23() } }
 
         }
 
@@ -227,7 +223,7 @@ class CreateGuide(val actions: GuideActions ){
     private fun guide23(){
         actions.apply {
             actions.removeHole()
-            actions.getArrowVisibilityAnim(false).start()
+            actions.getArrowVisibilityAnim(false){}.start()
             animateCharacterAndSpbPos(R.string.guide_spb_create_13,
                 {setCharacterPosInCenter()},
                 {setSpbPosAboveCharacter()},

@@ -70,7 +70,7 @@ class GuideActions(val activity:MainActivity){
     private val libraryChildBinding         get() = activity.mainActivityViewModel.libraryBaseViewModel.getChildFragBinding
     private val libraryBaseBinding          get() = libraryViewModel.libraryFragBinding
     private val mainActivityBinding         get() = activity.mainActivityViewModel.mainActivityBinding
-    val libraryRv                   get() = libraryChildBinding.vocabCardRV
+    private val libraryRv                   get() = libraryChildBinding.vocabCardRV
     val libRvFirstItem              get() = libraryRv[0]
     val imvOpenMultiModeMenu        get() = libraryChildBinding.topBarMultiselectBinding.imvChangeMenuVisibility
     val frameLayMultiMenu           get() = libraryChildBinding.frameLayMultiModeMenu
@@ -244,18 +244,17 @@ class GuideActions(val activity:MainActivity){
     }
     fun animateCharacterAndSpbPos(stringId:Int, characterPos:()->Unit,spbPos:()->Unit,doOnEnd:()->Unit){
         characterPos()
-        doAfterCharacterPosChanged = {
-            spbPos()
-            getSpbPosAnim(getString(stringId)).start()
-        }
-        characterPosChangeAnimDoOnEnd ={doOnEnd()}
-        getCharacterPosChangeAnim().start()
+        getCharacterPosChangeAnim(
+            doOnEnd = {doOnEnd()},
+            doAfterCharacterPosChanged = {
+                spbPos()
+                getSpbPosAnim(getString(stringId)) {}.start()
+            }).start()
 
 
     }
     fun animateSpbNoChange(stringId: Int,doOnEnd: () -> Unit){
-        spbPosAnimDoOnEnd = {doOnEnd()}
-        getSpbPosAnim(getString(stringId)).start()
+        getSpbPosAnim(getString(stringId)){doOnEnd()}.start()
     }
     fun animateCharacterMiddleSpbTop(stringId: Int,doOnEnd: () -> Unit){
         animateCharacterAndSpbPos(stringId,
@@ -328,31 +327,23 @@ class GuideActions(val activity:MainActivity){
         setCharacterSize()
         setPositionByMargin(ViewAndPositionData(character,characterBorderSet,characterOrientation))
     }
-    var allConLayChildrenGoneAnimDoOnEnd:()-> Unit = {}
 
-    fun getAllConLayChildrenGoneAnim():AnimatorSet{
+    fun getAllConLayChildrenGoneAnim(doOnEnd: () -> Unit):AnimatorSet{
         return AnimatorSet().apply {
-            playTogether(getCharacterVisibilityAnim(false),getArrowVisibilityAnim(false),getSpbVisibilityAnim(false))
-            doOnEnd{
-                allConLayChildrenGoneAnimDoOnEnd()
-                allConLayChildrenGoneAnimDoOnEnd = {}
-            }
+            playTogether(getCharacterVisibilityAnim(false){},
+                getArrowVisibilityAnim(false){},getSpbVisibilityAnim(false){})
+            doOnEnd{ doOnEnd() }
         }
     }
-    var characterPosChangeAnimDoOnEnd:()->Unit = {}
-    var doAfterCharacterPosChanged:()->Unit = {}
-    fun getCharacterPosChangeAnim():AnimatorSet{
+//    var characterPosChangeAnimDoOnEnd:()->Unit = {}
+//    var doAfterCharacterPosChanged:()->Unit = {}
+    private fun getCharacterPosChangeAnim(doOnEnd: () -> Unit,doAfterCharacterPosChanged:()->Unit):AnimatorSet{
         return AnimatorSet().apply {
-            characterVisibilityAnimDoOnEnd = {
+            playSequentially(getCharacterVisibilityAnim(false){
                 setCharacterPos()
                 doAfterCharacterPosChanged()
-                doAfterCharacterPosChanged = {}
-            }
-            playSequentially(getCharacterVisibilityAnim(false),getCharacterVisibilityAnim(true))
-            doOnEnd{
-                characterPosChangeAnimDoOnEnd()
-                characterPosChangeAnimDoOnEnd = {}
-            }
+            },getCharacterVisibilityAnim(true){})
+            doOnEnd{ doOnEnd() }
         }
 
     }
@@ -364,47 +355,33 @@ class GuideActions(val activity:MainActivity){
             it.setOnClickListener(null)
         }
     }
-    var spbVisibilityAnimDoOnEnd:()-> Unit = {}
-    private fun getSpbVisibilityAnim(visible: Boolean):AnimatorSet{
+    private fun getSpbVisibilityAnim(visible: Boolean,doOnEnd: () -> Unit):AnimatorSet{
         return AnimatorSet().apply {
-            playTogether(getAppearAlphaAnimation(textView,visible),
-                getAppearAlphaAnimation(bottom,visible))
-            doOnEnd{
-                spbVisibilityAnimDoOnEnd()
-                spbVisibilityAnimDoOnEnd = {}
-            }
+            playTogether(getAppearAlphaAnimation(textView,visible){},
+                getAppearAlphaAnimation(bottom,visible){})
+            doOnEnd{ doOnEnd() }
         }
     }
-    var characterVisibilityAnimDoOnEnd:()->Unit = {}
-    var arrowVisibilityAnimDoOnEnd:()->Unit = {}
-    private fun getCharacterVisibilityAnim(visible: Boolean):ValueAnimator{
-        appearAlphaAnimDonOnEnd = {
-            characterVisibilityAnimDoOnEnd()
-            characterVisibilityAnimDoOnEnd = {}
-        }
-        return getAppearAlphaAnimation(character,visible)
+//    var characterVisibilityAnimDoOnEnd:()->Unit = {}
+    private fun getCharacterVisibilityAnim(visible: Boolean,doOnEnd: () -> Unit):ValueAnimator{
+        return getAppearAlphaAnimation(character,visible){doOnEnd()}
     }
-    fun getArrowVisibilityAnim(visible: Boolean):ValueAnimator{
-        appearAlphaAnimDonOnEnd = {
-            arrowVisibilityAnimDoOnEnd()
-            arrowVisibilityAnimDoOnEnd = {}
-        }
-        return getAppearAlphaAnimation(arrow,visible)
+    fun getArrowVisibilityAnim(visible: Boolean,doOnEnd: () -> Unit):ValueAnimator{
+
+        return getAppearAlphaAnimation(arrow,visible){doOnEnd()}
     }
     private fun makeTouchAreaGone(){
         guideParentConLay.children.iterator().forEach {
             if(it.tag == touchAreaTag) it.visibility = View.GONE
         }
     }
-    var appearAlphaAnimDonOnEnd :()->Unit = {}
-    fun getAppearAlphaAnimation(view :View, visible:Boolean): ValueAnimator {
-        return Animation().appearAlphaAnimation(view,visible,if(view == holeView)0.7f else 1f){
-            appearAlphaAnimDonOnEnd()
-            appearAlphaAnimDonOnEnd = {}
-        }
+//    var appearAlphaAnimDonOnEnd :()->Unit = {}
+    fun getAppearAlphaAnimation(view :View, visible:Boolean,doOnEnd: () -> Unit): ValueAnimator {
+        return Animation().appearAlphaAnimation(view,visible,if(view == holeView)0.7f else 1f)
+        { doOnEnd() }
     }
     fun animateConLayGoNextVisibility(visible: Boolean){
-        getAppearAlphaAnimation(conLayGoNext,visible).start()
+        getAppearAlphaAnimation(conLayGoNext,visible){}.start()
     }
     fun getSimplePosRelation(standardView:View, orientation: MyOrientation, fit:Boolean): BorderSet {
         return ViewChangeActions().getSimpleBorderSet(standardView,orientation,fit)
@@ -460,7 +437,7 @@ class GuideActions(val activity:MainActivity){
     }
 
     fun setArrow(arrowPosition: MyOrientation,
-                 view: View){
+                 view: View,doOnEnd: () -> Unit){
         fun getArrowPositionData():ViewAndPositionData{
             val getBorderSet = getSimplePosRelation(view,arrowPosition, true)
             getBorderSet.margin = arrowMargin
@@ -470,11 +447,11 @@ class GuideActions(val activity:MainActivity){
         }
         setPositionByMargin(getArrowPositionData())
         setArrowDirection(getArrowDirectionFromArrowPos(arrowPosition))
-        getArrowVisibilityAnim(true).start()
+        getArrowVisibilityAnim(true){doOnEnd()}.start()
     }
-    var spbPosAnimDoOnEnd :()->Unit = {}
+//    var spbPosAnimDoOnEnd :()->Unit = {}
 
-    fun setSpbPos(){
+    private fun setSpbPos(){
         ViewChangeActions().setSize(textView,LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT)
         val posData = ViewAndPositionData(
             textView,
@@ -482,17 +459,13 @@ class GuideActions(val activity:MainActivity){
             orientation= spbOrientation)
         setPositionByMargin(posData)
     }
-    fun getSpbPosAnim(string: String):AnimatorSet{
+    fun getSpbPosAnim(string: String,doOnEnd: () -> Unit):AnimatorSet{
         return AnimatorSet().apply {
-            spbVisibilityAnimDoOnEnd = {
-                changeMulVisibility(arrayOf(bottom,textView),false)
+            playSequentially(getSpbVisibilityAnim(false)
+            {changeMulVisibility(arrayOf(bottom,textView),false)
                 textView.text = string
-                setSpbPos() }
-            playSequentially(getSpbVisibilityAnim(false),speakBubbleTextAnimation())
-            doOnEnd {
-                spbPosAnimDoOnEnd()
-                spbPosAnimDoOnEnd = {}
-            }
+                setSpbPos()},speakBubbleTextAnimation())
+            doOnEnd {   doOnEnd() }
         }
 
     }
@@ -579,7 +552,7 @@ class GuideActions(val activity:MainActivity){
             playSequentially( bottomTransAnim1,bottomTransAnim2,bottomTransAnim3)
         }
         val finalAnim = AnimatorSet().apply {
-            playTogether(txvScaleAnimSet,bottomAnim1,bottomTransAnim,getSpbVisibilityAnim(true))
+            playTogether(txvScaleAnimSet,bottomAnim1,bottomTransAnim,getSpbVisibilityAnim(true){})
             txvScaleAnimSet.duration = finalDuration
             bottomTransAnim.duration = finalDuration
         }

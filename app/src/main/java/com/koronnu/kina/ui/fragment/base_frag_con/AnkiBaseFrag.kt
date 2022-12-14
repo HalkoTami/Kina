@@ -30,7 +30,7 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
     private val ankiBaseViewModel : AnkiBaseViewModel by activityViewModels()
     private lateinit var ankiSettingSharedPref:SharedPreferences
-    private val getResources = requireActivity().resources
+
 
     private val binding get() = _binding!!
 
@@ -107,7 +107,7 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
         _binding =  AnkiFragBaseBinding.inflate(inflater, container, false)
         val a = childFragmentManager.findFragmentById(binding.ankiFragContainerView.id) as NavHostFragment
         val myNavCon = a.navController
-        ankiSettingSharedPref = requireActivity().getSharedPreferences(getResources.getString(R.string.sp_title_ankiSetting),Context.MODE_PRIVATE)
+        ankiSettingSharedPref = requireActivity().getSharedPreferences(resources.getString(R.string.sp_title_ankiSetting),Context.MODE_PRIVATE)
         val settingVisibilityObserver = Observer<Boolean>{ settingVisible ->
             saveAutoFlipSec()
             arrayOf(binding.frameLayAnkiSetting,binding.viewAnkiFragConCover).onEach {
@@ -156,10 +156,7 @@ class AnkiBaseFrag  : Fragment(),View.OnClickListener {
         setSelectedStateAndAlpha(stateView,alphaChangeView,stateView.isSelected.not())
         return stateView.isSelected
     }
-    private fun changeSelectedState(v: View):Boolean{
-        v.isSelected = v.isSelected.not()
-        return v.isSelected
-    }
+
     private fun putBooleanToSP(stringId:Int,boolean: Boolean){
         ankiSettingSharedPref.edit {
             putBoolean(requireActivity().getString(stringId),boolean)

@@ -3,7 +3,6 @@ package com.koronnu.kina.ui.fragment.anki_frag_con
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +43,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
     private val flipTypeAndCheckViewModel: FlipTypeAndCheckViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
-    private val getResources = requireActivity().resources
     private val binding get() = _binding!!
     private lateinit var ankiNavCon:NavController
     private lateinit var flipNavCon:NavController
@@ -101,7 +99,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             val frag = childFragmentManager.findFragmentById(binding.fragConViewFlip.id) as NavHostFragment
             flipNavCon = frag.navController
             ankiNavCon= ankiBaseViewModel.returnAnkiBaseNavCon() ?:return
-            flipRoundSharedPref = requireActivity().getSharedPreferences(getResources.getString(R.string.sp_title_flipRound),Context.MODE_PRIVATE)
+            flipRoundSharedPref = requireActivity().getSharedPreferences(resources.getString(R.string.sp_title_flipRound),Context.MODE_PRIVATE)
         }
 
         var start = true
