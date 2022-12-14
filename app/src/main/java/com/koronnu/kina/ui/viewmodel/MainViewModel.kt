@@ -1,13 +1,18 @@
 package com.koronnu.kina.ui.viewmodel
 
 import android.view.LayoutInflater
+import android.widget.ImageView
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.koronnu.kina.activity.MainActivity
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.MainActivityBinding
+import com.koronnu.kina.tabLibrary.LibraryBaseFragDirections
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
-import com.koronnu.kina.ui.fragment.base_frag_con.LibraryBaseFragDirections
+import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
+import com.koronnu.kina.ui.listener.KeyboardListener
 import kotlinx.coroutines.*
 
 
@@ -29,7 +34,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
                 val mainModel = MainViewModel(mainActivity.layoutInflater)
                 val guideViewModel = getViewModelProviderWithFactory(GuideViewModel.getViewModelFactory(mainModel,mainActivity.resources))[GuideViewModel::class.java]
                 val guideOptionMenuViewModel = getViewModelProviderWithFactory(GuideOptionMenuViewModel.getViewModelFactory(mainModel))[GuideOptionMenuViewModel::class.java]
-                val editFileViewModel = getViewModelProviderWithFactory(EditFileViewModel.Factory)[EditFileViewModel::class.java]
+                val editFileViewModel = getViewModelProviderWithFactory(EditFileViewModel.getFactory(mainModel))[EditFileViewModel::class.java]
                 val deletePopUpViewModel = getViewModelProviderWithFactory(DeletePopUpViewModel.Factory)[DeletePopUpViewModel::class.java]
                 val ankiBaseViewModel = getViewModelProviderWithFactory(AnkiBaseViewModel.getFactory(mainModel,mainActivity))[AnkiBaseViewModel::class.java]
                 val popUpJumpToGuideViewModel = getViewModelProviderWithFactory(PopUpJumpToGuideViewModel.getViewModelFactory(mainModel))[PopUpJumpToGuideViewModel::class.java]
@@ -48,10 +53,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
             fun getViewModelProviderWithFactory(factory: ViewModelProvider.Factory):ViewModelProvider{
                 return ViewModelProvider(mainActivity,factory)
             }
-
         }
-
-
     }
 
 
@@ -60,8 +62,32 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
         guideViewModel.observeGuideViewModelLiveData(lifecycleOwner)
     }
     private var _mainActivityBinding:MainActivityBinding? = null
+    private val bnvBinding      get() =  mainActivityBinding.bnvBinding
+
+
     fun setMainActivityBinding(mainActivityBinding: MainActivityBinding){
        _mainActivityBinding =  mainActivityBinding
+        doAfterSetMainActivityBin()
+    }
+    private fun checkBnvVisible():Boolean{
+        val isEditCardFragment = getFragmentStatus.now== MainFragment.EditCard
+        val isFlipFragment = ankiBaseViewModel.returnActiveFragment()== AnkiFragments.Flip
+        return !(isFlipFragment||isEditCardFragment)
+    }
+    private fun doAfterSetMainActivityBin(){
+        setListeners()
+        editFileViewModel.afterSetMainActivityBinding()
+    }
+    private fun setListeners(){
+        val topConLay = mainActivityBinding.mainTopConstrainLayout
+        val keyboardListener = object : KeyboardListener(topConLay){}.apply{
+            onKeyBoardAppear = { setBnvVisibility(false) }
+            onKeyBoardDisappear = {setBnvVisibility(checkBnvVisible())}
+        }
+        topConLay.viewTreeObserver.addOnGlobalLayoutListener(keyboardListener)
+        bnvBinding.bnvImvAdd        .setOnClickListener { editFileViewModel.setBottomMenuVisible(true)}
+        bnvBinding.bnvTxvTabAnki    .setOnClickListener { navigateInMainActivityFragCon(MainFragment.Anki)}
+        bnvBinding.bnvTxvTabLibrary .setOnClickListener { navigateInMainActivityFragCon(MainFragment.Library)}
     }
     val mainActivityBinding get() = _mainActivityBinding!!
 
@@ -70,43 +96,42 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
         var now: MainFragment,
         var before: MainFragment?
     )
-    private val _mainActivityNavCon = MutableLiveData<NavController>()
+    private var _mainActivityNavCon:NavController? = null
     fun setMainActivityNavCon(navController: NavController){
-        _mainActivityNavCon.value = navController
+        _mainActivityNavCon = navController
     }
-    fun returnMainActivityNavCon(): NavController?{
-        return _mainActivityNavCon.value
-    }
+    val getMainActivityNavCon get() = _mainActivityNavCon!!
 
-    private val _childFragmentsStatus = MutableLiveData<MainActivityChildFragmentStatus>()
-    val childFragmentStatus:LiveData<MainActivityChildFragmentStatus> = _childFragmentsStatus
+    private var _childFragmentsStatus :MainActivityChildFragmentStatus? = null
     fun setChildFragmentStatus(fragment: MainFragment){
-        val previous = _childFragmentsStatus.value?.now
-        if (fragment == previous) return else {
-            val newStatus = MainActivityChildFragmentStatus(fragment,previous)
-            _childFragmentsStatus.value = newStatus
-        }
+        val previous = getFragmentStatus.now
+        val newStatus = MainActivityChildFragmentStatus(fragment,previous)
+        _childFragmentsStatus = newStatus
+        setUpBnv()
     }
-
-    private fun returnActiveFragment(): MainFragment?{
-        return _childFragmentsStatus.value?.now
-    }
-    fun returnFragmentStatus():MainActivityChildFragmentStatus?{
-        return _childFragmentsStatus.value
-    }
-    fun changeFragment(to: MainFragment){
-        val navCOn = returnMainActivityNavCon()
-        if(returnActiveFragment() == to||
-                navCOn==null) return
-        else{
-            val action =
-            when(to){
-                MainFragment.Library -> LibraryBaseFragDirections.toLibrary()
-                MainFragment.EditCard ->return
-                MainFragment.Anki -> AnkiBaseFragDirections.toAnki()
+    private fun setUpBnv(){
+        if(getFragmentStatus.now==MainFragment.EditCard
+            ||getFragmentStatus.before==MainFragment.EditCard) return
+        fun getImv(mainFragment: MainFragment): ImageView{
+            return when(mainFragment){
+                MainFragment.Anki -> bnvBinding.bnvImvTabAnki
+                MainFragment.Library -> bnvBinding.bnvImvTabLibrary
+                else                -> throw IllegalArgumentException()
             }
-            navCOn.navigate(action)
         }
+        getImv(getFragmentStatus.now).isSelected = true
+        getImv(getFragmentStatus.before ?:MainFragment.Anki).isSelected = false
+    }
+    val getFragmentStatus get() = _childFragmentsStatus!!
+    private fun navigateInMainActivityFragCon(to: MainFragment){
+        if(to == getFragmentStatus.now) return
+        getMainActivityNavCon.navigate(
+            when(to){
+                MainFragment.Anki -> AnkiBaseFragDirections.toAnki()
+                MainFragment.EditCard -> EditCardBaseFragDirections.openCreateCard()
+                MainFragment.Library  -> LibraryBaseFragDirections.toLibrary()
+            }
+        )
     }
     private val _bnvVisibility = MutableLiveData<Boolean>()
     val bnvVisibility:LiveData<Boolean> = _bnvVisibility
@@ -135,7 +160,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
             ||deletePopUpViewModel.doOnBackPress()
             ||libraryBaseViewModel.doOnBackPress()
             ||ankiBaseViewModel.doOnBackPress()) return
-        returnMainActivityNavCon()?.popBackStack()
+        getMainActivityNavCon.popBackStack()
 
     }
 

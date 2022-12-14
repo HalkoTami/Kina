@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.listadapter
+package com.koronnu.kina.tabLibrary.chooseFileMoveTo
 
 import android.view.*
 import androidx.appcompat.content.res.AppCompatResources
@@ -12,9 +12,7 @@ import com.koronnu.kina.actions.setClickListeners
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.ui.listener.recyclerview.LibraryRVChooseFileMoveToCL
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
-import com.koronnu.kina.ui.viewmodel.ChooseFileMoveToViewModel
 
 
 /**

@@ -9,10 +9,11 @@ import com.koronnu.kina.databinding.ItemColorPalletBinding
 import com.koronnu.kina.db.enumclass.ColorStatus
 
 class ColorPalletViewSetUp {
-    fun changeColPalletCol(context: Context, colorStatus: ColorStatus?, selected:Boolean?, colorPalletBinding: ItemColorPalletBinding){
+    fun changeColPalletCol( colorStatus: ColorStatus?, selected:Boolean?, colorPalletBinding: ItemColorPalletBinding){
         val imageView: ImageView
         val colId:Int
         val color:Int
+        val context = colorPalletBinding.root.context
         colorPalletBinding.apply {
             when(colorStatus) {
                 ColorStatus.GRAY -> {
@@ -57,10 +58,10 @@ class ColorPalletViewSetUp {
         imageView.setImageDrawable(a)
 
     }
-    fun makeAllColPalletUnselected(context: Context, colorPalletBinding: ItemColorPalletBinding){
-        changeColPalletCol(context, ColorStatus.RED,false,colorPalletBinding)
-        changeColPalletCol(context, ColorStatus.YELLOW,false,colorPalletBinding)
-        changeColPalletCol(context, ColorStatus.BLUE,false,colorPalletBinding)
-        changeColPalletCol(context, ColorStatus.GRAY,false,colorPalletBinding)
+    fun makeAllColPalletUnselected( colorPalletBinding: ItemColorPalletBinding){
+        changeColPalletCol(ColorStatus.RED,false,colorPalletBinding)
+        changeColPalletCol(ColorStatus.YELLOW,false,colorPalletBinding)
+        changeColPalletCol(ColorStatus.BLUE,false,colorPalletBinding)
+        changeColPalletCol(ColorStatus.GRAY,false,colorPalletBinding)
     }
 }

@@ -1,49 +1,46 @@
-package com.koronnu.kina.ui.fragment.lib_frag_con
+package com.koronnu.kina.tabLibrary.lib_frag_con
+
 
 import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
 import com.koronnu.kina.actions.changeViewIfRVEmpty
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
+import com.koronnu.kina.ui.listener.topbar.LibFragTopBarHomeCL
 import com.koronnu.kina.ui.observer.LibraryOb
-import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
 import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.*
 
 
-class LibraryFolderFrag :  Fragment(){
-    private val args: LibraryFolderFragArgs by navArgs()
+class LibraryHomeFrag : Fragment(){
 
+    private lateinit var topBarBinding:LibraryFragTopBarHomeBinding
     private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView
-    private lateinit var topBarBinding:LibraryFragTopBarFileBinding
     private lateinit var mainNavCon:NavController
     private lateinit var adapter:LibFragPlaneRVListAdapter
-    private lateinit var searchAdapter: LibFragSearchRVListAdapter
+    private lateinit var searchAdapter:LibFragSearchRVListAdapter
     private val searchViewModel:SearchViewModel by activityViewModels()
-    private val cardTypeStringViewModel: CardTypeStringViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
+    private val cardTypeStringViewModel: CardTypeStringViewModel by activityViewModels()
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
@@ -58,11 +55,11 @@ class LibraryFolderFrag :  Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         fun setUpLateInitVars(){
-            topBarBinding = LibraryFragTopBarFileBinding.inflate(inflater,container,false)
+            topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
-            libraryBaseViewModel.setChildFragBinding(binding)
             recyclerView = binding.vocabCardRV
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
@@ -83,9 +80,15 @@ class LibraryFolderFrag :  Fragment(){
                 context = requireActivity(),
             )
         }
+        fun homeTopBarAddCL(){
+            arrayOf(
+                topBarBinding.frameLayInBox,
+                topBarBinding.btnGuide
+            ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(topBarBinding, libraryBaseViewModel)) }
+        }
         fun addCL(){
-            val addCL = LibraryAddListeners()
-            addCL.fileTopBarAddCL(topBarBinding,binding.ancestorsBinding,libraryBaseViewModel)
+            homeTopBarAddCL()
+
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
                 libraryBaseViewModel,
@@ -95,13 +98,13 @@ class LibraryFolderFrag :  Fragment(){
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             )
             recyclerView.addOnItemTouchListener(
-                object : LibraryRVItemClickListener(requireActivity(),binding.frameLayTest,recyclerView,libraryBaseViewModel){})
+                object :LibraryRVItemClickListener(requireActivity(),binding.frameLayTest,recyclerView,libraryBaseViewModel){})
         }
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()
             commonViewSetUp.setUpLibFragWithMultiModeBase(binding,topBarBinding.root,searchAdapter,adapter,requireActivity())
-            binding.frameLayAncestors.visibility = View.VISIBLE
         }
+
         fun observeSwipe(){
             libraryBaseViewModel.apply {
                 makeAllUnSwiped.observe(viewLifecycleOwner){
@@ -116,6 +119,7 @@ class LibraryFolderFrag :  Fragment(){
                     topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                     LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
                     if(it.not()) changeViewVisibility(binding.frameLayMultiModeMenu,false)
+
                 }
                 changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
@@ -123,8 +127,8 @@ class LibraryFolderFrag :  Fragment(){
                 selectedItems.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
                 }
-                multiMenuVisibility.observe(viewLifecycleOwner,LibraryOb()
-                    .multiMenuVisibilityObserver(binding))
+                multiMenuVisibility
+                    .observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))
 
             }
 
@@ -132,11 +136,23 @@ class LibraryFolderFrag :  Fragment(){
         setUpLateInitVars()
         val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
         val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
-        val fileRVItemsObserver = Observer<List<File>>{
-            val sorted  = it
+        val homeRVItemsObserver = Observer<List<File>>{
+            val sorted = it
             libraryBaseViewModel.setParentRVItems(sorted)
-            if( adapter.currentList.size == it.size) adapter.submitList(null)
-            adapter.submitList(it)
+            val mainRV = binding.vocabCardRV
+            adapter = LibFragPlaneRVListAdapter(
+                stringCardViewModel  = cardTypeStringViewModel,
+                createCardViewModel  = createCardViewModel,
+                mainNavController = mainNavCon,
+                deletePopUpViewModel = deletePopUpViewModel,
+                createFileViewModel = editFileViewModel,
+                libraryViewModel = libraryBaseViewModel,
+            )
+            mainRV.adapter = adapter
+            mainRV.layoutManager = LinearLayoutManager(context)
+            mainRV.isNestedScrollingEnabled = true
+//            adapter.submitList(null)
+            adapter.submitList(sorted)
             changeViewIfRVEmpty(it,binding.frameLayRvEmpty,emptyView)
         }
 
@@ -144,71 +160,41 @@ class LibraryFolderFrag :  Fragment(){
         addCL()
         observeSwipe()
         observeMultiMode()
-
+        createCardViewModel.setParentFlashCardCover(null)
+        editFileViewModel.setParentTokenFileParent(null)
+        editFileViewModel.makeAllBottomMenuClickable()
+        searchViewModel.matchedItems.observe(viewLifecycleOwner){
+            searchAdapter.submitList(it)
+        }
+        libraryBaseViewModel.setParentFile(null)
         searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
-
         libraryBaseViewModel.apply {
-            clearFinalList()
-            setLibraryFragment(LibraryFragment.Folder)
-            parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner){
-                setParentFile(it)
-                editFileViewModel.setParentTokenFileParent(it)
-                topBarBinding.apply {
-                    txvFileTitle.text = it?.title ?:resources.getString(R.string.no_title)
-                    imvFileType.setImageDrawable(
-                        GetCustomDrawables(requireActivity()).getFolderIconByCol(it?.colorStatus ?:ColorStatus.GRAY,)
-                    )
-                }
-            }
-            childFilesFromDB(args.folderId.single()).observe(viewLifecycleOwner,fileRVItemsObserver)
+            setLibraryFragment(LibraryFragment.Home)
 
-            parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner){
-                setParentFileAncestorsFromDB(it)
-                editFileViewModel.filterBottomMenuByAncestors(it,it[0])
-            }
-            fun setUpEachAncestor(linLay:LinearLayoutCompat,txv:TextView, imv:ImageView, file: File?){
-                val getDraw =  GetCustomDrawables(requireActivity())
-                if(file==null)linLay.visibility = View.GONE
-                else {
-                    linLay.visibility = View.VISIBLE
-                    txv.text = file.title
-                    imv.setImageDrawable(getDraw.getFileIconByFile(file))
-                }
-            }
-            parentFileAncestors.observe(viewLifecycleOwner){
-                    binding.ancestorsBinding.apply {
-                        setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,it.gGrandPFile)
-                        setUpEachAncestor(lineLayGPFile,txvGrandParentFileTitle,imvGrandParentFile,it.gParentFile)
-                        setUpEachAncestor(lineLayParentFile,txvParentFileTitle,imvParentFile,it.ParentFile)
-                    }
-                }
-            val commonViewSetUp = LibrarySetUpItems()
-            multipleSelectMode.observe(viewLifecycleOwner){
-                binding.topBarMultiselectBinding.root.visibility =if(it) View.VISIBLE else View.GONE
-                topBarBinding.root.visibility = if(!it) View.VISIBLE else View.INVISIBLE
-                commonViewSetUp.changeLibRVSelectBtnVisibility(recyclerView,it)
-            }
-            makeAllUnSwiped.observe(viewLifecycleOwner){
-                if(it) commonViewSetUp.makeLibRVUnSwiped(recyclerView)
-            }
-            changeAllRVSelectedStatus.observe(viewLifecycleOwner){
-                commonViewSetUp.changeLibRVAllSelectedState(recyclerView,it)
-            }
-            selectedItems.observe(viewLifecycleOwner){
-                binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
-            }
+            libraryBaseViewModel.clearFinalList()
 
+            childFilesFromDB(null).observe(viewLifecycleOwner,homeRVItemsObserver)
+            childCardsFromDB(null).observe(viewLifecycleOwner){
+                topBarBinding.txvInBoxCardAmount.apply {
+                    text = it?.size.toString()
+                    visibility = if(it?.size == 0) View.GONE else View.VISIBLE
+                }
+                createCardViewModel.setSisterCards(it?:return@observe)
             }
-//        LibrarySetUpFragment(libraryViewModel,deletePopUpViewModel).setUpFragLibFolder(binding,myNavCon,requireActivity())
+        }
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        libraryBaseViewModel.setChildFragBinding(binding)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-
 }
+
 

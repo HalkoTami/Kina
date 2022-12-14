@@ -1,13 +1,7 @@
 package com.koronnu.kina.ui.listener.topbar
 
 import android.view.View
-import android.widget.FrameLayout
-import com.koronnu.kina.actions.makeToast
-import com.koronnu.kina.databinding.LibItemTopBarMenuBinding
-import com.koronnu.kina.databinding.LibraryFragTopBarMultiselectModeBinding
-import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.ui.viewmodel.DeletePopUpViewModel
-import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 
 class LibFragTopBarMultiModeCL(
     val libVM: LibraryBaseViewModel,

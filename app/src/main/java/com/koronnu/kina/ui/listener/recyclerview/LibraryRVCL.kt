@@ -11,7 +11,7 @@ import com.koronnu.kina.ui.listener.MyTouchListener
 import com.koronnu.kina.ui.viewmodel.CreateCardViewModel
 import com.koronnu.kina.ui.viewmodel.EditFileViewModel
 import com.koronnu.kina.ui.viewmodel.DeletePopUpViewModel
-import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 
 
 class LibraryRVCL(val item: Any,
@@ -79,12 +79,12 @@ class LibraryRVCL(val item: Any,
 }
 
 class LibraryRVCLNewCard(val item: Card,
-                  private val libraryViewModel: LibraryBaseViewModel,
-                  private val createFileViewModel: EditFileViewModel,
-                  private val rvBinding: LibraryFragRvItemBaseBinding,
-                  private val deletePopUpViewModel: DeletePopUpViewModel,
-                  private val createCardViewModel: CreateCardViewModel,
-                  val v:View,
+                         private val libraryViewModel: LibraryBaseViewModel,
+                         private val createFileViewModel: EditFileViewModel,
+                         private val rvBinding: LibraryFragRvItemBaseBinding,
+                         private val deletePopUpViewModel: DeletePopUpViewModel,
+                         private val createCardViewModel: CreateCardViewModel,
+                         val v:View,
 ): MyTouchListener(v.context){
     override fun onSingleTap(motionEvent: MotionEvent?) {
         super.onSingleTap(motionEvent)

@@ -1,10 +1,9 @@
-package com.koronnu.kina.ui.fragment.base_frag_con
+package com.koronnu.kina.tabLibrary
 
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -13,6 +12,7 @@ import com.koronnu.kina.databinding.LibraryFragBinding
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
+import com.koronnu.kina.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
 import com.koronnu.kina.ui.observer.CommonOb
 import com.koronnu.kina.ui.viewmodel.*
 
@@ -24,7 +24,7 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
-    private val chooseFileMoveToViewModel:ChooseFileMoveToViewModel by activityViewModels()
+    private val chooseFileMoveToViewModel: ChooseFileMoveToViewModel by activityViewModels()
     private var _binding: LibraryFragBinding? = null
     private val binding get() = _binding!!
 

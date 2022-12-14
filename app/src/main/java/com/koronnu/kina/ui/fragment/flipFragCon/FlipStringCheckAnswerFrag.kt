@@ -1,6 +1,5 @@
 package com.koronnu.kina.ui.fragment.flipFragCon
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,14 +11,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
+import com.koronnu.kina.customClasses.enumClasses.FlipFragments
 import com.koronnu.kina.databinding.AnkiFlipFragCheckAnswerStringFragBinding
 import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.enumclass.ActivityStatus
-import com.koronnu.kina.customClasses.enumClasses.FlipFragments
 import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
-import com.koronnu.kina.ui.viewmodel.FlipTypeAndCheckViewModel
 import com.koronnu.kina.ui.viewmodel.AnkiSettingPopUpViewModel
+import com.koronnu.kina.ui.viewmodel.FlipTypeAndCheckViewModel
 
 
 class FlipStringCheckAnswerFrag  : Fragment() {
@@ -115,17 +114,17 @@ class FlipStringCheckAnswerFrag  : Fragment() {
         val typedAnswersObserver = Observer<MutableMap<Int,String>> {
             binding.txvYourAnswer.text = it[args.cardId].toString()
         }
-        val activityDataObserver = Observer<List<ActivityData>> {
-            setResultContentNoData(it.isNullOrEmpty())
-            if(it.isNullOrEmpty().not()){
-                val results = it.filter { arrayOf(
+        val activityDataObserver = Observer<List<ActivityData>> { activityDataList ->
+            setResultContentNoData(activityDataList.isNullOrEmpty())
+            if(activityDataList.isNullOrEmpty().not()){
+                val results = activityDataList.filter { arrayOf(
                     ActivityStatus.WRONG_BACK_CONTENT_TYPED,
                     ActivityStatus.RIGHT_BACK_CONTENT_TYPED,
                     ActivityStatus.WRONG_FRONT_CONTENT_TYPED,
                     ActivityStatus.RIGHT_FRONT_CONTENT_TYPED).contains(it.activityStatus)  }
                 if(results.isEmpty()) return@Observer
                 setResultContent(getAnswerCorrect(results.last().activityStatus))
-                binding.txvResultInRow.text  = resources.getString(R.string.txvResultInRow,getResultsInRow(it),
+                binding.txvResultInRow.text  = resources.getString(R.string.txvResultInRow,getResultsInRow(activityDataList),
                     if(getAnswerCorrect(results.last().activityStatus)) resources.getString(R.string.answer_correct) else resources.getString(R.string.answer_incorrect))
                 val correct = getAnswerCorrectTimes(args.answerIsBack,results)
                 val challenged = getChallengedTimes(args.answerIsBack,results)
@@ -146,15 +145,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
 
         return root
     }
-    fun dpTopx(dp: Int, context: Context): Float {
-        val metrics = context.getResources().getDisplayMetrics()
-        return dp * metrics.density
-    }
 
-    fun pxToDp(px: Int, context: Context): Float {
-        val metrics = context.resources.displayMetrics
-        return px / metrics.density
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

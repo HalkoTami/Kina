@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.lib_frag_con
+package com.koronnu.kina.tabLibrary.lib_frag_con
 
 import android.os.Bundle
 import android.text.SpannableStringBuilder

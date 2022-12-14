@@ -83,7 +83,7 @@ class GuideOptionMenuViewModel:ViewModel(){
         }
     }
     private fun isInLibraryFragment():Boolean{
-        return  (mainViewModel.returnFragmentStatus()?.now == MainFragment.Library)
+        return  (mainViewModel.getFragmentStatus.now == MainFragment.Library)
     }
     private fun isLibraryFragmentWithRVItem():Boolean{
         val hasItemInFirstRow = (libraryBaseViewModel.getChildFragBinding.vocabCardRV.size>0)

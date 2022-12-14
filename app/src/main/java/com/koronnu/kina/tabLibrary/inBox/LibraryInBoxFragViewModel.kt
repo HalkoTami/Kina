@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.viewmodel
+package com.koronnu.kina.tabLibrary.inBox
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -9,12 +9,14 @@ import com.koronnu.kina.R
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
+import com.koronnu.kina.ui.viewmodel.PopUpJumpToGuideViewModel
 
 class LibraryInBoxFragViewModel(repository: MyRoomRepository):ViewModel() {
     private lateinit var sharedPrefCheckForFirstTime: SharedPreferences
     private lateinit var sharedPrefKeyInboxWithContentFirstTimeOpened:String
-    private lateinit var libraryBaseViewModel:LibraryBaseViewModel
-    private lateinit var popUpJumpToGuideViewModel:PopUpJumpToGuideViewModel
+    private lateinit var libraryBaseViewModel: LibraryBaseViewModel
+    private lateinit var popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel
 
 
     companion object {

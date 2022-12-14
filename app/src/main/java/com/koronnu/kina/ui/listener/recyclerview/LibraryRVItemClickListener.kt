@@ -12,13 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.customClasses.enumClasses.LibRVState
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.ui.viewmodel.LibraryBaseViewModel
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import kotlin.math.abs
 
 open class LibraryRVItemClickListener(val context: Context,
                                  val scrollView: NestedScrollView,
                                  val recyclerView: RecyclerView,
-                                 val libraryBaseViewModel: LibraryBaseViewModel) :RecyclerView.OnItemTouchListener{
+                                 val libraryBaseViewModel: LibraryBaseViewModel
+) :RecyclerView.OnItemTouchListener{
     private val gestureScrollDetector = GestureDetector(context, ScrollDetector())
     inner class ScrollDetector : GestureDetector.OnGestureListener {
         override fun onShowPress(e: MotionEvent) {}
