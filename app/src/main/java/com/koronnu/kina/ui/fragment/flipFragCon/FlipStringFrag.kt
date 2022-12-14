@@ -61,8 +61,7 @@ class FlipStringFrag  : Fragment() {
                 true -> FlipFragments.LookStringFront
                 false -> FlipFragments.LookStringBack
             },
-            ankiSettingPopUpViewModel.returnReverseCardSide(),
-            ankiSettingPopUpViewModel.returnAutoFlip().active
+            ankiSettingPopUpViewModel.getAutoFlip.active
         )
         flipBaseViewModel.getCardFromDB(cardId?.single() ?:return binding.root).observe(viewLifecycleOwner,cardFromDBObserver)
 

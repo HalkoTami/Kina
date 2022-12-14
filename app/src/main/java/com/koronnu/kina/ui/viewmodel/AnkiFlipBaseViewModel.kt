@@ -1,7 +1,6 @@
 package com.koronnu.kina.ui.viewmodel
 
 import android.content.res.Resources
-import android.text.Spannable.Factory
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
@@ -28,7 +27,6 @@ import java.util.*
 
 class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
                             val resources: Resources) : ViewModel() {
-
     companion object{
         val  Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -65,9 +63,9 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     }
 
 
-    fun onChildFragmentsStart(flipFragments: FlipFragments,
-                              reverseMode: Boolean,
-                              autoFlip: Boolean, ){
+    fun onChildFragmentsStart(
+        flipFragments: FlipFragments,
+        autoFlip: Boolean, ){
         setFlipFragment(flipFragments)
         if(autoFlip){
             if(returnAutoFlipPaused().not())
@@ -75,11 +73,10 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         }
     }
     private val _autoFlipPaused = MutableLiveData<Boolean>()
-    val autoFlipPaused :LiveData<Boolean> = _autoFlipPaused
     fun setAutoFlipPaused(boolean: Boolean){
         _autoFlipPaused.value = boolean
     }
-    fun returnAutoFlipPaused():Boolean{
+    private fun returnAutoFlipPaused():Boolean{
         return _autoFlipPaused.value ?:false
     }
 
@@ -88,7 +85,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     fun setFlipBaseNavCon(navController: NavController){
         _flipBaseNavCon.value = navController
     }
-    fun returnFlipBaseNavCon(): NavController?{
+    private fun returnFlipBaseNavCon(): NavController?{
         return _flipBaseNavCon.value
     }
     private val _countFlip = MutableLiveData<CountFlip>()
@@ -99,7 +96,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     fun returnCountFlip(): CountFlip?{
         return _countFlip.value
     }
-    val countFlip:LiveData<CountFlip> = _countFlip
 
     private val _flipFragment = MutableLiveData<FlipFragments>()
     private fun setFlipFragment (flipAction: FlipFragments){
@@ -108,7 +104,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     fun returnFlipFragment(): FlipFragments {
         return _flipFragment.value ?: FlipFragments.LookStringFront
     }
-    val flipFragment:LiveData<FlipFragments> = _flipFragment
 
     private val _countDownAnim = MutableLiveData<AnimationAttributes>()
     fun setCountDownAnim(animationAttributes: AnimationAttributes){
@@ -133,7 +128,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         if(position<0||returnFlipItems().size-1<position) return else
             _parentPosition.value = position
     }
-    val parentPosition:LiveData<Int> = _parentPosition
 
     fun returnParentPosition():Int{
         return _parentPosition.value ?:0
@@ -156,7 +150,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         return (reverseMode&&checkFront())||(reverseMode.not()&&checkBack())
                 ||returnFlipFragment() == FlipFragments.CheckAnswerString
     }
-    private fun checkChangeToPreviouscard(reverseMode: Boolean):Boolean{
+    private fun checkChangeToPreviousCard(reverseMode: Boolean):Boolean{
         return (reverseMode&&checkBack())||(reverseMode.not()&&checkFront())
     }
     private fun checkPositionIsOnStartEdge(reverseMode: Boolean):Boolean{
@@ -257,7 +251,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         }
         fun getPreviousFrag():NavDirections?{
 
-            val changeCard = checkChangeToPreviouscard(reverseMode)
+            val changeCard = checkChangeToPreviousCard(reverseMode)
             val flipToFront = (changeCard&&reverseMode)||(!changeCard&&reverseMode.not())
             val oldPosition = returnParentPosition()
             val newPosition = returnParentPosition() - 1
@@ -356,5 +350,9 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     }
 
 
+    fun onBackPressed():Boolean{
+//        TODO()
+        return true
+    }
 
 }

@@ -59,12 +59,12 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
         return binding.root
     }
     private fun navigateToAnkiBox(){
-        val navCon = ankiBaseViewModel.returnAnkiBaseNavCon() ?:return
+        val navCon = ankiBaseViewModel.getAnkiBaseNavCon
         NavigationActions().popBackStackToLabel(navCon ,
             requireActivity().getString(R.string.nav_label_anki_ankiBox))
     }
     private fun navigateToFlipStart(){
-        val navCon = ankiBaseViewModel.returnAnkiBaseNavCon() ?:return
+        val navCon = ankiBaseViewModel.getAnkiBaseNavCon
         NavigationActions().popBackStackToLabel(navCon,
         requireActivity().getString(R.string.nav_label_anki_flip))
     }

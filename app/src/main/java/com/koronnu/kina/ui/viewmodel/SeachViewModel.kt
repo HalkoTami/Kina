@@ -1,11 +1,7 @@
 package com.koronnu.kina.ui.viewmodel
 
-import android.content.Context
-import android.widget.EditText
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.koronnu.kina.actions.hideKeyBoard
-import com.koronnu.kina.actions.showKeyBoard
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
@@ -57,16 +53,8 @@ class SearchViewModel(private val repository: MyRoomRepository):ViewModel() {
     fun setSearchModeActive(boolean: Boolean){
         _searchModeActive.value = boolean
     }
-    fun onClickSearchLoup(edtLibrarySearch:EditText,context: Context){
-        edtLibrarySearch.requestFocus()
-        showKeyBoard(edtLibrarySearch,context)
-        setSearchModeActive(true)
-    }
-    fun onClickCancel(edtLibrarySearch:EditText,context: Context){
-        hideKeyBoard(edtLibrarySearch,context)
-        setSearchModeActive(false)
-    }
-    fun returnSearchModeActive():Boolean{
+
+    private fun returnSearchModeActive():Boolean{
         return _searchModeActive.value ?:false
     }
 

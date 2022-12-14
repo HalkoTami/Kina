@@ -31,7 +31,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
                 val guideOptionMenuViewModel = getViewModelProviderWithFactory(GuideOptionMenuViewModel.getViewModelFactory(mainModel))[GuideOptionMenuViewModel::class.java]
                 val editFileViewModel = getViewModelProviderWithFactory(EditFileViewModel.Factory)[EditFileViewModel::class.java]
                 val deletePopUpViewModel = getViewModelProviderWithFactory(DeletePopUpViewModel.Factory)[DeletePopUpViewModel::class.java]
-                val ankiBaseViewModel = getViewModelProviderWithFactory(AnkiBaseViewModel.getFactory(mainModel))[AnkiBaseViewModel::class.java]
+                val ankiBaseViewModel = getViewModelProviderWithFactory(AnkiBaseViewModel.getFactory(mainModel,mainActivity))[AnkiBaseViewModel::class.java]
                 val popUpJumpToGuideViewModel = getViewModelProviderWithFactory(PopUpJumpToGuideViewModel.getViewModelFactory(mainModel))[PopUpJumpToGuideViewModel::class.java]
                 val createCardViewModel = getViewModelProviderWithFactory(CreateCardViewModel.getFactory(mainModel))[CreateCardViewModel::class.java]
                 mainModel.guideViewModel = guideViewModel
@@ -87,6 +87,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
             _childFragmentsStatus.value = newStatus
         }
     }
+
     private fun returnActiveFragment(): MainFragment?{
         return _childFragmentsStatus.value?.now
     }

@@ -72,7 +72,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
                 binding.btnCheckAnswer.setOnClickListener {
                     val rootView = binding.root
                     rootView.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
-                    flipBaseViewModel.flip(NeighbourCardSide.NEXT,ankiSettingPopUpViewModel.returnReverseCardSide(),true)
+                    flipBaseViewModel.flip(NeighbourCardSide.NEXT,ankiSettingPopUpViewModel.getReverseCardSideActive,true)
                 }
             }
             addCL()
@@ -91,8 +91,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
         setUpViewStart()
         flipBaseViewModel.onChildFragmentsStart(
             FlipFragments.TypeAnswerString,
-            ankiSettingPopUpViewModel.returnReverseCardSide(),
-            ankiSettingPopUpViewModel.returnAutoFlip().active)
+            ankiSettingPopUpViewModel.getAutoFlip.active)
         flipBaseViewModel.getCardFromDB(args.cardId).observe(viewLifecycleOwner,cardFromDBObserver)
 
 

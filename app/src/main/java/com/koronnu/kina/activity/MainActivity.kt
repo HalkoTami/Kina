@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
             libraryViewModel        =ViewModelProvider(this,LibraryBaseViewModel.getFactory(mainActivityViewModel,this,this.baseContext))[LibraryBaseViewModel::class.java]
             _createCardViewModel   = ViewModelProvider(this,CreateCardViewModel.getFactory(mainActivityViewModel))[CreateCardViewModel::class.java]
             ankiFlipBaseViewModel =  ViewModelProvider(this,AnkiFlipBaseViewModel.Factory)[AnkiFlipBaseViewModel::class.java]
-            ankiBaseViewModel     = ViewModelProvider(this,AnkiFlipBaseViewModel.Factory)[AnkiBaseViewModel::class.java]
             chooseFileMoveToViewModel      = ViewModelProvider(this,ChooseFileMoveToViewModel.getFactory(libraryViewModel))[ChooseFileMoveToViewModel::class.java]
             _deletePopUpViewModel  = ViewModelProvider(this,DeletePopUpViewModel.Factory)[DeletePopUpViewModel::class.java]
             searchViewModel       = ViewModelProvider(this,SearchViewModel.Factory)[SearchViewModel::class.java]
@@ -168,7 +167,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         fun createAllViewModels(){
             ViewModelProvider(this)[CardTypeStringViewModel::class.java]
-            ViewModelProvider(this,AnkiBoxViewModel.Factory)[AnkiBoxViewModel::class.java]
             ViewModelProvider(this)[AnkiSettingPopUpViewModel::class.java]
             ViewModelProvider(this,FlipTypeAndCheckViewModel.Factory)[FlipTypeAndCheckViewModel::class.java]
         }
@@ -251,7 +249,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         val popUpEditFileVisibilityObserver  = Observer<Boolean>{
             Animation().animatePopUpAddFile(binding.frameLayEditFile,it)
             changeViewVisibility(binding.fragConViewCover,it||createFileViewModel.getBottomMenuVisible())
-            if(it.not())  hideKeyBoard(binding.editFileBinding.edtFileTitle,this)
+            if(it.not())  hideKeyBoard(binding.editFileBinding.edtFileTitle)
         }
         val popUpEditFileUIDataObserver        = Observer<EditFileViewModel.PopUpUI>{
             LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,this@MainActivity)

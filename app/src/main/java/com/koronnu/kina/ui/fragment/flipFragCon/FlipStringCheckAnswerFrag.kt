@@ -138,8 +138,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
         ankiFlipBaseViewModel.getCardFromDB(args.cardId).observe(viewLifecycleOwner,cardFromDBObserver)
         ankiFlipBaseViewModel.onChildFragmentsStart(
             FlipFragments.CheckAnswerString,
-            ankiSettingPopUpViewModel.returnReverseCardSide(),
-            ankiSettingPopUpViewModel.returnAutoFlip().active)
+            ankiSettingPopUpViewModel.getAutoFlip.active)
         flipTypeAndCheckViewModel.typedAnswers.observe(viewLifecycleOwner,typedAnswersObserver)
         flipTypeAndCheckViewModel.getActivityData(args.cardId).observe(viewLifecycleOwner,activityDataObserver)
         flipTypeAndCheckViewModel.setKeyBoardVisible(false)
