@@ -34,7 +34,7 @@ import com.koronnu.kina.ui.viewmodel.*
 
 class
 LibraryFlashCardCoverFrag  : Fragment(){
-    private val args: com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFragArgs by navArgs()
+    private val args: LibraryFlashCardCoverFragArgs by navArgs()
 
     private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView

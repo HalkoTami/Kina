@@ -2,6 +2,7 @@ package com.koronnu.kina.activity
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -26,12 +27,12 @@ import com.koronnu.kina.ui.viewmodel.*
 
 
 class MainActivity : AppCompatActivity(){
+
     private lateinit var mainNavCon              : NavController
 
-    private var _createFileViewModel   : EditFileViewModel? = null
-    val createFileViewModel get() = _createFileViewModel!!
+    val createFileViewModel get() = mainActivityViewModel.editFileViewModel
     private var _createCardViewModel   : CreateCardViewModel? = null
-    val createCardViewModel get() = _createCardViewModel!!
+    val createCardViewModel get() = mainActivityViewModel.createCardViewModel
 
     val mainActivityViewModel :MainViewModel by viewModels { MainViewModel.getViewModel(this) }
 
@@ -79,34 +80,9 @@ class MainActivity : AppCompatActivity(){
             changeViewVisibility(binding.bnvCover,it)
         }
 
-        val popUpEditFileUIDataObserver        = Observer<EditFileViewModel.PopUpUI>{
-            LibraryOb().observeEditFilePopUp(binding.editFileBinding,it,this@MainActivity)
-            createFileViewModel.onClickColorPallet(it.colorStatus)
-        }
-        val editFileColPalletObserver = Observer<ColorPalletStatus> {
-            val colBinding = binding.editFileBinding.colPaletBinding
-            ColorPalletViewSetUp().apply {
-                changeColPalletCol(it.colNow,true,colBinding)
-                changeColPalletCol(it.before,false,colBinding)
-            }
-            val get = GetCustomDrawables(this)
-            val draw:Drawable =
-            when(createFileViewModel.returnTokenFile()?.fileStatus){
-                FileStatus.FOLDER -> get.getFolderIconByCol(it.colNow)
-                FileStatus.FLASHCARD_COVER -> get.getFlashCardIconByCol(it.colNow)
-                else -> return@Observer
-            }
-            binding.editFileBinding.imvFileType.setImageDrawable(draw)
 
-        }
 
-        val bottomMenuClickableStatusObserver = Observer<EditFileViewModel.BottomMenuClickable>{
-            binding.bindingAddMenu.apply {
-                changeViewVisibility(frameLayNewFolder,it.createFile)
-                changeViewVisibility(frameLayNewFlashcard,it.createFlashCardCover)
-                changeViewVisibility(frameLayNewCard,it.createCard)
-            }
-        }
+
         val parentFileParentObserver          = Observer<File>{
             createFileViewModel.setParentFileParent(it)
         }
@@ -115,38 +91,34 @@ class MainActivity : AppCompatActivity(){
         }
         val libraryParentFileObserver           = Observer<File?>{
             createCardViewModel.setParentFlashCardCover(it)
-            createFileViewModel.setParentTokenFileParent(it)
             createFileViewModel.getChildFilesByFileIdFromDB(it?.fileId).observe(this){list->
                 createFileViewModel.setParentFileSisters(list)
             }
             createFileViewModel.parentFileParent(it?.parentFileId).observe(this@MainActivity,editFileParentFileObserver)
             createFileViewModel.lastInsertedFile.observe(this,lastInsertedFileObserver)
         }
-        val libraryParentRVItemsObserver        = Observer<List<Any>>{
-            createFileViewModel.setPosition(it.size+1)
-        }
 
 //        ー－－－mainActivityのviewModel 読み取りー－－－
+
+        binding.editFileBinding.lifecycleOwner = this
+        binding.editFileBinding.viewModel = mainActivityViewModel.editFileViewModel
+
         mainActivityViewModel.setMainActivityNavCon(mainNavCon)
         mainActivityViewModel.setMainActivityBinding(binding)
         mainActivityViewModel.observeLiveDataFromMainActivity(this,this)
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
         mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)
 //        ー－－－CreateFileViewModelの読み取りー－－－
-        createFileViewModel.apply{
+        mainActivityViewModel.editFileViewModel.apply{
             onCreate()
-            filePopUpUIData     .observe(this@MainActivity,popUpEditFileUIDataObserver)
-            bottomMenuClickable .observe(this@MainActivity,bottomMenuClickableStatusObserver)
-            colorPalletStatus   .observe(this@MainActivity,editFileColPalletObserver)
             lastInsertedFile.observe(this@MainActivity,lastInsertedFileObserver)
         }
 //        ー－－－LibraryViewModelの読み取りー－－－
         libraryViewModel. onCreate()
         libraryViewModel.parentFile.observe(this@MainActivity,libraryParentFileObserver)
-        libraryViewModel.parentRVItems.observe(this@MainActivity,libraryParentRVItemsObserver)
 
-        createCardViewModel.setMainActivityNavCon(mainNavCon)
-        createCardViewModel.lastInsertedCardFromDB.observe(this) {
+        mainActivityViewModel.createCardViewModel.setMainActivityNavCon(mainNavCon)
+        mainActivityViewModel.createCardViewModel.lastInsertedCardFromDB.observe(this) {
             createCardViewModel.setLastInsertedCard(it)
         }
 

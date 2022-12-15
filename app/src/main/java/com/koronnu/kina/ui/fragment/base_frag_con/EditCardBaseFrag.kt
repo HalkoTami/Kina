@@ -116,7 +116,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
                 )
             }
         }
-        val parentFlashCardCoverId = when (mainViewModel.returnFragmentStatus()?.now) {
+        val parentFlashCardCoverId = when (mainViewModel.getFragmentStatus.now) {
             MainFragment.Anki -> when (ankiBaseViewModel.returnActiveFragment()) {
                 AnkiFragments.AnkiBox -> null
                 AnkiFragments.Flip -> flipBaseViewModel.returnParentCard()?.belongingFlashCardCoverId

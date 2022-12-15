@@ -100,7 +100,7 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
     private val getSettingVisible get() = _settingVisible.value!!
 
     fun doOnBackPress(): Boolean {
-        val isActive = mainViewModel.returnFragmentStatus()?.now == MainFragment.Anki
+        val isActive = mainViewModel.getFragmentStatus.now == MainFragment.Anki
         if(!isActive) return false
         val isStartFragment = returnActiveFragment()==AnkiFragments.AnkiBox
         if(isStartFragment

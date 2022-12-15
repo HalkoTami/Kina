@@ -583,7 +583,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
 
     fun doOnBackPress(): Boolean {
-        val isActive = mainViewModel.returnFragmentStatus()?.now == MainFragment.Library
+        val isActive = mainViewModel.getFragmentStatus.now == MainFragment.Library
         if(!isActive) return false
         val isHomeFragment = (returnLibraryFragment()==LibraryFragment.Home)
         if(isHomeFragment

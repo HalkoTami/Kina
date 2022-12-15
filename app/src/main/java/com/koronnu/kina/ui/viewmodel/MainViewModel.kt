@@ -122,7 +122,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
         getImv(getFragmentStatus.now).isSelected = true
         getImv(getFragmentStatus.before ?:MainFragment.Anki).isSelected = false
     }
-    val getFragmentStatus get() = _childFragmentsStatus!!
+    val getFragmentStatus get() = _childFragmentsStatus?:MainActivityChildFragmentStatus(now = MainFragment.Library,null)
     private fun navigateInMainActivityFragCon(to: MainFragment){
         if(to == getFragmentStatus.now) return
         getMainActivityNavCon.navigate(

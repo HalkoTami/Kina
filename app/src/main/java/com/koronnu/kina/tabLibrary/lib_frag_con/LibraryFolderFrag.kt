@@ -34,7 +34,7 @@ import com.koronnu.kina.ui.viewmodel.*
 
 
 class LibraryFolderFrag :  Fragment(){
-    private val args: com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFolderFragArgs by navArgs()
+    private val args: LibraryFolderFragArgs by navArgs()
 
     private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView
@@ -153,7 +153,6 @@ class LibraryFolderFrag :  Fragment(){
             setLibraryFragment(LibraryFragment.Folder)
             parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFile(it)
-                editFileViewModel.setParentTokenFileParent(it)
                 topBarBinding.apply {
                     txvFileTitle.text = it?.title ?:resources.getString(R.string.no_title)
                     imvFileType.setImageDrawable(

@@ -10,6 +10,7 @@
     <dimen name="top_bar_ancestors_height">20dp</dimen>
     <item name="popUpButton_height_percentage" format="float" type="integer">0.25</item>
     <item name="popUpText_width_percentage" format="float" type="integer">0.8</item>
+    <dimen name="imvColPallet_alpha_unselected">0.4dp</dimen>
     <dimen name="string_card_min_height" >90dp</dimen>
     <dimen name="lib_rv_file_height" >70dp</dimen>
     <dimen name="popUp_frameLay_width">300dp</dimen>
@@ -32,6 +33,7 @@
     <dimen name="background_PopupJumpToGuide_character_paddingLeft">@dimen/background_PopupJumpToGuide_rectangle_padding</dimen>
     <dimen name="background_PopupJumpToGuide_questionIcon_paddingLeft"> </dimen>
     <dimen name="guide_holeView_margin">10dp</dimen>
+    <dimen name="drawColPallet_strokeWidth_selected">2dp</dimen>
 
 
 </resources>

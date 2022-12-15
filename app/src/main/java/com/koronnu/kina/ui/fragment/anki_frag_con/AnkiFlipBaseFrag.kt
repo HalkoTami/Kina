@@ -334,8 +334,8 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                     imvEditCard -> {
                         val editingId = ankiFlipBaseViewModel.returnParentCard()?.id ?: return
                         createCardViewModel.setStartingCardId(editingId)
-                        mainViewModel.returnMainActivityNavCon()
-                            ?.navigate(EditCardBaseFragDirections.openCreateCard())
+                        mainViewModel.getMainActivityNavCon
+                            .navigate(EditCardBaseFragDirections.openCreateCard())
                     }
                     confirmEndBinding.btnCancelEnd, confirmEndBinding.btnCloseConfirmEnd-> changeViewVisibility(binding.frameLayConfirmEnd,false)
                     confirmEndBinding.btnCommit -> {

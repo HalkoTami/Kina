@@ -54,7 +54,7 @@ class CreateGuide(val actions: GuideActions ){
                 goNextAfterNewFileCreated {
                     viewUnderSpotInGuide = null
                     guide6() }
-                createFileViewModel.makeFileInGuide(edtEditFileTitle.text.toString())
+                createFileViewModel.makeFileInGuide()
             }
             setArrow(MyOrientation.BOTTOM,btnCreateFile){}
             holeShapeInGuide = HoleShape.RECTANGLE
@@ -124,7 +124,7 @@ class CreateGuide(val actions: GuideActions ){
             animateConLayGoNextVisibility(true)
             viewUnderSpotInGuide = null
             createCardViewModel.onClickAddNewCardBottomBar()
-            actionsBeforeEndGuideList.add { mainViewModel.returnMainActivityNavCon()?.popBackStack() }
+            actionsBeforeEndGuideList.add { mainViewModel.getMainActivityNavCon.popBackStack() }
             onClickGoNext{guide13()}
         }
 

@@ -1,6 +1,12 @@
 package com.koronnu.kina.ui.viewmodel
 
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.view.Display.Mode
+import android.widget.EditText
+import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -17,6 +23,7 @@ import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
 import com.koronnu.kina.customClasses.enumClasses.EditingMode
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.ui.view_set_up.ColorPalletViewSetUp
+import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import kotlinx.coroutines.launch
 
 class EditFileViewModel(val repository: MyRoomRepository,
@@ -40,8 +47,11 @@ class EditFileViewModel(val repository: MyRoomRepository,
     private val editFilePopUpBinding get() = mainActivityBinding.editFileBinding
     private val colorPalletBinding  get() = editFilePopUpBinding.colPaletBinding
     private val addMenuBinding      get() = mainActivityBinding.bindingAddMenu
+    private val parentOpenedFile    get() = mainViewModel.libraryBaseViewModel.returnParentFile()
+    private lateinit var colorPalletViewSetUp: ColorPalletViewSetUp
+
     fun afterSetMainActivityBinding(){
-        ColorPalletViewSetUp().makeAllColPalletUnselected(colorPalletBinding)
+        colorPalletViewSetUp = ColorPalletViewSetUp(colorPalletBinding)
         setClickListeners()
     }
     private fun setClickListeners(){
@@ -50,12 +60,6 @@ class EditFileViewModel(val repository: MyRoomRepository,
         addMenuBinding.frameLayNewFlashcard .setOnClickListener{ onClickCreateFile(FileStatus.FLASHCARD_COVER)}
         addMenuBinding.frameLayNewFolder    .setOnClickListener{ onClickCreateFile(FileStatus.FOLDER)}
         addMenuBinding.root                 .setOnClickListener(null)
-        colorPalletBinding.imvColBlue       .setOnClickListener{ onClickColorPallet(ColorStatus.BLUE)}
-        colorPalletBinding.imvColGray       .setOnClickListener{ onClickColorPallet(ColorStatus.GRAY)}
-        colorPalletBinding.imvColRed        .setOnClickListener{ onClickColorPallet(ColorStatus.RED)}
-        colorPalletBinding.imvColYellow     .setOnClickListener{ onClickColorPallet(ColorStatus.YELLOW)}
-        editFilePopUpBinding.btnClose       .setOnClickListener{ setEditFilePopUpVisible(false) }
-        editFilePopUpBinding.btnFinish      .setOnClickListener{ onClickFinish() }
         editFilePopUpBinding.root           .setOnClickListener(null)
 
     }
@@ -64,20 +68,8 @@ class EditFileViewModel(val repository: MyRoomRepository,
     fun onCreate(){
         setBottomMenuVisible(false)
     }
-    private val _parentTokenFileParent = MutableLiveData<File?>()
-    fun setParentTokenFileParent(file: File?){
-        _parentTokenFileParent.value = file
-    }
-    private fun returnParentTokenFileParent():File?{
-        return _parentTokenFileParent.value
-    }
-    private val _position = MutableLiveData<Int>()
-    fun setPosition (int: Int){
-        _position.value = int
-    }
-    private fun returnPosition ():Int?{
-        return _position.value
-    }
+
+
     private val _ankiBoxCards = MutableLiveData<List<Card>>()
     fun setAnkiBoxCards (list: List<Card>){
         _ankiBoxCards.value = list
@@ -171,14 +163,12 @@ class EditFileViewModel(val repository: MyRoomRepository,
         setMode(EditingMode.New)
         makeEmptyFileToCreate(fileStatus)
         setTokenFile(fileToCreate)
-        makeFilePopUp(returnParentTokenFileParent(), fileToCreate,mode)
         setEditFilePopUpVisible(true)
     }
     fun onClickEditFileInRV(editingFile:File){
         setMode(EditingMode.Edit)
         setFileToEdit(editingFile)
         setTokenFile(fileToEdit)
-        makeFilePopUp(returnParentTokenFileParent(),fileToEdit,mode)
         setEditFilePopUpVisible(true)
     }
 
@@ -190,8 +180,9 @@ class EditFileViewModel(val repository: MyRoomRepository,
         _editFilePopUpVisible = visible
         doAfterSetEditFilePopUpVisible()
     }
-    val editFilePopUpVisible get() = _editFilePopUpVisible!!
+    val editFilePopUpVisible get() = _editFilePopUpVisible?:false
     private fun doAfterSetEditFilePopUpVisible(){
+        setUpPopUpView()
         Animation().animatePopUpAddFile(mainActivityBinding.frameLayEditFile,editFilePopUpVisible)
         setUpFragConViewCoverVisibility()
         if(editFilePopUpVisible.not())  hideKeyBoard(editFilePopUpBinding.edtFileTitle)
@@ -225,69 +216,80 @@ class EditFileViewModel(val repository: MyRoomRepository,
     fun returnTokenFile():File?{
         return _tokenFile.value
     }
-    fun getHintTxvText():String{
-        return when(mode){
+    val txvHintText = MutableLiveData<String>()
+    private fun setTxvHintText(){
+        txvHintText.value = when(mode){
             EditingMode.New -> resources.getString(when(fileToCreate.fileStatus){
-                FileStatus.FOLDER ->  R.string.editFilePopUpBin_HintTxv_createNewFolder
-                FileStatus.ANKI_BOX_FAVOURITE ->R.string.editFilePopUpBin_HintTxv_createNewAnkiBoxfavourite
-                FileStatus.FLASHCARD_COVER -> R.string.editFilePopUpBin_HintTxv_createNewFlashCard
+                FileStatus.FOLDER               ->  R.string.editFilePopUpBin_HintTxv_createNewFolder
+                FileStatus.ANKI_BOX_FAVOURITE   ->  R.string.editFilePopUpBin_HintTxv_createNewAnkiBoxfavourite
+                FileStatus.FLASHCARD_COVER      ->  R.string.editFilePopUpBin_HintTxv_createNewFlashCard
                 else  -> throw IllegalArgumentException()
             })
             EditingMode.Edit -> resources.getString(R.string.editFilePopUpBin_HintTxv_edit,fileToEdit.title)
         }
     }
-    private fun makeFilePopUp(tokenFileParent: File?,tokenFile:File, mode: EditingMode){
-        fun getLeftTopText():String{
-            return tokenFileParent?.title ?: resources.getString(R.string.title_home)
-        }
 
-        fun getTitleEdtHint():String{
-            return resources.getString(when(mode){
-                EditingMode.Edit -> R.string.editFilePopUpBin_edtFileTitleHint_edit
-                EditingMode.New -> R.string.editFilePopUpBin_edtFileTitleHint_create
-            })
+    private fun setEdtFileTitleText() {
+        edtFileTitleText.value = getPopUpShownFile.title ?: String()
+    }
+    private val _popUpShownFile = MutableLiveData<File>()
+    private fun setPopUpShownFile(){
+        _popUpShownFile.value = when(mode){
+            EditingMode.Edit -> fileToEdit
+            EditingMode.New  -> fileToCreate
         }
-        fun getTitleEdtText():String{
-            return when(mode){
-                EditingMode.Edit -> tokenFile.title.toString()
-                EditingMode.New -> String()
-            }
-        }
-        fun getFinishBtnText():String{
-            return resources.getString(when(mode){
-                EditingMode.Edit -> R.string.editFilePopUpBin_btnFinish_update
-                EditingMode.New -> R.string.editFilePopUpBin_btnFinish_create
-            })
-        }
-        val a = PopUpUI(
-            txvLeftTopText = getLeftTopText(),
-            txvHintText = getHintTxvText(),
-            edtTitleHint = getTitleEdtHint(),
-            edtTitleText = getTitleEdtText(),
-            colorStatus = tokenFile.colorStatus,
-            fileStatus = tokenFile.fileStatus,
-            parentTokenFile = tokenFile,
-            finishBtnText = getFinishBtnText()
-        )
-        setFilePopUpUIData(a)
+    }
+    private val getPopUpShownFile get() = _popUpShownFile.value!!
+    private fun setEdtFileTitleHint(){
+        edtFileTitleHint.value =
+        resources.getString(when(mode){
+            EditingMode.Edit -> R.string.editFilePopUpBin_edtFileTitleHint_edit
+            EditingMode.New -> R.string.editFilePopUpBin_edtFileTitleHint_create
+        })
+    }
+    private fun setBtnFinishText() {
+        btnFinishText.value =
+        resources.getString(when(mode){
+            EditingMode.Edit -> R.string.editFilePopUpBin_btnFinish_update
+            EditingMode.New -> R.string.editFilePopUpBin_btnFinish_create
+        })
+    }
+    val btnFinishText = MutableLiveData<String>()
+    val txvParentFileTitleText = MutableLiveData<String>()
+    private fun setTxvParentFileTitleText(){
+        txvParentFileTitleText.value = parentOpenedFile?.title ?: resources.getString(R.string.title_home)
+    }
+    val edtFileTitleText = MutableLiveData<String>()
+    val edtFileTitleHint = MutableLiveData<String>()
+
+    private fun setUpPopUpView(){
+        setPopUpShownFile()
+        setTxvHintText()
+        setBtnFinishText()
+        setTxvParentFileTitleText()
+        setEdtFileTitleText()
+        setEdtFileTitleHint()
+        setColPalletStatus(getPopUpShownFile.colorStatus)
+        setImvFileStatusDraw()
 
     }
 
-    private val _colPalletStatus = MutableLiveData<ColorPalletStatus>()
-    val colorPalletStatus:LiveData<ColorPalletStatus> = _colPalletStatus
-    private fun setColPalletStatus( colorPalletStatus: ColorPalletStatus){
+    private val _colPalletStatus = MutableLiveData<ColorStatus>()
+    fun setColPalletStatus( colorPalletStatus: ColorStatus){
         _colPalletStatus.value = colorPalletStatus
+        doAfterColPalletStatusSet()
     }
-    private fun returnColPalletStatus(): ColorPalletStatus?{
-        return _colPalletStatus.value
+    val imvFileStatusDraw = MutableLiveData<Drawable>()
+    fun setImvFileStatusDraw(){
+       imvFileStatusDraw.value = GetCustomDrawables(editFilePopUpBinding.root.context)
+           .getFileIconByFileStatusAndColStatus(getPopUpShownFile.fileStatus,colPalletStatus)
     }
-    fun onClickColorPallet(colorStatus: ColorStatus){
-        val beforeStatus = _colPalletStatus.value
-        if(beforeStatus?.colNow!=colorStatus){
-            val new = ColorPalletStatus(colorStatus, beforeStatus?.colNow)
-            setColPalletStatus(new)
-        }
+    fun doAfterColPalletStatusSet(){
+        colorPalletViewSetUp.makeSelected(colPalletStatus)
+        setImvFileStatusDraw()
     }
+    val colPalletStatus get() =  _colPalletStatus.value!!
+
 
 
     val lastInsertedFile:LiveData<File> = repository.lastInsertedFile.asLiveData()
@@ -326,7 +328,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
                 colorStatus = ColorStatus.GRAY,
                 deleted = false,
                 fileBefore = returnParentFileSisters().lastOrNull()?.fileId,
-                parentFileId = returnParentTokenFileParent()?.fileId
+                parentFileId = parentOpenedFile?.fileId
             ))
     }
     private var _fileToEdit:File? = null
@@ -350,8 +352,8 @@ class EditFileViewModel(val repository: MyRoomRepository,
             edtFileTitle.hint = "タイトルが必要です"
             return
         }
-        setEditFilePopUpVisible(false)
-        val color = returnColPalletStatus()?.colNow ?:ColorStatus.GRAY
+
+        val color = colPalletStatus
 
         when(mode ){
             EditingMode.New -> {
