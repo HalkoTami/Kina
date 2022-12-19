@@ -1,8 +1,6 @@
 package com.koronnu.kina.activity
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,19 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.actions.hideKeyBoard
-import com.koronnu.kina.actions.makeToast
-import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
 import com.koronnu.kina.databinding.MainActivityBinding
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
-import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.ui.observer.LibraryOb
-import com.koronnu.kina.ui.view_set_up.ColorPalletViewSetUp
-import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
-import com.koronnu.kina.ui.viewmodel.*
+import com.koronnu.kina.ui.viewmodel.MainViewModel
+import com.koronnu.kina.ui.viewmodel.SearchViewModel
 
 
 class MainActivity : AppCompatActivity(){
@@ -32,16 +23,12 @@ class MainActivity : AppCompatActivity(){
     private lateinit var mainNavCon              : NavController
 
     val createFileViewModel get() = mainActivityViewModel.editFileViewModel
-    private var _createCardViewModel   : CreateCardViewModel? = null
     val createCardViewModel get() = mainActivityViewModel.createCardViewModel
 
     val mainActivityViewModel :MainViewModel by viewModels { MainViewModel.getViewModel(this) }
-
-    private var _deletePopUpViewModel   : DeletePopUpViewModel? = null
     val deletePopUpViewModel get() = mainActivityViewModel.deletePopUpViewModel
 
     lateinit var libraryViewModel : LibraryBaseViewModel
-    private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
     private lateinit var chooseFileMoveToViewModel : ChooseFileMoveToViewModel
     private lateinit var searchViewModel         : SearchViewModel
 
@@ -85,9 +72,6 @@ class MainActivity : AppCompatActivity(){
 
         val libraryParentFileObserver           = Observer<File?>{
             createCardViewModel.setParentFlashCardCover(it)
-            createFileViewModel.getChildFilesByFileIdFromDB(it?.fileId).observe(this){list->
-                createFileViewModel.setParentFileSisters(list)
-            }
         }
 
 //        ー－－－mainActivityのviewModel 読み取りー－－－

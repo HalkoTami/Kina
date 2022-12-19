@@ -114,7 +114,7 @@
             style="@style/BackGroundViewStyle"
             android:visibility="@{mainViewModel.editFileViewModel.viewCoverVisibility ? View.VISIBLE : View.GONE }"
             android:id="@+id/frag_con_view_cover"
-            android:onClick="@{()->mainViewModel.editFileViewModel.makeBothPopUpGone()}"
+            android:onClick="@{()->mainViewModel.editFileViewModel.onClickFragConViewCover()}"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
         <View
