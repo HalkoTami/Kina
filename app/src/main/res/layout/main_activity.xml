@@ -1,125 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="mainViewModel"
+            type="com.koronnu.kina.ui.viewmodel.MainViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
 
-    android:id="@+id/main_top_constrainLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activity.MainActivity">
-
-    <FrameLayout
-        android:id="@+id/frameLay_libraryChildFragBase_jumpToGuidePopup"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="10dp"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/topBar_height"
-        app:layout_constraintWidth_percent="0.6"
-        app:layout_constraintHeight_percent="0.1"
-        app:layout_constraintHorizontal_bias="1"
-        android:elevation="10dp"
-        >
-        <include layout="@layout/popup_jump_to_guide"
-            android:id="@+id/binding_popup_jump_to_guide"/>
-
-    </FrameLayout>
-    <FrameLayout
-        style="@style/PopUpFrameLayStyle"
-        android:id="@+id/frameLay_edit_file"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        >
-        <include
-            android:id="@+id/edit_file_binding"
-            layout="@layout/main_activity_popup_edit_file"
-            android:visibility="visible"/>
-    </FrameLayout>
-
-
-    <FrameLayout
-        android:visibility="visible"
-        android:id="@+id/frame_bottomMenu"
-        android:background="@drawable/gray_stroke_rectangle"
-        android:elevation="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@id/frame_bnv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <include
-            android:id="@+id/binding_add_menu"
-            layout="@layout/main_activity_popup_menu_create" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/viewPager"
-        app:layout_constraintBottom_toTopOf="@id/frame_bnv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <androidx.fragment.app.FragmentContainerView
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/main_navigation"
-            android:id="@+id/frag_container_view"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/frame_bnv"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_bar_height"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewPager"
-        app:labelVisibilityMode="unlabeled" >
-
-        <include
-            android:id="@+id/bnv_binding"
-            layout="@layout/main_activity_bottom_navigation_bar" />
-    </FrameLayout>
-
-    <View
-        style="@style/BackGroundViewStyle"
-        android:id="@+id/frag_con_view_cover"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <View
-        style="@style/BackGroundViewStyle"
-        android:id="@+id/bnv_cover"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="@id/frame_bnv"
-        app:layout_constraintEnd_toEndOf="@id/frame_bnv"
-        app:layout_constraintBottom_toBottomOf="@id/frame_bnv"
-        app:layout_constraintTop_toTopOf="@id/frame_bnv"/>
-
-    <FrameLayout
-        android:elevation="20dp"
-        android:id="@+id/frameLay_call_on_install"
+        android:id="@+id/main_top_constrainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        >
-    </FrameLayout>
+        android:focusableInTouchMode="true"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".activity.MainActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <FrameLayout
+            android:id="@+id/frameLay_libraryChildFragBase_jumpToGuidePopup"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="10dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/topBar_height"
+            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintHorizontal_bias="1"
+            android:elevation="10dp"
+            >
+            <include layout="@layout/popup_jump_to_guide"
+                android:id="@+id/binding_popup_jump_to_guide"/>
+
+        </FrameLayout>
+        <FrameLayout
+            style="@style/PopUpFrameLayStyle"
+            android:onClick="@{()->null}"
+            android:id="@+id/frameLay_edit_file"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+            <include
+                android:id="@+id/edit_file_binding"
+                layout="@layout/main_activity_popup_edit_file"
+                android:visibility="visible"/>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:onClick="@{()->null}"
+            android:visibility="gone"
+            android:id="@+id/frame_bottomMenu"
+            android:background="@drawable/gray_stroke_rectangle"
+            android:elevation="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@id/frame_bnv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <include
+                android:id="@+id/binding_add_menu"
+                bind:editFileViewModel="@{mainViewModel.editFileViewModel}"
+                layout="@layout/main_activity_popup_menu_create" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/viewPager"
+            app:layout_constraintBottom_toTopOf="@id/frame_bnv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <androidx.fragment.app.FragmentContainerView
+                app:defaultNavHost="true"
+                app:navGraph="@navigation/main_navigation"
+                android:id="@+id/frag_container_view"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_bnv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_height"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewPager"
+            app:labelVisibilityMode="unlabeled" >
+
+            <include
+                android:id="@+id/bnv_binding"
+                layout="@layout/main_activity_bottom_navigation_bar" />
+        </FrameLayout>
+
+        <View
+            style="@style/BackGroundViewStyle"
+            android:visibility="@{mainViewModel.editFileViewModel.viewCoverVisibility ? View.VISIBLE : View.GONE }"
+            android:id="@+id/frag_con_view_cover"
+            android:onClick="@{()->mainViewModel.editFileViewModel.makeBothPopUpGone()}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <View
+            style="@style/BackGroundViewStyle"
+            android:id="@+id/bnv_cover"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/frame_bnv"
+            app:layout_constraintEnd_toEndOf="@id/frame_bnv"
+            app:layout_constraintBottom_toBottomOf="@id/frame_bnv"
+            app:layout_constraintTop_toTopOf="@id/frame_bnv"/>
+
+        <FrameLayout
+            android:elevation="20dp"
+            android:id="@+id/frameLay_call_on_install"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            >
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

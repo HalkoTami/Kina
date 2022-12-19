@@ -127,9 +127,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
 //            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
         }
         val parentFileAncestorsObserver = Observer<List<File>> {
-            editFileViewModel.filterBottomMenuWhenInChooseFileMoveTo(
-                flashCard = flashcard, args.fileId == null,it
-            )
+            libraryBaseViewModel.setParentFileAncestorsFromDB(it)
         }
         val chooseFileMoveToModeObserver = Observer<Boolean>{
             if(it == false){

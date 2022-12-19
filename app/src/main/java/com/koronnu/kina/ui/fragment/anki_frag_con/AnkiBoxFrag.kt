@@ -114,7 +114,6 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         }
         val ankiBoxItemsObserver = Observer<MutableList<Card>>{
             binding.btnAddToFavouriteAnkiBox.isSelected = checkFavouriteExistsList.contains(it)
-            editFileViewModel.setAnkiBoxCards(it)
             viewSetUp.setUpAnkiBoxRing(it,binding.ringBinding)
             binding.btnStartAnki.text =
                 requireActivity().resources.getString(if(it.isEmpty()) R.string.btnStartAnki_withoutSelect else R.string.btnStartAnki_deafult)

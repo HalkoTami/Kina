@@ -89,7 +89,7 @@ class CreateGuide(val actions: GuideActions ){
         actions.apply {
             animateConLayGoNextVisibility(true)
             viewUnderSpotInGuide = null
-            libraryViewModel.openNextFile(createFileViewModel.returnLastInsertedFile()!!)
+            libraryViewModel.openNextFile(createFileViewModel.getLastInsertedFile!!)
             actionsBeforeEndGuideList.add { libraryViewModel.returnLibraryNavCon()?.popBackStack() }
             getArrowVisibilityAnim(false){ onClickGoNext{guide9()}}.start()
         }

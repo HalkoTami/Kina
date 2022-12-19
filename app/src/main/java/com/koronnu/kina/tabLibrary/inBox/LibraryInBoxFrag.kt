@@ -140,7 +140,6 @@ class LibraryInBoxFrag  : Fragment(){
         val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
         searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
         libraryInBoxFragViewModel.observeLiveDataInInboxFrag(viewLifecycleOwner,requireActivity())
-        editFileViewModel.filterBottomMenuOnlyCard()
         libraryBaseViewModel.apply {
             setModeInBox(true)
             setLibraryFragment(LibraryFragment.InBox)

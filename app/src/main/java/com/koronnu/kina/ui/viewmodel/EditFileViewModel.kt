@@ -2,11 +2,8 @@ package com.koronnu.kina.ui.viewmodel
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.view.Display.Mode
-import android.widget.EditText
-import androidx.databinding.BindingAdapter
+import android.opengl.Visibility
+import android.view.View
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -19,12 +16,15 @@ import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
 import com.koronnu.kina.customClasses.enumClasses.EditingMode
+import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.tabLibrary.lib_frag_con.LibraryHomeFrag
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.ui.view_set_up.ColorPalletViewSetUp
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
+import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class EditFileViewModel(val repository: MyRoomRepository,
                         val resources: Resources,
@@ -43,113 +43,89 @@ class EditFileViewModel(val repository: MyRoomRepository,
     }
     private val ankiBoxViewModel    get() = mainViewModel.ankiBaseViewModel.ankiBoxViewModel
     private val createCardViewModel get() = mainViewModel.createCardViewModel
-    private val mainActivityBinding get() = mainViewModel.mainActivityBinding
+    private val mainActivityBinding  get() = mainViewModel.mainActivityBinding
     private val editFilePopUpBinding get() = mainActivityBinding.editFileBinding
     private val colorPalletBinding  get() = editFilePopUpBinding.colPaletBinding
-    private val addMenuBinding      get() = mainActivityBinding.bindingAddMenu
     private val parentOpenedFile    get() = mainViewModel.libraryBaseViewModel.returnParentFile()
-    private lateinit var colorPalletViewSetUp: ColorPalletViewSetUp
+    private val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel
+    private val colorPalletViewSetUp get() =  ColorPalletViewSetUp(colorPalletBinding)
+    private val ankiBoxCards get() = ankiBoxViewModel.returnAnkiBoxItems()
+    private val parentFileIsNull get() = parentOpenedFile == null
+    private val parentFileIsFlashCard get() = parentOpenedFile?.fileStatus == FileStatus.FLASHCARD_COVER
+    private val parentFileIsNotFlashCard get() = parentFileIsFlashCard.not()
+    private val isNotChooseFileMoveToFrag get() = libraryBaseViewModel.returnLibraryFragment()!=LibraryFragment.ChooseFileMoveTo
+    private val parentFileIsFolder get() = parentOpenedFile?.fileStatus == FileStatus.FOLDER
+    private val parentFileHasLessThan3Ancestors get() = (libraryBaseViewModel.getParentFileAncestors?.size ?:0) < 3
+    private val isNotInBoxFrag get() = libraryBaseViewModel.returnLibraryFragment() != LibraryFragment.InBox
 
-    fun afterSetMainActivityBinding(){
-        colorPalletViewSetUp = ColorPalletViewSetUp(colorPalletBinding)
-        setClickListeners()
-    }
-    private fun setClickListeners(){
-        mainActivityBinding.fragConViewCover.setOnClickListener { makeBothPopUpGone() }
-        addMenuBinding.frameLayNewCard      .setOnClickListener { createCardViewModel.onClickAddNewCardBottomBar()}
-        addMenuBinding.frameLayNewFlashcard .setOnClickListener{ onClickCreateFile(FileStatus.FLASHCARD_COVER)}
-        addMenuBinding.frameLayNewFolder    .setOnClickListener{ onClickCreateFile(FileStatus.FOLDER)}
-        addMenuBinding.root                 .setOnClickListener(null)
-        editFilePopUpBinding.root           .setOnClickListener(null)
+    val viewCoverVisibility = MutableLiveData<Boolean>().apply { value = false }
+    val frameLayNewCardVisible = MutableLiveData<Boolean>().apply { value = true }
+    val frameLayNewFlashCardVisible = MutableLiveData<Boolean>().apply { value = true }
+    val frameLayNewFolderVisible = MutableLiveData<Boolean>().apply { value = true }
+    val txvHintText = MutableLiveData<String>()
+    private val _popUpShownFile = MutableLiveData<File>()
+    val btnFinishText = MutableLiveData<String>()
+    val txvParentFileTitleText = MutableLiveData<String>()
+    val edtFileTitleText = MutableLiveData<String>()
+    val edtFileTitleHint = MutableLiveData<String>()
+    private val _colPalletStatus = MutableLiveData<ColorStatus>()
+    val imvFileStatusDraw = MutableLiveData<Drawable>()
 
-    }
 
     fun getChildFilesByFileIdFromDB(fileId: Int?) = repository.getFileDataByParentFileId(fileId).asLiveData()
-    fun onCreate(){
-        setBottomMenuVisible(false)
-    }
 
 
-    private val _ankiBoxCards = MutableLiveData<List<Card>>()
-    fun setAnkiBoxCards (list: List<Card>){
-        _ankiBoxCards.value = list
-    }
-    private fun returnAnkiBoxCards ():List<Card>?{
-        return _ankiBoxCards.value
-    }
+    fun onClickCreateCard() = createCardViewModel.onClickAddNewCardBottomBar()
 
-    fun parentFileParent(id:Int?):LiveData<File> = repository.getFileByFileId(id).asLiveData()
-    private val _parentFileParent = MutableLiveData<File?>()
-    fun setParentFileParent(file: File? ){
-        _parentFileParent.value = file
-    }
+
+
+
+
+
 
     private var _mode:EditingMode? = null
     private fun setMode(mode: EditingMode){
         _mode = mode
     }
-    val mode get() = _mode!!
+    private val mode get() = _mode!!
 
 
 
 //    add Bottom Menu
-    private fun setBottomMenuClickable(createFolder: Boolean,
-                               createFlashCardCover: Boolean,
-                               createCard: Boolean){
-        addMenuBinding.frameLayNewCard.isEnabled = createCard
-        addMenuBinding.frameLayNewFlashcard.isEnabled = createFlashCardCover
-        addMenuBinding.frameLayNewFolder.isEnabled = createFolder
+
+    private fun setFrameLayNewCardVisible(){
+        frameLayNewCardVisible.value =  (parentFileIsNull ||parentFileIsFlashCard)
+                &&isNotChooseFileMoveToFrag
+
     }
-
-
-    fun makeAllBottomMenuClickable(){
-        setBottomMenuClickable(
-            createFolder =  true,
-            createFlashCardCover = true,
-            createCard = true
-        )
+    private fun setFrameLayNewFlashCardCoverVisible(){
+        frameLayNewFlashCardVisible.value = parentFileIsNotFlashCard&&isNotInBoxFrag
     }
-
-    fun filterBottomMenuOnlyCard(){
-        setBottomMenuClickable(
-            createFolder =  false,
-            createFlashCardCover = false,
-            createCard = true
-        )
+    private fun setFrameLayNewFolderVisible(){
+        frameLayNewFolderVisible.value = (parentFileIsNull||parentFileIsFolder)
+                &&isNotInBoxFrag
+                &&parentFileHasLessThan3Ancestors
     }
-    fun filterBottomMenuWhenInChooseFileMoveTo(flashCard:Boolean,home:Boolean,ancestors: List<File>?){
-        setBottomMenuClickable(
-            createFolder = if(!flashCard)  (ancestors?.size ?: 0) < 3 else false,
-            createFlashCardCover = flashCard&&home,
-            createCard = false
-        )
+    fun setUpFragConViewCoverVisibility(){
+        viewCoverVisibility.value = editFilePopUpVisible||bottomMenuVisible
     }
-    fun filterBottomMenuByAncestors(ancestors:List<File>, parentFile:File){
-        val parentFileIsNotFlashCard = parentFile.fileStatus != FileStatus.FLASHCARD_COVER
-        val createFlashCardCoverEnabled = parentFile.fileStatus != FileStatus.FLASHCARD_COVER
-        val createCardEnabled = parentFile.fileStatus == FileStatus.FLASHCARD_COVER
-        val createFolderEnabled = if(parentFileIsNotFlashCard) ancestors.size < 3 else false
-        setBottomMenuClickable(createFolderEnabled,createFlashCardCoverEnabled,createCardEnabled)
-    }
-
-
-
     fun makeBothPopUpGone(){
         setBottomMenuVisible(false)
         setEditFilePopUpVisible(false)
+        setUpFragConViewCoverVisibility()
     }
     private var _bottomMenuVisible:Boolean? = null
     fun setBottomMenuVisible(visible: Boolean){
         if(bottomMenuVisible == visible) return
         _bottomMenuVisible = visible
-        if(visible) setEditFilePopUpVisible(false)
         doAfterSetBottomMenuVisible()
     }
-    fun setUpFragConViewCoverVisibility(){
-        changeViewVisibility(mainActivityBinding.fragConViewCover,
-            editFilePopUpVisible||bottomMenuVisible)
-    }
+
     fun doAfterSetBottomMenuVisible(){
+        if(bottomMenuVisible) setEditFilePopUpVisible(false)
+        setFrameLayNewCardVisible()
+        setFrameLayNewFlashCardCoverVisible()
+        setFrameLayNewFolderVisible()
         Animation().animateFrameBottomMenu(mainActivityBinding.frameBottomMenu,bottomMenuVisible)
         setUpFragConViewCoverVisibility()
     }
@@ -159,16 +135,14 @@ class EditFileViewModel(val repository: MyRoomRepository,
 
     fun onClickCreateFile(fileStatus: FileStatus){
         if(fileStatus==FileStatus.ANKI_BOX_FAVOURITE&&
-                returnAnkiBoxCards().isNullOrEmpty()) return
+                ankiBoxCards.isEmpty()) return
         setMode(EditingMode.New)
         makeEmptyFileToCreate(fileStatus)
-        setTokenFile(fileToCreate)
         setEditFilePopUpVisible(true)
     }
     fun onClickEditFileInRV(editingFile:File){
         setMode(EditingMode.Edit)
         setFileToEdit(editingFile)
-        setTokenFile(fileToEdit)
         setEditFilePopUpVisible(true)
     }
 
@@ -189,34 +163,9 @@ class EditFileViewModel(val repository: MyRoomRepository,
     }
 
 //    Todo popupのクラス作る
-    class PopUpUI(
-        var txvLeftTopText:String,
-        var txvHintText:String,
-        var fileStatus:FileStatus,
-        var edtTitleText:String,
-        var edtTitleHint:String,
-        var colorStatus: ColorStatus,
-        val parentTokenFile:File,
-        var finishBtnText:String
-    )
-    private val _filePopUpUIData = MutableLiveData<PopUpUI>()
-    val filePopUpUIData:LiveData<PopUpUI> = _filePopUpUIData
-    private fun setFilePopUpUIData(popUpUI: PopUpUI){
-        _filePopUpUIData.value = popUpUI
-    }
-    private val _tokenFile = MutableLiveData<File>()
-    val tokenFile:LiveData<File> = _tokenFile
-    private fun setTokenFile(file: File){
-        _tokenFile.value = file
-        doAfterSetTokenFile()
-    }
-    fun doAfterSetTokenFile(){
 
-    }
-    fun returnTokenFile():File?{
-        return _tokenFile.value
-    }
-    val txvHintText = MutableLiveData<String>()
+
+
     private fun setTxvHintText(){
         txvHintText.value = when(mode){
             EditingMode.New -> resources.getString(when(fileToCreate.fileStatus){
@@ -232,7 +181,6 @@ class EditFileViewModel(val repository: MyRoomRepository,
     private fun setEdtFileTitleText() {
         edtFileTitleText.value = getPopUpShownFile.title ?: String()
     }
-    private val _popUpShownFile = MutableLiveData<File>()
     private fun setPopUpShownFile(){
         _popUpShownFile.value = when(mode){
             EditingMode.Edit -> fileToEdit
@@ -254,13 +202,11 @@ class EditFileViewModel(val repository: MyRoomRepository,
             EditingMode.New -> R.string.editFilePopUpBin_btnFinish_create
         })
     }
-    val btnFinishText = MutableLiveData<String>()
-    val txvParentFileTitleText = MutableLiveData<String>()
+
     private fun setTxvParentFileTitleText(){
         txvParentFileTitleText.value = parentOpenedFile?.title ?: resources.getString(R.string.title_home)
     }
-    val edtFileTitleText = MutableLiveData<String>()
-    val edtFileTitleHint = MutableLiveData<String>()
+
 
     private fun setUpPopUpView(){
         setPopUpShownFile()
@@ -274,12 +220,11 @@ class EditFileViewModel(val repository: MyRoomRepository,
 
     }
 
-    private val _colPalletStatus = MutableLiveData<ColorStatus>()
+
     fun setColPalletStatus( colorPalletStatus: ColorStatus){
         _colPalletStatus.value = colorPalletStatus
         doAfterColPalletStatusSet()
     }
-    val imvFileStatusDraw = MutableLiveData<Drawable>()
     fun setImvFileStatusDraw(){
        imvFileStatusDraw.value = GetCustomDrawables(editFilePopUpBinding.root.context)
            .getFileIconByFileStatusAndColStatus(getPopUpShownFile.fileStatus,colPalletStatus)
@@ -291,35 +236,41 @@ class EditFileViewModel(val repository: MyRoomRepository,
     val colPalletStatus get() =  _colPalletStatus.value!!
 
 
+    fun observeLiveData(lifecycleOwner: LifecycleOwner){
+        lastInsertedFile.observe(lifecycleOwner,Observer{ setLastInsertedFile(it)})
+    }
 
-    val lastInsertedFile:LiveData<File> = repository.lastInsertedFile.asLiveData()
-    private val _lastInsertedFile = MutableLiveData<File>()
-    fun setLastInsertedFile(file: File?){
-        val before = _lastInsertedFile.value
-        if(before == file|| file==null)
-            return
-        else _lastInsertedFile.value = file!!
+    val lastInsertedFile:LiveData<File?> =  repository.lastInsertedFile.asLiveData()
+    private val _lastInsertedFile = MutableLiveData<File?>()
+    private fun setLastInsertedFile(file: File?){
+        _lastInsertedFile.value = file
     }
-    private fun returnLastInsertedFileId():Int?{
-       return _lastInsertedFile.value?.fileId
-    }
-     fun returnLastInsertedFile():File?{
-        return _lastInsertedFile.value
-    }
+     val getLastInsertedFile:File? get() = _lastInsertedFile.value
 
     private var _fileToCreate :File? = null
     private fun setFileToCreate(file: File){
         _fileToCreate = file
     }
     val fileToCreate get() = _fileToCreate!!
-    private val _parentFileSisters = MutableLiveData<List<File>>()
-    val parentFileSisters:LiveData<List<File>> = _parentFileSisters
-    fun setParentFileSisters(list: List<File>){
+    private val parentFileSisters : LiveData<List<File>> get() =  repository.getFileDataByParentFileId(parentOpenedFile?.parentFileId).asLiveData()
+    private fun getParentFileSisters():List<File>?{
+        parentFileSisters.observeForever(object :Observer<List<File>>{
+            override fun onChanged(t: List<File>?) {
+                setParentFileSisters(t)
+                parentFileSisters.removeObserver(this)
+            }
+        })
+        while (parentFileSisters.hasObservers()){
+            println("waiting")
+        }
+        return getParentFileSisters
+
+    }
+    private val _parentFileSisters = MutableLiveData<List<File>?>()
+    fun setParentFileSisters(list: List<File>?){
         _parentFileSisters.value = list
     }
-    fun returnParentFileSisters():List<File>{
-        return _parentFileSisters.value ?: mutableListOf()
-    }
+    val getParentFileSisters get() = _parentFileSisters.value!!
     private fun makeEmptyFileToCreate(fileStatus:FileStatus){
         setFileToCreate(
             File(fileId = 0,
@@ -327,7 +278,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
                 fileStatus = fileStatus ,
                 colorStatus = ColorStatus.GRAY,
                 deleted = false,
-                fileBefore = returnParentFileSisters().lastOrNull()?.fileId,
+                fileBefore = getParentFileSisters()?.lastOrNull()?.fileId,
                 parentFileId = parentOpenedFile?.fileId
             ))
     }
@@ -340,8 +291,8 @@ class EditFileViewModel(val repository: MyRoomRepository,
     fun makeFileInGuide(){
         onClickFinish()
         fileToCreate.fileBefore = null
-        val first = returnParentFileSisters().firstOrNull()
-        first?.fileBefore = (returnLastInsertedFileId()?:0) + 1
+        val first = getParentFileSisters()?.firstOrNull()
+        first?.fileBefore = (getLastInsertedFile?.fileId?:0) + 1
         upDateFile(first ?:return)
     }
 
@@ -362,7 +313,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
                 if(fileToCreate.fileStatus==FileStatus.ANKI_BOX_FAVOURITE){
                     val cardList = ankiBoxViewModel.returnAnkiBoxItems()
                     if(cardList.isEmpty()) return
-                    addCardsToFavouriteAnkiBox(cardList,returnLastInsertedFileId() ?:0,fileToCreate)
+                    addCardsToFavouriteAnkiBox(cardList,getLastInsertedFile?.fileId ?:0,fileToCreate)
                 }
                 else insertFile(fileToCreate)
             }

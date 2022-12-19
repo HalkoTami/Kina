@@ -11,21 +11,7 @@ import com.koronnu.kina.ui.viewmodel.EditFileViewModel
 import com.koronnu.kina.ui.viewmodel.SearchViewModel
 
 class LibraryOb {
-    fun observeEditFilePopUp(binding:MainActivityPopupEditFileBinding,
-                             data:EditFileViewModel.PopUpUI,
-                             context:Context){
-        binding.apply {
-            if(txvFileTitle.text != data.txvLeftTopText) txvFileTitle.text = data.txvLeftTopText
-            if(txvHint.text!=data.txvHintText) txvHint.text=data.txvHintText
-            imvFileType.setImageDrawable(GetCustomDrawables(context).getFileIconByFile(data.parentTokenFile))
-            edtFileTitle.apply {
-                if(text.toString()!=data.edtTitleText) text= SpannableStringBuilder(data.edtTitleText)
-                if(hint!= data.edtTitleHint) hint = data.edtTitleHint
-            }
-            btnFinish.text = data.finishBtnText
-        }
 
-    }
     fun searchModeObserver(binding: LibraryChildFragWithMulModeBaseBinding,
                            searchViewModel: SearchViewModel) = Observer<Boolean>{
         binding.apply {

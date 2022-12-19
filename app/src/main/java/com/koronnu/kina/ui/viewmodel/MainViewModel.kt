@@ -60,6 +60,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
     fun observeLiveDataFromMainActivity(lifecycleOwner: LifecycleOwner,activity: MainActivity){
         guideOptionMenuViewModel.observeLiveDataInGuideOptionViewModel(lifecycleOwner,activity)
         guideViewModel.observeGuideViewModelLiveData(lifecycleOwner)
+        editFileViewModel.observeLiveData(lifecycleOwner)
     }
     private var _mainActivityBinding:MainActivityBinding? = null
     private val bnvBinding      get() =  mainActivityBinding.bnvBinding
@@ -76,7 +77,6 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
     }
     private fun doAfterSetMainActivityBin(){
         setListeners()
-        editFileViewModel.afterSetMainActivityBinding()
     }
     private fun setListeners(){
         val topConLay = mainActivityBinding.mainTopConstrainLayout

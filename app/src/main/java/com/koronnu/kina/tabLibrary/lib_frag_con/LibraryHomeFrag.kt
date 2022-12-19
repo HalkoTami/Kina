@@ -161,7 +161,6 @@ class LibraryHomeFrag : Fragment(){
         observeSwipe()
         observeMultiMode()
         createCardViewModel.setParentFlashCardCover(null)
-        editFileViewModel.makeAllBottomMenuClickable()
         searchViewModel.matchedItems.observe(viewLifecycleOwner){
             searchAdapter.submitList(it)
         }

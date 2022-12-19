@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.actions.hideKeyBoard
+import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.customClasses.normalClasses.ColorPalletStatus
 import com.koronnu.kina.databinding.MainActivityBinding
 import com.koronnu.kina.db.dataclass.File
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity(){
     val mainActivityViewModel :MainViewModel by viewModels { MainViewModel.getViewModel(this) }
 
     private var _deletePopUpViewModel   : DeletePopUpViewModel? = null
-    val deletePopUpViewModel get() = _deletePopUpViewModel!!
+    val deletePopUpViewModel get() = mainActivityViewModel.deletePopUpViewModel
 
     lateinit var libraryViewModel : LibraryBaseViewModel
     private lateinit var ankiBaseViewModel       : AnkiBaseViewModel
@@ -54,6 +55,8 @@ class MainActivity : AppCompatActivity(){
         fun setMainActivityLateInitVars(){
 
             binding = MainActivityBinding.inflate(layoutInflater)
+            binding.mainViewModel = mainActivityViewModel
+            binding.lifecycleOwner = this
             val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
             libraryViewModel        =ViewModelProvider(this,
                 LibraryBaseViewModel.getFactory(mainActivityViewModel,this,this.baseContext))[LibraryBaseViewModel::class.java]
@@ -70,9 +73,7 @@ class MainActivity : AppCompatActivity(){
         setContentView(binding.root)
 //       TODO checkIfInstall()
 
-        val lastInsertedFileObserver      = Observer<File>{
-            createFileViewModel.setLastInsertedFile(it)
-        }
+
         val bnvVisibilityObserver            = Observer<Boolean>{
             changeViewVisibility(binding.frameBnv,it)
         }
@@ -82,20 +83,11 @@ class MainActivity : AppCompatActivity(){
 
 
 
-
-        val parentFileParentObserver          = Observer<File>{
-            createFileViewModel.setParentFileParent(it)
-        }
-        val editFileParentFileObserver           = Observer<File> {
-            createFileViewModel.parentFileParent(it?.fileId).observe(this,parentFileParentObserver)
-        }
         val libraryParentFileObserver           = Observer<File?>{
             createCardViewModel.setParentFlashCardCover(it)
             createFileViewModel.getChildFilesByFileIdFromDB(it?.fileId).observe(this){list->
                 createFileViewModel.setParentFileSisters(list)
             }
-            createFileViewModel.parentFileParent(it?.parentFileId).observe(this@MainActivity,editFileParentFileObserver)
-            createFileViewModel.lastInsertedFile.observe(this,lastInsertedFileObserver)
         }
 
 //        ー－－－mainActivityのviewModel 読み取りー－－－
@@ -109,14 +101,9 @@ class MainActivity : AppCompatActivity(){
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
         mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)
 //        ー－－－CreateFileViewModelの読み取りー－－－
-        mainActivityViewModel.editFileViewModel.apply{
-            onCreate()
-            lastInsertedFile.observe(this@MainActivity,lastInsertedFileObserver)
-        }
 //        ー－－－LibraryViewModelの読み取りー－－－
         libraryViewModel. onCreate()
         libraryViewModel.parentFile.observe(this@MainActivity,libraryParentFileObserver)
-
         mainActivityViewModel.createCardViewModel.setMainActivityNavCon(mainNavCon)
         mainActivityViewModel.createCardViewModel.lastInsertedCardFromDB.observe(this) {
             createCardViewModel.setLastInsertedCard(it)

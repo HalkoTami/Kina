@@ -164,7 +164,6 @@ class LibraryFolderFrag :  Fragment(){
 
             parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
-                editFileViewModel.filterBottomMenuByAncestors(it,it[0])
             }
             fun setUpEachAncestor(linLay:LinearLayoutCompat,txv:TextView, imv:ImageView, file: File?){
                 val getDraw =  GetCustomDrawables(requireActivity())
@@ -175,13 +174,13 @@ class LibraryFolderFrag :  Fragment(){
                     imv.setImageDrawable(getDraw.getFileIconByFile(file))
                 }
             }
-            parentFileAncestors.observe(viewLifecycleOwner){
-                    binding.ancestorsBinding.apply {
-                        setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,it.gGrandPFile)
-                        setUpEachAncestor(lineLayGPFile,txvGrandParentFileTitle,imvGrandParentFile,it.gParentFile)
-                        setUpEachAncestor(lineLayParentFile,txvParentFileTitle,imvParentFile,it.ParentFile)
-                    }
-                }
+//            parentFileAncestors.observe(viewLifecycleOwner){
+//                    binding.ancestorsBinding.apply {
+//                        setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,it.gGrandPFile)
+//                        setUpEachAncestor(lineLayGPFile,txvGrandParentFileTitle,imvGrandParentFile,it.gParentFile)
+//                        setUpEachAncestor(lineLayParentFile,txvParentFileTitle,imvParentFile,it.ParentFile)
+//                    }
+//                }
             val commonViewSetUp = LibrarySetUpItems()
             multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility =if(it) View.VISIBLE else View.GONE

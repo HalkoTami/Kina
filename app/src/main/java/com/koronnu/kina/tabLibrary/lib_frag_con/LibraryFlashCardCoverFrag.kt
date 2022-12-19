@@ -150,7 +150,6 @@ LibraryFlashCardCoverFrag  : Fragment(){
             }
             parentFileAncestorsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
-                editFileViewModel.filterBottomMenuByAncestors(it,returnParentFile() ?:return@observe)
             }
 
             val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
@@ -183,20 +182,20 @@ LibraryFlashCardCoverFrag  : Fragment(){
             changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                 commonViewSetUp.changeLibRVAllSelectedState(recyclerView,it)
             }
-            parentFileAncestors.observe(viewLifecycleOwner){
-
-                binding.ancestorsBinding.apply {
-                    txvGGrandParentFileTitle.text = it.gGrandPFile?.title
-                    txvGrandParentFileTitle.text = it.gParentFile?.title
-                    txvParentFileTitle.text = it.ParentFile?.title
-                    lineLayGGFile.visibility =
-                        if(it.gGrandPFile != null) View.VISIBLE else View.GONE
-                    lineLayGPFile.visibility =
-                        if(it.gParentFile != null) View.VISIBLE else View.GONE
-                    lineLayParentFile.visibility =
-                        if(it.ParentFile != null) View.VISIBLE else View.GONE
-                }
-            }
+//            parentFileAncestors.observe(viewLifecycleOwner){
+//
+////                binding.ancestorsBinding.apply {
+////                    txvGGrandParentFileTitle.text = it[2].title
+////                    txvGrandParentFileTitle.text = it.title
+////                    txvParentFileTitle.text = it.ParentFile?.title
+////                    lineLayGGFile.visibility =
+////                        if(it.gGrandPFile != null) View.VISIBLE else View.GONE
+////                    lineLayGPFile.visibility =
+////                        if(it.gParentFile != null) View.VISIBLE else View.GONE
+////                    lineLayParentFile.visibility =
+////                        if(it.ParentFile != null) View.VISIBLE else View.GONE
+////                }
+//            }
             selectedItems.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
             }

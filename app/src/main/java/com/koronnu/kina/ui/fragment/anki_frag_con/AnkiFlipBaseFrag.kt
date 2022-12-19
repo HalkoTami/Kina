@@ -197,7 +197,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
         setUpViewStart()
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         mainViewModel.setBnvVisibility(false)
-        editFileViewModel.filterBottomMenuOnlyCard()
 
         ankiFlipBaseViewModel.setFlipBaseNavCon(flipNavCon)
         ankiFlipBaseViewModel.setFront(!ankiSettingPopUpViewModel.getReverseCardSideActive)
