@@ -1,6 +1,6 @@
 package com.koronnu.kina.ui.view_set_up
 
-import android.animation.ValueAnimator
+import android.animation.Animator
 import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.widget.FrameLayout
@@ -8,11 +8,9 @@ import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.ViewModel
 import com.koronnu.kina.R
 import com.koronnu.kina.databinding.ItemColorPalletBinding
 import com.koronnu.kina.db.enumclass.ColorStatus
-import com.koronnu.kina.ui.viewmodel.EditFileViewModel
 
 
 
@@ -33,7 +31,7 @@ object BindingAdapters{
 
     @BindingAdapter("visibilityAnim","animVisibility", requireAll = true)
     @JvmStatic
-    fun animateVisibility(view:FrameLayout,getAnimation:(v:View,visible:Boolean)->ValueAnimator,visible: Boolean){
+    fun animateVisibility(view:FrameLayout,getAnimation:(v:View,visible:Boolean)->Animator,visible: Boolean){
         getAnimation(view,visible).start()
     }
 
@@ -76,11 +74,6 @@ class ColorPalletViewSetUp(val binding: ItemColorPalletBinding) {
         val draw = AppCompatResources.getDrawable(context,R.drawable.circle) as GradientDrawable
         draw.setColor(ContextCompat.getColor(context,colId))
         return draw
-    }
-    private fun setUpFirst(){
-        ColorStatus.values().onEach {
-            getImvByColStatus(it).setImageDrawable(getDrawableByColStatus(it))
-        }
     }
     private fun changeSelectedStatus(selected: Boolean,imageView: ImageView){
         imageView.apply {
