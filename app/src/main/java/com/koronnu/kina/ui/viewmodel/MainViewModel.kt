@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
-import com.koronnu.kina.databinding.MainActivityBinding
+import com.koronnu.kina.databinding.ActivityMainBinding
 import com.koronnu.kina.tabLibrary.LibraryBaseFragDirections
 import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
@@ -62,11 +62,11 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
         guideViewModel.observeGuideViewModelLiveData(lifecycleOwner)
         editFileViewModel.observeLiveData(lifecycleOwner)
     }
-    private var _mainActivityBinding:MainActivityBinding? = null
-    private val bnvBinding      get() =  mainActivityBinding.bnvBinding
+    private var _mainActivityBinding:ActivityMainBinding? = null
+    private val bnvBinding      get() =  mainActivityBinding.bindingWidgetTwgActivityMain
 
 
-    fun setMainActivityBinding(mainActivityBinding: MainActivityBinding){
+    fun setMainActivityBinding(mainActivityBinding: ActivityMainBinding){
        _mainActivityBinding =  mainActivityBinding
         doAfterSetMainActivityBin()
     }

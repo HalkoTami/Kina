@@ -38,7 +38,7 @@ class GuideOptionMenuViewModel:ViewModel(){
     private val getGuideOptionMenuVisible get() = _guideOptionMenuVisible.value!!
     private val guideOptionMenuVisible :LiveData<Boolean> = _guideOptionMenuVisible
     private val guideMenuVisibilityObserver = Observer<Boolean>{
-        val frameLay = mainViewModel.mainActivityBinding.frameLayCallOnInstall
+        val frameLay = mainViewModel.mainActivityBinding.flGuide
         frameLay.removeAllViews()
         if(it){
             changeViewVisibility(frameLay,true)

@@ -44,7 +44,7 @@ class EditCardFrag: Fragment() {
         fun setLateInitVars(){
             _binding = CreateCardFragBaseBinding.inflate(inflater, container, false)
             cardNavCon =getNavConFromFragCon(R.id.create_card_frag_con)
-            mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
+            mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
         }
         fun booleanToVisibility(visibility: Boolean):Int{
             return if(visibility) View.VISIBLE else View.GONE

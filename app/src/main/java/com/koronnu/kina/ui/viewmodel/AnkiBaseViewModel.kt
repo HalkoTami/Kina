@@ -43,7 +43,7 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
         }
     }
     fun changeBnvBtnAddStatus(able:Boolean){
-        mainViewModel.mainActivityBinding.bnvBinding.bnvImvAdd.apply {
+        mainViewModel.mainActivityBinding.bindingWidgetTwgActivityMain.bnvImvAdd.apply {
             visibility = if(able)View.VISIBLE else View.INVISIBLE
             isEnabled = able
         }

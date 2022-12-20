@@ -61,7 +61,7 @@ class LibraryHomeFrag : Fragment(){
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
             recyclerView = binding.vocabCardRV
-            mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
+            mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
                 stringCardViewModel  = cardTypeStringViewModel,
                 createCardViewModel  = createCardViewModel,

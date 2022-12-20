@@ -1,6 +1,9 @@
 package com.koronnu.kina.ui.view_set_up
 
+import android.animation.ValueAnimator
 import android.graphics.drawable.GradientDrawable
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
@@ -28,6 +31,11 @@ object BindingAdapters{
         view.setImageDrawable(draw)
     }
 
+    @BindingAdapter("visibilityAnim","animVisibility", requireAll = true)
+    @JvmStatic
+    fun animateVisibility(view:FrameLayout,getAnimation:(v:View,visible:Boolean)->ValueAnimator,visible: Boolean){
+        getAnimation(view,visible).start()
+    }
 
 }
 

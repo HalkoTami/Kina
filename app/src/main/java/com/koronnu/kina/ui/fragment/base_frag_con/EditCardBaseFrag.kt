@@ -54,7 +54,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             cardNavCon = a.navController
             createCardViewModel.setCreateCardBaseBinding(binding)
             mainNavCon =
-                requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view)
+                requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain)
                     .findNavController()
         }
 

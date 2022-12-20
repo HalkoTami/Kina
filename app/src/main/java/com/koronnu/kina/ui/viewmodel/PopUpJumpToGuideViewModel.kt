@@ -2,20 +2,15 @@ package com.koronnu.kina.ui.viewmodel
 
 import android.animation.ValueAnimator
 import android.view.View
+import android.widget.FrameLayout
+import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
 import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.actions.setClickListeners
-import com.koronnu.kina.application.RoomApplication
-import com.koronnu.kina.databinding.PopupJumpToGuideBinding
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.ui.listener.libraryBaseFragment.PopUpJumpToGuideCL
 
 class PopUpJumpToGuideViewModel:ViewModel() {
-
-    private lateinit var mainViewModel: MainViewModel
-    private val frameLayout get () = mainViewModel.mainActivityBinding.frameLayLibraryChildFragBaseJumpToGuidePopup
-    val popupJumpToGuideBinding get() =mainViewModel.mainActivityBinding.bindingPopupJumpToGuide
-    private val popUpTextView get() = popupJumpToGuideBinding.txvPopUpJumpToGuide
     companion object{
         fun getViewModelFactory(mainVM: MainViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -27,6 +22,12 @@ class PopUpJumpToGuideViewModel:ViewModel() {
 
         }
     }
+// mutable LiveData
+
+    private lateinit var mainViewModel: MainViewModel
+    private val frameLayout get () = mainViewModel.mainActivityBinding.flJumpToGuide
+    val popupJumpToGuideBinding get() =mainViewModel.mainActivityBinding.bindingWidgetJumpToGuide
+    private val popUpTextView get() = popupJumpToGuideBinding.txvPopUpJumpToGuide
 
     private val getPopUpJumpToGuideBindingClickableViews:Array<View> get() {
         val binding = popupJumpToGuideBinding
@@ -38,8 +39,17 @@ class PopUpJumpToGuideViewModel:ViewModel() {
     }
 
 
+    fun getVisibilityAnim(frameLayout: View,visible: Boolean):ValueAnimator{
+        return when(visible){
+            true -> Animation().slideInRightAnim(frameLayout).apply {
+                startDelay = 2000
+            }
+            false -> Animation().slideOutRightAnim(frameLayout)
+        }
+    }
 
-    private val _popUpVisible = MutableLiveData<Boolean>()
+
+    val _popUpVisible = MutableLiveData<Boolean>()
     fun setPopUpVisible(visible:Boolean){
         _popUpVisible.value = visible
     }

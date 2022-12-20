@@ -1,7 +1,9 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.animation.ValueAnimator
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.view.View
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -49,6 +51,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
     val edtFileTitleText = MutableLiveData<String>()
     val edtFileTitleHint = MutableLiveData<String>()
     val imvFileStatusDraw = MutableLiveData<Drawable>()
+    val _editFilePopUpVisible = MutableLiveData<Boolean>()
 
     private val _colPalletStatus = MutableLiveData<ColorStatus>()
     private val _popUpShownFile = MutableLiveData<File>()
@@ -56,11 +59,10 @@ class EditFileViewModel(val repository: MyRoomRepository,
 
     private var _bottomMenuVisible:Boolean? = null
     private var _mode:EditingMode? = null
-    private var _editFilePopUpVisible :Boolean? = null
     private var _fileToCreate :File? = null
     private var _fileToEdit:File? = null
     private var _doAfterNewFileCreated:()->Unit = {}
-    private val editFilePopUpVisible get() = _editFilePopUpVisible?:false
+    private val editFilePopUpVisible get() = _editFilePopUpVisible.value?:false
 
 
     //    getter
@@ -71,7 +73,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
     private val ankiBoxViewModel    get() = mainViewModel.ankiBaseViewModel.ankiBoxViewModel
     private val createCardViewModel get() = mainViewModel.createCardViewModel
     private val mainActivityBinding  get() = mainViewModel.mainActivityBinding
-    private val editFilePopUpBinding get() = mainActivityBinding.editFileBinding
+    private val editFilePopUpBinding get() = mainActivityBinding.bindingWidgetPwEditFile
     private val colorPalletBinding  get() = editFilePopUpBinding.colPaletBinding
     private val parentOpenedFile    get() = mainViewModel.libraryBaseViewModel.returnParentFile()
     private val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel
@@ -152,7 +154,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
     fun setEditFilePopUpVisible(visible: Boolean){
         if(editFilePopUpVisible == visible) return
         if(visible)setBottomMenuVisible(false)
-        _editFilePopUpVisible = visible
+        _editFilePopUpVisible.value = visible
         doAfterSetEditFilePopUpVisible()
     }
     private fun setEdtFileTitleHint(){
@@ -197,14 +199,16 @@ class EditFileViewModel(val repository: MyRoomRepository,
         setFrameLayNewCardVisible()
         setFrameLayNewFlashCardCoverVisible()
         setFrameLayNewFolderVisible()
-        Animation().animateFrameBottomMenu(mainActivityBinding.frameBottomMenu,bottomMenuVisible)
+        Animation().animateFrameBottomMenu(mainActivityBinding.flPmAddItem,bottomMenuVisible)
         setUpFragConViewCoverVisibility()
     }
 
+    val editFilePopUpAnim:(v:View,visible:Boolean)-> ValueAnimator = { v, visible ->
+        Animation().appearAlphaAnimation(v,visible,1f){}
+    }
 
     private fun doAfterSetEditFilePopUpVisible(){
         setUpPopUpView()
-        Animation().animatePopUpAddFile(mainActivityBinding.frameLayEditFile,editFilePopUpVisible)
         setUpFragConViewCoverVisibility()
         if(editFilePopUpVisible.not())  hideKeyBoard(editFilePopUpBinding.edtFileTitle)
     }

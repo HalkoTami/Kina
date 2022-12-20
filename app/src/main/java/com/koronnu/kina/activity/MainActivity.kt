@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.databinding.MainActivityBinding
+import com.koronnu.kina.databinding.ActivityMainBinding
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(){
     private lateinit var chooseFileMoveToViewModel : ChooseFileMoveToViewModel
     private lateinit var searchViewModel         : SearchViewModel
 
-    private lateinit var binding                  : MainActivityBinding
+    private lateinit var binding                  : ActivityMainBinding
 
 
 
@@ -41,10 +41,10 @@ class MainActivity : AppCompatActivity(){
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         fun setMainActivityLateInitVars(){
 
-            binding = MainActivityBinding.inflate(layoutInflater)
+            binding = ActivityMainBinding.inflate(layoutInflater)
             binding.mainViewModel = mainActivityViewModel
             binding.lifecycleOwner = this
-            val navHostFragment = supportFragmentManager.findFragmentById(binding.fragContainerView.id) as NavHostFragment
+            val navHostFragment = supportFragmentManager.findFragmentById(binding.fcvActivityMain.id) as NavHostFragment
             libraryViewModel        =ViewModelProvider(this,
                 LibraryBaseViewModel.getFactory(mainActivityViewModel,this,this.baseContext))[LibraryBaseViewModel::class.java]
             chooseFileMoveToViewModel      = ViewModelProvider(this,
@@ -62,10 +62,10 @@ class MainActivity : AppCompatActivity(){
 
 
         val bnvVisibilityObserver            = Observer<Boolean>{
-            changeViewVisibility(binding.frameBnv,it)
+            changeViewVisibility(binding.flTwgActivityMain,it)
         }
         val bnvCoverObserver            = Observer<Boolean>{
-            changeViewVisibility(binding.bnvCover,it)
+            changeViewVisibility(binding.flTwgActivityMain,it)
         }
 
 
@@ -76,8 +76,8 @@ class MainActivity : AppCompatActivity(){
 
 //        ー－－－mainActivityのviewModel 読み取りー－－－
 
-        binding.editFileBinding.lifecycleOwner = this
-        binding.editFileBinding.viewModel = mainActivityViewModel.editFileViewModel
+        binding.bindingWidgetPwEditFile.lifecycleOwner = this
+        binding.bindingWidgetPwEditFile.viewModel = mainActivityViewModel.editFileViewModel
 
         mainActivityViewModel.setMainActivityNavCon(mainNavCon)
         mainActivityViewModel.setMainActivityBinding(binding)

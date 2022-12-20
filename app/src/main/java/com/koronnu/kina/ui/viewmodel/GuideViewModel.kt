@@ -127,7 +127,7 @@ class GuideViewModel : ViewModel(){
     }
 
     private val guideVisibilityObserver = Observer<Boolean>{
-        val frameLay = mainViewModel.mainActivityBinding.frameLayCallOnInstall
+        val frameLay = mainViewModel.mainActivityBinding.flGuide
         frameLay.removeAllViews()
         if(!it) return@Observer
         val newBinding = CallOnInstallBinding.inflate(mainViewModel.layoutInflater)

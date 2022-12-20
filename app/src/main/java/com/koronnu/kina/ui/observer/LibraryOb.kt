@@ -5,7 +5,7 @@ import android.text.SpannableStringBuilder
 import androidx.lifecycle.Observer
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
-import com.koronnu.kina.databinding.MainActivityPopupEditFileBinding
+import com.koronnu.kina.databinding.WidgetPwEditFileBinding
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.viewmodel.EditFileViewModel
 import com.koronnu.kina.ui.viewmodel.SearchViewModel
