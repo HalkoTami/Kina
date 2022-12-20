@@ -31,6 +31,7 @@
     <color name="button_before_press_shadow_light">#7AB39D</color>
     <color name="speak_bubble_gray">#595959</color>
     <color name="background_popup_jump_to_guide_rectangle">#B3000000</color>
+    <color name="mostDarkGreen">#1A4E3B</color>
 
 
 </resources>

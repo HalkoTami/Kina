@@ -103,6 +103,7 @@
             app:labelVisibilityMode="unlabeled" >
 
             <include
+                bind:mainViewModel = "@{mainViewModel}"
                 android:id="@+id/binding_widgetTwgActivityMain"
                 layout="@layout/widget_twg_activity_main" />
         </FrameLayout>

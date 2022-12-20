@@ -34,6 +34,11 @@ object BindingAdapters{
     fun animateVisibility(view:FrameLayout,getAnimation:(v:View,visible:Boolean)->Animator,visible: Boolean){
         getAnimation(view,visible).start()
     }
+    @BindingAdapter("isSelected")
+    @JvmStatic
+    fun setSelected(view:View,selected: Boolean){
+        view.isSelected = selected
+    }
 
 }
 

@@ -1,10 +1,7 @@
 package com.koronnu.kina.ui.animation
 
-import android.animation.Animator
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.os.Build
 import android.view.View
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.animation.doOnEnd

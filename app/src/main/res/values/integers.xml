@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="twg_imvVerticalWeight">7</integer>
+    <integer name="twg_txvVerticalWeight">3</integer>
+</resources>
