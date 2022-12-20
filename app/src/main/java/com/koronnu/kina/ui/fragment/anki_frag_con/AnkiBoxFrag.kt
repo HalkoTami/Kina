@@ -96,7 +96,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
             ankiBoxViewModel.setAnkiBoxCardIds(it)
         }
         val getCardsFromDBByMultipleCardIdsObserver = Observer<List<Card>> {
-            ankiBoxViewModel.setAnkiBoxItems(filterCards(ankiSettingPopUpViewModel.returnAnkiFilter(),it))
+            ankiBoxViewModel.setAnkiBoxItems(filterCards(ankiSettingPopUpViewModel.getAnkiFilter,it))
         }
         val ankiBoxFileIdsObserver = Observer<MutableList<Int>>{
             ankiBoxViewModel.getDescendantsCardIds(it).observe(viewLifecycleOwner,descendantsCardIdsFromDBObserver)
@@ -114,7 +114,6 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         }
         val ankiBoxItemsObserver = Observer<MutableList<Card>>{
             binding.btnAddToFavouriteAnkiBox.isSelected = checkFavouriteExistsList.contains(it)
-            editFileViewModel.setAnkiBoxCards(it)
             viewSetUp.setUpAnkiBoxRing(it,binding.ringBinding)
             binding.btnStartAnki.text =
                 requireActivity().resources.getString(if(it.isEmpty()) R.string.btnStartAnki_withoutSelect else R.string.btnStartAnki_deafult)
@@ -171,8 +170,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
                         )
                     }
                     ankiBaseViewModel.setSettingVisible(false)
-                    ankiBaseViewModel.returnAnkiBaseNavCon()
-                        ?.navigate(AnkiFlipBaseFragDirections.toFlipFrag())
+                    ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.Flip)
                 }
                 btnAddToFavouriteAnkiBox -> {
                     if (btnAddToFavouriteAnkiBox.isSelected.not() && ankiBoxViewModel.returnAnkiBoxItems()

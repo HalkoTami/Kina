@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.lib_frag_con
+package com.koronnu.kina.tabLibrary.chooseFileMoveTo
 
 import android.os.Bundle
 import android.view.*
@@ -17,7 +17,7 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
-import com.koronnu.kina.ui.listadapter.LibFragChooseFileRVListAdapter
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.listener.popUp.LibFragPopUpConfirmMoveToFileCL
 import com.koronnu.kina.ui.listener.topbar.LibFragTopBarChooseFileMoveToCL
 import com.koronnu.kina.ui.viewmodel.*
@@ -26,14 +26,14 @@ import com.koronnu.kina.ui.viewmodel.*
 class LibraryChooseFileMoveToFrag  : Fragment(){
     private val args: LibraryChooseFileMoveToFragArgs by navArgs()
 
-    private lateinit var adapter:LibFragChooseFileRVListAdapter
+    private lateinit var adapter: LibFragChooseFileRVListAdapter
     private lateinit var topBarBinding:LibraryFragTopBarChooseFileMoveToBinding
     private lateinit var libNavCon:NavController
     private lateinit var myNavCon:NavController
     private lateinit var recyclerView:RecyclerView
     private val editFileViewModel: EditFileViewModel by activityViewModels()
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
-    private val chooseFileMoveToViewModel:ChooseFileMoveToViewModel by activityViewModels()
+    private val chooseFileMoveToViewModel: ChooseFileMoveToViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
@@ -127,9 +127,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
 //            changeViewIfRVEmpty(list,binding.frameLayRvEmpty,emptyView)
         }
         val parentFileAncestorsObserver = Observer<List<File>> {
-            editFileViewModel.filterBottomMenuWhenInChooseFileMoveTo(
-                flashCard = flashcard, args.fileId == null,it
-            )
+            libraryBaseViewModel.setParentFileAncestorsFromDB(it)
         }
         val chooseFileMoveToModeObserver = Observer<Boolean>{
             if(it == false){

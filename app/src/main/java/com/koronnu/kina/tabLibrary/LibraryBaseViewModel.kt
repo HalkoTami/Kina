@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.viewmodel
+package com.koronnu.kina.tabLibrary
 
 import android.content.Context
 import androidx.lifecycle.*
@@ -17,18 +17,21 @@ import com.koronnu.kina.db.dataclass.Card
 
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryChooseFileMoveToFragDirections
-import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFlashCardCoverFragDirections
-import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryFolderFragDirections
-import com.koronnu.kina.ui.fragment.lib_frag_con.LibraryHomeFragDirections
+import com.koronnu.kina.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
+import com.koronnu.kina.tabLibrary.chooseFileMoveTo.LibraryChooseFileMoveToFragDirections
+import com.koronnu.kina.tabLibrary.inBox.LibraryInBoxFragViewModel
+import com.koronnu.kina.tabLibrary.lib_frag_con.LibraryFlashCardCoverFragDirections
+import com.koronnu.kina.tabLibrary.lib_frag_con.LibraryFolderFragDirections
+import com.koronnu.kina.tabLibrary.lib_frag_con.LibraryHomeFragDirections
+import com.koronnu.kina.ui.viewmodel.*
 import kotlinx.coroutines.cancel
 class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var searchViewModel:SearchViewModel
-    private lateinit var popUpJumpToGuideViewModel:PopUpJumpToGuideViewModel
-    private lateinit var moveToViewModel :ChooseFileMoveToViewModel
-    private lateinit var _libraryInBoxFragViewModel:LibraryInBoxFragViewModel
+    private lateinit var searchViewModel: SearchViewModel
+    private lateinit var popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel
+    private lateinit var moveToViewModel : ChooseFileMoveToViewModel
+    private lateinit var _libraryInBoxFragViewModel: LibraryInBoxFragViewModel
     val chooseFileMoveToViewModel get() = moveToViewModel
     val guideOptionMenuViewModel get() = mainViewModel.guideOptionMenuViewModel
 
@@ -44,10 +47,14 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
                 val repository = application.repository
                 val libraryBaseViewModel = LibraryBaseViewModel(repository)
-                val searchViewModel = ViewModelProvider(viewModelStoreOwner,SearchViewModel.Factory)[SearchViewModel::class.java]
-                val moveToViewModel = ViewModelProvider(viewModelStoreOwner,ChooseFileMoveToViewModel.getFactory(libraryBaseViewModel))[ChooseFileMoveToViewModel::class.java]
-                val inBoxFragViewModel = ViewModelProvider(viewModelStoreOwner,LibraryInBoxFragViewModel.getFactory(libraryBaseViewModel,
-                    mainViewModel.popUpJumpToGuideViewModel,context))[LibraryInBoxFragViewModel::class.java]
+                val searchViewModel = ViewModelProvider(viewModelStoreOwner,
+                    SearchViewModel.Factory)[SearchViewModel::class.java]
+                val moveToViewModel = ViewModelProvider(viewModelStoreOwner,
+                    ChooseFileMoveToViewModel.getFactory(libraryBaseViewModel))[ChooseFileMoveToViewModel::class.java]
+                val inBoxFragViewModel = ViewModelProvider(viewModelStoreOwner,
+                    LibraryInBoxFragViewModel.getFactory(libraryBaseViewModel,
+                        mainViewModel.popUpJumpToGuideViewModel,
+                        context))[LibraryInBoxFragViewModel::class.java]
                 libraryBaseViewModel.mainViewModel = mainViewModel
                 libraryBaseViewModel.popUpJumpToGuideViewModel = mainViewModel.popUpJumpToGuideViewModel
                 libraryBaseViewModel.searchViewModel = searchViewModel
@@ -116,8 +123,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         _parentFragment.value = fragment
     }
 
-    private fun returnLibraryFragment(): LibraryFragment?{
-        return _parentFragment.value
+    fun returnLibraryFragment(): LibraryFragment{
+        return _parentFragment.value!!
     }
     val parentFragment:LiveData<LibraryFragment> = _parentFragment
 
@@ -174,17 +181,13 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 //    今開いてるファイルの祖先
     fun  parentFileAncestorsFromDB(int: Int?):LiveData<List<File>> = repository.getAllAncestorsByFileId(int).asLiveData()
     fun setParentFileAncestorsFromDB (ancestors: List<File>){
-        val a = ParentFileAncestors(
-            gGrandPFile  = if(ancestors.size>=3) ancestors[2] else null,
-            gParentFile = if(ancestors.size>=2) ancestors[1] else null,
-            ParentFile = if(ancestors.isNotEmpty()) ancestors[0] else null
-        )
-        _parentFileAncestors.value = a
+        _parentFileAncestors.value = ancestors
 
     }
 
-    private val _parentFileAncestors = MutableLiveData<ParentFileAncestors>()
-    val parentFileAncestors:LiveData<ParentFileAncestors> = _parentFileAncestors
+
+    private val _parentFileAncestors = MutableLiveData<List<File>?>()
+    val getParentFileAncestors get() = _parentFileAncestors.value
 
 
 
@@ -576,7 +579,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
 
     fun doOnBackPress(): Boolean {
-        val isActive = mainViewModel.returnFragmentStatus()?.now == MainFragment.Library
+        val isActive = mainViewModel.getFragmentStatus.now == MainFragment.Library
         if(!isActive) return false
         val isHomeFragment = (returnLibraryFragment()==LibraryFragment.Home)
         if(isHomeFragment

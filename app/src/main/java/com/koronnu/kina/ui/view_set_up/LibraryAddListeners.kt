@@ -8,6 +8,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.navigation.NavController
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.customViews.ImvChangeAlphaOnDown
 import com.koronnu.kina.ui.listener.*
 import com.koronnu.kina.ui.listener.recyclerview.*

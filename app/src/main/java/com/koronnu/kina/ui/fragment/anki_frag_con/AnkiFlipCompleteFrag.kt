@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.koronnu.kina.R
@@ -27,7 +26,6 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
     private val ankiBaseViewModel: AnkiBaseViewModel by activityViewModels()
     private val ankiFlipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
     private lateinit var flipRoundSharedPref: SharedPreferences
-    private val getResources = requireActivity().resources
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +35,7 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = AnkiFlipFragCompletedBinding.inflate(inflater, container, false)
         Animation().appearAlphaAnimation(binding.root,true,1f){}.start()
-        flipRoundSharedPref = requireActivity().getSharedPreferences(getResources.getString(R.string.sp_title_flipRound),Context.MODE_PRIVATE)
+        flipRoundSharedPref = requireActivity().getSharedPreferences(resources.getString(R.string.sp_title_flipRound),Context.MODE_PRIVATE)
 
         ankiFlipBaseViewModel.allActivityData.observe(viewLifecycleOwner){
             val dTA = DateTimeActions()
@@ -61,12 +59,12 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
         return binding.root
     }
     private fun navigateToAnkiBox(){
-        val navCon = ankiBaseViewModel.returnAnkiBaseNavCon() ?:return
+        val navCon = ankiBaseViewModel.getAnkiBaseNavCon
         NavigationActions().popBackStackToLabel(navCon ,
             requireActivity().getString(R.string.nav_label_anki_ankiBox))
     }
     private fun navigateToFlipStart(){
-        val navCon = ankiBaseViewModel.returnAnkiBaseNavCon() ?:return
+        val navCon = ankiBaseViewModel.getAnkiBaseNavCon
         NavigationActions().popBackStackToLabel(navCon,
         requireActivity().getString(R.string.nav_label_anki_flip))
     }

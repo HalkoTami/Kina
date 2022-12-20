@@ -1,9 +1,8 @@
-package com.koronnu.kina.ui.listener.recyclerview
+package com.koronnu.kina.tabLibrary.chooseFileMoveTo
 
 import android.view.View
 import com.koronnu.kina.databinding.LibraryFragRvItemBaseBinding
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.ui.viewmodel.ChooseFileMoveToViewModel
 
 class LibraryRVChooseFileMoveToCL(val item: File,
                                   private val rvBinding: LibraryFragRvItemBaseBinding,

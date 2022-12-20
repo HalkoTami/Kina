@@ -31,6 +31,8 @@
         app:destination="@+id/flip_item_rv_frag"/>
     <action android:id="@+id/to_flip_completed_frag"
         app:destination="@+id/flip_completed_frag"/>
+    <action android:id="@+id/to_anki_box_frag"
+        app:destination="@+id/anki_box_frag"/>
 
 
 </navigation>

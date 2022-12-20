@@ -18,6 +18,7 @@ import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.databinding.CreateCardFragMainBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.viewmodel.*
 
@@ -32,7 +33,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
     private val stringCardViewModel : CardTypeStringViewModel by activityViewModels()
     private val libraryViewModel: LibraryBaseViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
-    private val getResources = requireActivity().resources
+
 
     private lateinit var mainNavCon:NavController
     private lateinit var cardNavCon:NavController
@@ -53,7 +54,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             cardNavCon = a.navController
             createCardViewModel.setCreateCardBaseBinding(binding)
             mainNavCon =
-                requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view)
+                requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain)
                     .findNavController()
         }
 
@@ -81,7 +82,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
             val nextCard = createCardViewModel.getNeighbourCardId(NeighbourCardSide.NEXT)
             val sisterCards = createCardViewModel.returnSisterCards()
             binding.apply {
-                val text = getResources.getString(R.string.editCardProgress,(sisterCards.indexOf(parentCard) + 1),sisterCards.size)
+                val text = resources.getString(R.string.editCardProgress,(sisterCards.indexOf(parentCard) + 1),sisterCards.size)
                 binding.createCardTopBarBinding.txvPosition.text = text
                 setAlphaByClickable(nextCard != null, binding.btnNext)
                 setAlphaByClickable(previousCard != null, binding.btnPrevious)
@@ -91,7 +92,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         val sisterCardObserver = Observer<List<Card>?> {
             val parentCard = createCardViewModel.returnParentCard()
             if (parentCard != null) {
-                val text = getResources.getString(R.string.editCardProgress,(it.indexOf(parentCard) + 1),it.size)
+                val text = resources.getString(R.string.editCardProgress,(it.indexOf(parentCard) + 1),it.size)
                 binding.createCardTopBarBinding.txvPosition.text =
                     text
 
@@ -115,7 +116,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
                 )
             }
         }
-        val parentFlashCardCoverId = when (mainViewModel.returnFragmentStatus()?.now) {
+        val parentFlashCardCoverId = when (mainViewModel.getFragmentStatus.now) {
             MainFragment.Anki -> when (ankiBaseViewModel.returnActiveFragment()) {
                 AnkiFragments.AnkiBox -> null
                 AnkiFragments.Flip -> flipBaseViewModel.returnParentCard()?.belongingFlashCardCoverId

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activity.MainActivity"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="mainViewModel"
+            type="com.koronnu.kina.ui.viewmodel.MainViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:id="@+id/main_top_constrainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
+        >
+
+        <FrameLayout
+            android:id="@+id/fl_jumpToGuide"
+
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="10dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/topBar_height"
+            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintHorizontal_bias="1"
+            android:elevation="10dp"
+            >
+            <include layout="@layout/widget_jump_to_guide"
+                android:id="@+id/binding_widgetJumpToGuide"/>
+
+        </FrameLayout>
+        <FrameLayout
+            style="@style/PopUpFrameLayStyle"
+            android:onClick="@{()->null}"
+            visibilityAnim="@{mainViewModel.editFileViewModel.editFilePopUpAnim}"
+            animVisibility="@{mainViewModel.editFileViewModel._editFilePopUpVisible}"
+            android:id="@+id/fl_pw_editFile"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+            <include
+                android:id="@+id/binding_widgetPwEditFile"
+                layout="@layout/widget_pw_edit_file"
+                android:visibility="visible"/>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:onClick="@{()->null}"
+            android:visibility="gone"
+            android:id="@+id/fl_pm_addItem"
+            android:background="@drawable/gray_stroke_rectangle"
+            android:elevation="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@id/fl_twg_activityMain"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <include
+                android:id="@+id/binding_widgetPmAddItem"
+                bind:editFileViewModel="@{mainViewModel.editFileViewModel}"
+                layout="@layout/widget_pm_add_item" />
+
+        </FrameLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/main_navigation"
+            android:id="@+id/fcv_activityMain"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/fl_twg_activityMain"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <FrameLayout
+            android:id="@+id/fl_twg_activityMain"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_height"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fcv_activityMain"
+            app:labelVisibilityMode="unlabeled" >
+
+            <include
+                android:id="@+id/binding_widgetTwgActivityMain"
+                layout="@layout/widget_twg_activity_main" />
+        </FrameLayout>
+
+        <View
+            style="@style/BackGroundViewStyle"
+            android:visibility="@{mainViewModel.editFileViewModel.viewCoverVisibility ? View.VISIBLE : View.GONE }"
+            android:onClick="@{()->mainViewModel.editFileViewModel.onClickFragConViewCover()}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <View
+            style="@style/BackGroundViewStyle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/fl_twg_activityMain"
+            app:layout_constraintEnd_toEndOf="@id/fl_twg_activityMain"
+            app:layout_constraintBottom_toBottomOf="@id/fl_twg_activityMain"
+            app:layout_constraintTop_toTopOf="@id/fl_twg_activityMain"/>
+
+        <FrameLayout
+            android:elevation="20dp"
+            android:id="@+id/fl_guide"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            >
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

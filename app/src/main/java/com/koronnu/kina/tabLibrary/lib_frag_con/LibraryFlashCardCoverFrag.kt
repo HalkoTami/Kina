@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.lib_frag_con
+package com.koronnu.kina.tabLibrary.lib_frag_con
 
 import android.content.Context
 import android.os.Bundle
@@ -20,6 +20,7 @@ import com.koronnu.kina.databinding.LibraryFragTopBarFileBinding
 import com.koronnu.kina.databinding.RvEmptyBinding
 import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
@@ -62,7 +63,7 @@ LibraryFlashCardCoverFrag  : Fragment(){
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
             libraryBaseViewModel.setChildFragBinding(binding)
             recyclerView = binding.vocabCardRV
-            mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
+            mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
                 stringCardViewModel  = cardTypeStringViewModel,
                 createCardViewModel  = createCardViewModel,
@@ -149,7 +150,6 @@ LibraryFlashCardCoverFrag  : Fragment(){
             }
             parentFileAncestorsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
-                editFileViewModel.filterBottomMenuByAncestors(it,returnParentFile() ?:return@observe)
             }
 
             val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
@@ -182,20 +182,20 @@ LibraryFlashCardCoverFrag  : Fragment(){
             changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                 commonViewSetUp.changeLibRVAllSelectedState(recyclerView,it)
             }
-            parentFileAncestors.observe(viewLifecycleOwner){
-
-                binding.ancestorsBinding.apply {
-                    txvGGrandParentFileTitle.text = it.gGrandPFile?.title
-                    txvGrandParentFileTitle.text = it.gParentFile?.title
-                    txvParentFileTitle.text = it.ParentFile?.title
-                    lineLayGGFile.visibility =
-                        if(it.gGrandPFile != null) View.VISIBLE else View.GONE
-                    lineLayGPFile.visibility =
-                        if(it.gParentFile != null) View.VISIBLE else View.GONE
-                    lineLayParentFile.visibility =
-                        if(it.ParentFile != null) View.VISIBLE else View.GONE
-                }
-            }
+//            parentFileAncestors.observe(viewLifecycleOwner){
+//
+////                binding.ancestorsBinding.apply {
+////                    txvGGrandParentFileTitle.text = it[2].title
+////                    txvGrandParentFileTitle.text = it.title
+////                    txvParentFileTitle.text = it.ParentFile?.title
+////                    lineLayGGFile.visibility =
+////                        if(it.gGrandPFile != null) View.VISIBLE else View.GONE
+////                    lineLayGPFile.visibility =
+////                        if(it.gParentFile != null) View.VISIBLE else View.GONE
+////                    lineLayParentFile.visibility =
+////                        if(it.ParentFile != null) View.VISIBLE else View.GONE
+////                }
+//            }
             selectedItems.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.txvSelectingStatus.text = resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
             }

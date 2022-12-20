@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">KiNa</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="title_tab_library">ライブラリ</string>
-    <string name="title_tab_anki">暗記</string>
-    <string name="title_tab_planner">プランナー</string>
-    <string name="title_tab_data">データ</string>
-    <string name="title_tab_create">作成</string>
+    <string name="title_home" translatable="false">Home</string>
+    <string name="title_dashboard" translatable="false">Dashboard</string>
+    <string name="title_notifications" translatable="false">Notifications</string>
+    <string name="title_tab_library" translatable="false">ライブラリ</string>
+    <string name="title_tab_anki" translatable="false">暗記</string>
+    <string name="title_tab_planner" translatable="false">プランナー</string>
+    <string name="title_tab_data" translatable="false">データ</string>
+    <string name="title_tab_create" translatable="false">作成</string>
     <string name="text_sample">sample サンプル</string>
     <string name="visible_guide_line">visible guideline</string>
     <string name="icon_search">Icon Search</string>
@@ -231,7 +231,7 @@
     <string name="edtBackTitle_default">裏</string>
     <string name="edtFrontTitle_default">表</string>
     <string name="flipCheckAnswerStringFragBin_spbContent_correct">正解！</string>
-    <string name="flipCheckAnswerStringFragBin_spbContent_wrong">残念...</string>
+    <string name="flipCheckAnswerStringFragBin_spbContent_wrong">残念…</string>
     <string name="answer">答え</string>
     <string name="txvResultInRow">%1$d連続%2$s中</string>
     <string name="answer_correct">正解</string>

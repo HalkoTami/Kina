@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.lib_frag_con
+package com.koronnu.kina.tabLibrary.lib_frag_con
 
 
 import android.content.Context
@@ -19,6 +19,7 @@ import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
 import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
@@ -60,7 +61,7 @@ class LibraryHomeFrag : Fragment(){
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
             recyclerView = binding.vocabCardRV
-            mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.frag_container_view).findNavController()
+            mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
                 stringCardViewModel  = cardTypeStringViewModel,
                 createCardViewModel  = createCardViewModel,
@@ -160,8 +161,6 @@ class LibraryHomeFrag : Fragment(){
         observeSwipe()
         observeMultiMode()
         createCardViewModel.setParentFlashCardCover(null)
-        editFileViewModel.setParentTokenFileParent(null)
-        editFileViewModel.makeAllBottomMenuClickable()
         searchViewModel.matchedItems.observe(viewLifecycleOwner){
             searchAdapter.submitList(it)
         }

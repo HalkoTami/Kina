@@ -50,29 +50,19 @@ class FlipStringTypeAnswerFrag  : Fragment() {
             }
             fun addKeyBoardListener(){
                 val rootView = binding.root
-                rootView.viewTreeObserver.addOnGlobalLayoutListener(object:KeyboardListener(rootView,){
-                    override fun onGlobalLayout() {
-                        super.onGlobalLayout()
-                        keyLis = this
-                    }
-                    override fun onKeyBoardAppear() {
-                        super.onKeyBoardAppear()
-                        typeAndCheckViewModel.setKeyBoardVisible(true)
-                        binding.btnCheckAnswer.visibility = View.VISIBLE
-                    }
-
-                    override fun onKeyBoardDisappear() {
-                        super.onKeyBoardDisappear()
-                        typeAndCheckViewModel.setKeyBoardVisible(false)
-                        binding.btnCheckAnswer.visibility = View.GONE
-                    }
-                })
+                val keyboardListener = object:KeyboardListener(rootView,){
+                }.apply { onKeyBoardAppear = {typeAndCheckViewModel.setKeyBoardVisible(true)
+                    binding.btnCheckAnswer.visibility = View.VISIBLE}
+                onKeyBoardDisappear={typeAndCheckViewModel.setKeyBoardVisible(false)
+                    binding.btnCheckAnswer.visibility = View.GONE}}
+                keyLis = keyboardListener
+                rootView.viewTreeObserver.addOnGlobalLayoutListener(keyboardListener)
             }
             fun addCL(){
                 binding.btnCheckAnswer.setOnClickListener {
                     val rootView = binding.root
                     rootView.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
-                    flipBaseViewModel.flip(NeighbourCardSide.NEXT,ankiSettingPopUpViewModel.returnReverseCardSide(),true)
+                    flipBaseViewModel.flip(NeighbourCardSide.NEXT,ankiSettingPopUpViewModel.getReverseCardSideActive,true)
                 }
             }
             addCL()
@@ -91,8 +81,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
         setUpViewStart()
         flipBaseViewModel.onChildFragmentsStart(
             FlipFragments.TypeAnswerString,
-            ankiSettingPopUpViewModel.returnReverseCardSide(),
-            ankiSettingPopUpViewModel.returnAutoFlip().active)
+            ankiSettingPopUpViewModel.getAutoFlip.active)
         flipBaseViewModel.getCardFromDB(args.cardId).observe(viewLifecycleOwner,cardFromDBObserver)
 
 

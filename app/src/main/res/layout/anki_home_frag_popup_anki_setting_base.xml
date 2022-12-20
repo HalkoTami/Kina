@@ -67,6 +67,7 @@
     </FrameLayout>
 
     <Button
+        android:enabled="false"
         android:id="@+id/btn_start_anki"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

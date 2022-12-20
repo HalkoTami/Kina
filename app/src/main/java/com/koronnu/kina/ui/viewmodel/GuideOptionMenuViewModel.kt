@@ -38,7 +38,7 @@ class GuideOptionMenuViewModel:ViewModel(){
     private val getGuideOptionMenuVisible get() = _guideOptionMenuVisible.value!!
     private val guideOptionMenuVisible :LiveData<Boolean> = _guideOptionMenuVisible
     private val guideMenuVisibilityObserver = Observer<Boolean>{
-        val frameLay = mainViewModel.mainActivityBinding.frameLayCallOnInstall
+        val frameLay = mainViewModel.mainActivityBinding.flGuide
         frameLay.removeAllViews()
         if(it){
             changeViewVisibility(frameLay,true)
@@ -83,7 +83,7 @@ class GuideOptionMenuViewModel:ViewModel(){
         }
     }
     private fun isInLibraryFragment():Boolean{
-        return  (mainViewModel.returnFragmentStatus()?.now == MainFragment.Library)
+        return  (mainViewModel.getFragmentStatus.now == MainFragment.Library)
     }
     private fun isLibraryFragmentWithRVItem():Boolean{
         val hasItemInFirstRow = (libraryBaseViewModel.getChildFragBinding.vocabCardRV.size>0)

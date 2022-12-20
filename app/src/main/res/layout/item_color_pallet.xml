@@ -1,43 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:id="@+id/linLay_col_pallet"
-
+<layout
     >
+    <data >
+        <import type="com.koronnu.kina.db.enumclass.ColorStatus"/>
+        <import type="kotlin.Unit"/>
+        <variable
+            name="editFileViewModel"
+            type="com.koronnu.kina.ui.viewmodel.EditFileViewModel" />
 
-    <ImageView
-        android:layout_weight="1.5"
-        android:id="@+id/imv_icon_pallet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="25dp"
-        android:minHeight="25dp"
-        android:src="@drawable/icon_pallet"
-        tools:ignore="ContentDescription" />
+    </data>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:id="@+id/linLay_col_pallet"
 
-    <ImageView
-        style="@style/colorPalletCircle"
-        android:contentDescription="@string/cd_col_red"
-        android:id="@+id/imv_col_red" />
+        >
 
-    <ImageView
-        android:id="@+id/imv_col_blue"
-        android:contentDescription="@string/cd_col_blue"
-        style="@style/colorPalletCircle" />
+        <ImageView
+            android:layout_weight="1.5"
+            android:id="@+id/imv_icon_pallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="25dp"
+            android:minHeight="25dp"
+            android:src="@drawable/icon_pallet"
+            tools:ignore="ContentDescription" />
 
-    <ImageView
-        android:id="@+id/imv_col_yellow"
-        android:contentDescription="@string/cd_col_yellow"
-        style="@style/colorPalletCircle" />
+        <ImageView
+            style="@style/colorPalletCircle"
+            convertColPalletDraw="@{ColorStatus.RED}"
+            android:contentDescription="@string/cd_col_red"
+            android:onClick="@{() -> editFileViewModel.setColPalletStatus(ColorStatus.RED)  }"
+            android:id="@+id/imv_col_red" />
 
-    <ImageView
-        android:id="@+id/imv_col_gray"
-        android:contentDescription="@string/cd_col_gray"
-        style="@style/colorPalletCircle" />
+        <ImageView
+            android:id="@+id/imv_col_blue"
+            convertColPalletDraw="@{ColorStatus.BLUE}"
+            android:onClick="@{() -> editFileViewModel.setColPalletStatus(ColorStatus.BLUE)  }"
+            android:contentDescription="@string/cd_col_blue"
+            style="@style/colorPalletCircle" />
+
+        <ImageView
+            android:id="@+id/imv_col_yellow"
+            convertColPalletDraw="@{ColorStatus.YELLOW}"
+            android:onClick="@{() -> editFileViewModel.setColPalletStatus(ColorStatus.YELLOW)  }"
+            android:contentDescription="@string/cd_col_yellow"
+            style="@style/colorPalletCircle" />
+
+        <ImageView
+            android:id="@+id/imv_col_gray"
+            convertColPalletDraw="@{ColorStatus.GRAY}"
+            android:onClick="@{() -> editFileViewModel.setColPalletStatus(ColorStatus.GRAY)  }"
+            android:contentDescription="@string/cd_col_gray"
+            style="@style/colorPalletCircle" />
 
 
 
@@ -45,4 +63,5 @@
 
 
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

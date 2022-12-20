@@ -28,9 +28,9 @@ class MoveGuide(val actions: GuideActions){
     }
     private fun guide3(){
         actions.apply {
-            spbPosAnimDoOnEnd = { onClickGoNext { guide4() } }
             getSpbPosAnim(activity.getString(R.string.guide_spb_move_3,
-                getListFirstItemAsString(libraryViewModel.returnParentRVItems()))).start()
+                getListFirstItemAsString(libraryViewModel.returnParentRVItems())))
+            { onClickGoNext { guide4() } }.start()
         }
     }
     private fun guide4(){
@@ -55,7 +55,7 @@ class MoveGuide(val actions: GuideActions){
         actions.apply {
             animateConLayGoNextVisibility(false)
             goNextOnClickTouchArea(imvOpenMultiModeMenu){guide7()}
-            setArrow(MyOrientation.BOTTOM,imvOpenMultiModeMenu)
+            setArrow(MyOrientation.BOTTOM,imvOpenMultiModeMenu){}
             viewUnderSpotInGuide = imvOpenMultiModeMenu
             animateCharacterAndSpbPos(R.string.guide_spb_move_6,
                 {setCharacterBottomLeftAboveBnv()},
@@ -69,7 +69,7 @@ class MoveGuide(val actions: GuideActions){
             libraryViewModel.setMultiMenuVisibility(true)
             actionsBeforeEndGuideList.add{libraryViewModel.setMultiMenuVisibility(false)}
             goNextOnClickTouchArea(linLayMenuMoveItem){guide8()}
-            setArrow(MyOrientation.LEFT,linLayMenuMoveItem)
+            setArrow(MyOrientation.LEFT,linLayMenuMoveItem){}
         }
     }
     private fun guide8(){
@@ -88,17 +88,19 @@ class MoveGuide(val actions: GuideActions){
     }
     private fun guide9(){
         actions.apply {
-            spbPosAnimDoOnEnd = {onClickGoNext{guide10()}}
             getSpbPosAnim(activity.getString(R.string.guide_spb_move_8,
-            selectedItemAsString,notMovableItemAsString)).start()
+            selectedItemAsString,notMovableItemAsString))
+            {onClickGoNext{guide10()}}.start()
         }
     }
     private fun guide10(){
         actions.apply {
-            spbPosAnimDoOnEnd = { if(moveToViewModel.getMovableFiles.isNullOrEmpty())
+            fun spbPosAnimDoOnEnd () {
+                if(moveToViewModel.getMovableFiles.isNullOrEmpty())
                 onClickGoNext{guide11()}
                 else onClickGoNext { guide18() }    }
-            getSpbPosAnim(activity.getString(R.string.guide_spb_move_9,movableItemAsString)).start()
+            getSpbPosAnim(activity.getString(R.string.guide_spb_move_9,movableItemAsString))
+            {spbPosAnimDoOnEnd()}.start()
         }
     }
     private fun guide11(){
@@ -135,10 +137,10 @@ class MoveGuide(val actions: GuideActions){
     }
     private fun guide15(){
         actions.apply {
-            allConLayChildrenGoneAnimDoOnEnd = {
+            fun allConLayChildrenGoneAnimDoOnEnd() {
                 animateHole = false
                 viewUnderSpotInGuide = getCreatingMenuItemFrameLay()
-                setArrow(MyOrientation.TOP,getCreatingMenuItemFrameLay())
+                setArrow(MyOrientation.TOP,getCreatingMenuItemFrameLay()){}
                 goNextOnClickTouchArea(getCreatingMenuItemFrameLay())
                 {   getCreatingMenuItemFrameLay().performClick()
                     actionsBeforeEndGuideList.add{createFileViewModel.setEditFilePopUpVisible(false)}
@@ -146,7 +148,8 @@ class MoveGuide(val actions: GuideActions){
                 imvBnvBtnAdd.performClick()
                 actionsBeforeEndGuideList.add{createFileViewModel.setBottomMenuVisible(false)}
             }
-            getAllConLayChildrenGoneAnim().start()
+            getAllConLayChildrenGoneAnim()
+            {allConLayChildrenGoneAnimDoOnEnd()}.start()
 
         }
     }
@@ -154,7 +157,7 @@ class MoveGuide(val actions: GuideActions){
         actions.apply {
             viewUnderSpotInGuide = frameLayEditFile
             makeHereTouchable(frameLayEditFile)
-            setArrow(MyOrientation.BOTTOM,btnCreateFile)
+            setArrow(MyOrientation.BOTTOM,btnCreateFile){}
             addViewToConLay(btnCloseEditFilePopUp).setOnClickListener(null)
             goNextAfterNewFileCreated { guide17() }
 
@@ -167,7 +170,7 @@ class MoveGuide(val actions: GuideActions){
             doAfterMoveToRvAttached {
                 viewUnderSpotInGuide = libRvFirstItem
             }
-            getArrowVisibilityAnim(false).start()
+            getArrowVisibilityAnim(false){}.start()
             animateCharacterAndSpbPos(R.string.guide_spb_move_10e,
                 {setCharacterBottomLeftAboveBnv()},
                 {setSpbPosRightNextToCharacter()},
@@ -189,19 +192,20 @@ class MoveGuide(val actions: GuideActions){
     }
     private fun guide19prt2(){
         actions.apply {
-            allConLayChildrenGoneAnimDoOnEnd = {
+            val allConLayChildrenGoneAnimDoOnEnd = {
                 moveToViewModel.setPopUpVisible(true)
                 actionsBeforeEndGuideList.add{moveToViewModel.setPopUpVisible(false)}
                 viewUnderSpotInGuide = frameLayConfirmMove
                 onClickGoNext{guide20()}
             }
-            getAllConLayChildrenGoneAnim().start()
+            getAllConLayChildrenGoneAnim()
+            {allConLayChildrenGoneAnimDoOnEnd()}.start()
         }
 
     }
     private fun guide20(){
         actions.apply {
-            setArrow(MyOrientation.BOTTOM,btnCommitMove)
+            setArrow(MyOrientation.BOTTOM,btnCommitMove){}
             animateCharacterAndSpbPos(R.string.guide_spb_move_13,
                 {setCharacterBottomLeftAboveConfirmMovePopUp()},
                 {setSpbPosRightNextToCharacter()},
@@ -212,7 +216,7 @@ class MoveGuide(val actions: GuideActions){
         actions.apply {
             moveToViewModel.setPopUpVisible(false)
             viewUnderSpotInGuide = null
-            getArrowVisibilityAnim(false).start()
+            getArrowVisibilityAnim(false){}.start()
             animateCharacterAndSpbPos(R.string.guide_spb_move_14,
                 {setCharacterPosInCenter()},
                 {setSpbPosAboveCharacter()},
