@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO:Rename View Ids In Rules-->
-<!--TODO:Rename String res In Rules-->
-<!--TODO:Rename included Layout titles in Rules-->
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -16,15 +13,13 @@
             type="com.koronnu.kina.ui.viewmodel.MainViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-
-        android:id="@+id/main_top_constrainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusableInTouchMode="true"
         >
 
         <FrameLayout
-            android:id="@+id/fl_jumpToGuide"
+            android:id="@+id/fl_pw_jumpToGuide"
 
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
@@ -38,8 +33,8 @@
             app:layout_constraintHorizontal_bias="1"
             android:elevation="10dp"
             >
-            <include layout="@layout/widget_jump_to_guide"
-                android:id="@+id/binding_widgetJumpToGuide"/>
+            <include layout="@layout/pw_jump_to_guide"
+                android:id="@+id/binding_pwJumpToGuide"/>
 
         </FrameLayout>
         <FrameLayout
@@ -54,8 +49,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             >
             <include
-                android:id="@+id/binding_widgetPwEditFile"
-                layout="@layout/widget_pw_edit_file"
+                android:id="@+id/binding_pwEditFile"
+                layout="@layout/pw_edit_file"
                 android:visibility="visible"/>
         </FrameLayout>
 
@@ -65,7 +60,7 @@
             visibilityAnim="@{mainViewModel.editFileViewModel.flPmAddItemAnim}"
             animVisibility="@{mainViewModel.editFileViewModel._bottomMenuVisible}"
             android:visibility="gone"
-            android:id="@+id/fl_pm_addItem"
+            android:id="@+id/fl_pm_addNewItem"
             android:background="@drawable/gray_stroke_rectangle"
             android:elevation="10dp"
             android:layout_width="wrap_content"
@@ -76,9 +71,9 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <include
-                android:id="@+id/binding_widgetPmAddItem"
+                android:id="@+id/binding_pmAddNewItem"
                 bind:editFileViewModel="@{mainViewModel.editFileViewModel}"
-                layout="@layout/widget_pm_add_item" />
+                layout="@layout/pm_add_new_item" />
 
         </FrameLayout>
 
@@ -107,8 +102,8 @@
 
             <include
                 bind:mainViewModel = "@{mainViewModel}"
-                android:id="@+id/binding_widgetTwgActivityMain"
-                layout="@layout/widget_twg_activity_main" />
+                android:id="@+id/binding_twgActivityMain"
+                layout="@layout/twg_activity_main" />
         </FrameLayout>
 
         <View

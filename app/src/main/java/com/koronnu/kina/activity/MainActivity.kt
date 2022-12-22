@@ -76,8 +76,8 @@ class MainActivity : AppCompatActivity(){
 
 //        ー－－－mainActivityのviewModel 読み取りー－－－
 
-        binding.bindingWidgetPwEditFile.lifecycleOwner = this
-        binding.bindingWidgetPwEditFile.viewModel = mainActivityViewModel.editFileViewModel
+        binding.bindingPwEditFile.lifecycleOwner = this
+        binding.bindingPwEditFile.viewModel = mainActivityViewModel.editFileViewModel
 
         mainActivityViewModel.setMainActivityNavCon(mainNavCon)
         mainActivityViewModel.setMainActivityBinding(binding)

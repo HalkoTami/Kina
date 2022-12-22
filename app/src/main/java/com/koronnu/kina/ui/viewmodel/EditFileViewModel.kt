@@ -80,7 +80,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
     private val ankiBoxViewModel    get() = mainViewModel.ankiBaseViewModel.ankiBoxViewModel
     private val createCardViewModel get() = mainViewModel.createCardViewModel
     private val mainActivityBinding  get() = mainViewModel.mainActivityBinding
-    private val editFilePopUpBinding get() = mainActivityBinding.bindingWidgetPwEditFile
+    private val editFilePopUpBinding get() = mainActivityBinding.bindingPwEditFile
     private val colorPalletBinding  get() = editFilePopUpBinding.colPaletBinding
     private val parentOpenedFile    get() = mainViewModel.libraryBaseViewModel.returnParentFile()
     private val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel

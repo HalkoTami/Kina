@@ -13,7 +13,7 @@
     <string name="sp_anki_setting_type_answer" translatable="false">s_p_anki_setting_type_answer</string>
     <string name="sp_checkFirstTimeOpened" translatable="false">CheckFirstTimeOpened</string>
     <string name="sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened" translatable="false">sp_checkFirstTimeOpened_inBoxFirstTimeOpened</string>
-    <string name="minutes_practiced">暗記した時間</string>
+    <string name="fragmentAnkiFlipCompleted_txvFlippedMinutesDescription_text">暗記した時間</string>
 <!--    nav label-->
     <string name="nav_label_main_tab_anki" translatable="false">暗記タブ</string>
     <string name="nav_label_main_tab_library" translatable="false">ライブラリタブ</string>
@@ -56,7 +56,7 @@
     <string name="cd_col_gray">灰色</string>
     <string name="cd_close">閉じる</string>
     <string name="cd_folder">フォルダ</string>
-    <string name="cd_flip_to_other_side">カードの裏表を返す</string>
+    <string name="fragmentFlipStringCheckAnswer_imvFlipCorrectAnswerSide_cd">カードの裏表を返す</string>
     <string name="cd_open_anki_setting">暗記設定画面を開く</string>
     <string name="cd_containing_flashcard">含まれた単語帳の数</string>
     <string name="cd_containing_card">含まれたカードの数</string>
@@ -116,13 +116,13 @@
 
 
     <string name="side_back">裏</string>
-    <string name="your_answer">あなたの回答</string>
-    <string name="flip_round_completed_comment">暗記アイテムを一周したよ</string>
-    <string name="in_card_amount">枚中</string>
-    <string name="flip_items">暗記アイテム総数</string>
-    <string name="card_amount">枚</string>
-    <string name="newly_remembered_card">新しく覚えたカード</string>
-    <string name="minutes_count">min</string>
+    <string name="fragmentFlipStringCheckAnswer_txvLlYourAnswerTitle_text">あなたの回答</string>
+    <string name="fragmentAnkiFlipCompleted_txvCompletedComment_text">暗記アイテムを一周したよ</string>
+    <string name="fragmentAnkiFlipCompleted_txvFlippedItemsCountClassifier_text">枚中</string>
+    <string name="fragmentAnkiFlipCompleted_txvFlippedItemsCountDescription_text">暗記アイテム総数</string>
+    <string name="fragmentAnkiFlipCompleted_txvNewlyRememberedCardAmountClassifier_text">枚</string>
+    <string name="fragmentAnkiFlipCompleted_txvNewlyRememberedCardAmountDescription_text">新しく覚えたカード</string>
+    <string name="fragmentAnkiFlipCompleted_txvFlippedMinutesClassifier_text">min</string>
 
     <string name="only_not_remembered_cards">未暗記のカードのみ</string>
     <string name="default_auto_flip_seconds">20</string>

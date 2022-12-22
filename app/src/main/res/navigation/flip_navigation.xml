@@ -26,7 +26,7 @@
     </fragment>
     <fragment android:id="@+id/flip_string_check_answer_frag"
         android:name="com.koronnu.kina.ui.fragment.flipFragCon.FlipStringCheckAnswerFrag"
-        tools:layout="@layout/anki_flip_frag_check_answer_string_frag">
+        tools:layout="@layout/fragment_flip_string_check_answer">
         <argument android:name="answer_is_back"
             app:argType="boolean"/>
         <argument
