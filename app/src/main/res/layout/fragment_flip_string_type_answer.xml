@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/top_con_lay"
     android:padding="10dp"
     android:focusableInTouchMode="true"
     android:focusable="true"
@@ -12,19 +11,19 @@
 
     <TextView
         style="@style/CardTitleTxvStyle"
-        android:id="@+id/txv_flip_title"
+        android:id="@+id/txv_typeAnswerSideOppositeTitle"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
     <TextView
         style="@style/CardContentTxvStyle"
         android:layout_marginTop="10dp"
-        android:id="@+id/txv_content"
+        android:id="@+id/txv_typeAnswerSideOppositeContent"
         android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
         app:layout_constraintVertical_weight="3"
-        app:layout_constraintTop_toBottomOf="@id/txv_flip_title"
+        app:layout_constraintTop_toBottomOf="@id/txv_typeAnswerSideOppositeTitle"
         android:background="@drawable/gray_stroke_rectangle"
-        app:layout_constraintBottom_toTopOf="@id/edt_type_answer">
+        app:layout_constraintBottom_toTopOf="@id/edt_typeAnswerString">
 
 
     </TextView>
@@ -32,11 +31,11 @@
     <EditText
         android:inputType="textMultiLine"
         android:layout_marginTop="20dp"
-        android:id="@+id/edt_type_answer"
+        android:id="@+id/edt_typeAnswerString"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintVertical_weight="5"
-        app:layout_constraintTop_toBottomOf="@id/txv_content"
+        app:layout_constraintTop_toBottomOf="@id/txv_typeAnswerSideOppositeContent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/gray_stroke_rectangle"
         android:gravity="center"
@@ -46,15 +45,15 @@
         tools:ignore="LabelFor" />
 
     <ImageView
-        android:contentDescription="@string/cd_check_typed_answer"
+        android:contentDescription="@string/fragmentFlipStringTypeAnswer_imvCheckAnswer_cd"
         android:rotation="180"
-        android:id="@+id/btn_check_answer"
+        android:id="@+id/imv_check_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_move"
         android:layout_gravity="end"
-        app:layout_constraintEnd_toEndOf="@id/edt_type_answer"
-        app:layout_constraintBottom_toBottomOf="@id/edt_type_answer"
+        app:layout_constraintEnd_toEndOf="@id/edt_typeAnswerString"
+        app:layout_constraintBottom_toBottomOf="@id/edt_typeAnswerString"
         android:padding="10dp"
         android:layout_weight="1"/>
 

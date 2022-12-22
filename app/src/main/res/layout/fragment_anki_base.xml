@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/top_con_lay">
+    >
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/anki_frag_container_view"
+        android:id="@+id/fcv_fragmentAnkiBase"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -15,7 +15,7 @@
 
 
     <FrameLayout
-        android:id="@+id/frameLay_anki_setting"
+        android:id="@+id/fl_pwAnkiSetting"
         android:visibility="gone"
         android:layout_width="0dp"
         android:layout_height="400dp"
@@ -27,14 +27,14 @@
         android:background="@drawable/rectangle_green_stroke"
         android:backgroundTint="@color/white"
         android:elevation="10dp">
-        <include android:id="@+id/binding_setting"
-            layout="@layout/anki_home_frag_popup_anki_setting_base"/>
+        <include android:id="@+id/binding_pwAnkiSetting"
+            layout="@layout/pw_anki_setting"/>
     </FrameLayout>
     <View
         style="@style/BackGroundViewStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/view_anki_frag_con_cover" />
+        android:id="@+id/v_anki_frag_con_cover" />
 
 
 

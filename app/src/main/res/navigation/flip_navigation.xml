@@ -6,7 +6,7 @@
     app:startDestination="@id/flip_string_look_frag">
     <fragment android:id="@+id/flip_string_look_frag"
         android:name="com.koronnu.kina.ui.fragment.flipFragCon.FlipStringFrag"
-        tools:layout="@layout/anki_flip_frag_look_string_frag">
+        tools:layout="@layout/fragment_flip_string">
         <argument android:name="front"
             app:argType="boolean"
             android:defaultValue="false"/>
@@ -17,7 +17,7 @@
     </fragment>
     <fragment android:id="@+id/flip_string_type_answer_frag"
         android:name="com.koronnu.kina.ui.fragment.flipFragCon.FlipStringTypeAnswerFrag"
-        tools:layout="@layout/anki_flip_frag_type_answer_string_frag">
+        tools:layout="@layout/fragment_flip_string_type_answer">
         <argument android:name="answer_is_back"
             app:argType="boolean"/>
         <argument android:name="cardId"
@@ -26,7 +26,7 @@
     </fragment>
     <fragment android:id="@+id/flip_string_check_answer_frag"
         android:name="com.koronnu.kina.ui.fragment.flipFragCon.FlipStringCheckAnswerFrag"
-        tools:layout="@layout/anki_flip_frag_check_answer_string_frag">
+        tools:layout="@layout/fragment_flip_string_check_answer">
         <argument android:name="answer_is_back"
             app:argType="boolean"/>
         <argument

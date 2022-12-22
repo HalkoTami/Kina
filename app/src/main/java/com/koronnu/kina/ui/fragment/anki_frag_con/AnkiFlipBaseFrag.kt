@@ -24,7 +24,7 @@ import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.customClasses.normalClasses.AutoFlip
 import com.koronnu.kina.customClasses.normalClasses.Progress
-import com.koronnu.kina.databinding.AnkiFlipFragBaseBinding
+import com.koronnu.kina.databinding.FragmentAnkiFlipBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
@@ -34,7 +34,7 @@ import java.util.Date
 
 class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
 
-    private var _binding: AnkiFlipFragBaseBinding? = null
+    private var _binding: FragmentAnkiFlipBaseBinding? = null
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
     private val ankiBaseViewModel: AnkiBaseViewModel by activityViewModels()
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
@@ -54,7 +54,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = AnkiFlipFragBaseBinding.inflate(inflater, container, false)
+        _binding = FragmentAnkiFlipBaseBinding.inflate(inflater, container, false)
 
 
 

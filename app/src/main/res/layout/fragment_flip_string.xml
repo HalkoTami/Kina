@@ -3,27 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/top_con_lay"
     android:padding="10dp">
-
-
-
     <TextView
         style="@style/CardTitleTxvStyle"
-        android:id="@+id/txv_title"
+        android:id="@+id/txv_flipStringCardTitle"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
     <TextView
         style="@style/CardContentTxvStyle"
         android:layout_marginTop="10dp"
-        android:id="@+id/txv_content"
+        android:id="@+id/txv_flipStringCardContent"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/txv_title"
+        app:layout_constraintTop_toBottomOf="@id/txv_flipStringCardTitle"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

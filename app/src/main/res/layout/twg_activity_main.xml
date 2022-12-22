@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--TODO:Rename View Ids In Rules-->
+<!--TODO:Rename String res In Rules-->
+<!--TODO:Rename included Layout titles in Rules-->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
@@ -8,7 +11,6 @@
             type="com.koronnu.kina.ui.viewmodel.MainViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bnv_root"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:padding="5dp"
@@ -22,13 +24,13 @@
             app:layout_constraintWidth_percent="0.2"
             android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/bnv_imv_add"
+            app:layout_constraintEnd_toStartOf="@id/imv_createNewItems"
             android:orientation="vertical"
             android:gravity="center">
             <ImageView
                 isSelected="@{mainViewModel.mainActivityChildFragment==MainFragment.Library}"
-                android:contentDescription="@string/title_tab_library"
-                android:id="@+id/bnv_imv_tab_library"
+                android:contentDescription="@string/cd_tab_library"
+                android:id="@+id/imv_tabLibrary"
                 android:layout_height="0dp"
                 android:layout_weight="@integer/twg_imvVerticalWeight"
                 android:layout_width="wrap_content"
@@ -36,9 +38,9 @@
                 />
             <TextView
                 style="@style/TxvUniformSmallStyle"
-                android:id="@+id/bnv_txv_tab_library"
+                android:id="@+id/txv_tabLibrary"
                 android:gravity="center"
-                android:text="@string/tab_title_library"
+                android:text="@string/widgetTwgActivityMain_txvTabLibrary_text"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="@integer/twg_txvVerticalWeight"
@@ -47,8 +49,8 @@
 
         <ImageView
             android:onClick="@{()->mainViewModel.editFileViewModel.setBottomMenuVisible(true)}"
-            android:contentDescription="@string/title_tab_create"
-            android:id="@+id/bnv_imv_add"
+            android:contentDescription="@string/cd_btn_add_item"
+            android:id="@+id/imv_createNewItems"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/ll_tabLibrary"
             app:layout_constraintEnd_toStartOf="@id/ll_tabLAnki"
@@ -62,14 +64,14 @@
             android:layout_width="0dp"
             app:layout_constraintWidth_percent="0.2"
             android:layout_height="match_parent"
-            app:layout_constraintStart_toEndOf="@id/bnv_imv_add"
+            app:layout_constraintStart_toEndOf="@id/imv_createNewItems"
             app:layout_constraintEnd_toEndOf="parent"
             android:orientation="vertical"
             android:gravity="center">
             <ImageView
                 isSelected="@{mainViewModel.mainActivityChildFragment==MainFragment.Anki}"
-                android:contentDescription="@string/title_tab_anki"
-                android:id="@+id/bnv_imv_tab_anki"
+                android:contentDescription="@string/cd_tab_anki"
+                android:id="@+id/imv_tabAnki"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="@integer/twg_imvVerticalWeight"
@@ -77,11 +79,11 @@
                 />
             <TextView
                 style="@style/TxvUniformSmallStyle"
-                android:id="@+id/bnv_txv_tab_anki"
+                android:id="@+id/txv_tabAnki"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="@integer/twg_txvVerticalWeight"
-                android:text="@string/tab_title_anki"
+                android:text="@string/widgetTwgActivityMain_txvTabAnki_text"
                 />
         </androidx.appcompat.widget.LinearLayoutCompat>
 

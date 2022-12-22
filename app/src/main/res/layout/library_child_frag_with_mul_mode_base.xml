@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!--TODO:Rename View Ids In Rules-->
+<!--TODO:Rename String res In Rules-->
+<!--TODO:Rename included Layout titles in Rules-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,7 +12,7 @@
 
     <FrameLayout
         style="@style/TopBarFrameLayStyle"
-        android:id="@+id/frameLay_top_bar"
+        android:id="@+id/fl_tpbAnkiBox"
         android:layout_width="match_parent"
         android:layout_height="@dimen/topBar_height"
 
@@ -26,7 +28,7 @@
     </FrameLayout>
     <FrameLayout
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/frameLay_top_bar"
+        app:layout_constraintTop_toBottomOf="@id/fl_tpbAnkiBox"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/frameLay_multi_mode_menu"
         android:layout_width="wrap_content"
@@ -47,7 +49,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_ancestors_height"
-        app:layout_constraintTop_toBottomOf="@id/frameLay_top_bar"
+        app:layout_constraintTop_toBottomOf="@id/fl_tpbAnkiBox"
         app:layout_constraintWidth_percent="0.6">
         <include android:id="@+id/ancestors_binding"
             layout="@layout/library_frag_top_bar_ancestors"/>

@@ -156,7 +156,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository,
     }
     private fun doAfterItemsMovedToFile(){
         setPopUpVisible(false)
-        makeToastFromVM( resources.getString(R.string.toast_AfteritemMovedtoFile,getFileMoveTo.title))
+        makeToastFromVM( resources.getString(R.string.toast_AfterItemMovedToFile,getFileMoveTo.title))
         libraryViewModel.returnLibraryNavCon()?.popBackStack()
         fileMoveToChildrenFiles!!.removeObserver(fileMoveToChildrenObserver)
         doAfterDataCollected = { }

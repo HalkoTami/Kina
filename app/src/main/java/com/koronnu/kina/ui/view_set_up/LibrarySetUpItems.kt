@@ -44,7 +44,7 @@ class LibrarySetUpItems{
             searchRV.layoutManager = LinearLayoutManager(context)
             searchRV.isNestedScrollingEnabled = true
         }
-        binding.frameLayTopBar.addView(topBarView)
+        binding.flTpbAnkiBox.addView(topBarView)
         setUpSearchRV()
         setUpPlaneLibRV()
     }
@@ -69,13 +69,6 @@ class LibrarySetUpItems{
     }
     fun changeStringBtnVisibility(rv: RecyclerView, multiMode:Boolean){
         rv.children.iterator().forEach { view ->
-            arrayOf(
-                view.findViewById<FrameLayout>(R.id.btn_edt_front),
-                view.findViewById(R.id.btn_edt_back),
-                )
-                .onEach {
-                    it.visibility = if(multiMode)View.VISIBLE else View.GONE
-                }
             view.findViewById<ImageView>(R.id.btn_add_new_card).visibility =
                 if(multiMode) View.INVISIBLE else View.VISIBLE
         }
@@ -111,7 +104,7 @@ class LibrarySetUpItems{
     }
 
     fun setUpRVStringCardBinding(
-        stringBinding: LibraryFragRvItemCardStringBinding,
+        stringBinding: ListItemLibraryRvCardStringBinding,
         stringData: StringData?
     ){
         val resources = stringBinding.root.resources
@@ -124,7 +117,7 @@ class LibrarySetUpItems{
 
     }
     fun returnStringCardTextViews(
-        stringBinding: LibraryFragRvItemCardStringBinding,
+        stringBinding: ListItemLibraryRvCardStringBinding,
     ):Array<TextView>{
 
         return arrayOf(

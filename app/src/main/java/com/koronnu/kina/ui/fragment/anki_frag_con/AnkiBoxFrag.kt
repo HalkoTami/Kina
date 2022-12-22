@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
-import com.koronnu.kina.databinding.AnkiHomeFragBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
@@ -21,13 +20,14 @@ import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.customClasses.normalClasses.AnkiBoxTabData
 import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.databinding.FragmentAnkiBoxBinding
 import com.koronnu.kina.ui.observer.CommonOb
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.viewmodel.*
 
 class AnkiBoxFrag  : Fragment(),View.OnClickListener {
 
-    private var _binding: AnkiHomeFragBaseBinding? = null
+    private var _binding: FragmentAnkiBoxBinding? = null
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
     private val ankiBaseViewModel:AnkiBaseViewModel by activityViewModels()
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
@@ -44,31 +44,32 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
     ): View {
 
         fun setUpLateInitVars(){
-            _binding =  AnkiHomeFragBaseBinding.inflate(inflater, container, false)
-            val frag = childFragmentManager.findFragmentById(binding.fragConAnkiBoxTab.id) as NavHostFragment
+            _binding =  FragmentAnkiBoxBinding.inflate(inflater, container, false)
+            val frag = childFragmentManager.findFragmentById(binding.fcvFragmentAnkiBox.id) as NavHostFragment
             ankiBoxNavCon = frag.navController
         }
         fun changeSelectedTab(select: AnkiBoxFragments, before: AnkiBoxFragments?){
             fun getTextView(tab: AnkiBoxFragments): TextView {
                 return when(tab){
-                    AnkiBoxFragments.AllFlashCardCovers-> binding.tabAllFlashCardCoverToAnkiBox
-                    AnkiBoxFragments.Library -> binding.tabLibraryToAnkiBox
-                    AnkiBoxFragments.Favourites -> binding.tabFavouritesToAnkiBox
+                    AnkiBoxFragments.AllFlashCardCovers-> binding.txvTwgFragmentAnkiBoxTabAllFlashCardCover
+                    AnkiBoxFragments.Library -> binding.txvTwgFragmentAnkiBoxTabLibrary
+                    AnkiBoxFragments.Favourites -> binding.txvTwgFragmentAnkiBoxTabAnkiBoxFavourite
                 }
             }
             getTextView(select).isSelected = true
-            binding.linLayTabChange.tag = select
+            binding.llTwgFragmentAnkiBox.tag = select
             if(before!=null&&before!=select)
                 getTextView(before).isSelected = false
 
         }
         fun addCL(){
             binding.apply {
-                arrayOf(tabFavouritesToAnkiBox,
-                    tabLibraryToAnkiBox,
-                    tabAllFlashCardCoverToAnkiBox,
-                    btnStartAnki,btnAddToFavouriteAnkiBox,
-                    topBarBinding.btnSetting
+                arrayOf(txvTwgFragmentAnkiBoxTabAnkiBoxFavourite,
+                    txvTwgFragmentAnkiBoxTabLibrary,
+                    txvTwgFragmentAnkiBoxTabAllFlashCardCover,
+                    btnStartAnkiFromAnkiBox,
+                    imvAddAnkiBoxContentToFavourite,
+                    bindingTpbAnkiBox.btnSetting
                     ).onEach {
                     it.setOnClickListener(this@AnkiBoxFrag)
                 }
@@ -113,10 +114,10 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
             }
         }
         val ankiBoxItemsObserver = Observer<MutableList<Card>>{
-            binding.btnAddToFavouriteAnkiBox.isSelected = checkFavouriteExistsList.contains(it)
-            viewSetUp.setUpAnkiBoxRing(it,binding.ringBinding)
-            binding.btnStartAnki.text =
-                requireActivity().resources.getString(if(it.isEmpty()) R.string.btnStartAnki_withoutSelect else R.string.btnStartAnki_deafult)
+            binding.imvAddAnkiBoxContentToFavourite.isSelected = checkFavouriteExistsList.contains(it)
+            viewSetUp.setUpAnkiBoxRing(it,binding.bindingPgbAnkiBoxDataRemembered)
+            binding.btnStartAnkiFromAnkiBox.text =
+                requireActivity().resources.getString(if(it.isEmpty()) R.string.btnStartAnki_withoutSelect else R.string.btnStartAnki_default)
         }
 
 
@@ -163,7 +164,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
     override fun onClick(p0: View?) {
         binding.apply {
             when (p0) {
-                btnStartAnki -> {
+                btnStartAnkiFromAnkiBox -> {
                     ankiBoxViewModel.apply {
                         if (returnAnkiBoxItems().isEmpty()) ankiBoxViewModel.setModeCardsNotSelected(
                             true
@@ -172,18 +173,18 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
                     ankiBaseViewModel.setSettingVisible(false)
                     ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.Flip)
                 }
-                btnAddToFavouriteAnkiBox -> {
-                    if (btnAddToFavouriteAnkiBox.isSelected.not() && ankiBoxViewModel.returnAnkiBoxItems()
+                imvAddAnkiBoxContentToFavourite -> {
+                    if (imvAddAnkiBoxContentToFavourite.isSelected.not() && ankiBoxViewModel.returnAnkiBoxItems()
                             .isEmpty().not()
                     ) {
                         editFileViewModel.onClickCreateFile(FileStatus.ANKI_BOX_FAVOURITE)
                     } else return
 
                 }
-                topBarBinding.btnSetting -> ankiBaseViewModel.setSettingVisible(true)
-                tabAllFlashCardCoverToAnkiBox -> ankiBoxViewModel.changeTab(AnkiBoxFragments.AllFlashCardCovers)
-                tabLibraryToAnkiBox -> ankiBoxViewModel.changeTab(AnkiBoxFragments.Library)
-                tabFavouritesToAnkiBox -> ankiBoxViewModel.changeTab(AnkiBoxFragments.Favourites)
+                bindingTpbAnkiBox.btnSetting -> ankiBaseViewModel.setSettingVisible(true)
+                txvTwgFragmentAnkiBoxTabAllFlashCardCover -> ankiBoxViewModel.changeTab(AnkiBoxFragments.AllFlashCardCovers)
+                txvTwgFragmentAnkiBoxTabLibrary -> ankiBoxViewModel.changeTab(AnkiBoxFragments.Library)
+                txvTwgFragmentAnkiBoxTabAnkiBoxFavourite -> ankiBoxViewModel.changeTab(AnkiBoxFragments.Favourites)
             }
         }
     }

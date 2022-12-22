@@ -61,7 +61,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             mainRV.layoutManager = LinearLayoutManager(requireActivity())
             mainRV.isNestedScrollingEnabled = true
 
-            binding.frameLayTopBar.addView(topBarBinding.root)
+            binding.flTpbAnkiBox.addView(topBarBinding.root)
             topBarBinding.imvFileMoveToStatus.setImageDrawable(
                 AppCompatResources.getDrawable(requireActivity(),
                     if(flashcard) R.drawable.icon_move_to_flashcard_cover else R.drawable.icon_move_to_folder

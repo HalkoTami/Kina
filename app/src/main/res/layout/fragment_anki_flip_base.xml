@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--TODO:Rename View Ids In Rules-->
+<!--TODO:Rename String res In Rules-->
+<!--TODO:Rename included Layout titles in Rules-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -16,17 +19,17 @@
         app:layout_constraintStart_toStartOf="parent">
         <include
             android:id="@+id/confirm_end_binding"
-            layout="@layout/anki_flip_popup_confirm_end"/>
+            layout="@layout/widget_pw_confirm_end_anki_flip"/>
     </FrameLayout>
     <FrameLayout
         style="@style/TopBarFrameLayStyle"
-        android:id="@+id/frameLay_top_bar"
+        android:id="@+id/fl_tpbAnkiBox"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         >
         <include
             android:id="@+id/top_binding"
-            layout="@layout/anki_flip_frag_top_bar"/>
+            layout="@layout/widget_tpb_fragment_anki_flip_base"/>
     </FrameLayout>
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragConView_flip"
@@ -34,7 +37,7 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
         app:navGraph="@navigation/flip_navigation"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/frameLay_top_bar"
+        app:layout_constraintTop_toBottomOf="@id/fl_tpbAnkiBox"
         app:layout_constraintBottom_toTopOf="@id/linLay_flip_bottom"
         >
     </androidx.fragment.app.FragmentContainerView>
@@ -78,7 +81,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/icon_move"/>
             <ImageView
-                android:contentDescription="@string/add_new_card"
+                android:contentDescription="@string/cd_btn_add_card"
                 android:id="@+id/btn_add_card"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="0dp"

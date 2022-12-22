@@ -2,6 +2,7 @@ package com.koronnu.kina.ui.viewmodel
 
 import android.view.LayoutInflater
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.koronnu.kina.activity.MainActivity
@@ -64,7 +65,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
         editFileViewModel.observeLiveData(lifecycleOwner)
     }
     private var _mainActivityBinding:ActivityMainBinding? = null
-    private val bnvBinding      get() =  mainActivityBinding.bindingWidgetTwgActivityMain
+    private val bnvBinding      get() =  mainActivityBinding.bindingTwgActivityMain
 
 
     fun setMainActivityBinding(mainActivityBinding: ActivityMainBinding){
@@ -80,7 +81,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
         setListeners()
     }
     private fun setListeners(){
-        val topConLay = mainActivityBinding.mainTopConstrainLayout
+        val topConLay = mainActivityBinding.root as ConstraintLayout
         val keyboardListener = object : KeyboardListener(topConLay){}.apply{
             onKeyBoardAppear = { setBnvVisibility(false) }
             onKeyBoardDisappear = {setBnvVisibility(checkBnvVisible())}

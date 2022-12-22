@@ -12,16 +12,16 @@ import androidx.fragment.app.activityViewModels
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.DateTimeActions
 import com.koronnu.kina.actions.NavigationActions
-import com.koronnu.kina.databinding.AnkiFlipFragCompletedBinding
 import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.databinding.FragmentAnkiFlipCompletedBinding
 import com.koronnu.kina.ui.viewmodel.AnkiBaseViewModel
 import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import java.util.*
 
 class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
-    private var _binding: AnkiFlipFragCompletedBinding? = null
+    private var _binding: FragmentAnkiFlipCompletedBinding? = null
     private val binding get() = _binding!!
     private val ankiBaseViewModel: AnkiBaseViewModel by activityViewModels()
     private val ankiFlipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
@@ -33,7 +33,7 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        _binding = AnkiFlipFragCompletedBinding.inflate(inflater, container, false)
+        _binding = FragmentAnkiFlipCompletedBinding.inflate(inflater, container, false)
         Animation().appearAlphaAnimation(binding.root,true,1f){}.start()
         flipRoundSharedPref = requireActivity().getSharedPreferences(resources.getString(R.string.sp_title_flipRound),Context.MODE_PRIVATE)
 
@@ -50,8 +50,8 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
         binding.txvNewlyRememberedCardAmount.text =
             ankiFlipBaseViewModel.getNewlyRememberedCardAmount().toString()
         binding.apply {
-            arrayOf(linLayButtonEndFlip,
-                frameLayButtonFlipStartAgain).onEach {
+            arrayOf(llBtnEndFlip,
+                flBtnFlipStartAgain).onEach {
                 it.setOnClickListener(this@AnkiFlipCompleteFrag)
             }
         }
@@ -105,8 +105,8 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
     override fun onClick(v: View?) {
         binding.apply {
             when(v){
-                linLayButtonEndFlip -> onClickEndFlip()
-                frameLayButtonFlipStartAgain -> onClickStartAgain()
+                llBtnEndFlip -> onClickEndFlip()
+                flBtnFlipStartAgain -> onClickStartAgain()
 
             }
         }

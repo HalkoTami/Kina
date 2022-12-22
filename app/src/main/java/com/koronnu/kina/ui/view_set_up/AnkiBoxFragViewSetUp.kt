@@ -30,14 +30,12 @@ class AnkiBoxFragViewSetUp() {
 
 
 
-    fun setUpRVCard(cardBinding: AnkiHomeFragRvItemCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxViewModel){
+    fun setUpRVCard(cardBinding: ListItemAnkiBoxRvCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxViewModel){
         val resources = cardBinding.root.context.resources
-        LibrarySetUpItems().setUpRVStringCardBinding(cardBinding.stringContentBinding,card.stringData)
-        cardBinding.stringContentBinding.apply {
-            arrayOf(btnEdtFront,btnEdtBack).onEach { it.visibility= View.GONE }
-        }
+        LibrarySetUpItems().setUpRVStringCardBinding(cardBinding.bindingListItemCardString,card.stringData)
+
         fun setOnCL(){
-            arrayOf(cardBinding.checkboxAnkiRv,).onEach { it.setOnClickListener(AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
+            arrayOf(cardBinding.imvChbIsInAnkiBox,).onEach { it.setOnClickListener(AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
         }
         fun getStringByRemembered(remembered:Boolean):String{
             return resources.getString(if(remembered) R.string.remembered else R.string.not_remembered)
@@ -48,7 +46,7 @@ class AnkiBoxFragViewSetUp() {
         }
         setOnCL()
         ankiBoxVM.ankiBoxItems.observe(lifecycleOwner){
-            cardBinding.checkboxAnkiRv.isSelected = it.contains(card)
+            cardBinding.imvChbIsInAnkiBox.isSelected = it.contains(card)
         }
         ankiBoxVM.getCardActivityFromDB(card.id).observe(lifecycleOwner){
             val lastLooked =it.findLast { it.activityStatus == ActivityStatus.CARD_OPENED }
@@ -76,7 +74,7 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
 
 
 
-    fun setUpRVFileBinding(binding:AnkiHomeFragRvItemFileBinding,
+    fun setUpRVFileBinding(binding:ListItemAnkiBoxRvFileBinding,
                            file: File, tab: AnkiBoxFragments,
                            ankiBoxVM: AnkiBoxViewModel,
                            context:Context,
@@ -142,14 +140,14 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
 
             binding.apply {
                 ankiBoxVM.ankiBoxFileIds.observe(lifecycleOwner){
-                    checkboxAnkiRv.isSelected = (it.contains(file.fileId))
+                    imvChbIsInAnkiBox.isSelected = (it.contains(file.fileId))
                 }
                 imvFileType.setImageDrawable(
                     getDraw.getFileIconByFile(file)
                 )
                 txvFileTitle.text = file.title
 
-                arrayOf(root,checkboxAnkiRv).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
+                arrayOf(root,imvChbIsInAnkiBox).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
                     file,
                     ankiBoxVM = ankiBoxVM,
                     binding = binding,
@@ -183,7 +181,7 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         view.translationX = dx
         view.translationY =dy
     }
-    fun setUpAnkiBoxRing(list: MutableList<Card>,binding: ProgressBarRememberedRingBinding){
+    fun setUpAnkiBoxRing(list: MutableList<Card>,binding: PgbAnkiBoxDataRememberedBinding){
         val resources = binding.root.resources
         val rememberedPercentage = getRememberedPercentage(list)
         val rememberedCardsSize = list.filter { it.remembered == true }.size

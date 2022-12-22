@@ -76,10 +76,9 @@ class LibFragSearchRVListAdapter(
                     fileBinding.root
                 }
                 is Card -> {
-                    val stringCardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
+                    val stringCardBinding = ListItemLibraryRvCardStringBinding.inflate(LayoutInflater.from(context))
                     checkMatchTxv.addAll(viewSetUp.returnStringCardTextViews(stringCardBinding))
                     viewSetUp.setUpRVStringCardBinding(stringCardBinding, item.stringData, )
-                    addL.cardRVStringAddCL(stringCardBinding,item,createCardViewModel,stringCardViewModel,mainNavController)
                     binding.btnAddNewCard.visibility = View.VISIBLE
                     stringCardBinding.root
                 }

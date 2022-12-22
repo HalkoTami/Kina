@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/top_con_lay"
     android:padding="10dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -12,7 +11,7 @@
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHeight_percent="0.15"
-        android:id="@+id/linLay_answer_result"
+        android:id="@+id/ll_answer_result"
         android:padding="5dp">
         <ImageView
             android:id="@+id/imv_character_typed_answer_reaction"
@@ -23,15 +22,15 @@
             tools:ignore="ContentDescription" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-           >
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            >
 
             <TextView
                 android:id="@+id/txv_speak_bubble_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/imv_speak_bubble_polygon"
+                app:layout_constraintStart_toEndOf="@id/v_speak_bubble_polygon"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:textSize="11sp"
@@ -45,7 +44,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/txv_speak_bubble_content"
-                android:id="@+id/imv_speak_bubble_polygon"
+                android:id="@+id/v_speak_bubble_polygon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:background="@drawable/speak_bubble_polygon"
@@ -59,13 +58,13 @@
             android:layout_marginEnd="20dp"
             android:background="@drawable/gray_stroke_rectangle">
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/linLay_in_row"
+                android:id="@+id/ll_in_row"
                 android:layout_width="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:gravity="center_vertical"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@id/linLay_result_data"
+                app:layout_constraintBottom_toTopOf="@id/ll_result_data"
                 app:layout_constraintHeight_percent="0.3"
                 app:layout_constraintWidth_percent="0.8"
 
@@ -87,17 +86,17 @@
                     android:layout_height="match_parent" />
             </androidx.appcompat.widget.LinearLayoutCompat>
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/linLay_result_data"
+                android:id="@+id/ll_result_data"
                 android:layout_width="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintWidth_percent="0.8"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/linLay_in_row">
+                app:layout_constraintTop_toBottomOf="@id/ll_in_row">
                 <ProgressBar
                     android:layout_gravity="center_vertical"
-                    android:id="@+id/progressbar_answer_correct"
+                    android:id="@+id/pgb_answer_correct"
                     android:layout_width="0dp"
                     android:layout_weight="8"
                     android:layout_height="15dp"
@@ -129,9 +128,9 @@
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/lineLay_correct_answer"
-        app:layout_constraintTop_toBottomOf="@id/linLay_answer_result"
-        app:layout_constraintBottom_toTopOf="@id/linLay_your_answer"
+        android:id="@+id/ll_correct_answer"
+        app:layout_constraintTop_toBottomOf="@id/ll_answer_result"
+        app:layout_constraintBottom_toTopOf="@id/ll_your_answer"
         android:background="@drawable/gray_stroke_rectangle"
         android:layout_marginBottom="10dp"
         android:layout_gravity="center_vertical"
@@ -140,9 +139,8 @@
         android:orientation="vertical"
         android:padding="10dp">
         <TextView
-            android:text="@string/side_back"
             style="@style/CardTitleTxvCheckAnswerStyle"
-            android:id="@+id/txv_title" />
+            android:id="@+id/txv_correctAnswerCardTitle" />
         <TextView
 
             style="@style/CardContentTxvCheckAnswerStyle"
@@ -150,27 +148,28 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
     <ImageView
-        android:id="@+id/btn_flip"
+        android:id="@+id/imv_flipCorrectAnswerSide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/lineLay_correct_answer"
-        app:layout_constraintEnd_toEndOf="@id/lineLay_correct_answer"
+        app:layout_constraintBottom_toBottomOf="@id/ll_correct_answer"
+        app:layout_constraintEnd_toEndOf="@id/ll_correct_answer"
         android:src="@drawable/icon_flashcard_flat"
         android:alpha="0.3"
         android:layout_margin="10dp"
-        android:contentDescription="@string/cd_flip_to_other_side"/>
+        android:contentDescription="@string/fragmentFlipStringCheckAnswer_imvFlipCorrectAnswerSide_cd"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        app:layout_constraintTop_toBottomOf="@id/lineLay_correct_answer"
+        app:layout_constraintTop_toBottomOf="@id/ll_correct_answer"
         android:background="@drawable/gray_stroke_rectangle"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/linLay_your_answer"
+        android:id="@+id/ll_your_answer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
         android:padding="10dp">
         <TextView
-            android:text="@string/your_answer"
+            android:id="@+id/txv_llYourAnswerTitle"
+            android:text="@string/fragmentFlipStringCheckAnswer_txvLlYourAnswerTitle_text"
             style="@style/CardTitleTxvCheckAnswerStyle" />
         <FrameLayout
             android:layout_width="match_parent"

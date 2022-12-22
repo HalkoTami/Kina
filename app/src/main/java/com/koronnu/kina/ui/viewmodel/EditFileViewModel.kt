@@ -80,7 +80,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
     private val ankiBoxViewModel    get() = mainViewModel.ankiBaseViewModel.ankiBoxViewModel
     private val createCardViewModel get() = mainViewModel.createCardViewModel
     private val mainActivityBinding  get() = mainViewModel.mainActivityBinding
-    private val editFilePopUpBinding get() = mainActivityBinding.bindingWidgetPwEditFile
+    private val editFilePopUpBinding get() = mainActivityBinding.bindingPwEditFile
     private val colorPalletBinding  get() = editFilePopUpBinding.colPaletBinding
     private val parentOpenedFile    get() = mainViewModel.libraryBaseViewModel.returnParentFile()
     private val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel
@@ -142,7 +142,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
         txvHintText.value = when(mode){
             EditingMode.New -> resources.getString(when(fileToCreate.fileStatus){
                 FileStatus.FOLDER               ->  R.string.editFilePopUpBin_HintTxv_createNewFolder
-                FileStatus.ANKI_BOX_FAVOURITE   ->  R.string.editFilePopUpBin_HintTxv_createNewAnkiBoxfavourite
+                FileStatus.ANKI_BOX_FAVOURITE   ->  R.string.editFilePopUpBin_HintTxv_createNewAnkiBoxFavourite
                 FileStatus.FLASHCARD_COVER      ->  R.string.editFilePopUpBin_HintTxv_createNewFlashCard
                 else  -> throw IllegalArgumentException()
             })
@@ -181,7 +181,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
     }
 
     private fun setTxvParentFileTitleText(){
-        txvParentFileTitleText.value = parentOpenedFile?.title ?: resources.getString(R.string.title_home)
+        txvParentFileTitleText.value = parentOpenedFile?.title ?: resources.getString(R.string.txvHome)
     }
     fun setColPalletStatus( colorPalletStatus: ColorStatus){
         _colPalletStatus.value = colorPalletStatus

@@ -102,10 +102,9 @@ class LibFragPlaneRVListAdapter(
                     libRVButtonsAddCL(item)
                 }
                 is Card -> {
-                    val stringCardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
+                    val stringCardBinding = ListItemLibraryRvCardStringBinding.inflate(LayoutInflater.from(context))
                     viewSetUp.setUpRVStringCardBinding(stringCardBinding, item.stringData, )
 
-                    addL.cardRVStringAddCL(stringCardBinding,item,createCardViewModel,stringCardViewModel,mainNavController)
 //                    addCardCL(item)
                     libRVButtonsAddCL(item)
                     binding.btnAddNewCard.visibility = View.VISIBLE

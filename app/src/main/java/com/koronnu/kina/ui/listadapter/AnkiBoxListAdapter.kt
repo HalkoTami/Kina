@@ -46,28 +46,28 @@ class AnkiBoxListAdapter(
 
         fun bind(item: Any, ){
 
-            binding.frameLayAnkiBoxRvContent.removeAllViews()
+            binding.flAnkiBoxRvContent.removeAllViews()
             val content =
             when(item){
                 is File -> {
-                    val fileBinding = AnkiHomeFragRvItemFileBinding.inflate(LayoutInflater.from(context))
+                    val fileBinding = ListItemAnkiBoxRvFileBinding.inflate(LayoutInflater.from(context))
                     AnkiBoxFragViewSetUp().setUpRVFileBinding(fileBinding, item,tab!!, ankiBoxVM = ankiBoxFragViewModel ,context,lifecycleOwner)
-                    binding.frameLayAnkiBoxRvContent.layoutParams.height = context.resources.getDimensionPixelSize(
+                    binding.flAnkiBoxRvContent.layoutParams.height = context.resources.getDimensionPixelSize(
                         R.dimen.anki_box_rv_item_height)
-                    binding.frameLayAnkiBoxRvContent.requestLayout()
+                    binding.flAnkiBoxRvContent.requestLayout()
                     fileBinding.root
                 }
                 is Card -> {
-                    val cardBinding = AnkiHomeFragRvItemCardBinding.inflate(LayoutInflater.from(context))
+                    val cardBinding = ListItemAnkiBoxRvCardBinding.inflate(LayoutInflater.from(context))
                     AnkiBoxFragViewSetUp().setUpRVCard(cardBinding,item,lifecycleOwner,ankiBoxFragViewModel)
-                    binding.frameLayAnkiBoxRvContent.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-                    binding.frameLayAnkiBoxRvContent.requestLayout()
-                    changeViewVisibility(cardBinding.checkboxAnkiRv,(tab==null).not())
+                    binding.flAnkiBoxRvContent.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    binding.flAnkiBoxRvContent.requestLayout()
+                    changeViewVisibility(cardBinding.imvChbIsInAnkiBox,(tab==null).not())
                     cardBinding.root
                 }
                 else -> return
             }
-            binding.frameLayAnkiBoxRvContent.addView(content)
+            binding.flAnkiBoxRvContent.addView(content)
 
 
 

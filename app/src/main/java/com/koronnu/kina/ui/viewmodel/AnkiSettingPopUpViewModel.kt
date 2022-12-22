@@ -44,21 +44,20 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
     }
     private val settingSharedPref get() = _settingSharedPref!!
     private val ankiBaseBinding get() = ankiBaseViewModel.ankiFragBaseBinding
-    private val settingBinding  get() = ankiBaseBinding.bindingSetting
-    private val contentBin      get() = settingBinding.bindingSettingContent
+    private val settingBinding  get() = ankiBaseBinding.bindingPwAnkiSetting
 
     private fun doAfterSettingSharedPrefSet(){
 
         val reverseSide =  settingSharedPref.getBoolean(
-            resources.getString(R.string.s_p_anki_setting_reverse_side),false)
+            resources.getString(R.string.sp_anki_setting_reverse_side),false)
         val autoFLip = settingSharedPref.getBoolean(
-            resources.getString(R.string.s_p_anki_setting_auto_flip_active),false)
+            resources.getString(R.string.sp_anki_setting_auto_flip_active),false)
         val typeAnswer = settingSharedPref.getBoolean(
-            resources.getString(R.string.s_p_anki_setting_type_answer),false)
+            resources.getString(R.string.sp_anki_setting_type_answer),false)
         val filterRemembered =  settingSharedPref.getBoolean(
-            resources.getString(R.string.s_p_anki_setting_filter_remembered),false)
+            resources.getString(R.string.sp_anki_setting_filter_remembered),false)
         val autoFlipSec = settingSharedPref.getInt(
-            resources.getString(R.string.s_p_anki_setting_auto_flip_seconds),
+            resources.getString(R.string.sp_anki_setting_auto_flip_seconds),
             AutoFlip().seconds)
         setReverseCardSide(reverseSide)
         setAutoFlip(AutoFlip(autoFLip,autoFlipSec))
@@ -66,14 +65,14 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
         setTypeAnswer(typeAnswer)
     }
     fun setListener(){
-        contentBin.edtAutoFlipSeconds.addTextChangedListener { setAutoFlipSeconds() }
-        ankiBaseBinding.frameLayAnkiSetting         .setOnClickListener(null)
-        contentBin.checkboxFilterCardRememberStatus .setOnClickListener { changeAnkiFilterRememberedActiveStatus() }
-        contentBin.checkboxAutoFlip                 .setOnClickListener { reverseAutoFlipActiveStatus() }
-        contentBin.checkboxReverseSides             .setOnClickListener { changeReverseCardSideActiveStatus() }
-        contentBin.checkboxTypeAnswer               .setOnClickListener { changeTypeAnswerActiveStatus() }
+        settingBinding.edtAutoFlipSeconds.addTextChangedListener { setAutoFlipSeconds() }
+        ankiBaseBinding.flPwAnkiSetting         .setOnClickListener(null)
+        settingBinding.checkboxFilterCardRememberStatus .setOnClickListener { changeAnkiFilterRememberedActiveStatus() }
+        settingBinding.checkboxAutoFlip                 .setOnClickListener { reverseAutoFlipActiveStatus() }
+        settingBinding.checkboxReverseSides             .setOnClickListener { changeReverseCardSideActiveStatus() }
+        settingBinding.checkboxTypeAnswer               .setOnClickListener { changeTypeAnswerActiveStatus() }
         settingBinding.imvCloseSetting              .setOnClickListener { ankiBaseViewModel.setSettingVisible(false) }
-        settingBinding.btnStartAnki                 .setOnClickListener { onClickStartAnki() }
+        settingBinding.btnStartAnkiFromAnkiBox                 .setOnClickListener { onClickStartAnki() }
     }
     fun afterBindingSet(lifecycleOwner: LifecycleOwner,getSharedPref:(int:Int)->SharedPreferences){
         observeLiveData(lifecycleOwner)
@@ -81,7 +80,7 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
     }
     private fun observeLiveData(lifecycleOwner: LifecycleOwner){
         ankiFlipBaseViewModel.ankiFlipItems.observe(lifecycleOwner){
-            if(it.isNotEmpty()) settingBinding.btnStartAnki.isEnabled = true
+            if(it.isNotEmpty()) settingBinding.btnStartAnkiFromAnkiBox.isEnabled = true
         }
     }
 
@@ -113,7 +112,7 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
         }
     }
     private fun getAutoFlipSec():Int{
-        val text = contentBin.edtAutoFlipSeconds.text.toString()
+        val text = settingBinding.edtAutoFlipSeconds.text.toString()
         return if(text.isBlank()) AutoFlip().seconds
         else text.toInt()
     }
@@ -124,10 +123,10 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
         doAfterSetAnkiFilter()
     }
     private fun doAfterSetAnkiFilter(){
-        putBooleanToSP(R.string.s_p_anki_setting_filter_remembered,getAnkiFilter.rememberedFilterActive)
+        putBooleanToSP(R.string.sp_anki_setting_filter_remembered,getAnkiFilter.rememberedFilterActive)
         changeSelectedStateAndAlpha(
-            contentBin.checkboxFilterCardRememberStatus,
-            contentBin.linLayAnkiSettingFilterRemembered,
+            settingBinding.checkboxFilterCardRememberStatus,
+            settingBinding.linLayAnkiSettingFilterRemembered,
             getAnkiFilter.rememberedFilterActive)
     }
     private fun changeAnkiFilterRememberedActiveStatus(){
@@ -158,12 +157,12 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
         setAutoFlip(after())
     }
     private fun doAfterSetAutoFlip(){
-        putBooleanToSP(R.string.s_p_anki_setting_auto_flip_active,getAutoFlip.active)
-        putIntToSP(R.string.s_p_anki_setting_auto_flip_seconds,getAutoFlip.seconds)
+        putBooleanToSP(R.string.sp_anki_setting_auto_flip_active,getAutoFlip.active)
+        putIntToSP(R.string.sp_anki_setting_auto_flip_seconds,getAutoFlip.seconds)
         changeSelectedStateAndAlpha(
-            contentBin.checkboxAutoFlip,
-            contentBin.linLayAnkiSettingAutoFlip,getAutoFlip.active)
-        contentBin.edtAutoFlipSeconds.isEnabled = getAutoFlip.active
+            settingBinding.checkboxAutoFlip,
+            settingBinding.linLayAnkiSettingAutoFlip,getAutoFlip.active)
+        settingBinding.edtAutoFlipSeconds.isEnabled = getAutoFlip.active
 
     }
     val autoFlip:LiveData<AutoFlip> = _autoFlip
@@ -175,10 +174,10 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
         doAfterSetTypeAnswer()
     }
     private fun doAfterSetTypeAnswer(){
-        putBooleanToSP(R.string.s_p_anki_setting_type_answer,getTypeAnswer)
+        putBooleanToSP(R.string.sp_anki_setting_type_answer,getTypeAnswer)
         changeSelectedStateAndAlpha(
-            contentBin.checkboxTypeAnswer,
-            contentBin.linLayAnkiSettingTypeAnswer,getTypeAnswer)
+            settingBinding.checkboxTypeAnswer,
+            settingBinding.linLayAnkiSettingTypeAnswer,getTypeAnswer)
     }
     private fun changeTypeAnswerActiveStatus(){
         val after = getTypeAnswer.not()
@@ -198,9 +197,9 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
     }
     private fun doAfterSetReverseCardSide(){
         changeSelectedStateAndAlpha(
-            contentBin.checkboxReverseSides,
-            contentBin.linLayAnkiSettingReverseSide, getReverseCardSideActive)
-        putBooleanToSP(R.string.s_p_anki_setting_reverse_side,getReverseCardSideActive)
+            settingBinding.checkboxReverseSides,
+            settingBinding.linLayAnkiSettingReverseSide, getReverseCardSideActive)
+        putBooleanToSP(R.string.sp_anki_setting_reverse_side,getReverseCardSideActive)
     }
     val getReverseCardSideActive get() = _reverseCardSide.value!!
 

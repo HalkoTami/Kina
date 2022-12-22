@@ -1,19 +1,19 @@
 package com.koronnu.kina.ui.listener.recyclerview
 
 import android.view.View
-import com.koronnu.kina.databinding.AnkiHomeFragRvItemFileBinding
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.databinding.ListItemAnkiBoxRvFileBinding
 import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
 
 class AnkiBoxFileRVCL(val item: File,
                       private val tab: AnkiBoxFragments,
-                      private val binding:AnkiHomeFragRvItemFileBinding,
+                      private val binding:ListItemAnkiBoxRvFileBinding,
                       val ankiBoxVM:AnkiBoxViewModel,
 ): View.OnClickListener{
     override fun onClick(p0: View?) {
         when(p0){
-            binding.checkboxAnkiRv -> {
+            binding.imvChbIsInAnkiBox -> {
                 if(p0.isSelected){
                     ankiBoxVM.removeFromAnkiBoxFileIds(item.fileId)
                 } else ankiBoxVM.addToAnkiBoxFileIds(listOf(item.fileId))

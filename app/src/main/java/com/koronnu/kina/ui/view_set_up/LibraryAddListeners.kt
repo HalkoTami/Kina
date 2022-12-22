@@ -90,29 +90,6 @@ class LibraryAddListeners(){
 
 
 
-    fun cardRVStringAddCL(binding: LibraryFragRvItemCardStringBinding,
-                          item: Card,
-                          createCardViewModel: CreateCardViewModel,
-                          stringCardViewModel: CardTypeStringViewModel,
-                          mainNavController: NavController
-    ) {
-        binding.apply {
-            arrayOf(
-                btnEdtBack,
-                btnEdtFront,
-            ).onEach {
-                it.setOnClickListener(
-                    LibraryRVStringCardCL(
-                        item = item,
-                        createCardViewModel = createCardViewModel,
-                        stringCardViewModel = stringCardViewModel,
-                        binding = binding,
-                    )
-                )
-            }
-        }
-    }
-
 
 
 

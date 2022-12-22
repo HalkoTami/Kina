@@ -67,7 +67,7 @@ class CardTypeStringFrag : Fragment() {
                         StringFragFocusedOn.BackContent -> showSoftKeyboard(edtBackContent)
                         StringFragFocusedOn.FrontTitle -> showSoftKeyboard(edtFrontTitle)
                         StringFragFocusedOn.BackTitle -> showSoftKeyboard(edtBackTitle)
-                        else -> requireActivity().findViewById<ConstraintLayout>(R.id.main_top_constrainLayout).requestFocus()
+                        else -> binding.root.requestFocus()
                     }
                 }
 

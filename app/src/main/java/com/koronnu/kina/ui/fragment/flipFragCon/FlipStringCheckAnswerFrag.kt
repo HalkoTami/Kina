@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
 import com.koronnu.kina.customClasses.enumClasses.FlipFragments
-import com.koronnu.kina.databinding.AnkiFlipFragCheckAnswerStringFragBinding
+import com.koronnu.kina.databinding.FragmentFlipStringCheckAnswerBinding
 import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.enumclass.ActivityStatus
@@ -23,7 +23,7 @@ import com.koronnu.kina.ui.viewmodel.FlipTypeAndCheckViewModel
 
 class FlipStringCheckAnswerFrag  : Fragment() {
 
-    private var _binding: AnkiFlipFragCheckAnswerStringFragBinding? = null
+    private var _binding: FragmentFlipStringCheckAnswerBinding? = null
     private val args: FlipStringCheckAnswerFragArgs by navArgs()
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
     private val flipTypeAndCheckViewModel: FlipTypeAndCheckViewModel by activityViewModels()
@@ -56,7 +56,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
             binding.imvResultIcon.setImageDrawable(getResultIcon(answerCorrect))
         }
         fun setResultContentNoData(boolean: Boolean){
-            binding.linLayAnswerResult.alpha = if(boolean) 0.5f else 1f
+            binding.llAnswerResult.alpha = if(boolean) 0.5f else 1f
         }
         fun filterChallengedTimes(answerIsBack:Boolean, results:List<ActivityData>):List<ActivityData>{
             val challengeStatus = if(answerIsBack) arrayOf(ActivityStatus.RIGHT_BACK_CONTENT_TYPED,ActivityStatus.WRONG_BACK_CONTENT_TYPED) else
@@ -89,26 +89,26 @@ class FlipStringCheckAnswerFrag  : Fragment() {
             return results.filter { it.activityStatus == if(answerIsBack)ActivityStatus.RIGHT_BACK_CONTENT_TYPED else ActivityStatus.RIGHT_FRONT_CONTENT_TYPED }.size
         }
         fun addCL(){
-            binding.btnFlip.setOnClickListener {
+            binding.imvFlipCorrectAnswerSide.setOnClickListener {
                 val data = ankiFlipBaseViewModel.returnParentCard()?.stringData
-                binding.btnFlip.isSelected = binding.btnFlip.isSelected.not()
-                if(binding.btnFlip.isSelected){
-                    binding.btnFlip.alpha = 1f
-                    binding.txvTitle.text = if(args.answerIsBack)data?.frontTitle ?:resources.getString(R.string.edtFrontTitle_default) else data?.backTitle ?:resources.getString(R.string.edtBackTitle_default)
+                it.isSelected = it.isSelected.not()
+                if(it.isSelected){
+                    it.alpha = 1f
+                    binding.txvCorrectAnswerCardTitle.text = if(args.answerIsBack)data?.frontTitle ?:resources.getString(R.string.edtFrontTitle_default) else data?.backTitle ?:resources.getString(R.string.edtBackTitle_default)
                     binding.txvCorrectAnswer.text = if(args.answerIsBack)data?.frontText else data?.backText
                 } else {
-                    binding.btnFlip.alpha = 0.5f
-                    binding.txvTitle.text = (if(args.answerIsBack)data?.backTitle  else data?.frontTitle )?:resources.getString(R.string.answer)
+                    it.alpha = 0.5f
+                    binding.txvCorrectAnswerCardTitle.text = (if(args.answerIsBack)data?.backTitle  else data?.frontTitle )?:resources.getString(R.string.answer)
                     binding.txvCorrectAnswer.text = if(args.answerIsBack)data?.backText else data?.frontText
                 }
 
             }
         }
-        _binding =  AnkiFlipFragCheckAnswerStringFragBinding.inflate(inflater, container, false)
+        _binding =  FragmentFlipStringCheckAnswerBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val cardFromDBObserver = Observer<Card>{
             ankiFlipBaseViewModel.setParentCard(it)
-            binding.txvTitle.text = (if(args.answerIsBack)it.stringData?.backTitle  else it.stringData?.frontTitle) ?:resources.getString(R.string.answer)
+            binding.txvCorrectAnswerCardTitle.text = (if(args.answerIsBack)it.stringData?.backTitle  else it.stringData?.frontTitle) ?:resources.getString(R.string.answer)
             binding.txvCorrectAnswer.text = if(args.answerIsBack)it.stringData?.backText else it.stringData?.frontText
         }
         val typedAnswersObserver = Observer<MutableMap<Int,String>> {
@@ -128,7 +128,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
                     if(getAnswerCorrect(results.last().activityStatus)) resources.getString(R.string.answer_correct) else resources.getString(R.string.answer_incorrect))
                 val correct = getAnswerCorrectTimes(args.answerIsBack,results)
                 val challenged = getChallengedTimes(args.answerIsBack,results)
-                binding.progressbarAnswerCorrect.progress =
+                binding.pgbAnswerCorrect.progress =
                     (correct/challenged.toDouble()*100).toInt()
                 binding.txvProgressAnswerCorrect.text = resources.getString(R.string.answerCorrectInRowPercentage,(correct/challenged.toDouble()*100).toInt())
             }

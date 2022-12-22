@@ -2,8 +2,6 @@ package com.koronnu.kina.ui.viewmodel
 
 import android.animation.ValueAnimator
 import android.view.View
-import android.widget.FrameLayout
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
 import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.actions.setClickListeners
@@ -25,8 +23,8 @@ class PopUpJumpToGuideViewModel:ViewModel() {
 // mutable LiveData
 
     private lateinit var mainViewModel: MainViewModel
-    private val frameLayout get () = mainViewModel.mainActivityBinding.flJumpToGuide
-    val popupJumpToGuideBinding get() =mainViewModel.mainActivityBinding.bindingWidgetJumpToGuide
+    private val frameLayout get () = mainViewModel.mainActivityBinding.flPwJumpToGuide
+    val popupJumpToGuideBinding get() =mainViewModel.mainActivityBinding.bindingPwJumpToGuide
     private val popUpTextView get() = popupJumpToGuideBinding.txvPopUpJumpToGuide
 
     private val getPopUpJumpToGuideBindingClickableViews:Array<View> get() {
