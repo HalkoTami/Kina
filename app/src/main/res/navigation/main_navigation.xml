@@ -32,7 +32,7 @@
         android:id="@+id/fragmentAnki"
         android:label="@string/nav_label_main_tab_anki"
         android:name="com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFrag"
-        tools:layout="@layout/anki_frag_base">
+        tools:layout="@layout/fragment_anki_base">
 
     </fragment>
 

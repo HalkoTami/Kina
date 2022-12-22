@@ -89,7 +89,7 @@ class AnkiBoxContentFrag  : Fragment() {
             true // default to enabled
         ) {
             override fun handleOnBackPressed() {
-                val ankiNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.anki_frag_container_view).findNavController()
+                val ankiNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_fragmentAnkiBase).findNavController()
                 ankiNavCon.popBackStack()
             }
         }

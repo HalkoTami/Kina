@@ -9,17 +9,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
-import com.koronnu.kina.databinding.AnkiFlipFragLookStringFragBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.customClasses.enumClasses.Count
 import com.koronnu.kina.customClasses.enumClasses.FlipFragments
+import com.koronnu.kina.databinding.FragmentFlipStringBinding
 import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.viewmodel.AnkiSettingPopUpViewModel
 
 
 class FlipStringFrag  : Fragment() {
 
-    private var _binding: AnkiFlipFragLookStringFragBinding? = null
+    private var _binding: FragmentFlipStringBinding? = null
     private val flipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
     private val args: FlipStringFragArgs by navArgs()
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
@@ -34,7 +34,7 @@ class FlipStringFrag  : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding =  AnkiFlipFragLookStringFragBinding.inflate(inflater, container, false)
+        _binding =  FragmentFlipStringBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val cardId = args.cardId
         val front = args.front
@@ -44,12 +44,12 @@ class FlipStringFrag  : Fragment() {
             binding.apply {
                 when(front) {
                     true ->{
-                        txvTitle.text = data?.frontTitle ?:resources.getString(R.string.edtFrontTitle_default)
-                        txvContent.text = data?.frontText
+                        txvFlipStringCardTitle.text = data?.frontTitle ?:resources.getString(R.string.edtFrontTitle_default)
+                        txvFlipStringCardContent.text = data?.frontText
                     }
                     false  -> {
-                        txvTitle.text =data?.backTitle ?:resources.getString(R.string.edtBackTitle_default)
-                        txvContent.text = data?.backText
+                        txvFlipStringCardTitle.text =data?.backTitle ?:resources.getString(R.string.edtBackTitle_default)
+                        txvFlipStringCardContent.text = data?.backText
                     }
                 }
             }

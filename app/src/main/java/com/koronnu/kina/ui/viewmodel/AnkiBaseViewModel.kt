@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import com.koronnu.kina.actions.hideKeyBoard
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
-import com.koronnu.kina.databinding.AnkiFragBaseBinding
+import com.koronnu.kina.databinding.FragmentAnkiBaseBinding
 import com.koronnu.kina.ui.fragment.anki_frag_con.AnkiBoxContentFragDirections
 import com.koronnu.kina.ui.fragment.anki_frag_con.AnkiBoxFragDirections
 import com.koronnu.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFragDirections
@@ -49,14 +49,14 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
         }
     }
 
-    private var _ankiFragBaseBinding:AnkiFragBaseBinding? = null
+    private var _ankiFragBaseBinding:FragmentAnkiBaseBinding? = null
     val ankiFragBaseBinding get() = _ankiFragBaseBinding!!
-    private fun setAnkiFragBaseBinding(ankiFragBaseBinding: AnkiFragBaseBinding){
+    private fun setAnkiFragBaseBinding(ankiFragBaseBinding: FragmentAnkiBaseBinding){
         _ankiFragBaseBinding = ankiFragBaseBinding
         setCL()
     }
 
-    fun onFragmentCreated(ankiFragBaseBinding: AnkiFragBaseBinding,
+    fun onFragmentCreated(ankiFragBaseBinding: FragmentAnkiBaseBinding,
                           lifecycleOwner: LifecycleOwner,
                           getSharedPref:(int:Int)->SharedPreferences,
                           navController: NavController, ){
@@ -71,7 +71,7 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
 
     private fun setCL(){
         ankiSettingPopUpViewModel.setListener()
-        ankiFragBaseBinding.viewAnkiFragConCover.setOnClickListener { setSettingVisible(false) }
+        ankiFragBaseBinding.vAnkiFragConCover.setOnClickListener { setSettingVisible(false) }
     }
 
     private val _activeFragment = MutableLiveData<AnkiFragments>()
@@ -92,10 +92,10 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
         doAfterSetSettingVisible()
     }
     private fun doAfterSetSettingVisible(){
-        arrayOf(ankiFragBaseBinding.frameLayAnkiSetting,ankiFragBaseBinding.viewAnkiFragConCover).onEach {
+        arrayOf(ankiFragBaseBinding.flPwAnkiSetting,ankiFragBaseBinding.vAnkiFragConCover).onEach {
             it.visibility = if(getSettingVisible) View.VISIBLE else View.GONE
         }
-        if(getSettingVisible.not()) hideKeyBoard(ankiFragBaseBinding.bindingSetting.bindingSettingContent.edtAutoFlipSeconds)
+        if(getSettingVisible.not()) hideKeyBoard(ankiFragBaseBinding.bindingPwAnkiSetting.bindingSettingContent.edtAutoFlipSeconds)
     }
     private val getSettingVisible get() = _settingVisible.value!!
 

@@ -9,10 +9,10 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.showKeyBoard
-import com.koronnu.kina.databinding.AnkiFlipFragTypeAnswerStringFragBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.customClasses.enumClasses.FlipFragments
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
+import com.koronnu.kina.databinding.FragmentFlipStringTypeAnswerBinding
 import com.koronnu.kina.ui.listener.KeyboardListener
 import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.viewmodel.FlipTypeAndCheckViewModel
@@ -21,7 +21,7 @@ import com.koronnu.kina.ui.viewmodel.AnkiSettingPopUpViewModel
 
 class FlipStringTypeAnswerFrag  : Fragment() {
 
-    private var _binding: AnkiFlipFragTypeAnswerStringFragBinding? = null
+    private var _binding: FragmentFlipStringTypeAnswerBinding? = null
     private val args: FlipStringTypeAnswerFragArgs by navArgs()
     private val flipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
     private val typeAndCheckViewModel: FlipTypeAndCheckViewModel by activityViewModels()
@@ -36,12 +36,12 @@ class FlipStringTypeAnswerFrag  : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =  AnkiFlipFragTypeAnswerStringFragBinding.inflate(inflater, container, false)
+        _binding =  FragmentFlipStringTypeAnswerBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         fun setUpViewStart(){
             fun addEdtFocusChangeListener(){
-                binding.edtTypeAnswer.setOnFocusChangeListener { view, b ->
+                binding.edtTypeAnswerString.setOnFocusChangeListener { view, b ->
                     when(b){
                         true ->  showKeyBoard(view as EditText,requireActivity())
                         false -> return@setOnFocusChangeListener
@@ -52,14 +52,14 @@ class FlipStringTypeAnswerFrag  : Fragment() {
                 val rootView = binding.root
                 val keyboardListener = object:KeyboardListener(rootView,){
                 }.apply { onKeyBoardAppear = {typeAndCheckViewModel.setKeyBoardVisible(true)
-                    binding.btnCheckAnswer.visibility = View.VISIBLE}
+                    binding.imvCheckAnswer.visibility = View.VISIBLE}
                 onKeyBoardDisappear={typeAndCheckViewModel.setKeyBoardVisible(false)
-                    binding.btnCheckAnswer.visibility = View.GONE}}
+                    binding.imvCheckAnswer.visibility = View.GONE}}
                 keyLis = keyboardListener
                 rootView.viewTreeObserver.addOnGlobalLayoutListener(keyboardListener)
             }
             fun addCL(){
-                binding.btnCheckAnswer.setOnClickListener {
+                binding.imvCheckAnswer.setOnClickListener {
                     val rootView = binding.root
                     rootView.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
                     flipBaseViewModel.flip(NeighbourCardSide.NEXT,ankiSettingPopUpViewModel.getReverseCardSideActive,true)
@@ -70,13 +70,13 @@ class FlipStringTypeAnswerFrag  : Fragment() {
             addKeyBoardListener()
 
             typeAndCheckViewModel.setKeyBoardVisible(true)
-            binding.edtTypeAnswer.requestFocus()
+            binding.edtTypeAnswerString.requestFocus()
         }
         val cardFromDBObserver = Observer<Card>{
             flipBaseViewModel.setParentCard(it)
-            binding.txvFlipTitle.text = if(args.answerIsBack)it.stringData?.frontTitle ?:resources.getString(
+            binding.txvTypeAnswerSideOppositeTitle.text = if(args.answerIsBack)it.stringData?.frontTitle ?:resources.getString(
                 R.string.edtFrontTitle_default) else it.stringData?.backTitle ?:resources.getString(R.string.edtBackTitle_default)
-            binding.txvContent.text = if(args.answerIsBack)it.stringData?.frontText else it.stringData?.backText
+            binding.txvTypeAnswerSideOppositeContent.text = if(args.answerIsBack)it.stringData?.frontText else it.stringData?.backText
         }
         setUpViewStart()
         flipBaseViewModel.onChildFragmentsStart(
@@ -96,7 +96,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding.root.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
-        typeAndCheckViewModel.addAnswer(args.cardId, binding.edtTypeAnswer.editableText.toString())
+        typeAndCheckViewModel.addAnswer(args.cardId, binding.edtTypeAnswerString.editableText.toString())
         typeAndCheckViewModel.checkAnswer(flipBaseViewModel.returnParentCard()?:return,args.answerIsBack)
         _binding = null
     }

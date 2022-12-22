@@ -36,7 +36,7 @@
     <string name="cd_show_flip_list">暗記中のアイテム一覧</string>
     <string name="cd_flip_previous">後ろにめくる</string>
     <string name="cd_flip_next">前へめくる</string>
-    <string name="cd_check_typed_answer">回答をチェックする</string>
+    <string name="fragmentFlipStringTypeAnswer_imvCheckAnswer_cd">回答をチェックする</string>
     <string name="cd_add_to_favourite_anki_box">お気に入りに追加</string>
     <string name="cd_close_anki_setting_popUp">設定画面を閉じる</string>
     <string name="cd_checkBox">チェックボックス</string>
