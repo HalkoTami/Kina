@@ -117,7 +117,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
             binding.imvAddAnkiBoxContentToFavourite.isSelected = checkFavouriteExistsList.contains(it)
             viewSetUp.setUpAnkiBoxRing(it,binding.bindingPgbAnkiBoxDataRemembered)
             binding.btnStartAnkiFromAnkiBox.text =
-                requireActivity().resources.getString(if(it.isEmpty()) R.string.btnStartAnki_withoutSelect else R.string.btnStartAnki_deafult)
+                requireActivity().resources.getString(if(it.isEmpty()) R.string.btnStartAnki_withoutSelect else R.string.btnStartAnki_default)
         }
 
 

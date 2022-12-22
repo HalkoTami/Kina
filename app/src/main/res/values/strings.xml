@@ -125,7 +125,7 @@
     <string name="fragmentAnkiFlipCompleted_txvFlippedMinutesClassifier_text">min</string>
 
     <string name="only_not_remembered_cards">未暗記のカードのみ</string>
-    <string name="default_auto_flip_seconds">20</string>
+    <string name="default_auto_flip_seconds" translatable="false">20</string>
 
     <string name="selected_item_option_move">アイテムを移動する</string>
     <string name="selected_item_option_delete">削除する</string>
@@ -221,13 +221,13 @@
     <string name="ankiBoxContentFrag_topBarTitle_ankiBoxContent">暗記ボックスアイテム</string>
     <string name="ankiBoxContentFrag_topBarTitle_parentFlipItem">暗記中のアイテム</string>
     <string name="item">アイテム</string>
-    <string name="cardAmountText">%d枚</string>
+    <string name="cardAmountText" translatable="false">%1$d枚</string>
     <string name="btnStartAnki_withoutSelect">カードを選ばず暗記</string>
-    <string name="btnStartAnki_deafult">暗記開始</string>
-    <string name="flipProgress">%d/%d</string>
+    <string name="btnStartAnki_default">暗記開始</string>
+    <string name="flipProgress" translatable="false">%1$d/%2$d</string>
     <string name="sp_title_flipRound">flip_round</string>
     <string name="sp_title_ankiSetting">anki_setting</string>
-    <string name="editCardProgress">%d/%d</string>
+    <string name="editCardProgress" translatable="false">%1$d/%2$d</string>
     <string name="create_string_card_edtFrontContent_hint">表</string>
     <string name="create_string_card_edtBackContent_hint">裏</string>
     <string name="front">表</string>
@@ -241,7 +241,7 @@
     <string name="answer_incorrect">不正解</string>
     <string name="answerCorrectInRowPercentage">正答率：%1$d</string>
     <string name="chooseFileMoveToTopBarBin_topText">%1$d個のアイテムを%2$sに移動</string>
-    <string name="topBarMultiSelectBin_selectingStatus">%d個 選択中</string>
+    <string name="topBarMultiSelectBin_selectingStatus">%1$d個 選択中</string>
     <string name="no_title">タイトルなし</string>
     <string name="txvInBoxStatus_empty">InBox</string>
     <string name="txvInBoxStatus_notEmpty">%d個の単語帳に未追加のアイテム</string>
@@ -249,8 +249,8 @@
     <string name="not_remembered">未暗記</string>
     <string name="lastLookedDate">めくった最終日 %1$s</string>
     <string name="no_data">記録なし</string>
-    <string name="remembered_progress">%1$d/%2$d</string>
-    <string name="toast_AfteritemMovedtoFile">%1$sへ移動しました</string>
+    <string name="remembered_progress" translatable="false">%1$d/%2$d</string>
+    <string name="toast_AfterItemMovedToFile">%1$sへ移動しました</string>
     <string name="popUpConfirmMoveBin_confirmMove">洗濯中のアイテムを%1$sへ移動しますか？</string>
     <string name="toast_afterFileDeleted_single_withContent">%1$sと中身を削除しました</string>
     <string name="toast_afterFileDeleted_single_withoutContent">%1$sを削除しました</string>
@@ -261,7 +261,7 @@
     <string name="confirmDeleteWithContentBin_confirmDelete_single">%1$sの中身をすべて削除しますか？</string>
     <string name="confirmDeleteWithContentBin_confirmDelete_multiple">中身をすべて削除しますか？</string>
     <string name="editFilePopUpBin_HintTxv_createNewFolder">新しいフォルダを作る</string>
-    <string name="editFilePopUpBin_HintTxv_createNewAnkiBoxfavourite">お気に入りに登録する</string>
+    <string name="editFilePopUpBin_HintTxv_createNewAnkiBoxFavourite">お気に入りに登録する</string>
     <string name="editFilePopUpBin_HintTxv_createNewFlashCard">新しい単語帳を作る</string>
     <string name="editFilePopUpBin_HintTxv_edit">%1$sを編集する</string>
     <string name="editFilePopUpBin_edtFileTitleHint_edit">タイトルを編集</string>
@@ -269,7 +269,7 @@
     <string name="editFilePopUpBin_btnFinish_update">更新</string>
     <string name="editFilePopUpBin_btnFinish_create">作成</string>
 
-    <string name="txvHome">Home</string>
+    <string name="txvHome" translatable="false">Home</string>
 
 
 </resources>

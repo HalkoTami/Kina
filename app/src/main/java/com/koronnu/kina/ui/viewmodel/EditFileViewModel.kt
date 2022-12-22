@@ -142,7 +142,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
         txvHintText.value = when(mode){
             EditingMode.New -> resources.getString(when(fileToCreate.fileStatus){
                 FileStatus.FOLDER               ->  R.string.editFilePopUpBin_HintTxv_createNewFolder
-                FileStatus.ANKI_BOX_FAVOURITE   ->  R.string.editFilePopUpBin_HintTxv_createNewAnkiBoxfavourite
+                FileStatus.ANKI_BOX_FAVOURITE   ->  R.string.editFilePopUpBin_HintTxv_createNewAnkiBoxFavourite
                 FileStatus.FLASHCARD_COVER      ->  R.string.editFilePopUpBin_HintTxv_createNewFlashCard
                 else  -> throw IllegalArgumentException()
             })
