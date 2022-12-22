@@ -44,7 +44,7 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
     }
     private val settingSharedPref get() = _settingSharedPref!!
     private val ankiBaseBinding get() = ankiBaseViewModel.ankiFragBaseBinding
-    private val settingBinding  get() = ankiBaseBinding.bindingSetting
+    private val settingBinding  get() = ankiBaseBinding.bindingPwAnkiSetting
     private val contentBin      get() = settingBinding.bindingSettingContent
 
     private fun doAfterSettingSharedPrefSet(){
@@ -67,7 +67,7 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
     }
     fun setListener(){
         contentBin.edtAutoFlipSeconds.addTextChangedListener { setAutoFlipSeconds() }
-        ankiBaseBinding.frameLayAnkiSetting         .setOnClickListener(null)
+        ankiBaseBinding.flPwAnkiSetting         .setOnClickListener(null)
         contentBin.checkboxFilterCardRememberStatus .setOnClickListener { changeAnkiFilterRememberedActiveStatus() }
         contentBin.checkboxAutoFlip                 .setOnClickListener { reverseAutoFlipActiveStatus() }
         contentBin.checkboxReverseSides             .setOnClickListener { changeReverseCardSideActiveStatus() }
