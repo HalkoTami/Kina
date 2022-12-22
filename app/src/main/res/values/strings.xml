@@ -37,10 +37,10 @@
     <string name="cd_flip_previous">後ろにめくる</string>
     <string name="cd_flip_next">前へめくる</string>
     <string name="fragmentFlipStringTypeAnswer_imvCheckAnswer_cd">回答をチェックする</string>
-    <string name="cd_add_to_favourite_anki_box">お気に入りに追加</string>
+    <string name="fragmentAnkiBox_imvAddAnkiBoxContentToFavourite_cd">お気に入りに追加</string>
     <string name="cd_close_anki_setting_popUp">設定画面を閉じる</string>
     <string name="cd_checkBox">チェックボックス</string>
-    <string name="cd_anki_box_rv_checkBox">暗記アイテムに追加、または削除</string>
+    <string name="listItemAnkiBoxRvCard_imvChbIsInAnkiBox_cd">暗記アイテムに追加、または削除</string>
     <string name="cd_anki_box_rv_flag">フラグを立てる、またはおろす</string>
     <string name="cd_btn_save_and_back">保存して閉じる</string>
     <string name="cd_create_card_move_next">カードを次へめくる</string>
@@ -93,9 +93,9 @@
     <string name="anki_setting_reverse_sides">裏表を逆にする</string>
 
     <string name="flipped_graph_title">めくった回数</string>
-    <string name="anki_box_tab_title_flashCards">すべての単語帳</string>
-    <string name="anki_box_tab_title_library">ライブラリ</string>
-    <string name="anki_box_tab_title_favourites">お気に入り</string>
+    <string name="fragmentAnkiBox_txvTabAllFlashCardCover_text">すべての単語帳</string>
+    <string name="fragmentAnkiBox_txvTabLibrary_text">ライブラリ</string>
+    <string name="fragmentAnkiBox_txvTabAnkiBoxFavourite_text">お気に入り</string>
     <string name="anki_setting_popUp_title">暗記の設定</string>
 
     <string name="anki_setting_popUp_btn_start_anki_text">暗記を開始</string>

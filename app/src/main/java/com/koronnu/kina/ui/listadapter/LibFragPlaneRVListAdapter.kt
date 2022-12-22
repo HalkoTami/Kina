@@ -102,7 +102,7 @@ class LibFragPlaneRVListAdapter(
                     libRVButtonsAddCL(item)
                 }
                 is Card -> {
-                    val stringCardBinding = LibraryFragRvItemCardStringBinding.inflate(LayoutInflater.from(context))
+                    val stringCardBinding = ListItemLibraryRvCardStringBinding.inflate(LayoutInflater.from(context))
                     viewSetUp.setUpRVStringCardBinding(stringCardBinding, item.stringData, )
 
 //                    addCardCL(item)

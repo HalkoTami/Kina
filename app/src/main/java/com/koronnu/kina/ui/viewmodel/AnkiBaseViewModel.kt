@@ -95,7 +95,7 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
         arrayOf(ankiFragBaseBinding.flPwAnkiSetting,ankiFragBaseBinding.vAnkiFragConCover).onEach {
             it.visibility = if(getSettingVisible) View.VISIBLE else View.GONE
         }
-        if(getSettingVisible.not()) hideKeyBoard(ankiFragBaseBinding.bindingPwAnkiSetting.bindingSettingContent.edtAutoFlipSeconds)
+        if(getSettingVisible.not()) hideKeyBoard(ankiFragBaseBinding.bindingPwAnkiSetting.edtAutoFlipSeconds)
     }
     private val getSettingVisible get() = _settingVisible.value!!
 

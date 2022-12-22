@@ -6,7 +6,7 @@
     app:startDestination="@id/anki_box_frag">
     <fragment
         android:name="com.koronnu.kina.ui.fragment.anki_frag_con.AnkiBoxFrag"
-        tools:layout="@layout/anki_home_frag_base"
+        tools:layout="@layout/fragment_anki_box"
         android:label="@string/nav_label_anki_ankiBox"
         android:id="@+id/anki_box_frag"/>
     <fragment

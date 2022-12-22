@@ -44,7 +44,7 @@ class LibrarySetUpItems{
             searchRV.layoutManager = LinearLayoutManager(context)
             searchRV.isNestedScrollingEnabled = true
         }
-        binding.frameLayTopBar.addView(topBarView)
+        binding.flTpbAnkiBox.addView(topBarView)
         setUpSearchRV()
         setUpPlaneLibRV()
     }
@@ -104,7 +104,7 @@ class LibrarySetUpItems{
     }
 
     fun setUpRVStringCardBinding(
-        stringBinding: LibraryFragRvItemCardStringBinding,
+        stringBinding: ListItemLibraryRvCardStringBinding,
         stringData: StringData?
     ){
         val resources = stringBinding.root.resources
@@ -117,7 +117,7 @@ class LibrarySetUpItems{
 
     }
     fun returnStringCardTextViews(
-        stringBinding: LibraryFragRvItemCardStringBinding,
+        stringBinding: ListItemLibraryRvCardStringBinding,
     ):Array<TextView>{
 
         return arrayOf(

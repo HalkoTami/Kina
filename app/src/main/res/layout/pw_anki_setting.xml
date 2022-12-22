@@ -52,26 +52,164 @@
         android:id="@+id/anki_setting_barrier_top"
         app:constraint_referenced_ids="imv_close_setting,imv_icon_setting,txv_txv_setting_title"
         app:barrierDirection="bottom"/>
-    <FrameLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/anki_setting_main_frame"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_start_anki"
+        app:layout_constraintBottom_toTopOf="@id/btn_startAnkiFromAnkiBox"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/anki_setting_barrier_top"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        <androidx.appcompat.widget.LinearLayoutCompat
+            style="@style/SettingLineLayStyle"
+            android:id="@+id/linLay_anki_setting_filter_remembered">
+            <ImageView
+                android:contentDescription="@string/anki_setting_checkBox_missed_remembered"
+                android:id="@+id/checkbox_filter_card_remember_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/selector_checkbox"/>
+            <TextView
+                style="@style/TxvUniformMiddleStyle"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/only_not_remembered_cards"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            style="@style/SettingLineLayStyle"
+            android:id="@+id/linLay_anki_setting_auto_flip"
 
-        <include
-            android:id="@+id/binding_setting_content"
-            layout="@layout/anki_home_frag_popup_anki_setting_scroll_view_content" />
+            >
+            <ImageView
+                android:contentDescription="@string/cd_checkBox"
+                android:id="@+id/checkbox_auto_flip"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="start|center_vertical"
 
-    </FrameLayout>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/selector_checkbox"/>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                >
+
+                <TextView
+                    style="@style/TxvUniformMiddleStyle"
+                    android:gravity="center"
+                    android:id="@+id/txv_auto_flip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/anki_setting_auto_flip"/>
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/line_lay_auto_flip_duration"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/gray_stroke_rectangle"
+                    android:padding="10dp"
+                    android:gravity="center_vertical">
+                    <EditText
+                        android:maxLength="2"
+                        style="@style/TxvUniformMiddleStyle"
+                        android:inputType="time"
+                        android:id="@+id/edt_auto_flip_seconds"
+                        android:background="@android:color/transparent"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_height="wrap_content"
+                        android:importantForAutofill="no"
+                        tools:ignore="LabelFor"
+                        android:text="@string/default_auto_flip_seconds"/>
+                    <TextView
+                        style="@style/TxvUniformSmallStyle"
+
+                        android:text="@string/anki_setting_auto_flip_seconds"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            style="@style/SettingLineLayStyle"
+            android:id="@+id/linLay_anki_setting_type_answer"
+            android:gravity="center">
+            <ImageView
+                android:contentDescription="@string/cd_checkBox"
+                android:id="@+id/checkbox_type_answer"
+                android:layout_marginEnd="10dp"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/selector_checkbox"/>
+
+            <TextView
+                style="@style/TxvUniformMiddleStyle"
+                android:id="@+id/txv_type_answer"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:text="@string/anki_setting_type_answer" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            style="@style/SettingLineLayStyle"
+            android:gravity="center"
+            android:id="@+id/linLay_anki_setting_reverse_side">
+            <ImageView
+                android:contentDescription="@string/cd_checkBox"
+                android:id="@+id/checkbox_reverse_sides"
+                app:layout_constraintTop_toTopOf="@id/txv_reverse_sides"
+                app:layout_constraintStart_toStartOf="@id/checkbox_auto_flip"
+                app:layout_constraintBottom_toBottomOf="@id/txv_reverse_sides"
+                android:layout_marginEnd="10dp"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/selector_checkbox"/>
+
+            <TextView
+                style="@style/TxvUniformMiddleStyle"
+                android:id="@+id/txv_reverse_sides"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/anki_setting_reverse_sides"
+                />
+
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <Button
         android:enabled="false"
-        android:id="@+id/btn_start_anki"
+        android:id="@+id/btn_startAnkiFromAnkiBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
