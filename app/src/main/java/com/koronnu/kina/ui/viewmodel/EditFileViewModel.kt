@@ -1,6 +1,6 @@
 package com.koronnu.kina.ui.viewmodel
 
-import android.animation.ValueAnimator
+import android.animation.Animator
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.view.View
@@ -52,20 +52,27 @@ class EditFileViewModel(val repository: MyRoomRepository,
     val edtFileTitleHint = MutableLiveData<String>()
     val imvFileStatusDraw = MutableLiveData<Drawable>()
     val _editFilePopUpVisible = MutableLiveData<Boolean>()
+    val _bottomMenuVisible =MutableLiveData<Boolean>()
 
     private val _colPalletStatus = MutableLiveData<ColorStatus>()
     private val _popUpShownFile = MutableLiveData<File>()
     private val _lastInsertedFile = MutableLiveData<File?>()
 
-    private var _bottomMenuVisible:Boolean? = null
     private var _mode:EditingMode? = null
     private var _fileToCreate :File? = null
     private var _fileToEdit:File? = null
     private var _doAfterNewFileCreated:()->Unit = {}
-    private val editFilePopUpVisible get() = _editFilePopUpVisible.value?:false
 
+//    animation
+    val editFilePopUpAnim:(v:View,visible:Boolean)-> Animator = { v, visible ->
+        Animation().appearAlphaAnimation(v,visible,1f){}
+    }
+    val flPmAddItemAnim:(v:View,visible:Boolean)-> Animator = { v, visible ->
+        Animation().animateFrameBottomMenu(v,visible)
+    }
 
     //    getter
+    private val editFilePopUpVisible get() = _editFilePopUpVisible.value?:false
     private val doAfterNewFileCreated get() = _doAfterNewFileCreated
     private val fileToEdit get() = _fileToEdit!!
     private val fileToCreate get() = _fileToCreate!!
@@ -89,7 +96,8 @@ class EditFileViewModel(val repository: MyRoomRepository,
     val getLastInsertedFile:File? get() = _lastInsertedFile.value
     private val mode get() = _mode!!
     private val getPopUpShownFile get() = _popUpShownFile.value!!
-    private val bottomMenuVisible get() = _bottomMenuVisible ?:false
+    private val bottomMenuVisible get() = _bottomMenuVisible.value ?:false
+
 
     //    setter
     fun setDoAfterNewFileCreated(func:()->Unit){
@@ -126,7 +134,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
     }
     fun setBottomMenuVisible(visible: Boolean){
         if(bottomMenuVisible == visible) return
-        _bottomMenuVisible = visible
+        _bottomMenuVisible.value = visible
         doAfterSetBottomMenuVisible()
     }
 
@@ -199,13 +207,9 @@ class EditFileViewModel(val repository: MyRoomRepository,
         setFrameLayNewCardVisible()
         setFrameLayNewFlashCardCoverVisible()
         setFrameLayNewFolderVisible()
-        Animation().animateFrameBottomMenu(mainActivityBinding.flPmAddItem,bottomMenuVisible)
         setUpFragConViewCoverVisibility()
     }
 
-    val editFilePopUpAnim:(v:View,visible:Boolean)-> ValueAnimator = { v, visible ->
-        Animation().appearAlphaAnimation(v,visible,1f){}
-    }
 
     private fun doAfterSetEditFilePopUpVisible(){
         setUpPopUpView()

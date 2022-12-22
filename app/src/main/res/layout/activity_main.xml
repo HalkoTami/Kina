@@ -59,6 +59,8 @@
 
         <FrameLayout
             android:onClick="@{()->null}"
+            visibilityAnim="@{mainViewModel.editFileViewModel.flPmAddItemAnim}"
+            animVisibility="@{mainViewModel.editFileViewModel._bottomMenuVisible}"
             android:visibility="gone"
             android:id="@+id/fl_pm_addItem"
             android:background="@drawable/gray_stroke_rectangle"
@@ -101,6 +103,7 @@
             app:labelVisibilityMode="unlabeled" >
 
             <include
+                bind:mainViewModel = "@{mainViewModel}"
                 android:id="@+id/binding_widgetTwgActivityMain"
                 layout="@layout/widget_twg_activity_main" />
         </FrameLayout>
