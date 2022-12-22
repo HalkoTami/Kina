@@ -1,88 +1,20 @@
 <resources>
-    <string name="app_name">KiNa</string>
-    <string name="title_home" translatable="false">Home</string>
-    <string name="title_dashboard" translatable="false">Dashboard</string>
-    <string name="title_notifications" translatable="false">Notifications</string>
-    <string name="title_tab_library" translatable="false">ライブラリ</string>
-    <string name="title_tab_anki" translatable="false">暗記</string>
-    <string name="title_tab_planner" translatable="false">プランナー</string>
-    <string name="title_tab_data" translatable="false">データ</string>
-    <string name="title_tab_create" translatable="false">作成</string>
-    <string name="text_sample">sample サンプル</string>
-    <string name="visible_guide_line">visible guideline</string>
-    <string name="icon_search">Icon Search</string>
-    <string name="edt_front">edit front</string>
-    <string name="edt_back">edit back</string>
-    <string name="btn_select">select card or file</string>
-    <string name="gone_on_long_click">gone on long click</string>
-    <string name="delete">delete</string>
-    <string name="add_new_card">add new card</string>
-    <string name="btn_edit">edit</string>
-    <string name="icon_marker">marker</string>
-    <string name="marker_text">markered_ text</string>
-    <string name="edit_marker_text">"edit marker text "</string>
-    <string name="question">question</string>
-    <string name="edt_question">edit question</string>
-    <string name="icon_answer">answer</string>
-    <string name="btn_edit_answer">edit answer</string>
-    <string name="cd_edit_tag">edit tag</string>
-    <string name="cd_file_type">file</string>
-    <string name="cd_file_amount">containing files</string>
-    <string name="cd_tango_cho_amount">containing flashcards</string>
-    <string name="cd_card_amount">containing cards</string>
-    <string name="cd_btn_add_card">add new card</string>
+<!--    untranslatable -->
+<!--    app data-->
+    <string name="app_name" translatable="false">KiNa</string>
+    <string name="activityData_dateFormat" translatable="false">dd/M/yyyy hh:mm:ss</string>
 
-    <string name="cd_btn_back">戻る</string>
-    <string name="cd_flip_mode">暗記中</string>
-    <string name="cd_setting">設定</string>
-    <string name="cd_show_flip_list">暗記中のアイテム一覧</string>
-    <string name="cd_flip_previous">後ろにめくる</string>
-    <string name="cd_flip_next">前へめくる</string>
-    <string name="cd_check_typed_answer">回答をチェックする</string>
-    <string name="anki_box_top_bar_title">暗記するカードを選ぶ</string>
-    <string name="cd_add_to_favourite_anki_box">お気に入りに追加</string>
-    <string name="flipped_graph_title">めくった回数</string>
-    <string name="anki_box_tab_title_flashCards">すべての単語帳</string>
-    <string name="anki_box_tab_title_library">ライブラリ</string>
-    <string name="anki_box_tab_title_favourites">お気に入り</string>
-    <string name="anki_setting_popUp_title">暗記の設定</string>
-    <string name="cd_close_anki_setting_popUp">設定画面を閉じる</string>
-    <string name="anki_setting_popUp_btn_start_anki_text">暗記を開始</string>
-    <string name="anki_setting_txv_order">順番指定</string>
-    <string name="anki_setting_order_library">ライブラリ</string>
-    <string name="anki_setting_order_random">ランダム</string>
-    <string name="anki_setting_order_most_missed">回答ミスが多い順</string>
-    <string name="anki_setting_txv_filter">フィルタ</string>
-    <string name="anki_setting_checkBox_missed_filter">回答入力によるフィルタを有効にする</string>
-    <string name="anki_setting_checkBox_missed_remembered">暗記済みかによるフィルタを有効にする</string>
-    <string name="anki_setting_checkBox_flag">フラグによるフィルタを有効にする</string>
-    <string name="anki_setting_filter_answer_missed">回答入力を\nミスしたカード</string>
-    <string name="anki_setting_filter_answer_correct">回答入力を\n正解したカード</string>
-    <string name="anki_setting_filter_not_remembered">未暗記のカード</string>
-    <string name="anki_setting_filter_remembered">暗記済のカード</string>
-    <string name="anki_setting_filter_with_flag">フラグ付き</string>
-    <string name="anki_setting_filter_without_flag">フラグなし</string>
-    <string name="cd_checkBox">チェックボックス</string>
-    <string name="anki_setting_auto_flip">カードを自動でめくる</string>
-    <string name="anki_setting_auto_flip_seconds">秒</string>
-    <string name="anki_setting_type_answer">答えを入力する</string>
-    <string name="anki_setting_reverse_sides">裏表を逆にする</string>
-    <string name="cd_anki_box_rv_checkBox">暗記アイテムに追加、または削除</string>
-    <string name="cd_anki_box_rv_flag">フラグを立てる、またはおろす</string>
-    <string name="cd_btn_save_and_back">保存して閉じる</string>
-    <string name="cd_create_card_move_next">カードを次へめくる</string>
-    <string name="cd_create_card_insert_next">カードを次に挿入する</string>
-    <string name="cd_create_card_move_previous">カードを後ろへめくる</string>
-    <string name="cd_create_card_insert_previous">カードを後ろへ挿入する</string>
-    <string name="create_string_card_edt_front_title_hint">表のタイトル</string>
-    <string name="create_string_card_edt_back_title_hint">裏のタイトル</string>
-
-    <string name="s_p_anki_setting_reverse_side" translatable="false">s_p_anki_setting_reverse_side</string>
-    <string name="s_p_anki_setting_filter_remembered" translatable="false">s_p_anki_setting_filter_remembered</string>
-    <string name="s_p_anki_setting_auto_flip_active" translatable="false">s_p_anki_setting_auto_flip_active</string>
-    <string name="s_p_anki_setting_auto_flip_seconds" translatable="false">s_p_anki_setting_auto_flip_seconds</string>
-    <string name="s_p_anki_setting_type_answer" translatable="false">s_p_anki_setting_type_answer</string>
-
+    <string name="text_sample" translatable="false">sample サンプル</string>
+<!--    shared preference -->
+    <string name="sp_anki_setting_reverse_side" translatable="false">s_p_anki_setting_reverse_side</string>
+    <string name="sp_anki_setting_filter_remembered" translatable="false">s_p_anki_setting_filter_remembered</string>
+    <string name="sp_anki_setting_auto_flip_active" translatable="false">s_p_anki_setting_auto_flip_active</string>
+    <string name="sp_anki_setting_auto_flip_seconds" translatable="false">s_p_anki_setting_auto_flip_seconds</string>
+    <string name="sp_anki_setting_type_answer" translatable="false">s_p_anki_setting_type_answer</string>
+    <string name="sp_checkFirstTimeOpened" translatable="false">CheckFirstTimeOpened</string>
+    <string name="sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened" translatable="false">sp_checkFirstTimeOpened_inBoxFirstTimeOpened</string>
+    <string name="minutes_practiced">暗記した時間</string>
+<!--    nav label-->
     <string name="nav_label_main_tab_anki" translatable="false">暗記タブ</string>
     <string name="nav_label_main_tab_library" translatable="false">ライブラリタブ</string>
     <string name="nav_label_main_create_card" translatable="false">カード作成</string>
@@ -90,6 +22,31 @@
     <string name="nav_label_anki_flip_item" translatable="false">flip item</string>
     <string name="nav_label_anki_flip" translatable="false">flip mode</string>
     <string name="nav_label_anki_flip_completed" translatable="false">flip completed</string>
+
+<!--    content description-->
+    <string name="cd_edit_tag" >edit tag</string>
+    <string name="cd_file_type" >file</string>
+    <string name="cd_file_amount" >containing files</string>
+    <string name="cd_tango_cho_amount" >containing flashcards</string>
+    <string name="cd_card_amount" >containing cards</string>
+    <string name="cd_btn_add_card" >add new card</string>
+    <string name="cd_btn_back" >戻る</string>
+    <string name="cd_flip_mode">暗記中</string>
+    <string name="cd_setting">設定</string>
+    <string name="cd_show_flip_list">暗記中のアイテム一覧</string>
+    <string name="cd_flip_previous">後ろにめくる</string>
+    <string name="cd_flip_next">前へめくる</string>
+    <string name="cd_check_typed_answer">回答をチェックする</string>
+    <string name="cd_add_to_favourite_anki_box">お気に入りに追加</string>
+    <string name="cd_close_anki_setting_popUp">設定画面を閉じる</string>
+    <string name="cd_checkBox">チェックボックス</string>
+    <string name="cd_anki_box_rv_checkBox">暗記アイテムに追加、または削除</string>
+    <string name="cd_anki_box_rv_flag">フラグを立てる、またはおろす</string>
+    <string name="cd_btn_save_and_back">保存して閉じる</string>
+    <string name="cd_create_card_move_next">カードを次へめくる</string>
+    <string name="cd_create_card_insert_next">カードを次に挿入する</string>
+    <string name="cd_create_card_move_previous">カードを後ろへめくる</string>
+    <string name="cd_create_card_insert_previous">カードを後ろへ挿入する</string>
     <string name="cd_flip_card">カードの表裏をめくる</string>
     <string name="cd_repeat_flip">最初から繰り返す</string>
     <string name="cd_done">完了して戻る</string>
@@ -111,6 +68,53 @@
     <string name="cd_create_new_flashCard">新しい単語帳を作成</string>
     <string name="cd_create_new_folder">新しいフォルダを作成</string>
     <string name="cd_create_new_card">新しいカードを作成</string>
+    <string name="cd_btn_select">アイテムを選択</string>
+    <string name="cd_btn_edit">編集する</string>
+    <string name="cd_edt_front">表を編集</string>
+    <string name="cd_tab_library">ライブラリタブ</string>
+    <string name="cd_tab_anki">暗記タブ</string>
+    <string name="cd_btn_add_item">アイテムを作成</string>
+    <string name="cd_btnDelete">削除する</string>
+
+<!--    Main activity-->
+
+<!--    Library Tab-->
+
+<!--    Create Tab-->
+
+<!--    Anki Tab-->
+
+    <string name="anki_box_top_bar_title">暗記するカードを選ぶ</string>
+    <string name="create_string_card_edt_front_title_hint">表のタイトル</string>
+    <string name="create_string_card_edt_back_title_hint">裏のタイトル</string>
+    <string name="anki_setting_auto_flip">カードを自動でめくる</string>
+    <string name="anki_setting_auto_flip_seconds">秒</string>
+    <string name="anki_setting_type_answer">答えを入力する</string>
+    <string name="anki_setting_reverse_sides">裏表を逆にする</string>
+
+    <string name="flipped_graph_title">めくった回数</string>
+    <string name="anki_box_tab_title_flashCards">すべての単語帳</string>
+    <string name="anki_box_tab_title_library">ライブラリ</string>
+    <string name="anki_box_tab_title_favourites">お気に入り</string>
+    <string name="anki_setting_popUp_title">暗記の設定</string>
+
+    <string name="anki_setting_popUp_btn_start_anki_text">暗記を開始</string>
+    <string name="anki_setting_txv_order">順番指定</string>
+    <string name="anki_setting_order_library">ライブラリ</string>
+    <string name="anki_setting_order_random">ランダム</string>
+    <string name="anki_setting_order_most_missed">回答ミスが多い順</string>
+    <string name="anki_setting_txv_filter">フィルタ</string>
+    <string name="anki_setting_checkBox_missed_filter">回答入力によるフィルタを有効にする</string>
+    <string name="anki_setting_checkBox_missed_remembered">暗記済みかによるフィルタを有効にする</string>
+    <string name="anki_setting_checkBox_flag">フラグによるフィルタを有効にする</string>
+    <string name="anki_setting_filter_answer_missed">回答入力を\nミスしたカード</string>
+    <string name="anki_setting_filter_answer_correct">回答入力を\n正解したカード</string>
+    <string name="anki_setting_filter_not_remembered">未暗記のカード</string>
+    <string name="anki_setting_filter_remembered">暗記済のカード</string>
+    <string name="anki_setting_filter_with_flag">フラグ付き</string>
+    <string name="anki_setting_filter_without_flag">フラグなし</string>
+
+
     <string name="side_back">裏</string>
     <string name="your_answer">あなたの回答</string>
     <string name="flip_round_completed_comment">暗記アイテムを一周したよ</string>
@@ -119,7 +123,7 @@
     <string name="card_amount">枚</string>
     <string name="newly_remembered_card">新しく覚えたカード</string>
     <string name="minutes_count">min</string>
-    <string name="minutes_practiced">暗記した時間</string>
+
     <string name="only_not_remembered_cards">未暗記のカードのみ</string>
     <string name="default_auto_flip_seconds">20</string>
 
@@ -129,8 +133,8 @@
     <string name="delete_option_include_children_confirm">中身もすべて削除しますか？</string>
     <string name="confirm_move">移動しますか？</string>
     <string name="commit_move">移動する</string>
-    <string name="tab_title_library">ライブラリ</string>
-    <string name="tab_title_anki">暗記する</string>
+    <string name="widgetTwgActivityMain_txvTabLibrary_text">ライブラリ</string>
+    <string name="widgetTwgActivityMain_txvTabAnki_text">暗記する</string>
     <string name="create_file_edt_hint">タイトル</string>
     <string name="commit_create">作成</string>
     <string name="library_empty_comment">まだ中身がないよ</string>
@@ -189,8 +193,7 @@
     <string name="guide_spb_move_12">タッチすると、確認画面が現れるよ</string>
     <string name="guide_spb_move_13">移動したい場合はここをタッチしてね。</string>
     <string name="guide_spb_move_14">ガイドは以上だよ</string>
-    <string name="sp_checkFirstTimeOpened" translatable="false">CheckFirstTimeOpened</string>
-    <string name="sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened" translatable="false">sp_checkFirstTimeOpened_inBoxFirstTimeOpened</string>
+
     <string name="guide_popUp_confirm_end">終了しますか？</string>
     <string name="commit_end">終了する</string>
     <string name="guide_popUp_confirm_create_movable_File">移動先を作成しますか</string>
@@ -265,7 +268,8 @@
     <string name="editFilePopUpBin_edtFileTitleHint_create">タイトル</string>
     <string name="editFilePopUpBin_btnFinish_update">更新</string>
     <string name="editFilePopUpBin_btnFinish_create">作成</string>
-    <string name="activityData_dateFormat">dd/M/yyyy hh:mm:ss</string>
+
+    <string name="txvHome">Home</string>
 
 
 </resources>

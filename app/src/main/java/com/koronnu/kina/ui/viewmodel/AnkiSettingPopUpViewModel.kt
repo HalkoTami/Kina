@@ -50,15 +50,15 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
     private fun doAfterSettingSharedPrefSet(){
 
         val reverseSide =  settingSharedPref.getBoolean(
-            resources.getString(R.string.s_p_anki_setting_reverse_side),false)
+            resources.getString(R.string.sp_anki_setting_reverse_side),false)
         val autoFLip = settingSharedPref.getBoolean(
-            resources.getString(R.string.s_p_anki_setting_auto_flip_active),false)
+            resources.getString(R.string.sp_anki_setting_auto_flip_active),false)
         val typeAnswer = settingSharedPref.getBoolean(
-            resources.getString(R.string.s_p_anki_setting_type_answer),false)
+            resources.getString(R.string.sp_anki_setting_type_answer),false)
         val filterRemembered =  settingSharedPref.getBoolean(
-            resources.getString(R.string.s_p_anki_setting_filter_remembered),false)
+            resources.getString(R.string.sp_anki_setting_filter_remembered),false)
         val autoFlipSec = settingSharedPref.getInt(
-            resources.getString(R.string.s_p_anki_setting_auto_flip_seconds),
+            resources.getString(R.string.sp_anki_setting_auto_flip_seconds),
             AutoFlip().seconds)
         setReverseCardSide(reverseSide)
         setAutoFlip(AutoFlip(autoFLip,autoFlipSec))
@@ -124,7 +124,7 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
         doAfterSetAnkiFilter()
     }
     private fun doAfterSetAnkiFilter(){
-        putBooleanToSP(R.string.s_p_anki_setting_filter_remembered,getAnkiFilter.rememberedFilterActive)
+        putBooleanToSP(R.string.sp_anki_setting_filter_remembered,getAnkiFilter.rememberedFilterActive)
         changeSelectedStateAndAlpha(
             contentBin.checkboxFilterCardRememberStatus,
             contentBin.linLayAnkiSettingFilterRemembered,
@@ -158,8 +158,8 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
         setAutoFlip(after())
     }
     private fun doAfterSetAutoFlip(){
-        putBooleanToSP(R.string.s_p_anki_setting_auto_flip_active,getAutoFlip.active)
-        putIntToSP(R.string.s_p_anki_setting_auto_flip_seconds,getAutoFlip.seconds)
+        putBooleanToSP(R.string.sp_anki_setting_auto_flip_active,getAutoFlip.active)
+        putIntToSP(R.string.sp_anki_setting_auto_flip_seconds,getAutoFlip.seconds)
         changeSelectedStateAndAlpha(
             contentBin.checkboxAutoFlip,
             contentBin.linLayAnkiSettingAutoFlip,getAutoFlip.active)
@@ -175,7 +175,7 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
         doAfterSetTypeAnswer()
     }
     private fun doAfterSetTypeAnswer(){
-        putBooleanToSP(R.string.s_p_anki_setting_type_answer,getTypeAnswer)
+        putBooleanToSP(R.string.sp_anki_setting_type_answer,getTypeAnswer)
         changeSelectedStateAndAlpha(
             contentBin.checkboxTypeAnswer,
             contentBin.linLayAnkiSettingTypeAnswer,getTypeAnswer)
@@ -200,7 +200,7 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
         changeSelectedStateAndAlpha(
             contentBin.checkboxReverseSides,
             contentBin.linLayAnkiSettingReverseSide, getReverseCardSideActive)
-        putBooleanToSP(R.string.s_p_anki_setting_reverse_side,getReverseCardSideActive)
+        putBooleanToSP(R.string.sp_anki_setting_reverse_side,getReverseCardSideActive)
     }
     val getReverseCardSideActive get() = _reverseCardSide.value!!
 

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--TODO:Rename View Ids In Rules-->
+<!--TODO:Rename String res In Rules-->
+<!--TODO:Rename included Layout titles in Rules-->
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -18,7 +21,7 @@
         android:id="@+id/txv_home"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:text="Home"
+        android:text="@string/txvHome"
         android:layout_marginStart="10dp"
         />
 

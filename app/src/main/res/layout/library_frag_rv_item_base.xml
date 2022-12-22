@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!--TODO:Rename View Ids In Rules-->
+<!--TODO:Rename String res In Rules-->
+<!--TODO:Rename included Layout titles in Rules-->
 <layout >
     <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_height="wrap_content"
@@ -12,7 +14,7 @@
 
     <FrameLayout
         android:id="@+id/rv_base_frameLay_left"
-        android:contentDescription="@string/btn_select"
+        android:contentDescription="@string/cd_btn_select"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/content_binding_frame"
@@ -20,7 +22,6 @@
 
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:src="@drawable/select_rv_item"
         android:layout_marginEnd="5dp"
         android:visibility="visible"
 
@@ -28,7 +29,7 @@
         <ImageView
             android:layout_gravity="center"
             android:id="@+id/btn_select"
-            android:contentDescription="@string/btn_select"
+            android:contentDescription="@string/cd_btn_select"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/content_binding_frame"
@@ -81,8 +82,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
         <ImageView
-            android:contentDescription="@string/btn_edit"
-            android:tag="@string/gone_on_long_click"
+            android:contentDescription="@string/cd_btn_edit"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -92,9 +92,7 @@
 
 
         <ImageView
-            android:contentDescription="@string/delete"
-            android:tag="@string/gone_on_long_click"
-
+            android:contentDescription="@string/cd_btnDelete"
             android:id="@+id/btn_delete"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -112,8 +110,7 @@
 
 
     <ImageView
-        android:contentDescription="@string/add_new_card"
-        android:tag="@string/gone_on_long_click"
+        android:contentDescription="@string/cd_btn_add_card"
         android:id="@+id/btn_add_new_card"
 
 

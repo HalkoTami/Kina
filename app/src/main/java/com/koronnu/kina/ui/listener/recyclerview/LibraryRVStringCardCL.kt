@@ -14,11 +14,6 @@ class LibraryRVStringCardCL(val item: Card,
 ): View.OnClickListener{
 
     override fun onClick(v: View?) {
-        when(v){
-            binding.btnEdtBack-> { stringCardViewModel.setFocusedOn(StringFragFocusedOn.BackContent)
-            }
-            binding.btnEdtFront-> stringCardViewModel.setFocusedOn(StringFragFocusedOn.FrontContent)
-        }
         createCardViewModel.onClickEditCardFromRV(item)
     }
 }

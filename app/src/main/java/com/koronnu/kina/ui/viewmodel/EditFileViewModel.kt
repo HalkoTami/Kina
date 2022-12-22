@@ -181,7 +181,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
     }
 
     private fun setTxvParentFileTitleText(){
-        txvParentFileTitleText.value = parentOpenedFile?.title ?: resources.getString(R.string.title_home)
+        txvParentFileTitleText.value = parentOpenedFile?.title ?: resources.getString(R.string.txvHome)
     }
     fun setColPalletStatus( colorPalletStatus: ColorStatus){
         _colPalletStatus.value = colorPalletStatus

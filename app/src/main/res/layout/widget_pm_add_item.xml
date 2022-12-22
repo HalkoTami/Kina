@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--TODO:Rename View Ids In Rules-->
+<!--TODO:Rename String res In Rules-->
+<!--TODO:Rename included Layout titles in Rules-->
 <layout>
         <data>
            <variable

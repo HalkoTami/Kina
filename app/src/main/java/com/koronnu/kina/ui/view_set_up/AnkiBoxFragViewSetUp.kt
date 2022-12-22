@@ -33,9 +33,7 @@ class AnkiBoxFragViewSetUp() {
     fun setUpRVCard(cardBinding: AnkiHomeFragRvItemCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxViewModel){
         val resources = cardBinding.root.context.resources
         LibrarySetUpItems().setUpRVStringCardBinding(cardBinding.stringContentBinding,card.stringData)
-        cardBinding.stringContentBinding.apply {
-            arrayOf(btnEdtFront,btnEdtBack).onEach { it.visibility= View.GONE }
-        }
+
         fun setOnCL(){
             arrayOf(cardBinding.checkboxAnkiRv,).onEach { it.setOnClickListener(AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
         }
