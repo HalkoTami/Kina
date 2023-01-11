@@ -193,26 +193,15 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     val ankiBoxCardIds:LiveData<MutableList<Int>> = _ankiBoxCardIds
 
-    private val _modeCardsNotSelected = MutableLiveData<Boolean>()
-    fun setModeCardsNotSelected(boolean: Boolean){
-        _modeCardsNotSelected.value = boolean
-    }
-    private fun checkCardExists(unit:(it:Boolean)->Unit){
-        val livedata = cardsExistsFromDB
-        livedata.observeForever(object:Observer<Boolean>{
-            override fun onChanged(t: Boolean) {
-                livedata.removeObserver(this)
-                unit(t)
-            }
-        })
-    }
+    
     fun openFlip(){
         ankiBaseViewModel.setSettingVisible(false)
         ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.Flip)
     }
     fun onClickBtnStartFlip(){
-        if(returnAnkiBoxCardIds().isEmpty()) checkCardExists { cardExist->
-            if(cardExist) openFlip() else return@checkCardExists
-        } else openFlip()
+        if(returnAnkiBoxCardIds().isEmpty()) ObserveOnce(cardsExistsFromDB){ cardExist->
+            if(cardExist) openFlip() else return@ObserveOnce
+        }.commit() else openFlip()
+
     }
 }
