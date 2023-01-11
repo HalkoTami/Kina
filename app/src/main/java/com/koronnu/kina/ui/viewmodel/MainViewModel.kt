@@ -120,19 +120,12 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
             }
         )
     }
-    private val _bnvVisibility = MutableLiveData<Boolean>()
+    val _bnvVisibility = MutableLiveData<Boolean>()
     val bnvVisibility:LiveData<Boolean> = _bnvVisibility
     fun setBnvVisibility(boolean: Boolean){
         _bnvVisibility.value = boolean
     }
 
-
-    private val _bnvCoverVisible = MutableLiveData<Boolean>()
-    val bnvCoverVisible:LiveData<Boolean> = _bnvCoverVisible
-
-    fun setBnvCoverVisible (boolean: Boolean){
-        _bnvCoverVisible.value = boolean
-    }
 
     override fun onCleared() {
         super.onCleared()

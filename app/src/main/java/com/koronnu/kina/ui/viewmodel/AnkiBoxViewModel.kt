@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     private lateinit var ankiBaseViewModel: AnkiBaseViewModel
-    private val ankiFlipBaseViewModel get() = ankiBaseViewModel.ankiFlipBaseViewModel
     companion object{
         fun getFactory(ankiBaseViewModel:AnkiBaseViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -193,7 +192,7 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     val ankiBoxCardIds:LiveData<MutableList<Int>> = _ankiBoxCardIds
 
-    
+
     fun openFlip(){
         ankiBaseViewModel.setSettingVisible(false)
         ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.Flip)
