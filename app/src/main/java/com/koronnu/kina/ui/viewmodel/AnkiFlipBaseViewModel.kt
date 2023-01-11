@@ -79,7 +79,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     }
     val _autoFlipRunning = MutableLiveData<Boolean>()
     fun setAutoFlipRunning(boolean: Boolean){
-        val animation = getCountDownAnim
         _autoFlipRunning.value = boolean
         if(boolean) getCountDownAnim?.resume()
         else getCountDownAnim?.pause()
@@ -125,7 +124,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         }
     }
     val getCountDownAnim get() = _countDownAnim.value
-    val countDownAnim:LiveData<ValueAnimator> = _countDownAnim
 
     val _loadingNewCountDownAnim = MutableLiveData<Boolean>()
     val loadingNewCountDownAnim :LiveData<Boolean> = _loadingNewCountDownAnim
@@ -141,7 +139,6 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         doAfterParentCardChanged()
     }
     val getParentCard get() = _parentCard.value!!
-//    val parentCard :LiveData<Card> = _parentCard
     val topBarFlipProgressText = MutableLiveData<String>()
     fun setTopBarFlipProgressText(){
         val flipItems = returnFlipItems()
@@ -328,11 +325,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
             repository.insert(a )
         }
     }
-//    fun updateFlipped(card:Card){
-//        viewModelScope.launch {
-//            repository.updateCardFlippedTime(card)
-//        }
-//    }
+
     fun updateLookedTime(card:Card){
         val formatter = SimpleDateFormat(resources.getString(R.string.activityData_dateFormat), Locale.JAPAN)
         val a = ActivityData(0,card.id,DBTable.TABLE_CARD,
@@ -356,48 +349,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         saveFlipActionStatus(ActivityStatus.FLIP_ROUND_ENDED)
         setFrConfirmEndVisible(false)
     }
-//    btnRemembered -> {
-//        p0.isSelected = !p0.isSelected
-//        ankiFlipBaseViewModel.changeRememberStatus()
-//    }
-//    btnFlipNext -> {
-//        ankiSettingPopUpViewModel.apply {
-//            if(ankiFlipBaseViewModel.flip(
-//                    NeighbourCardSide.NEXT,
-//                    getReverseCardSideActive,
-//                    getTypeAnswer
-//                ).not()) ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.FlipCompleted)
-//        }
-//
-//    }
-//    btnFlipPrevious -> {
-//        ankiSettingPopUpViewModel.apply {
-//            ankiFlipBaseViewModel.flip(
-//                NeighbourCardSide.PREVIOUS,
-//                getReverseCardSideActive,
-//                getTypeAnswer
-//            )
-//        }
-//    }
-//    btnAddCard -> {
-//        editFileViewModel.setBottomMenuVisible(true)
-//    }
-//    btnStopCount -> {
-//        p0.isSelected = !p0.isSelected
-//        if (p0.isSelected) ankiFlipBaseViewModel.setCountDownAnim(
-//            AnimationAttributes.Pause
-//        ) else ankiFlipBaseViewModel.setCountDownAnim(
-//            AnimationAttributes.Resume
-//        )
-//        ankiFlipBaseViewModel.setAutoFlipPaused(p0.isSelected)
-//    }
-//    imvEditCard -> {
-//        val editingId = ankiFlipBaseViewModel.getParentCard.id ?: return
-//        createCardViewModel.setStartingCardId(editingId)
-//        mainViewModel.getMainActivityNavCon
-//            .navigate(EditCardBaseFragDirections.openCreateCard())
-//    }
-//}
+
     fun openParentFlipItems(){
         ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.FlipItems)
     }
