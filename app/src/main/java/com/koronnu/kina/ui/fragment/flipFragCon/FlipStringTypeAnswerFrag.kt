@@ -97,7 +97,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
         super.onDestroyView()
         binding.root.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
         typeAndCheckViewModel.addAnswer(args.cardId, binding.edtTypeAnswerString.editableText.toString())
-        typeAndCheckViewModel.checkAnswer(flipBaseViewModel.returnParentCard()?:return,args.answerIsBack)
+        typeAndCheckViewModel.checkAnswer(flipBaseViewModel.getParentCard,args.answerIsBack)
         _binding = null
     }
 }

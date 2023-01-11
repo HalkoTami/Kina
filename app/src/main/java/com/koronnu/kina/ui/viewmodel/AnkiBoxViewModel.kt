@@ -10,6 +10,7 @@ import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.normalClasses.AnkiBoxTabData
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.fragment.ankibox_frag_con.BoxFavouriteFragDirections
@@ -20,13 +21,17 @@ import kotlinx.coroutines.launch
 
 class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
 
+    private lateinit var ankiBaseViewModel: AnkiBaseViewModel
+    private val ankiFlipBaseViewModel get() = ankiBaseViewModel.ankiFlipBaseViewModel
     companion object{
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+        fun getFactory(ankiBaseViewModel:AnkiBaseViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
                 val repository = application.repository
-                return AnkiBoxViewModel(repository) as T
+                val boxViewModel = AnkiBoxViewModel(repository)
+                boxViewModel.ankiBaseViewModel = ankiBaseViewModel
+                return boxViewModel as T
             }
         }
     }
@@ -39,6 +44,7 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun ankiBoxFileAncestorsFromDB(int: Int?):LiveData<List<File>> = repository.getAllAncestorsByFileId(int).asLiveData()
     val allFlashCardCoverFromDB: LiveData<List<File>> = repository.allFlashCardCoverContainsCard.asLiveData()
     val allFavouriteAnkiBoxFromDB: LiveData<List<File>> = repository.allFavouriteAnkiBox.asLiveData()
+    val cardsExistsFromDB:LiveData<Boolean> = repository.cardExists.asLiveData()
 
     fun getLibraryFilesFromDB(parentFileId:Int?) :LiveData<List<File>> = repository.getLibraryItemsWithDescendantCards(parentFileId).asLiveData()
     fun getCardsFromDB(parentFileId:Int?) :LiveData<List<Card>> = repository.getCardDataByFileId(parentFileId).asLiveData()
@@ -190,5 +196,23 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
     private val _modeCardsNotSelected = MutableLiveData<Boolean>()
     fun setModeCardsNotSelected(boolean: Boolean){
         _modeCardsNotSelected.value = boolean
+    }
+    private fun checkCardExists(unit:(it:Boolean)->Unit){
+        val livedata = cardsExistsFromDB
+        livedata.observeForever(object:Observer<Boolean>{
+            override fun onChanged(t: Boolean) {
+                livedata.removeObserver(this)
+                unit(t)
+            }
+        })
+    }
+    fun openFlip(){
+        ankiBaseViewModel.setSettingVisible(false)
+        ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.Flip)
+    }
+    fun onClickBtnStartFlip(){
+        if(returnAnkiBoxCardIds().isEmpty()) checkCardExists { cardExist->
+            if(cardExist) openFlip() else return@checkCardExists
+        } else openFlip()
     }
 }

@@ -27,14 +27,20 @@ import java.util.*
 
 class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
                             val resources: Resources) : ViewModel() {
+    private lateinit var mainViewModel: MainViewModel
+    private val createCardViewModel get() = mainViewModel.createCardViewModel
+    private val ankiBaseViewModel get() = mainViewModel.ankiBaseViewModel
+    private val ankiSettingPopUpViewModel get() = ankiBaseViewModel.ankiSettingPopUpViewModel
     companion object{
-        val  Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+        fun getFactory(mainViewModel: MainViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication
                 val repository = application.repository
                 val resources = application.resources
-                return AnkiFlipBaseViewModel(repository,resources) as T
+                val baseViewModel = AnkiFlipBaseViewModel(repository,resources)
+                baseViewModel.mainViewModel = mainViewModel
+                return baseViewModel as T
             }
         }
     }
@@ -112,15 +118,28 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     val countDownAnim:LiveData<AnimationAttributes> = _countDownAnim
 
     fun getCardFromDB(cardId:Int) :LiveData<Card> = repository.getCardByCardId(cardId).asLiveData()
-    private val _parentCard = MutableLiveData<Card?>()
-    fun setParentCard(card: Card?){
+    val _parentCard = MutableLiveData<Card>()
+    fun setParentCard(card: Card){
+        if(_parentCard.value==card) return
         _parentCard.value = card
+        doAfterParentCardChanged()
     }
-    fun returnParentCard():Card?{
-        return _parentCard.value
+    val getParentCard get() = _parentCard.value!!
+//    val parentCard :LiveData<Card> = _parentCard
+    val topBarFlipProgressText = MutableLiveData<String>()
+    fun setTopBarFlipProgressText(){
+        val flipItems = returnFlipItems()
+        val updatedString = resources.getString(R.string.flipProgress,flipItems.indexOf(getParentCard)+1,flipItems.size)
+        topBarFlipProgressText.value = updatedString
     }
-    val parentCard :LiveData<Card?> = _parentCard
-
+    fun doAfterParentCardChanged(){
+        val flipItems = returnFlipItems()
+        updateLookedTime(getParentCard)
+        setTopBarFlipProgressText()
+        createCardViewModel.setStartingCardId(getParentCard.id)
+        setParentPosition(flipItems.indexOf(getParentCard))
+        changeProgress()
+    }
     val getAllCardsFromDB:LiveData<List<Card>> = repository.allCards.asLiveData()
 
     private val _parentPosition = MutableLiveData<Int>()
@@ -163,7 +182,8 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     private fun setProgress(progress: Progress){
         _flipProgress.value = progress
     }
-    fun changeProgress(reverseMode: Boolean){
+    fun changeProgress(){
+        val reverseMode = ankiSettingPopUpViewModel.getReverseCardSideActive
         val position = returnParentPosition()
         val first = when(returnFlipFragment()){
             FlipFragments.LookStringBack     -> reverseMode
@@ -275,8 +295,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
                     false -> {
                         val cardId = if(changeCard) returnFlipItems()[newPosition].id else _parentCard.value!!.id
                         val action =
-                            FlipStringFragDirections.toFlipString(
-                            )
+                            FlipStringFragDirections.toFlipString()
                         action.front = flipToFront
                         action.cardId = intArrayOf(cardId)
                         return action
@@ -335,15 +354,15 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
             repository.insert(a )
         }
     }
-    fun updateFlipped(card:Card){
-        viewModelScope.launch {
-            repository.updateCardFlippedTime(card)
-        }
-    }
-    fun updateLookedTime(card:Card,opened:Boolean){
+//    fun updateFlipped(card:Card){
+//        viewModelScope.launch {
+//            repository.updateCardFlippedTime(card)
+//        }
+//    }
+    fun updateLookedTime(card:Card){
         val formatter = SimpleDateFormat(resources.getString(R.string.activityData_dateFormat), Locale.JAPAN)
         val a = ActivityData(0,card.id,DBTable.TABLE_CARD,
-            if(opened) ActivityStatus.CARD_OPENED else ActivityStatus.CARD_CLOSED,formatter.format(Date()).toString())
+            ActivityStatus.CARD_OPENED,formatter.format(Date()).toString())
         viewModelScope.launch {
             repository.insert(a)
         }

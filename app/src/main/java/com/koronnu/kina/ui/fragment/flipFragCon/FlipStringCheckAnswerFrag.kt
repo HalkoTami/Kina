@@ -90,7 +90,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
         }
         fun addCL(){
             binding.imvFlipCorrectAnswerSide.setOnClickListener {
-                val data = ankiFlipBaseViewModel.returnParentCard()?.stringData
+                val data = ankiFlipBaseViewModel.getParentCard.stringData
                 it.isSelected = it.isSelected.not()
                 if(it.isSelected){
                     it.alpha = 1f
