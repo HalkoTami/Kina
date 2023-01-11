@@ -92,7 +92,7 @@ abstract class CardDao: BaseDao<Card> {
     @Query("select * from tbl_card where not deleted AND id in (:cardIds)  ")
     abstract fun getCardByMultipleCardIds(cardIds:List<Int>): Flow<List<Card>>
 
-    @Query("select * from tbl_card where not deleted AND belongingFlashCardCoverId  ")
+    @Query("select * from tbl_card where not deleted  ")
     abstract fun getAllCards(): Flow<List<Card>>
 
     @Query("select * from tbl_card where not deleted limit 1")
