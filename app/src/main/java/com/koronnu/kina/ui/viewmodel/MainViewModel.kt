@@ -120,6 +120,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
             }
         )
     }
+
     val _bnvVisibility = MutableLiveData<Boolean>()
     val bnvVisibility:LiveData<Boolean> = _bnvVisibility
     fun setBnvVisibility(boolean: Boolean){

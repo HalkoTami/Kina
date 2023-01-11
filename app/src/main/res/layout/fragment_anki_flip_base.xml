@@ -6,6 +6,7 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View"/>
+        <import type="com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide"/>
         <variable
             name="viewModel"
             type="com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel" />
@@ -28,6 +29,7 @@
             app:layout_constraintStart_toStartOf="parent">
             <include
                 android:id="@+id/confirm_end_binding"
+                bind:viewModel="@{viewModel}"
                 layout="@layout/widget_pw_confirm_end_anki_flip"/>
         </FrameLayout>
         <FrameLayout
@@ -85,6 +87,7 @@
                 <ImageView
                     android:contentDescription="@string/cd_flip_previous"
                     android:id="@+id/btn_flip_previous"
+                    android:onClick="@{()->viewModel.flip(NeighbourCardSide.PREVIOUS)}"
                     android:layout_gravity="start"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -93,6 +96,7 @@
                 <ImageView
                     android:contentDescription="@string/cd_btn_add_card"
                     android:id="@+id/btn_add_card"
+                    android:visibility="invisible"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -101,6 +105,7 @@
                     android:src="@drawable/icon_add"/>
                 <ImageView
                     android:contentDescription="@string/cd_flip_next"
+                    android:onClick="@{()->viewModel.flip(NeighbourCardSide.NEXT)}"
                     android:rotation="180"
                     android:id="@+id/btn_flip_next"
                     android:layout_width="0dp"
@@ -118,6 +123,7 @@
         <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnSelect
             android:id="@+id/btn_remembered"
             isSelected="@{viewModel._parentCard.remembered}"
+            android:onClick="@{()->viewModel.changeRememberStatus()}"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="20dp"
@@ -130,6 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_edit"
+            android:onClick="@{()->viewModel.editParentFlipCard()}"
             app:layout_constraintTop_toTopOf="@+id/fragConView_flip"
             app:layout_constraintEnd_toEndOf="@id/fragConView_flip"
             android:layout_margin="10dp"/>
@@ -151,8 +158,10 @@
         <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnSelect
             android:id="@+id/btn_stop_count"
             android:layout_width="0dp"
+            android:visibility="gone"
+            isSelected="@{!viewModel._autoFlipRunning}"
             app:layout_constraintWidth_percent="0.08"
-
+            android:onClick="@{()->viewModel.controlCountDown()}"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@id/txv_countDown"
             app:layout_constraintTop_toTopOf="@id/txv_countDown"

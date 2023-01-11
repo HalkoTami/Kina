@@ -62,7 +62,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
                 binding.imvCheckAnswer.setOnClickListener {
                     val rootView = binding.root
                     rootView.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
-                    flipBaseViewModel.flip(NeighbourCardSide.NEXT,ankiSettingPopUpViewModel.getReverseCardSideActive,true)
+                    flipBaseViewModel.flip(NeighbourCardSide.NEXT)
                 }
             }
             addCL()

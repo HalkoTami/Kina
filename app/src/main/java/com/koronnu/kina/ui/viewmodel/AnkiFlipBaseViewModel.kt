@@ -1,5 +1,6 @@
 package com.koronnu.kina.ui.viewmodel
 
+import android.animation.ValueAnimator
 import android.content.res.Resources
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -7,7 +8,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.koronnu.kina.R
 import com.koronnu.kina.application.RoomApplication
-import com.koronnu.kina.customClasses.enumClasses.AnimationAttributes
+import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.FlipFragments
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
@@ -18,6 +19,8 @@ import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.db.enumclass.DBTable
+import com.koronnu.kina.ui.fragment.anki_frag_con.AnkiFlipCompleteFragDirections
+import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.koronnu.kina.ui.fragment.flipFragCon.FlipStringCheckAnswerFragDirections
 import com.koronnu.kina.ui.fragment.flipFragCon.FlipStringFragDirections
 import com.koronnu.kina.ui.fragment.flipFragCon.FlipStringTypeAnswerFragDirections
@@ -68,23 +71,21 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         return returnFlipItems().filter { it.remembered }.size -(returnRememberedCardsAmountOnStart() ?:0)
     }
 
-
     fun onChildFragmentsStart(
         flipFragments: FlipFragments,
         autoFlip: Boolean, ){
         setFlipFragment(flipFragments)
-        if(autoFlip){
-            if(returnAutoFlipPaused().not())
-                setCountDownAnim(AnimationAttributes.StartAnim)
-        }
+        setLoadingCountDownAnim(true)
     }
-    private val _autoFlipPaused = MutableLiveData<Boolean>()
-    fun setAutoFlipPaused(boolean: Boolean){
-        _autoFlipPaused.value = boolean
+    val _autoFlipRunning = MutableLiveData<Boolean>()
+    fun setAutoFlipRunning(boolean: Boolean){
+        val animation = getCountDownAnim
+        _autoFlipRunning.value = boolean
+        if(boolean) getCountDownAnim?.resume()
+        else getCountDownAnim?.pause()
     }
-    private fun returnAutoFlipPaused():Boolean{
-        return _autoFlipPaused.value ?:false
-    }
+    val getAutoFlipRunning get() = _autoFlipRunning.value ?:false
+
 
 
     private val _flipBaseNavCon = MutableLiveData<NavController>()
@@ -111,16 +112,31 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         return _flipFragment.value ?: FlipFragments.LookStringFront
     }
 
-    private val _countDownAnim = MutableLiveData<AnimationAttributes>()
-    fun setCountDownAnim(animationAttributes: AnimationAttributes){
-        _countDownAnim.value = animationAttributes
+    private val _countDownAnim = MutableLiveData<ValueAnimator>()
+    fun setCountDownAnim(valueAnimator: ValueAnimator){
+        getCountDownAnim?.cancel()
+        _countDownAnim.value = valueAnimator
+        doAfterCountDownAnimSet()
     }
-    val countDownAnim:LiveData<AnimationAttributes> = _countDownAnim
+    fun doAfterCountDownAnimSet(){
+        if(ankiSettingPopUpViewModel.getAutoFlip.active){
+            getCountDownAnim?.start()
+            if(!getAutoFlipRunning) getCountDownAnim?.pause()
+        }
+    }
+    val getCountDownAnim get() = _countDownAnim.value
+    val countDownAnim:LiveData<ValueAnimator> = _countDownAnim
+
+    val _loadingNewCountDownAnim = MutableLiveData<Boolean>()
+    val loadingNewCountDownAnim :LiveData<Boolean> = _loadingNewCountDownAnim
+    fun setLoadingCountDownAnim(boolean: Boolean){
+        _loadingNewCountDownAnim.value = boolean
+    }
 
     fun getCardFromDB(cardId:Int) :LiveData<Card> = repository.getCardByCardId(cardId).asLiveData()
     val _parentCard = MutableLiveData<Card>()
     fun setParentCard(card: Card){
-        if(_parentCard.value==card) return
+        if(_parentCard.value===card) return
         _parentCard.value = card
         doAfterParentCardChanged()
     }
@@ -154,30 +170,10 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     private fun checkFront():Boolean{
         return (returnFlipFragment() == FlipFragments.LookStringFront)
     }
-    private fun checkBack():Boolean{
-        return (returnFlipFragment() == FlipFragments.LookStringBack)
-    }
 
-    private fun checkChangeToNextCard(reverseMode: Boolean):Boolean{
-        return  (reverseMode&&checkFront())||(reverseMode.not()&&checkBack())
-    }
-    private fun checkFirstSide(reverseMode: Boolean):Boolean{
-        return (reverseMode&&checkBack())||(reverseMode.not()&&checkFront())
-                ||returnFlipFragment() == FlipFragments.TypeAnswerString
-    }
-    private fun checkSecondSide(reverseMode: Boolean):Boolean{
-        return (reverseMode&&checkFront())||(reverseMode.not()&&checkBack())
-                ||returnFlipFragment() == FlipFragments.CheckAnswerString
-    }
-    private fun checkChangeToPreviousCard(reverseMode: Boolean):Boolean{
-        return (reverseMode&&checkBack())||(reverseMode.not()&&checkFront())
-    }
-    private fun checkPositionIsOnStartEdge(reverseMode: Boolean):Boolean{
-        return (returnParentPosition() == 0&&checkFirstSide(reverseMode))
-    }
-    private fun checkPositionIsOnEndEdge(reverseMode: Boolean):Boolean{
-        return (returnParentPosition() == returnFlipItems().size -1&&checkSecondSide(reverseMode))
-    }
+    val reverseMode get() = ankiSettingPopUpViewModel.getReverseCardSideActive
+    private val changeCardIfFlipNext get()= parentFlipSide==FlipSide.Back
+    private val changeCardIfFlipPrevious get() = parentFlipSide == FlipSide.Front
     private val _flipProgress = MutableLiveData<Progress>()
     private fun setProgress(progress: Progress){
         _flipProgress.value = progress
@@ -218,102 +214,80 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
                 false -> {
                     val cardId =list[startingPosition].id
                     val action =
-                        FlipStringFragDirections.toFlipString(
-                        )
+                        FlipStringFragDirections.toFlipString()
                     action.front = reverseMode.not()
                     action.cardId = intArrayOf(cardId)
                     return action
                 }
             }
         }
+        setParentFlipSide(FlipSide.Front)
+        setAutoFlipRunning(ankiSettingPopUpViewModel.getAutoFlip.active)
         returnFlipBaseNavCon()?.navigate(getAction())
+
+    }
+    val typeAnswer get() = ankiSettingPopUpViewModel.getTypeAnswer
+    val nextCard get() =  returnFlipItems()[returnParentPosition()+1]
+    val previousCard get() =  returnFlipItems()[returnParentPosition()-1]
+    fun getTypeAndCheckNavDirection(side:NeighbourCardSide):NavDirections{
+        val changeCard = if(side==NeighbourCardSide.NEXT) nextCard else previousCard
+        return when(returnFlipFragment()){
+            FlipFragments.CheckAnswerString ->
+                FlipStringTypeAnswerFragDirections.toTypeAnswerString(
+                reverseMode.not(),
+                changeCard.id)
+            FlipFragments.TypeAnswerString ->
+                FlipStringCheckAnswerFragDirections.toCheckAnswerString(
+                    reverseMode.not(),
+                    true,
+                    getParentCard.id,
+                )
+            else -> throw IllegalArgumentException()
+    }}
+    val parentSideIsFront:Boolean get() = checkFront()
+    fun getFlipStringNavDirection(side: NeighbourCardSide):NavDirections{
+        val card = if(side == NeighbourCardSide.NEXT&&changeCardIfFlipNext) nextCard
+        else if(side== NeighbourCardSide.PREVIOUS&&changeCardIfFlipPrevious) previousCard
+        else getParentCard
+        val cardId = card.id
+        val action = FlipStringFragDirections.toFlipString()
+        action.front = parentSideIsFront.not()
+        action.cardId = intArrayOf(cardId)
+        return action
+    }
+    enum class FlipSide{
+        Front, Back
+    }
+    val _parentFlipSide = MutableLiveData<FlipSide>()
+    val parentFlipSide get() =_parentFlipSide.value ?:FlipSide.Front
+    fun setParentFlipSide(flipSide: FlipSide){
+        _parentFlipSide.value = flipSide
     }
 
-    fun flip(side: NeighbourCardSide, reverseMode:Boolean, typeAnswer:Boolean):Boolean{
+    val isLastCard get() = (returnFlipItems().last() == getParentCard)
+    val isLastCardLastSide get() = isLastCard&&parentFlipSide==FlipSide.Back
+    val isFirstCard get() = (returnFlipItems().first() == getParentCard)
 
-        fun getNextFrag():NavDirections?{
-            val changeCard = checkChangeToNextCard(reverseMode)
-            val changeOnlySide = (reverseMode.not()&&checkFront())||(reverseMode&&checkBack())
-            val flipToFront = (changeCard&&reverseMode.not())||(changeOnlySide&&reverseMode)
-            val oldPosition = returnParentPosition()
-            val newPosition = returnParentPosition()  + 1
-            return   if(checkPositionIsOnEndEdge(reverseMode))
-                null else {
-                when(typeAnswer){
-                    true -> when(returnFlipFragment()){
-                        FlipFragments.CheckAnswerString -> {
-                            FlipStringTypeAnswerFragDirections.toTypeAnswerString(
-                                reverseMode.not(),
-                                returnFlipItems()[newPosition].id)
-                        }
-                        FlipFragments.TypeAnswerString -> {
-                            FlipStringCheckAnswerFragDirections.toCheckAnswerString(
-                                reverseMode.not(),
-                                true,
-                                returnFlipItems()[oldPosition].id,
-                            )
-                        }
-                        else -> return null
-                    }
-                    false -> {
-                        val cardId = if(changeCard) returnFlipItems()[newPosition].id else _parentCard.value!!.id
-                        val action =
-                            FlipStringFragDirections.toFlipString(
-                            )
-                        action.front = flipToFront
-                        action.cardId = intArrayOf(cardId)
-                        action
-                    }
-                }
-
-            }
-
+    val isFirstCardFirstSide get() = isFirstCard&&parentFlipSide==FlipSide.Front
+    fun flip(side: NeighbourCardSide):Boolean{
+        if(side == NeighbourCardSide.PREVIOUS&&isFirstCardFirstSide) return false
+        if(side==NeighbourCardSide.NEXT&&isLastCardLastSide) {
+            ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.FlipCompleted)
+            return true
         }
-        fun getPreviousFrag():NavDirections?{
-
-            val changeCard = checkChangeToPreviousCard(reverseMode)
-            val flipToFront = (changeCard&&reverseMode)||(!changeCard&&reverseMode.not())
-            val oldPosition = returnParentPosition()
-            val newPosition = returnParentPosition() - 1
-            return if(checkPositionIsOnStartEdge(reverseMode))
-                null else {
-                when(typeAnswer){
-                    true -> when(changeCard){
-                        true -> {
-                            FlipStringCheckAnswerFragDirections.toCheckAnswerString(
-                                reverseMode.not(),
-                                false,
-                                returnFlipItems()[newPosition].id,
-                            )
-                        }
-                        false -> {
-                            FlipStringTypeAnswerFragDirections.toTypeAnswerString(
-                                reverseMode.not(),
-                                returnFlipItems()[oldPosition].id)
-                        }
-                    }
-                    false -> {
-                        val cardId = if(changeCard) returnFlipItems()[newPosition].id else _parentCard.value!!.id
-                        val action =
-                            FlipStringFragDirections.toFlipString()
-                        action.front = flipToFront
-                        action.cardId = intArrayOf(cardId)
-                        return action
-                    }
-                }
-
-            }
-
-
-        }
-        val action = when(side){
-            NeighbourCardSide.PREVIOUS-> getPreviousFrag()
-            NeighbourCardSide.NEXT -> getNextFrag()
-        }
-        returnFlipBaseNavCon()?.navigate(action ?:return false)
+        val action = if(typeAnswer) getTypeAndCheckNavDirection(side)
+        else getFlipStringNavDirection(side)
+        returnFlipBaseNavCon()?.navigate(action )
+        reverseFlipSide()
         return true
     }
-
+    fun reverseFlipSide(){
+        val reverseSide = when(parentFlipSide){
+            FlipSide.Front->FlipSide.Back
+            FlipSide.Back -> FlipSide.Front
+        }
+        setParentFlipSide(reverseSide)
+    }
 
 
     private val _front = MutableLiveData<Boolean>()
@@ -374,6 +348,77 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     val frConfirmEndVisible get() = _frConfirmEndVisible.value ?:false
 
 
+    fun cancelEnd(){
+        setFrConfirmEndVisible(false)
+    }
+    fun end(){
+        ankiBaseViewModel.getAnkiBaseNavCon.popBackStack()
+        saveFlipActionStatus(ActivityStatus.FLIP_ROUND_ENDED)
+        setFrConfirmEndVisible(false)
+    }
+//    btnRemembered -> {
+//        p0.isSelected = !p0.isSelected
+//        ankiFlipBaseViewModel.changeRememberStatus()
+//    }
+//    btnFlipNext -> {
+//        ankiSettingPopUpViewModel.apply {
+//            if(ankiFlipBaseViewModel.flip(
+//                    NeighbourCardSide.NEXT,
+//                    getReverseCardSideActive,
+//                    getTypeAnswer
+//                ).not()) ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.FlipCompleted)
+//        }
+//
+//    }
+//    btnFlipPrevious -> {
+//        ankiSettingPopUpViewModel.apply {
+//            ankiFlipBaseViewModel.flip(
+//                NeighbourCardSide.PREVIOUS,
+//                getReverseCardSideActive,
+//                getTypeAnswer
+//            )
+//        }
+//    }
+//    btnAddCard -> {
+//        editFileViewModel.setBottomMenuVisible(true)
+//    }
+//    btnStopCount -> {
+//        p0.isSelected = !p0.isSelected
+//        if (p0.isSelected) ankiFlipBaseViewModel.setCountDownAnim(
+//            AnimationAttributes.Pause
+//        ) else ankiFlipBaseViewModel.setCountDownAnim(
+//            AnimationAttributes.Resume
+//        )
+//        ankiFlipBaseViewModel.setAutoFlipPaused(p0.isSelected)
+//    }
+//    imvEditCard -> {
+//        val editingId = ankiFlipBaseViewModel.getParentCard.id ?: return
+//        createCardViewModel.setStartingCardId(editingId)
+//        mainViewModel.getMainActivityNavCon
+//            .navigate(EditCardBaseFragDirections.openCreateCard())
+//    }
+//}
+    fun openParentFlipItems(){
+        ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.FlipItems)
+    }
+    fun openCreateCardByCardId(editingId:Int){
+        createCardViewModel.setStartingCardId(editingId)
+        mainViewModel.getMainActivityNavCon
+            .navigate(EditCardBaseFragDirections.openCreateCard())
+    }
+    fun editParentFlipCard(){
+        try {
+            openCreateCardByCardId(getParentCard.id)
+        } catch (error:java.lang.NullPointerException){
+            println(error)
+            println("flip called before parentCard set")
+            return
+        }
+    }
+
+    fun controlCountDown(){
+        setAutoFlipRunning(getAutoFlipRunning.not())
+    }
 
     fun onBackPressed():Boolean{
         setFrConfirmEndVisible(frConfirmEndVisible.not())

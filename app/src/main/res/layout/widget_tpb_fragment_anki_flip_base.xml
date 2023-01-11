@@ -44,6 +44,7 @@
         <ImageView
             android:contentDescription="@string/cd_show_flip_list"
             style="@style/TopBarButtonStyle"
+            android:onClick="@{()->viewModel.openParentFlipItems()}"
             android:layout_marginStart="10dp"
             android:id="@+id/btn_flip_item_list"
             app:tint="@color/most_dark_gray"

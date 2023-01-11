@@ -14,7 +14,6 @@
         tools:layout="@layout/fragment_anki_flip_base"
         android:label="@string/nav_label_anki_flip"
         android:id="@+id/anki_flip_base_frag">
-w
     </fragment>
     <fragment
         android:name="com.koronnu.kina.ui.fragment.anki_frag_con.AnkiBoxContentFrag"

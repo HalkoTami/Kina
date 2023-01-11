@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -23,11 +22,9 @@ import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.customClasses.enumClasses.AnimationAttributes
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
-import com.koronnu.kina.customClasses.normalClasses.AutoFlip
 import com.koronnu.kina.customClasses.normalClasses.Progress
 import com.koronnu.kina.databinding.FragmentAnkiFlipBaseBinding
 import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.koronnu.kina.ui.viewmodel.*
 import java.util.Date
@@ -66,30 +63,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fun setUpCL(){
-            binding.apply {
-                topBinding.apply {
-                    arrayOf(
-
-                        btnFlipItemList,
-                        imvEditCard,
-                        imvBack,
-                        btnRemembered,
-                        btnFlipNext,
-                        btnFlipPrevious,
-                        btnAddCard,
-                        btnStopCount,
-                        confirmEndBinding.btnCloseConfirmEnd,
-                        confirmEndBinding.btnCommit,
-                        confirmEndBinding.btnCancelEnd,
-                        frameLayConfirmEnd).onEach {
-                        it.setOnClickListener(
-                            this@AnkiFlipBaseFrag)
-                    }
-                }
-
-            }
-        }
         fun setUpViewStart(){
             binding.progressBarBinding.apply {
                 frameLayProgressbarRemembered.
@@ -125,6 +98,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                 else ->  return@Observer
             }
         }
+
         val allCardsFromDBObserver = Observer<List<Card>>{
             if(cardIds.isEmpty())
                 ankiFlipBaseViewModel.setAnkiFlipItems(it,ankiSettingPopUpViewModel.getAnkiFilter)
@@ -173,20 +147,20 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                 binding.btnFlipPrevious.visibility = View.INVISIBLE
             }
         }
-        val autoFlipObserver = Observer<AutoFlip>{
-            if(it.active){
-                ankiFlipBaseViewModel.setCountDownAnim(AnimationAttributes.StartAnim)
-            } else {
-                binding.txvCountDown.visibility = View.GONE
-                binding.btnStopCount.visibility = View.GONE
-                ankiFlipBaseViewModel.apply {
-                    if(parentCountAnimation!=null){
-                        setCountDownAnim(AnimationAttributes.Cancel)
-                    }
-
-                }
-            }
-        }
+//        val autoFlipObserver = Observer<AutoFlip>{
+//            if(it.active){
+//                ankiFlipBaseViewModel.setCountDownAnim(AnimationAttributes.StartAnim)
+//            } else {
+//                binding.txvCountDown.visibility = View.GONE
+//                binding.btnStopCount.visibility = View.GONE
+//                ankiFlipBaseViewModel.apply {
+//                    if(parentCountAnimation!=null){
+//                        setCountDownAnim(AnimationAttributes.Cancel)
+//                    }
+//
+//                }
+//            }
+//        }
         val keyBoardVisibilityObserver = Observer<Boolean>{ visible ->
             val views = arrayOf(binding.linLayFlipBottom,binding.btnRemembered)
             views.onEach {
@@ -195,25 +169,30 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
         }
 
         setUpLateInitVars()
-        setUpCL()
         setUpViewStart()
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
         mainViewModel.setBnvVisibility(false)
 
+        ankiFlipBaseViewModel.loadingNewCountDownAnim.observe(viewLifecycleOwner){
+            if(it){
+                ankiFlipBaseViewModel.setCountDownAnim(getCountDownAnim())
+                ankiFlipBaseViewModel.setLoadingCountDownAnim(false)
+            }
+        }
         ankiFlipBaseViewModel.setFlipBaseNavCon(flipNavCon)
         ankiFlipBaseViewModel.setFront(!ankiSettingPopUpViewModel.getReverseCardSideActive)
         ankiBaseViewModel.setActiveFragment(AnkiFragments.Flip)
-        ankiFlipBaseViewModel.setAutoFlipPaused(false)
+        ankiFlipBaseViewModel.setAutoFlipRunning(false)
 //        ankiFlipBaseViewModel.saveFlipActionStatus(ActivityStatus.FLIP_ROUND_STARTED)
 
         ankiFlipBaseViewModel.flipProgress.observe(viewLifecycleOwner,progressObserver)
-        ankiFlipBaseViewModel.countDownAnim.observe(viewLifecycleOwner,countDownAnimObserver)
+//        ankiFlipBaseViewModel.countDownAnim.observe(viewLifecycleOwner,countDownAnimObserver)
         ankiFlipBaseViewModel.getAllCardsFromDB.observe(viewLifecycleOwner,allCardsFromDBObserver)
 //        ankiFlipBaseViewModel.parentCard.observe(viewLifecycleOwner,parentCardObserver)
         ankiFlipBaseViewModel.ankiFlipItems.observe(viewLifecycleOwner,flipItemsObserver)
         ankiBoxViewModel.getCardsFromDBByMultipleCardIds(cardIds).observe(viewLifecycleOwner,getCardsByMultipleCardIdsFromDBObserver)
         ankiSettingPopUpViewModel.typeAnswer.observe(viewLifecycleOwner,typeAnswerObserver)
-        ankiSettingPopUpViewModel.autoFlip.observe(viewLifecycleOwner,autoFlipObserver)
+//        ankiSettingPopUpViewModel.autoFlip.observe(viewLifecycleOwner,autoFlipObserver)
 
         flipTypeAndCheckViewModel.keyBoardVisible.observe(viewLifecycleOwner,keyBoardVisibilityObserver)
 
@@ -260,9 +239,7 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             }
             doOnEnd {
                 ankiFlipBaseViewModel.flip(
-                    NeighbourCardSide.NEXT,
-                    ankiSettingPopUpViewModel.getReverseCardSideActive,
-                    ankiSettingPopUpViewModel.getTypeAnswer)
+                    NeighbourCardSide.NEXT)
             }
 
         }
@@ -272,8 +249,9 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        parentCountAnimation?.cancel()
-        ankiFlipBaseViewModel.setCountDownAnim(AnimationAttributes.Cancel)
+//        parentCountAnimation?.cancel()
+//        ankiFlipBaseViewModel.setCountDownAnim(AnimationAttributes.Cancel)
+        ankiFlipBaseViewModel.getCountDownAnim?.cancel()
         _binding = null
     }
 
@@ -286,47 +264,42 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
                         p0.isSelected = !p0.isSelected
                         ankiFlipBaseViewModel.changeRememberStatus()
                     }
-                    btnFlipNext -> {
-                        ankiSettingPopUpViewModel.apply {
-                            if(ankiFlipBaseViewModel.flip(
-                                NeighbourCardSide.NEXT,
-                                getReverseCardSideActive,
-                                getTypeAnswer
-                            ).not()) ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.FlipCompleted)
-                        }
-
-                    }
-                    btnFlipPrevious -> {
-                        ankiSettingPopUpViewModel.apply {
-                            ankiFlipBaseViewModel.flip(
-                                NeighbourCardSide.PREVIOUS,
-                                getReverseCardSideActive,
-                                getTypeAnswer
-                            )
-                        }
-                    }
+//                    btnFlipNext -> {
+//                        ankiSettingPopUpViewModel.apply {
+//                            if(ankiFlipBaseViewModel.flip(
+//                                NeighbourCardSide.NEXT,
+//                                getReverseCardSideActive,
+//                                getTypeAnswer
+//                            ).not()) ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.FlipCompleted)
+//                        }
+//
+//                    }
+//                    btnFlipPrevious -> {
+//                        ankiSettingPopUpViewModel.apply {
+//                            ankiFlipBaseViewModel.flip(
+//                                NeighbourCardSide.PREVIOUS,
+//                                getReverseCardSideActive,
+//                                getTypeAnswer
+//                            )
+//                        }
+//                    }
                     btnAddCard -> {
                         editFileViewModel.setBottomMenuVisible(true)
                     }
-                    btnStopCount -> {
-                        p0.isSelected = !p0.isSelected
-                        if (p0.isSelected) ankiFlipBaseViewModel.setCountDownAnim(
-                            AnimationAttributes.Pause
-                        ) else ankiFlipBaseViewModel.setCountDownAnim(
-                            AnimationAttributes.Resume
-                        )
-                        ankiFlipBaseViewModel.setAutoFlipPaused(p0.isSelected)
-                    }
+//                    btnStopCount -> {
+//                        p0.isSelected = !p0.isSelected
+//                        if (p0.isSelected) ankiFlipBaseViewModel.setCountDownAnim(
+//                            AnimationAttributes.Pause
+//                        ) else ankiFlipBaseViewModel.setCountDownAnim(
+//                            AnimationAttributes.Resume
+//                        )
+//                        ankiFlipBaseViewModel.setAutoFlipPaused(p0.isSelected)
+//                    }
                     imvEditCard -> {
                         val editingId = ankiFlipBaseViewModel.getParentCard.id ?: return
                         createCardViewModel.setStartingCardId(editingId)
                         mainViewModel.getMainActivityNavCon
                             .navigate(EditCardBaseFragDirections.openCreateCard())
-                    }
-                    confirmEndBinding.btnCancelEnd, confirmEndBinding.btnCloseConfirmEnd-> changeViewVisibility(binding.frameLayConfirmEnd,false)
-                    confirmEndBinding.btnCommit -> {
-                        ankiBaseViewModel.getAnkiBaseNavCon.popBackStack()
-                        ankiFlipBaseViewModel.saveFlipActionStatus(ActivityStatus.FLIP_ROUND_ENDED)
                     }
                 }
             }
