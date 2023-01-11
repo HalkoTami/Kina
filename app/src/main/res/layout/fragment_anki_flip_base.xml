@@ -5,6 +5,7 @@
 <layout
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel" />
@@ -19,7 +20,7 @@
 
         <FrameLayout
             style="@style/PopUpFrameLayStyle"
-            android:visibility="gone"
+            android:visibility="@{viewModel._frConfirmEndVisible ?View.VISIBLE :View.GONE}"
             android:id="@+id/frameLay_confirm_end"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

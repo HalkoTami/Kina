@@ -367,10 +367,16 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
             repository.insert(a)
         }
     }
+    val _frConfirmEndVisible = MutableLiveData<Boolean>()
+    fun setFrConfirmEndVisible(visible: Boolean){
+        _frConfirmEndVisible.value = visible
+    }
+    val frConfirmEndVisible get() = _frConfirmEndVisible.value ?:false
+
 
 
     fun onBackPressed():Boolean{
-//        TODO()
+        setFrConfirmEndVisible(frConfirmEndVisible.not())
         return true
     }
 

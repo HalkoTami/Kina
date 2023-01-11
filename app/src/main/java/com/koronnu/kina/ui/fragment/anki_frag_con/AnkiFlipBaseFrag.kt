@@ -268,20 +268,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
         }
         return animation
     }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
-            true // default to enabled
-        ) {
-            override fun handleOnBackPressed() {
-                changeViewVisibility(binding.frameLayConfirmEnd,true)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,  // LifecycleOwner
-            callback
-        )
-    }
 
 
     override fun onDestroyView() {
@@ -296,7 +282,6 @@ class AnkiFlipBaseFrag  : Fragment(),View.OnClickListener {
             topBinding.apply {
                 when (p0) {
                     btnFlipItemList -> ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.FlipItems)
-                    imvBack -> ankiFlipBaseViewModel.onBackPressed()
                     btnRemembered -> {
                         p0.isSelected = !p0.isSelected
                         ankiFlipBaseViewModel.changeRememberStatus()
