@@ -2,154 +2,175 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/top_con_lay">
-
-
-    <FrameLayout
-        style="@style/PopUpFrameLayStyle"
-        android:visibility="gone"
-        android:id="@+id/frameLay_confirm_end"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-        <include
-            android:id="@+id/confirm_end_binding"
-            layout="@layout/widget_pw_confirm_end_anki_flip"/>
-    </FrameLayout>
-    <FrameLayout
-        style="@style/TopBarFrameLayStyle"
-        android:id="@+id/fl_tpbAnkiBox"
-        app:layout_constraintTop_toTopOf="parent"
+<layout
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <import type="com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide"/>
+        <variable
+            name="viewModel"
+            type="com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        >
-        <include
-            android:id="@+id/top_binding"
-            layout="@layout/widget_tpb_fragment_anki_flip_base"/>
-    </FrameLayout>
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragConView_flip"
-        android:layout_width="match_parent"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/flip_navigation"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/fl_tpbAnkiBox"
-        app:layout_constraintBottom_toTopOf="@id/linLay_flip_bottom"
-        >
-    </androidx.fragment.app.FragmentContainerView>
+        android:layout_height="match_parent"
+        android:id="@+id/top_con_lay">
 
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linLay_flip_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.12"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragConView_flip"
-        android:orientation="vertical">
 
         <FrameLayout
-            android:id="@+id/imv_flip_progress"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:layout_margin="10dp"
-            android:src="@drawable/custom_progressbar"
-            app:layout_constraintBottom_toTopOf="@id/linLay_bottom"
-            app:layout_constraintTop_toBottomOf="@id/fragConView_flip">
-
-            <include android:id="@+id/progress_bar_binding"
-                layout="@layout/progress_bar_remembered_rectangle"/>
-        </FrameLayout>
-        <LinearLayout
-            android:id="@+id/linLay_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            style="@style/PopUpFrameLayStyle"
+            android:visibility="@{viewModel._frConfirmEndVisible ?View.VISIBLE :View.GONE}"
+            android:id="@+id/frameLay_confirm_end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:paddingBottom="10dp">
-            <ImageView
-                android:contentDescription="@string/cd_flip_previous"
-                android:id="@+id/btn_flip_previous"
-                android:layout_gravity="start"
-                android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent">
+            <include
+                android:id="@+id/confirm_end_binding"
+                bind:viewModel="@{viewModel}"
+                layout="@layout/widget_pw_confirm_end_anki_flip"/>
+        </FrameLayout>
+        <FrameLayout
+            style="@style/TopBarFrameLayStyle"
+            android:id="@+id/fl_tpbAnkiBox"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            >
+            <include
+                android:id="@+id/top_binding"
+                bind:viewModel="@{viewModel}"
+                layout="@layout/widget_tpb_fragment_anki_flip_base"/>
+        </FrameLayout>
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragConView_flip"
+            android:layout_width="match_parent"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            app:navGraph="@navigation/flip_navigation"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/fl_tpbAnkiBox"
+            app:layout_constraintBottom_toTopOf="@id/linLay_flip_bottom"
+            >
+        </androidx.fragment.app.FragmentContainerView>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linLay_flip_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragConView_flip"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/imv_flip_progress"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:layout_margin="10dp"
+                android:src="@drawable/custom_progressbar"
+                app:layout_constraintBottom_toTopOf="@id/linLay_bottom"
+                app:layout_constraintTop_toBottomOf="@id/fragConView_flip">
+
+                <include android:id="@+id/progress_bar_binding"
+                    layout="@layout/progress_bar_remembered_rectangle"/>
+            </FrameLayout>
+            <LinearLayout
+                android:id="@+id/linLay_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:src="@drawable/icon_move"/>
-            <ImageView
-                android:contentDescription="@string/cd_btn_add_card"
-                android:id="@+id/btn_add_card"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/icon_add"/>
-            <ImageView
-                android:contentDescription="@string/cd_flip_next"
-                android:rotation="180"
-                android:id="@+id/btn_flip_next"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/icon_move"
-                android:layout_gravity="end"
-                android:layout_weight="1"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingBottom="10dp">
+                <ImageView
+                    android:contentDescription="@string/cd_flip_previous"
+                    android:id="@+id/btn_flip_previous"
+                    android:onClick="@{()->viewModel.flip(NeighbourCardSide.PREVIOUS)}"
+                    android:layout_gravity="start"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_move"/>
+                <ImageView
+                    android:contentDescription="@string/cd_btn_add_card"
+                    android:id="@+id/btn_add_card"
+                    android:visibility="invisible"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_add"/>
+                <ImageView
+                    android:contentDescription="@string/cd_flip_next"
+                    android:onClick="@{()->viewModel.flip(NeighbourCardSide.NEXT)}"
+                    android:rotation="180"
+                    android:id="@+id/btn_flip_next"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_move"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"/>
 
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-    <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnSelect
-        android:id="@+id/btn_remembered"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="20dp"
-        android:src="@drawable/selector_remembered"
-        app:layout_constraintBottom_toBottomOf="@id/fragConView_flip"
-        app:layout_constraintEnd_toEndOf="@id/fragConView_flip"/>
-
-    <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnDown
-        android:id="@+id/imv_edit_card"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_edit"
-        app:layout_constraintTop_toTopOf="@+id/fragConView_flip"
-        app:layout_constraintEnd_toEndOf="@id/fragConView_flip"
-        android:layout_margin="10dp"/>
-
-    <TextView
-        android:id="@+id/txv_countDown"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="7sp"
-        app:autoSizeMaxTextSize="30sp"
-        android:gravity="center"
-        app:layout_constraintHeight_percent="0.07"
-        app:layout_constraintWidth_percent="0.2"
-        android:layout_margin="10dp"
-        app:layout_constraintBottom_toTopOf="@id/linLay_flip_bottom"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-    <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnSelect
-        android:id="@+id/btn_stop_count"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.08"
-
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/txv_countDown"
-        app:layout_constraintTop_toTopOf="@id/txv_countDown"
-        app:layout_constraintStart_toEndOf="@id/txv_countDown"
-        android:src="@drawable/selector_stop_count"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
+        <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnSelect
+            android:id="@+id/btn_remembered"
+            isSelected="@{viewModel._parentCard.remembered}"
+            android:onClick="@{()->viewModel.changeRememberStatus()}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/selector_remembered"
+            app:layout_constraintBottom_toBottomOf="@id/fragConView_flip"
+            app:layout_constraintEnd_toEndOf="@id/fragConView_flip"/>
+
+        <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnDown
+            android:id="@+id/imv_edit_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_edit"
+            android:onClick="@{()->viewModel.editParentFlipCard()}"
+            app:layout_constraintTop_toTopOf="@+id/fragConView_flip"
+            app:layout_constraintEnd_toEndOf="@id/fragConView_flip"
+            android:layout_margin="10dp"/>
+
+        <TextView
+            android:id="@+id/txv_countDown"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeMaxTextSize="30sp"
+            android:gravity="center"
+            app:layout_constraintHeight_percent="0.07"
+            app:layout_constraintWidth_percent="0.2"
+            android:layout_margin="10dp"
+            app:layout_constraintBottom_toTopOf="@id/linLay_flip_bottom"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+        <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnSelect
+            android:id="@+id/btn_stop_count"
+            android:layout_width="0dp"
+            android:visibility="gone"
+            isSelected="@{!viewModel._autoFlipRunning}"
+            app:layout_constraintWidth_percent="0.08"
+            android:onClick="@{()->viewModel.controlCountDown()}"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/txv_countDown"
+            app:layout_constraintTop_toTopOf="@id/txv_countDown"
+            app:layout_constraintStart_toEndOf="@id/txv_countDown"
+            android:src="@drawable/selector_stop_count"/>
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

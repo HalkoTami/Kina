@@ -119,7 +119,7 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         val parentFlashCardCoverId = when (mainViewModel.getFragmentStatus.now) {
             MainFragment.Anki -> when (ankiBaseViewModel.returnActiveFragment()) {
                 AnkiFragments.AnkiBox -> null
-                AnkiFragments.Flip -> flipBaseViewModel.returnParentCard()?.belongingFlashCardCoverId
+                AnkiFragments.Flip -> flipBaseViewModel.getParentCard.belongingFlashCardCoverId
                 else -> null
             }
             MainFragment.Library -> libraryViewModel.returnParentFile()?.fileId

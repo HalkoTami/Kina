@@ -65,7 +65,6 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
                 changeViewVisibility(binding.background,deletePopUpViewModel.checkBackgroundVisible())
                 binding.frameLayConfirmDelete.visibility = if(it.visible) View.VISIBLE else View.GONE
                 txvConfirmDeleteOnlyParent.text = it.confirmText
-                mainViewModel.setBnvCoverVisible(deletePopUpViewModel.checkBackgroundVisible())
                 deletePopUpViewModel.doOnPopUpVisibilityChanged()
             }
         }
@@ -76,7 +75,6 @@ class LibraryBaseFrag : Fragment(),View.OnClickListener{
                 txvContainingFolder.text = it.containingFolder.toString()
                 txvContainingFlashcard.text = it.containingFlashCardCover.toString()
                 txvContainingCard.text = it.containingCards.toString()
-                mainViewModel.setBnvCoverVisible(deletePopUpViewModel.checkBackgroundVisible())
                 deletePopUpViewModel.doOnPopUpVisibilityChanged()
             }
         }

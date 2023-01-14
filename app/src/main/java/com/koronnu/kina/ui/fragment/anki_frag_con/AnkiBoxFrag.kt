@@ -45,6 +45,8 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
 
         fun setUpLateInitVars(){
             _binding =  FragmentAnkiBoxBinding.inflate(inflater, container, false)
+            binding.viewModel = ankiBoxViewModel
+            binding.lifecycleOwner = viewLifecycleOwner
             val frag = childFragmentManager.findFragmentById(binding.fcvFragmentAnkiBox.id) as NavHostFragment
             ankiBoxNavCon = frag.navController
         }
@@ -127,7 +129,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         addCL()
 
         ankiFlipBaseViewModel.setParentPosition(0)
-        ankiFlipBaseViewModel.setParentCard(null)
+//        ankiFlipBaseViewModel.setParentCard(null)
         ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
         ankiBoxViewModel.setAnkiBoxNavCon(ankiBoxNavCon)
         ankiFlipBaseViewModel.setAnkiFlipItems(mutableListOf(), AnkiFilter())
@@ -164,15 +166,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
     override fun onClick(p0: View?) {
         binding.apply {
             when (p0) {
-                btnStartAnkiFromAnkiBox -> {
-                    ankiBoxViewModel.apply {
-                        if (returnAnkiBoxItems().isEmpty()) ankiBoxViewModel.setModeCardsNotSelected(
-                            true
-                        )
-                    }
-                    ankiBaseViewModel.setSettingVisible(false)
-                    ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.Flip)
-                }
+
                 imvAddAnkiBoxContentToFavourite -> {
                     if (imvAddAnkiBoxContentToFavourite.isSelected.not() && ankiBoxViewModel.returnAnkiBoxItems()
                             .isEmpty().not()

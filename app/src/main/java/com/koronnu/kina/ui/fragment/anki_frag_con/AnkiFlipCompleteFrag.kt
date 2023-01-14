@@ -76,7 +76,7 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
     }
     private fun onClickStartAgain(){
         ankiFlipBaseViewModel.setParentPosition(0)
-        ankiFlipBaseViewModel.setParentCard(null)
+//        ankiFlipBaseViewModel.setParentCard(null)
         Animation().appearAlphaAnimation(binding.root,false,1f){
             navigateToFlipStart()
         }.start()

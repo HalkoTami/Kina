@@ -5,6 +5,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -64,9 +65,8 @@ class MainActivity : AppCompatActivity(){
         val bnvVisibilityObserver            = Observer<Boolean>{
             changeViewVisibility(binding.flTwgActivityMain,it)
         }
-        val bnvCoverObserver            = Observer<Boolean>{
-            changeViewVisibility(binding.flTwgActivityMain,it)
-        }
+
+
 
 
 
@@ -83,7 +83,6 @@ class MainActivity : AppCompatActivity(){
         mainActivityViewModel.setMainActivityBinding(binding)
         mainActivityViewModel.observeLiveDataFromMainActivity(this,this)
         mainActivityViewModel.bnvVisibility         .observe(this@MainActivity,bnvVisibilityObserver)
-        mainActivityViewModel.bnvCoverVisible       .observe(this,bnvCoverObserver)
 //        ー－－－CreateFileViewModelの読み取りー－－－
 //        ー－－－LibraryViewModelの読み取りー－－－
         libraryViewModel. onCreate()

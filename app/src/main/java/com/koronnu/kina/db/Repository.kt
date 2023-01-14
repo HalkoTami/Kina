@@ -42,6 +42,7 @@ class MyRoomRepository(
     fun getAnkiBoxRVCards                      (fileId:Int)                 :Flow<List<Card>>   = cardDao.getAnkiBoxRVCards(fileId,xRefTypeCardAsInt,xRefTypeFileAsInt)
     fun getDescendantsCardsIsByMultipleFileId  (fileIdList: List<Int>)      :Flow<List<Int>>    = cardDao.getDescendantsCardsIdsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
     val allCards                                                            :Flow<List<Card>>   = cardDao.getAllCards()
+    val cardExists                                                          :Flow<Boolean>      = cardDao.checkCardExists().map { it!=null }
 //    files
     fun getFileByFileId                        (fileId:Int?)                :Flow<File>         = fileDao.getFileByFileId(fileId)
     fun getFileAndChildrenCards                (fileId:Int?)                :Flow<Map<File,List<Card>>> = fileDao.getFileChildrenCards(fileId)
@@ -116,9 +117,9 @@ class MyRoomRepository(
 
     }
 
-    suspend fun updateCardFlippedTime(card:Card){
-        cardDao.upDateCardFlippedTimes(card.id)
-    }
+//    suspend fun updateCardFlippedTime(card:Card){
+//        cardDao.upDateCardFlippedTimes(card.id)
+//    }
 
     suspend fun update(item: Any) {
         when (item) {

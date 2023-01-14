@@ -98,7 +98,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fcv_activityMain"
-            app:labelVisibilityMode="unlabeled" >
+            app:labelVisibilityMode="unlabeled"
+            android:visibility="@{mainViewModel._bnvVisibility ? View.VISIBLE : View.GONE}">
 
             <include
                 bind:mainViewModel = "@{mainViewModel}"

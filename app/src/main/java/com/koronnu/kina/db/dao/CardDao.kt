@@ -83,8 +83,8 @@ abstract class CardDao: BaseDao<Card> {
     )
     abstract fun getAnkiBoxFavouriteRVCards(fileId:Int,cardTableInt:Int,fileTableInt:Int):Flow<List<Card>>
 
-    @Query("UPDATE tbl_card SET timesFlipped = timesFlipped +1   WHERE id = :cardId")
-    abstract suspend fun upDateCardFlippedTimes(cardId: Int)
+//    @Query("UPDATE tbl_card SET timesFlipped = timesFlipped +1   WHERE id = :cardId")
+//    abstract suspend fun upDateCardFlippedTimes(cardId: Int)
 
     @Query("select * from tbl_card where not deleted AND id = :cardId ")
     abstract fun getCardByCardId(cardId:Int?): Flow<Card>
@@ -92,9 +92,11 @@ abstract class CardDao: BaseDao<Card> {
     @Query("select * from tbl_card where not deleted AND id in (:cardIds)  ")
     abstract fun getCardByMultipleCardIds(cardIds:List<Int>): Flow<List<Card>>
 
-    @Query("select * from tbl_card where not deleted AND belongingFlashCardCoverId  ")
+    @Query("select * from tbl_card where not deleted  ")
     abstract fun getAllCards(): Flow<List<Card>>
 
+    @Query("select * from tbl_card where not deleted limit 1")
+    abstract fun checkCardExists(): Flow<Card?>
     @Query("select * FROM tbl_card " +
             "where not deleted AND belongingFlashCardCoverId is :belongingFileId "
     )

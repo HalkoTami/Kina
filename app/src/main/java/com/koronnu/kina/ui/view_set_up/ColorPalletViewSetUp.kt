@@ -8,6 +8,7 @@ import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.MutableLiveData
 import com.koronnu.kina.R
 import com.koronnu.kina.databinding.ItemColorPalletBinding
 import com.koronnu.kina.db.enumclass.ColorStatus

@@ -95,7 +95,6 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
                 libraryBaseViewModel.returnModeInBox()==true
         val popUpVisibleObserver = Observer<Boolean>{
             changeViewVisibility(binding.libChildFragBackground,it)
-            mainViewModel.setBnvCoverVisible(it)
             binding.frameLayConfirmMove.visibility = if(it) View.VISIBLE else View.GONE
         }
         val popUpTextObserver = Observer<String> {

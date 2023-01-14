@@ -17,7 +17,8 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
 
     private lateinit var _ankiFlipBaseViewModel: AnkiFlipBaseViewModel
     val ankiFlipBaseViewModel get() = _ankiFlipBaseViewModel
-    private lateinit var ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel
+    private lateinit var _ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel
+    val ankiSettingPopUpViewModel get() =_ankiSettingPopUpViewModel
     private lateinit var _ankiBoxViewModel: AnkiBoxViewModel
     val ankiBoxViewModel get() = _ankiBoxViewModel
 
@@ -32,11 +33,12 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
                         AnkiSettingPopUpViewModel.getFactory(ankiBaseViewModel)
                     )[AnkiSettingPopUpViewModel::class.java]
                 val ankiBoxViewModel =
-                    ViewModelProvider(viewModelStoreOwner,AnkiBoxViewModel.Factory)[AnkiBoxViewModel::class.java]
+                    ViewModelProvider(viewModelStoreOwner,AnkiBoxViewModel.getFactory(ankiBaseViewModel))[AnkiBoxViewModel::class.java]
                 ankiBaseViewModel._ankiBoxViewModel = ankiBoxViewModel
-                ankiBaseViewModel.ankiSettingPopUpViewModel = ankiSettingPopUpViewModel
+
+                ankiBaseViewModel._ankiSettingPopUpViewModel = ankiSettingPopUpViewModel
                 val ankiFlipBaseViewModel =
-                    ViewModelProvider(viewModelStoreOwner,AnkiFlipBaseViewModel.Factory)[AnkiFlipBaseViewModel::class.java]
+                    ViewModelProvider(viewModelStoreOwner,AnkiFlipBaseViewModel.getFactory(mainViewModel))[AnkiFlipBaseViewModel::class.java]
                 ankiBaseViewModel._ankiFlipBaseViewModel = ankiFlipBaseViewModel
                 return ankiBaseViewModel as T
             }
