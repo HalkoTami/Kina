@@ -18,25 +18,7 @@
         android:focusableInTouchMode="true"
         >
 
-        <FrameLayout
-            android:id="@+id/fl_pw_jumpToGuide"
 
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="10dp"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/topBar_height"
-            app:layout_constraintWidth_percent="0.6"
-            app:layout_constraintHeight_percent="0.1"
-            app:layout_constraintHorizontal_bias="1"
-            android:elevation="10dp"
-            >
-            <include layout="@layout/pw_jump_to_guide"
-                android:id="@+id/binding_pwJumpToGuide"/>
-
-        </FrameLayout>
         <FrameLayout
             style="@style/PopUpFrameLayStyle"
             android:onClick="@{()->null}"
