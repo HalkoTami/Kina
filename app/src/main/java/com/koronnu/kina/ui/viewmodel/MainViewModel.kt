@@ -23,14 +23,12 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 val mainModel = MainViewModel(mainActivity.layoutInflater)
-                val guideViewModel = getViewModelProviderWithFactory(GuideViewModel.getViewModelFactory(mainModel,mainActivity.resources))[GuideViewModel::class.java]
                 val guideOptionMenuViewModel = getViewModelProviderWithFactory(GuideOptionMenuViewModel.getViewModelFactory(mainModel))[GuideOptionMenuViewModel::class.java]
                 val editFileViewModel = getViewModelProviderWithFactory(EditFileViewModel.getFactory(mainModel))[EditFileViewModel::class.java]
                 val deletePopUpViewModel = getViewModelProviderWithFactory(DeletePopUpViewModel.Factory)[DeletePopUpViewModel::class.java]
                 val ankiBaseViewModel = getViewModelProviderWithFactory(AnkiBaseViewModel.getFactory(mainModel,mainActivity))[AnkiBaseViewModel::class.java]
                 val popUpJumpToGuideViewModel = getViewModelProviderWithFactory(PopUpJumpToGuideViewModel.getViewModelFactory(mainModel))[PopUpJumpToGuideViewModel::class.java]
                 val createCardViewModel = getViewModelProviderWithFactory(CreateCardViewModel.getFactory(mainModel))[CreateCardViewModel::class.java]
-                mainModel.guideViewModel = guideViewModel
                 mainModel.guideOptionMenuViewModel = guideOptionMenuViewModel
                 mainModel.editFileViewModel = editFileViewModel
                 mainModel.deletePopUpViewModel = deletePopUpViewModel
@@ -47,7 +45,6 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
         }
     }
 //    vars init onCreate
-    lateinit var guideViewModel: GuideViewModel
     lateinit var libraryBaseViewModel: LibraryBaseViewModel
     lateinit var guideOptionMenuViewModel: GuideOptionMenuViewModel
     lateinit var editFileViewModel: EditFileViewModel
@@ -61,7 +58,6 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
 
     fun observeLiveDataFromMainActivity(lifecycleOwner: LifecycleOwner,activity: MainActivity){
         guideOptionMenuViewModel.observeLiveDataInGuideOptionViewModel(lifecycleOwner,activity)
-        guideViewModel.observeGuideViewModelLiveData(lifecycleOwner)
         editFileViewModel.observeLiveData(lifecycleOwner)
     }
     private var _mainActivityBinding:ActivityMainBinding? = null
@@ -135,7 +131,6 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
 
     fun doOnBackPress() {
         if(guideOptionMenuViewModel.doOnBackPress()
-            ||guideViewModel.doOnBackPress()
             ||createCardViewModel.doOnBackPress()
             ||editFileViewModel.doOnBackPress()
             ||deletePopUpViewModel.doOnBackPress()

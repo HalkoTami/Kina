@@ -27,7 +27,6 @@ class GuideOptionMenuViewModel:ViewModel(){
     }
     private lateinit var mainViewModel: MainViewModel
     val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel
-    private val guideViewModel get() = mainViewModel.guideViewModel
 
     private val _guideOptionMenuVisible = MutableLiveData<Boolean>().apply {
         value = false
