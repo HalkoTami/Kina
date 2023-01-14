@@ -12,8 +12,6 @@ import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
 
 class LibraryInBoxFragViewModel(repository: MyRoomRepository):ViewModel() {
-    private lateinit var sharedPrefCheckForFirstTime: SharedPreferences
-    private lateinit var sharedPrefKeyInboxWithContentFirstTimeOpened:String
     private lateinit var libraryBaseViewModel: LibraryBaseViewModel
 
 
@@ -26,7 +24,6 @@ class LibraryInBoxFragViewModel(repository: MyRoomRepository):ViewModel() {
                 val repository = application.repository
                 val viewModel = LibraryInBoxFragViewModel(repository)
                 viewModel.libraryBaseViewModel = libraryBaseViewModel
-                viewModel.setLateInitVarsAfterGetContext(context)
 
                 return viewModel as T
             }
@@ -37,41 +34,14 @@ class LibraryInBoxFragViewModel(repository: MyRoomRepository):ViewModel() {
 
     private val inBoxItemObserver = Observer<List<Card>>{
         libraryBaseViewModel.setParentRVItems(it)
-//        if(!jumpToGuideHowToMoveItemsPopUpShouldShown(it)) return@Observer
-//        popUpJumpToGuideViewModel.apply {
-//            setPopUpTextId(R.string.guide_option_how_to_move_items)
-//            setPopUpVisible(true)
-//        }
-//        saveInBoxWIthContentFirstTimeOpened()
     }
-    fun observeLiveDataInInboxFrag(lifecycleOwner: LifecycleOwner,context: Context){
-        setLateInitVarsAfterGetContext(context)
+    fun observeLiveDataInInboxFrag(lifecycleOwner: LifecycleOwner){
         inBoxItem.observe(lifecycleOwner,inBoxItemObserver)
     }
-    private fun jumpToGuideHowToMoveItemsPopUpShouldShown(list: List<Card>):Boolean{
-        val inBoxContentNotEmpty = list.isNotEmpty()
-        if(!inBoxContentNotEmpty) return false
-        if(!getInBoxWIthContentFirstTimeOpened()) return false
 
-        return true
-    }
-    private fun saveInBoxWIthContentFirstTimeOpened(){
-        sharedPrefCheckForFirstTime.edit() {
-            putBoolean(sharedPrefKeyInboxWithContentFirstTimeOpened,false)
-            commit()
-        }
-    }
-    private fun setLateInitVarsAfterGetContext(context: Context){
-        val spTitleString = context.getString(R.string.sp_checkFirstTimeOpened)
-        sharedPrefCheckForFirstTime = context.getSharedPreferences(spTitleString, Context.MODE_PRIVATE)
-        sharedPrefKeyInboxWithContentFirstTimeOpened = context.getString(R.string.sp_checkFirstTimeOpened_inBoxWithContentFirstTimeOpened)
-    }
 
-    private fun getInBoxWIthContentFirstTimeOpened():Boolean{
-        return  sharedPrefCheckForFirstTime.getBoolean(sharedPrefKeyInboxWithContentFirstTimeOpened, true)
-    }
 
-    fun doOnDestroy(){
-    }
+
+
 
 }
