@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.*
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.GuideActions
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.actions.setClickListeners
-import com.koronnu.kina.customClasses.enumClasses.Guides
 import com.koronnu.kina.databinding.CallOnInstallBinding
 import com.koronnu.kina.ui.listener.GuideBindingCL
 
@@ -140,11 +138,6 @@ class GuideViewModel : ViewModel(){
         guideVisibility.observe(lifecycleOwner,guideVisibilityObserver)
     }
 
-    fun startGuide(guides: Guides,guideActions: GuideActions){
-        setGuideVisibility(true)
-        guideActions.callOnFirst(guides)
-
-    }
     var actionsBeforeEndGuideList: MutableList<()->Unit> = mutableListOf()
     fun doOnBackPress():Boolean{
         if(!getGuideVisibility) return false

@@ -92,7 +92,6 @@ class GuideOptionMenuViewModel:ViewModel(){
     fun onClickGuideMenu(guide:Guides,activity: MainActivity){
         setGuideOptionMenuVisible(false)
 
-        guideViewModel.startGuide(guide, GuideActions(activity))
 
     }
 
