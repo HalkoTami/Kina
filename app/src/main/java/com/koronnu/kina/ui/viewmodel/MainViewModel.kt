@@ -26,12 +26,10 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
                 val editFileViewModel = getViewModelProviderWithFactory(EditFileViewModel.getFactory(mainModel))[EditFileViewModel::class.java]
                 val deletePopUpViewModel = getViewModelProviderWithFactory(DeletePopUpViewModel.Factory)[DeletePopUpViewModel::class.java]
                 val ankiBaseViewModel = getViewModelProviderWithFactory(AnkiBaseViewModel.getFactory(mainModel,mainActivity))[AnkiBaseViewModel::class.java]
-                val popUpJumpToGuideViewModel = getViewModelProviderWithFactory(PopUpJumpToGuideViewModel.getViewModelFactory(mainModel))[PopUpJumpToGuideViewModel::class.java]
                 val createCardViewModel = getViewModelProviderWithFactory(CreateCardViewModel.getFactory(mainModel))[CreateCardViewModel::class.java]
                 mainModel.editFileViewModel = editFileViewModel
                 mainModel.deletePopUpViewModel = deletePopUpViewModel
                 mainModel.ankiBaseViewModel = ankiBaseViewModel
-                mainModel.popUpJumpToGuideViewModel = popUpJumpToGuideViewModel
                 mainModel.createCardViewModel   = createCardViewModel
                 val libraryBaseViewModel = getViewModelProviderWithFactory(LibraryBaseViewModel.getFactory(mainModel,mainActivity,mainActivity.baseContext))[LibraryBaseViewModel::class.java]
                 mainModel.libraryBaseViewModel = libraryBaseViewModel
@@ -47,7 +45,6 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
     lateinit var editFileViewModel: EditFileViewModel
     lateinit var deletePopUpViewModel: DeletePopUpViewModel
     lateinit var ankiBaseViewModel: AnkiBaseViewModel
-    lateinit var popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel
     lateinit var createCardViewModel: CreateCardViewModel
 
 

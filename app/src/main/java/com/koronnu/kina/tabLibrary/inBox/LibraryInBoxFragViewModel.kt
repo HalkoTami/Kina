@@ -10,18 +10,15 @@ import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
-import com.koronnu.kina.ui.viewmodel.PopUpJumpToGuideViewModel
 
 class LibraryInBoxFragViewModel(repository: MyRoomRepository):ViewModel() {
     private lateinit var sharedPrefCheckForFirstTime: SharedPreferences
     private lateinit var sharedPrefKeyInboxWithContentFirstTimeOpened:String
     private lateinit var libraryBaseViewModel: LibraryBaseViewModel
-    private lateinit var popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel
 
 
     companion object {
         fun getFactory(libraryBaseViewModel: LibraryBaseViewModel,
-                       popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel,
                        context: Context): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
@@ -29,7 +26,6 @@ class LibraryInBoxFragViewModel(repository: MyRoomRepository):ViewModel() {
                 val repository = application.repository
                 val viewModel = LibraryInBoxFragViewModel(repository)
                 viewModel.libraryBaseViewModel = libraryBaseViewModel
-                viewModel.popUpJumpToGuideViewModel = popUpJumpToGuideViewModel
                 viewModel.setLateInitVarsAfterGetContext(context)
 
                 return viewModel as T
@@ -76,7 +72,6 @@ class LibraryInBoxFragViewModel(repository: MyRoomRepository):ViewModel() {
     }
 
     fun doOnDestroy(){
-        popUpJumpToGuideViewModel.setPopUpVisible(false)
     }
 
 }
