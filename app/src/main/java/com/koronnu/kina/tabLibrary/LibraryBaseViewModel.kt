@@ -33,7 +33,6 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private lateinit var moveToViewModel : ChooseFileMoveToViewModel
     private lateinit var _libraryInBoxFragViewModel: LibraryInBoxFragViewModel
     val chooseFileMoveToViewModel get() = moveToViewModel
-    val guideOptionMenuViewModel get() = mainViewModel.guideOptionMenuViewModel
 
     /**
      *
