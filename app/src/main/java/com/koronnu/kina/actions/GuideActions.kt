@@ -415,12 +415,6 @@ class GuideActions(val activity:MainActivity){
 
         actionsBeforeEndGuideList.add{changeLibraryScrollviewAbility(true)}
 
-        when(guide){
-            Guides.CreateItems  ->CreateGuide(this).guide1()
-            Guides.MoveItems    ->MoveGuide(this).guide1()
-            Guides.EditItems    ->EditGuide(this).guide1()
-            Guides.DeleteItems  ->DeleteGuide(this).guide1()
-        }
     }
 
     private fun scrollToTop() {
