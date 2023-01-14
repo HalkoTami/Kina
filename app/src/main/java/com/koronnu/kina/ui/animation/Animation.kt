@@ -7,7 +7,6 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
-import com.koronnu.kina.actions.ViewChangeActions
 import com.koronnu.kina.actions.changeViewVisibility
 import kotlin.math.absoluteValue
 
@@ -49,7 +48,7 @@ class Animation {
         val disappear = ValueAnimator.ofFloat(defaultAlpha,0f)
         arrayOf(appear,disappear).onEach { eachAnimator->
             eachAnimator.addUpdateListener { thisAnimator ->
-                ViewChangeActions().setAlpha(view, thisAnimator.animatedValue as Float)
+                view.alpha = thisAnimator.animatedValue as Float
             }
             eachAnimator.duration = 200
         }
