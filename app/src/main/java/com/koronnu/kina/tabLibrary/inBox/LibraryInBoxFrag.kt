@@ -139,7 +139,7 @@ class LibraryInBoxFrag  : Fragment(){
         observeMultiMode()
         val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
         searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
-        libraryInBoxFragViewModel.observeLiveDataInInboxFrag(viewLifecycleOwner,requireActivity())
+        libraryInBoxFragViewModel.observeLiveDataInInboxFrag(viewLifecycleOwner)
         libraryBaseViewModel.apply {
             setModeInBox(true)
             setLibraryFragment(LibraryFragment.InBox)
@@ -185,7 +185,6 @@ class LibraryInBoxFrag  : Fragment(){
     override fun onDestroyView() {
         super.onDestroyView()
         libraryBaseViewModel.setModeInBox(false)
-        libraryInBoxFragViewModel.doOnDestroy()
 
         _binding = null
     }

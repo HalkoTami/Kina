@@ -1,14 +1,12 @@
 package com.koronnu.kina.actions
 
 import android.content.Context
-import android.graphics.Rect
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 
 
 fun makeToast(context: Context, string: String){
@@ -16,12 +14,6 @@ fun makeToast(context: Context, string: String){
 }
 
 
-fun getWindowDisplayHeightDiff(activity:AppCompatActivity): Int {
-    val rect = Rect()
-    val win = activity.window
-    win.decorView.getWindowVisibleDisplayFrame(rect)
-    return rect.top
-}
 fun setClickListeners(views: Array<View>,clickListener: OnClickListener){
     views.onEach { it.setOnClickListener (clickListener) }
 }

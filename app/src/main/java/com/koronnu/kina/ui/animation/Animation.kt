@@ -7,7 +7,6 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
-import com.koronnu.kina.actions.ViewChangeActions
 import com.koronnu.kina.actions.changeViewVisibility
 import kotlin.math.absoluteValue
 
@@ -22,26 +21,6 @@ class Animation {
             }
         }
     }
-    fun slideInRightAnim(view: View,):ValueAnimator{
-        val start = 1000f
-        val end = 0f
-        return ValueAnimator.ofFloat(start,end).apply {
-            addUpdateListener {
-                view.translationX = it.animatedValue as Float
-            }
-            doOnStart { changeViewVisibility(view,true) }
-        }
-    }
-    fun slideOutRightAnim(view: View):ValueAnimator{
-        val start = 0f
-        val end = 1000f
-        return ValueAnimator.ofFloat(start,end).apply {
-            addUpdateListener {
-                view.translationX = it.animatedValue as Float
-            }
-            doOnEnd { changeViewVisibility(view,false) }
-        }
-    }
 
     fun appearAlphaAnimation(view :View, visible:Boolean,defaultAlpha:Float,doOnEnd: () -> Unit): ValueAnimator {
 
@@ -49,7 +28,7 @@ class Animation {
         val disappear = ValueAnimator.ofFloat(defaultAlpha,0f)
         arrayOf(appear,disappear).onEach { eachAnimator->
             eachAnimator.addUpdateListener { thisAnimator ->
-                ViewChangeActions().setAlpha(view, thisAnimator.animatedValue as Float)
+                view.alpha = thisAnimator.animatedValue as Float
             }
             eachAnimator.duration = 200
         }

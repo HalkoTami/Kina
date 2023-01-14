@@ -29,11 +29,9 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var searchViewModel: SearchViewModel
-    private lateinit var popUpJumpToGuideViewModel: PopUpJumpToGuideViewModel
     private lateinit var moveToViewModel : ChooseFileMoveToViewModel
     private lateinit var _libraryInBoxFragViewModel: LibraryInBoxFragViewModel
     val chooseFileMoveToViewModel get() = moveToViewModel
-    val guideOptionMenuViewModel get() = mainViewModel.guideOptionMenuViewModel
 
     /**
      *
@@ -53,10 +51,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
                     ChooseFileMoveToViewModel.getFactory(libraryBaseViewModel))[ChooseFileMoveToViewModel::class.java]
                 val inBoxFragViewModel = ViewModelProvider(viewModelStoreOwner,
                     LibraryInBoxFragViewModel.getFactory(libraryBaseViewModel,
-                        mainViewModel.popUpJumpToGuideViewModel,
                         context))[LibraryInBoxFragViewModel::class.java]
                 libraryBaseViewModel.mainViewModel = mainViewModel
-                libraryBaseViewModel.popUpJumpToGuideViewModel = mainViewModel.popUpJumpToGuideViewModel
                 libraryBaseViewModel.searchViewModel = searchViewModel
                 libraryBaseViewModel.moveToViewModel = moveToViewModel
                 libraryBaseViewModel._libraryInBoxFragViewModel = inBoxFragViewModel
@@ -76,7 +72,6 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
 
     fun observeLiveDataInFragment(lifecycleOwner: LifecycleOwner){
-        popUpJumpToGuideViewModel.observePopUpVisibility(lifecycleOwner)
         childFragBinding.observe(lifecycleOwner,childFragBindingObserver)
     }
     private val _childFragBinding= MutableLiveData<LibraryChildFragWithMulModeBaseBinding>()
