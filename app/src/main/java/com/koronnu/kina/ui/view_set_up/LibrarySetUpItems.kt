@@ -133,6 +133,7 @@ class LibrarySetUpItems{
 
 
 
+
     fun setColorByMatchedSearch(view: TextView, fulltext: String, subtext: String, color: Int) {
         view.setText(fulltext, TextView.BufferType.SPANNABLE)
         val str = view.text as Spannable
