@@ -1,14 +1,12 @@
 package com.koronnu.kina.actions
 
 import android.content.Context
-import android.graphics.Rect
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 
 
 fun makeToast(context: Context, string: String){
