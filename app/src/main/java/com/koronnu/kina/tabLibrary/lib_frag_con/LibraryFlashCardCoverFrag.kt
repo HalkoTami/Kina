@@ -13,7 +13,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
-import com.koronnu.kina.actions.SortActions
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.koronnu.kina.databinding.LibraryFragTopBarFileBinding
@@ -155,9 +154,7 @@ LibraryFlashCardCoverFrag  : Fragment(){
             val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
             topBarBinding.txvFileTitle.text = args.flashCardCoverId.single().toString()
             childCardsFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner) {
-
-                val sorted = SortActions().sortCards(it ?: mutableListOf())
-                setParentRVItems(sorted ?: mutableListOf())
+                setParentRVItems(it?: mutableListOf())
                 adapter.submitList(it)
                 if(it!=null){
                     createCardViewModel.setSisterCards(it)

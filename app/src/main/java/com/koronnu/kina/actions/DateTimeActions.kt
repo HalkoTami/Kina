@@ -11,10 +11,7 @@ class DateTimeActions {
         DAYS
     }
 
-    fun fromDateToString(date: Date):String{
-        val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPAN)
-        return formatter.format(date).toString()
-    }
+
     fun fromStringToDate(string: String): Date?{
         val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPAN)
         return formatter.parse(string)

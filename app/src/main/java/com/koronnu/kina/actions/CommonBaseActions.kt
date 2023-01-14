@@ -16,12 +16,6 @@ fun makeToast(context: Context, string: String){
 }
 
 
-fun getWindowDisplayHeightDiff(activity:AppCompatActivity): Int {
-    val rect = Rect()
-    val win = activity.window
-    win.decorView.getWindowVisibleDisplayFrame(rect)
-    return rect.top
-}
 fun setClickListeners(views: Array<View>,clickListener: OnClickListener){
     views.onEach { it.setOnClickListener (clickListener) }
 }
