@@ -74,12 +74,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/icon_help"
-        android:id="@+id/btn_guide"
-        android:contentDescription="@string/cd_btn_guide" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

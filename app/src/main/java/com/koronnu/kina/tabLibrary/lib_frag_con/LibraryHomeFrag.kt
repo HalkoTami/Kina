@@ -83,7 +83,6 @@ class LibraryHomeFrag : Fragment(){
         fun homeTopBarAddCL(){
             arrayOf(
                 topBarBinding.frameLayInBox,
-                topBarBinding.btnGuide
             ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(topBarBinding, libraryBaseViewModel)) }
         }
         fun addCL(){
