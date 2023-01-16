@@ -136,6 +136,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private fun returnLastInsertedCard():Card?{
         return _lastInsertedCard.value
     }
+
     fun setLastInsertedCard(card: Card?){
         if(card==returnLastInsertedCard()) return else
             _lastInsertedCard.value = card
@@ -182,8 +183,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         viewModelScope.launch {
             repository.insert(any)
         }
-
     }
+
     fun update(any: Any){
         viewModelScope.launch {
             repository.update(any)
@@ -203,7 +204,6 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             saveEmptyCard(returnParentCard()?.id,returnParentFlashCardCover()?.fileId)
         }
         fun insertToBefore(){
-
             val insertingCardsBefore = returnParentCard()?.cardBefore
             saveEmptyCard(insertingCardsBefore,returnParentFlashCardCover()?.fileId)
             upDateCardBefore(returnParentCard()!!,(returnLastInsertedCard()?.id ?:0)+1)
