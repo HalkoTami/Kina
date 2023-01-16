@@ -121,6 +121,11 @@ class MyRoomRepository(
 //        cardDao.upDateCardFlippedTimes(card.id)
 //    }
 
+    suspend fun updateCardRememberedStatus(card:Card,remembered:Boolean){
+        if(card.remembered==remembered) return
+        card.remembered = remembered
+        cardDao.update(card)
+    }
     suspend fun update(item: Any) {
         when (item) {
             is XRef -> xRefDao.update(item)
