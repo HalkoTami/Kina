@@ -71,6 +71,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
             fun addCL(){
                 binding.imvCheckAnswer.setOnClickListener {
                     binding.root.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
+                    changeViewVisibility(bottom,true)
                     flipBaseViewModel.flip(NeighbourCardSide.NEXT)
                 }
             }
