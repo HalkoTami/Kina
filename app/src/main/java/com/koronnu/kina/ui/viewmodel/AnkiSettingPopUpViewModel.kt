@@ -72,22 +72,15 @@ class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,
         settingBinding.checkboxReverseSides             .setOnClickListener { changeReverseCardSideActiveStatus() }
         settingBinding.checkboxTypeAnswer               .setOnClickListener { changeTypeAnswerActiveStatus() }
         settingBinding.imvCloseSetting              .setOnClickListener { ankiBaseViewModel.setSettingVisible(false) }
-        settingBinding.btnStartAnkiFromAnkiBox                 .setOnClickListener { onClickStartAnki() }
+
     }
     fun afterBindingSet(lifecycleOwner: LifecycleOwner,getSharedPref:(int:Int)->SharedPreferences){
-        observeLiveData(lifecycleOwner)
         _settingSharedPref = getSharedPref(R.string.sp_title_ankiSetting)
     }
-    private fun observeLiveData(lifecycleOwner: LifecycleOwner){
-        ankiFlipBaseViewModel.ankiFlipItems.observe(lifecycleOwner){
-            if(it.isNotEmpty()) settingBinding.btnStartAnkiFromAnkiBox.isEnabled = true
-        }
-    }
 
 
-    private fun onClickStartAnki() {
-        ankiBaseViewModel.setSettingVisible(false)
-        ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.Flip)
+    fun onClickStartAnki() {
+        ankiBaseViewModel.ankiBoxViewModel.onClickBtnStartFlip()
     }
 
     private fun setSelectedStateAndAlpha(stateView:View,alphaChangeView:View,boolean: Boolean){
