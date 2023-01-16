@@ -111,6 +111,7 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
             setSettingVisible(false)
             return true
         }
+        if(ankiFlipBaseViewModel.onBackPressed()) return true
         if(!isStartFragment) getAnkiBaseNavCon.popBackStack()
         return true
     }
