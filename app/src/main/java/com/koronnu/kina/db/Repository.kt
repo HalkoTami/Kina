@@ -46,7 +46,7 @@ class MyRoomRepository(
 //    files
     fun getFileByFileId                        (fileId:Int?)                :Flow<File>         = fileDao.getFileByFileId(fileId)
     fun getFileAndChildrenCards                (fileId:Int?)                :Flow<Map<File,List<Card>>> = fileDao.getFileChildrenCards(fileId)
-    fun getFileDataByParentFileId              (parentFileId:Int?)          :Flow<List<File>>           = fileDao.myGetFileByParentFileId(parentFileId)
+    fun getFileDataByParentFileId              (parentFileId:Int?)          :Flow<List<File>?>           = fileDao.myGetFileByParentFileId(parentFileId)
     fun getLibraryItemsWithDescendantCards     (parentFileId:Int?)          :Flow<List<File>>           = fileDao.getLibraryItemsWithDescendantCards(parentFileId)
     fun getAnkiBoxRVDescendantsFolders         (fileId:Int)                 :Flow<List<File>>           = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFolderAsInt)
     fun getAnkiBoxRVDescendantsFlashCards      (fileId:Int)                 :Flow<List<File>>           = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFlashCardAsInt)

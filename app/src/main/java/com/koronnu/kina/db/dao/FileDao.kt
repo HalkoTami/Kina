@@ -44,9 +44,10 @@ abstract class FileDao: BaseDao<File> {
             "and fileBefore is null " +
             "and not fileStatus = 3 " +
             "UNION ALL" +
-            " SELECT a.*, g.level + 1 as level  from tbl_file a Inner JOIN generation g ON g.fileId = a.fileBefore )" +
+            " SELECT a.*, g.level + 1 as level  from tbl_file a Inner JOIN generation g ON g.fileId = a.fileBefore and " +
+                    "a.parentFileId is :fileId )" +
             "SELECT  b.* FROM generation b order by level  ")
-    abstract fun myGetFileByParentFileId(fileId: Int?): Flow<List<File>>
+    abstract fun myGetFileByParentFileId(fileId: Int?): Flow<List<File>?>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM tbl_file su WHERE su.parentFileId is :fileId and not su.fileStatus = 3 " +

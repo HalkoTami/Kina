@@ -39,7 +39,8 @@ class EditFileViewModel(val repository: MyRoomRepository,
     }
 
     private val lastInsertedFile:LiveData<File?> =  repository.lastInsertedFile.asLiveData()
-    private val parentFileSisters : LiveData<List<File>> get() =  repository.getFileDataByParentFileId(parentOpenedFile?.parentFileId).asLiveData()
+
+    private fun getSisterFiles(parentFileId:Int?):LiveData<List<File>?> = repository.getFileDataByParentFileId(parentFileId).asLiveData()
 
     val viewCoverVisibility = MutableLiveData<Boolean>().apply { value = false }
     val frameLayNewCardVisible = MutableLiveData<Boolean>().apply { value = true }
@@ -221,10 +222,10 @@ class EditFileViewModel(val repository: MyRoomRepository,
         if(fileStatus==FileStatus.ANKI_BOX_FAVOURITE&&
             ankiBoxCards.isEmpty()) return
         setMode(EditingMode.New)
-        getParentFileSisters {
+        ObserveOnce(getSisterFiles(parentOpenedFile?.fileId)){
             makeEmptyFileToCreate(fileStatus,it)
             setEditFilePopUpVisible(true)
-        }
+        }.commit()
 
     }
     fun onClickCreateCard() = createCardViewModel.onClickAddNewCardBottomBar()
@@ -248,6 +249,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
 
         val color = colPalletStatus
 
+        val fileToCreate = fileToCreate
         when(mode ){
             EditingMode.New -> {
                 fileToCreate.title = title
@@ -279,15 +281,6 @@ class EditFileViewModel(val repository: MyRoomRepository,
 
 
 
-    private fun getParentFileSisters(unit:(it:List<File>?)->Unit){
-        val livedata = parentFileSisters
-        livedata.observeForever(object:Observer<List<File>?>{
-            override fun onChanged(t: List<File>?) {
-                livedata.removeObserver(this)
-                unit(t)
-            }
-        })
-    }
     private fun makeEmptyFileToCreate(fileStatus:FileStatus,list: List<File>?){
         setFileToCreate(
             File(fileId = 0,
@@ -301,19 +294,6 @@ class EditFileViewModel(val repository: MyRoomRepository,
     }
 
 
-    fun makeFileInGuide(){
-        getParentFileSisters {
-            val first = it?.firstOrNull()
-            first?.fileBefore = (getLastInsertedFile?.fileId?:0) + 1
-            upDateFile(first ?:return@getParentFileSisters)
-        }
-        val before = fileToCreate
-        val after = run {before.fileBefore = null
-            before
-        }
-        setFileToCreate(after)
-        onClickFinish()
-    }
 
 
 
