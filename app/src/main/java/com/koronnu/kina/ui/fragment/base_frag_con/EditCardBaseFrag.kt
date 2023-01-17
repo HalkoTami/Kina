@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
@@ -23,7 +24,7 @@ import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.viewmodel.*
 
 
-class EditCardBaseFrag  : Fragment(),View.OnClickListener {
+class EditCardBaseFrag  : Fragment() {
 //    private val args : EditCardBaseFragArgs by navArgs()
     private var _binding: CreateCardFragMainBinding? = null
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -35,7 +36,6 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
     private val editFileViewModel: EditFileViewModel by activityViewModels()
 
 
-    private lateinit var mainNavCon:NavController
     private lateinit var cardNavCon:NavController
 
     private val binding get() = _binding!!
@@ -57,20 +57,8 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
                 childFragmentManager.findFragmentById(binding.createCardFragCon.id) as NavHostFragment
             cardNavCon = a.navController
             createCardViewModel.setCreateCardBaseBinding(binding)
-            mainNavCon =
-                requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain)
-                    .findNavController()
         }
 
-        fun addClickListeners() {
-            binding.apply {
-                arrayOf(
-                    createCardTopBarBinding.imvSaveAndBack,
-                    btnInsertPrevious,
-                    btnPrevious,
-                ).onEach { it.setOnClickListener(this@EditCardBaseFrag) }
-            }
-        }
 
         fun setAlphaByClickable(clickable: Boolean, view: View) {
             view.alpha = if (clickable) 1f else 0.5f
@@ -129,7 +117,10 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         }
 
         setLateInitVars()
-        addClickListeners()
+        binding.createCardTopBarBinding.imvSaveAndBack.setOnClickListener {
+            requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain)
+                .findNavController().popBackStack()
+        }
 
         mainViewModel.setChildFragmentStatus(MainFragment.EditCard)
         mainViewModel.setBnvVisibility(false)
@@ -161,25 +152,4 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         _binding = null
     }
 
-    override fun onClick(p0: View?) {
-        binding.apply {
-            when(p0){
-                createCardTopBarBinding.imvSaveAndBack  ->{
-                    mainNavCon.popBackStack()
-                }
-
-                btnInsertNext,btnInsertPrevious         -> {
-                    when(p0){
-                        btnInsertPrevious                    -> createCardViewModel. onClickBtnInsert(
-                            NeighbourCardSide.PREVIOUS)
-                        btnInsertNext                           -> createCardViewModel. onClickBtnInsert(
-                            NeighbourCardSide.NEXT)
-                    }
-//                    createCardViewModel.checkMakePopUpVisible(mainViewModel.returnFragmentStatus() ?:return,ankiBaseViewModel.returnActiveFragment())
-                }
-
-            }
-        }
-
-    }
 }
