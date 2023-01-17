@@ -63,13 +63,7 @@ class MyRoomRepository(
 //    activity
     fun getCardActivity                        (cardId:Int)                 :Flow<List<ActivityData>>       = activityDataDao.getActivityDataByCard(cardId)
     val allActivity                                                         :Flow<List<ActivityData>>       = activityDataDao.getAllActivityData()
-    val lastFlipRoundDuration:Flow<Int>                         =
-        activityDataDao.getLastActivityStartedData(
-            ActivityStatusConverter().fromActivityStatus(ActivityStatus.FLIP_ROUND_STARTED)).map {
-                val startedDate:Date = DateTimeActions().fromStringToDate(it.dateTime)!!
-                val now = Date()
-                DateTimeActions().getTimeDifference(startedDate, now,DateTimeActions.TimeUnit.MINUTES)
-        }
+    val lastFlipRoundDuration:Flow<Int>                         = activityDataDao.getLastFlipDuration()
 
     suspend fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {
         fileDao.upDateChildFilesOfDeletedFile(deletedFileId,newParentFileId)
