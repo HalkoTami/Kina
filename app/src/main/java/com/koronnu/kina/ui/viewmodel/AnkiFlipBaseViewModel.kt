@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.koronnu.kina.R
+import com.koronnu.kina.actions.DateTimeActions
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.FlipFragments
@@ -47,6 +48,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
             }
         }
     }
+    val lastFlipDurationInMin = repository.lastFlipRoundDuration.asLiveData()
     val allActivityData:LiveData<List<ActivityData>> = repository.allActivity.asLiveData()
     private val _flipLeavedTimeInSec = MutableLiveData<Int>()
     private fun setFlipLeavedTimeInSec(timeInSec:Int){
@@ -316,11 +318,11 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         }
     }
     fun saveFlipActionStatus(activityStatus: ActivityStatus){
-        val formatter = SimpleDateFormat(resources.getString(R.string.activityData_dateFormat), Locale.JAPAN)
+        val formatter =  SimpleDateFormat(resources.getString(R.string.activityData_dateFormat), Locale.JAPAN)
         val a = ActivityData(id = 0,
             activityStatus =
             activityStatus,
-            dateTime =  formatter.format(Date()).toString())
+            dateTime =  DateTimeActions().parentTimeToString())
         viewModelScope.launch {
             repository.insert(a )
         }

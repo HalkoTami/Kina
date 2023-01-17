@@ -56,7 +56,6 @@ class EditCardBaseFrag  : Fragment() {
             val a =
                 childFragmentManager.findFragmentById(binding.createCardFragCon.id) as NavHostFragment
             cardNavCon = a.navController
-            createCardViewModel.setCreateCardBaseBinding(binding)
         }
 
 
