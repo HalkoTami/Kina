@@ -102,7 +102,6 @@ class FlipStringTypeAnswerFrag  : Fragment() {
         return root
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         binding.root.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
