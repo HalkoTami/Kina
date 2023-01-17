@@ -329,9 +329,8 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     }
 
     fun updateLookedTime(card:Card){
-        val formatter = SimpleDateFormat(resources.getString(R.string.activityData_dateFormat), Locale.JAPAN)
         val a = ActivityData(0,card.id,DBTable.TABLE_CARD,
-            ActivityStatus.CARD_OPENED,formatter.format(Date()).toString())
+            ActivityStatus.CARD_OPENED,DateTimeActions().parentTimeToString())
         viewModelScope.launch {
             repository.insert(a)
         }
