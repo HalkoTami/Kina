@@ -60,9 +60,12 @@ class FlipStringTypeAnswerFrag  : Fragment() {
                     binding.imvCheckAnswer.visibility = View.VISIBLE
                    changeViewVisibility(bottom,false)
                 }
-                onKeyBoardDisappear={typeAndCheckViewModel.setKeyBoardVisible(false)
-                    binding.imvCheckAnswer.visibility = View.GONE
-                    changeViewVisibility(bottom,true)
+                onKeyBoardDisappear={
+                    typeAndCheckViewModel.setKeyBoardVisible(false)
+                    if(this@FlipStringTypeAnswerFrag.isVisible){
+                        binding.imvCheckAnswer.visibility = View.GONE
+                        changeViewVisibility(bottom,true)
+                    }
                 }
                 }
                 keyLis = keyboardListener
