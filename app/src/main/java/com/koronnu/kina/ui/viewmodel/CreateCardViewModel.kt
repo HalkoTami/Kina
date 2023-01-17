@@ -3,6 +3,7 @@ package com.koronnu.kina.ui.viewmodel
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
@@ -36,6 +37,11 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         }
     }
 
+    private val _editCardBaseFragNavDirection = MutableLiveData<NavDirections?>()
+    fun setEditCardBaseFragNavDirection(direction: NavDirections?){
+        _editCardBaseFragNavDirection.value = direction
+    }
+    val editCardBaseFragNavDirection :LiveData<NavDirections?> = _editCardBaseFragNavDirection
 
     private var _createCardStringBinding :CreateCardFragStringFragBinding? = null
     fun setCreateCardStringBinding(createCardFragStringFragBinding: CreateCardFragStringFragBinding){
@@ -230,7 +236,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         return neighbourCard?.id
 
     }
-    fun onClickBtnNavigate(navController: NavController,side: NeighbourCardSide){
+    fun onClickBtnNavigate(side: NeighbourCardSide){
         val flashCardId = returnParentCard()?.belongingFlashCardCoverId
         val a = if(flashCardId!=null) intArrayOf(flashCardId) else null
         val nextCardId = getNeighbourCardId(side)
@@ -239,8 +245,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
            val action = EditCardFragDirections.flipCreateCard()
             action.parentFlashCardCoverId = a
             action.cardId = b
-            navController.popBackStack()
-           navController.navigate(action)
+            setEditCardBaseFragNavDirection(action)
        }
     }
 

@@ -49,6 +49,10 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
 
         fun setLateInitVars() {
             _binding = CreateCardFragMainBinding.inflate(inflater, container, false)
+            binding.apply {
+                viewModel = createCardViewModel
+                lifecycleOwner = viewLifecycleOwner
+            }
             val a =
                 childFragmentManager.findFragmentById(binding.createCardFragCon.id) as NavHostFragment
             cardNavCon = a.navController
@@ -64,8 +68,6 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
                     createCardTopBarBinding.imvSaveAndBack,
                     btnInsertPrevious,
                     btnPrevious,
-                    btnNext,
-                    btnInsertNext,
                 ).onEach { it.setOnClickListener(this@EditCardBaseFrag) }
             }
         }
@@ -134,56 +136,24 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         editFileViewModel.setBottomMenuVisible(false)
 
         createCardViewModel.apply {
+            setEditCardBaseFragNavDirection(null)
             parentCard.observe(viewLifecycleOwner, parentCardObserver)
             sisterCards.observe(viewLifecycleOwner, sisterCardObserver)
             parentFlashCardCover.observe(viewLifecycleOwner, parentFlashCardCoverObserver)
             getSisterCards(parentFlashCardCoverId).observe(viewLifecycleOwner,
                 sisterCardFromDBObserver)
+            editCardBaseFragNavDirection.observe(viewLifecycleOwner){
+                if(it==null) return@observe
+                cardNavCon.popBackStack()
+                cardNavCon.navigate(it)
+            }
         }
 
-//        val startingCardId =args.startEditCardId
-//        var started = true
-//        if(started){
-//            createCardViewModel.getParentCard(startingCardId).observe(viewLifecycleOwner){
-//                val action = EditCardFragDirections.flipCreateCard()
-//                action.cardId = intArrayOf(it.id)
-//                val flashCardCoverId = it.belongingFlashCardCoverId
-//                action.parentFlashCardCoverId =if(flashCardCoverId!=null) intArrayOf(flashCardCoverId) else null
-//                cardNavCon.navigate(action)
-//                started = false
-//            }
-//
-//        }
 
 
         return binding.root
     }
 
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
-//            true // default to enabled
-//        ) {
-//            override fun handleOnBackPressed() {
-//
-//
-//                val a = mainNavCon.backQueue.size
-//                if(a>0){
-//                    while( mainNavCon.backQueue[mainNavCon.backQueue.size-1].destination.label.toString()==getString(R.string.nav_label_main_create_card)){
-//                        mainNavCon.popBackStack()
-//                    }
-//                }
-//
-//            }
-//        }
-//        if(mainViewModel.returnGuideVisibility().not()){
-//            requireActivity().onBackPressedDispatcher.addCallback(
-//                this,  // LifecycleOwner
-//                callback
-//            )
-//        }
-//
-//    }
 
 
     override fun onDestroyView() {
@@ -207,10 +177,6 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
                     }
 //                    createCardViewModel.checkMakePopUpVisible(mainViewModel.returnFragmentStatus() ?:return,ankiBaseViewModel.returnActiveFragment())
                 }
-                btnNext                                 -> createCardViewModel.onClickBtnNavigate(cardNavCon,
-                    NeighbourCardSide.NEXT)
-                btnPrevious                             -> createCardViewModel.onClickBtnNavigate(cardNavCon,
-                    NeighbourCardSide.PREVIOUS)
 
             }
         }
