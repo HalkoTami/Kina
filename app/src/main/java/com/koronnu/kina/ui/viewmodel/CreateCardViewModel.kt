@@ -47,12 +47,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun setCreateCardStringBinding(createCardFragStringFragBinding: CreateCardFragStringFragBinding){
         _createCardStringBinding = createCardFragStringFragBinding
     }
-    val createCardFragStringFragBinding:CreateCardFragStringFragBinding get() = _createCardStringBinding!!
-    private var _createCardMainBinding :CreateCardFragMainBinding? = null
-    fun setCreateCardBaseBinding(createCardFragMainBinding: CreateCardFragMainBinding){
-        _createCardMainBinding = createCardFragMainBinding
-    }
-    val createCardFragMainBinding:CreateCardFragMainBinding get() = _createCardMainBinding!!
+
 
     private val _mainActivityNavCon = MutableLiveData<NavController>()
     fun setMainActivityNavCon(navController: NavController){
