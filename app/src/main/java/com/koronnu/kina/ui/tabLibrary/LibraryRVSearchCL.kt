@@ -2,8 +2,8 @@ package com.koronnu.kina.ui.tabLibrary
 
 import android.view.View
 import com.koronnu.kina.databinding.LibraryFragRvItemBaseBinding
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 
 class LibraryRVSearchCL(

@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 
 import com.koronnu.kina.databinding.*
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
-import com.koronnu.kina.customClasses.normalClasses.ParentFileAncestors
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.data.model.normalClasses.ParentFileAncestors
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxListAdapter
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxFileRVCL
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
@@ -148,7 +148,7 @@ fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
         view.translationX = dx
         view.translationY =dy
     }
-    fun setUpAnkiBoxRing(list: MutableList<Card>,binding: PgbAnkiBoxDataRememberedBinding){
+    fun setUpAnkiBoxRing(list: MutableList<Card>, binding: PgbAnkiBoxDataRememberedBinding){
         val resources = binding.root.resources
         val rememberedPercentage = getRememberedPercentage(list)
         val rememberedCardsSize = list.filter { it.remembered == true }.size

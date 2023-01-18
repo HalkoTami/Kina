@@ -10,8 +10,8 @@ import com.koronnu.kina.actions.changeMulVisibility
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.actions.setClickListeners
 import com.koronnu.kina.databinding.*
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.enumclass.FileStatus
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 
 

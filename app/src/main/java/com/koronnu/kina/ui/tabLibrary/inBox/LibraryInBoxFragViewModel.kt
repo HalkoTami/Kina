@@ -1,14 +1,11 @@
 package com.koronnu.kina.ui.tabLibrary.inBox
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.core.content.edit
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.koronnu.kina.R
-import com.koronnu.kina.application.RoomApplication
+import com.koronnu.kina.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
-import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 
 class LibraryInBoxFragViewModel(repository: MyRoomRepository):ViewModel() {

@@ -14,8 +14,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
 import com.koronnu.kina.databinding.CreateCardFragBaseBinding
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 

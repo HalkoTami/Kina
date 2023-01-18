@@ -2,10 +2,10 @@ package com.koronnu.kina.ui.viewmodel
 
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.koronnu.kina.application.RoomApplication
+import com.koronnu.kina.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
 
 class SearchViewModel(private val repository: MyRoomRepository):ViewModel() {
 

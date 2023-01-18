@@ -12,9 +12,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.koronnu.kina.R
-import com.koronnu.kina.application.RoomApplication
-import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
-import com.koronnu.kina.customClasses.normalClasses.AutoFlip
+import com.koronnu.kina.RoomApplication
+import com.koronnu.kina.data.model.normalClasses.AnkiFilter
+import com.koronnu.kina.data.model.normalClasses.AutoFlip
 import com.koronnu.kina.db.MyRoomRepository
 
 class AnkiSettingPopUpViewModel(val repository: MyRoomRepository,

@@ -4,15 +4,15 @@ import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
-import com.koronnu.kina.application.RoomApplication
+import com.koronnu.kina.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.dataclass.StringData
-import com.koronnu.kina.db.enumclass.CardStatus
-import com.koronnu.kina.db.enumclass.ColorStatus
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.source.local.entity.StringData
+import com.koronnu.kina.data.source.local.entity.enumclass.CardStatus
+import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
 import com.koronnu.kina.ui.editCard.editCardContent.EditCardFragDirections
-import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
+import com.koronnu.kina.data.model.enumClasses.NeighbourCardSide
 import com.koronnu.kina.databinding.CreateCardFragStringFragBinding
 import com.koronnu.kina.ui.MainViewModel
 import kotlinx.coroutines.launch
@@ -73,7 +73,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     }
     val parentFlashCardCover:LiveData<File?> = _parentFlashCardCover
-    private fun returnParentFlashCardCover():File?{
+    private fun returnParentFlashCardCover(): File?{
         return _parentFlashCardCover.value
     }
 
@@ -85,7 +85,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         if(card==before ) return else
             _parentCard.value = card
     }
-    fun returnParentCard():Card?{
+    fun returnParentCard(): Card?{
         return _parentCard.value
     }
     val parentCard :LiveData<Card?> = _parentCard
@@ -133,7 +133,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     val lastInsertedCardFromDB:LiveData<Card> = repository.lastInsertedCard.asLiveData()
     private val _lastInsertedCard =  MutableLiveData<Card?>()
     val lastInsertedCard: LiveData<Card?> = _lastInsertedCard
-    private fun returnLastInsertedCard():Card?{
+    private fun returnLastInsertedCard(): Card?{
         return _lastInsertedCard.value
     }
 
@@ -171,11 +171,11 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         )
         insert(newCard)
     }
-    fun upDateCard(stringData: StringData,card: Card) {
+    fun upDateCard(stringData: StringData, card: Card) {
         card.stringData = stringData
         update(card)
     }
-    private fun upDateCardBefore(card:Card, newCardBefore:Int){
+    private fun upDateCardBefore(card: Card, newCardBefore:Int){
         card.cardBefore = newCardBefore
         update(card)
     }
@@ -253,7 +253,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         saveEmptyCard(last ,returnParentFlashCardCover()?.fileId)
 
     }
-    fun onClickAddNewCardRV(itemBefore:Card){
+    fun onClickAddNewCardRV(itemBefore: Card){
         returnMainActivityNavCon()?.navigate(EditCardBaseFragDirections.openCreateCard())
         setStartingCardId((returnLastInsertedCard()?.id ?:0)+1)
         val nextCard = returnSisterCards().find { it.cardBefore == itemBefore.id }
@@ -267,7 +267,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
 
     }
 
-    fun onClickEditCard(item: Card,navController: NavController){
+    fun onClickEditCard(item: Card, navController: NavController){
         setSaveCard(true)
         setSaveCard(false)
         setOpenEditCard(false)

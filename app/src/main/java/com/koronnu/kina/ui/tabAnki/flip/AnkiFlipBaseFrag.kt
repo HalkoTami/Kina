@@ -19,11 +19,11 @@ import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.DateTimeActions
 import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
-import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
-import com.koronnu.kina.customClasses.normalClasses.Progress
+import com.koronnu.kina.data.model.enumClasses.AnkiFragments
+import com.koronnu.kina.data.model.enumClasses.NeighbourCardSide
+import com.koronnu.kina.data.model.normalClasses.Progress
 import com.koronnu.kina.databinding.FragmentAnkiFlipBaseBinding
-import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiSettingPopUpViewModel

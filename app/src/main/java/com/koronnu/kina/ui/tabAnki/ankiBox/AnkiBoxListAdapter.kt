@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.*
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
-import com.koronnu.kina.db.dataclass.ActivityData
-import com.koronnu.kina.db.enumclass.ActivityStatus
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.data.source.local.entity.ActivityData
+import com.koronnu.kina.data.source.local.entity.enumclass.ActivityStatus
 import com.koronnu.kina.ui.tabLibrary.SearchDiffCallback
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
@@ -76,7 +76,7 @@ class AnkiBoxListAdapter(
 
 
         }
-        fun setUpRVCard(cardBinding: ListItemAnkiBoxRvCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxViewModel){
+        fun setUpRVCard(cardBinding: ListItemAnkiBoxRvCardBinding, card: Card, lifecycleOwner: LifecycleOwner, ankiBoxVM: AnkiBoxViewModel){
             val resources = cardBinding.root.context.resources
             LibrarySetUpItems().setUpRVStringCardBinding(cardBinding.bindingListItemCardString,card.stringData)
 

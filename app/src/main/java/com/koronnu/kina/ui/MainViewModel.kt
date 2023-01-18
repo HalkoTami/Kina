@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
-import com.koronnu.kina.customClasses.enumClasses.MainFragment
+import com.koronnu.kina.data.model.enumClasses.AnkiFragments
+import com.koronnu.kina.data.model.enumClasses.MainFragment
 import com.koronnu.kina.databinding.ActivityMainBinding
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseFragDirections

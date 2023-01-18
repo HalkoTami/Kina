@@ -5,8 +5,8 @@ import android.view.View
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import com.koronnu.kina.actions.hideKeyBoard
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
-import com.koronnu.kina.customClasses.enumClasses.MainFragment
+import com.koronnu.kina.data.model.enumClasses.AnkiFragments
+import com.koronnu.kina.data.model.enumClasses.MainFragment
 import com.koronnu.kina.databinding.FragmentAnkiBaseBinding
 import com.koronnu.kina.ui.tabAnki.ankiItemContent.AnkiBoxContentFragDirections
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxFragDirections
@@ -109,7 +109,7 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel) : ViewModel() {
     fun doOnBackPress(): Boolean {
         val isActive = mainViewModel.getFragmentStatus.now == MainFragment.Anki
         if(!isActive) return false
-        val isStartFragment = returnActiveFragment()==AnkiFragments.AnkiBox
+        val isStartFragment = returnActiveFragment()== AnkiFragments.AnkiBox
         if(isStartFragment
             &&!getSettingVisible) return false
         if(getSettingVisible) {

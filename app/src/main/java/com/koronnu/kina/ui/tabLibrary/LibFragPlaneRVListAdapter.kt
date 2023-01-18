@@ -7,10 +7,10 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-import com.koronnu.kina.customClasses.enumClasses.LibRVState
+import com.koronnu.kina.data.model.enumClasses.LibRVState
 import com.koronnu.kina.databinding.*
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel

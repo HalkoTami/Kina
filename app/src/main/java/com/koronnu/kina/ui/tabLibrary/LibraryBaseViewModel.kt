@@ -4,18 +4,18 @@ import android.content.Context
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
-import com.koronnu.kina.application.RoomApplication
-import com.koronnu.kina.customClasses.enumClasses.*
-import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
+import com.koronnu.kina.RoomApplication
+import com.koronnu.kina.data.model.enumClasses.*
+import com.koronnu.kina.data.model.normalClasses.MakeToastFromVM
 import com.koronnu.kina.databinding.LibItemTopBarMenuBinding
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.koronnu.kina.databinding.LibraryFragBinding
 import com.koronnu.kina.databinding.LibraryFragTopBarMultiselectModeBinding
 import com.koronnu.kina.db.MyRoomRepository
-import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.data.source.local.entity.Card
 
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.enumclass.FileStatus
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
 import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
 import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.LibraryChooseFileMoveToFragDirections
@@ -118,7 +118,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         _parentFragment.value = fragment
     }
 
-    fun returnLibraryFragment(): LibraryFragment{
+    fun returnLibraryFragment(): LibraryFragment {
         return _parentFragment.value!!
     }
     val parentFragment:LiveData<LibraryFragment> = _parentFragment
@@ -170,7 +170,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
     private val _parentFile = MutableLiveData<File?>()
     val parentFile:LiveData<File?> = _parentFile
-    fun returnParentFile():File?{
+    fun returnParentFile(): File?{
         return _parentFile.value
     }
 //    今開いてるファイルの祖先
@@ -259,10 +259,10 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     private fun updateLeftCardItems(parentCards:List<Card>){
         val updateList = mutableListOf<Card>()
         val selectedList =  returnSelectedItems().filterIsInstance<Card>()
-        fun checkIsSelected(card:Card):Boolean{
+        fun checkIsSelected(card: Card):Boolean{
             return selectedList.map { it.id }.contains(card.id)
         }
-        var lastUnselectedCard:Card? = null
+        var lastUnselectedCard: Card? = null
         fun getNextCard(cardId: Int?){
             val nextCard = parentCards.find { it.cardBefore == cardId } ?:return
             if(checkIsSelected(nextCard).not()) {
@@ -282,7 +282,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         fun checkIsSelected(file: File):Boolean{
             return selectedList.map { it.fileId }.contains(file.fileId)
         }
-        var lastUnselectedFile:File? = null
+        var lastUnselectedFile: File? = null
         fun getNextFile(fileId: Int?){
             val nextFile = parentCards.find { it.fileBefore == fileId } ?:return
             if(checkIsSelected(nextFile).not()) {
@@ -324,7 +324,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         }
         setUpdatedSelectedItems(newUpdatedList)
     }
-    private fun onClickRvSelectCard(item: Card,listAttributes: ListAttributes){
+    private fun onClickRvSelectCard(item: Card, listAttributes: ListAttributes){
         val list = returnSelectedItems().filterIsInstance<Card>()
         val parentList = returnParentRVItems().filterIsInstance<Card>()
         val mList = mutableListOf<Card>()
@@ -344,7 +344,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         sortAndUpdateSelectedCards()
 
     }
-    private fun onClickRvSelectFile(item: File,listAttributes: ListAttributes){
+    private fun onClickRvSelectFile(item: File, listAttributes: ListAttributes){
         val list = returnSelectedItems().filterIsInstance<File>()
         val parentList = returnParentRVItems().filterIsInstance<File>()
         val mList = mutableListOf<File>()
@@ -534,8 +534,8 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
     fun onClickMultiMenuMoveSelectedItemToFile(){
         val movableFileStatus = when(returnLibraryFragment()){
-            LibraryFragment.Home,LibraryFragment.Folder-> FileStatus.FOLDER
-            LibraryFragment.InBox,LibraryFragment.FlashCardCover -> FileStatus.FLASHCARD_COVER
+            LibraryFragment.Home, LibraryFragment.Folder-> FileStatus.FOLDER
+            LibraryFragment.InBox, LibraryFragment.FlashCardCover -> FileStatus.FLASHCARD_COVER
             else -> throw IllegalArgumentException()
         }
         getChooseFileMoveToViewModel.setMovableFileStatus(movableFileStatus)
@@ -546,7 +546,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         getDeletePopUpViewModel.setDeletingItem(returnSelectedItems().toMutableList())
         getDeletePopUpViewModel.setConfirmDeleteVisible(true)
     }
-    fun openChooseFileMoveTo(file:File?){
+    fun openChooseFileMoveTo(file: File?){
         val a  = LibraryChooseFileMoveToFragDirections.selectFileMoveTo(if(file ==null) null else intArrayOf(file.fileId))
        returnLibraryNavCon()?.navigate(a)
     }
@@ -576,7 +576,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun doOnBackPress(): Boolean {
         val isActive = mainViewModel.getFragmentStatus.now == MainFragment.Library
         if(!isActive) return false
-        val isHomeFragment = (returnLibraryFragment()==LibraryFragment.Home)
+        val isHomeFragment = (returnLibraryFragment()== LibraryFragment.Home)
         if(isHomeFragment
             &&!searchViewModel.doOnBackPress()
             &&!returnMultiSelectMode()

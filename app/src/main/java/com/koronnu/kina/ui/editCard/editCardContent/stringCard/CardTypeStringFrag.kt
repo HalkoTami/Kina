@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.koronnu.kina.R
 import com.koronnu.kina.databinding.CreateCardFragStringFragBinding
-import com.koronnu.kina.db.dataclass.StringData
-import com.koronnu.kina.db.enumclass.CardStatus
-import com.koronnu.kina.customClasses.enumClasses.StringFragFocusedOn
+import com.koronnu.kina.data.source.local.entity.StringData
+import com.koronnu.kina.data.source.local.entity.enumclass.CardStatus
+import com.koronnu.kina.data.model.enumClasses.StringFragFocusedOn
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 
 class CardTypeStringFrag : Fragment() {

@@ -10,7 +10,7 @@ import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-import com.koronnu.kina.customClasses.enumClasses.LibRVState
+import com.koronnu.kina.data.model.enumClasses.LibRVState
 import com.koronnu.kina.ui.animation.Animation
 import kotlin.math.abs
 

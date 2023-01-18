@@ -2,7 +2,7 @@ package com.koronnu.kina.ui.tabAnki.ankiBox
 
 import android.view.View
 import com.koronnu.kina.databinding.ListItemAnkiBoxRvCardBinding
-import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.data.source.local.entity.Card
 
 class AnkiBoxRVStringCardCL(private val card: Card,
                             private val binding:ListItemAnkiBoxRvCardBinding,

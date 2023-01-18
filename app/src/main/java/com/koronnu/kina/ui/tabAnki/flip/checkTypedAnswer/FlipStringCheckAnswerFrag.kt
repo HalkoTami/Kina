@@ -12,11 +12,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
-import com.koronnu.kina.customClasses.enumClasses.FlipFragments
+import com.koronnu.kina.data.model.enumClasses.FlipFragments
 import com.koronnu.kina.databinding.FragmentFlipStringCheckAnswerBinding
-import com.koronnu.kina.db.dataclass.ActivityData
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.enumclass.ActivityStatus
+import com.koronnu.kina.data.source.local.entity.ActivityData
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.enumclass.ActivityStatus
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiSettingPopUpViewModel
 import com.koronnu.kina.ui.tabAnki.flip.FlipTypeAndCheckViewModel
@@ -60,8 +60,9 @@ class FlipStringCheckAnswerFrag  : Fragment() {
             binding.llAnswerResult.alpha = if(boolean) 0.5f else 1f
         }
         fun filterChallengedTimes(answerIsBack:Boolean, results:List<ActivityData>):List<ActivityData>{
-            val challengeStatus = if(answerIsBack) arrayOf(ActivityStatus.RIGHT_BACK_CONTENT_TYPED,ActivityStatus.WRONG_BACK_CONTENT_TYPED) else
-                arrayOf(ActivityStatus.WRONG_FRONT_CONTENT_TYPED,ActivityStatus.RIGHT_FRONT_CONTENT_TYPED)
+            val challengeStatus = if(answerIsBack) arrayOf(ActivityStatus.RIGHT_BACK_CONTENT_TYPED,
+                ActivityStatus.WRONG_BACK_CONTENT_TYPED) else
+                arrayOf(ActivityStatus.WRONG_FRONT_CONTENT_TYPED, ActivityStatus.RIGHT_FRONT_CONTENT_TYPED)
             return  results.filter {challengeStatus.contains(it.activityStatus)}
         }
         fun getResultsInRow(results:List<ActivityData>):Int{
@@ -73,7 +74,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
             return rowCount
 
         }
-        fun getAnswerCorrect(activityStatus:ActivityStatus):Boolean{
+        fun getAnswerCorrect(activityStatus: ActivityStatus):Boolean{
             return when(activityStatus){
                 ActivityStatus.WRONG_BACK_CONTENT_TYPED,
                 ActivityStatus.WRONG_FRONT_CONTENT_TYPED,-> false
@@ -87,7 +88,7 @@ class FlipStringCheckAnswerFrag  : Fragment() {
             return filterChallengedTimes(answerIsBack,results).size
         }
         fun getAnswerCorrectTimes(answerIsBack:Boolean,results:List<ActivityData>):Int{
-            return results.filter { it.activityStatus == if(answerIsBack)ActivityStatus.RIGHT_BACK_CONTENT_TYPED else ActivityStatus.RIGHT_FRONT_CONTENT_TYPED }.size
+            return results.filter { it.activityStatus == if(answerIsBack) ActivityStatus.RIGHT_BACK_CONTENT_TYPED else ActivityStatus.RIGHT_FRONT_CONTENT_TYPED }.size
         }
         fun addCL(){
             binding.imvFlipCorrectAnswerSide.setOnClickListener {

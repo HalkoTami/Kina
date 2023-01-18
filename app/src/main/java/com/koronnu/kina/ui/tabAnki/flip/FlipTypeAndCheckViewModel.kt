@@ -4,12 +4,12 @@ import android.content.res.Resources
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.koronnu.kina.R
-import com.koronnu.kina.application.RoomApplication
+import com.koronnu.kina.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
-import com.koronnu.kina.db.dataclass.ActivityData
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.enumclass.ActivityStatus
-import com.koronnu.kina.db.enumclass.DBTable
+import com.koronnu.kina.data.source.local.entity.ActivityData
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.enumclass.ActivityStatus
+import com.koronnu.kina.data.source.local.entity.enumclass.DBTable
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,7 +58,7 @@ class FlipTypeAndCheckViewModel(val repository: MyRoomRepository,
         return b[cardId] ?:String()
     }
 
-    fun checkAnswer(card:Card,answerIsBack:Boolean){
+    fun checkAnswer(card: Card, answerIsBack:Boolean){
         val backContentIsCorrect = card.stringData?.backText==getAnswer(card.id)
         val frontContentIsCorrect = card.stringData?.frontText==getAnswer(card.id)
         val answerFront = !answerIsBack

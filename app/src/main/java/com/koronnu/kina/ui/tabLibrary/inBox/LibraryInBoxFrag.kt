@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.*
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.model.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel

@@ -9,7 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.databinding.FullRvBinding
-import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 

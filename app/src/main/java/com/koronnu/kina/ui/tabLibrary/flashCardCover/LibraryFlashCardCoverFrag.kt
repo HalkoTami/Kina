@@ -17,8 +17,8 @@ import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.koronnu.kina.databinding.LibraryFragTopBarFileBinding
 import com.koronnu.kina.databinding.RvEmptyBinding
-import com.koronnu.kina.db.enumclass.ColorStatus
-import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
+import com.koronnu.kina.data.model.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
@@ -142,7 +142,7 @@ LibraryFlashCardCoverFrag  : Fragment(){
                 setParentFile(it)
                 topBarBinding.txvFileTitle.text = it.title ?:resources.getString(R.string.no_title)
                 topBarBinding.imvFileType.setImageDrawable(
-                    GetCustomDrawables(requireContext()).getFlashCardIconByCol(it?.colorStatus ?:ColorStatus.GRAY,)
+                    GetCustomDrawables(requireContext()).getFlashCardIconByCol(it?.colorStatus ?: ColorStatus.GRAY,)
                 )
                 createCardViewModel.setParentFlashCardCover(it)
 

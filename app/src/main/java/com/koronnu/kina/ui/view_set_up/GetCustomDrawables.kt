@@ -7,9 +7,9 @@ import android.graphics.drawable.VectorDrawable
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import com.koronnu.kina.R
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.enumclass.ColorStatus
-import com.koronnu.kina.db.enumclass.FileStatus
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
+import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
 
 class
 GetCustomDrawables(val context: Context){
@@ -19,7 +19,7 @@ GetCustomDrawables(val context: Context){
     fun getFileIconByFile(file: File):Drawable{
         return getFileIconByFileStatusAndColStatus(file.fileStatus,file.colorStatus)
     }
-    fun getFileIconByFileStatusAndColStatus(fileStatus: FileStatus,colorStatus: ColorStatus):Drawable{
+    fun getFileIconByFileStatusAndColStatus(fileStatus: FileStatus, colorStatus: ColorStatus):Drawable{
         return when(fileStatus){
             FileStatus.FOLDER -> getFolderIconByCol(colorStatus)
             FileStatus.FLASHCARD_COVER -> getFlashCardIconByCol(colorStatus)

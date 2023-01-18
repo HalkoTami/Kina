@@ -12,12 +12,12 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
-import com.koronnu.kina.customClasses.enumClasses.MainFragment
-import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
+import com.koronnu.kina.data.model.enumClasses.AnkiFragments
+import com.koronnu.kina.data.model.enumClasses.MainFragment
+import com.koronnu.kina.data.model.enumClasses.NeighbourCardSide
 import com.koronnu.kina.databinding.CreateCardFragMainBinding
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel

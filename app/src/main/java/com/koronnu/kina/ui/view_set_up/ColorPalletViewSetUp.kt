@@ -11,7 +11,7 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import com.koronnu.kina.R
 import com.koronnu.kina.databinding.ItemColorPalletBinding
-import com.koronnu.kina.db.enumclass.ColorStatus
+import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
 
 
 
@@ -26,7 +26,7 @@ class ColorPalletViewSetUp(val binding: ItemColorPalletBinding) {
     private val unselectedAlpha get() = resources.getDimension(R.dimen.imvColPallet_alpha_unselected)
     private val selectedStrokeWidth get() =  resources.getDimensionPixelSize(R.dimen.drawColPallet_strokeWidth_selected)
     private val strokeColor get() =  ContextCompat.getColor(context,R.color.black)
-    private val colBindingTag:ColorStatus? get() = binding.root.tag as ColorStatus?
+    private val colBindingTag: ColorStatus? get() = binding.root.tag as ColorStatus?
     private fun getImvByColStatus(colorStatus: ColorStatus):ImageView{
         binding.apply {
             return when(colorStatus){
@@ -37,7 +37,7 @@ class ColorPalletViewSetUp(val binding: ItemColorPalletBinding) {
             }
         }
     }
-    fun getDrawable(colPalletCol:ColorStatus, parent: ColorStatus):GradientDrawable{
+    fun getDrawable(colPalletCol: ColorStatus, parent: ColorStatus):GradientDrawable{
         val draw = getDrawableByColStatus(colPalletCol)
         if(parent == colPalletCol) draw.setStroke(selectedStrokeWidth,strokeColor)
         else draw.setStroke(0,strokeColor)

@@ -4,12 +4,12 @@ import android.content.res.Resources
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.koronnu.kina.R
-import com.koronnu.kina.application.RoomApplication
+import com.koronnu.kina.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
+import com.koronnu.kina.data.model.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 
 class DeletePopUpViewModel(private val repository: MyRoomRepository,

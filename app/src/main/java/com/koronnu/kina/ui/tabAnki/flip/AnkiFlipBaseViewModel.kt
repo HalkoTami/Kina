@@ -8,18 +8,18 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.DateTimeActions
-import com.koronnu.kina.application.RoomApplication
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
-import com.koronnu.kina.customClasses.enumClasses.FlipFragments
-import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
-import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
-import com.koronnu.kina.customClasses.normalClasses.CountFlip
-import com.koronnu.kina.customClasses.normalClasses.Progress
+import com.koronnu.kina.RoomApplication
+import com.koronnu.kina.data.model.enumClasses.AnkiFragments
+import com.koronnu.kina.data.model.enumClasses.FlipFragments
+import com.koronnu.kina.data.model.enumClasses.NeighbourCardSide
+import com.koronnu.kina.data.model.normalClasses.AnkiFilter
+import com.koronnu.kina.data.model.normalClasses.CountFlip
+import com.koronnu.kina.data.model.normalClasses.Progress
 import com.koronnu.kina.db.MyRoomRepository
-import com.koronnu.kina.db.dataclass.ActivityData
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.enumclass.ActivityStatus
-import com.koronnu.kina.db.enumclass.DBTable
+import com.koronnu.kina.data.source.local.entity.ActivityData
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.enumclass.ActivityStatus
+import com.koronnu.kina.data.source.local.entity.enumclass.DBTable
 import com.koronnu.kina.ui.editCard.EditCardBaseFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.checkTypedAnswer.FlipStringCheckAnswerFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.lookString.FlipStringFragDirections
@@ -196,7 +196,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
 
 
 
-    fun startFlip(reverseMode: Boolean,typeAnswer: Boolean,list: List<Card>,startingPosition:Int,flipRoundResumed:Boolean){
+    fun startFlip(reverseMode: Boolean, typeAnswer: Boolean, list: List<Card>, startingPosition:Int, flipRoundResumed:Boolean){
         if(flipRoundResumed.not()) {
             setRememberedCardsAmountOnStart(list)
             saveFlipActionStatus(ActivityStatus.FLIP_ROUND_STARTED)
@@ -228,8 +228,8 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     val typeAnswer get() = ankiSettingPopUpViewModel.getTypeAnswer
     val nextCard get() =  returnFlipItems()[returnParentPosition()+1]
     val previousCard get() =  returnFlipItems()[returnParentPosition()-1]
-    fun getTypeAndCheckNavDirection(side:NeighbourCardSide):NavDirections{
-        val changeCard = if(side==NeighbourCardSide.NEXT) nextCard else previousCard
+    fun getTypeAndCheckNavDirection(side: NeighbourCardSide):NavDirections{
+        val changeCard = if(side== NeighbourCardSide.NEXT) nextCard else previousCard
         return when(returnFlipFragment()){
             FlipFragments.CheckAnswerString ->
                 FlipStringTypeAnswerFragDirections.toTypeAnswerString(
@@ -270,7 +270,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     val isFirstCardFirstSide get() = isFirstCard&&parentFlipSide== FlipSide.Front
     fun flip(side: NeighbourCardSide):Boolean{
         if(side == NeighbourCardSide.PREVIOUS&&isFirstCardFirstSide) return false
-        if(side==NeighbourCardSide.NEXT&&isLastCardLastSide) {
+        if(side== NeighbourCardSide.NEXT&&isLastCardLastSide) {
             ankiBaseViewModel.navigateInAnkiFragments(AnkiFragments.FlipCompleted)
             return true
         }
@@ -296,7 +296,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
 
 
     private val _ankiFlipItems = MutableLiveData<MutableList<Card>>()
-    fun setAnkiFlipItems(list: List<Card>,ankiFilter: AnkiFilter){
+    fun setAnkiFlipItems(list: List<Card>, ankiFilter: AnkiFilter){
         val a = mutableListOf<Card>()
         a.addAll(list)
         a.sortBy { it.cardBefore }
@@ -328,8 +328,8 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         }
     }
 
-    fun updateLookedTime(card:Card){
-        val a = ActivityData(0,card.id,DBTable.TABLE_CARD,
+    fun updateLookedTime(card: Card){
+        val a = ActivityData(0,card.id, DBTable.TABLE_CARD,
             ActivityStatus.CARD_OPENED,DateTimeActions().parentTimeToString())
         viewModelScope.launch {
             repository.insert(a)

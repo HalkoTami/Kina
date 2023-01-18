@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.actions.makeToast
-import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
+import com.koronnu.kina.data.model.normalClasses.MakeToastFromVM
 import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
 
 class CommonOb {

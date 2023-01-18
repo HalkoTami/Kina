@@ -14,9 +14,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.koronnu.kina.R
 import com.koronnu.kina.databinding.FragAnkiContentRvBinding
-import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel

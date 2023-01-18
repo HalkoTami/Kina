@@ -9,14 +9,14 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.hideKeyBoard
-import com.koronnu.kina.application.RoomApplication
-import com.koronnu.kina.customClasses.enumClasses.EditingMode
-import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.RoomApplication
+import com.koronnu.kina.data.model.enumClasses.EditingMode
+import com.koronnu.kina.data.model.enumClasses.LibraryFragment
 import com.koronnu.kina.db.MyRoomRepository
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.enumclass.ColorStatus
-import com.koronnu.kina.db.enumclass.FileStatus
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
+import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.ui.view_set_up.ColorPalletViewSetUp
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
@@ -60,9 +60,9 @@ class EditFileViewModel(val repository: MyRoomRepository,
     private val _popUpShownFile = MutableLiveData<File>()
     private val _lastInsertedFile = MutableLiveData<File?>()
 
-    private var _mode:EditingMode? = null
-    private var _fileToCreate :File? = null
-    private var _fileToEdit:File? = null
+    private var _mode: EditingMode? = null
+    private var _fileToCreate : File? = null
+    private var _fileToEdit: File? = null
     private var _doAfterNewFileCreated:()->Unit = {}
 
 //    animation
@@ -91,11 +91,11 @@ class EditFileViewModel(val repository: MyRoomRepository,
     private val parentFileIsNull get() = parentOpenedFile == null
     private val parentFileIsFlashCard get() = parentOpenedFile?.fileStatus == FileStatus.FLASHCARD_COVER
     private val parentFileIsNotFlashCard get() = parentFileIsFlashCard.not()
-    private val isNotChooseFileMoveToFrag get() = libraryBaseViewModel.returnLibraryFragment()!=LibraryFragment.ChooseFileMoveTo
+    private val isNotChooseFileMoveToFrag get() = libraryBaseViewModel.returnLibraryFragment()!= LibraryFragment.ChooseFileMoveTo
     private val parentFileIsFolder get() = parentOpenedFile?.fileStatus == FileStatus.FOLDER
     private val parentFileHasLessThan3Ancestors get() = (libraryBaseViewModel.getParentFileAncestors?.size ?:0) < 3
     private val isNotInBoxFrag get() = libraryBaseViewModel.returnLibraryFragment() != LibraryFragment.InBox
-    val getLastInsertedFile:File? get() = _lastInsertedFile.value
+    val getLastInsertedFile: File? get() = _lastInsertedFile.value
     private val mode get() = _mode!!
     private val getPopUpShownFile get() = _popUpShownFile.value!!
     private val bottomMenuVisible get() = _bottomMenuVisible.value ?:false
@@ -220,7 +220,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
     }
 
     fun onClickCreateFile(fileStatus: FileStatus){
-        if(fileStatus==FileStatus.ANKI_BOX_FAVOURITE&&
+        if(fileStatus== FileStatus.ANKI_BOX_FAVOURITE&&
             ankiBoxCards.isEmpty()) return
         setMode(EditingMode.New)
         ObserveOnce(getSisterFiles(parentOpenedFile?.fileId)){
@@ -235,7 +235,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
         setEditFilePopUpVisible(false)
         setUpFragConViewCoverVisibility()
     }
-    fun onClickEditFileInRV(editingFile:File){
+    fun onClickEditFileInRV(editingFile: File){
         setMode(EditingMode.Edit)
         setFileToEdit(editingFile)
         setEditFilePopUpVisible(true)
@@ -255,7 +255,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
             EditingMode.New -> {
                 fileToCreate.title = title
                 fileToCreate.colorStatus = color
-                if(fileToCreate.fileStatus==FileStatus.ANKI_BOX_FAVOURITE){
+                if(fileToCreate.fileStatus== FileStatus.ANKI_BOX_FAVOURITE){
                     val cardList = ankiBoxViewModel.returnAnkiBoxItems()
                     if(cardList.isEmpty()) return
                     addCardsToFavouriteAnkiBox(cardList,getLastInsertedFile?.fileId ?:0,fileToCreate)
@@ -282,7 +282,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
 
 
 
-    private fun makeEmptyFileToCreate(fileStatus:FileStatus,list: List<File>?){
+    private fun makeEmptyFileToCreate(fileStatus: FileStatus, list: List<File>?){
         setFileToCreate(
             File(fileId = 0,
                 title = null,
@@ -299,7 +299,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
 
 
 
-    private fun addCardsToFavouriteAnkiBox(list:List<Card>,lastInsertedFileId:Int,favFile:File){
+    private fun addCardsToFavouriteAnkiBox(list:List<Card>, lastInsertedFileId:Int, favFile: File){
         viewModelScope.launch {
             repository.saveCardsToFavouriteAnkiBox(list,lastInsertedFileId,favFile)
         }

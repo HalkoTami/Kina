@@ -2,7 +2,7 @@ package com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo
 
 import android.view.View
 import com.koronnu.kina.databinding.LibraryFragRvItemBaseBinding
-import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.data.source.local.entity.File
 
 class LibraryRVChooseFileMoveToCL(val item: File,
                                   private val rvBinding: LibraryFragRvItemBaseBinding,

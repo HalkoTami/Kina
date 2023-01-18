@@ -13,13 +13,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
-import com.koronnu.kina.customClasses.normalClasses.AnkiBoxTabData
-import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
+import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.data.model.normalClasses.AnkiBoxTabData
+import com.koronnu.kina.data.model.normalClasses.AnkiFilter
+import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.databinding.FragmentAnkiBoxBinding
 import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.MainViewModel
@@ -180,9 +180,11 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
 
                 }
                 bindingTpbAnkiBox.btnSetting -> ankiBaseViewModel.setSettingVisible(true)
-                txvTwgFragmentAnkiBoxTabAllFlashCardCover -> ankiBoxViewModel.changeTab(AnkiBoxFragments.AllFlashCardCovers)
+                txvTwgFragmentAnkiBoxTabAllFlashCardCover -> ankiBoxViewModel.changeTab(
+                    AnkiBoxFragments.AllFlashCardCovers)
                 txvTwgFragmentAnkiBoxTabLibrary -> ankiBoxViewModel.changeTab(AnkiBoxFragments.Library)
-                txvTwgFragmentAnkiBoxTabAnkiBoxFavourite -> ankiBoxViewModel.changeTab(AnkiBoxFragments.Favourites)
+                txvTwgFragmentAnkiBoxTabAnkiBoxFavourite -> ankiBoxViewModel.changeTab(
+                    AnkiBoxFragments.Favourites)
             }
         }
     }

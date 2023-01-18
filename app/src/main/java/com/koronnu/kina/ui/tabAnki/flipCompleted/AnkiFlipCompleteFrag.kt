@@ -12,7 +12,7 @@ import androidx.fragment.app.activityViewModels
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.NavigationActions
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
+import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.databinding.FragmentAnkiFlipCompletedBinding
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel

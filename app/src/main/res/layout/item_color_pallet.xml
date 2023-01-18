@@ -5,7 +5,7 @@
 <layout
     >
     <data >
-        <import type="com.koronnu.kina.db.enumclass.ColorStatus"/>
+        <import type="com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus"/>
         <import type="kotlin.Unit"/>
         <variable
             name="editFileViewModel"

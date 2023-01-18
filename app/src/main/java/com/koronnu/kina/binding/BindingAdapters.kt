@@ -9,7 +9,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.koronnu.kina.R
-import com.koronnu.kina.db.enumclass.ColorStatus
+import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
 
 object ViewBinding{
     @BindingAdapter("convertColPalletDraw")

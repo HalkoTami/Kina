@@ -9,9 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.customClasses.enumClasses.Count
-import com.koronnu.kina.customClasses.enumClasses.FlipFragments
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.model.enumClasses.Count
+import com.koronnu.kina.data.model.enumClasses.FlipFragments
 import com.koronnu.kina.databinding.FragmentFlipStringBinding
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiSettingPopUpViewModel

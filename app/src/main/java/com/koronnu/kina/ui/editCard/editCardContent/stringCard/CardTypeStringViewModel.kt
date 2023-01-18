@@ -3,9 +3,9 @@ package com.koronnu.kina.ui.editCard.editCardContent.stringCard
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.StringData
-import com.koronnu.kina.customClasses.enumClasses.StringFragFocusedOn
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.StringData
+import com.koronnu.kina.data.model.enumClasses.StringFragFocusedOn
 
 class CardTypeStringViewModel:ViewModel() {
     private val _parentCard = MutableLiveData<Card?>()
@@ -13,7 +13,7 @@ class CardTypeStringViewModel:ViewModel() {
     fun setParentCard (card: Card?){
         _parentCard.value = card
     }
-    fun returnParentCard ():Card?{
+    fun returnParentCard (): Card?{
         return _parentCard.value
     }
 

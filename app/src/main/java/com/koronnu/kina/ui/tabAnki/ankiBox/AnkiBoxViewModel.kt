@@ -4,19 +4,19 @@ import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
-import com.koronnu.kina.application.RoomApplication
+import com.koronnu.kina.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
-import com.koronnu.kina.db.dataclass.ActivityData
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
-import com.koronnu.kina.customClasses.normalClasses.AnkiBoxTabData
-import com.koronnu.kina.db.enumclass.FileStatus
+import com.koronnu.kina.data.source.local.entity.ActivityData
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.data.model.enumClasses.AnkiFragments
+import com.koronnu.kina.data.model.normalClasses.AnkiBoxTabData
+import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
 import com.koronnu.kina.ui.tabAnki.ankiBox.favourites.BoxFavouriteFragDirections
 import com.koronnu.kina.ui.tabAnki.ankiBox.allFlashCards.BoxFlashCardCoversFragDirections
 import com.koronnu.kina.ui.tabAnki.ankiBox.library.BoxLibraryItemsFragDirections
-import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
+import com.koronnu.kina.data.model.normalClasses.MakeToastFromVM
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.ObserveOnce
 import kotlinx.coroutines.launch
@@ -50,7 +50,7 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
     fun getLibraryFilesFromDB(parentFileId:Int?) :LiveData<List<File>> = repository.getLibraryItemsWithDescendantCards(parentFileId).asLiveData()
     fun getCardsFromDB(parentFileId:Int?) :LiveData<List<Card>> = repository.getCardDataByFileId(parentFileId).asLiveData()
     fun getCardsFromDBByMultipleCardIds(cardIds:List<Int>) :LiveData<List<Card>> = repository.getCardsByMultipleCardId(cardIds).asLiveData()
-    fun updateCardFlagStatus(card:Card){
+    fun updateCardFlagStatus(card: Card){
         val new = card
         new.flag = new.flag.not()
         viewModelScope.launch {
@@ -124,7 +124,7 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
         }
 
     }
-    fun openFile(item:File){
+    fun openFile(item: File){
         val action =
         when(returnCurrentChildFragment()){
             AnkiBoxFragments.AllFlashCardCovers ->{

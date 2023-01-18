@@ -1,8 +1,8 @@
 package com.koronnu.kina.ui.tabAnki.ankiBox
 
 import android.view.View
-import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.databinding.ListItemAnkiBoxRvFileBinding
 
 class AnkiBoxFileRVCL(val item: File,
