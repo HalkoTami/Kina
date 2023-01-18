@@ -22,7 +22,7 @@
 <!--    </fragment>-->
     <fragment
         android:id="@+id/fragLibraryHome"
-        android:name="com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryHomeFrag"
+        android:name="com.koronnu.kina.ui.tabLibrary.home.LibraryHomeFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 

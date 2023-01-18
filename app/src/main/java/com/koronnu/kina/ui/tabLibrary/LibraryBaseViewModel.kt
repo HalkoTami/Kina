@@ -22,7 +22,7 @@ import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.LibraryChooseFileMoveToFr
 import com.koronnu.kina.ui.tabLibrary.inBox.LibraryInBoxFragViewModel
 import com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryFlashCardCoverFragDirections
 import com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryFolderFragDirections
-import com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryHomeFragDirections
+import com.koronnu.kina.ui.tabLibrary.home.LibraryHomeFragDirections
 import com.koronnu.kina.ui.viewmodel.*
 import kotlinx.coroutines.cancel
 class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
