@@ -1,10 +1,9 @@
-package com.koronnu.kina.ui.viewmodel
+package com.koronnu.kina.ui
 
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import com.koronnu.kina.ui.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.ActivityMainBinding
@@ -25,7 +24,8 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 val mainModel = MainViewModel(mainActivity.layoutInflater)
-                val editFileViewModel = getViewModelProviderWithFactory(EditFileViewModel.getFactory(mainModel))[EditFileViewModel::class.java]
+                val editFileViewModel = getViewModelProviderWithFactory(EditFileViewModel.getFactory(
+                    mainModel))[EditFileViewModel::class.java]
                 val deletePopUpViewModel = getViewModelProviderWithFactory(DeletePopUpViewModel.Factory)[DeletePopUpViewModel::class.java]
                 val ankiBaseViewModel = getViewModelProviderWithFactory(AnkiBaseViewModel.getFactory(mainModel,mainActivity))[AnkiBaseViewModel::class.java]
                 val createCardViewModel = getViewModelProviderWithFactory(CreateCardViewModel.getFactory(mainModel))[CreateCardViewModel::class.java]
@@ -100,7 +100,7 @@ class MainViewModel(val layoutInflater: LayoutInflater):ViewModel(){
         _childFragmentsStatus.value = newStatus
         mainActivityChildFragment.value = newStatus.now
     }
-    val getFragmentStatus get() = _childFragmentsStatus?.value?:MainActivityChildFragmentStatus(now = MainFragment.Library,null)
+    val getFragmentStatus get() = _childFragmentsStatus?.value?: MainActivityChildFragmentStatus(now = MainFragment.Library,null)
     fun navigateInMainActivityFragCon(to: MainFragment){
         if(to == getFragmentStatus.now) return
         getMainActivityNavCon.navigate(

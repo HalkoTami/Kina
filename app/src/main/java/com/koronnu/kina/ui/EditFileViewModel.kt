@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.viewmodel
+package com.koronnu.kina.ui
 
 import android.animation.Animator
 import android.content.res.Resources
@@ -24,7 +24,8 @@ import kotlinx.coroutines.launch
 
 class EditFileViewModel(val repository: MyRoomRepository,
                         val resources: Resources,
-                        val mainViewModel: MainViewModel) : ViewModel() {
+                        val mainViewModel: MainViewModel
+) : ViewModel() {
 
     companion object{
         fun getFactory(mainViewModel: MainViewModel) : ViewModelProvider.Factory = object : ViewModelProvider.Factory {

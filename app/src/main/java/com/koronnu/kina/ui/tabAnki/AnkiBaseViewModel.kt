@@ -14,7 +14,7 @@ import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseFragDirections
 import com.koronnu.kina.ui.tabAnki.flipCompleted.AnkiFlipCompleteFragDirections
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
-import com.koronnu.kina.ui.viewmodel.MainViewModel
+import com.koronnu.kina.ui.MainViewModel
 
 class AnkiBaseViewModel(val mainViewModel: MainViewModel) : ViewModel() {
 

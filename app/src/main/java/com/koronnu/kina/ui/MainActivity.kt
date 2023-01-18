@@ -14,7 +14,6 @@ import com.koronnu.kina.databinding.ActivityMainBinding
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
-import com.koronnu.kina.ui.viewmodel.MainViewModel
 import com.koronnu.kina.ui.viewmodel.SearchViewModel
 
 
@@ -25,7 +24,7 @@ class MainActivity : AppCompatActivity(){
     val createFileViewModel get() = mainActivityViewModel.editFileViewModel
     val createCardViewModel get() = mainActivityViewModel.createCardViewModel
 
-    val mainActivityViewModel :MainViewModel by viewModels { MainViewModel.getViewModel(this) }
+    val mainActivityViewModel : MainViewModel by viewModels { MainViewModel.getViewModel(this) }
     val deletePopUpViewModel get() = mainActivityViewModel.deletePopUpViewModel
 
     lateinit var libraryViewModel : LibraryBaseViewModel

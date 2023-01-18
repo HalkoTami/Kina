@@ -16,6 +16,7 @@ import com.koronnu.kina.db.dataclass.Card
 
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
+import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
 import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.LibraryChooseFileMoveToFragDirections
 import com.koronnu.kina.ui.tabLibrary.inBox.LibraryInBoxFragViewModel

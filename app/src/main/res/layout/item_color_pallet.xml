@@ -9,7 +9,7 @@
         <import type="kotlin.Unit"/>
         <variable
             name="editFileViewModel"
-            type="com.koronnu.kina.ui.viewmodel.EditFileViewModel" />
+            type="com.koronnu.kina.ui.EditFileViewModel" />
 
     </data>
     <androidx.appcompat.widget.LinearLayoutCompat

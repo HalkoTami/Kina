@@ -10,7 +10,7 @@
         <import type="android.view.View" />
         <variable
             name="mainViewModel"
-            type="com.koronnu.kina.ui.viewmodel.MainViewModel" />
+            type="com.koronnu.kina.ui.MainViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

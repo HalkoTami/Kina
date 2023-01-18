@@ -21,12 +21,13 @@ import com.koronnu.kina.customClasses.normalClasses.AnkiBoxTabData
 import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.databinding.FragmentAnkiBoxBinding
+import com.koronnu.kina.ui.EditFileViewModel
+import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.observer.CommonOb
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiSettingPopUpViewModel
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
-import com.koronnu.kina.ui.viewmodel.*
 
 class AnkiBoxFrag  : Fragment(),View.OnClickListener {
 

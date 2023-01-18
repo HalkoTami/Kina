@@ -22,6 +22,8 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.ui.EditFileViewModel
+import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
 import com.koronnu.kina.ui.observer.LibraryOb

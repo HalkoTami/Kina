@@ -18,12 +18,13 @@ import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.databinding.CreateCardFragMainBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.ui.EditFileViewModel
+import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
-import com.koronnu.kina.ui.viewmodel.*
 
 
 class EditCardBaseFrag  : Fragment() {

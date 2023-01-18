@@ -9,7 +9,7 @@ import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.ui.listener.MyTouchListener
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
-import com.koronnu.kina.ui.viewmodel.EditFileViewModel
+import com.koronnu.kina.ui.EditFileViewModel
 
 
 class LibraryRVCL(val item: Any,

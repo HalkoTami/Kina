@@ -14,7 +14,7 @@ import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.ui.editCard.editCardContent.EditCardFragDirections
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.databinding.CreateCardFragStringFragBinding
-import com.koronnu.kina.ui.viewmodel.MainViewModel
+import com.koronnu.kina.ui.MainViewModel
 import kotlinx.coroutines.launch
 
 

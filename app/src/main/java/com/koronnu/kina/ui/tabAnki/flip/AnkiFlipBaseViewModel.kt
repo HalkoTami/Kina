@@ -24,7 +24,7 @@ import com.koronnu.kina.ui.editCard.EditCardBaseFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.checkTypedAnswer.FlipStringCheckAnswerFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.lookString.FlipStringFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.typeAnswer.FlipStringTypeAnswerFragDirections
-import com.koronnu.kina.ui.viewmodel.MainViewModel
+import com.koronnu.kina.ui.MainViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*

@@ -17,9 +17,10 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
+import com.koronnu.kina.ui.EditFileViewModel
+import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.listener.topbar.LibFragTopBarChooseFileMoveToCL
-import com.koronnu.kina.ui.viewmodel.*
 
 
 class LibraryChooseFileMoveToFrag  : Fragment(){

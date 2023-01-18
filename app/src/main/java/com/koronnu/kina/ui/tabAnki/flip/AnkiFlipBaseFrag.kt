@@ -24,10 +24,10 @@ import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.customClasses.normalClasses.Progress
 import com.koronnu.kina.databinding.FragmentAnkiFlipBaseBinding
 import com.koronnu.kina.db.dataclass.Card
+import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiSettingPopUpViewModel
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
-import com.koronnu.kina.ui.viewmodel.*
 import java.util.Date
 
 

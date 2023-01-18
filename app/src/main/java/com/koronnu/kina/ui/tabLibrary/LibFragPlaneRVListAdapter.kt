@@ -11,11 +11,11 @@ import com.koronnu.kina.customClasses.enumClasses.LibRVState
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
 import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
 import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
-import com.koronnu.kina.ui.viewmodel.*
 
 
 /**
