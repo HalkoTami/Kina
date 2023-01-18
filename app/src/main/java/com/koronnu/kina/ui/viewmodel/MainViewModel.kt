@@ -9,8 +9,8 @@ import com.koronnu.kina.activity.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.ActivityMainBinding
-import com.koronnu.kina.tabLibrary.LibraryBaseFragDirections
-import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
+import com.koronnu.kina.ui.tabLibrary.LibraryBaseFragDirections
+import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFragDirections
 import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.koronnu.kina.ui.listener.KeyboardListener

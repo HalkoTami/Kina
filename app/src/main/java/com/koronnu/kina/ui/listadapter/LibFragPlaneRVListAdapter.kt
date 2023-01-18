@@ -11,7 +11,7 @@ import com.koronnu.kina.customClasses.enumClasses.LibRVState
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
+import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.listener.recyclerview.LibraryRVCL
 import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
 import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems

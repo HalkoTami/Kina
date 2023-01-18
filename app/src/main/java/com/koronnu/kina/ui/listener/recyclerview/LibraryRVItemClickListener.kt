@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.customClasses.enumClasses.LibRVState
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
+import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import kotlin.math.abs
 
 open class LibraryRVItemClickListener(val context: Context,

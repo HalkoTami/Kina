@@ -2,7 +2,7 @@ package com.koronnu.kina.ui.listener.popUp
 
 import android.view.View
 import com.koronnu.kina.databinding.LibraryFragPopupConfirmMoveToFileBinding
-import com.koronnu.kina.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
+import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
 
 class LibFragPopUpConfirmMoveToFileCL(private val binding: LibraryFragPopupConfirmMoveToFileBinding,
                                       private val chooseFileMoveToViewModel: ChooseFileMoveToViewModel

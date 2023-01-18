@@ -1,4 +1,4 @@
-package com.koronnu.kina.tabLibrary
+package com.koronnu.kina.ui.tabLibrary
 
 import android.content.Context
 import androidx.lifecycle.*
@@ -17,12 +17,12 @@ import com.koronnu.kina.db.dataclass.Card
 
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
-import com.koronnu.kina.tabLibrary.chooseFileMoveTo.LibraryChooseFileMoveToFragDirections
-import com.koronnu.kina.tabLibrary.inBox.LibraryInBoxFragViewModel
-import com.koronnu.kina.tabLibrary.lib_frag_con.LibraryFlashCardCoverFragDirections
-import com.koronnu.kina.tabLibrary.lib_frag_con.LibraryFolderFragDirections
-import com.koronnu.kina.tabLibrary.lib_frag_con.LibraryHomeFragDirections
+import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
+import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.LibraryChooseFileMoveToFragDirections
+import com.koronnu.kina.ui.tabLibrary.inBox.LibraryInBoxFragViewModel
+import com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryFlashCardCoverFragDirections
+import com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryFolderFragDirections
+import com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryHomeFragDirections
 import com.koronnu.kina.ui.viewmodel.*
 import kotlinx.coroutines.cancel
 class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {

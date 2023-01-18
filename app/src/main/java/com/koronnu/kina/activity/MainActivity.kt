@@ -12,8 +12,8 @@ import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.ActivityMainBinding
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
-import com.koronnu.kina.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
+import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
+import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
 import com.koronnu.kina.ui.viewmodel.MainViewModel
 import com.koronnu.kina.ui.viewmodel.SearchViewModel
 

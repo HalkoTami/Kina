@@ -11,7 +11,7 @@ import com.koronnu.kina.ui.listener.MyTouchListener
 import com.koronnu.kina.ui.viewmodel.CreateCardViewModel
 import com.koronnu.kina.ui.viewmodel.EditFileViewModel
 import com.koronnu.kina.ui.viewmodel.DeletePopUpViewModel
-import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
+import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 
 
 class LibraryRVCL(val item: Any,

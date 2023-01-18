@@ -1,4 +1,4 @@
-package com.koronnu.kina.tabLibrary.chooseFileMoveTo
+package com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo
 
 import android.view.*
 import androidx.appcompat.content.res.AppCompatResources

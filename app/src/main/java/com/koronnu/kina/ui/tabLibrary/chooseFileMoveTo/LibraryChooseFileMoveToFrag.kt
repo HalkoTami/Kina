@@ -1,4 +1,4 @@
-package com.koronnu.kina.tabLibrary.chooseFileMoveTo
+package com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo
 
 import android.os.Bundle
 import android.view.*
@@ -17,14 +17,14 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
-import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
+import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.listener.popUp.LibFragPopUpConfirmMoveToFileCL
 import com.koronnu.kina.ui.listener.topbar.LibFragTopBarChooseFileMoveToCL
 import com.koronnu.kina.ui.viewmodel.*
 
 
 class LibraryChooseFileMoveToFrag  : Fragment(){
-    private val args: LibraryChooseFileMoveToFragArgs by navArgs()
+    private val args: com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.LibraryChooseFileMoveToFragArgs by navArgs()
 
     private lateinit var adapter: LibFragChooseFileRVListAdapter
     private lateinit var topBarBinding:LibraryFragTopBarChooseFileMoveToBinding

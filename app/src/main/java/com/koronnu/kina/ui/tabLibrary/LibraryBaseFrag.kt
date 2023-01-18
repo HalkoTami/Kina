@@ -1,4 +1,4 @@
-package com.koronnu.kina.tabLibrary
+package com.koronnu.kina.ui.tabLibrary
 
 import android.os.Bundle
 import android.view.*
@@ -12,7 +12,7 @@ import com.koronnu.kina.databinding.LibraryFragBinding
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
-import com.koronnu.kina.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
+import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
 import com.koronnu.kina.ui.observer.CommonOb
 import com.koronnu.kina.ui.viewmodel.*
 
