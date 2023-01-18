@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.customViews
+package com.koronnu.kina.customViews
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import com.koronnu.kina.R
-import com.koronnu.kina.ui.listener.MyTouchListener
+import com.koronnu.kina.util.MyTouchListener
 
 class ImvChangeAlphaOnDown(context: Context, attrs: AttributeSet) : androidx.appcompat.widget.AppCompatImageView(context,attrs){
 

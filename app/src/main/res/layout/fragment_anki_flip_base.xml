@@ -120,7 +120,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-        <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnSelect
+        <com.koronnu.kina.customViews.ImvChangeAlphaOnSelect
             android:id="@+id/btn_remembered"
             isSelected="@{viewModel._parentCard.remembered}"
             android:onClick="@{()->viewModel.changeRememberStatus()}"
@@ -132,7 +132,7 @@
             app:layout_constraintBottom_toBottomOf="@id/fragConView_flip"
             app:layout_constraintEnd_toEndOf="@id/fragConView_flip"/>
 
-        <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnDown
+        <com.koronnu.kina.customViews.ImvChangeAlphaOnDown
             android:id="@+id/imv_edit_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -156,7 +156,7 @@
             app:layout_constraintBottom_toTopOf="@id/linLay_flip_bottom"
             app:layout_constraintStart_toStartOf="parent"
             />
-        <com.koronnu.kina.ui.customViews.ImvChangeAlphaOnSelect
+        <com.koronnu.kina.customViews.ImvChangeAlphaOnSelect
             android:id="@+id/btn_stop_count"
             android:layout_width="0dp"
             android:visibility="gone"

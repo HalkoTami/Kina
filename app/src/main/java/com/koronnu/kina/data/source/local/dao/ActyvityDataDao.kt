@@ -3,7 +3,7 @@ package com.koronnu.kina.data.source.local.dao
 import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.koronnu.kina.actions.DateTimeActions
+import com.koronnu.kina.util.DateTimeActions
 import com.koronnu.kina.data.source.local.entity.ActivityData
 import com.koronnu.kina.data.source.local.entity.enumclass.ActivityStatus
 import com.koronnu.kina.data.source.local.typeConverters.ActivityStatusConverter

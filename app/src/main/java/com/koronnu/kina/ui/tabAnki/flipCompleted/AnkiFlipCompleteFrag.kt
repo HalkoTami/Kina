@@ -10,8 +10,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.NavigationActions
-import com.koronnu.kina.ui.animation.Animation
+import com.koronnu.kina.util.NavigationActions
+import com.koronnu.kina.util.Animation
 import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.databinding.FragmentAnkiFlipCompletedBinding
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel

@@ -11,7 +11,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.data.model.enumClasses.LibRVState
-import com.koronnu.kina.ui.animation.Animation
+import com.koronnu.kina.util.Animation
 import kotlin.math.abs
 
 open class LibraryRVItemClickListener(val context: Context,

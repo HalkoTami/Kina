@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.view_set_up
+package com.koronnu.kina.util.view_set_up
 
 import android.content.Context
 import android.text.Spannable
@@ -16,7 +16,7 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.StringData
 import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
-import com.koronnu.kina.ui.animation.Animation
+import com.koronnu.kina.util.Animation
 import com.koronnu.kina.ui.tabLibrary.LibFragPlaneRVListAdapter
 import com.koronnu.kina.ui.tabLibrary.LibFragSearchRVListAdapter
 import com.koronnu.kina.data.model.enumClasses.LibRVState

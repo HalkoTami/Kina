@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.listener
+package com.koronnu.kina.util
 
 import android.content.Context
 import android.view.*

@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.animation
+package com.koronnu.kina.util
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator

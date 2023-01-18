@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.view_set_up
+package com.koronnu.kina.util.view_set_up
 
 import android.content.Context
 import android.graphics.drawable.Drawable

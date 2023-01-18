@@ -17,7 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.DateTimeActions
+import com.koronnu.kina.util.DateTimeActions
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.data.model.enumClasses.NeighbourCardSide
@@ -155,7 +155,7 @@ class AnkiFlipBaseFrag  : Fragment() {
         super.onResume()
         ankiFlipBaseViewModel.addFlipLeavedTimeInSec(
             DateTimeActions().getTimeDifference(
-                Date(),pausedTime?:return,DateTimeActions.TimeUnit.SECONDS
+                Date(),pausedTime?:return, DateTimeActions.TimeUnit.SECONDS
             ))
     }
 

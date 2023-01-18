@@ -1,4 +1,4 @@
-package com.koronnu.kina.actions
+package com.koronnu.kina.util
 
 import androidx.navigation.NavController
 

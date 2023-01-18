@@ -7,7 +7,7 @@ import com.koronnu.kina.data.model.enumClasses.ListAttributes
 import com.koronnu.kina.databinding.LibraryFragRvItemBaseBinding
 import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.source.local.entity.File
-import com.koronnu.kina.ui.listener.MyTouchListener
+import com.koronnu.kina.util.MyTouchListener
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.EditFileViewModel
 

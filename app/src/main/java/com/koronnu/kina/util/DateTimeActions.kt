@@ -1,4 +1,4 @@
-package com.koronnu.kina.actions
+package com.koronnu.kina.util
 
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,8 +29,8 @@ class DateTimeActions {
         return when(timeUnit){
             TimeUnit.SECONDS -> seconds
             TimeUnit.MINUTES -> minutes
-            TimeUnit.HOURS   -> hours
-            TimeUnit.DAYS   -> numOfDays
+            TimeUnit.HOURS -> hours
+            TimeUnit.DAYS -> numOfDays
         }
     }
 }

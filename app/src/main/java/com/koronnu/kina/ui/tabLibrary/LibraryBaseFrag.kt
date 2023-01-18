@@ -14,7 +14,7 @@ import com.koronnu.kina.data.model.enumClasses.LibraryFragment
 import com.koronnu.kina.data.model.enumClasses.MainFragment
 import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
-import com.koronnu.kina.ui.observer.CommonOb
+import com.koronnu.kina.util.CommonOb
 import com.koronnu.kina.ui.viewmodel.*
 
 

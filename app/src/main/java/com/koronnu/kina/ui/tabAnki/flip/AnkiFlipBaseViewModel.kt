@@ -7,7 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.DateTimeActions
+import com.koronnu.kina.util.DateTimeActions
 import com.koronnu.kina.RoomApplication
 import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.data.model.enumClasses.FlipFragments
@@ -330,7 +330,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
 
     fun updateLookedTime(card: Card){
         val a = ActivityData(0,card.id, DBTable.TABLE_CARD,
-            ActivityStatus.CARD_OPENED,DateTimeActions().parentTimeToString())
+            ActivityStatus.CARD_OPENED, DateTimeActions().parentTimeToString())
         viewModelScope.launch {
             repository.insert(a)
         }

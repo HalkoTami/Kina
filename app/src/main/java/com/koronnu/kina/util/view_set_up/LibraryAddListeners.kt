@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.view_set_up
+package com.koronnu.kina.util.view_set_up
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.FrameLayout
 import androidx.core.widget.addTextChangedListener
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
-import com.koronnu.kina.ui.customViews.ImvChangeAlphaOnDown
+import com.koronnu.kina.customViews.ImvChangeAlphaOnDown
 import com.koronnu.kina.ui.listener.topbar.*
 import com.koronnu.kina.ui.tabLibrary.DeletePopUpViewModel
 import com.koronnu.kina.ui.tabLibrary.LibFragSearchBarCL
@@ -20,7 +20,7 @@ class LibraryAddListeners(){
     fun fragChildMultiBaseAddCL(binding: LibraryChildFragWithMulModeBaseBinding,
                                 context: Context,
                                 libraryViewModel: LibraryBaseViewModel,
-                                imvSearchLoup:ImvChangeAlphaOnDown?,
+                                imvSearchLoup: ImvChangeAlphaOnDown?,
                                 deletePopUpViewModel: DeletePopUpViewModel,
                                 searchViewModel:SearchViewModel,
                                 inputMethodManager: InputMethodManager){

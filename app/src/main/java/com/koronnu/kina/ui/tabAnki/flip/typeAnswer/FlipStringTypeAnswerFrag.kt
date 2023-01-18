@@ -16,7 +16,7 @@ import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.model.enumClasses.FlipFragments
 import com.koronnu.kina.data.model.enumClasses.NeighbourCardSide
 import com.koronnu.kina.databinding.FragmentFlipStringTypeAnswerBinding
-import com.koronnu.kina.ui.listener.KeyboardListener
+import com.koronnu.kina.util.KeyboardListener
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.tabAnki.flip.FlipTypeAndCheckViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiSettingPopUpViewModel
@@ -29,7 +29,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
     private val flipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
     private val typeAndCheckViewModel: FlipTypeAndCheckViewModel by viewModels{ FlipTypeAndCheckViewModel.Factory}
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
-    var keyLis:KeyboardListener? = null
+    var keyLis: KeyboardListener? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -53,7 +53,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
             }
             fun addKeyBoardListener(){
                 val rootView = binding.root
-                val keyboardListener = object:KeyboardListener(rootView,){
+                val keyboardListener = object: KeyboardListener(rootView,){
                 }.apply { onKeyBoardAppear = {typeAndCheckViewModel.setKeyBoardVisible(true)
                     binding.imvCheckAnswer.visibility = View.VISIBLE
                    changeViewVisibility(bottom,false)

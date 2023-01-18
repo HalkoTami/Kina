@@ -26,11 +26,11 @@ import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
-import com.koronnu.kina.ui.observer.LibraryOb
+import com.koronnu.kina.util.LibraryOb
 import com.koronnu.kina.ui.tabLibrary.*
-import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
-import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
-import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
+import com.koronnu.kina.util.view_set_up.GetCustomDrawables
+import com.koronnu.kina.util.view_set_up.LibraryAddListeners
+import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.*
 
 
@@ -125,7 +125,7 @@ class LibraryFolderFrag :  Fragment(){
                 selectedItems.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
                 }
-                multiMenuVisibility.observe(viewLifecycleOwner,LibraryOb()
+                multiMenuVisibility.observe(viewLifecycleOwner, LibraryOb()
                     .multiMenuVisibilityObserver(binding))
 
             }

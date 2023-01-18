@@ -12,7 +12,7 @@ import com.koronnu.kina.ui.tabLibrary.LibraryBaseFragDirections
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiBaseFragDirections
 import com.koronnu.kina.ui.editCard.EditCardBaseFragDirections
-import com.koronnu.kina.ui.listener.KeyboardListener
+import com.koronnu.kina.util.KeyboardListener
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabLibrary.DeletePopUpViewModel
 import kotlinx.coroutines.*

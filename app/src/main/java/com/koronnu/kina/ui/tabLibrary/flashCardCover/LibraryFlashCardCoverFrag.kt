@@ -8,6 +8,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -22,12 +23,11 @@ import com.koronnu.kina.data.model.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
-import com.koronnu.kina.ui.observer.CommonOb
-import com.koronnu.kina.ui.observer.LibraryOb
+import com.koronnu.kina.util.LibraryOb
 import com.koronnu.kina.ui.tabLibrary.*
-import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
-import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
-import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
+import com.koronnu.kina.util.view_set_up.GetCustomDrawables
+import com.koronnu.kina.util.view_set_up.LibraryAddListeners
+import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.*
 
 
@@ -100,12 +100,15 @@ LibraryFlashCardCoverFrag  : Fragment(){
             commonViewSetUp.setUpLibFragWithMultiModeBase(binding,topBarBinding.root,searchAdapter,adapter,requireActivity())
             binding.frameLayAncestors.visibility = View.VISIBLE
         }
-
+        fun makeAllUnSwipedObserver(recyclerView:RecyclerView) = Observer<Boolean>{
+            if(it) LibrarySetUpItems().makeLibRVUnSwiped(recyclerView)
+        }
         fun observeSwipe(){
             libraryBaseViewModel.apply {
-                makeAllUnSwiped.observe(viewLifecycleOwner,CommonOb().makeAllUnSwipedObserver(recyclerView))
+                makeAllUnSwiped.observe(viewLifecycleOwner,makeAllUnSwipedObserver(recyclerView))
             }
         }
+
         fun observeMultiMode(){
             libraryBaseViewModel.apply {
                 multipleSelectMode.observe(viewLifecycleOwner){
@@ -121,7 +124,7 @@ LibraryFlashCardCoverFrag  : Fragment(){
                         resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
                 }
                 multiMenuVisibility
-                    .observe(viewLifecycleOwner,LibraryOb().multiMenuVisibilityObserver(binding))
+                    .observe(viewLifecycleOwner, LibraryOb().multiMenuVisibilityObserver(binding))
 
             }
 

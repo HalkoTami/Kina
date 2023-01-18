@@ -12,7 +12,7 @@ import com.koronnu.kina.databinding.FullRvBinding
 import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
-import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
+import com.koronnu.kina.util.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 
 

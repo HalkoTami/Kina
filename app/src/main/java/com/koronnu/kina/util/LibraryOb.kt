@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.observer
+package com.koronnu.kina.util
 
 import android.text.SpannableStringBuilder
 import androidx.lifecycle.Observer

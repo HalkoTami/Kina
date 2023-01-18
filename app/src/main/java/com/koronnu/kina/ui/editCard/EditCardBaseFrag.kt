@@ -24,7 +24,7 @@ import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringVie
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
-import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
+import com.koronnu.kina.util.view_set_up.GetCustomDrawables
 
 
 class EditCardBaseFrag  : Fragment() {
