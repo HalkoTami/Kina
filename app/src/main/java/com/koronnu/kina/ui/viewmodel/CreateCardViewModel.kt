@@ -11,8 +11,8 @@ import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.dataclass.StringData
 import com.koronnu.kina.db.enumclass.CardStatus
 import com.koronnu.kina.db.enumclass.ColorStatus
-import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
-import com.koronnu.kina.ui.fragment.createCard_frag_com.EditCardFragDirections
+import com.koronnu.kina.ui.editCard.EditCardBaseFragDirections
+import com.koronnu.kina.ui.editCard.editCardContent.EditCardFragDirections
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.databinding.CreateCardFragMainBinding
 import com.koronnu.kina.databinding.CreateCardFragStringFragBinding

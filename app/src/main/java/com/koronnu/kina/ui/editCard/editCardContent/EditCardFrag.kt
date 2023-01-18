@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.createCard_frag_com
+package com.koronnu.kina.ui.editCard.editCardContent
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,7 +25,7 @@ class EditCardFrag: Fragment() {
     private var _binding: CreateCardFragBaseBinding? = null
     private val binding get() = _binding!!
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
-    private val args : EditCardFragArgs by navArgs()
+    private val args : com.koronnu.kina.ui.editCard.editCardContent.EditCardFragArgs by navArgs()
     private val  createCardViewModel: CreateCardViewModel by activityViewModels()
 
     lateinit var cardNavCon:NavController

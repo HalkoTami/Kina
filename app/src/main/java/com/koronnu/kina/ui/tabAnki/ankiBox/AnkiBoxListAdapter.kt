@@ -12,8 +12,11 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
+import com.koronnu.kina.db.dataclass.ActivityData
+import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.ui.tabLibrary.SearchDiffCallback
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
+import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
 
 
@@ -60,7 +63,7 @@ class AnkiBoxListAdapter(
                 }
                 is Card -> {
                     val cardBinding = ListItemAnkiBoxRvCardBinding.inflate(LayoutInflater.from(context))
-                    AnkiBoxFragViewSetUp().setUpRVCard(cardBinding,item,lifecycleOwner,ankiBoxFragViewModel)
+                    setUpRVCard(cardBinding,item,lifecycleOwner,ankiBoxFragViewModel)
                     binding.flAnkiBoxRvContent.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                     binding.flAnkiBoxRvContent.requestLayout()
                     changeViewVisibility(cardBinding.imvChbIsInAnkiBox,(tab==null).not())
@@ -70,6 +73,37 @@ class AnkiBoxListAdapter(
             }
             binding.flAnkiBoxRvContent.addView(content)
 
+
+
+
+        }
+        fun setUpRVCard(cardBinding: ListItemAnkiBoxRvCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxViewModel){
+            val resources = cardBinding.root.context.resources
+            LibrarySetUpItems().setUpRVStringCardBinding(cardBinding.bindingListItemCardString,card.stringData)
+
+            fun setOnCL(){
+                arrayOf(cardBinding.imvChbIsInAnkiBox,).onEach { it.setOnClickListener(
+                    AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
+            }
+            fun getStringByRemembered(remembered:Boolean):String{
+                return resources.getString(if(remembered) R.string.remembered else R.string.not_remembered)
+            }
+            fun getStringByLastLooked(lastLooked: ActivityData?,):String{
+
+                return resources.getString(R.string.lastLookedDate,lastLooked?.dateTime ?:resources.getString(R.string.no_data))
+            }
+            setOnCL()
+            ankiBoxVM.ankiBoxItems.observe(lifecycleOwner){
+                cardBinding.imvChbIsInAnkiBox.isSelected = it.contains(card)
+            }
+            ankiBoxVM.getCardActivityFromDB(card.id).observe(lifecycleOwner){
+                val lastLooked =it.findLast { it.activityStatus == ActivityStatus.CARD_OPENED }
+                cardBinding.txvAnkiRvLastFlipped.text = getStringByLastLooked(lastLooked)
+            }
+            cardBinding.apply {
+                imvAnkiRvCardRemembered.isSelected = card.remembered
+                txvAnkiRvRememberedStatus.text = getStringByRemembered(card.remembered)
+            }
 
 
 

@@ -21,7 +21,7 @@ import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.db.enumclass.DBTable
 import com.koronnu.kina.ui.tabAnki.flipCompleted.AnkiFlipCompleteFragDirections
-import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
+import com.koronnu.kina.ui.editCard.EditCardBaseFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.checkTypedAnswer.FlipStringCheckAnswerFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.lookString.FlipStringFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.typeAnswer.FlipStringTypeAnswerFragDirections

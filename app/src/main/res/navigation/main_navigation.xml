@@ -23,7 +23,7 @@
     <fragment
         android:id="@+id/fragmentCreateCard"
         android:label="@string/nav_label_main_create_card"
-        android:name="com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFrag"
+        android:name="com.koronnu.kina.ui.editCard.EditCardBaseFrag"
         tools:layout="@layout/create_card_frag_main">
 
 

@@ -29,37 +29,7 @@ class AnkiBoxFragViewSetUp() {
 
 
 
-    fun setUpRVCard(cardBinding: ListItemAnkiBoxRvCardBinding,card: Card,lifecycleOwner: LifecycleOwner,ankiBoxVM: AnkiBoxViewModel){
-        val resources = cardBinding.root.context.resources
-        LibrarySetUpItems().setUpRVStringCardBinding(cardBinding.bindingListItemCardString,card.stringData)
-
-        fun setOnCL(){
-            arrayOf(cardBinding.imvChbIsInAnkiBox,).onEach { it.setOnClickListener(
-                AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
-        }
-        fun getStringByRemembered(remembered:Boolean):String{
-            return resources.getString(if(remembered) R.string.remembered else R.string.not_remembered)
-        }
-        fun getStringByLastLooked(lastLooked:ActivityData?,):String{
-
-            return resources.getString(R.string.lastLookedDate,lastLooked?.dateTime ?:resources.getString(R.string.no_data))
-        }
-        setOnCL()
-        ankiBoxVM.ankiBoxItems.observe(lifecycleOwner){
-            cardBinding.imvChbIsInAnkiBox.isSelected = it.contains(card)
-        }
-        ankiBoxVM.getCardActivityFromDB(card.id).observe(lifecycleOwner){
-            val lastLooked =it.findLast { it.activityStatus == ActivityStatus.CARD_OPENED }
-            cardBinding.txvAnkiRvLastFlipped.text = getStringByLastLooked(lastLooked)
-        }
-        cardBinding.apply {
-            imvAnkiRvCardRemembered.isSelected = card.remembered
-            txvAnkiRvRememberedStatus.text = getStringByRemembered(card.remembered)
-        }
-
-
-
-    }
+    
 fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                               context: Context,
                               ankiBoxVM: AnkiBoxViewModel, tab: AnkiBoxFragments?,
