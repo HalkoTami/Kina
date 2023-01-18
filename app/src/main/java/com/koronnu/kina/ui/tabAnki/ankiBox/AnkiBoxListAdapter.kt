@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.listadapter
+package com.koronnu.kina.ui.tabAnki.ankiBox
 
 import android.content.Context
 import android.view.*

@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.listener.recyclerview
+package com.koronnu.kina.ui.tabAnki.ankiBox
 
 import android.view.View
 import com.koronnu.kina.databinding.ListItemAnkiBoxRvCardBinding

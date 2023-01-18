@@ -2,7 +2,6 @@ package com.koronnu.kina.ui.view_set_up
 
 import android.animation.ValueAnimator
 import android.content.Context
-import android.content.res.Resources
 import android.view.View
 import android.widget.ImageView
 import androidx.core.animation.doOnEnd
@@ -19,9 +18,9 @@ import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.customClasses.normalClasses.ParentFileAncestors
-import com.koronnu.kina.ui.listadapter.AnkiBoxListAdapter
-import com.koronnu.kina.ui.listener.recyclerview.AnkiBoxFileRVCL
-import com.koronnu.kina.ui.listener.recyclerview.AnkiBoxRVStringCardCL
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxListAdapter
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxFileRVCL
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxRVStringCardCL
 import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
 import kotlin.math.abs
 
@@ -35,7 +34,8 @@ class AnkiBoxFragViewSetUp() {
         LibrarySetUpItems().setUpRVStringCardBinding(cardBinding.bindingListItemCardString,card.stringData)
 
         fun setOnCL(){
-            arrayOf(cardBinding.imvChbIsInAnkiBox,).onEach { it.setOnClickListener(AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
+            arrayOf(cardBinding.imvChbIsInAnkiBox,).onEach { it.setOnClickListener(
+                AnkiBoxRVStringCardCL(card,cardBinding,ankiBoxVM)) }
         }
         fun getStringByRemembered(remembered:Boolean):String{
             return resources.getString(if(remembered) R.string.remembered else R.string.not_remembered)
