@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/fragmentAnki"
         android:label="@string/nav_label_main_tab_anki"
-        android:name="com.koronnu.kina.ui.fragment.base_frag_con.AnkiBaseFrag"
+        android:name="com.koronnu.kina.ui.tabAnki.AnkiBaseFrag"
         tools:layout="@layout/fragment_anki_base">
 
     </fragment>

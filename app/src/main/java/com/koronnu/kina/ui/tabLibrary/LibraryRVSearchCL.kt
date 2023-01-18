@@ -1,11 +1,10 @@
-package com.koronnu.kina.ui.listener.recyclerview
+package com.koronnu.kina.ui.tabLibrary
 
 import android.view.View
 import com.koronnu.kina.databinding.LibraryFragRvItemBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.ui.viewmodel.CreateCardViewModel
-import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 
 class LibraryRVSearchCL(
     val item: Any,

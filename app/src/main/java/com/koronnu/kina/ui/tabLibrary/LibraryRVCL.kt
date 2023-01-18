@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.listener.recyclerview
+package com.koronnu.kina.ui.tabLibrary
 
 
 import android.view.MotionEvent
@@ -11,7 +11,6 @@ import com.koronnu.kina.ui.listener.MyTouchListener
 import com.koronnu.kina.ui.viewmodel.CreateCardViewModel
 import com.koronnu.kina.ui.viewmodel.EditFileViewModel
 import com.koronnu.kina.ui.viewmodel.DeletePopUpViewModel
-import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 
 
 class LibraryRVCL(val item: Any,

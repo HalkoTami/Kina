@@ -16,9 +16,9 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
-import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
-import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
-import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
+import com.koronnu.kina.ui.tabLibrary.LibFragPlaneRVListAdapter
+import com.koronnu.kina.ui.tabLibrary.LibFragSearchRVListAdapter
+import com.koronnu.kina.ui.tabLibrary.LibraryRVItemClickListener
 import com.koronnu.kina.ui.listener.topbar.LibFragTopBarInBoxCL
 import com.koronnu.kina.ui.observer.LibraryOb
 import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
@@ -32,7 +32,7 @@ class LibraryInBoxFrag  : Fragment(){
     private lateinit var recyclerView:RecyclerView
     private lateinit var topBarBinding:LibraryFragTopBarInboxBinding
     private lateinit var mainNavCon:NavController
-    private lateinit var adapter:LibFragPlaneRVListAdapter
+    private lateinit var adapter: LibFragPlaneRVListAdapter
     private lateinit var searchAdapter:LibFragSearchRVListAdapter
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val  libraryInBoxFragViewModel: LibraryInBoxFragViewModel by activityViewModels()

@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.listener.recyclerview
+package com.koronnu.kina.ui.tabLibrary
 
 import android.content.Context
 import android.view.GestureDetector
@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 import com.koronnu.kina.customClasses.enumClasses.LibRVState
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import kotlin.math.abs
 
 open class LibraryRVItemClickListener(val context: Context,

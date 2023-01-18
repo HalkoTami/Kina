@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragLibraryFolder"
-        android:name="com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryFolderFrag"
+        android:name="com.koronnu.kina.ui.tabLibrary.folder.LibraryFolderFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
         <argument
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragLibraryFlashCardCover"
-        android:name="com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryFlashCardCoverFrag"
+        android:name="com.koronnu.kina.ui.tabLibrary.flashCardCover.LibraryFlashCardCoverFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
         <argument

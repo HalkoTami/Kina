@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.base_frag_con
+package com.koronnu.kina.ui.tabAnki
 
 import android.content.Context
 import android.content.SharedPreferences

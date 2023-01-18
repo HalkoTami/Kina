@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.tabLibrary.lib_frag_con
+package com.koronnu.kina.ui.tabLibrary.folder
 
 import android.content.Context
 import android.os.Bundle
@@ -23,9 +23,9 @@ import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
-import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
-import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
-import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
+import com.koronnu.kina.ui.tabLibrary.LibFragPlaneRVListAdapter
+import com.koronnu.kina.ui.tabLibrary.LibFragSearchRVListAdapter
+import com.koronnu.kina.ui.tabLibrary.LibraryRVItemClickListener
 import com.koronnu.kina.ui.observer.LibraryOb
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
@@ -34,13 +34,13 @@ import com.koronnu.kina.ui.viewmodel.*
 
 
 class LibraryFolderFrag :  Fragment(){
-    private val args: com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryFolderFragArgs by navArgs()
+    private val args: com.koronnu.kina.ui.tabLibrary.folder.LibraryFolderFragArgs by navArgs()
 
     private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView
     private lateinit var topBarBinding:LibraryFragTopBarFileBinding
     private lateinit var mainNavCon:NavController
-    private lateinit var adapter:LibFragPlaneRVListAdapter
+    private lateinit var adapter: LibFragPlaneRVListAdapter
     private lateinit var searchAdapter: LibFragSearchRVListAdapter
     private val searchViewModel:SearchViewModel by activityViewModels()
     private val cardTypeStringViewModel: CardTypeStringViewModel by activityViewModels()

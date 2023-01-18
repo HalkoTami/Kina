@@ -7,7 +7,6 @@ import androidx.navigation.NavController
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.customClasses.enumClasses.*
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
-import com.koronnu.kina.customClasses.normalClasses.ParentFileAncestors
 import com.koronnu.kina.databinding.LibItemTopBarMenuBinding
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.koronnu.kina.databinding.LibraryFragBinding
@@ -20,8 +19,8 @@ import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.ChooseFileMoveToViewModel
 import com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.LibraryChooseFileMoveToFragDirections
 import com.koronnu.kina.ui.tabLibrary.inBox.LibraryInBoxFragViewModel
-import com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryFlashCardCoverFragDirections
-import com.koronnu.kina.ui.tabLibrary.lib_frag_con.LibraryFolderFragDirections
+import com.koronnu.kina.ui.tabLibrary.flashCardCover.LibraryFlashCardCoverFragDirections
+import com.koronnu.kina.ui.tabLibrary.folder.LibraryFolderFragDirections
 import com.koronnu.kina.ui.tabLibrary.home.LibraryHomeFragDirections
 import com.koronnu.kina.ui.viewmodel.*
 import kotlinx.coroutines.cancel

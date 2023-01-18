@@ -20,9 +20,9 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
-import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
-import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
-import com.koronnu.kina.ui.listener.recyclerview.LibraryRVItemClickListener
+import com.koronnu.kina.ui.tabLibrary.LibFragPlaneRVListAdapter
+import com.koronnu.kina.ui.tabLibrary.LibFragSearchRVListAdapter
+import com.koronnu.kina.ui.tabLibrary.LibraryRVItemClickListener
 import com.koronnu.kina.ui.listener.topbar.LibFragTopBarHomeCL
 import com.koronnu.kina.ui.observer.LibraryOb
 import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
@@ -36,7 +36,7 @@ class LibraryHomeFrag : Fragment(){
     private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView
     private lateinit var mainNavCon:NavController
-    private lateinit var adapter:LibFragPlaneRVListAdapter
+    private lateinit var adapter: LibFragPlaneRVListAdapter
     private lateinit var searchAdapter:LibFragSearchRVListAdapter
     private val searchViewModel:SearchViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
@@ -97,7 +97,7 @@ class LibraryHomeFrag : Fragment(){
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             )
             recyclerView.addOnItemTouchListener(
-                object :LibraryRVItemClickListener(requireActivity(),binding.frameLayTest,recyclerView,libraryBaseViewModel){})
+                object : LibraryRVItemClickListener(requireActivity(),binding.frameLayTest,recyclerView,libraryBaseViewModel){})
         }
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()

@@ -4,7 +4,6 @@ import android.content.Context
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -18,8 +17,8 @@ import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.dataclass.StringData
 import com.koronnu.kina.db.enumclass.FileStatus
 import com.koronnu.kina.ui.animation.Animation
-import com.koronnu.kina.ui.listadapter.LibFragPlaneRVListAdapter
-import com.koronnu.kina.ui.listadapter.LibFragSearchRVListAdapter
+import com.koronnu.kina.ui.tabLibrary.LibFragPlaneRVListAdapter
+import com.koronnu.kina.ui.tabLibrary.LibFragSearchRVListAdapter
 import com.koronnu.kina.customClasses.enumClasses.LibRVState
 
 
