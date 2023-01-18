@@ -13,9 +13,9 @@ import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.normalClasses.AnkiBoxTabData
 import com.koronnu.kina.db.enumclass.FileStatus
-import com.koronnu.kina.ui.fragment.ankibox_frag_con.BoxFavouriteFragDirections
-import com.koronnu.kina.ui.fragment.ankibox_frag_con.BoxFlashCardCoversFragDirections
-import com.koronnu.kina.ui.fragment.ankibox_frag_con.BoxLibraryItemsFragDirections
+import com.koronnu.kina.ui.tabAnki.ankiBox.favourites.BoxFavouriteFragDirections
+import com.koronnu.kina.ui.tabAnki.ankiBox.allFlashCards.BoxFlashCardCoversFragDirections
+import com.koronnu.kina.ui.tabAnki.ankiBox.library.BoxLibraryItemsFragDirections
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
 import kotlinx.coroutines.launch
 

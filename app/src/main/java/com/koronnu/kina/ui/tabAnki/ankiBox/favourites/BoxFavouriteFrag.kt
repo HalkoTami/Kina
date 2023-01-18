@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.ankibox_frag_con
+package com.koronnu.kina.ui.tabAnki.ankiBox.favourites
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,18 +9,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.databinding.FullRvBinding
-import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
 
 
-class BoxFlashCardCoversFrag  : Fragment() {
+class BoxFavouriteFrag  : Fragment() {
 
-    private val args: BoxFlashCardCoversFragArgs by navArgs()
+    private val args: com.koronnu.kina.ui.tabAnki.ankiBox.favourites.BoxFavouriteFragArgs by navArgs()
     private var _binding: FullRvBinding? = null
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
+
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -31,31 +30,29 @@ class BoxFlashCardCoversFrag  : Fragment() {
 
         _binding =  FullRvBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        val fileId = args.fileId?.single()
         val viewSetUp = AnkiBoxFragViewSetUp()
         val adapter = viewSetUp
             .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),ankiBoxViewModel,
-                AnkiBoxFragments.AllFlashCardCovers,viewLifecycleOwner)
+                AnkiBoxFragments.Favourites,viewLifecycleOwner)
 
         fun makeEmptyVisibleByListSize(list: List<Any>){
             binding.frameLayFullRvEmpty.visibility = if(list.isEmpty()) View.VISIBLE else View.GONE
         }
-        val allFlashCardCoverFromDBObserver = Observer<List<File>>{
-            if(fileId==null){
-                adapter.submitList(it)
-                makeEmptyVisibleByListSize(it)
-            }
+        val fileId = args.fileId?.single()
+        val fileIdIsNull = fileId == null
+        val allFavouriteAnkiBoxFromDBObserver = Observer<List<Any>>{
+            adapter.submitList(it)
+            makeEmptyVisibleByListSize(it)
         }
-        val getCardsFromDBObserver = Observer<List<Card>>{
-            if(fileId!=null){
-                adapter.submitList(it)
-                makeEmptyVisibleByListSize(it)
-            }
+        ankiBoxViewModel.setCurrentChildFragment(AnkiBoxFragments.Favourites)
+        if(fileIdIsNull){
+            ankiBoxViewModel.allFavouriteAnkiBoxFromDB.observe(viewLifecycleOwner,allFavouriteAnkiBoxFromDBObserver)
+        } else {
+            ankiBoxViewModel.getAnkiBoxRVCards(fileId!!).observe(viewLifecycleOwner,allFavouriteAnkiBoxFromDBObserver)
         }
-        ankiBoxViewModel.setCurrentChildFragment(AnkiBoxFragments.AllFlashCardCovers)
-        ankiBoxViewModel.allFlashCardCoverFromDB.observe(viewLifecycleOwner,allFlashCardCoverFromDBObserver)
-        ankiBoxViewModel.getCardsFromDB(fileId).observe(viewLifecycleOwner,getCardsFromDBObserver)
+
+
+
         return root
     }
 

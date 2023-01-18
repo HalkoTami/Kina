@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.ankibox_frag_con
+package com.koronnu.kina.ui.tabAnki.ankiBox.library
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,7 +17,7 @@ import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
 
 
 class BoxLibraryItemsFrag  : Fragment() {
-    private val args: BoxLibraryItemsFragArgs by navArgs()
+    private val args: com.koronnu.kina.ui.tabAnki.ankiBox.library.BoxLibraryItemsFragArgs by navArgs()
     private var _binding: FullRvBinding? = null
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
 

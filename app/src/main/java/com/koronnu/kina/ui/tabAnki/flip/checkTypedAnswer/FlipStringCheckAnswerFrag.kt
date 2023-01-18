@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.flipFragCon
+package com.koronnu.kina.ui.tabAnki.flip.checkTypedAnswer
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -25,7 +25,7 @@ import com.koronnu.kina.ui.viewmodel.FlipTypeAndCheckViewModel
 class FlipStringCheckAnswerFrag  : Fragment() {
 
     private var _binding: FragmentFlipStringCheckAnswerBinding? = null
-    private val args: FlipStringCheckAnswerFragArgs by navArgs()
+    private val args: com.koronnu.kina.ui.tabAnki.flip.checkTypedAnswer.FlipStringCheckAnswerFragArgs by navArgs()
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
     private val flipTypeAndCheckViewModel: FlipTypeAndCheckViewModel by viewModels { FlipTypeAndCheckViewModel.Factory }
     private val ankiFlipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()

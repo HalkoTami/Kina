@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.anki_frag_con
+package com.koronnu.kina.ui.tabAnki.flip
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -19,13 +19,11 @@ import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
 import com.koronnu.kina.actions.DateTimeActions
 import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.customClasses.enumClasses.AnimationAttributes
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.customClasses.normalClasses.Progress
 import com.koronnu.kina.databinding.FragmentAnkiFlipBaseBinding
 import com.koronnu.kina.db.dataclass.Card
-import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
 import com.koronnu.kina.ui.viewmodel.*
 import java.util.Date
 

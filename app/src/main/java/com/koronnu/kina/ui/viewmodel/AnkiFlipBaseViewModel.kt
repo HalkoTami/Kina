@@ -20,11 +20,11 @@ import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.db.enumclass.DBTable
-import com.koronnu.kina.ui.fragment.anki_frag_con.AnkiFlipCompleteFragDirections
+import com.koronnu.kina.ui.tabAnki.flipCompleted.AnkiFlipCompleteFragDirections
 import com.koronnu.kina.ui.fragment.base_frag_con.EditCardBaseFragDirections
-import com.koronnu.kina.ui.fragment.flipFragCon.FlipStringCheckAnswerFragDirections
-import com.koronnu.kina.ui.fragment.flipFragCon.FlipStringFragDirections
-import com.koronnu.kina.ui.fragment.flipFragCon.FlipStringTypeAnswerFragDirections
+import com.koronnu.kina.ui.tabAnki.flip.checkTypedAnswer.FlipStringCheckAnswerFragDirections
+import com.koronnu.kina.ui.tabAnki.flip.lookString.FlipStringFragDirections
+import com.koronnu.kina.ui.tabAnki.flip.typeAnswer.FlipStringTypeAnswerFragDirections
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*

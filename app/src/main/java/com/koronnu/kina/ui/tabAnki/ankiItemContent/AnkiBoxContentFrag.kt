@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.anki_frag_con
+package com.koronnu.kina.ui.tabAnki.ankiItemContent
 
 import android.content.Context
 import android.graphics.drawable.Drawable

@@ -1,11 +1,9 @@
-package com.koronnu.kina.ui.fragment.flipFragCon
+package com.koronnu.kina.ui.tabAnki.flip.typeAnswer
 
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
-import android.widget.ImageView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.compose.runtime.key
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -27,7 +25,7 @@ import com.koronnu.kina.ui.viewmodel.AnkiSettingPopUpViewModel
 class FlipStringTypeAnswerFrag  : Fragment() {
 
     private var _binding: FragmentFlipStringTypeAnswerBinding? = null
-    private val args: FlipStringTypeAnswerFragArgs by navArgs()
+    private val args: com.koronnu.kina.ui.tabAnki.flip.typeAnswer.FlipStringTypeAnswerFragArgs by navArgs()
     private val flipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
     private val typeAndCheckViewModel: FlipTypeAndCheckViewModel by viewModels{ FlipTypeAndCheckViewModel.Factory}
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()

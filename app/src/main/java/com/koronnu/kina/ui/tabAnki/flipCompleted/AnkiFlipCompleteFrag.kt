@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.anki_frag_con
+package com.koronnu.kina.ui.tabAnki.flipCompleted
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -10,9 +10,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.DateTimeActions
 import com.koronnu.kina.actions.NavigationActions
-import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.databinding.FragmentAnkiFlipCompletedBinding

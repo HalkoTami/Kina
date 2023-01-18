@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.fragment.flipFragCon
+package com.koronnu.kina.ui.tabAnki.flip.lookString
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,7 +21,7 @@ class FlipStringFrag  : Fragment() {
 
     private var _binding: FragmentFlipStringBinding? = null
     private val flipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
-    private val args: FlipStringFragArgs by navArgs()
+    private val args: com.koronnu.kina.ui.tabAnki.flip.lookString.FlipStringFragArgs by navArgs()
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and

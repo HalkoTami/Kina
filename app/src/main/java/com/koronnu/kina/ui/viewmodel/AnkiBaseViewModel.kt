@@ -8,10 +8,10 @@ import com.koronnu.kina.actions.hideKeyBoard
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.FragmentAnkiBaseBinding
-import com.koronnu.kina.ui.fragment.anki_frag_con.AnkiBoxContentFragDirections
-import com.koronnu.kina.ui.fragment.anki_frag_con.AnkiBoxFragDirections
-import com.koronnu.kina.ui.fragment.anki_frag_con.AnkiFlipBaseFragDirections
-import com.koronnu.kina.ui.fragment.anki_frag_con.AnkiFlipCompleteFragDirections
+import com.koronnu.kina.ui.tabAnki.ankiItemContent.AnkiBoxContentFragDirections
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxFragDirections
+import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseFragDirections
+import com.koronnu.kina.ui.tabAnki.flipCompleted.AnkiFlipCompleteFragDirections
 
 class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
 
