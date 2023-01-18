@@ -3,6 +3,7 @@ package com.koronnu.kina.ui.viewmodel
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import com.koronnu.kina.application.RoomApplication
 import com.koronnu.kina.db.MyRoomRepository
 import com.koronnu.kina.db.dataclass.Card
@@ -36,17 +37,17 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         }
     }
 
+    private val _editCardBaseFragNavDirection = MutableLiveData<NavDirections?>()
+    fun setEditCardBaseFragNavDirection(direction: NavDirections?){
+        _editCardBaseFragNavDirection.value = direction
+    }
+    val editCardBaseFragNavDirection :LiveData<NavDirections?> = _editCardBaseFragNavDirection
 
     private var _createCardStringBinding :CreateCardFragStringFragBinding? = null
     fun setCreateCardStringBinding(createCardFragStringFragBinding: CreateCardFragStringFragBinding){
         _createCardStringBinding = createCardFragStringFragBinding
     }
-    val createCardFragStringFragBinding:CreateCardFragStringFragBinding get() = _createCardStringBinding!!
-    private var _createCardMainBinding :CreateCardFragMainBinding? = null
-    fun setCreateCardBaseBinding(createCardFragMainBinding: CreateCardFragMainBinding){
-        _createCardMainBinding = createCardFragMainBinding
-    }
-    val createCardFragMainBinding:CreateCardFragMainBinding get() = _createCardMainBinding!!
+
 
     private val _mainActivityNavCon = MutableLiveData<NavController>()
     fun setMainActivityNavCon(navController: NavController){
@@ -136,6 +137,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     private fun returnLastInsertedCard():Card?{
         return _lastInsertedCard.value
     }
+
     fun setLastInsertedCard(card: Card?){
         if(card==returnLastInsertedCard()) return else
             _lastInsertedCard.value = card
@@ -182,8 +184,8 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         viewModelScope.launch {
             repository.insert(any)
         }
-
     }
+
     fun update(any: Any){
         viewModelScope.launch {
             repository.update(any)
@@ -203,7 +205,6 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
             saveEmptyCard(returnParentCard()?.id,returnParentFlashCardCover()?.fileId)
         }
         fun insertToBefore(){
-
             val insertingCardsBefore = returnParentCard()?.cardBefore
             saveEmptyCard(insertingCardsBefore,returnParentFlashCardCover()?.fileId)
             upDateCardBefore(returnParentCard()!!,(returnLastInsertedCard()?.id ?:0)+1)
@@ -230,7 +231,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
         return neighbourCard?.id
 
     }
-    fun onClickBtnNavigate(navController: NavController,side: NeighbourCardSide){
+    fun onClickBtnNavigate(side: NeighbourCardSide){
         val flashCardId = returnParentCard()?.belongingFlashCardCoverId
         val a = if(flashCardId!=null) intArrayOf(flashCardId) else null
         val nextCardId = getNeighbourCardId(side)
@@ -239,8 +240,7 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
            val action = EditCardFragDirections.flipCreateCard()
             action.parentFlashCardCoverId = a
             action.cardId = b
-            navController.popBackStack()
-           navController.navigate(action)
+            setEditCardBaseFragNavDirection(action)
        }
     }
 

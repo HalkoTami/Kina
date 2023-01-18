@@ -37,11 +37,11 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository,
 
 
 
-    fun getFilteredFiles(fileId: Int?):LiveData<List<File>> =
+    fun getFilteredFiles(fileId: Int?):LiveData<List<File>?> =
         repository.getFileDataByParentFileId(fileId).map { listFromDB->
             when(getMovableFileStatus) {
-                FileStatus.FLASHCARD_COVER -> listFromDB.filter { it.fileId!=getMovingItemsParentFileId && it.fileStatus == FileStatus.FLASHCARD_COVER }
-                FileStatus.FOLDER -> listFromDB.filter { (returnMovingItems().filterIsInstance<File>().map { file-> file.fileId }.contains(it.fileId).not()) &&
+                FileStatus.FLASHCARD_COVER -> listFromDB?.filter { it.fileId!=getMovingItemsParentFileId && it.fileStatus == FileStatus.FLASHCARD_COVER }
+                FileStatus.FOLDER -> listFromDB?.filter { (returnMovingItems().filterIsInstance<File>().map { file-> file.fileId }.contains(it.fileId).not()) &&
                 it.fileStatus == FileStatus.FOLDER}
                 else -> throw IllegalArgumentException()
             } }.asLiveData()
@@ -121,7 +121,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository,
         var file: File,
         val fileChildLastId:Int?
     )
-    private val fileMoveToChildrenObserver = Observer<List<File>> {
+    private val fileMoveToChildrenObserver = Observer<List<File>?> {
         setFileMoveToData(FileMoveToData(getFileMoveTo,it.lastOrNull()?.fileId))
         setCollectMovingFileData(Count.End)
     }
@@ -145,7 +145,7 @@ class ChooseFileMoveToViewModel(val repository: MyRoomRepository,
         }
     }
 
-    private var fileMoveToChildrenFiles:LiveData<List<File>>? = null
+    private var fileMoveToChildrenFiles:LiveData<List<File>?>? = null
     private fun collectChildrenData(){
         fileMoveToChildrenFiles = getFilteredFiles(getFileMoveTo.fileId)
         fileMoveToChildrenFiles!!.observeForever(fileMoveToChildrenObserver)

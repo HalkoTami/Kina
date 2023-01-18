@@ -124,6 +124,7 @@
             android:id="@+id/btn_remembered"
             isSelected="@{viewModel._parentCard.remembered}"
             android:onClick="@{()->viewModel.changeRememberStatus()}"
+            android:visibility="@{viewModel.typeAnswer ?View.GONE :View.VISIBLE}"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="20dp"

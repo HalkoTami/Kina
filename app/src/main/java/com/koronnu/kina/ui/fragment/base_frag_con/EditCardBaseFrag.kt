@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
@@ -23,7 +24,7 @@ import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.viewmodel.*
 
 
-class EditCardBaseFrag  : Fragment(),View.OnClickListener {
+class EditCardBaseFrag  : Fragment() {
 //    private val args : EditCardBaseFragArgs by navArgs()
     private var _binding: CreateCardFragMainBinding? = null
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -35,7 +36,6 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
     private val editFileViewModel: EditFileViewModel by activityViewModels()
 
 
-    private lateinit var mainNavCon:NavController
     private lateinit var cardNavCon:NavController
 
     private val binding get() = _binding!!
@@ -49,26 +49,15 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
 
         fun setLateInitVars() {
             _binding = CreateCardFragMainBinding.inflate(inflater, container, false)
+            binding.apply {
+                viewModel = createCardViewModel
+                lifecycleOwner = viewLifecycleOwner
+            }
             val a =
                 childFragmentManager.findFragmentById(binding.createCardFragCon.id) as NavHostFragment
             cardNavCon = a.navController
-            createCardViewModel.setCreateCardBaseBinding(binding)
-            mainNavCon =
-                requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain)
-                    .findNavController()
         }
 
-        fun addClickListeners() {
-            binding.apply {
-                arrayOf(
-                    createCardTopBarBinding.imvSaveAndBack,
-                    btnInsertPrevious,
-                    btnPrevious,
-                    btnNext,
-                    btnInsertNext,
-                ).onEach { it.setOnClickListener(this@EditCardBaseFrag) }
-            }
-        }
 
         fun setAlphaByClickable(clickable: Boolean, view: View) {
             view.alpha = if (clickable) 1f else 0.5f
@@ -127,63 +116,34 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         }
 
         setLateInitVars()
-        addClickListeners()
+        binding.createCardTopBarBinding.imvSaveAndBack.setOnClickListener {
+            requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain)
+                .findNavController().popBackStack()
+        }
 
         mainViewModel.setChildFragmentStatus(MainFragment.EditCard)
         mainViewModel.setBnvVisibility(false)
         editFileViewModel.setBottomMenuVisible(false)
 
         createCardViewModel.apply {
+            setEditCardBaseFragNavDirection(null)
             parentCard.observe(viewLifecycleOwner, parentCardObserver)
             sisterCards.observe(viewLifecycleOwner, sisterCardObserver)
             parentFlashCardCover.observe(viewLifecycleOwner, parentFlashCardCoverObserver)
             getSisterCards(parentFlashCardCoverId).observe(viewLifecycleOwner,
                 sisterCardFromDBObserver)
+            editCardBaseFragNavDirection.observe(viewLifecycleOwner){
+                if(it==null) return@observe
+                cardNavCon.popBackStack()
+                cardNavCon.navigate(it)
+            }
         }
 
-//        val startingCardId =args.startEditCardId
-//        var started = true
-//        if(started){
-//            createCardViewModel.getParentCard(startingCardId).observe(viewLifecycleOwner){
-//                val action = EditCardFragDirections.flipCreateCard()
-//                action.cardId = intArrayOf(it.id)
-//                val flashCardCoverId = it.belongingFlashCardCoverId
-//                action.parentFlashCardCoverId =if(flashCardCoverId!=null) intArrayOf(flashCardCoverId) else null
-//                cardNavCon.navigate(action)
-//                started = false
-//            }
-//
-//        }
 
 
         return binding.root
     }
 
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
-//            true // default to enabled
-//        ) {
-//            override fun handleOnBackPressed() {
-//
-//
-//                val a = mainNavCon.backQueue.size
-//                if(a>0){
-//                    while( mainNavCon.backQueue[mainNavCon.backQueue.size-1].destination.label.toString()==getString(R.string.nav_label_main_create_card)){
-//                        mainNavCon.popBackStack()
-//                    }
-//                }
-//
-//            }
-//        }
-//        if(mainViewModel.returnGuideVisibility().not()){
-//            requireActivity().onBackPressedDispatcher.addCallback(
-//                this,  // LifecycleOwner
-//                callback
-//            )
-//        }
-//
-//    }
 
 
     override fun onDestroyView() {
@@ -191,29 +151,4 @@ class EditCardBaseFrag  : Fragment(),View.OnClickListener {
         _binding = null
     }
 
-    override fun onClick(p0: View?) {
-        binding.apply {
-            when(p0){
-                createCardTopBarBinding.imvSaveAndBack  ->{
-                    mainNavCon.popBackStack()
-                }
-
-                btnInsertNext,btnInsertPrevious         -> {
-                    when(p0){
-                        btnInsertPrevious                    -> createCardViewModel. onClickBtnInsert(
-                            NeighbourCardSide.PREVIOUS)
-                        btnInsertNext                           -> createCardViewModel. onClickBtnInsert(
-                            NeighbourCardSide.NEXT)
-                    }
-//                    createCardViewModel.checkMakePopUpVisible(mainViewModel.returnFragmentStatus() ?:return,ankiBaseViewModel.returnActiveFragment())
-                }
-                btnNext                                 -> createCardViewModel.onClickBtnNavigate(cardNavCon,
-                    NeighbourCardSide.NEXT)
-                btnPrevious                             -> createCardViewModel.onClickBtnNavigate(cardNavCon,
-                    NeighbourCardSide.PREVIOUS)
-
-            }
-        }
-
-    }
 }

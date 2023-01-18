@@ -135,7 +135,7 @@ class LibraryHomeFrag : Fragment(){
         setUpLateInitVars()
         val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
         val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
-        val homeRVItemsObserver = Observer<List<File>>{
+        val homeRVItemsObserver = Observer<List<File>?>{
             val sorted = it
             libraryBaseViewModel.setParentRVItems(sorted)
             val mainRV = binding.vocabCardRV

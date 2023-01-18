@@ -59,16 +59,20 @@ class FlipTypeAndCheckViewModel(val repository: MyRoomRepository,
     }
 
     fun checkAnswer(card:Card,answerIsBack:Boolean){
+        val backContentIsCorrect = card.stringData?.backText==getAnswer(card.id)
+        val frontContentIsCorrect = card.stringData?.frontText==getAnswer(card.id)
+        val answerFront = !answerIsBack
         val activityStatus=
         if(!answerIsBack){
-            if(card.stringData?.frontText==getAnswer(card.id))
+            if(frontContentIsCorrect)
                 ActivityStatus.RIGHT_FRONT_CONTENT_TYPED
             else ActivityStatus.WRONG_FRONT_CONTENT_TYPED
         } else {
-            if(card.stringData?.backText==getAnswer(card.id))
+            if(backContentIsCorrect)
                 ActivityStatus.RIGHT_BACK_CONTENT_TYPED
             else ActivityStatus.WRONG_BACK_CONTENT_TYPED
         }
+        val answerCorrect = (answerFront&&frontContentIsCorrect)||(answerIsBack&&backContentIsCorrect)
         viewModelScope.launch {
             val a =SimpleDateFormat(resources.getString(R.string.activityData_dateFormat),Locale.JAPAN)
             val datetime = a.format(Date())
@@ -77,6 +81,8 @@ class FlipTypeAndCheckViewModel(val repository: MyRoomRepository,
                 activityStatus = activityStatus,
                 dateTime = datetime,
                 idTokenTable = DBTable.TABLE_CARD))
+            if(answerCorrect)
+                repository.updateCardRememberedStatus(card,true)
         }
     }
 

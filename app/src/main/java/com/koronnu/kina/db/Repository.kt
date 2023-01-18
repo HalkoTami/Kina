@@ -1,13 +1,17 @@
 package com.koronnu.kina.db
 
 import androidx.annotation.WorkerThread
+import com.koronnu.kina.actions.DateTimeActions
 import com.koronnu.kina.db.dao.*
 import com.koronnu.kina.db.dataclass.*
+import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.db.enumclass.XRefType
 import com.koronnu.kina.db.enumclass.FileStatus
+import com.koronnu.kina.db.typeConverters.ActivityStatusConverter
 import com.koronnu.kina.db.typeConverters.FileStatusConverter
 import com.koronnu.kina.db.typeConverters.XRefTypeConverter
 import kotlinx.coroutines.flow.*
+import java.util.*
 
 /// Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
@@ -46,7 +50,7 @@ class MyRoomRepository(
 //    files
     fun getFileByFileId                        (fileId:Int?)                :Flow<File>         = fileDao.getFileByFileId(fileId)
     fun getFileAndChildrenCards                (fileId:Int?)                :Flow<Map<File,List<Card>>> = fileDao.getFileChildrenCards(fileId)
-    fun getFileDataByParentFileId              (parentFileId:Int?)          :Flow<List<File>>           = fileDao.myGetFileByParentFileId(parentFileId)
+    fun getFileDataByParentFileId              (parentFileId:Int?)          :Flow<List<File>?>           = fileDao.myGetFileByParentFileId(parentFileId)
     fun getLibraryItemsWithDescendantCards     (parentFileId:Int?)          :Flow<List<File>>           = fileDao.getLibraryItemsWithDescendantCards(parentFileId)
     fun getAnkiBoxRVDescendantsFolders         (fileId:Int)                 :Flow<List<File>>           = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFolderAsInt)
     fun getAnkiBoxRVDescendantsFlashCards      (fileId:Int)                 :Flow<List<File>>           = fileDao.getAnkiBoxRVDescendantsFiles(fileId,statusFlashCardAsInt)
@@ -59,7 +63,7 @@ class MyRoomRepository(
 //    activity
     fun getCardActivity                        (cardId:Int)                 :Flow<List<ActivityData>>       = activityDataDao.getActivityDataByCard(cardId)
     val allActivity                                                         :Flow<List<ActivityData>>       = activityDataDao.getAllActivityData()
-
+    val lastFlipRoundDuration:Flow<Int>                         = activityDataDao.getLastFlipDuration()
 
     suspend fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {
         fileDao.upDateChildFilesOfDeletedFile(deletedFileId,newParentFileId)
@@ -121,6 +125,11 @@ class MyRoomRepository(
 //        cardDao.upDateCardFlippedTimes(card.id)
 //    }
 
+    suspend fun updateCardRememberedStatus(card:Card,remembered:Boolean){
+        if(card.remembered==remembered) return
+        card.remembered = remembered
+        cardDao.update(card)
+    }
     suspend fun update(item: Any) {
         when (item) {
             is XRef -> xRefDao.update(item)

@@ -3,11 +3,16 @@ package com.koronnu.kina.ui.fragment.flipFragCon
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
+import android.widget.ImageView
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.compose.runtime.key
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
+import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.actions.showKeyBoard
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.customClasses.enumClasses.FlipFragments
@@ -24,7 +29,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
     private var _binding: FragmentFlipStringTypeAnswerBinding? = null
     private val args: FlipStringTypeAnswerFragArgs by navArgs()
     private val flipBaseViewModel: AnkiFlipBaseViewModel by activityViewModels()
-    private val typeAndCheckViewModel: FlipTypeAndCheckViewModel by activityViewModels()
+    private val typeAndCheckViewModel: FlipTypeAndCheckViewModel by viewModels{ FlipTypeAndCheckViewModel.Factory}
     private val ankiSettingPopUpViewModel: AnkiSettingPopUpViewModel by activityViewModels()
     var keyLis:KeyboardListener? = null
     // This property is only valid between onCreateView and
@@ -38,7 +43,7 @@ class FlipStringTypeAnswerFrag  : Fragment() {
     ): View {
         _binding =  FragmentFlipStringTypeAnswerBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
+        val bottom = requireActivity().findViewById<LinearLayoutCompat>(R.id.linLay_flip_bottom)
         fun setUpViewStart(){
             fun addEdtFocusChangeListener(){
                 binding.edtTypeAnswerString.setOnFocusChangeListener { view, b ->
@@ -52,16 +57,24 @@ class FlipStringTypeAnswerFrag  : Fragment() {
                 val rootView = binding.root
                 val keyboardListener = object:KeyboardListener(rootView,){
                 }.apply { onKeyBoardAppear = {typeAndCheckViewModel.setKeyBoardVisible(true)
-                    binding.imvCheckAnswer.visibility = View.VISIBLE}
-                onKeyBoardDisappear={typeAndCheckViewModel.setKeyBoardVisible(false)
-                    binding.imvCheckAnswer.visibility = View.GONE}}
+                    binding.imvCheckAnswer.visibility = View.VISIBLE
+                   changeViewVisibility(bottom,false)
+                }
+                onKeyBoardDisappear={
+                    typeAndCheckViewModel.setKeyBoardVisible(false)
+                    if(this@FlipStringTypeAnswerFrag.isVisible){
+                        binding.imvCheckAnswer.visibility = View.GONE
+                        changeViewVisibility(bottom,true)
+                    }
+                }
+                }
                 keyLis = keyboardListener
                 rootView.viewTreeObserver.addOnGlobalLayoutListener(keyboardListener)
             }
             fun addCL(){
                 binding.imvCheckAnswer.setOnClickListener {
-                    val rootView = binding.root
-                    rootView.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
+                    binding.root.viewTreeObserver.removeOnGlobalLayoutListener(keyLis)
+                    changeViewVisibility(bottom,true)
                     flipBaseViewModel.flip(NeighbourCardSide.NEXT)
                 }
             }
@@ -91,7 +104,6 @@ class FlipStringTypeAnswerFrag  : Fragment() {
 
         return root
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

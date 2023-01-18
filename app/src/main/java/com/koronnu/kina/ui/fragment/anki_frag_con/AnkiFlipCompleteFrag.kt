@@ -37,13 +37,16 @@ class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
         Animation().appearAlphaAnimation(binding.root,true,1f){}.start()
         flipRoundSharedPref = requireActivity().getSharedPreferences(resources.getString(R.string.sp_title_flipRound),Context.MODE_PRIVATE)
 
+        ankiFlipBaseViewModel.lastFlipDurationInMin.observe(viewLifecycleOwner){
+            binding.txvFlippedMinutes.text = it.toString()
+        }
         ankiFlipBaseViewModel.allActivityData.observe(viewLifecycleOwner){
-            val dTA = DateTimeActions()
-            val startedDate =dTA.
-            fromStringToDate(it.last { it.activityStatus == ActivityStatus.FLIP_ROUND_STARTED }.dateTime)?:return@observe
-            val diffInMin = dTA.getTimeDifference( Date(),startedDate,DateTimeActions.TimeUnit.MINUTES)
-            val finalResult = diffInMin - ankiFlipBaseViewModel.returnFlipLeavedTimeInSec()/60
-            binding.txvFlippedMinutes.text = finalResult.toString()
+//            val dTA = DateTimeActions()
+//            val startedDate =dTA.
+//            fromStringToDate(it.last { it.activityStatus == ActivityStatus.FLIP_ROUND_STARTED }.dateTime)?:return@observe
+//            val diffInMin = dTA.getTimeDifference( Date(),startedDate,DateTimeActions.TimeUnit.MINUTES)
+//            val finalResult = diffInMin - ankiFlipBaseViewModel.returnFlipLeavedTimeInSec()/60
+//            binding.txvFlippedMinutes.text = finalResult.toString()
 
         }
         binding.txvFlippedItemsAmount.text = ankiFlipBaseViewModel.returnFlipItems().size.toString()

@@ -31,6 +31,10 @@ class AnkiBaseFrag  : Fragment() {
             requireActivity().getSharedPreferences(getString(int),Context.MODE_PRIVATE)
         }
         ankiBaseViewModel.onFragmentCreated(binding, viewLifecycleOwner,getSharedPref,myNavCon)
+        binding.apply {
+            viewModel=ankiBaseViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
         return binding.root
     }
 
