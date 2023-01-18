@@ -8,9 +8,9 @@ import androidx.core.widget.addTextChangedListener
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.customViews.ImvChangeAlphaOnDown
-import com.koronnu.kina.ui.listener.*
 import com.koronnu.kina.ui.listener.topbar.*
 import com.koronnu.kina.ui.tabLibrary.DeletePopUpViewModel
+import com.koronnu.kina.ui.tabLibrary.LibFragSearchBarCL
 import com.koronnu.kina.ui.viewmodel.*
 
 class LibraryAddListeners(){
