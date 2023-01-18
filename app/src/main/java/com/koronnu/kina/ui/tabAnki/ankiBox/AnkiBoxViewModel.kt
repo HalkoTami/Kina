@@ -18,7 +18,7 @@ import com.koronnu.kina.ui.tabAnki.ankiBox.allFlashCards.BoxFlashCardCoversFragD
 import com.koronnu.kina.ui.tabAnki.ankiBox.library.BoxLibraryItemsFragDirections
 import com.koronnu.kina.data.model.normalClasses.MakeToastFromVM
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
-import com.koronnu.kina.ui.ObserveOnce
+import com.koronnu.kina.util.ObserveOnce
 import kotlinx.coroutines.launch
 
 class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {

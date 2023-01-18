@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui
+package com.koronnu.kina.util
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
