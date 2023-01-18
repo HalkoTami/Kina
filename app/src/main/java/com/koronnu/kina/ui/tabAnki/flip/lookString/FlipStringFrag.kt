@@ -13,8 +13,8 @@ import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.customClasses.enumClasses.Count
 import com.koronnu.kina.customClasses.enumClasses.FlipFragments
 import com.koronnu.kina.databinding.FragmentFlipStringBinding
-import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
-import com.koronnu.kina.ui.viewmodel.AnkiSettingPopUpViewModel
+import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
+import com.koronnu.kina.ui.tabAnki.AnkiSettingPopUpViewModel
 
 
 class FlipStringFrag  : Fragment() {

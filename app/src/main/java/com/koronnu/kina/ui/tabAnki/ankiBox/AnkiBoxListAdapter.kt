@@ -17,7 +17,6 @@ import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.ui.tabLibrary.SearchDiffCallback
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems
-import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
 
 
 /**

@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.databinding.FragmentAnkiBaseBinding
-import com.koronnu.kina.ui.viewmodel.*
 
 
 class AnkiBaseFrag  : Fragment() {

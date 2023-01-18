@@ -12,16 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
 
 import com.koronnu.kina.databinding.*
-import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.customClasses.normalClasses.ParentFileAncestors
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxListAdapter
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxFileRVCL
-import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxRVStringCardCL
-import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 import kotlin.math.abs
 
 
@@ -29,7 +26,7 @@ class AnkiBoxFragViewSetUp() {
 
 
 
-    
+
 fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
                               context: Context,
                               ankiBoxVM: AnkiBoxViewModel, tab: AnkiBoxFragments?,

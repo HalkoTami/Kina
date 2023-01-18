@@ -1,19 +1,21 @@
 package com.koronnu.kina.ui.viewmodel
 
 import android.view.LayoutInflater
-import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import com.koronnu.kina.activity.MainActivity
+import com.koronnu.kina.ui.MainActivity
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.enumClasses.MainFragment
 import com.koronnu.kina.databinding.ActivityMainBinding
+import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseFragDirections
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiBaseFragDirections
 import com.koronnu.kina.ui.editCard.EditCardBaseFragDirections
 import com.koronnu.kina.ui.listener.KeyboardListener
+import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
+import com.koronnu.kina.ui.tabLibrary.DeletePopUpViewModel
 import kotlinx.coroutines.*
 
 

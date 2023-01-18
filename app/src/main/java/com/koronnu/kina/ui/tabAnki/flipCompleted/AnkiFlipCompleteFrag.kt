@@ -14,9 +14,8 @@ import com.koronnu.kina.actions.NavigationActions
 import com.koronnu.kina.ui.animation.Animation
 import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.databinding.FragmentAnkiFlipCompletedBinding
-import com.koronnu.kina.ui.viewmodel.AnkiBaseViewModel
-import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
-import java.util.*
+import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
+import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
 
 class AnkiFlipCompleteFrag:Fragment(),View.OnClickListener {
     private var _binding: FragmentAnkiFlipCompletedBinding? = null

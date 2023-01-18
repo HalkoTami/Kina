@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.koronnu.kina.ui.viewmodel.CreateCardViewModel" />
+            type="com.koronnu.kina.ui.editCard.CreateCardViewModel" />
         <import type="com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout

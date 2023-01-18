@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.viewmodel
+package com.koronnu.kina.ui.tabAnki
 
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.koronnu.kina.R
 import com.koronnu.kina.application.RoomApplication
-import com.koronnu.kina.customClasses.enumClasses.AnkiFragments
 import com.koronnu.kina.customClasses.normalClasses.AnkiFilter
 import com.koronnu.kina.customClasses.normalClasses.AutoFlip
 import com.koronnu.kina.db.MyRoomRepository

@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.viewmodel
+package com.koronnu.kina.ui.tabAnki.flip
 
 import android.animation.ValueAnimator
 import android.content.res.Resources
@@ -20,11 +20,11 @@ import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.enumclass.ActivityStatus
 import com.koronnu.kina.db.enumclass.DBTable
-import com.koronnu.kina.ui.tabAnki.flipCompleted.AnkiFlipCompleteFragDirections
 import com.koronnu.kina.ui.editCard.EditCardBaseFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.checkTypedAnswer.FlipStringCheckAnswerFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.lookString.FlipStringFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.typeAnswer.FlipStringTypeAnswerFragDirections
+import com.koronnu.kina.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -171,7 +171,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     }
 
     val reverseMode get() = ankiSettingPopUpViewModel.getReverseCardSideActive
-    private val changeCardIfFlipNext get()= parentFlipSide==FlipSide.Back
+    private val changeCardIfFlipNext get()= parentFlipSide== FlipSide.Back
     private val changeCardIfFlipPrevious get() = parentFlipSide == FlipSide.Front
     private val _flipProgress = MutableLiveData<Progress>()
     private fun setProgress(progress: Progress){
@@ -258,16 +258,16 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         Front, Back
     }
     val _parentFlipSide = MutableLiveData<FlipSide>()
-    val parentFlipSide get() =_parentFlipSide.value ?:FlipSide.Front
+    val parentFlipSide get() =_parentFlipSide.value ?: FlipSide.Front
     fun setParentFlipSide(flipSide: FlipSide){
         _parentFlipSide.value = flipSide
     }
 
     val isLastCard get() = (returnFlipItems().last() == getParentCard)
-    val isLastCardLastSide get() = isLastCard&&parentFlipSide==FlipSide.Back
+    val isLastCardLastSide get() = isLastCard&&parentFlipSide== FlipSide.Back
     val isFirstCard get() = (returnFlipItems().first() == getParentCard)
 
-    val isFirstCardFirstSide get() = isFirstCard&&parentFlipSide==FlipSide.Front
+    val isFirstCardFirstSide get() = isFirstCard&&parentFlipSide== FlipSide.Front
     fun flip(side: NeighbourCardSide):Boolean{
         if(side == NeighbourCardSide.PREVIOUS&&isFirstCardFirstSide) return false
         if(side==NeighbourCardSide.NEXT&&isLastCardLastSide) {
@@ -282,7 +282,7 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     }
     fun reverseFlipSide(){
         val reverseSide = when(parentFlipSide){
-            FlipSide.Front->FlipSide.Back
+            FlipSide.Front -> FlipSide.Back
             FlipSide.Back -> FlipSide.Front
         }
         setParentFlipSide(reverseSide)

@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.viewmodel
+package com.koronnu.kina.ui.tabAnki.ankiBox
 
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -17,13 +17,15 @@ import com.koronnu.kina.ui.tabAnki.ankiBox.favourites.BoxFavouriteFragDirections
 import com.koronnu.kina.ui.tabAnki.ankiBox.allFlashCards.BoxFlashCardCoversFragDirections
 import com.koronnu.kina.ui.tabAnki.ankiBox.library.BoxLibraryItemsFragDirections
 import com.koronnu.kina.customClasses.normalClasses.MakeToastFromVM
+import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
+import com.koronnu.kina.ui.viewmodel.ObserveOnce
 import kotlinx.coroutines.launch
 
 class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
 
     private lateinit var ankiBaseViewModel: AnkiBaseViewModel
     companion object{
-        fun getFactory(ankiBaseViewModel:AnkiBaseViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+        fun getFactory(ankiBaseViewModel: AnkiBaseViewModel): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as RoomApplication

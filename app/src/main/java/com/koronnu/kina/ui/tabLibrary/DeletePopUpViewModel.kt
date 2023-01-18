@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.viewmodel
+package com.koronnu.kina.ui.tabLibrary
 
 import android.content.res.Resources
 import androidx.lifecycle.*
@@ -175,15 +175,15 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository,
     private fun setConfirmDeleteView(confirmDeleteView: ConfirmDeleteView){
         _confirmDeleteView.value = confirmDeleteView
     }
-    private fun returnConfirmDeleteView():ConfirmDeleteView{
-        return _confirmDeleteView.value ?:ConfirmDeleteView()
+    private fun returnConfirmDeleteView(): ConfirmDeleteView {
+        return _confirmDeleteView.value ?: ConfirmDeleteView()
     }
     val confirmDeleteView:LiveData<ConfirmDeleteView> = _confirmDeleteView
     private val _confirmDeleteWithChildrenView =  MutableLiveData<ConfirmDeleteWithChildrenView>()
     private fun setConfirmDeleteWithChildrenView(confirmDeleteWithChildrenView: ConfirmDeleteWithChildrenView){
         _confirmDeleteWithChildrenView.value = confirmDeleteWithChildrenView
     }
-    private fun returnConfirmDeleteWithChildrenView():ConfirmDeleteWithChildrenView{
+    private fun returnConfirmDeleteWithChildrenView(): ConfirmDeleteWithChildrenView {
         return _confirmDeleteWithChildrenView.value ?: ConfirmDeleteWithChildrenView()
     }
     val confirmDeleteWithChildrenView:LiveData<ConfirmDeleteWithChildrenView> = _confirmDeleteWithChildrenView

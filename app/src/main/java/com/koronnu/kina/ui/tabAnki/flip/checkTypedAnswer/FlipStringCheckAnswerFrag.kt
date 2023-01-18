@@ -17,9 +17,9 @@ import com.koronnu.kina.databinding.FragmentFlipStringCheckAnswerBinding
 import com.koronnu.kina.db.dataclass.ActivityData
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.enumclass.ActivityStatus
-import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
-import com.koronnu.kina.ui.viewmodel.AnkiSettingPopUpViewModel
-import com.koronnu.kina.ui.viewmodel.FlipTypeAndCheckViewModel
+import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
+import com.koronnu.kina.ui.tabAnki.AnkiSettingPopUpViewModel
+import com.koronnu.kina.ui.tabAnki.flip.FlipTypeAndCheckViewModel
 
 
 class FlipStringCheckAnswerFrag  : Fragment() {

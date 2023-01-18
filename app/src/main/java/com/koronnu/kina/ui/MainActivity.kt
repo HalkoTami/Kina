@@ -1,4 +1,4 @@
-package com.koronnu.kina.activity
+package com.koronnu.kina.ui
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback

@@ -17,9 +17,9 @@ import com.koronnu.kina.customClasses.enumClasses.FlipFragments
 import com.koronnu.kina.customClasses.enumClasses.NeighbourCardSide
 import com.koronnu.kina.databinding.FragmentFlipStringTypeAnswerBinding
 import com.koronnu.kina.ui.listener.KeyboardListener
-import com.koronnu.kina.ui.viewmodel.AnkiFlipBaseViewModel
-import com.koronnu.kina.ui.viewmodel.FlipTypeAndCheckViewModel
-import com.koronnu.kina.ui.viewmodel.AnkiSettingPopUpViewModel
+import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
+import com.koronnu.kina.ui.tabAnki.flip.FlipTypeAndCheckViewModel
+import com.koronnu.kina.ui.tabAnki.AnkiSettingPopUpViewModel
 
 
 class FlipStringTypeAnswerFrag  : Fragment() {

@@ -14,6 +14,8 @@ import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
+import com.koronnu.kina.ui.editCard.CreateCardViewModel
+import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
 import com.koronnu.kina.ui.view_set_up.*
 import com.koronnu.kina.ui.viewmodel.*
 

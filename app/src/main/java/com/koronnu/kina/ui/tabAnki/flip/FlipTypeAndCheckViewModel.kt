@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.viewmodel
+package com.koronnu.kina.ui.tabAnki.flip
 
 import android.content.res.Resources
 import androidx.lifecycle.*

@@ -16,8 +16,8 @@ import com.koronnu.kina.R
 import com.koronnu.kina.databinding.CreateCardFragBaseBinding
 import com.koronnu.kina.db.dataclass.Card
 import com.koronnu.kina.db.dataclass.File
-import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
-import com.koronnu.kina.ui.viewmodel.CreateCardViewModel
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
+import com.koronnu.kina.ui.editCard.CreateCardViewModel
 
 
 class EditCardFrag: Fragment() {

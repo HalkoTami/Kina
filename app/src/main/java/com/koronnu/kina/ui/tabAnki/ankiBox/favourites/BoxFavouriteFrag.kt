@@ -11,7 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.databinding.FullRvBinding
 import com.koronnu.kina.customClasses.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.ui.view_set_up.AnkiBoxFragViewSetUp
-import com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 
 
 class BoxFavouriteFrag  : Fragment() {

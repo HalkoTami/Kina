@@ -22,11 +22,10 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.db.dataclass.File
 import com.koronnu.kina.db.enumclass.ColorStatus
 import com.koronnu.kina.customClasses.enumClasses.LibraryFragment
-import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
-import com.koronnu.kina.ui.tabLibrary.LibFragPlaneRVListAdapter
-import com.koronnu.kina.ui.tabLibrary.LibFragSearchRVListAdapter
-import com.koronnu.kina.ui.tabLibrary.LibraryRVItemClickListener
+import com.koronnu.kina.ui.editCard.CreateCardViewModel
+import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
 import com.koronnu.kina.ui.observer.LibraryOb
+import com.koronnu.kina.ui.tabLibrary.*
 import com.koronnu.kina.ui.view_set_up.GetCustomDrawables
 import com.koronnu.kina.ui.view_set_up.LibraryAddListeners
 import com.koronnu.kina.ui.view_set_up.LibrarySetUpItems

@@ -1,4 +1,4 @@
-package com.koronnu.kina.ui.viewmodel
+package com.koronnu.kina.ui.tabAnki
 
 import android.content.SharedPreferences
 import android.view.View
@@ -12,8 +12,11 @@ import com.koronnu.kina.ui.tabAnki.ankiItemContent.AnkiBoxContentFragDirections
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseFragDirections
 import com.koronnu.kina.ui.tabAnki.flipCompleted.AnkiFlipCompleteFragDirections
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
+import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
+import com.koronnu.kina.ui.viewmodel.MainViewModel
 
-class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
+class AnkiBaseViewModel(val mainViewModel: MainViewModel) : ViewModel() {
 
     private lateinit var _ankiFlipBaseViewModel: AnkiFlipBaseViewModel
     val ankiFlipBaseViewModel get() = _ankiFlipBaseViewModel
@@ -33,12 +36,14 @@ class AnkiBaseViewModel(val mainViewModel: MainViewModel ) : ViewModel() {
                         AnkiSettingPopUpViewModel.getFactory(ankiBaseViewModel)
                     )[AnkiSettingPopUpViewModel::class.java]
                 val ankiBoxViewModel =
-                    ViewModelProvider(viewModelStoreOwner,AnkiBoxViewModel.getFactory(ankiBaseViewModel))[AnkiBoxViewModel::class.java]
+                    ViewModelProvider(viewModelStoreOwner,
+                        AnkiBoxViewModel.getFactory(ankiBaseViewModel))[AnkiBoxViewModel::class.java]
                 ankiBaseViewModel._ankiBoxViewModel = ankiBoxViewModel
 
                 ankiBaseViewModel._ankiSettingPopUpViewModel = ankiSettingPopUpViewModel
                 val ankiFlipBaseViewModel =
-                    ViewModelProvider(viewModelStoreOwner,AnkiFlipBaseViewModel.getFactory(mainViewModel))[AnkiFlipBaseViewModel::class.java]
+                    ViewModelProvider(viewModelStoreOwner,
+                        AnkiFlipBaseViewModel.getFactory(mainViewModel))[AnkiFlipBaseViewModel::class.java]
                 ankiBaseViewModel._ankiFlipBaseViewModel = ankiFlipBaseViewModel
                 return ankiBaseViewModel as T
             }
