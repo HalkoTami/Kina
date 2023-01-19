@@ -12,12 +12,12 @@ import com.koronnu.kina.databinding.FullRvBinding
 import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
-import com.koronnu.kina.util.view_set_up.AnkiBoxFragViewSetUp
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxListAdapter
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 
 
 class BoxLibraryItemsFrag  : Fragment() {
-    private val args: com.koronnu.kina.ui.tabAnki.ankiBox.library.BoxLibraryItemsFragArgs by navArgs()
+    private val args: BoxLibraryItemsFragArgs by navArgs()
     private var _binding: FullRvBinding? = null
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
 
@@ -33,10 +33,9 @@ class BoxLibraryItemsFrag  : Fragment() {
 
         _binding =  FullRvBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val viewSetUp = AnkiBoxFragViewSetUp()
-        val adapter = viewSetUp
-            .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),ankiBoxViewModel,
+        val adapter = AnkiBoxListAdapter(requireActivity(),ankiBoxViewModel,
                 AnkiBoxFragments.AllFlashCardCovers,viewLifecycleOwner)
+        binding.listAdapter = adapter
         val fileId = args.fileId?.single()
         ankiBoxViewModel.setCurrentChildFragment(AnkiBoxFragments.Library)
         fun makeEmptyVisibleByListSize(list: List<Any>){

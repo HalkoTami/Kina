@@ -10,13 +10,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.databinding.FullRvBinding
 import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
-import com.koronnu.kina.util.view_set_up.AnkiBoxFragViewSetUp
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxListAdapter
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 
 
 class BoxFavouriteFrag  : Fragment() {
 
-    private val args: com.koronnu.kina.ui.tabAnki.ankiBox.favourites.BoxFavouriteFragArgs by navArgs()
+    private val args: BoxFavouriteFragArgs by navArgs()
     private var _binding: FullRvBinding? = null
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
 
@@ -30,10 +30,9 @@ class BoxFavouriteFrag  : Fragment() {
 
         _binding =  FullRvBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val viewSetUp = AnkiBoxFragViewSetUp()
-        val adapter = viewSetUp
-            .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),ankiBoxViewModel,
+        val adapter = AnkiBoxListAdapter(requireActivity(),ankiBoxViewModel,
                 AnkiBoxFragments.Favourites,viewLifecycleOwner)
+        binding.listAdapter = adapter
 
         fun makeEmptyVisibleByListSize(list: List<Any>){
             binding.frameLayFullRvEmpty.visibility = if(list.isEmpty()) View.VISIBLE else View.GONE

@@ -12,13 +12,13 @@ import com.koronnu.kina.databinding.FullRvBinding
 import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
-import com.koronnu.kina.util.view_set_up.AnkiBoxFragViewSetUp
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxListAdapter
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 
 
 class BoxFlashCardCoversFrag  : Fragment() {
 
-    private val args: com.koronnu.kina.ui.tabAnki.ankiBox.allFlashCards.BoxFlashCardCoversFragArgs by navArgs()
+    private val args: BoxFlashCardCoversFragArgs by navArgs()
     private var _binding: FullRvBinding? = null
     private val ankiBoxViewModel: AnkiBoxViewModel by activityViewModels()
     private val binding get() = _binding!!
@@ -33,23 +33,24 @@ class BoxFlashCardCoversFrag  : Fragment() {
         val root: View = binding.root
 
         val fileId = args.fileId?.single()
-        val viewSetUp = AnkiBoxFragViewSetUp()
-        val adapter = viewSetUp
-            .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),ankiBoxViewModel,
-                AnkiBoxFragments.AllFlashCardCovers,viewLifecycleOwner)
+        val listAdapter =  AnkiBoxListAdapter(requireContext(),ankiBoxViewModel,AnkiBoxFragments.AllFlashCardCovers,viewLifecycleOwner)
+//        val adapter = viewSetUp
+//            .setUpAnkiBoxRVListAdapter(binding.recyclerView,requireActivity(),ankiBoxViewModel,
+//                AnkiBoxFragments.AllFlashCardCovers,viewLifecycleOwner)
 
+        binding.listAdapter = listAdapter
         fun makeEmptyVisibleByListSize(list: List<Any>){
             binding.frameLayFullRvEmpty.visibility = if(list.isEmpty()) View.VISIBLE else View.GONE
         }
         val allFlashCardCoverFromDBObserver = Observer<List<File>>{
             if(fileId==null){
-                adapter.submitList(it)
+                listAdapter.submitList(it)
                 makeEmptyVisibleByListSize(it)
             }
         }
         val getCardsFromDBObserver = Observer<List<Card>>{
             if(fileId!=null){
-                adapter.submitList(it)
+                listAdapter.submitList(it)
                 makeEmptyVisibleByListSize(it)
             }
         }

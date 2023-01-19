@@ -15,9 +15,9 @@ import androidx.navigation.findNavController
 import com.koronnu.kina.R
 import com.koronnu.kina.databinding.FragAnkiContentRvBinding
 import com.koronnu.kina.data.source.local.entity.Card
-import com.koronnu.kina.util.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxListAdapter
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
 
@@ -39,7 +39,6 @@ class AnkiBoxContentFrag  : Fragment() {
         _binding =  FragAnkiContentRvBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val fragmentBefore = ankiBaseViewModel.returnActiveFragment()
-        val viewSetUp = AnkiBoxFragViewSetUp()
         fun getTopBarTitle(fragmentBefore: AnkiFragments):String{
             return requireActivity().resources.getString(when(fragmentBefore){
                 AnkiFragments.AnkiBox ->R.string.ankiBoxContentFrag_topBarTitle_ankiBoxContent
@@ -69,12 +68,11 @@ class AnkiBoxContentFrag  : Fragment() {
             binding.imvFlipOrAnkiBox.setImageDrawable(getTopBarDrawable(fragmentBefore))
         }
         fun setUpRV(){
-            val adapter =
-                viewSetUp.setUpAnkiBoxRVListAdapter(
-                    binding.rvBinding.recyclerView,
-                    requireActivity(),
+            val adapter = AnkiBoxListAdapter(
+                requireActivity(),
                     ankiBoxViewModel,
                     null,viewLifecycleOwner)
+            binding.rvBinding.listAdapter = adapter
             adapter.submitList(getParentTokenList(fragmentBefore))
 
         }

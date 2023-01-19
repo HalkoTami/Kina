@@ -1,4 +1,4 @@
-package com.koronnu.kina.binding
+package com.koronnu.kina.util
 
 import android.animation.Animator
 import android.graphics.drawable.GradientDrawable

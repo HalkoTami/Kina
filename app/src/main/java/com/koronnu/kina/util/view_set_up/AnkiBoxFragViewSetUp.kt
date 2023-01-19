@@ -10,14 +10,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-
-import com.koronnu.kina.databinding.*
-import com.koronnu.kina.data.source.local.entity.Card
-import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
 import com.koronnu.kina.data.model.normalClasses.ParentFileAncestors
-import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxListAdapter
+import com.koronnu.kina.data.source.local.entity.Card
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.databinding.ListItemAnkiBoxRvFileBinding
+import com.koronnu.kina.databinding.PgbAnkiBoxDataRememberedBinding
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxFileRVCL
+import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxListAdapter
 import com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel
 import kotlin.math.abs
 
@@ -25,18 +25,6 @@ import kotlin.math.abs
 class AnkiBoxFragViewSetUp() {
 
 
-
-
-fun setUpAnkiBoxRVListAdapter(recyclerView: RecyclerView,
-                              context: Context,
-                              ankiBoxVM: AnkiBoxViewModel, tab: AnkiBoxFragments?,
-                              lifecycleOwner: LifecycleOwner): AnkiBoxListAdapter {
-    val adapter = AnkiBoxListAdapter(context,ankiBoxVM,tab,lifecycleOwner)
-    recyclerView.adapter = adapter
-    recyclerView.layoutManager = LinearLayoutManager(context)
-    recyclerView.isNestedScrollingEnabled = false
-    return adapter
-}
 
 
 
