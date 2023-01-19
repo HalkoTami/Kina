@@ -76,47 +76,47 @@ class AnkiBoxListAdapter(
                 return a
             }
             val getDraw = GetCustomDrawables(context)
-            val descendantsCardsObserver = Observer<List<Card>>{ list->
-                binding.apply {
-                    arrayOf(txvAnkiBoxCardAmount,imvContainingCardsIcon
-                    ).onEach { it.visibility = if(list.isEmpty()) View.INVISIBLE else View.VISIBLE }
-                    binding.txvAnkiBoxCardAmount.text = list.size.toString()
-                }
-                getAnimation(list).start()
-
-            }
-            val descendantsFoldersObserver = Observer<List<File>>{ list->
-                binding.apply {
-                    arrayOf(txvAnkiBoxFolderAmount,imvContainingFoldersIcon
-                    ).onEach { it.visibility = if(list.isEmpty()) View.INVISIBLE else View.VISIBLE }
-                    binding.txvAnkiBoxFolderAmount.text = list.size.toString()
-                }
-            }
-            val descendantsFlashCardsObserver = Observer<List<File>>{ list->
-                binding.apply {
-                    arrayOf(txvAnkiBoxFlashCardAmount,imvContainingFlashcardsIcon
-                    ).onEach { it.visibility = if(list.isEmpty()) View.INVISIBLE else View.VISIBLE }
-                    binding.txvAnkiBoxFlashCardAmount.text = list.size.toString()
-                }
-            }
-            val ancestorsObserver = Observer<List<File>>{ ancestors ->
-                val a = ParentFileAncestors(
-                    gGrandPFile  = if(ancestors.size>=3) ancestors[2] else null,
-                    gParentFile = if(ancestors.size>=2) ancestors[1] else null,
-                    ParentFile =  null
-                )
-                binding.ancestorsBinding.apply {
-                    CommonViewSetUp().apply {
-                        setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,a.gGrandPFile)
-                        setUpEachAncestor(lineLayGPFile,txvGrandParentFileTitle,imvGrandParentFile,a.gParentFile)
-//                        setUpEachAncestor(lineLayParentFile,txvParentFileTitle,imvParentFile,a.ParentFile)
-                        binding.frameAnkiBoxRvAncestors.visibility =
-                            if(ancestors.size == 1) View.GONE
-                            else View.VISIBLE
-                    }
-
-                }
-            }
+//            val descendantsCardsObserver = Observer<List<Card>>{ list->
+//                binding.apply {
+//                    arrayOf(txvAnkiBoxCardAmount,imvContainingCardsIcon
+//                    ).onEach { it.visibility = if(list.isEmpty()) View.INVISIBLE else View.VISIBLE }
+//                    binding.txvAnkiBoxCardAmount.text = list.size.toString()
+//                }
+//                getAnimation(list).start()
+//
+//            }
+//            val descendantsFoldersObserver = Observer<List<File>>{ list->
+//                binding.apply {
+//                    arrayOf(txvAnkiBoxFolderAmount,imvContainingFoldersIcon
+//                    ).onEach { it.visibility = if(list.isEmpty()) View.INVISIBLE else View.VISIBLE }
+//                    binding.txvAnkiBoxFolderAmount.text = list.size.toString()
+//                }
+//            }
+//            val descendantsFlashCardsObserver = Observer<List<File>>{ list->
+//                binding.apply {
+//                    arrayOf(txvAnkiBoxFlashCardAmount,imvContainingFlashcardsIcon
+//                    ).onEach { it.visibility = if(list.isEmpty()) View.INVISIBLE else View.VISIBLE }
+//                    binding.txvAnkiBoxFlashCardAmount.text = list.size.toString()
+//                }
+//            }
+//            val ancestorsObserver = Observer<List<File>>{ ancestors ->
+//                val a = ParentFileAncestors(
+//                    gGrandPFile  = if(ancestors.size>=3) ancestors[2] else null,
+//                    gParentFile = if(ancestors.size>=2) ancestors[1] else null,
+//                    ParentFile =  null
+//                )
+//                binding.ancestorsBinding.apply {
+//                    CommonViewSetUp().apply {
+//                        setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,a.gGrandPFile)
+//                        setUpEachAncestor(lineLayGPFile,txvGrandParentFileTitle,imvGrandParentFile,a.gParentFile)
+////                        setUpEachAncestor(lineLayParentFile,txvParentFileTitle,imvParentFile,a.ParentFile)
+//                        binding.frameAnkiBoxRvAncestors.visibility =
+//                            if(ancestors.size == 1) View.GONE
+//                            else View.VISIBLE
+//                    }
+//
+//                }
+//            }
 
             binding.apply {
 //                ankiBoxVM.ankiBoxFileIds.observe(lifecycleOwner){
@@ -133,9 +133,9 @@ class AnkiBoxListAdapter(
 //                    binding = binding,
 //                    tab = tab)) }
 //                ankiBoxVM.ankiBoxFileAncestorsFromDB(file.fileId)       .observe(lifecycleOwner,ancestorsObserver)
-                ankiBoxVM.getAnkiBoxRVCards(file.fileId)                .observe(lifecycleOwner,descendantsCardsObserver)
-                ankiBoxVM.getAnkiBoxRVDescendantsFolders(file.fileId)   .observe(lifecycleOwner,descendantsFoldersObserver)
-                ankiBoxVM.getAnkiBoxRVDescendantsFlashCards(file.fileId)   .observe(lifecycleOwner,descendantsFlashCardsObserver)
+//                ankiBoxVM.getAnkiBoxRVCards(file.fileId)                .observe(lifecycleOwner,descendantsCardsObserver)
+//                ankiBoxVM.getAnkiBoxRVDescendantsFolders(file.fileId)   .observe(lifecycleOwner,descendantsFoldersObserver)
+//                ankiBoxVM.getAnkiBoxRVDescendantsFlashCards(file.fileId)   .observe(lifecycleOwner,descendantsFlashCardsObserver)
 
             }
         }
@@ -153,6 +153,15 @@ class AnkiBoxListAdapter(
                     }
                     ankiBoxFragViewModel.ankiBoxFileAncestorsFromDB(item.fileId).observe(viewLifecycleOwner){
                         fileBinding.ancestors = it
+                    }
+                    ankiBoxFragViewModel.getAnkiBoxRVCards(item.fileId)                .observe(viewLifecycleOwner){
+                        fileBinding.descendantsCardsAmount = it.size
+                    }
+                    ankiBoxFragViewModel.getAnkiBoxRVDescendantsFolders(item.fileId)   .observe(viewLifecycleOwner){
+                        fileBinding.descendantsFolderAmount = it.size
+                    }
+                    ankiBoxFragViewModel.getAnkiBoxRVDescendantsFlashCards(item.fileId)   .observe(viewLifecycleOwner){
+                        fileBinding.descendantsFlashCardCoversAmount = it.size
                     }
                     setUpRVFileBinding(fileBinding, item,tab!!, ankiBoxVM = ankiBoxFragViewModel ,context,viewLifecycleOwner)
                     binding.flAnkiBoxRvContent.layoutParams.height = context.resources.getDimensionPixelSize(

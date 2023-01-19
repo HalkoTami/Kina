@@ -12,6 +12,16 @@
         <import type="com.koronnu.kina.data.source.local.entity.File"/>
         <import type="android.view.View"/>
         <variable
+            name="descendantsFolderAmount"
+            type="Integer" />
+        <variable
+            name="descendantsFlashCardCoversAmount"
+            type="Integer" />
+        <variable
+            name="descendantsCardsAmount"
+            type="Integer" />
+
+        <variable
             name="ancestors"
             type="List&lt;File>" />
         <variable
@@ -111,6 +121,7 @@
                 android:layout_height="13dp"
                 android:gravity="center_vertical">
                 <ImageView
+                    android:visibility="@{descendantsFolderAmount>0 ?View.VISIBLE :View.GONE }"
                     android:id="@+id/imv_containing_folders_icon"
                     android:paddingTop="1dp"
                     android:paddingBottom="1dp"
@@ -121,6 +132,8 @@
                 <TextView
                     style="@style/TxvUniformSmallStyle"
                     android:minWidth="30dp"
+                    android:visibility="@{descendantsFolderAmount>0 ?View.VISIBLE :View.GONE }"
+                    android:text="@{descendantsFolderAmount.toString()}"
                     android:gravity="start|center_vertical"
                     android:id="@+id/txv_anki_box_folder_amount"
                     android:layout_width="wrap_content"
@@ -129,6 +142,7 @@
                     android:layout_height="match_parent"
                     />
                 <ImageView
+                    android:visibility="@{descendantsFlashCardCoversAmount>0 ?View.VISIBLE :View.GONE }"
                     android:id="@+id/imv_containing_flashcards_icon"
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
@@ -138,6 +152,8 @@
                     android:src="@drawable/icon_flashcard_flat"
                     tools:ignore="ContentDescription" />
                 <TextView
+                    android:visibility="@{descendantsFlashCardCoversAmount>0 ?View.VISIBLE :View.GONE }"
+                    android:text="@{descendantsFlashCardCoversAmount.toString()}"
                     android:minWidth="30dp"
                     style="@style/TxvUniformSmallStyle"
                     android:gravity="start|center_vertical"
@@ -148,12 +164,15 @@
                     android:layout_height="match_parent"
                     />
                 <ImageView
+                    android:visibility="@{descendantsCardsAmount>0 ?View.VISIBLE :View.GONE }"
                     android:id="@+id/imv_containing_cards_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/icon_card"
                     tools:ignore="ContentDescription" />
                 <TextView
+                    android:visibility="@{descendantsCardsAmount>0 ?View.VISIBLE :View.GONE }"
+                    android:text="@{descendantsCardsAmount.toString()}"
                     android:minWidth="30dp"
                     style="@style/TxvUniformSmallStyle"
                     android:gravity="start|center_vertical"
