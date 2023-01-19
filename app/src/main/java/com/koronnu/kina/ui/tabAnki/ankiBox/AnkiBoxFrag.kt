@@ -1,12 +1,15 @@
 package com.koronnu.kina.ui.tabAnki.ankiBox
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -21,13 +24,14 @@ import com.koronnu.kina.data.model.normalClasses.AnkiBoxTabData
 import com.koronnu.kina.data.model.normalClasses.AnkiFilter
 import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.databinding.FragmentAnkiBoxBinding
+import com.koronnu.kina.databinding.PgbAnkiBoxDataRememberedBinding
 import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.util.CommonOb
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiSettingPopUpViewModel
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
-import com.koronnu.kina.util.view_set_up.AnkiBoxFragViewSetUp
+import kotlin.math.abs
 
 class AnkiBoxFrag  : Fragment(),View.OnClickListener {
 
@@ -93,7 +97,6 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
             }
             return a
         }
-        val viewSetUp = AnkiBoxFragViewSetUp()
         val checkFavouriteExistsList = mutableListOf<List<Card>>()
         val toastObserver = CommonOb().toastObserver(requireActivity())
         val ankiBoxChildFragObserver = Observer<AnkiBoxTabData>{
@@ -121,7 +124,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         }
         val ankiBoxItemsObserver = Observer<MutableList<Card>>{
             binding.imvAddAnkiBoxContentToFavourite.isSelected = checkFavouriteExistsList.contains(it)
-            viewSetUp.setUpAnkiBoxRing(it,binding.bindingPgbAnkiBoxDataRemembered)
+            setUpAnkiBoxRing(it,binding.bindingPgbAnkiBoxDataRemembered)
             binding.btnStartAnkiFromAnkiBox.text =
                 requireActivity().resources.getString(if(it.isEmpty()) R.string.btnStartAnki_withoutSelect else R.string.btnStartAnki_default)
         }
@@ -146,6 +149,57 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
         mainViewModel.setBnvVisibility(true)
 
         return binding.root
+    }
+
+    fun getRememberedPercentage(list: MutableList<Card>):Double{
+        return if(list.size!=0) (list.filter { it.remembered == true }.size.toDouble()/list.size)
+        else 0.0
+
+    }
+
+    fun moveViewInCircle(percentage:Double,
+                         view: ImageView,
+                         circleWidth: Int){
+        val radious = Math.toRadians(360*percentage-90.0)
+        val dx: Float = (circleWidth-view.layoutParams.width)/2 * Math.cos(radious).toFloat()
+        val dy: Float = (circleWidth-view.layoutParams.height)/2 * Math.sin(radious).toFloat()
+        view.translationX = dx
+        view.translationY =dy
+    }
+    fun setUpAnkiBoxRing(list: MutableList<Card>, binding: PgbAnkiBoxDataRememberedBinding){
+        val resources = binding.root.resources
+        val rememberedPercentage = getRememberedPercentage(list)
+        val rememberedCardsSize = list.filter { it.remembered == true }.size
+        binding.apply {
+            binding.imvRememberedEndIcon.visibility = View.VISIBLE
+            txvInsideRing.text = resources.getString(R.string.remembered_progress,rememberedCardsSize,list.size)
+
+        }
+        val progressRingWidth = binding.ringProgressBar.layoutParams.width
+        val progressBefore = binding.ringProgressBar.progress
+        val beforePercentage = binding.ringProgressBar.progress.toFloat()/100
+        val newProgress = rememberedPercentage.times(100).toInt()
+        if(progressBefore==newProgress) {
+            binding.ringProgressBar.progress = newProgress
+            binding.imvRememberedEndIcon.visibility = if(newProgress!=0)  View.VISIBLE else View.INVISIBLE
+            moveViewInCircle(rememberedPercentage,binding.imvRememberedEndIcon,progressRingWidth)
+            return
+        }
+        fun getAnimation(percentageBefore:Float,newPercentage:Float): ValueAnimator {
+            val percentageAnim = ValueAnimator.ofFloat(percentageBefore,newPercentage)
+            percentageAnim.doOnEnd {
+                binding.imvRememberedEndIcon.visibility = if(rememberedPercentage!=0.0)  View.VISIBLE else View.INVISIBLE
+            }
+            percentageAnim.addUpdateListener {
+                val value = it.animatedValue as Float
+                binding.ringProgressBar.progress = value.times(100).toInt()
+                moveViewInCircle(value.toDouble(),binding.imvRememberedEndIcon,progressRingWidth)
+            }
+            percentageAnim.duration= abs(newProgress-progressBefore).times(30).toLong()
+            return percentageAnim
+        }
+        getAnimation(beforePercentage,rememberedPercentage.toFloat()).start()
+
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)

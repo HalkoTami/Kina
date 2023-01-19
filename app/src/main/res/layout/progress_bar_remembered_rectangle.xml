@@ -9,9 +9,6 @@
         <variable
             name="progress"
             type="Integer" />
-        <variable
-            name="a"
-            type="float" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frameLay_progressbar_remembered"
