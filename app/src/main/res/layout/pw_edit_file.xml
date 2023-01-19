@@ -117,7 +117,7 @@
             <EditText
 
                 android:hint="@{view_model.edtFileTitleHint}"
-                android:text="@={view_model.edtFileTitleText}"
+                android:text="@={view_model._popUpShownFile.title}"
                 android:padding="3dp"
                 android:layout_gravity="center"
                 app:layout_constraintStart_toStartOf="parent"

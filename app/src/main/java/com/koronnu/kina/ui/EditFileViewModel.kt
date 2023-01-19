@@ -19,7 +19,6 @@ import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
 import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
 import com.koronnu.kina.util.Animation
 import com.koronnu.kina.util.ObserveOnce
-import com.koronnu.kina.util.view_set_up.ColorPalletViewSetUp
 import com.koronnu.kina.util.view_set_up.GetCustomDrawables
 import kotlinx.coroutines.launch
 
@@ -57,8 +56,8 @@ class EditFileViewModel(val repository: MyRoomRepository,
     val _editFilePopUpVisible = MutableLiveData<Boolean>()
     val _bottomMenuVisible =MutableLiveData<Boolean>()
 
-    private val _colPalletStatus = MutableLiveData<ColorStatus>()
-    private val _popUpShownFile = MutableLiveData<File>()
+    val _colPalletStatus = MutableLiveData<ColorStatus>()
+    val _popUpShownFile = MutableLiveData<File>()
     private val _lastInsertedFile = MutableLiveData<File?>()
 
     private var _mode: EditingMode? = null
@@ -84,10 +83,8 @@ class EditFileViewModel(val repository: MyRoomRepository,
     private val createCardViewModel get() = mainViewModel.createCardViewModel
     private val mainActivityBinding  get() = mainViewModel.mainActivityBinding
     private val editFilePopUpBinding get() = mainActivityBinding.bindingPwEditFile
-    private val colorPalletBinding  get() = editFilePopUpBinding.colPaletBinding
     private val parentOpenedFile    get() = mainViewModel.libraryBaseViewModel.returnParentFile()
     private val libraryBaseViewModel get() = mainViewModel.libraryBaseViewModel
-    private val colorPalletViewSetUp get() =  ColorPalletViewSetUp(colorPalletBinding)
     private val ankiBoxCards get() = ankiBoxViewModel.returnAnkiBoxItems()
     private val parentFileIsNull get() = parentOpenedFile == null
     private val parentFileIsFlashCard get() = parentOpenedFile?.fileStatus == FileStatus.FLASHCARD_COVER
@@ -251,7 +248,6 @@ class EditFileViewModel(val repository: MyRoomRepository,
 
         val color = colPalletStatus
 
-        val fileToCreate = fileToCreate
         when(mode ){
             EditingMode.New -> {
                 fileToCreate.title = title
@@ -272,7 +268,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
         setEditFilePopUpVisible(false)
     }
     private fun doAfterColPalletStatusSet(){
-        colorPalletViewSetUp.makeSelected(colPalletStatus)
+//        colorPalletViewSetUp.makeSelected(colPalletStatus)
         setImvFileStatusDraw()
     }
 

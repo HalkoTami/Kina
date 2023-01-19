@@ -1,7 +1,9 @@
 package com.koronnu.kina.util
 
 import android.animation.Animator
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.StateListDrawable
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -26,9 +28,24 @@ object ViewBinding{
             ColorStatus.GRAY    -> R.color.gray
             ColorStatus.BLUE    -> R.color.blue
         }
-        val draw = AppCompatResources.getDrawable(view.context,R.drawable.circle) as GradientDrawable
-        draw.setColor(ContextCompat.getColor(view.context,colId))
-        view.setImageDrawable(draw)
+
+
+        fun getDraw(selected: Boolean):Drawable{
+            val res = if(selected) R.drawable.colpallet_unselected else R.drawable.colpallet_selected
+            val unselected = AppCompatResources.getDrawable(view.context,res) as GradientDrawable
+            unselected.setColor(ContextCompat.getColor(view.context,colId))
+            if(!selected) return unselected
+            unselected.setStroke(3,ContextCompat.getColor(view.context,R.color.black))
+            return  unselected
+        }
+
+        val stateDraw = StateListDrawable()
+        stateDraw.addState(intArrayOf(android.R.attr.state_selected),getDraw(true) )
+        stateDraw.addState(intArrayOf(-android.R.attr.state_selected),getDraw(false) )
+
+
+
+        view.setImageDrawable(stateDraw)
     }
     @BindingAdapter("convertFileStatusDraw")
     @JvmStatic
