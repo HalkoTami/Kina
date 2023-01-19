@@ -126,9 +126,9 @@ class AnkiBoxListAdapter(
 //                imvFileType.setImageDrawable(
 //                    getDraw.getFileIconByFile(file)
 //                )
-                txvFileTitle.text = file.title
+//                txvFileTitle.text = file.title
 
-                arrayOf(root,imvChbIsInAnkiBox).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
+                arrayOf(imvChbIsInAnkiBox).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
                     file,
                     ankiBoxVM = ankiBoxVM,
                     binding = binding,
@@ -147,7 +147,10 @@ class AnkiBoxListAdapter(
             when(item){
                 is File -> {
                     val fileBinding = ListItemAnkiBoxRvFileBinding.inflate(LayoutInflater.from(context))
-                    fileBinding.file = item
+                    fileBinding.apply {
+                        file = item
+                        ankiBoxViewModel = ankiBoxFragViewModel
+                    }
                     setUpRVFileBinding(fileBinding, item,tab!!, ankiBoxVM = ankiBoxFragViewModel ,context,lifecycleOwner)
                     binding.flAnkiBoxRvContent.layoutParams.height = context.resources.getDimensionPixelSize(
                         R.dimen.anki_box_rv_item_height)
