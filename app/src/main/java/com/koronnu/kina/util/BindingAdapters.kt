@@ -9,7 +9,9 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.koronnu.kina.R
+import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
+import com.koronnu.kina.util.view_set_up.GetCustomDrawables
 
 object ViewBinding{
     @BindingAdapter("convertColPalletDraw")
@@ -24,6 +26,13 @@ object ViewBinding{
         val draw = AppCompatResources.getDrawable(view.context,R.drawable.circle) as GradientDrawable
         draw.setColor(ContextCompat.getColor(view.context,colId))
         view.setImageDrawable(draw)
+    }
+    @BindingAdapter("convertFileStatusDraw")
+    @JvmStatic
+    fun convertFileStatusDrawable(view: ImageView, file: File){
+        view.setImageDrawable(
+            GetCustomDrawables(view.context).getFileIconByFile(file)
+        )
     }
 
     @BindingAdapter("visibilityAnim","animVisibility", requireAll = true)

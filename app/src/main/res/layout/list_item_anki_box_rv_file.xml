@@ -2,186 +2,194 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="110dp"
-    android:padding="5dp"
-    android:background="@drawable/gray_stroke_rectangle">
-    <ImageView
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        android:contentDescription="@string/listItemAnkiBoxRvCard_imvChbIsInAnkiBox_cd"
-        android:id="@+id/imv_chb_isInAnkiBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/selector_anki_box"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="0dp"
-        android:layout_marginEnd="10dp"
-        android:layout_height="40dp"
-        android:id="@+id/fl_listItemCardString"
-        android:orientation="vertical"
-        app:layout_constraintStart_toEndOf="@id/imv_chb_isInAnkiBox"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center_vertical"
-        app:layout_constraintBottom_toTopOf="@id/lineLay_graphs">
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            app:layout_constraintStart_toEndOf="@id/imv_file_type"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-           
-            app:layout_constraintBottom_toTopOf="@id/ll_ankiData"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            >
-
-            <ImageView
-                app:layout_constraintBottom_toBottomOf="@id/fl_listItemCardString"
-                app:layout_constraintStart_toEndOf="@id/imv_chb_isInAnkiBox"
-                app:layout_constraintTop_toTopOf="@id/fl_listItemCardString"
-                android:contentDescription="@string/cd_file_type"
-                android:id="@+id/imv_file_type"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintVertical_weight="1"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/icon_file"
-                android:layout_marginEnd="10dp"
-
-                />
-
-            <TextView
-                android:id="@+id/txv_file_title"
-
-                style="@style/TxvUniformPreLargeStyle"
-                android:gravity="center_vertical"
-                android:ellipsize="end"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2.5"
-                app:layout_constraintStart_toEndOf="@id/imv_file_type"
-                app:layout_constraintTop_toTopOf="parent" />
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/icon_polygon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/fl_listItemCardString"
-                app:layout_constraintBottom_toBottomOf="@id/fl_listItemCardString"
-                tools:ignore="ContentDescription" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/linLay_children_data"
-            android:layout_width="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="20dp"
-            android:layout_height="13dp"
-            android:gravity="center_vertical">
-            <ImageView
-                android:id="@+id/imv_containing_folders_icon"
-                android:paddingTop="1dp"
-                android:paddingBottom="1dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/icon_file"
-                tools:ignore="ContentDescription" />
-            <TextView
-                style="@style/TxvUniformSmallStyle"
-                android:minWidth="30dp"
-                android:gravity="start|center_vertical"
-                android:id="@+id/txv_anki_box_folder_amount"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="10dp"
-                android:layout_height="match_parent"
-                />
-            <ImageView
-                android:id="@+id/imv_containing_flashcards_icon"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/icon_flashcard_flat"
-                tools:ignore="ContentDescription" />
-            <TextView
-                android:minWidth="30dp"
-                style="@style/TxvUniformSmallStyle"
-                android:gravity="start|center_vertical"
-                android:layout_marginEnd="10dp"
-                android:id="@+id/txv_anki_box_flashCard_amount"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                />
-            <ImageView
-                android:id="@+id/imv_containing_cards_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/icon_card"
-                tools:ignore="ContentDescription" />
-            <TextView
-                android:minWidth="30dp"
-                style="@style/TxvUniformSmallStyle"
-                android:gravity="start|center_vertical"
-                android:id="@+id/txv_anki_box_Card_amount"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                />
-
-
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-    <LinearLayout
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fl_listItemCardString"
-        app:layout_constraintBottom_toBottomOf="parent"
+<layout>
+    <data>
+        <variable
+            name="file"
+            type="com.koronnu.kina.data.source.local.entity.File" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintVertical_weight="0.7"
-        android:id="@+id/lineLay_graphs"
-        android:orientation="vertical">
-        <FrameLayout
-            android:visibility="gone"
-            android:id="@+id/frame_anki_box_rv_ancestors"
-            android:layout_width="match_parent"
-            android:layout_height="18dp">
-            <include
-                android:id="@+id/ancestors_binding"
-                layout="@layout/library_frag_top_bar_ancestors"/>
-        </FrameLayout>
-        <FrameLayout
-            android:id="@+id/frameLay_progress"
-            android:layout_marginBottom="3dp"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="110dp"
+        android:padding="5dp"
+        android:background="@drawable/gray_stroke_rectangle">
+        <ImageView
             android:layout_marginTop="5dp"
-            >
-            <include
-                android:id="@+id/remembered_progress_bar_binding"
-                layout="@layout/progress_bar_remembered_rectangle"/>
-        </FrameLayout>
+            android:layout_marginStart="5dp"
+            android:contentDescription="@string/listItemAnkiBoxRvCard_imvChbIsInAnkiBox_cd"
+            android:id="@+id/imv_chb_isInAnkiBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/selector_anki_box"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
-    </LinearLayout>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="40dp"
+            android:id="@+id/fl_listItemCardString"
+            android:orientation="vertical"
+            app:layout_constraintStart_toEndOf="@id/imv_chb_isInAnkiBox"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toTopOf="@id/lineLay_graphs">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                app:layout_constraintStart_toEndOf="@id/imv_file_type"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+
+                app:layout_constraintBottom_toTopOf="@id/ll_ankiData"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+
+                <ImageView
+                    convertFileStatusDraw="@{file}"
+                    app:layout_constraintBottom_toBottomOf="@id/fl_listItemCardString"
+                    app:layout_constraintStart_toEndOf="@id/imv_chb_isInAnkiBox"
+                    app:layout_constraintTop_toTopOf="@id/fl_listItemCardString"
+                    android:contentDescription="@string/cd_file_type"
+                    android:id="@+id/imv_file_type"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintVertical_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/icon_file"
+                    android:layout_marginEnd="10dp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txv_file_title"
+
+                    style="@style/TxvUniformPreLargeStyle"
+                    android:gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.5"
+                    app:layout_constraintStart_toEndOf="@id/imv_file_type"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/icon_polygon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/fl_listItemCardString"
+                    app:layout_constraintBottom_toBottomOf="@id/fl_listItemCardString"
+                    tools:ignore="ContentDescription" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linLay_children_data"
+                android:layout_width="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"
+                android:layout_height="13dp"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:id="@+id/imv_containing_folders_icon"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_file"
+                    tools:ignore="ContentDescription" />
+                <TextView
+                    style="@style/TxvUniformSmallStyle"
+                    android:minWidth="30dp"
+                    android:gravity="start|center_vertical"
+                    android:id="@+id/txv_anki_box_folder_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:layout_height="match_parent"
+                    />
+                <ImageView
+                    android:id="@+id/imv_containing_flashcards_icon"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_flashcard_flat"
+                    tools:ignore="ContentDescription" />
+                <TextView
+                    android:minWidth="30dp"
+                    style="@style/TxvUniformSmallStyle"
+                    android:gravity="start|center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/txv_anki_box_flashCard_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    />
+                <ImageView
+                    android:id="@+id/imv_containing_cards_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_card"
+                    tools:ignore="ContentDescription" />
+                <TextView
+                    android:minWidth="30dp"
+                    style="@style/TxvUniformSmallStyle"
+                    android:gravity="start|center_vertical"
+                    android:id="@+id/txv_anki_box_Card_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    />
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <LinearLayout
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fl_listItemCardString"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintVertical_weight="0.7"
+            android:id="@+id/lineLay_graphs"
+            android:orientation="vertical">
+            <FrameLayout
+                android:visibility="gone"
+                android:id="@+id/frame_anki_box_rv_ancestors"
+                android:layout_width="match_parent"
+                android:layout_height="18dp">
+                <include
+                    android:id="@+id/ancestors_binding"
+                    layout="@layout/library_frag_top_bar_ancestors"/>
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/frameLay_progress"
+                android:layout_marginBottom="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="5dp"
+                >
+                <include
+                    android:id="@+id/remembered_progress_bar_binding"
+                    layout="@layout/progress_bar_remembered_rectangle"/>
+            </FrameLayout>
+
+        </LinearLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
 
 
