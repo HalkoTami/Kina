@@ -1,10 +1,8 @@
 package com.koronnu.kina.ui.tabAnki.ankiBox
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.view.*
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,14 +12,10 @@ import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.model.enumClasses.AnkiBoxFragments
-import com.koronnu.kina.data.model.normalClasses.ParentFileAncestors
 import com.koronnu.kina.data.source.local.entity.ActivityData
 import com.koronnu.kina.data.source.local.entity.enumclass.ActivityStatus
 import com.koronnu.kina.ui.tabLibrary.SearchDiffCallback
-import com.koronnu.kina.util.view_set_up.CommonViewSetUp
-import com.koronnu.kina.util.view_set_up.GetCustomDrawables
 import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
-import kotlin.math.abs
 
 
 /**

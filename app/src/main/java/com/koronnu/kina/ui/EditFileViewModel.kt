@@ -185,11 +185,15 @@ class EditFileViewModel(val repository: MyRoomRepository,
     }
     fun setColPalletStatus( colorPalletStatus: ColorStatus){
         _colPalletStatus.value = colorPalletStatus
+        val after = getPopUpShownFile.run { this.colorStatus= colorPalletStatus
+        this}
+        _popUpShownFile.value = after
         doAfterColPalletStatusSet()
     }
     private fun setImvFileStatusDraw(){
-        imvFileStatusDraw.value = GetCustomDrawables(editFilePopUpBinding.root.context)
-            .getFileIconByFileStatusAndColStatus(getPopUpShownFile.fileStatus,colPalletStatus)
+//
+//        imvFileStatusDraw.value = GetCustomDrawables(editFilePopUpBinding.root.context)
+//            .getFileIconByFileStatusAndColStatus(getPopUpShownFile.fileStatus,colPalletStatus)
     }
 
     private fun setUpPopUpView(){
@@ -200,7 +204,7 @@ class EditFileViewModel(val repository: MyRoomRepository,
         setEdtFileTitleText()
         setEdtFileTitleHint()
         setColPalletStatus(getPopUpShownFile.colorStatus)
-        setImvFileStatusDraw()
+//        setImvFileStatusDraw()
     }
     private fun doAfterSetBottomMenuVisible(){
         if(bottomMenuVisible) setEditFilePopUpVisible(false)

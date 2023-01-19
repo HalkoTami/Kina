@@ -90,10 +90,11 @@
 
                 android:gravity="start|bottom">
                 <ImageView
+                    convertFileStatusDraw="@{view_model._popUpShownFile}"
                     android:id="@+id/imv_file_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@{view_model.imvFileStatusDraw}"
+
                     app:layout_constraintBottom_toTopOf="@id/edt_file_title"
                     app:layout_constraintStart_toStartOf="@id/edt_file_title"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat"
