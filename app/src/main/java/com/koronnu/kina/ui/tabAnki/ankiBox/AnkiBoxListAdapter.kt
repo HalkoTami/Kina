@@ -60,21 +60,21 @@ class AnkiBoxListAdapter(
                                context:Context,
                                lifecycleOwner: LifecycleOwner
         ){
-            fun getAnimation(list:List<Card>): ValueAnimator {
-                val remPer = list.filter { it.remembered }.size.toDouble()/list.size
-                val rememberedProgressBar = binding.rememberedProgressBarBinding.progressbarRemembered
-                val progressBefore =rememberedProgressBar.progress
-                val imvEndIcon = binding.rememberedProgressBarBinding.imvRememberedEndIcon
-                val a = ValueAnimator.ofFloat(progressBefore.toFloat(),getPercentage(remPer).toFloat())
-                a.addUpdateListener {
-                    val value = it.animatedValue as Float
-                    rememberedProgressBar.progress = value.toInt()
-                    val translation = rememberedProgressBar.width*value/100-imvEndIcon.width/2
-                    imvEndIcon.translationX = if(translation<0) 0f else translation
-                }
-                a.duration = abs(progressBefore-getPercentage(remPer)).times(30).toLong()
-                return a
-            }
+//            fun getAnimation(list:List<Card>): ValueAnimator {
+//                val remPer = list.filter { it.remembered }.size.toDouble()/list.size
+//                val rememberedProgressBar = binding.rememberedProgressBarBinding.progressbarRemembered
+//                val progressBefore =rememberedProgressBar.progress
+//                val imvEndIcon = binding.rememberedProgressBarBinding.imvRememberedEndIcon
+//                val a = ValueAnimator.ofFloat(progressBefore.toFloat(),getPercentage(remPer).toFloat())
+//                a.addUpdateListener {
+//                    val value = it.animatedValue as Float
+//                    rememberedProgressBar.progress = value.toInt()
+//                    val translation = rememberedProgressBar.width*value/100-imvEndIcon.width/2
+//                    imvEndIcon.translationX = if(translation<0) 0f else translation
+//                }
+//                a.duration = abs(progressBefore-getPercentage(remPer)).times(30).toLong()
+//                return a
+//            }
             val getDraw = GetCustomDrawables(context)
 //            val descendantsCardsObserver = Observer<List<Card>>{ list->
 //                binding.apply {
@@ -156,6 +156,8 @@ class AnkiBoxListAdapter(
                     }
                     ankiBoxFragViewModel.getAnkiBoxRVCards(item.fileId)                .observe(viewLifecycleOwner){
                         fileBinding.descendantsCardsAmount = it.size
+                        fileBinding.progress = (it.filter { it.remembered }.size.toDouble()/it.size).toInt()
+                        fileBinding.a = 0.8f
                     }
                     ankiBoxFragViewModel.getAnkiBoxRVDescendantsFolders(item.fileId)   .observe(viewLifecycleOwner){
                         fileBinding.descendantsFolderAmount = it.size

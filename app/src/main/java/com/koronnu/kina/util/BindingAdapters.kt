@@ -6,12 +6,15 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.koronnu.kina.R
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
 import com.koronnu.kina.util.view_set_up.GetCustomDrawables
+
 
 object ViewBinding{
     @BindingAdapter("convertColPalletDraw")
@@ -36,6 +39,16 @@ object ViewBinding{
         )
     }
 
+    @BindingAdapter("horizontal_constraint_percentage")
+    @JvmStatic
+    fun setLayoutConstraintGuideBegin(view: View, progress:Int) {
+        val constraintSet = ConstraintSet()
+        val parentView = view.parent as ConstraintLayout
+        constraintSet.clone(parentView)
+        val biasedValue = progress.toFloat()/100
+        constraintSet.setHorizontalBias(view.id,biasedValue)
+        constraintSet.applyTo(parentView)
+    }
     @BindingAdapter("visibilityAnim","animVisibility", requireAll = true)
     @JvmStatic
     fun animateVisibility(view: FrameLayout, getAnimation:(v: View, visible:Boolean)-> Animator, visible: Boolean){

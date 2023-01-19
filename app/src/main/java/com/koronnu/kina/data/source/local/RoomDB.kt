@@ -1,4 +1,4 @@
-package com.koronnu.kina.db
+package com.koronnu.kina.data.source.local
 
 import android.content.Context
 import androidx.room.*
@@ -7,7 +7,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.koronnu.kina.data.source.local.dao.*
 import com.koronnu.kina.data.source.local.entity.*
 import com.koronnu.kina.data.source.local.typeConverters.*
-import com.koronnu.kina.db.typeConverters.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

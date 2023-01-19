@@ -16,7 +16,6 @@ import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
-import com.koronnu.kina.ui.view_set_up.*
 import com.koronnu.kina.ui.viewmodel.*
 import com.koronnu.kina.util.view_set_up.LibraryAddListeners
 import com.koronnu.kina.util.view_set_up.LibrarySetUpItems

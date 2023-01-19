@@ -1,7 +1,7 @@
 package com.koronnu.kina
 
 import android.app.Application
-import com.koronnu.kina.db.MyRoomDatabase
+import com.koronnu.kina.data.source.local.MyRoomDatabase
 import com.koronnu.kina.db.MyRoomRepository
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope

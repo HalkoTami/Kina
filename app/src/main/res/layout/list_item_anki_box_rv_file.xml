@@ -22,6 +22,12 @@
             type="Integer" />
 
         <variable
+            name="progress"
+            type="Integer" />
+        <variable
+            name="a"
+            type="Float" />
+        <variable
             name="ancestors"
             type="List&lt;File>" />
         <variable
@@ -217,6 +223,8 @@
                 >
                 <include
                     android:id="@+id/remembered_progress_bar_binding"
+                    bind:progress="@{progress}"
+                    bind:a="@{a}"
                     layout="@layout/progress_bar_remembered_rectangle"/>
             </FrameLayout>
 
