@@ -148,7 +148,12 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
         navigateWithBackstack(action)
     }
 
-    private val _ankiBoxFileIds = MutableLiveData<MutableList<Int>>()
+    val _ankiBoxFileIds = MutableLiveData<MutableList<Int>>()
+    fun onClickAnkiBoxRvItemFileCheckBox(file: File){
+        if((_ankiBoxFileIds.value ?: mutableListOf()).contains(file.fileId))
+            removeFromAnkiBoxFileIds(file.fileId)
+        else addToAnkiBoxFileIds(listOf(file.fileId))
+    }
     fun addToAnkiBoxFileIds(list: List<Int>){
         val a = mutableListOf<Int>()
         a.addAll(_ankiBoxFileIds.value ?: mutableListOf())

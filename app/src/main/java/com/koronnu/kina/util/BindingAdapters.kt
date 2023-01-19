@@ -29,7 +29,8 @@ object ViewBinding{
     }
     @BindingAdapter("convertFileStatusDraw")
     @JvmStatic
-    fun convertFileStatusDrawable(view: ImageView, file: File){
+    fun convertFileStatusDrawable(view: ImageView, file: File?){
+        file ?:return
         view.setImageDrawable(
             GetCustomDrawables(view.context).getFileIconByFile(file)
         )

@@ -18,7 +18,6 @@ import com.koronnu.kina.data.model.normalClasses.ParentFileAncestors
 import com.koronnu.kina.data.source.local.entity.ActivityData
 import com.koronnu.kina.data.source.local.entity.enumclass.ActivityStatus
 import com.koronnu.kina.ui.tabLibrary.SearchDiffCallback
-import com.koronnu.kina.util.view_set_up.AnkiBoxFragViewSetUp
 import com.koronnu.kina.util.view_set_up.CommonViewSetUp
 import com.koronnu.kina.util.view_set_up.GetCustomDrawables
 import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
@@ -50,7 +49,7 @@ class AnkiBoxListAdapter(
                                  val context: Context,
                                  val ankiBoxFragViewModel: AnkiBoxViewModel,
                                  val tab: AnkiBoxFragments?,
-                                 val lifecycleOwner: LifecycleOwner) :
+                                 val viewLifecycleOwner: LifecycleOwner) :
         RecyclerView.ViewHolder(binding.root){
         fun getPercentage(per:Double):Int{
             return per.times(100).toInt()
@@ -110,7 +109,7 @@ class AnkiBoxListAdapter(
                     CommonViewSetUp().apply {
                         setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,a.gGrandPFile)
                         setUpEachAncestor(lineLayGPFile,txvGrandParentFileTitle,imvGrandParentFile,a.gParentFile)
-                        setUpEachAncestor(lineLayParentFile,txvParentFileTitle,imvParentFile,a.ParentFile)
+//                        setUpEachAncestor(lineLayParentFile,txvParentFileTitle,imvParentFile,a.ParentFile)
                         binding.frameAnkiBoxRvAncestors.visibility =
                             if(ancestors.size == 1) View.GONE
                             else View.VISIBLE
@@ -120,20 +119,20 @@ class AnkiBoxListAdapter(
             }
 
             binding.apply {
-                ankiBoxVM.ankiBoxFileIds.observe(lifecycleOwner){
-                    imvChbIsInAnkiBox.isSelected = (it.contains(file.fileId))
-                }
+//                ankiBoxVM.ankiBoxFileIds.observe(lifecycleOwner){
+//                    imvChbIsInAnkiBox.isSelected = (it.contains(file.fileId))
+//                }
 //                imvFileType.setImageDrawable(
 //                    getDraw.getFileIconByFile(file)
 //                )
 //                txvFileTitle.text = file.title
 
-                arrayOf(imvChbIsInAnkiBox).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
-                    file,
-                    ankiBoxVM = ankiBoxVM,
-                    binding = binding,
-                    tab = tab)) }
-                ankiBoxVM.ankiBoxFileAncestorsFromDB(file.fileId)       .observe(lifecycleOwner,ancestorsObserver)
+//                arrayOf(imvChbIsInAnkiBox).onEach { it.setOnClickListener(AnkiBoxFileRVCL(
+//                    file,
+//                    ankiBoxVM = ankiBoxVM,
+//                    binding = binding,
+//                    tab = tab)) }
+//                ankiBoxVM.ankiBoxFileAncestorsFromDB(file.fileId)       .observe(lifecycleOwner,ancestorsObserver)
                 ankiBoxVM.getAnkiBoxRVCards(file.fileId)                .observe(lifecycleOwner,descendantsCardsObserver)
                 ankiBoxVM.getAnkiBoxRVDescendantsFolders(file.fileId)   .observe(lifecycleOwner,descendantsFoldersObserver)
                 ankiBoxVM.getAnkiBoxRVDescendantsFlashCards(file.fileId)   .observe(lifecycleOwner,descendantsFlashCardsObserver)
@@ -150,8 +149,12 @@ class AnkiBoxListAdapter(
                     fileBinding.apply {
                         file = item
                         ankiBoxViewModel = ankiBoxFragViewModel
+                        lifecycleOwner = viewLifecycleOwner
                     }
-                    setUpRVFileBinding(fileBinding, item,tab!!, ankiBoxVM = ankiBoxFragViewModel ,context,lifecycleOwner)
+                    ankiBoxFragViewModel.ankiBoxFileAncestorsFromDB(item.fileId).observe(viewLifecycleOwner){
+                        fileBinding.ancestors = it
+                    }
+                    setUpRVFileBinding(fileBinding, item,tab!!, ankiBoxVM = ankiBoxFragViewModel ,context,viewLifecycleOwner)
                     binding.flAnkiBoxRvContent.layoutParams.height = context.resources.getDimensionPixelSize(
                         R.dimen.anki_box_rv_item_height)
                     binding.flAnkiBoxRvContent.requestLayout()
@@ -159,7 +162,7 @@ class AnkiBoxListAdapter(
                 }
                 is Card -> {
                     val cardBinding = ListItemAnkiBoxRvCardBinding.inflate(LayoutInflater.from(context))
-                    setUpRVCard(cardBinding,item,lifecycleOwner,ankiBoxFragViewModel)
+                    setUpRVCard(cardBinding,item,viewLifecycleOwner,ankiBoxFragViewModel)
                     binding.flAnkiBoxRvContent.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                     binding.flAnkiBoxRvContent.requestLayout()
                     changeViewVisibility(cardBinding.imvChbIsInAnkiBox,(tab==null).not())
