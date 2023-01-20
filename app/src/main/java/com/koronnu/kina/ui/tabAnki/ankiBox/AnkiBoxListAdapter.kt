@@ -63,7 +63,8 @@ class AnkiBoxListAdapter(
                     }
                     ankiBoxFragViewModel.getAnkiBoxRVCards(item.fileId)                .observe(viewLifecycleOwner){
                         fileBinding.descendantsCardsAmount = it.size
-                        fileBinding.progress = (it.filter { it.remembered }.size.toDouble()/it.size).toInt()
+                        fileBinding.progress =
+                            (it.filter { it.remembered }.size.toDouble()/it.size*100).toInt()
                     }
                     ankiBoxFragViewModel.getAnkiBoxRVDescendantsFolders(item.fileId)   .observe(viewLifecycleOwner){
                         fileBinding.descendantsFolderAmount = it.size

@@ -60,7 +60,8 @@ object ViewBinding{
     @JvmStatic
     fun setLayoutConstraintGuideBegin(view: View, progress:Int) {
         val constraintSet = ConstraintSet()
-        val parentView = view.parent as ConstraintLayout
+        val parentView = view.parent
+        if(parentView !is ConstraintLayout) return
         constraintSet.clone(parentView)
         val biasedValue = progress.toFloat()/100
         constraintSet.setHorizontalBias(view.id,biasedValue)
