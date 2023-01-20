@@ -25,6 +25,9 @@ import com.koronnu.kina.ui.tabAnki.flip.checkTypedAnswer.FlipStringCheckAnswerFr
 import com.koronnu.kina.ui.tabAnki.flip.lookString.FlipStringFragDirections
 import com.koronnu.kina.ui.tabAnki.flip.typeAnswer.FlipStringTypeAnswerFragDirections
 import com.koronnu.kina.ui.MainViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -263,9 +266,9 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
         _parentFlipSide.value = flipSide
     }
 
-    val isLastCard get() = (returnFlipItems().last() == getParentCard)
+    val isLastCard get() = (returnFlipItems().last().id == getParentCard.id)
     val isLastCardLastSide get() = isLastCard&&parentFlipSide== FlipSide.Back
-    val isFirstCard get() = (returnFlipItems().first() == getParentCard)
+    val isFirstCard get() = (returnFlipItems().first().id == getParentCard.id)
 
     val isFirstCardFirstSide get() = isFirstCard&&parentFlipSide== FlipSide.Front
     fun flip(side: NeighbourCardSide):Boolean{
@@ -295,15 +298,17 @@ class AnkiFlipBaseViewModel(val repository: MyRoomRepository,
     }
 
 
+    fun getAnkiFlipItems(flipCardIds:List<Int>,notRememberedOnly:Boolean):LiveData<List<Card>> =
+        repository.getFlipItems(flipCardIds,notRememberedOnly).asLiveData()
     private val _ankiFlipItems = MutableLiveData<MutableList<Card>>()
-    fun setAnkiFlipItems(list: List<Card>, ankiFilter: AnkiFilter){
+    fun setAnkiFlipItems(list: List<Card>){
         val a = mutableListOf<Card>()
         a.addAll(list)
         a.sortBy { it.cardBefore }
-        val flag = if(ankiFilter.flagFilterActive) a.filter { it.flag == ankiFilter.flag }else a
-        val remembered = if(ankiFilter.rememberedFilterActive) flag.filter { it.remembered == ankiFilter.remembered } else flag
-        val answerTyped =  if(ankiFilter.answerTypedFilterActive) remembered.filter { it.lastTypedAnswerCorrect == ankiFilter.correctAnswerTyped } else remembered
-        _ankiFlipItems.value = answerTyped.toMutableList()
+//        val flag = if(ankiFilter.flagFilterActive) a.filter { it.flag == ankiFilter.flag }else a
+//        val remembered = if(ankiFilter.rememberedFilterActive) flag.filter { it.remembered == ankiFilter.remembered } else flag
+//        val answerTyped =  if(ankiFilter.answerTypedFilterActive) remembered.filter { it.lastTypedAnswerCorrect == ankiFilter.correctAnswerTyped } else remembered
+        _ankiFlipItems.value = a
     }
     fun returnFlipItems():MutableList<Card>{
         return  _ankiFlipItems.value ?: mutableListOf()

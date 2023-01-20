@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
 import com.koronnu.kina.util.DateTimeActions
 import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.actions.makeToast
 import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.data.model.enumClasses.NeighbourCardSide
 import com.koronnu.kina.data.model.normalClasses.Progress
@@ -81,26 +82,25 @@ class AnkiFlipBaseFrag  : Fragment() {
         }
 
         val allCardsFromDBObserver = Observer<List<Card>>{
-            if(cardIds.isEmpty())
-                ankiFlipBaseViewModel.setAnkiFlipItems(it,ankiSettingPopUpViewModel.getAnkiFilter)
+//            if(cardIds.isEmpty())
+//                ankiFlipBaseViewModel.setAnkiFlipItems(it,ankiSettingPopUpViewModel.getAnkiFilter)
         }
         val getCardsByMultipleCardIdsFromDBObserver = Observer<List<Card>> {
-            if(cardIds.isEmpty().not()){
-               ankiFlipBaseViewModel.setAnkiFlipItems(it,ankiSettingPopUpViewModel.getAnkiFilter)
-            }
+//            if(cardIds.isEmpty().not()){
+//               ankiFlipBaseViewModel.setAnkiFlipItems(it,ankiSettingPopUpViewModel.getAnkiFilter)
+//            }
         }
         val flipItemsObserver = Observer<List<Card>> {
-            if(it.isEmpty().not()) {
-                flipNavCon.popBackStack()
-                if(start){
-                    val startingPosition = ankiFlipBaseViewModel.returnParentPosition()
-                    ankiFlipBaseViewModel.startFlip(ankiSettingPopUpViewModel.getReverseCardSideActive,
-                        ankiSettingPopUpViewModel.getTypeAnswer,it,startingPosition,
-                        roundStart.not()
-                        )
-                    start = false
-                }
-            } else return@Observer
+            if(it.isEmpty()) return@Observer
+            flipNavCon.popBackStack()
+            if(start){
+                val startingPosition = ankiFlipBaseViewModel.returnParentPosition()
+                ankiFlipBaseViewModel.startFlip(ankiSettingPopUpViewModel.getReverseCardSideActive,
+                    ankiSettingPopUpViewModel.getTypeAnswer,it,startingPosition,
+                    roundStart.not()
+                )
+                start = false
+            }
         }
         val typeAnswerObserver = Observer<Boolean> {
 
@@ -132,12 +132,20 @@ class AnkiFlipBaseFrag  : Fragment() {
         ankiFlipBaseViewModel.setAutoFlipRunning(false)
 
         ankiFlipBaseViewModel.flipProgress.observe(viewLifecycleOwner,progressObserver)
-        ankiFlipBaseViewModel.getAllCardsFromDB.observe(viewLifecycleOwner,allCardsFromDBObserver)
         ankiFlipBaseViewModel.ankiFlipItems.observe(viewLifecycleOwner,flipItemsObserver)
-        ankiBoxViewModel.getCardsFromDBByMultipleCardIds(cardIds).observe(viewLifecycleOwner,getCardsByMultipleCardIdsFromDBObserver)
         ankiSettingPopUpViewModel.typeAnswer.observe(viewLifecycleOwner,typeAnswerObserver)
         flipTypeAndCheckViewModel.keyBoardVisible.observe(viewLifecycleOwner,keyBoardVisibilityObserver)
 
+        ankiFlipBaseViewModel.getAnkiFlipItems(cardIds,ankiSettingPopUpViewModel.getAnkiFilter.rememberedFilterActive).observe(viewLifecycleOwner){
+            if(start){
+                if(it.isEmpty()){
+                    ankiBaseViewModel.getAnkiBaseNavCon.popBackStack()
+                    makeToast(requireContext(),"アイテムがありません")
+                    return@observe
+                }
+                ankiFlipBaseViewModel.setAnkiFlipItems(it)
+            }
+        }
 
 
 

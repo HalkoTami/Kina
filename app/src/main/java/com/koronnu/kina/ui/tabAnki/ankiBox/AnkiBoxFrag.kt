@@ -139,7 +139,7 @@ class AnkiBoxFrag  : Fragment(),View.OnClickListener {
 //        ankiFlipBaseViewModel.setParentCard(null)
         ankiBaseViewModel.setActiveFragment(AnkiFragments.AnkiBox)
         ankiBoxViewModel.setAnkiBoxNavCon(ankiBoxNavCon)
-        ankiFlipBaseViewModel.setAnkiFlipItems(mutableListOf(), AnkiFilter())
+        ankiFlipBaseViewModel.setAnkiFlipItems(mutableListOf(),)
         ankiBoxViewModel.toast.observe(viewLifecycleOwner,toastObserver)
         ankiBoxViewModel.currentChildFragment.observe(viewLifecycleOwner,ankiBoxChildFragObserver)
         ankiBoxViewModel.ankiBoxFileIds.observe(viewLifecycleOwner,ankiBoxFileIdsObserver)

@@ -61,7 +61,10 @@ class MyRoomRepository(
     fun getCardActivity                        (cardId:Int)                 :Flow<List<ActivityData>>       = activityDataDao.getActivityDataByCard(cardId)
     val allActivity                                                         :Flow<List<ActivityData>>       = activityDataDao.getAllActivityData()
     val lastFlipRoundDuration:Flow<Int>                         = activityDataDao.getLastFlipDuration()
-
+    fun getFlipItems(flipCardIds:List<Int>,notRememberedOnly:Boolean):Flow<List<Card>> =
+        (if(flipCardIds.isEmpty()) allCards else cardDao.getCardByMultipleCardIds(flipCardIds)).map {
+            if(notRememberedOnly) it.filter { !it.remembered } else it
+        }
     suspend fun upDateChildFilesOfDeletedFile(deletedFileId: Int,newParentFileId:Int?) {
         fileDao.upDateChildFilesOfDeletedFile(deletedFileId,newParentFileId)
     }

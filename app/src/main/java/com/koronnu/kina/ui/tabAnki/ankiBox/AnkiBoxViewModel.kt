@@ -206,7 +206,8 @@ class AnkiBoxViewModel(val repository: MyRoomRepository) : ViewModel() {
     }
     fun onClickBtnStartFlip(){
         if(returnAnkiBoxCardIds().isEmpty()) ObserveOnce(cardsExistsFromDB){ cardExist->
-            if(cardExist) openFlip() else return@ObserveOnce
+            if(cardExist) openFlip()
+             else return@ObserveOnce
         }.commit() else openFlip()
 
     }
