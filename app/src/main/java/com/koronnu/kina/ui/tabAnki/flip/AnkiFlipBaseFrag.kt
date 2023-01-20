@@ -80,16 +80,6 @@ class AnkiFlipBaseFrag  : Fragment() {
         val progressObserver = Observer<Progress>{
             binding.progressBarBinding.progressbarRemembered.progress = ((it.now/it.all.toDouble())*100 ).toInt()
         }
-
-        val allCardsFromDBObserver = Observer<List<Card>>{
-//            if(cardIds.isEmpty())
-//                ankiFlipBaseViewModel.setAnkiFlipItems(it,ankiSettingPopUpViewModel.getAnkiFilter)
-        }
-        val getCardsByMultipleCardIdsFromDBObserver = Observer<List<Card>> {
-//            if(cardIds.isEmpty().not()){
-//               ankiFlipBaseViewModel.setAnkiFlipItems(it,ankiSettingPopUpViewModel.getAnkiFilter)
-//            }
-        }
         val flipItemsObserver = Observer<List<Card>> {
             if(it.isEmpty()) return@Observer
             flipNavCon.popBackStack()
