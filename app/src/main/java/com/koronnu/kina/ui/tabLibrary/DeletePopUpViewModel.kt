@@ -10,6 +10,7 @@ import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
 import com.koronnu.kina.data.model.normalClasses.MakeToastFromVM
+import com.koronnu.kina.util.ObserveOnce
 import kotlinx.coroutines.launch
 
 class DeletePopUpViewModel(private val repository: MyRoomRepository,
@@ -42,14 +43,22 @@ class DeletePopUpViewModel(private val repository: MyRoomRepository,
     }
 
     private fun deleteSingleFile(file: File, deleteChildren:Boolean){
-        viewModelScope.launch {
-            if(!deleteChildren){
-                repository.upDateChildFilesOfDeletedFile(file.fileId,file.parentFileId)
-                repository.delete(file)
-            } else {
-                repository.deleteFileAndAllDescendants(file.fileId)
+        val sisters = repository.getFileDataByParentFileId(file.parentFileId).asLiveData()
+        ObserveOnce(sisters){
+            val before = it?.find { it.fileId == file.fileBefore }
+            val after = it?.find { it.fileBefore == file.fileId }
+            viewModelScope.launch {
+                after?.fileBefore = before?.fileId
+                if(after!=null) repository.update(after)
+                if(!deleteChildren){
+                    repository.upDateChildFilesOfDeletedFile(file.fileId,file.parentFileId)
+                    repository.delete(file)
+                } else {
+                    repository.deleteFileAndAllDescendants(file.fileId)
+                }
             }
-        }
+        }.commit()
+
 
     }
     private fun deleteMultipleFiles(file: List<File>, deleteChildren:Boolean){
