@@ -6,7 +6,7 @@
     <data>
         <variable
             name="listAdapter"
-            type="com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxListAdapter" />
+            type="androidx.recyclerview.widget.ListAdapter" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

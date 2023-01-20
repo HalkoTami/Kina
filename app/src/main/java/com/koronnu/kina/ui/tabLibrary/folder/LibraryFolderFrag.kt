@@ -148,7 +148,9 @@ class LibraryFolderFrag :  Fragment(){
         observeMultiMode()
 
         searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
-
+        searchViewModel.matchedItems.observe(viewLifecycleOwner){
+            searchAdapter.submitList(it)
+        }
         libraryBaseViewModel.apply {
             clearFinalList()
             setLibraryFragment(LibraryFragment.Folder)

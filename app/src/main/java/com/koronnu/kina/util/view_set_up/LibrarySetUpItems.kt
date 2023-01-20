@@ -38,7 +38,7 @@ class LibrarySetUpItems{
             mainRV.isNestedScrollingEnabled = true
         }
         fun setUpSearchRV(){
-            val searchRV =  binding.searchRvBinding.recyclerView
+            val searchRV =  binding.searchRv
             searchRV.adapter = searchRVListAdapter
             searchRV.layoutManager = LinearLayoutManager(context)
             searchRV.isNestedScrollingEnabled = true

@@ -182,6 +182,9 @@ LibraryFlashCardCoverFrag  : Fragment(){
             changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                 commonViewSetUp.changeLibRVAllSelectedState(recyclerView,it)
             }
+            searchViewModel.matchedItems.observe(viewLifecycleOwner){
+                searchAdapter.submitList(it)
+            }
 //            parentFileAncestors.observe(viewLifecycleOwner){
 //
 ////                binding.ancestorsBinding.apply {
