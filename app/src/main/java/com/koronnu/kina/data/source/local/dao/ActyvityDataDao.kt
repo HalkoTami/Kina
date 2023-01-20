@@ -40,7 +40,7 @@ abstract class ActivityDataDao: BaseDao<ActivityData> {
         return calculateSingleActivityDataInternal(simpleSQLiteQuery).map {
             val startedDate: Date = DateTimeActions().fromStringToDate(it.dateTime)!!
             val now = Date()
-            DateTimeActions().getTimeDifference(startedDate, now, DateTimeActions.TimeUnit.SECONDS)
+            DateTimeActions().getTimeDifference(startedDate, now, DateTimeActions.TimeUnit.MINUTES)
         }
     }
 
