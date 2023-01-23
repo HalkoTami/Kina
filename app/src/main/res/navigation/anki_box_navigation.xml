@@ -5,7 +5,7 @@
     android:id="@+id/anki_box_navigation"
     app:startDestination="@id/allFlashCardCover_frag">
     <fragment
-        android:name="com.koronnu.kina.ui.fragment.ankibox_frag_con.BoxFlashCardCoversFrag"
+        android:name="com.koronnu.kina.ui.tabAnki.ankiBox.allFlashCards.BoxFlashCardCoversFrag"
         tools:layout="@layout/full_rv"
         android:id="@+id/allFlashCardCover_frag">
 
@@ -16,7 +16,7 @@
             app:nullable="true" />
     </fragment>
     <fragment
-        android:name="com.koronnu.kina.ui.fragment.ankibox_frag_con.BoxLibraryItemsFrag"
+        android:name="com.koronnu.kina.ui.tabAnki.ankiBox.library.BoxLibraryItemsFrag"
         tools:layout="@layout/full_rv"
         android:id="@+id/libraryItem_frag">
         <argument
@@ -31,7 +31,7 @@
     </fragment>
 
     <fragment
-        android:name="com.koronnu.kina.ui.fragment.ankibox_frag_con.BoxFavouriteFrag"
+        android:name="com.koronnu.kina.ui.tabAnki.ankiBox.favourites.BoxFavouriteFrag"
         tools:layout="@layout/full_rv"
         android:id="@+id/ankiBoxFavourite_frag">
         <argument

@@ -81,7 +81,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="elevation">3dp</item>
-        <item name="android:src">@drawable/circle</item>
+        <item name="android:src">@drawable/colpallet_unselected</item>
         <item name="android:tag">@string/tag_color_pallet_circle</item>
     </style>
 
@@ -219,7 +219,7 @@
         <item name="android:layout_margin">10dp</item>
         <item name="android:layout_width">10dp</item>
         <item name="android:layout_height">10dp</item>
-        <item name="android:src">@drawable/circle</item>
+        <item name="android:src">@drawable/colpallet_unselected</item>
         <item name="tint">@color/light_brown</item>
     </style>
 

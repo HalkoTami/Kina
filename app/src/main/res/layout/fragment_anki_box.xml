@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.koronnu.kina.ui.viewmodel.AnkiBoxViewModel" />
+            type="com.koronnu.kina.ui.tabAnki.ankiBox.AnkiBoxViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"

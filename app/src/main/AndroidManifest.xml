@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
-        android:name="com.koronnu.kina.application.RoomApplication"
+        android:name="com.koronnu.kina.RoomApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,7 +16,7 @@
         android:theme="@style/Theme.Tangochoupdated"
         tools:targetApi="31">
         <activity
-            android:name="com.koronnu.kina.activity.MainActivity"
+            android:name="com.koronnu.kina.ui.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

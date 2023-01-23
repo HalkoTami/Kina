@@ -2,7 +2,7 @@ package com.koronnu.kina.ui.listener.topbar
 import android.view.View
 import com.koronnu.kina.databinding.LibraryFragTopBarAncestorsBinding
 import com.koronnu.kina.databinding.LibraryFragTopBarFileBinding
-import com.koronnu.kina.tabLibrary.LibraryBaseViewModel
+import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
 
 class LibFragTopBarFileCL(val binding: LibraryFragTopBarFileBinding,
                           val ancestorsBinding: LibraryFragTopBarAncestorsBinding,

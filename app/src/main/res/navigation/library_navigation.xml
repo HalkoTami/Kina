@@ -22,7 +22,7 @@
 <!--    </fragment>-->
     <fragment
         android:id="@+id/fragLibraryHome"
-        android:name="com.koronnu.kina.tabLibrary.lib_frag_con.LibraryHomeFrag"
+        android:name="com.koronnu.kina.ui.tabLibrary.home.LibraryHomeFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragLibraryFolder"
-        android:name="com.koronnu.kina.tabLibrary.lib_frag_con.LibraryFolderFrag"
+        android:name="com.koronnu.kina.ui.tabLibrary.folder.LibraryFolderFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
         <argument
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragLibraryFlashCardCover"
-        android:name="com.koronnu.kina.tabLibrary.lib_frag_con.LibraryFlashCardCoverFrag"
+        android:name="com.koronnu.kina.ui.tabLibrary.flashCardCover.LibraryFlashCardCoverFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
         <argument
@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/fragLibraryInBox"
-        android:name="com.koronnu.kina.tabLibrary.inBox.LibraryInBoxFrag"
+        android:name="com.koronnu.kina.ui.tabLibrary.inBox.LibraryInBoxFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 
@@ -62,7 +62,7 @@
 
     <fragment
         android:id="@+id/fragLibrarySelectFileMoveTo"
-        android:name="com.koronnu.kina.tabLibrary.chooseFileMoveTo.LibraryChooseFileMoveToFrag"
+        android:name="com.koronnu.kina.ui.tabLibrary.chooseFileMoveTo.LibraryChooseFileMoveToFrag"
         android:label="library"
         tools:layout="@layout/library_child_frag_with_mul_mode_base" >
 

@@ -6,8 +6,8 @@
         <data>
            <variable
                name="editFileViewModel"
-               type="com.koronnu.kina.ui.viewmodel.EditFileViewModel" />
-                <import type="com.koronnu.kina.db.enumclass.FileStatus"/>
+               type="com.koronnu.kina.ui.EditFileViewModel" />
+                <import type="com.koronnu.kina.data.source.local.entity.enumclass.FileStatus"/>
                 <import type="android.view.View"/>
 
         </data>

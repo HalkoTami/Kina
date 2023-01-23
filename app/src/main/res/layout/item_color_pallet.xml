@@ -5,11 +5,11 @@
 <layout
     >
     <data >
-        <import type="com.koronnu.kina.db.enumclass.ColorStatus"/>
+        <import type="com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus"/>
         <import type="kotlin.Unit"/>
         <variable
             name="editFileViewModel"
-            type="com.koronnu.kina.ui.viewmodel.EditFileViewModel" />
+            type="com.koronnu.kina.ui.EditFileViewModel" />
 
     </data>
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -34,12 +34,14 @@
 
         <ImageView
             style="@style/colorPalletCircle"
+            isSelected="@{editFileViewModel._popUpShownFile.colorStatus == ColorStatus.RED}"
             convertColPalletDraw="@{ColorStatus.RED}"
             android:contentDescription="@string/cd_col_red"
             android:onClick="@{() -> editFileViewModel.setColPalletStatus(ColorStatus.RED)  }"
             android:id="@+id/imv_col_red" />
 
         <ImageView
+            isSelected="@{editFileViewModel._popUpShownFile.colorStatus == ColorStatus.BLUE}"
             android:id="@+id/imv_col_blue"
             convertColPalletDraw="@{ColorStatus.BLUE}"
             android:onClick="@{() -> editFileViewModel.setColPalletStatus(ColorStatus.BLUE)  }"
@@ -47,6 +49,7 @@
             style="@style/colorPalletCircle" />
 
         <ImageView
+            isSelected="@{editFileViewModel._popUpShownFile.colorStatus == ColorStatus.YELLOW}"
             android:id="@+id/imv_col_yellow"
             convertColPalletDraw="@{ColorStatus.YELLOW}"
             android:onClick="@{() -> editFileViewModel.setColPalletStatus(ColorStatus.YELLOW)  }"
@@ -54,6 +57,7 @@
             style="@style/colorPalletCircle" />
 
         <ImageView
+            isSelected="@{editFileViewModel._popUpShownFile.colorStatus== ColorStatus.GRAY}"
             android:id="@+id/imv_col_gray"
             convertColPalletDraw="@{ColorStatus.GRAY}"
             android:onClick="@{() -> editFileViewModel.setColPalletStatus(ColorStatus.GRAY)  }"

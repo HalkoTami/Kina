@@ -2,30 +2,40 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
-
-<androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="listAdapter"
+            type="androidx.recyclerview.widget.ListAdapter" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        />
+        android:layout_height="match_parent"
+        >
 
-</androidx.core.widget.NestedScrollView>
-    <FrameLayout
-        android:visibility="gone"
-        android:id="@+id/frameLay_full_rv_empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <include android:id="@+id/rv_empty_binding"
-            layout="@layout/rv_empty"/>
-    </FrameLayout>
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:adapter="@{listAdapter}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:nestedScrollingEnabled="false"
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                />
+
+        </androidx.core.widget.NestedScrollView>
+        <FrameLayout
+            android:visibility="gone"
+            android:id="@+id/frameLay_full_rv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include android:id="@+id/rv_empty_binding"
+                layout="@layout/rv_empty"/>
+        </FrameLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
