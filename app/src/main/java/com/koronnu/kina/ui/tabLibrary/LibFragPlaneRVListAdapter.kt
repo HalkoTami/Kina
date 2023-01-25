@@ -121,7 +121,7 @@ class LibFragPlaneRVListAdapter(
 
                 root.tag = LibRVState.Plane
                 linLaySwipeShow.visibility = View.GONE
-                if(libraryViewModel.returnMultiSelectMode()== true) btnSelect.visibility = View.VISIBLE
+                btnSelect.visibility = if(libraryViewModel.returnMultiSelectMode())  View.VISIBLE else View.GONE
             }
 
             binding.contentBindingFrame.addView(contentView)

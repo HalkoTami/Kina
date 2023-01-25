@@ -429,7 +429,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
     val multipleSelectMode =  MutableLiveData<Boolean>()
     fun setMultipleSelectMode(boolean: Boolean){
-        this.multipleSelectMode.apply {
+        multipleSelectMode.apply {
             value = boolean
         }
         if(!boolean) {
@@ -441,7 +441,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         changeRVMode()
     }
     fun returnMultiSelectMode():Boolean{
-        return this.multipleSelectMode.value ?:false
+        return multipleSelectMode.value ?:false
     }
 
     private val _recyclerViewMode = MutableLiveData<LibRVState>()
@@ -450,7 +450,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
     private fun changeRVMode(){
         setRecyclerViewMode(
-            if(this.multipleSelectMode.value == true) LibRVState.Selectable
+            if(multipleSelectMode.value == true) LibRVState.Selectable
         else if(_chooseFileMoveToMode.value == true) LibRVState.SelectFileMoveTo
         else LibRVState.Plane
         )

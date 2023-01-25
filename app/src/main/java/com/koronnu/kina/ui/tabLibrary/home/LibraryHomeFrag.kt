@@ -120,41 +120,19 @@ class LibraryHomeFrag : Fragment(){
             libraryBaseViewModel.apply {
                 multipleSelectMode.observe(viewLifecycleOwner){
                     LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
-
                 }
                 changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
                 }
-//                selectedItems.observe(viewLifecycleOwner){
-//                    binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
-//                }
-//                multiMenuVisibility
-//                    .observe(viewLifecycleOwner, LibraryOb().multiMenuVisibilityObserver(binding))
-
             }
 
         }
         setUpLateInitVars()
-        val emptyView = RvEmptyBinding.inflate(inflater,container,false).root
         val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
         val homeRVItemsObserver = Observer<List<File>?>{
             val sorted = it
             libraryBaseViewModel.setParentRVItems(sorted)
-            val mainRV = binding.vocabCardRV
-//            adapter = LibFragPlaneRVListAdapter(
-//                stringCardViewModel  = cardTypeStringViewModel,
-//                createCardViewModel  = createCardViewModel,
-//                mainNavController = mainNavCon,
-//                deletePopUpViewModel = deletePopUpViewModel,
-//                createFileViewModel = editFileViewModel,
-//                libraryViewModel = libraryBaseViewModel,
-//            )
-//            mainRV.adapter = adapter
-//            mainRV.layoutManager = LinearLayoutManager(context)
-//            mainRV.isNestedScrollingEnabled = true
-//            adapter.submitList(null)
             adapter.submitList(sorted)
-            changeViewIfRVEmpty(it,binding.frameLayRvEmpty,emptyView)
         }
 
         setUpView()
@@ -169,9 +147,7 @@ class LibraryHomeFrag : Fragment(){
         searchViewModel.searchModeActive.observe(viewLifecycleOwner,searchModeObserver)
         libraryBaseViewModel.apply {
             setLibraryFragment(LibraryFragment.Home)
-
             libraryBaseViewModel.clearFinalList()
-
             childFilesFromDB(null).observe(viewLifecycleOwner,homeRVItemsObserver)
             childCardsFromDB(null).observe(viewLifecycleOwner){
                 createCardViewModel.setSisterCards(it?:return@observe)

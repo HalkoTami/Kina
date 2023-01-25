@@ -119,7 +119,7 @@ LibraryFlashCardCoverFrag  : Fragment(){
 
         fun observeMultiMode(){
             libraryBaseViewModel.apply {
-                this.multipleSelectMode.observe(viewLifecycleOwner){
+                multipleSelectMode.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
                     topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                     LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
@@ -173,7 +173,7 @@ LibraryFlashCardCoverFrag  : Fragment(){
                 }
             }
             val commonViewSetUp = LibrarySetUpItems()
-            this.multipleSelectMode.observe(viewLifecycleOwner){
+            multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility =if(it) View.VISIBLE else View.GONE
                 topBarBinding.root.visibility = if(!it) View.VISIBLE else View.INVISIBLE
                 commonViewSetUp.changeLibRVSelectBtnVisibility(recyclerView,it)

@@ -36,7 +36,7 @@
         <ImageView
             android:layout_gravity="center"
             android:id="@+id/btn_select"
-            visibilityBoolean="@{libraryViewModel.multipleSelectMode}"
+            android:visibility="gone"
             android:contentDescription="@string/cd_btn_select"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
