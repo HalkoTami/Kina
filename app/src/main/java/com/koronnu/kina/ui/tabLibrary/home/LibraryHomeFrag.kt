@@ -119,18 +119,15 @@ class LibraryHomeFrag : Fragment(){
         fun observeMultiMode(){
             libraryBaseViewModel.apply {
                 multipleSelectMode.observe(viewLifecycleOwner){
-//                    binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
-//                    topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                     LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
-//                    if(it.not()) changeViewVisibility(binding.frameLayMultiModeMenu,false)
 
                 }
                 changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
                 }
-                selectedItems.observe(viewLifecycleOwner){
-                    binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
-                }
+//                selectedItems.observe(viewLifecycleOwner){
+//                    binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
+//                }
 //                multiMenuVisibility
 //                    .observe(viewLifecycleOwner, LibraryOb().multiMenuVisibilityObserver(binding))
 

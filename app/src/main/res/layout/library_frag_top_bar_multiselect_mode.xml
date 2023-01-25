@@ -35,6 +35,7 @@
             style="@style/TopBarTxvSizeNormalStyle"
             android:id="@+id/txv_selecting_status"
             android:layout_width="0dp"
+            android:text="@{String.format(@string/topBarMultiSelectBin_selectingStatus,libraryViewModel.selectedItems.size())}"
             android:layout_weight="1" />
         <ImageView
 
