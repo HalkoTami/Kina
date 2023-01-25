@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.source.local.entity.File
@@ -113,17 +113,17 @@ class LibFragSearchRVListAdapter(
 object SearchDiffCallback : DiffUtil.ItemCallback<Any>() {
     override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
         return if(oldItem is File && newItem is File){
-            oldItem.fileId == newItem.fileId
+            oldItem === newItem
         } else if(oldItem is Card && newItem is Card){
-            oldItem.id == newItem.id
+            oldItem === newItem
         } else false
     }
 
     override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
         return if(oldItem is File && newItem is File){
-            oldItem == newItem
+            oldItem.fileId == newItem.fileId
         } else if(oldItem is Card && newItem is Card){
-            oldItem == newItem
+            oldItem.id == newItem.id
         } else false
     }
 

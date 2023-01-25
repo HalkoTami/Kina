@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.navigation.NavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
@@ -130,5 +131,4 @@ class LibFragPlaneRVListAdapter(
         }
 
     }
-
 }

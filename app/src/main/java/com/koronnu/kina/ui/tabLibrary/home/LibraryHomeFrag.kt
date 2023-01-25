@@ -14,8 +14,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
-import com.koronnu.kina.actions.changeViewIfRVEmpty
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewIfRVEmpty
+import com.koronnu.kina.util.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.model.enumClasses.LibraryFragment
@@ -65,6 +65,7 @@ class LibraryHomeFrag : Fragment(){
             }
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
+
             recyclerView = binding.vocabCardRV
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
@@ -84,6 +85,12 @@ class LibraryHomeFrag : Fragment(){
                 mainNavController = mainNavCon,
                 context = requireActivity(),
             )
+            binding.apply {
+                libraryViewModel = libraryBaseViewModel
+                planeRVAdapter = adapter
+                seachRvAdapter = searchAdapter
+                lifecycleOwner = viewLifecycleOwner
+            }
         }
         fun homeTopBarAddCL(){
             arrayOf(
@@ -144,17 +151,17 @@ class LibraryHomeFrag : Fragment(){
             val sorted = it
             libraryBaseViewModel.setParentRVItems(sorted)
             val mainRV = binding.vocabCardRV
-            adapter = LibFragPlaneRVListAdapter(
-                stringCardViewModel  = cardTypeStringViewModel,
-                createCardViewModel  = createCardViewModel,
-                mainNavController = mainNavCon,
-                deletePopUpViewModel = deletePopUpViewModel,
-                createFileViewModel = editFileViewModel,
-                libraryViewModel = libraryBaseViewModel,
-            )
-            mainRV.adapter = adapter
-            mainRV.layoutManager = LinearLayoutManager(context)
-            mainRV.isNestedScrollingEnabled = true
+//            adapter = LibFragPlaneRVListAdapter(
+//                stringCardViewModel  = cardTypeStringViewModel,
+//                createCardViewModel  = createCardViewModel,
+//                mainNavController = mainNavCon,
+//                deletePopUpViewModel = deletePopUpViewModel,
+//                createFileViewModel = editFileViewModel,
+//                libraryViewModel = libraryBaseViewModel,
+//            )
+//            mainRV.adapter = adapter
+//            mainRV.layoutManager = LinearLayoutManager(context)
+//            mainRV.isNestedScrollingEnabled = true
 //            adapter.submitList(null)
             adapter.submitList(sorted)
             changeViewIfRVEmpty(it,binding.frameLayRvEmpty,emptyView)

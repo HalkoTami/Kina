@@ -11,7 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.model.enumClasses.LibraryFragment

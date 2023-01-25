@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import android.view.View
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import com.koronnu.kina.actions.hideKeyBoard
+import com.koronnu.kina.util.hideKeyBoard
 import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.data.model.enumClasses.MainFragment
 import com.koronnu.kina.databinding.FragmentAnkiBaseBinding

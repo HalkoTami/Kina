@@ -2,7 +2,7 @@ package com.koronnu.kina.util
 
 import android.text.SpannableStringBuilder
 import androidx.lifecycle.Observer
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewVisibility
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.koronnu.kina.ui.viewmodel.SearchViewModel
 

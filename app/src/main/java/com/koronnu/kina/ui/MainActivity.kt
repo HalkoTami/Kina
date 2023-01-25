@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewVisibility
 import com.koronnu.kina.databinding.ActivityMainBinding
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel

@@ -10,8 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.actions.showKeyBoard
+import com.koronnu.kina.util.changeViewVisibility
+import com.koronnu.kina.util.showKeyBoard
 import com.koronnu.kina.data.source.local.entity.Card
 import com.koronnu.kina.data.model.enumClasses.FlipFragments
 import com.koronnu.kina.data.model.enumClasses.NeighbourCardSide

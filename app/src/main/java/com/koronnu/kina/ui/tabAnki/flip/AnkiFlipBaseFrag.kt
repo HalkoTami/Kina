@@ -18,8 +18,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.koronnu.kina.R
 import com.koronnu.kina.util.DateTimeActions
-import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.actions.makeToast
+import com.koronnu.kina.util.changeViewVisibility
+import com.koronnu.kina.util.makeToast
 import com.koronnu.kina.data.model.enumClasses.AnkiFragments
 import com.koronnu.kina.data.model.enumClasses.NeighbourCardSide
 import com.koronnu.kina.data.model.normalClasses.Progress

@@ -8,7 +8,7 @@ import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.hideKeyBoard
+import com.koronnu.kina.util.hideKeyBoard
 import com.koronnu.kina.RoomApplication
 import com.koronnu.kina.data.model.enumClasses.EditingMode
 import com.koronnu.kina.data.model.enumClasses.LibraryFragment

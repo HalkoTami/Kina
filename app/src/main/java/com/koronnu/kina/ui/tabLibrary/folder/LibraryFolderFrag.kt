@@ -13,8 +13,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
-import com.koronnu.kina.actions.changeViewIfRVEmpty
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewIfRVEmpty
+import com.koronnu.kina.util.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.model.enumClasses.LibraryFragment
