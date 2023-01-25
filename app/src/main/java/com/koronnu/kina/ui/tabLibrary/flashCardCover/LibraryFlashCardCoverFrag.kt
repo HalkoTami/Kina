@@ -82,6 +82,12 @@ LibraryFlashCardCoverFrag  : Fragment(){
                 mainNavController = mainNavCon,
                 context = requireActivity(),
             )
+            binding.apply {
+                libraryViewModel = libraryBaseViewModel
+                planeRVAdapter = adapter
+                seachRvAdapter = searchAdapter
+                lifecycleOwner = viewLifecycleOwner
+            }
         }
         fun addCL(){
             val addCL = LibraryAddListeners()

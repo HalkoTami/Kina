@@ -53,6 +53,11 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             libraryBaseViewModel.setChildFragBinding(binding)
             recyclerView = binding.vocabCardRV
             adapter =   LibFragChooseFileRVListAdapter(chooseFileMoveToViewModel)
+            binding.apply {
+                libraryViewModel = libraryBaseViewModel
+                planeRVAdapter = adapter
+                lifecycleOwner = viewLifecycleOwner
+            }
         }
 
         fun setUpView(flashcard:Boolean,movingItems:List<Any>){

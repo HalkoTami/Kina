@@ -77,6 +77,12 @@ class LibraryInBoxFrag  : Fragment(){
                 mainNavController = mainNavCon,
                 context = requireActivity(),
             )
+            binding.apply {
+                libraryViewModel = libraryBaseViewModel
+                planeRVAdapter = adapter
+                seachRvAdapter = searchAdapter
+                lifecycleOwner = viewLifecycleOwner
+            }
         }
         fun inBoxTopBarAddCL(){
             arrayOf(
