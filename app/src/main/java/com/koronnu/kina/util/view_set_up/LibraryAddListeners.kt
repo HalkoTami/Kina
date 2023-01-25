@@ -30,13 +30,13 @@ class LibraryAddListeners(){
                              menuFrame:FrameLayout,
                              libVM: LibraryBaseViewModel,
                              deletePopUpViewModel: DeletePopUpViewModel, ){
-        arrayOf(
-            binding.imvCloseMultiMode,
-            binding.imvSelectAll,
-            binding.imvChangeMenuVisibility,
-            menuBarBinding.linLayMoveSelectedItems,
-            menuBarBinding.linLayDeleteSelectedItems,
-        ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL( libVM)) }
+//        arrayOf(
+//            binding.imvCloseMultiMode,
+//            binding.imvSelectAll,
+//            binding.imvChangeMenuVisibility,
+//            menuBarBinding.linLayMoveSelectedItems,
+//            menuBarBinding.linLayDeleteSelectedItems,
+//        ).onEach { it.setOnClickListener( LibFragTopBarMultiModeCL( libVM)) }
         }
 
         fun searchAddCL(){
@@ -48,7 +48,7 @@ class LibraryAddListeners(){
             }
         }
 
-        multiTopBarAddCL(binding.topBarMultiselectBinding,binding.multiSelectMenuBinding,binding.frameLayMultiModeMenu,libraryViewModel,deletePopUpViewModel)
+//        multiTopBarAddCL(binding.topBarMultiselectBinding,binding.multiSelectMenuBinding,binding.frameLayMultiModeMenu,libraryViewModel,deletePopUpViewModel)
         searchAddCL()
 
         binding.libChildFragBackground.setOnClickListener {

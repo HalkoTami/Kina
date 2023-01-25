@@ -2,7 +2,9 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<layout>
+<layout
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
     <data>
         <variable
             name="libraryViewModel"
@@ -36,6 +38,7 @@
             <include
                 android:id="@+id/top_bar_multiselect_binding"
                 layout="@layout/library_frag_top_bar_multiselect_mode"
+                bind:libraryViewModel="@{libraryViewModel}"
                 android:visibility="gone"/>
 
         </FrameLayout>
@@ -54,6 +57,7 @@
             android:background="@drawable/gray_stroke_rectangle">
             <include
                 android:id="@+id/multi_select_menu_binding"
+                bind:libraryViewModel="@{libraryViewModel}"
                 layout="@layout/lib_item_top_bar_menu" />
         </FrameLayout>
         <FrameLayout

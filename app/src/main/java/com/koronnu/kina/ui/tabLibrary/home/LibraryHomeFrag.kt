@@ -92,13 +92,8 @@ class LibraryHomeFrag : Fragment(){
                 lifecycleOwner = viewLifecycleOwner
             }
         }
-        fun homeTopBarAddCL(){
-            arrayOf(
-                topBarBinding.frameLayInBox,
-            ).onEach { it.setOnClickListener( LibFragTopBarHomeCL(topBarBinding, libraryBaseViewModel)) }
-        }
+
         fun addCL(){
-            homeTopBarAddCL()
 
             LibraryAddListeners().fragChildMultiBaseAddCL(
                 binding,requireActivity(),
