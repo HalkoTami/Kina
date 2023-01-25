@@ -90,8 +90,8 @@ class LibrarySetUpItems{
         fileBinding.apply {
             txvFileTitle.text = file.title.toString()
             imvFileType.setImageDrawable(when(file.fileStatus){
-                FileStatus.FOLDER -> GetCustomDrawables(context).getFolderIconByCol(file.colorStatus )
-                FileStatus.FLASHCARD_COVER -> GetCustomDrawables(context).getFlashCardIconByCol(file.colorStatus )
+                FileStatus.FOLDER -> DrawableConverter(context).getFolderIconByCol(file.colorStatus )
+                FileStatus.FLASHCARD_COVER -> DrawableConverter(context).getFlashCardIconByCol(file.colorStatus )
                 else -> return
             })
         }

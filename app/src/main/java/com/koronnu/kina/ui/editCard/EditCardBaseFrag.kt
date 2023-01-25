@@ -24,7 +24,7 @@ import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringVie
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
-import com.koronnu.kina.util.view_set_up.GetCustomDrawables
+import com.koronnu.kina.util.view_set_up.DrawableConverter
 
 
 class EditCardBaseFrag  : Fragment() {
@@ -102,8 +102,8 @@ class EditCardBaseFrag  : Fragment() {
             binding.createCardTopBarBinding.apply {
                 imvMode.setImageDrawable(
                     if (it != null) {
-                        GetCustomDrawables(requireActivity()).getFlashCardIconByCol(it.colorStatus)
-                    } else GetCustomDrawables(requireActivity()).getDrawable(R.drawable.icon_inbox)
+                        DrawableConverter(requireActivity()).getFlashCardIconByCol(it.colorStatus)
+                    } else DrawableConverter(requireActivity()).getDrawable(R.drawable.icon_inbox)
 
                 )
             }

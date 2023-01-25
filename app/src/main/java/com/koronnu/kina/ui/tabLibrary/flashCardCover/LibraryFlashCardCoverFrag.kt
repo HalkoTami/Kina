@@ -25,7 +25,7 @@ import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
 import com.koronnu.kina.util.LibraryOb
 import com.koronnu.kina.ui.tabLibrary.*
-import com.koronnu.kina.util.view_set_up.GetCustomDrawables
+import com.koronnu.kina.util.view_set_up.DrawableConverter
 import com.koronnu.kina.util.view_set_up.LibraryAddListeners
 import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.*
@@ -145,7 +145,7 @@ LibraryFlashCardCoverFrag  : Fragment(){
                 setParentFile(it)
                 topBarBinding.txvFileTitle.text = it.title ?:resources.getString(R.string.no_title)
                 topBarBinding.imvFileType.setImageDrawable(
-                    GetCustomDrawables(requireContext()).getFlashCardIconByCol(it?.colorStatus ?: ColorStatus.GRAY,)
+                    DrawableConverter(requireContext()).getFlashCardIconByCol(it?.colorStatus ?: ColorStatus.GRAY,)
                 )
                 createCardViewModel.setParentFlashCardCover(it)
 

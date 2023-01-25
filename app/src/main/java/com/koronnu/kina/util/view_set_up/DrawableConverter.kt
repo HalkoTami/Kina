@@ -11,16 +11,13 @@ import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
 import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
 
-class
-GetCustomDrawables(val context: Context){
+class DrawableConverter(val context: Context){
     fun getDrawable(id:Int):Drawable{
         return AppCompatResources.getDrawable(context,id)!!
     }
-    fun getFileIconByFile(file: File):Drawable{
-        return getFileIconByFileStatusAndColStatus(file.fileStatus,file.colorStatus)
-    }
-    fun getFileIconByFileStatusAndColStatus(fileStatus: FileStatus, colorStatus: ColorStatus):Drawable{
-        return when(fileStatus){
+    fun convertColoredFileStatusIcon(file: File):Drawable{
+        val colorStatus = file.colorStatus
+        return when(file.fileStatus){
             FileStatus.FOLDER -> getFolderIconByCol(colorStatus)
             FileStatus.FLASHCARD_COVER -> getFlashCardIconByCol(colorStatus)
             FileStatus.ANKI_BOX_FAVOURITE -> getAnkiBoxFavouriteIconByCol(colorStatus)

@@ -15,7 +15,7 @@ import androidx.databinding.BindingAdapter
 import com.koronnu.kina.R
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
-import com.koronnu.kina.util.view_set_up.GetCustomDrawables
+import com.koronnu.kina.util.view_set_up.DrawableConverter
 
 
 object ViewBinding{
@@ -52,7 +52,7 @@ object ViewBinding{
     fun convertFileStatusDrawable(view: ImageView, file: File?){
         file ?:return
         view.setImageDrawable(
-            GetCustomDrawables(view.context).getFileIconByFile(file)
+            DrawableConverter(view.context).convertColoredFileStatusIcon(file)
         )
     }
 

@@ -19,7 +19,6 @@ import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
 import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
 import com.koronnu.kina.util.Animation
 import com.koronnu.kina.util.ObserveOnce
-import com.koronnu.kina.util.view_set_up.GetCustomDrawables
 import kotlinx.coroutines.launch
 
 class EditFileViewModel(val repository: MyRoomRepository,

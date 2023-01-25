@@ -12,7 +12,7 @@ import com.koronnu.kina.actions.setClickListeners
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
-import com.koronnu.kina.util.view_set_up.GetCustomDrawables
+import com.koronnu.kina.util.view_set_up.DrawableConverter
 
 
 /**
@@ -47,6 +47,7 @@ class LibFragChooseFileRVListAdapter(
         ){
             val context = binding.root.context
             val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
+            fileBinding.file = item
             fun addCL(){
                 binding.apply {
                     val clickListener = LibraryRVChooseFileMoveToCL(item, binding, chooseFileMoveToViewModel)
@@ -78,18 +79,18 @@ class LibFragChooseFileRVListAdapter(
                     arrayOf(btnSelect,txvMove).onEach { changeViewVisibility(it, chooseFileMoveToViewModel.checkRvItemMoveBtnVisible(item)) }
                 }
             }
-            fun setUpFileContent(){
-                fileBinding.apply {
-                    txvFileTitle.text = item.title
-                    imvFileType.setImageDrawable(GetCustomDrawables(context).getFileIconByFileStatusAndColStatus(item.fileStatus,item.colorStatus))
-                }
-            }
+//            fun setUpFileContent(){
+////                fileBinding.apply {
+////                    txvFileTitle.text = item.title
+////                    imvFileType.setImageDrawable(DrawableConverter(context).convertColoredFileStatusIcon(item))
+////                }
+//            }
            setUpViewFirst()
 //            親レイアウトのclick listener
             binding.contentBindingFrame.addView(fileBinding.root)
             addCL()
             setLeftContent()
-            setUpFileContent()
+//            setUpFileContent()
         }
 
         }

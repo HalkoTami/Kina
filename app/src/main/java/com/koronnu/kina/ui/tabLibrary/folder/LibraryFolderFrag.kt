@@ -28,7 +28,7 @@ import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
 import com.koronnu.kina.util.LibraryOb
 import com.koronnu.kina.ui.tabLibrary.*
-import com.koronnu.kina.util.view_set_up.GetCustomDrawables
+import com.koronnu.kina.util.view_set_up.DrawableConverter
 import com.koronnu.kina.util.view_set_up.LibraryAddListeners
 import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.*
@@ -159,7 +159,7 @@ class LibraryFolderFrag :  Fragment(){
                 topBarBinding.apply {
                     txvFileTitle.text = it?.title ?:resources.getString(R.string.no_title)
                     imvFileType.setImageDrawable(
-                        GetCustomDrawables(requireActivity()).getFolderIconByCol(it?.colorStatus ?: ColorStatus.GRAY,)
+                        DrawableConverter(requireActivity()).getFolderIconByCol(it?.colorStatus ?: ColorStatus.GRAY,)
                     )
                 }
             }
@@ -168,15 +168,15 @@ class LibraryFolderFrag :  Fragment(){
             parentFileAncestorsFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFileAncestorsFromDB(it)
             }
-            fun setUpEachAncestor(linLay:LinearLayoutCompat,txv:TextView, imv:ImageView, file: File?){
-                val getDraw =  GetCustomDrawables(requireActivity())
-                if(file==null)linLay.visibility = View.GONE
-                else {
-                    linLay.visibility = View.VISIBLE
-                    txv.text = file.title
-                    imv.setImageDrawable(getDraw.getFileIconByFile(file))
-                }
-            }
+//            fun setUpEachAncestor(linLay:LinearLayoutCompat,txv:TextView, imv:ImageView, file: File?){
+//                val getDraw =  DrawableConverter(requireActivity())
+//                if(file==null)linLay.visibility = View.GONE
+//                else {
+//                    linLay.visibility = View.VISIBLE
+//                    txv.text = file.title
+//                    imv.setImageDrawable(getDraw.getFileIconByFile(file))
+//                }
+//            }
 //            parentFileAncestors.observe(viewLifecycleOwner){
 //                    binding.ancestorsBinding.apply {
 //                        setUpEachAncestor(lineLayGGFile,txvGGrandParentFileTitle,imvGGrandParentFile,it.gGrandPFile)
