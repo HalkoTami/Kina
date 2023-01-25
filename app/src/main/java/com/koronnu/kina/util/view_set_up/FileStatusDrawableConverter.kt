@@ -11,21 +11,18 @@ import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
 import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
 
-class
-GetCustomDrawables(val context: Context){
-    fun getDrawable(id:Int):Drawable{
-        return AppCompatResources.getDrawable(context,id)!!
-    }
-    fun getFileIconByFile(file: File):Drawable{
-        return getFileIconByFileStatusAndColStatus(file.fileStatus,file.colorStatus)
-    }
-    fun getFileIconByFileStatusAndColStatus(fileStatus: FileStatus, colorStatus: ColorStatus):Drawable{
-        return when(fileStatus){
-            FileStatus.FOLDER -> getFolderIconByCol(colorStatus)
-            FileStatus.FLASHCARD_COVER -> getFlashCardIconByCol(colorStatus)
-            FileStatus.ANKI_BOX_FAVOURITE -> getAnkiBoxFavouriteIconByCol(colorStatus)
-            else -> getDrawable(R.drawable.imv_character)
-        }
+class FileStatusDrawableConverter(val context: Context){
+    private fun getDrawable(id:Int) = AppCompatResources.getDrawable(context,id)!!
+    fun convertColoredFileStatusIcon(file: File?):Drawable{
+        return if(file!=null){
+            val colorStatus = file.colorStatus
+            when(file.fileStatus){
+                FileStatus.FOLDER -> getFolderIconByCol(colorStatus)
+                FileStatus.FLASHCARD_COVER -> getFlashCardIconByCol(colorStatus)
+                FileStatus.ANKI_BOX_FAVOURITE -> getAnkiBoxFavouriteIconByCol(colorStatus)
+                FileStatus.TAG -> throw IllegalArgumentException("tag status drawable does not exist yet")
+            }
+        } else getDrawable(R.drawable.icon_inbox)
     }
     private fun getColorFromColStatus(colorStatus: ColorStatus): Int {
         val colResId = when(colorStatus) {
@@ -37,19 +34,19 @@ GetCustomDrawables(val context: Context){
         return ContextCompat.getColor(context,colResId)
     }
 
-    fun getFolderIconByCol(colorStatus: ColorStatus,): Drawable {
+    private fun getFolderIconByCol(colorStatus: ColorStatus): Drawable {
         val drawable = getDrawable(R.drawable.icon_file_with_color) as LayerDrawable
         drawable.findDrawableByLayerId(R.id.file_paint).setTint(getColorFromColStatus(colorStatus))
         return  drawable
 
     }
-    fun getFlashCardIconByCol(colorStatus: ColorStatus, ): Drawable {
+    private fun getFlashCardIconByCol(colorStatus: ColorStatus ): Drawable {
         val drawable = getDrawable(R.drawable.icon_flashcard_with_col) as LayerDrawable
         drawable.findDrawableByLayerId(R.id.icon_flashcard_paint).setTint(getColorFromColStatus(colorStatus))
         return  drawable
 
     }
-    fun getAnkiBoxFavouriteIconByCol(colorStatus: ColorStatus,): Drawable {
+    private fun getAnkiBoxFavouriteIconByCol(colorStatus: ColorStatus): Drawable {
         val drawable = getDrawable(R.drawable.icon_heart) as VectorDrawable
         drawable.setTint(getColorFromColStatus(colorStatus))
         return  drawable

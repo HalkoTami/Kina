@@ -168,7 +168,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         changeTopBarMode()
 
     }
-    private val _parentFile = MutableLiveData<File?>()
+    val _parentFile = MutableLiveData<File?>()
     val parentFile:LiveData<File?> = _parentFile
     fun returnParentFile(): File?{
         return _parentFile.value

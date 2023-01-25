@@ -84,18 +84,7 @@ class LibrarySetUpItems{
             parent.tag = LibRVState.Plane
         }
     }
-    fun setUpRVFileBinding(fileBinding: LibraryFragRvItemFileBinding,
-                           file: File,
-                           context:Context){
-        fileBinding.apply {
-            txvFileTitle.text = file.title.toString()
-            imvFileType.setImageDrawable(when(file.fileStatus){
-                FileStatus.FOLDER -> GetCustomDrawables(context).getFolderIconByCol(file.colorStatus )
-                FileStatus.FLASHCARD_COVER -> GetCustomDrawables(context).getFlashCardIconByCol(file.colorStatus )
-                else -> return
-            })
-        }
-    }
+
     fun returnFileBindingTextViews(fileBinding: LibraryFragRvItemFileBinding, ):Array<TextView>{
         return  arrayOf(
             fileBinding.txvFileTitle

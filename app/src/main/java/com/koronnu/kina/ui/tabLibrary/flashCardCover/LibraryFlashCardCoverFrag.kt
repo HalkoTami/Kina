@@ -18,14 +18,12 @@ import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.koronnu.kina.databinding.LibraryFragTopBarFileBinding
 import com.koronnu.kina.databinding.RvEmptyBinding
-import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
 import com.koronnu.kina.data.model.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
 import com.koronnu.kina.util.LibraryOb
 import com.koronnu.kina.ui.tabLibrary.*
-import com.koronnu.kina.util.view_set_up.GetCustomDrawables
 import com.koronnu.kina.util.view_set_up.LibraryAddListeners
 import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.*
@@ -58,6 +56,10 @@ LibraryFlashCardCoverFrag  : Fragment(){
     ): View {
         fun setUpLateInitVars(){
             topBarBinding = LibraryFragTopBarFileBinding.inflate(inflater,container,false)
+            topBarBinding.apply {
+                libraryViewModel = libraryBaseViewModel
+                lifecycleOwner = viewLifecycleOwner
+            }
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
             libraryBaseViewModel.setChildFragBinding(binding)
@@ -141,12 +143,8 @@ LibraryFlashCardCoverFrag  : Fragment(){
         libraryBaseViewModel.apply {
             setLibraryFragment(LibraryFragment.FlashCardCover)
             clearFinalList()
-            parentFileFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){
+            parentFileFromDB(args.flashCardCoverId.single()).observe(viewLifecycleOwner){ it->
                 setParentFile(it)
-                topBarBinding.txvFileTitle.text = it.title ?:resources.getString(R.string.no_title)
-                topBarBinding.imvFileType.setImageDrawable(
-                    GetCustomDrawables(requireContext()).getFlashCardIconByCol(it?.colorStatus ?: ColorStatus.GRAY,)
-                )
                 createCardViewModel.setParentFlashCardCover(it)
 
             }

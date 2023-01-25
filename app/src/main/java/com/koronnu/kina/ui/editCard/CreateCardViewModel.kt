@@ -63,18 +63,17 @@ class CreateCardViewModel(private val repository: MyRoomRepository) :ViewModel()
     fun getFileAndChildrenCards(fileId:Int?): LiveData<Map<File, List<Card>>> = repository.getFileAndChildrenCards(fileId).asLiveData()
     val cardsWithoutCardsFlashCard:LiveData<List<Card>?> =  this.repository.getCardDataByFileIdSorted(null).asLiveData()
 
-    private val _parentFlashCardCover = MutableLiveData<File?>()
+    val parentFlashCardCover = MutableLiveData<File?>()
     fun setParentFlashCardCover(file: File?){
-        _parentFlashCardCover.value = file
+        parentFlashCardCover.value = file
     }
     fun onClickEditCardFromRV(card: Card){
         setStartingCardId(card.id)
         returnMainActivityNavCon()?.navigate(EditCardBaseFragDirections.openCreateCard())
 
     }
-    val parentFlashCardCover:LiveData<File?> = _parentFlashCardCover
     private fun returnParentFlashCardCover(): File?{
-        return _parentFlashCardCover.value
+        return parentFlashCardCover.value
     }
 
 //    parent card

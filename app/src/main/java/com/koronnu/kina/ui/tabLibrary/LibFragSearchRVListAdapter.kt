@@ -73,7 +73,7 @@ class LibFragSearchRVListAdapter(
                 is File -> {
                     val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
                     checkMatchTxv.addAll(viewSetUp.returnFileBindingTextViews(fileBinding))
-                    viewSetUp.setUpRVFileBinding(fileBinding, item, context)
+                    fileBinding.file = item
                     fileBinding.root
                 }
                 is Card -> {
