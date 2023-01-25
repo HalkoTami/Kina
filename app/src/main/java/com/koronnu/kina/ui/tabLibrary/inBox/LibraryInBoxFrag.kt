@@ -117,7 +117,7 @@ class LibraryInBoxFrag  : Fragment(){
         }
         fun observeMultiMode(){
             libraryBaseViewModel.apply {
-                multipleSelectMode.observe(viewLifecycleOwner){
+                this.multipleSelectMode.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
                     topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                     LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
@@ -165,7 +165,7 @@ class LibraryInBoxFrag  : Fragment(){
                 setTopBarText(it)
             }
             val commonViewSetUp = LibrarySetUpItems()
-            multipleSelectMode.observe(viewLifecycleOwner){
+            this.multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
                 topBarBinding.root.visibility = if(it) View.GONE else View.VISIBLE
                 commonViewSetUp.changeLibRVSelectBtnVisibility(recyclerView,it)

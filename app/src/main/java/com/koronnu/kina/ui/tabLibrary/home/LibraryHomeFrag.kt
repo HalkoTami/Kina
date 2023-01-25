@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
 import com.koronnu.kina.util.changeViewIfRVEmpty
@@ -23,7 +22,6 @@ import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
-import com.koronnu.kina.ui.listener.topbar.LibFragTopBarHomeCL
 import com.koronnu.kina.util.LibraryOb
 import com.koronnu.kina.ui.tabLibrary.*
 import com.koronnu.kina.util.view_set_up.LibraryAddListeners
@@ -121,10 +119,10 @@ class LibraryHomeFrag : Fragment(){
         fun observeMultiMode(){
             libraryBaseViewModel.apply {
                 multipleSelectMode.observe(viewLifecycleOwner){
-                    binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
-                    topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
+//                    binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
+//                    topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                     LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
-                    if(it.not()) changeViewVisibility(binding.frameLayMultiModeMenu,false)
+//                    if(it.not()) changeViewVisibility(binding.frameLayMultiModeMenu,false)
 
                 }
                 changeAllRVSelectedStatus.observe(viewLifecycleOwner){
@@ -133,8 +131,8 @@ class LibraryHomeFrag : Fragment(){
                 selectedItems.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.txvSelectingStatus.text =  resources.getString(R.string.topBarMultiSelectBin_selectingStatus,it.size)
                 }
-                multiMenuVisibility
-                    .observe(viewLifecycleOwner, LibraryOb().multiMenuVisibilityObserver(binding))
+//                multiMenuVisibility
+//                    .observe(viewLifecycleOwner, LibraryOb().multiMenuVisibilityObserver(binding))
 
             }
 

@@ -2,7 +2,13 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<layout >
+<layout
+    >
+    <data>
+        <variable
+            name="libraryViewModel"
+            type="com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -34,7 +40,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/content_binding_frame"
             app:layout_constraintEnd_toStartOf="@+id/content_binding_frame"
-
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/select_rv_item"

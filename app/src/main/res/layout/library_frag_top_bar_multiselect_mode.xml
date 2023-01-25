@@ -9,6 +9,7 @@
             type="com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel" />
     </data>
     <androidx.appcompat.widget.LinearLayoutCompat
+        visibilityBoolean="@{libraryViewModel.multipleSelectMode}"
         style="@style/TopBarLinLayStyle"
         xmlns:android="http://schemas.android.com/apk/res/android">
         <ImageView

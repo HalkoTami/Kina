@@ -11,7 +11,9 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        style="@style/TopBarLinLayStyle">
+        style="@style/TopBarLinLayStyle"
+        visibilityBoolean="@{!libraryViewModel.multipleSelectMode}"
+        >
 
 
         <ImageView

@@ -27,11 +27,9 @@
 
         <FrameLayout
             style="@style/TopBarFrameLayStyle"
-            android:id="@+id/fl_tpbAnkiBox"
+            android:id="@+id/fl_tpbLibrary"
             android:layout_width="match_parent"
             android:layout_height="@dimen/topBar_height"
-
-
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -39,21 +37,21 @@
                 android:id="@+id/top_bar_multiselect_binding"
                 layout="@layout/library_frag_top_bar_multiselect_mode"
                 bind:libraryViewModel="@{libraryViewModel}"
-                android:visibility="gone"/>
+                />
 
         </FrameLayout>
         <FrameLayout
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/fl_tpbAnkiBox"
+            app:layout_constraintTop_toBottomOf="@id/fl_tpbLibrary"
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/frameLay_multi_mode_menu"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.25"
-
             android:layout_gravity="center_vertical|end"
             android:elevation="22dp"
             android:layout_marginEnd="10dp"
+            visibilityBoolean="@{libraryViewModel.multiMenuVisibility}"
+            android:visibility="gone"
             android:background="@drawable/gray_stroke_rectangle">
             <include
                 android:id="@+id/multi_select_menu_binding"
@@ -66,7 +64,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_ancestors_height"
-            app:layout_constraintTop_toBottomOf="@id/fl_tpbAnkiBox"
+            app:layout_constraintTop_toBottomOf="@id/fl_tpbLibrary"
             app:layout_constraintWidth_percent="0.6">
             <include android:id="@+id/ancestors_binding"
                 layout="@layout/library_frag_top_bar_ancestors"/>
@@ -166,6 +164,7 @@
         </FrameLayout>
 
         <View
+            visibilityBoolean="@{libraryViewModel.multiMenuVisibility}"
             android:elevation="20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
