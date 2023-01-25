@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.view.View
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
@@ -53,6 +54,15 @@ object ViewBinding{
         view.setImageDrawable(
             FileStatusDrawableConverter(view.context).convertColoredFileStatusIcon(file)
         )
+    }
+    @BindingAdapter("keyBoardVisible")
+    @JvmStatic
+    fun setKeyBoardVisible(view: EditText, visible: Boolean){
+        if(visible) {
+            view.requestFocus()
+            showKeyBoard(view,view.context)
+        }
+        else hideKeyBoard(view)
     }
 
 

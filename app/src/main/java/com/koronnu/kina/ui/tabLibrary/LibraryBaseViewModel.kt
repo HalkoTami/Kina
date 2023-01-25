@@ -440,6 +440,10 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         changeTopBarMode()
         changeRVMode()
     }
+    val searchModeActive = MutableLiveData<Boolean>()
+    fun setSearchModeActive(boolean: Boolean){
+        searchModeActive.value = boolean
+    }
     fun returnMultiSelectMode():Boolean{
         return multipleSelectMode.value ?:false
     }

@@ -2,34 +2,43 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/gray_stroke_rectangle"
-    android:backgroundTint="@color/most_light_gray"
-    android:padding="8dp"
-    android:gravity="center_vertical">
-
-    <EditText
-        android:maxLines="1"
-        android:inputType="text"
-        android:id="@+id/edt_library_search"
-        android:layout_width="0dp"
+<layout>
+    <data>
+        <variable
+            name="libraryViewModel"
+            type="com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel" />
+    </data>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:autofillHints="name"
-        android:hint="検索"
-        android:textSize="14sp"
-        android:background="@android:color/transparent" />
-    <TextView
-        android:id="@+id/txv_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:textSize="12sp"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@drawable/gray_stroke_rectangle"
+        android:backgroundTint="@color/most_light_gray"
+        android:padding="8dp"
+        android:gravity="center_vertical">
 
-        android:text="キャンセル"/>
+        <EditText
+            keyBoardVisible="@{libraryViewModel.searchModeActive}"
+            android:maxLines="1"
+            android:inputType="text"
+            android:id="@+id/edt_library_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:autofillHints="name"
+            android:hint="検索"
+            android:textSize="14sp"
+            android:background="@android:color/transparent" />
+        <TextView
+            android:id="@+id/txv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textSize="12sp"
+            android:onClick="@{()->libraryViewModel.setSearchModeActive(false)}"
+            android:text="キャンセル"/>
 
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

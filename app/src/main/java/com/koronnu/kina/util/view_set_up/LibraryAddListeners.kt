@@ -17,7 +17,7 @@ class LibraryAddListeners(){
 //    top Bars
 
 
-    fun fragChildMultiBaseAddCL(binding: LibraryChildFragWithMulModeBaseBinding,
+    fun  fragChildMultiBaseAddCL(binding: LibraryChildFragWithMulModeBaseBinding,
                                 context: Context,
                                 libraryViewModel: LibraryBaseViewModel,
                                 imvSearchLoup: ImvChangeAlphaOnDown?,
@@ -59,12 +59,12 @@ class LibraryAddListeners(){
         binding.bindingSearch.edtLibrarySearch.addTextChangedListener {
             if(it.toString().isBlank()){
                 searchViewModel.setSearchText(String())
-                binding.mainFrameLayout.visibility= View.VISIBLE
-                binding.frameLaySearchRv.visibility = View.GONE
+//                binding.mainFrameLayout.visibility= View.VISIBLE
+//                binding.frameLaySearchRv.visibility = View.GONE
 
             } else {
-                binding.mainFrameLayout.visibility = View.GONE
-                binding.frameLaySearchRv.visibility = View.VISIBLE
+//                binding.mainFrameLayout.visibility = View.GONE
+//                binding.frameLaySearchRv.visibility = View.VISIBLE
                 searchViewModel.setSearchText(it.toString())
             }
         }

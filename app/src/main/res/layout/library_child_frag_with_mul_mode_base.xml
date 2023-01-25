@@ -9,6 +9,7 @@
         <variable
             name="libraryViewModel"
             type="com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel" />
+
         <variable
             name="planeRVAdapter"
             type="androidx.recyclerview.widget.ListAdapter" />
@@ -74,6 +75,7 @@
 
 
         <FrameLayout
+            visibilityBoolean="@{libraryViewModel.searchModeActive}"
             android:id="@+id/frameLay_search_bar"
             android:layout_width="0dp"
             android:layout_height="@dimen/searchbar_height"
@@ -85,6 +87,7 @@
             android:background="@android:color/transparent">
 
             <include
+                bind:libraryViewModel="@{libraryViewModel}"
                 android:id="@+id/binding_search"
                 layout="@layout/item_search_bar"
                 android:visibility="visible"/>
@@ -139,7 +142,6 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_rv"
                 android:adapter="@{seachRvAdapter}"
-
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

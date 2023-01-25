@@ -93,14 +93,14 @@ class LibraryHomeFrag : Fragment(){
 
         fun addCL(){
 
-            LibraryAddListeners().fragChildMultiBaseAddCL(
-                binding,requireActivity(),
-                libraryBaseViewModel,
-                topBarBinding.imvSearchLoup,
-                deletePopUpViewModel,
-                searchViewModel,
-                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            )
+//            LibraryAddListeners().fragChildMultiBaseAddCL(
+//                binding,requireActivity(),
+//                libraryBaseViewModel,
+//                topBarBinding.imvSearchLoup,
+//                deletePopUpViewModel,
+//                searchViewModel,
+//                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//            )
             recyclerView.addOnItemTouchListener(
                 object : LibraryRVItemClickListener(requireActivity(),binding.frameLayTest,recyclerView,libraryBaseViewModel){})
         }
