@@ -59,6 +59,10 @@ class LibraryHomeFrag : Fragment(){
 
         fun setUpLateInitVars(){
             topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
+            topBarBinding.apply {
+                libraryViewModel = libraryBaseViewModel
+                lifecycleOwner = viewLifecycleOwner
+            }
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
             recyclerView = binding.vocabCardRV
@@ -173,12 +177,9 @@ class LibraryHomeFrag : Fragment(){
 
             childFilesFromDB(null).observe(viewLifecycleOwner,homeRVItemsObserver)
             childCardsFromDB(null).observe(viewLifecycleOwner){
-                topBarBinding.txvInBoxCardAmount.apply {
-                    text = it?.size.toString()
-                    visibility = if(it?.size == 0) View.GONE else View.VISIBLE
-                }
                 createCardViewModel.setSisterCards(it?:return@observe)
             }
+
         }
         return binding.root
     }

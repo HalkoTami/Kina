@@ -54,6 +54,11 @@ object ViewBinding{
             FileStatusDrawableConverter(view.context).convertColoredFileStatusIcon(file)
         )
     }
+    @BindingAdapter("visibilityBoolean")
+    @JvmStatic
+    fun setVisibilityGoneByBoolean(view: View, visible: Boolean){
+        view.visibility = if(visible) View.VISIBLE else View.GONE
+    }
 
     @BindingAdapter("horizontal_constraint_percentage")
     @JvmStatic

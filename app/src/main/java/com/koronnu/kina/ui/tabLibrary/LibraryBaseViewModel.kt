@@ -25,6 +25,8 @@ import com.koronnu.kina.ui.tabLibrary.folder.LibraryFolderFragDirections
 import com.koronnu.kina.ui.tabLibrary.home.LibraryHomeFragDirections
 import com.koronnu.kina.ui.viewmodel.*
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.map
+
 class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     private lateinit var mainViewModel: MainViewModel
@@ -60,6 +62,10 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
             }
         }
     }
+    val cardsWithoutFlashCardCoverFromDB:LiveData<List<Card>> = repository.cardsWithoutFlashCardCover.asLiveData()
+
+
+
 
 
 

@@ -2,78 +2,85 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/TopBarLinLayStyle">
+<layout>
+    <data>
+        <variable
+            name="libraryViewModel"
+            type="com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel" />
+    </data>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/TopBarLinLayStyle">
 
 
-    <ImageView
-        android:id="@+id/imv_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:src="@drawable/icon_home"
-        tools:ignore="ContentDescription" />
-
-    <TextView
-        style="@style/TopBarTxvSizeNormalStyle"
-        android:id="@+id/txv_home"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:text="@string/txvHome"
-        android:layout_marginStart="10dp"
-        />
-
-
-    <com.koronnu.kina.customViews.ImvChangeAlphaOnDown
-        android:id="@+id/imv_search_loup"
-        android:layout_width="wrap_content"
-        android:paddingHorizontal="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_height="match_parent"
-        android:src="@drawable/icon_search_loup"
-        />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/frameLay_inBox"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginEnd="10dp"
-
-        >
         <ImageView
-            android:paddingEnd="10dp"
-            android:id="@+id/imv_inbox_icon"
-            android:layout_width="match_parent"
+            android:id="@+id/imv_home"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/icon_inbox"
-            android:contentDescription="@string/cd_inbox" />
+            android:src="@drawable/icon_home"
+            tools:ignore="ContentDescription" />
 
         <TextView
-            android:textSize="10sp"
-            android:id="@+id/txv_inBox_card_amount"
+            style="@style/TopBarTxvSizeNormalStyle"
+            android:id="@+id/txv_home"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/txvHome"
+            android:layout_marginStart="10dp"
+            />
+
+
+        <com.koronnu.kina.customViews.ImvChangeAlphaOnDown
+            android:id="@+id/imv_search_loup"
             android:layout_width="wrap_content"
-            android:layout_height="15dp"
-            android:background="@drawable/rectangle_green_stroke"
-            app:layout_constraintVertical_bias="0"
-            android:backgroundTint="@color/red"
-            android:minWidth="15dp"
-            android:paddingHorizontal="1dp"
-            android:gravity="center"
+            android:paddingHorizontal="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_search_loup"
+            />
 
-            android:textColor="@color/white"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/frameLay_inBox"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            >
+            <ImageView
+                android:paddingEnd="10dp"
+                android:id="@+id/imv_inbox_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/icon_inbox"
+                android:contentDescription="@string/cd_inbox" />
+
+            <TextView
+                android:textSize="10sp"
+                android:text="@{String.valueOf(libraryViewModel.cardsWithoutFlashCardCoverFromDB.size())}"
+                android:id="@+id/txv_inBox_card_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:background="@drawable/rectangle_green_stroke"
+                app:layout_constraintVertical_bias="0"
+                android:backgroundTint="@color/red"
+                android:minWidth="15dp"
+                android:paddingHorizontal="1dp"
+                android:gravity="center"
+                visibilityBoolean="@{libraryViewModel.cardsWithoutFlashCardCoverFromDB.size()!=0}"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
