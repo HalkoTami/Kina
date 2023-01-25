@@ -2,51 +2,52 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    style="@style/TopBarLinLayStyle">
+<layout>
+    <data>
+        <variable
+            name="createCardViewModel"
+            type="com.koronnu.kina.ui.editCard.CreateCardViewModel" />
+    </data>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        style="@style/TopBarLinLayStyle">
 
+        <ImageView
+            convertFileStatusDraw="@{createCardViewModel.parentFlashCardCover}"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/imv_mode"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            tools:ignore="ContentDescription" />
 
+        <TextView
+            style="@style/TopBarTxvSizeNormalStyle"
+            android:text="@{createCardViewModel.parentFlashCardCover.title}"
+            android:id="@+id/txv_editing_file_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:textSize="20sp" >
+        </TextView>
 
-    <ImageView
+        <TextView
+            style="@style/TopBarTxvSizeSmallStyle"
+            android:layout_marginStart="5dp"
+            android:id="@+id/txv_position"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom" />
 
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="5dp"
-        android:id="@+id/imv_mode"
-        android:layout_width="35dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_flashcard"
-        tools:ignore="ContentDescription" />
-    <TextView
-        style="@style/TopBarTxvSizeNormalStyle"
-        android:id="@+id/txv_editing_file_title"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:layout_weight="1"
-
-        android:textSize="20sp" >
-    </TextView>
-
-    <TextView
-        style="@style/TopBarTxvSizeSmallStyle"
-        android:layout_marginStart="5dp"
-        android:id="@+id/txv_position"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="bottom" />
-    <ImageView
-        android:contentDescription="@string/cd_btn_save_and_back"
-        android:id="@+id/imv_save_and_back"
-        android:layout_width="35dp"
-        android:padding="5dp"
-
-        android:layout_height="match_parent"
-        android:src="@drawable/icon_save" />
-
-
-
-
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <ImageView
+            android:contentDescription="@string/cd_btn_save_and_back"
+            android:id="@+id/imv_save_and_back"
+            android:layout_width="35dp"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_save" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

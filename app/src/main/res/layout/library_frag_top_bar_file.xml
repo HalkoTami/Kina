@@ -2,46 +2,54 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/TopBarLinLayStyle"
-    >
-    <ImageView
-    android:padding="5dp"
-    android:id="@+id/imv_go_back"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<layout>
+    <data>
+        <variable
+            name="libraryViewModel"
+            type="com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel" />
+    </data>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/TopBarLinLayStyle"
+        >
+        <ImageView
+            android:padding="5dp"
+            android:id="@+id/imv_go_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-    android:src="@drawable/icon_back"
-        android:contentDescription="@string/cd_btn_back" />
-    <ImageView
-        android:id="@+id/imv_file_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            android:src="@drawable/icon_back"
+            android:contentDescription="@string/cd_btn_back" />
+        <ImageView
+            convertFileStatusDraw="@{libraryViewModel._parentFile}"
+            android:id="@+id/imv_file_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_flashcard"
+            tools:ignore="ContentDescription" />
 
-        android:src="@drawable/icon_flashcard"
-        tools:ignore="ContentDescription" />
+        <TextView
+            style="@style/TopBarTxvSizeNormalStyle"
+            android:layout_marginStart="10dp"
+            android:id="@+id/txv_file_title"
+            android:text="@{libraryViewModel._parentFile.title}"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            />
 
-    <TextView
-        style="@style/TopBarTxvSizeNormalStyle"
-        android:layout_marginStart="10dp"
-        android:id="@+id/txv_file_title"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        />
-
-    <com.koronnu.kina.customViews.ImvChangeAlphaOnDown
-        android:id="@+id/imv_search_loup"
-        android:layout_width="wrap_content"
-        android:paddingHorizontal="5dp"
-        android:layout_height="match_parent"
-        android:src="@drawable/icon_search_loup"
-        />
-
-
-
+        <com.koronnu.kina.customViews.ImvChangeAlphaOnDown
+            android:id="@+id/imv_search_loup"
+            android:layout_width="wrap_content"
+            android:paddingHorizontal="5dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_search_loup"
+            />
 
 
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

@@ -12,7 +12,6 @@ import com.koronnu.kina.actions.setClickListeners
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
-import com.koronnu.kina.util.view_set_up.DrawableConverter
 
 
 /**

@@ -2,7 +2,9 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<layout>
+<layout
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
     <data>
         <variable
             name="viewModel"
@@ -23,6 +25,7 @@
             app:layout_constraintTop_toTopOf="parent">
             <include
                 android:id="@+id/create_card_top_bar_binding"
+                bind:createCardViewModel="@{viewModel}"
                 layout="@layout/create_card_frag_top_bar"/>
 
 

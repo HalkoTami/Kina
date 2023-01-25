@@ -4,9 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -20,22 +17,19 @@ import com.koronnu.kina.actions.changeViewIfRVEmpty
 import com.koronnu.kina.actions.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.File
-import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
 import com.koronnu.kina.data.model.enumClasses.LibraryFragment
 import com.koronnu.kina.ui.EditFileViewModel
-import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
 import com.koronnu.kina.util.LibraryOb
 import com.koronnu.kina.ui.tabLibrary.*
-import com.koronnu.kina.util.view_set_up.DrawableConverter
 import com.koronnu.kina.util.view_set_up.LibraryAddListeners
 import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.*
 
 
 class LibraryFolderFrag :  Fragment(){
-    private val args: com.koronnu.kina.ui.tabLibrary.folder.LibraryFolderFragArgs by navArgs()
+    private val args: LibraryFolderFragArgs by navArgs()
 
     private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView
@@ -49,7 +43,6 @@ class LibraryFolderFrag :  Fragment(){
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
-    private val mainViewModel: MainViewModel by activityViewModels()
 
     private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
     private val binding get() = _binding!!
@@ -62,6 +55,10 @@ class LibraryFolderFrag :  Fragment(){
     ): View {
         fun setUpLateInitVars(){
             topBarBinding = LibraryFragTopBarFileBinding.inflate(inflater,container,false)
+            topBarBinding.apply {
+                libraryViewModel = libraryBaseViewModel
+                lifecycleOwner = viewLifecycleOwner
+            }
             libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
             _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
             libraryBaseViewModel.setChildFragBinding(binding)
@@ -156,12 +153,6 @@ class LibraryFolderFrag :  Fragment(){
             setLibraryFragment(LibraryFragment.Folder)
             parentFileFromDB(args.folderId.single()).observe(viewLifecycleOwner){
                 setParentFile(it)
-                topBarBinding.apply {
-                    txvFileTitle.text = it?.title ?:resources.getString(R.string.no_title)
-                    imvFileType.setImageDrawable(
-                        DrawableConverter(requireActivity()).getFolderIconByCol(it?.colorStatus ?: ColorStatus.GRAY,)
-                    )
-                }
             }
             childFilesFromDB(args.folderId.single()).observe(viewLifecycleOwner,fileRVItemsObserver)
 

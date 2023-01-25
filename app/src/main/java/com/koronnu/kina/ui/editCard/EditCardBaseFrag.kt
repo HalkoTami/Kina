@@ -17,14 +17,12 @@ import com.koronnu.kina.data.model.enumClasses.MainFragment
 import com.koronnu.kina.data.model.enumClasses.NeighbourCardSide
 import com.koronnu.kina.databinding.CreateCardFragMainBinding
 import com.koronnu.kina.data.source.local.entity.Card
-import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
 import com.koronnu.kina.ui.tabAnki.AnkiBaseViewModel
 import com.koronnu.kina.ui.tabAnki.flip.AnkiFlipBaseViewModel
 import com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel
-import com.koronnu.kina.util.view_set_up.DrawableConverter
 
 
 class EditCardBaseFrag  : Fragment() {
@@ -98,16 +96,6 @@ class EditCardBaseFrag  : Fragment() {
                 calledFirst = false
             }
         }
-        val parentFlashCardCoverObserver = Observer<File?> {
-            binding.createCardTopBarBinding.apply {
-                imvMode.setImageDrawable(
-                    if (it != null) {
-                        DrawableConverter(requireActivity()).getFlashCardIconByCol(it.colorStatus)
-                    } else DrawableConverter(requireActivity()).getDrawable(R.drawable.icon_inbox)
-
-                )
-            }
-        }
         val parentFlashCardCoverId = when (mainViewModel.getFragmentStatus.now) {
             MainFragment.Anki -> when (ankiBaseViewModel.returnActiveFragment()) {
                 AnkiFragments.AnkiBox -> null
@@ -132,7 +120,6 @@ class EditCardBaseFrag  : Fragment() {
             setEditCardBaseFragNavDirection(null)
             parentCard.observe(viewLifecycleOwner, parentCardObserver)
             sisterCards.observe(viewLifecycleOwner, sisterCardObserver)
-            parentFlashCardCover.observe(viewLifecycleOwner, parentFlashCardCoverObserver)
             getSisterCards(parentFlashCardCoverId).observe(viewLifecycleOwner,
                 sisterCardFromDBObserver)
             editCardBaseFragNavDirection.observe(viewLifecycleOwner){

@@ -15,7 +15,7 @@ import androidx.databinding.BindingAdapter
 import com.koronnu.kina.R
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.ColorStatus
-import com.koronnu.kina.util.view_set_up.DrawableConverter
+import com.koronnu.kina.util.view_set_up.FileStatusDrawableConverter
 
 
 object ViewBinding{
@@ -50,9 +50,8 @@ object ViewBinding{
     @BindingAdapter("convertFileStatusDraw")
     @JvmStatic
     fun convertFileStatusDrawable(view: ImageView, file: File?){
-        file ?:return
         view.setImageDrawable(
-            DrawableConverter(view.context).convertColoredFileStatusIcon(file)
+            FileStatusDrawableConverter(view.context).convertColoredFileStatusIcon(file)
         )
     }
 

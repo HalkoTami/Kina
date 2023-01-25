@@ -95,7 +95,7 @@ class LibFragPlaneRVListAdapter(
             when(item){
                 is File -> {
                     val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
-                    viewSetUp.setUpRVFileBinding(fileBinding, item, context)
+                    fileBinding.file = item
                     binding.btnAddNewCard.visibility = View.GONE
                     contentView = fileBinding.root
 
