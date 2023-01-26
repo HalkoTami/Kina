@@ -50,11 +50,6 @@ class LibraryHomeFrag : Fragment(){
         topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
         val mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
         val adapter =  LibFragPlaneRVListAdapter(
-            stringCardViewModel  = cardTypeStringViewModel,
-            createCardViewModel  = createCardViewModel,
-            mainNavController = mainNavCon,
-            deletePopUpViewModel = deletePopUpViewModel,
-            createFileViewModel = editFileViewModel,
             libraryViewModel = libraryBaseViewModel,
             parentLifecycleOwner = viewLifecycleOwner
         )

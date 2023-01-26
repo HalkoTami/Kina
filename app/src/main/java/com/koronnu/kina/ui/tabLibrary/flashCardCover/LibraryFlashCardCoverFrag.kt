@@ -66,11 +66,6 @@ LibraryFlashCardCoverFrag  : Fragment(){
             recyclerView = binding.vocabCardRV
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
-                stringCardViewModel  = cardTypeStringViewModel,
-                createCardViewModel  = createCardViewModel,
-                mainNavController = mainNavCon,
-                deletePopUpViewModel = deletePopUpViewModel,
-                createFileViewModel = editFileViewModel,
                 libraryViewModel = libraryBaseViewModel,
                 parentLifecycleOwner = viewLifecycleOwner
             )
