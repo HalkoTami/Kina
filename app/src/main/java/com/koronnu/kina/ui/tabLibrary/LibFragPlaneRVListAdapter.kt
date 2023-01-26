@@ -6,6 +6,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.animation.doOnEnd
 import androidx.core.view.children
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,7 @@ class LibFragPlaneRVListAdapter(
     private val deletePopUpViewModel: DeletePopUpViewModel,
     private val mainNavController: NavController,
     private val libraryViewModel: LibraryBaseViewModel,
+    private val parentLifecycleOwner: LifecycleOwner
 ) :
     ListAdapter<Any, LibFragPlaneRVListAdapter.LibFragFileViewHolder>(SearchDiffCallback) {
 
@@ -43,8 +45,8 @@ class LibFragPlaneRVListAdapter(
     }
 
     override fun onBindViewHolder(holder: LibFragFileViewHolder, position: Int) {
-        holder.bind(getItem(position),libraryViewModel,createCardViewModel,
-            stringCardViewModel, mainNavController,createFileViewModel,deletePopUpViewModel)
+        holder.bind(getItem(position),createCardViewModel,
+            stringCardViewModel, mainNavController,createFileViewModel,deletePopUpViewModel,parentLifecycleOwner)
     }
 
     class LibFragFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val libraryViewModel: LibraryBaseViewModel) :
@@ -55,12 +57,12 @@ class LibFragPlaneRVListAdapter(
         override val libraryBaseViewModel: LibraryBaseViewModel
             get() = libraryViewModel
         fun bind(item: Any,
-                 libraryViewModel: LibraryBaseViewModel,
                  createCardViewModel: CreateCardViewModel,
                  stringCardViewModel: CardTypeStringViewModel,
                  mainNavController: NavController,
                  createFileViewModel: EditFileViewModel,
                  deletePopUpViewModel: DeletePopUpViewModel,
+                 parentLifecycleOwner: LifecycleOwner
         ){
             fun libRVButtonsAddCL(item:Any
             ){ binding.apply {
@@ -73,12 +75,18 @@ class LibFragPlaneRVListAdapter(
                     btnEditWhole
                 ).onEach {
                     it.setOnTouchListener(
-                    LibraryRVCL(item,libraryViewModel, createFileViewModel,binding,deletePopUpViewModel,createCardViewModel,it)
+                    LibraryRVCL(item,libraryBaseViewModel, createFileViewModel,binding,deletePopUpViewModel,createCardViewModel,it)
                 )
                 }
             }
             }
-
+            binding.apply {
+                libraryViewModel = libraryBaseViewModel
+                lifecycleOwner = parentLifecycleOwner
+            }
+            libraryBaseViewModel.makeAllUnSwiped.observe(parentLifecycleOwner){
+                if(it) animateDisAppear()
+            }
             binding.contentBindingFrame.removeAllViews()
 
             val context = binding.root.context
@@ -109,7 +117,7 @@ class LibFragPlaneRVListAdapter(
                 }
                 root.tag = LibRVState.Plane
                 linLaySwipeShow.visibility = View.GONE
-                btnSelect.visibility = if(libraryViewModel.returnMultiSelectMode())  View.VISIBLE else View.GONE
+//                btnSelect.visibility = if(libraryViewModel.returnMultiSelectMode())  View.VISIBLE else View.GONE
             }
             binding.contentBindingFrame.addView(contentView)
 

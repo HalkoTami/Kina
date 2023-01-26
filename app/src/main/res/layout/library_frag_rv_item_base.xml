@@ -37,6 +37,7 @@
             android:layout_gravity="center"
             android:id="@+id/btn_select"
             android:visibility="gone"
+            visibilityBoolean="@{libraryViewModel.multipleSelectMode}"
             android:contentDescription="@string/cd_btn_select"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -56,6 +56,7 @@ class LibraryHomeFrag : Fragment(){
             deletePopUpViewModel = deletePopUpViewModel,
             createFileViewModel = editFileViewModel,
             libraryViewModel = libraryBaseViewModel,
+            parentLifecycleOwner = viewLifecycleOwner
         )
         val searchAdapter = LibFragSearchRVListAdapter(
             libraryViewModel = libraryBaseViewModel,
@@ -90,9 +91,9 @@ class LibraryHomeFrag : Fragment(){
         }
         fun observeMultiMode(){
             libraryBaseViewModel.apply {
-                multipleSelectMode.observe(viewLifecycleOwner){
-                    LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
-                }
+//                multipleSelectMode.observe(viewLifecycleOwner){
+//                    LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
+//                }
                 changeAllRVSelectedStatus.observe(viewLifecycleOwner){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
                 }

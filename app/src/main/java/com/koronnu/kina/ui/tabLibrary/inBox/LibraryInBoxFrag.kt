@@ -67,6 +67,7 @@ class LibraryInBoxFrag  : Fragment(){
                 deletePopUpViewModel = deletePopUpViewModel,
                 createFileViewModel = editFileViewModel,
                 libraryViewModel = libraryBaseViewModel,
+                parentLifecycleOwner = viewLifecycleOwner
             )
             searchAdapter = LibFragSearchRVListAdapter(
                 libraryViewModel = libraryBaseViewModel,
