@@ -67,6 +67,42 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
 
 
 
+    fun onClickOpenRvItem(item:Any){
+        if(returnLeftSwipedItemExists()) makeAllUnSwiped()
+        else if(returnMultiSelectMode()){
+            onClickRvSelect(
+                if((_selectedItems.value ?: mutableListOf()).contains(item)) ListAttributes.Remove else ListAttributes.Add,item)
+        }else{
+            when(item){
+                is File -> openNextFile(item)
+                is Card -> mainViewModel.createCardViewModel.onClickEditCardFromRV(item)
+            }
+        }
+    }
+    fun onClickDelete(item:Any){
+        mainViewModel.deletePopUpViewModel.setDeletingItem(mutableListOf(item))
+        mainViewModel.deletePopUpViewModel.setConfirmDeleteVisible(true)
+    }
+    fun onClickEditItem(item: Any){
+        when(item ){
+            is File -> mainViewModel.editFileViewModel.onClickEditFileInRV(item)
+            is Card -> mainViewModel.createCardViewModel.onClickEditCardFromRV(item)
+            else -> return
+        }
+    }
+    fun onClickBtnAddNewCard(item: Any){
+        when(item){
+            is Card -> {
+                mainViewModel.createCardViewModel.onClickAddNewCardRV(item)
+            }
+            else -> return
+        }
+    }
+    fun onLongClickRvItem(item: Any):Boolean{
+        setMultipleSelectMode(true)
+        onClickRvSelect(ListAttributes.Add,item)
+        return true
+    }
 
 
     private fun setChildFragBindingClickListeners(){

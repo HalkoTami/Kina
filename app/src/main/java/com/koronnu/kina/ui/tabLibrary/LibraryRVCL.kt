@@ -24,42 +24,42 @@ class LibraryRVCL(val item: Any,
         super.onSingleTap(motionEvent)
         rvBinding.apply {
             when(v){
-                contentBindingFrame -> {
-                    if(libraryBaseViewModel.getOnlySwipeActive||libraryBaseViewModel.getOnlyLongClickActive) return
-                    else if(libraryBaseViewModel.returnLeftSwipedItemExists()) libraryBaseViewModel.makeAllUnSwiped()
-                    else if(libraryBaseViewModel.returnMultiSelectMode()){
-                        libraryBaseViewModel.onClickRvSelect(
-                            if(btnSelect.isSelected) ListAttributes.Remove else ListAttributes.Add,item)
-                        btnSelect.isSelected = btnSelect.isSelected.not()
-                    }else{
-                        when(item){
-                            is File -> libraryBaseViewModel.openNextFile(item)
-                            is Card -> createCardViewModel.onClickEditCardFromRV(item)
-                        }
-
-                    }
-
-                }
-                btnDelete       -> {
-                    deletePopUpViewModel.setDeletingItem(mutableListOf(item))
-                    deletePopUpViewModel.setConfirmDeleteVisible(true)
-                }
-                btnEditWhole    -> {
-                    when(item ){
-                        is File -> createFileViewModel.onClickEditFileInRV(item)
-                        is Card -> createCardViewModel.onClickEditCardFromRV(item)
-                        else -> return
-                    }
-
-                }
-                btnAddNewCard -> {
-                    when(item){
-                        is Card -> {
-                            createCardViewModel.onClickAddNewCardRV(item)
-                        }
-                        else -> return
-                    }
-                }
+//                contentBindingFrame -> {
+//                    if(libraryBaseViewModel.getOnlySwipeActive||libraryBaseViewModel.getOnlyLongClickActive) return
+//                    else if(libraryBaseViewModel.returnLeftSwipedItemExists()) libraryBaseViewModel.makeAllUnSwiped()
+//                    else if(libraryBaseViewModel.returnMultiSelectMode()){
+//                        libraryBaseViewModel.onClickRvSelect(
+//                            if(btnSelect.isSelected) ListAttributes.Remove else ListAttributes.Add,item)
+//                        btnSelect.isSelected = btnSelect.isSelected.not()
+//                    }else{
+//                        when(item){
+//                            is File -> libraryBaseViewModel.openNextFile(item)
+//                            is Card -> createCardViewModel.onClickEditCardFromRV(item)
+//                        }
+//
+//                    }
+//
+//                }
+//                btnDelete       -> {
+//                    deletePopUpViewModel.setDeletingItem(mutableListOf(item))
+//                    deletePopUpViewModel.setConfirmDeleteVisible(true)
+//                }
+//                btnEditWhole    -> {
+//                    when(item ){
+//                        is File -> createFileViewModel.onClickEditFileInRV(item)
+//                        is Card -> createCardViewModel.onClickEditCardFromRV(item)
+//                        else -> return
+//                    }
+//
+//                }
+//                btnAddNewCard -> {
+//                    when(item){
+//                        is Card -> {
+//                            createCardViewModel.onClickAddNewCardRV(item)
+//                        }
+//                        else -> return
+//                    }
+//                }
             }
         }
 
@@ -68,9 +68,7 @@ class LibraryRVCL(val item: Any,
     override fun onLongClick(motionEvent: MotionEvent?) {
         super.onLongClick(motionEvent)
         if(libraryBaseViewModel.getOnlySwipeActive) return
-        rvBinding.btnSelect.isSelected = true
-        libraryBaseViewModel.setMultipleSelectMode(true)
-        libraryBaseViewModel.onClickRvSelect(ListAttributes.Add,item)
+
         libraryBaseViewModel.getDoAfterLongClick()
     }
 

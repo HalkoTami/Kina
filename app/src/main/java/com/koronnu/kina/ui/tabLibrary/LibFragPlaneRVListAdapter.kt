@@ -2,6 +2,7 @@ package com.koronnu.kina.ui.tabLibrary
 
 import android.animation.ValueAnimator
 import android.view.*
+import androidx.annotation.AnyRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.animation.doOnEnd
@@ -29,11 +30,6 @@ import kotlin.math.absoluteValue
 
 
 class LibFragPlaneRVListAdapter(
-    private val stringCardViewModel: CardTypeStringViewModel,
-    private val createCardViewModel: CreateCardViewModel,
-    private val createFileViewModel: EditFileViewModel,
-    private val deletePopUpViewModel: DeletePopUpViewModel,
-    private val mainNavController: NavController,
     private val libraryViewModel: LibraryBaseViewModel,
     private val parentLifecycleOwner: LifecycleOwner
 ) :
@@ -45,8 +41,7 @@ class LibFragPlaneRVListAdapter(
     }
 
     override fun onBindViewHolder(holder: LibFragFileViewHolder, position: Int) {
-        holder.bind(getItem(position),createCardViewModel,
-            stringCardViewModel, mainNavController,createFileViewModel,deletePopUpViewModel,parentLifecycleOwner)
+        holder.bind(getItem(position),parentLifecycleOwner)
     }
 
     class LibFragFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val libraryViewModel: LibraryBaseViewModel) :
@@ -57,38 +52,17 @@ class LibFragPlaneRVListAdapter(
         override val libraryBaseViewModel: LibraryBaseViewModel
             get() = libraryViewModel
         fun bind(item: Any,
-                 createCardViewModel: CreateCardViewModel,
-                 stringCardViewModel: CardTypeStringViewModel,
-                 mainNavController: NavController,
-                 createFileViewModel: EditFileViewModel,
-                 deletePopUpViewModel: DeletePopUpViewModel,
                  parentLifecycleOwner: LifecycleOwner
         ){
-            fun libRVButtonsAddCL(item:Any
-            ){ binding.apply {
-                arrayOf(
-                    root,
-                    contentBindingFrame,
-                    btnDelete,
-                    btnSelect,
-                    btnAddNewCard,
-                    btnEditWhole
-                ).onEach {
-                    it.setOnTouchListener(
-                    LibraryRVCL(item,libraryBaseViewModel, createFileViewModel,binding,deletePopUpViewModel,createCardViewModel,it)
-                )
-                }
-            }
-            }
             binding.apply {
                 libraryViewModel = libraryBaseViewModel
+                rvItem = item
+                rvItemIsCard = item is Card
                 lifecycleOwner = parentLifecycleOwner
             }
             libraryBaseViewModel.makeAllUnSwiped.observe(parentLifecycleOwner){
                 if(it) animateDisAppear()
             }
-            binding.contentBindingFrame.removeAllViews()
-
             val context = binding.root.context
             val viewSetUp = LibrarySetUpItems()
             val contentView:View
@@ -96,29 +70,16 @@ class LibFragPlaneRVListAdapter(
                 is File -> {
                     val fileBinding = LibraryFragRvItemFileBinding.inflate(LayoutInflater.from(context))
                     fileBinding.file = item
-                    binding.btnAddNewCard.visibility = View.GONE
                     contentView = fileBinding.root
-
-                    libRVButtonsAddCL(item)
                 }
                 is Card -> {
                     val stringCardBinding = ListItemLibraryRvCardStringBinding.inflate(LayoutInflater.from(context))
                     viewSetUp.setUpRVStringCardBinding(stringCardBinding, item.stringData, )
-                    libRVButtonsAddCL(item)
-                    binding.btnAddNewCard.visibility = View.VISIBLE
                     contentView = stringCardBinding.root
                 }
                 else -> return
             }
-            binding.apply {
-                btnSelect.apply {
-                    setImageDrawable(
-                        AppCompatResources.getDrawable(context, R.drawable.select_rv_item))
-                }
-                root.tag = LibRVState.Plane
-                linLaySwipeShow.visibility = View.GONE
-//                btnSelect.visibility = if(libraryViewModel.returnMultiSelectMode())  View.VISIBLE else View.GONE
-            }
+            binding.contentBindingFrame.removeAllViews()
             binding.contentBindingFrame.addView(contentView)
 
 

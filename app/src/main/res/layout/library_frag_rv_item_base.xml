@@ -6,8 +6,15 @@
     >
     <data>
         <variable
+            name="rvItem"
+            type="Object" />
+        <variable
+            name="rvItemIsCard"
+            type="Boolean" />
+        <variable
             name="libraryViewModel"
             type="com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel" />
+        <import type="com.koronnu.kina.data.source.local.entity.Card"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_height="wrap_content"
@@ -37,6 +44,7 @@
             android:layout_gravity="center"
             android:id="@+id/btn_select"
             android:visibility="gone"
+            isSelected="@{libraryViewModel.selectedItems.contains(rvItem)}"
             visibilityBoolean="@{libraryViewModel.multipleSelectMode}"
             android:contentDescription="@string/cd_btn_select"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +76,10 @@
         app:layout_constraintEnd_toStartOf="@+id/linLay_swipe_show"
         app:layout_constraintStart_toEndOf="@+id/rv_base_frameLay_left"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_add_new_card">
+        app:layout_constraintBottom_toTopOf="@id/btn_add_new_card"
+        android:onClick="@{()->libraryViewModel.onClickOpenRvItem(rvItem)}"
+        android:onLongClick="@{()->libraryViewModel.onLongClickRvItem(rvItem)}"
+        >
 
 
 
@@ -90,6 +101,7 @@
         android:gravity="center_horizontal">
         <ImageView
             android:contentDescription="@string/cd_btn_edit"
+            android:onClick="@{()->libraryViewModel.onClickEditItem(rvItem)}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -100,6 +112,7 @@
 
         <ImageView
             android:contentDescription="@string/cd_btnDelete"
+            android:onClick="@{()->libraryViewModel.onClickDelete(rvItem)}"
             android:id="@+id/btn_delete"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -119,8 +132,7 @@
     <ImageView
         android:contentDescription="@string/cd_btn_add_card"
         android:id="@+id/btn_add_new_card"
-
-
+        android:onClick="@{()->libraryViewModel.onClickBtnAddNewCard(rvItem)}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/content_binding_frame"
         app:layout_constraintTop_toBottomOf="@id/content_binding_frame"
@@ -128,7 +140,8 @@
         android:layout_margin="3dp"
         android:layout_width="20dp"
         android:src="@drawable/icon_add"
-        android:visibility="visible"/>
+        visibilityBoolean="@{rvItemIsCard}"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
