@@ -1,34 +1,29 @@
 package com.koronnu.kina.ui.tabLibrary.home
 
 
-import android.content.Context
 import android.os.Bundle
-import android.view.*
-import android.view.inputmethod.InputMethodManager
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.koronnu.kina.*
-import com.koronnu.kina.util.changeViewIfRVEmpty
-import com.koronnu.kina.util.changeViewVisibility
-import com.koronnu.kina.databinding.*
-import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.R
 import com.koronnu.kina.data.model.enumClasses.LibraryFragment
+import com.koronnu.kina.data.source.local.entity.File
+import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
+import com.koronnu.kina.databinding.LibraryFragTopBarHomeBinding
 import com.koronnu.kina.ui.EditFileViewModel
-import com.koronnu.kina.ui.MainViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
-import com.koronnu.kina.util.LibraryOb
 import com.koronnu.kina.ui.tabLibrary.*
-import com.koronnu.kina.util.view_set_up.LibraryAddListeners
+import com.koronnu.kina.ui.viewmodel.SearchViewModel
+import com.koronnu.kina.util.LibraryOb
 import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
-import com.koronnu.kina.ui.viewmodel.*
-import com.koronnu.kina.util.makeToast
 
 
 class LibraryHomeFrag : Fragment(){
@@ -45,7 +40,6 @@ class LibraryHomeFrag : Fragment(){
     private val createCardViewModel: CreateCardViewModel by activityViewModels()
     private val libraryBaseViewModel: LibraryBaseViewModel by activityViewModels()
     private val deletePopUpViewModel: DeletePopUpViewModel by activityViewModels()
-    private val mainViewModel: MainViewModel by activityViewModels()
 
     private var _binding: LibraryChildFragWithMulModeBaseBinding? = null
     private val binding get() = _binding!!
@@ -58,15 +52,6 @@ class LibraryHomeFrag : Fragment(){
     ): View {
 
         fun setUpLateInitVars(){
-            topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
-            topBarBinding.apply {
-                libraryViewModel = libraryBaseViewModel
-                lifecycleOwner = viewLifecycleOwner
-            }
-            libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
-            _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
-
-            recyclerView = binding.vocabCardRV
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
                 stringCardViewModel  = cardTypeStringViewModel,
@@ -85,31 +70,22 @@ class LibraryHomeFrag : Fragment(){
                 mainNavController = mainNavCon,
                 context = requireActivity(),
             )
+            libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
+            _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
             binding.apply {
                 libraryViewModel = libraryBaseViewModel
                 planeRVAdapter = adapter
                 seachRvAdapter = searchAdapter
                 lifecycleOwner = viewLifecycleOwner
             }
-        }
+            topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
+            topBarBinding.apply {
+                libraryViewModel = libraryBaseViewModel
+                lifecycleOwner = viewLifecycleOwner
+            }
+            binding.flTpbLibrary.addView(topBarBinding.root)
+            recyclerView = binding.vocabCardRV
 
-        fun addCL(){
-
-//            LibraryAddListeners().fragChildMultiBaseAddCL(
-//                binding,requireActivity(),
-//                libraryBaseViewModel,
-//                topBarBinding.imvSearchLoup,
-//                deletePopUpViewModel,
-//                searchViewModel,
-//                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//            )
-
-            recyclerView.addOnItemTouchListener(
-                object : LibraryRVItemClickListener(recyclerView){})
-        }
-        fun setUpView(){
-            val commonViewSetUp = LibrarySetUpItems()
-            commonViewSetUp.setUpLibFragWithMultiModeBase(binding,topBarBinding.root,searchAdapter,adapter,requireActivity())
         }
 
         fun observeSwipe(){
@@ -137,9 +113,8 @@ class LibraryHomeFrag : Fragment(){
             libraryBaseViewModel.setParentRVItems(sorted)
             adapter.submitList(sorted)
         }
-
-        setUpView()
-        addCL()
+        recyclerView.addOnItemTouchListener(
+            object : LibraryRVItemClickListener(recyclerView){})
         observeSwipe()
         observeMultiMode()
         createCardViewModel.setParentFlashCardCover(null)
