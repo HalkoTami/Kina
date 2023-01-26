@@ -29,11 +29,7 @@ import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
 class LibraryHomeFrag : Fragment(){
 
     private lateinit var topBarBinding:LibraryFragTopBarHomeBinding
-    private lateinit var libNavCon:NavController
     private lateinit var recyclerView:RecyclerView
-    private lateinit var mainNavCon:NavController
-    private lateinit var adapter: LibFragPlaneRVListAdapter
-    private lateinit var searchAdapter:LibFragSearchRVListAdapter
     private val searchViewModel:SearchViewModel by activityViewModels()
     private val editFileViewModel: EditFileViewModel by activityViewModels()
     private val cardTypeStringViewModel: CardTypeStringViewModel by activityViewModels()
@@ -50,43 +46,40 @@ class LibraryHomeFrag : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        fun setUpLateInitVars(){
-            mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
-            adapter =  LibFragPlaneRVListAdapter(
-                stringCardViewModel  = cardTypeStringViewModel,
-                createCardViewModel  = createCardViewModel,
-                mainNavController = mainNavCon,
-                deletePopUpViewModel = deletePopUpViewModel,
-                createFileViewModel = editFileViewModel,
-                libraryViewModel = libraryBaseViewModel,
-            )
-            searchAdapter = LibFragSearchRVListAdapter(
-                libraryViewModel = libraryBaseViewModel,
-                stringCardViewModel = cardTypeStringViewModel,
-                createCardViewModel = createCardViewModel,
-                searchViewModel = searchViewModel,
-                lifecycleOwner = viewLifecycleOwner,
-                mainNavController = mainNavCon,
-                context = requireActivity(),
-            )
-            libNavCon =  requireActivity().findNavController(R.id.lib_frag_con_view)
-            _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
-            binding.apply {
-                libraryViewModel = libraryBaseViewModel
-                planeRVAdapter = adapter
-                seachRvAdapter = searchAdapter
-                lifecycleOwner = viewLifecycleOwner
-            }
-            topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
-            topBarBinding.apply {
-                libraryViewModel = libraryBaseViewModel
-                lifecycleOwner = viewLifecycleOwner
-            }
-            binding.flTpbLibrary.addView(topBarBinding.root)
-            recyclerView = binding.vocabCardRV
-
+        _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
+        topBarBinding = LibraryFragTopBarHomeBinding.inflate(inflater,container,false)
+        val mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
+        val adapter =  LibFragPlaneRVListAdapter(
+            stringCardViewModel  = cardTypeStringViewModel,
+            createCardViewModel  = createCardViewModel,
+            mainNavController = mainNavCon,
+            deletePopUpViewModel = deletePopUpViewModel,
+            createFileViewModel = editFileViewModel,
+            libraryViewModel = libraryBaseViewModel,
+        )
+        val searchAdapter = LibFragSearchRVListAdapter(
+            libraryViewModel = libraryBaseViewModel,
+            stringCardViewModel = cardTypeStringViewModel,
+            createCardViewModel = createCardViewModel,
+            searchViewModel = searchViewModel,
+            lifecycleOwner = viewLifecycleOwner,
+            mainNavController = mainNavCon,
+            context = requireActivity(),
+        )
+        _binding = LibraryChildFragWithMulModeBaseBinding.inflate(inflater, container, false)
+        binding.apply {
+            libraryViewModel = libraryBaseViewModel
+            planeRVAdapter = adapter
+            seachRvAdapter = searchAdapter
+            lifecycleOwner = viewLifecycleOwner
         }
+
+        topBarBinding.apply {
+            libraryViewModel = libraryBaseViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
+        binding.flTpbLibrary.addView(topBarBinding.root)
+        val recyclerView = binding.vocabCardRV
 
         fun observeSwipe(){
             libraryBaseViewModel.apply {
@@ -104,9 +97,7 @@ class LibraryHomeFrag : Fragment(){
                     LibrarySetUpItems().changeLibRVAllSelectedState(recyclerView,it)
                 }
             }
-
         }
-        setUpLateInitVars()
         val searchModeObserver = LibraryOb().searchModeObserver(binding,searchViewModel)
         val homeRVItemsObserver = Observer<List<File>?>{
             val sorted = it
