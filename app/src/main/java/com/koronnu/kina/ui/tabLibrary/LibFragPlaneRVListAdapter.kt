@@ -1,10 +1,12 @@
 package com.koronnu.kina.ui.tabLibrary
 
-import android.content.Context
+import android.animation.ValueAnimator
 import android.view.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.animation.doOnEnd
+import androidx.core.view.children
 import androidx.navigation.NavController
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
@@ -15,8 +17,9 @@ import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.ui.EditFileViewModel
 import com.koronnu.kina.ui.editCard.CreateCardViewModel
 import com.koronnu.kina.ui.editCard.editCardContent.stringCard.CardTypeStringViewModel
-import com.koronnu.kina.util.view_set_up.LibraryAddListeners
+import com.koronnu.kina.util.LeftScrollReceiver
 import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
+import kotlin.math.absoluteValue
 
 
 /**
@@ -36,7 +39,7 @@ class LibFragPlaneRVListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibFragFileViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return LibFragFileViewHolder(LibraryFragRvItemBaseBinding.inflate(layoutInflater, parent, false),parent.context)
+        return LibFragFileViewHolder(LibraryFragRvItemBaseBinding.inflate(layoutInflater, parent, false),libraryViewModel)
     }
 
     override fun onBindViewHolder(holder: LibFragFileViewHolder, position: Int) {
@@ -44,8 +47,13 @@ class LibFragPlaneRVListAdapter(
             stringCardViewModel, mainNavController,createFileViewModel,deletePopUpViewModel)
     }
 
-    class LibFragFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val context: Context) :
-        RecyclerView.ViewHolder(binding.root){
+    class LibFragFileViewHolder (private val binding: LibraryFragRvItemBaseBinding,val libraryViewModel: LibraryBaseViewModel) :
+        RecyclerView.ViewHolder(binding.root), LeftScrollReceiver {
+
+        override val upDatingView: LinearLayoutCompat
+            get() = binding.linLaySwipeShow
+        override val libraryBaseViewModel: LibraryBaseViewModel
+            get() = libraryViewModel
         fun bind(item: Any,
                  libraryViewModel: LibraryBaseViewModel,
                  createCardViewModel: CreateCardViewModel,
@@ -70,28 +78,11 @@ class LibFragPlaneRVListAdapter(
                 }
             }
             }
-//            fun addCardCL(item: Card){
-//                binding.apply {
-//                    arrayOf(
-//                        root,
-//                        contentBindingFrame,
-//                        btnDelete,
-//                        btnSelect,
-//                        btnAddNewCard,
-//                        btnEditWhole
-//                    ).onEach {
-//                        it.setOnTouchListener(
-//                            LibraryRVCLNewCard(item,libraryViewModel, createFileViewModel,binding,deletePopUpViewModel,createCardViewModel,it)
-//                        )
-//                    }
-//                }
-//            }
+
             binding.contentBindingFrame.removeAllViews()
-//            親レイアウトのclick listener
 
+            val context = binding.root.context
             val viewSetUp = LibrarySetUpItems()
-            val addL = LibraryAddListeners()
-
             val contentView:View
             when(item){
                 is File -> {
@@ -105,8 +96,6 @@ class LibFragPlaneRVListAdapter(
                 is Card -> {
                     val stringCardBinding = ListItemLibraryRvCardStringBinding.inflate(LayoutInflater.from(context))
                     viewSetUp.setUpRVStringCardBinding(stringCardBinding, item.stringData, )
-
-//                    addCardCL(item)
                     libRVButtonsAddCL(item)
                     binding.btnAddNewCard.visibility = View.VISIBLE
                     contentView = stringCardBinding.root
@@ -118,17 +107,15 @@ class LibFragPlaneRVListAdapter(
                     setImageDrawable(
                         AppCompatResources.getDrawable(context, R.drawable.select_rv_item))
                 }
-
                 root.tag = LibRVState.Plane
                 linLaySwipeShow.visibility = View.GONE
                 btnSelect.visibility = if(libraryViewModel.returnMultiSelectMode())  View.VISIBLE else View.GONE
             }
-
             binding.contentBindingFrame.addView(contentView)
-//            TODo
 
 
         }
 
     }
 }
+

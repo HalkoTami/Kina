@@ -100,7 +100,7 @@ class LibraryFolderFrag :  Fragment(){
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             )
             recyclerView.addOnItemTouchListener(
-                object : LibraryRVItemClickListener(requireActivity(),binding.frameLayTest,recyclerView,libraryBaseViewModel){})
+                object : LibraryRVItemClickListener(recyclerView){})
         }
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()

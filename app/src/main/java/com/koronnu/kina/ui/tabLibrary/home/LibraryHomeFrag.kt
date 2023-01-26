@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
 import com.koronnu.kina.util.changeViewIfRVEmpty
@@ -27,6 +28,7 @@ import com.koronnu.kina.ui.tabLibrary.*
 import com.koronnu.kina.util.view_set_up.LibraryAddListeners
 import com.koronnu.kina.util.view_set_up.LibrarySetUpItems
 import com.koronnu.kina.ui.viewmodel.*
+import com.koronnu.kina.util.makeToast
 
 
 class LibraryHomeFrag : Fragment(){
@@ -101,8 +103,9 @@ class LibraryHomeFrag : Fragment(){
 //                searchViewModel,
 //                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 //            )
+
             recyclerView.addOnItemTouchListener(
-                object : LibraryRVItemClickListener(requireActivity(),binding.frameLayTest,recyclerView,libraryBaseViewModel){})
+                object : LibraryRVItemClickListener(recyclerView){})
         }
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()
