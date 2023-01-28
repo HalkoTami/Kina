@@ -14,7 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewVisibility
 import com.koronnu.kina.databinding.LibraryChildFragWithMulModeBaseBinding
 import com.koronnu.kina.databinding.LibraryFragTopBarFileBinding
 import com.koronnu.kina.databinding.RvEmptyBinding
@@ -66,12 +66,8 @@ LibraryFlashCardCoverFrag  : Fragment(){
             recyclerView = binding.vocabCardRV
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
-                stringCardViewModel  = cardTypeStringViewModel,
-                createCardViewModel  = createCardViewModel,
-                mainNavController = mainNavCon,
-                deletePopUpViewModel = deletePopUpViewModel,
-                createFileViewModel = editFileViewModel,
                 libraryViewModel = libraryBaseViewModel,
+                parentLifecycleOwner = viewLifecycleOwner
             )
             searchAdapter = LibFragSearchRVListAdapter(
                 libraryViewModel = libraryBaseViewModel,
@@ -82,6 +78,12 @@ LibraryFlashCardCoverFrag  : Fragment(){
                 mainNavController = mainNavCon,
                 context = requireActivity(),
             )
+            binding.apply {
+                libraryViewModel = libraryBaseViewModel
+                planeRVAdapter = adapter
+                seachRvAdapter = searchAdapter
+                lifecycleOwner = viewLifecycleOwner
+            }
         }
         fun addCL(){
             val addCL = LibraryAddListeners()
@@ -95,7 +97,7 @@ LibraryFlashCardCoverFrag  : Fragment(){
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             )
             recyclerView.addOnItemTouchListener(
-                object : LibraryRVItemClickListener(requireActivity(),binding.frameLayTest,recyclerView,libraryBaseViewModel){})
+                object : LibraryRVItemClickListener(recyclerView){})
         }
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()

@@ -12,7 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus
@@ -53,6 +53,11 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             libraryBaseViewModel.setChildFragBinding(binding)
             recyclerView = binding.vocabCardRV
             adapter =   LibFragChooseFileRVListAdapter(chooseFileMoveToViewModel)
+            binding.apply {
+                libraryViewModel = libraryBaseViewModel
+                planeRVAdapter = adapter
+                lifecycleOwner = viewLifecycleOwner
+            }
         }
 
         fun setUpView(flashcard:Boolean,movingItems:List<Any>){
@@ -61,7 +66,7 @@ class LibraryChooseFileMoveToFrag  : Fragment(){
             mainRV.layoutManager = LinearLayoutManager(requireActivity())
             mainRV.isNestedScrollingEnabled = true
 
-            binding.flTpbAnkiBox.addView(topBarBinding.root)
+            binding.flTpbLibrary.addView(topBarBinding.root)
             topBarBinding.imvFileMoveToStatus.setImageDrawable(
                 AppCompatResources.getDrawable(requireActivity(),
                     if(flashcard) R.drawable.icon_move_to_flashcard_cover else R.drawable.icon_move_to_folder

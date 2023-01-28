@@ -44,7 +44,8 @@ class MyRoomRepository(
     fun getDescendantsCardsIsByMultipleFileId  (fileIdList: List<Int>)      :Flow<List<Int>>    = cardDao.getDescendantsCardsIdsByMultipleFileId(fileIdList,xRefTypeCardAsInt,xRefTypeFileAsInt)
     val allCards                                                            :Flow<List<Card>>   = cardDao.getAllCards()
     val cardExists                                                          :Flow<Boolean>      = cardDao.checkCardExists().map { it!=null }
-//    files
+    val cardsWithoutFlashCardCover = cardDao.getCardsDataByFileId(null)
+    //    files
     fun getFileByFileId                        (fileId:Int?)                :Flow<File>         = fileDao.getFileByFileId(fileId)
     fun getFileAndChildrenCards                (fileId:Int?)                :Flow<Map<File,List<Card>>> = fileDao.getFileChildrenCards(fileId)
     fun getFileDataByParentFileId              (parentFileId:Int?)          :Flow<List<File>?>           = fileDao.myGetFileByParentFileId(parentFileId)

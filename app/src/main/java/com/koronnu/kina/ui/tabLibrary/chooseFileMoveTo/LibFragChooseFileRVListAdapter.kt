@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.R
-import com.koronnu.kina.actions.changeMulVisibility
-import com.koronnu.kina.actions.changeViewVisibility
-import com.koronnu.kina.actions.setClickListeners
+import com.koronnu.kina.util.changeMulVisibility
+import com.koronnu.kina.util.changeViewVisibility
+import com.koronnu.kina.util.setClickListeners
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.source.local.entity.enumclass.FileStatus

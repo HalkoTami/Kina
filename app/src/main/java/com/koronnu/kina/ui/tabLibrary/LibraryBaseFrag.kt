@@ -7,7 +7,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewVisibility
 import com.koronnu.kina.databinding.LibraryFragBinding
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.model.enumClasses.LibraryFragment

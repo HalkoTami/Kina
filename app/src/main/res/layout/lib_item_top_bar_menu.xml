@@ -2,72 +2,82 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_vertical"
-    android:background="@drawable/gray_stroke_rectangle"
-    android:clickable="false"
-    android:orientation="vertical"
-    android:padding="10dp"
-    >
-
+<layout>
+    <data >
+        <variable
+            name="libraryViewModel"
+            type="com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel" />
+    </data>
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linLay_move_selected_items"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="10dp">
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/gray_stroke_rectangle"
+        android:clickable="false"
+        android:orientation="vertical"
+        android:padding="10dp"
+        >
 
-        <ImageView
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:id="@+id/imv_move_selected_items"
-            android:layout_width="0dp"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linLay_move_selected_items"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_move_to_folder"
-            tools:ignore="ContentDescription" />
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:onClick="@{()->libraryViewModel.onClickMultiMenuMoveSelectedItemToFile()}">
 
-        <TextView
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="5"
-            android:layout_height="wrap_content"
-            android:text="@string/selected_item_option_move"
-            android:textSize="15sp" />
+            <ImageView
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:id="@+id/imv_move_selected_items"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_move_to_folder"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="wrap_content"
+                android:text="@string/selected_item_option_move"
+                android:textSize="15sp" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linLay_delete_selected_items"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:onClick="@{()->libraryViewModel.onClickMultiMenuDeleteSelectedItems()}">
+
+            <ImageView
+                android:id="@+id/imv_delete_selected_items"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/icon_trash"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="wrap_content"
+                android:text="@string/selected_item_option_delete"
+                android:textSize="15sp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linLay_delete_selected_items"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="10dp">
-
-        <ImageView
-            android:id="@+id/imv_delete_selected_items"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-
-            android:src="@drawable/icon_trash"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="5"
-            android:layout_height="wrap_content"
-            android:text="@string/selected_item_option_delete"
-            android:textSize="15sp" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

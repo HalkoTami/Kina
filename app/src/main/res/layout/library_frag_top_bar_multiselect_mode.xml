@@ -2,41 +2,52 @@
 <!--TODO:Rename View Ids In Rules-->
 <!--TODO:Rename String res In Rules-->
 <!--TODO:Rename included Layout titles in Rules-->
-<androidx.appcompat.widget.LinearLayoutCompat
-    style="@style/TopBarLinLayStyle"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView
-        android:id="@+id/imv_close_multi_mode"
-        android:minHeight="40dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_close"
-        android:contentDescription="@string/cd_close" />
-    <ImageView
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:id="@+id/imv_select_all"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="20dp"
+<layout>
+    <data>
+        <variable
+            name="libraryViewModel"
+            type="com.koronnu.kina.ui.tabLibrary.LibraryBaseViewModel" />
+    </data>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        visibilityBoolean="@{libraryViewModel.multipleSelectMode}"
+        style="@style/TopBarLinLayStyle"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+        <ImageView
+            android:id="@+id/imv_close_multi_mode"
+            android:minHeight="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_close"
+            android:onClick="@{()->libraryViewModel.onClickCloseMultiMode()}"
+            android:contentDescription="@string/cd_close" />
+        <ImageView
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/imv_select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="20dp"
+            android:onClick="@{()->libraryViewModel.onClickMultiMenuMakeAllSelected()}"
+            android:src="@drawable/select_rv_item"
+            android:contentDescription="@string/cd_select_all" />
 
-        android:src="@drawable/select_rv_item"
-        android:contentDescription="@string/cd_select_all" />
+        <TextView
+            style="@style/TopBarTxvSizeNormalStyle"
+            android:id="@+id/txv_selecting_status"
+            android:layout_width="0dp"
+            android:text="@{String.format(@string/topBarMultiSelectBin_selectingStatus,libraryViewModel.selectedItems.size())}"
+            android:layout_weight="1" />
+        <ImageView
 
-    <TextView
-        style="@style/TopBarTxvSizeNormalStyle"
-        android:id="@+id/txv_selecting_status"
-        android:layout_width="0dp"
-        android:layout_weight="1" />
-    <ImageView
+            android:onClick="@{()->libraryViewModel.onClickImvChangeMultiMenuVisibility()}"
+            android:id="@+id/imv_change_menu_visibility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-        android:id="@+id/imv_change_menu_visibility"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:src="@drawable/icon_menu"
-        android:contentDescription="@string/cd_open_menu" />
+            android:src="@drawable/icon_menu"
+            android:contentDescription="@string/cd_open_menu" />
 
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
 

@@ -43,7 +43,7 @@ class LibrarySetUpItems{
             searchRV.layoutManager = LinearLayoutManager(context)
             searchRV.isNestedScrollingEnabled = true
         }
-        binding.flTpbAnkiBox.addView(topBarView)
+        binding.flTpbLibrary.addView(topBarView)
         setUpSearchRV()
         setUpPlaneLibRV()
     }

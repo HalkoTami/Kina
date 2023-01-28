@@ -13,8 +13,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.koronnu.kina.*
-import com.koronnu.kina.actions.changeViewIfRVEmpty
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewIfRVEmpty
+import com.koronnu.kina.util.changeViewVisibility
 import com.koronnu.kina.databinding.*
 import com.koronnu.kina.data.source.local.entity.File
 import com.koronnu.kina.data.model.enumClasses.LibraryFragment
@@ -65,12 +65,8 @@ class LibraryFolderFrag :  Fragment(){
             recyclerView = binding.vocabCardRV
             mainNavCon = requireActivity().findViewById<FragmentContainerView>(R.id.fcv_activityMain).findNavController()
             adapter =  LibFragPlaneRVListAdapter(
-                stringCardViewModel  = cardTypeStringViewModel,
-                createCardViewModel  = createCardViewModel,
-                mainNavController = mainNavCon,
-                deletePopUpViewModel = deletePopUpViewModel,
-                createFileViewModel = editFileViewModel,
                 libraryViewModel = libraryBaseViewModel,
+                parentLifecycleOwner = viewLifecycleOwner
             )
             searchAdapter = LibFragSearchRVListAdapter(
                 libraryViewModel = libraryBaseViewModel,
@@ -81,6 +77,12 @@ class LibraryFolderFrag :  Fragment(){
                 mainNavController = mainNavCon,
                 context = requireActivity(),
             )
+            binding.apply {
+                libraryViewModel = libraryBaseViewModel
+                planeRVAdapter = adapter
+                seachRvAdapter = searchAdapter
+                lifecycleOwner = viewLifecycleOwner
+            }
         }
         fun addCL(){
             val addCL = LibraryAddListeners()
@@ -94,7 +96,7 @@ class LibraryFolderFrag :  Fragment(){
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             )
             recyclerView.addOnItemTouchListener(
-                object : LibraryRVItemClickListener(requireActivity(),binding.frameLayTest,recyclerView,libraryBaseViewModel){})
+                object : LibraryRVItemClickListener(recyclerView){})
         }
         fun setUpView(){
             val commonViewSetUp = LibrarySetUpItems()
@@ -110,7 +112,7 @@ class LibraryFolderFrag :  Fragment(){
         }
         fun observeMultiMode(){
             libraryBaseViewModel.apply {
-                multipleSelectMode.observe(viewLifecycleOwner){
+                this.multipleSelectMode.observe(viewLifecycleOwner){
                     binding.topBarMultiselectBinding.root.visibility = if(it) View.VISIBLE else View.GONE
                     topBarBinding.root.visibility = if(!it) View.VISIBLE else View.GONE
                     LibrarySetUpItems().changeLibRVSelectBtnVisibility(recyclerView,it)
@@ -176,7 +178,7 @@ class LibraryFolderFrag :  Fragment(){
 //                    }
 //                }
             val commonViewSetUp = LibrarySetUpItems()
-            multipleSelectMode.observe(viewLifecycleOwner){
+            this.multipleSelectMode.observe(viewLifecycleOwner){
                 binding.topBarMultiselectBinding.root.visibility =if(it) View.VISIBLE else View.GONE
                 topBarBinding.root.visibility = if(!it) View.VISIBLE else View.INVISIBLE
                 commonViewSetUp.changeLibRVSelectBtnVisibility(recyclerView,it)

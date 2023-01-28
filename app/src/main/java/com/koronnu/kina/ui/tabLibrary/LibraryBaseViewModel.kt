@@ -25,6 +25,7 @@ import com.koronnu.kina.ui.tabLibrary.folder.LibraryFolderFragDirections
 import com.koronnu.kina.ui.tabLibrary.home.LibraryHomeFragDirections
 import com.koronnu.kina.ui.viewmodel.*
 import kotlinx.coroutines.cancel
+
 class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel() {
 
     private lateinit var mainViewModel: MainViewModel
@@ -60,7 +61,48 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
             }
         }
     }
+    val cardsWithoutFlashCardCoverFromDB:LiveData<List<Card>> = repository.cardsWithoutFlashCardCover.asLiveData()
 
+
+
+
+
+    fun onClickOpenRvItem(item:Any){
+        if(returnLeftSwipedItemExists()) makeAllUnSwiped()
+        else if(returnMultiSelectMode()){
+            onClickRvSelect(
+                if((_selectedItems.value ?: mutableListOf()).contains(item)) ListAttributes.Remove else ListAttributes.Add,item)
+        }else{
+            when(item){
+                is File -> openNextFile(item)
+                is Card -> mainViewModel.createCardViewModel.onClickEditCardFromRV(item)
+            }
+        }
+    }
+    fun onClickDelete(item:Any){
+        mainViewModel.deletePopUpViewModel.setDeletingItem(mutableListOf(item))
+        mainViewModel.deletePopUpViewModel.setConfirmDeleteVisible(true)
+    }
+    fun onClickEditItem(item: Any){
+        when(item ){
+            is File -> mainViewModel.editFileViewModel.onClickEditFileInRV(item)
+            is Card -> mainViewModel.createCardViewModel.onClickEditCardFromRV(item)
+            else -> return
+        }
+    }
+    fun onClickBtnAddNewCard(item: Any){
+        when(item){
+            is Card -> {
+                mainViewModel.createCardViewModel.onClickAddNewCardRV(item)
+            }
+            else -> return
+        }
+    }
+    fun onLongClickRvItem(item: Any):Boolean{
+        setMultipleSelectMode(true)
+        onClickRvSelect(ListAttributes.Add,item)
+        return true
+    }
 
 
     private fun setChildFragBindingClickListeners(){
@@ -410,34 +452,37 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     fun returnModeInBox():Boolean?{
         return _modeInBox.value
     }
-    private val _multiMenuVisibility = MutableLiveData<Boolean>()
-    val multiMenuVisibility: LiveData<Boolean> = _multiMenuVisibility
+    val multiMenuVisibility = MutableLiveData<Boolean>()
     fun setMultiMenuVisibility (boolean: Boolean){
-        _multiMenuVisibility.value = boolean
+        multiMenuVisibility.value = boolean
     }
     private fun returnMultiMenuVisibility():Boolean{
-        return _multiMenuVisibility.value ?:false
+        return multiMenuVisibility.value ?:false
     }
 
 
     private val _chooseFileMoveToMode = MutableLiveData<Boolean>()
     val chooseFileMoveToMode:LiveData<Boolean> =_chooseFileMoveToMode
 
-    private val _multipleSelectMode =  MutableLiveData<Boolean>()
-    val multipleSelectMode:LiveData<Boolean> = _multipleSelectMode
+    val multipleSelectMode =  MutableLiveData<Boolean>()
     fun setMultipleSelectMode(boolean: Boolean){
-        _multipleSelectMode.apply {
+        multipleSelectMode.apply {
             value = boolean
         }
         if(!boolean) {
+            setMultiMenuVisibility(false)
             clearSelectedItems()
             changeAllRVSelectedStatus(false)
         }
         changeTopBarMode()
         changeRVMode()
     }
+    val searchModeActive = MutableLiveData<Boolean>()
+    fun setSearchModeActive(boolean: Boolean){
+        searchModeActive.value = boolean
+    }
     fun returnMultiSelectMode():Boolean{
-        return _multipleSelectMode.value ?:false
+        return multipleSelectMode.value ?:false
     }
 
     private val _recyclerViewMode = MutableLiveData<LibRVState>()
@@ -446,7 +491,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
     }
     private fun changeRVMode(){
         setRecyclerViewMode(
-            if(_multipleSelectMode.value == true) LibRVState.Selectable
+            if(multipleSelectMode.value == true) LibRVState.Selectable
         else if(_chooseFileMoveToMode.value == true) LibRVState.SelectFileMoveTo
         else LibRVState.Plane
         )
@@ -462,7 +507,7 @@ class LibraryBaseViewModel(private val repository: MyRoomRepository) : ViewModel
         _topBarMode.value = topBarMode
     }
     private fun changeTopBarMode(){
-        setTopBarMode(if(_multipleSelectMode.value == true) LibraryTopBarMode.Multiselect
+        setTopBarMode(if(this.multipleSelectMode.value == true) LibraryTopBarMode.Multiselect
         else if (_chooseFileMoveToMode.value == true) LibraryTopBarMode.ChooseFileMoveTo
         else{
             if(_modeInBox.value == true) LibraryTopBarMode.InBox else

@@ -7,7 +7,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
-import com.koronnu.kina.actions.changeViewVisibility
+import com.koronnu.kina.util.changeViewVisibility
 import kotlin.math.absoluteValue
 
 class Animation {
