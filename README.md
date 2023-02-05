@@ -18,7 +18,7 @@ Kina is an android app where you can create, edit, memorize flashcards all in on
 [](https://play.google.com/store/apps/details?id=com.koronnu.kina)
 
 <div align="center">
-<img src="https://user-images.githubusercontent.com/101169544/216797270-c6657b6f-f92d-4620-9208-512fe3c50011.gif" width ="300">　<img src="https://user-images.githubusercontent.com/101169544/215409698-1a7a02e4-65fb-4bc3-b170-18b198c8bf21.gif" width ="300">　<img src="https://user-images.githubusercontent.com/101169544/216797286-2661c16f-0b92-46e7-a1a6-db15d79feae1.gif" width ="300">
+<img src="https://user-images.githubusercontent.com/101169544/216797270-c6657b6f-f92d-4620-9208-512fe3c50011.gif" width ="200">　<img src="https://user-images.githubusercontent.com/101169544/215409698-1a7a02e4-65fb-4bc3-b170-18b198c8bf21.gif" width ="200">　<img src="https://user-images.githubusercontent.com/101169544/216797286-2661c16f-0b92-46e7-a1a6-db15d79feae1.gif" width ="200">
 </div>
 
 
