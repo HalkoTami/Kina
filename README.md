@@ -70,7 +70,7 @@ Halko Tami, programming beginner, trying to get a job as Android App Developer.
 
 [twitter](https://twitter.com/halkoAusD), [qiita](https://qiita.com/halkoAusD)
 
-know more about me and stuffs I created: [my portfolio](www.halko-tami.com)
+know more about me and stuffs I created: [my portfolio](https://www.halko-tami.com)
 
 ## License
 
